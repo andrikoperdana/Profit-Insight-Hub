@@ -65,6 +65,31 @@ router.post(
         projectId: req.params.id,
       },
     });
+
+    // Auto-close: when both BAST and INVOICE exist on a COMPLETE project, set CLOSED
+    const project = await prisma.project.findUnique({
+      where: { id: req.params.id },
+      include: { documents: true },
+    });
+    if (project && project.status === "COMPLETE") {
+      const hasBast = project.documents.some((doc) => doc.type === "BAST");
+      const hasInvoice = project.documents.some((doc) => doc.type === "INVOICE");
+      if (hasBast && hasInvoice) {
+        await prisma.project.update({
+          where: { id: project.id },
+          data: { status: "CLOSED" },
+        });
+        await prisma.activity.create({
+          data: {
+            type: "project.status_changed",
+            message: `Project ${project.code} auto-closed (BAST + Invoice received)`,
+            userId: req.user!.sub,
+            projectId: project.id,
+          },
+        });
+      }
+    }
+
     res.status(201).json(serialize(d));
   },
 );

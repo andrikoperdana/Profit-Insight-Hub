@@ -1,5 +1,6 @@
 import express, { type Express } from "express";
 import cors from "cors";
+import path from "path";
 import pinoHttp from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
@@ -29,6 +30,14 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(
+  "/api/files",
+  express.static(path.resolve(process.cwd(), "uploads"), {
+    setHeaders: (res) => {
+      res.setHeader("Cache-Control", "private, max-age=3600");
+    },
+  }),
+);
 app.use("/api", router);
 
 export default app;
