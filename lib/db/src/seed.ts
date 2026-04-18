@@ -4,6 +4,12 @@ import bcrypt from "bcryptjs";
 async function main() {
   const hash = (p: string) => bcrypt.hash(p, 10);
 
+  const existingUsers = await prisma.user.count();
+  if (existingUsers > 0) {
+    console.log(`Seed skipped — database already has ${existingUsers} users.`);
+    return;
+  }
+
   console.log("Clearing existing data...");
   await prisma.activity.deleteMany();
   await prisma.timesheet.deleteMany();
