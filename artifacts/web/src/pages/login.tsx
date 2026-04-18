@@ -65,7 +65,7 @@ export default function Login() {
   };
 
   const seedUsers = [
-    { email: "management@secureprofit.id", role: "Management" },
+    { email: "management@secureprofit.id", role: "PMO Director" },
     { email: "pm@secureprofit.id", role: "Project Manager" },
     { email: "sales@secureprofit.id", role: "Sales" },
     { email: "konsultan@secureprofit.id", role: "Konsultan" },

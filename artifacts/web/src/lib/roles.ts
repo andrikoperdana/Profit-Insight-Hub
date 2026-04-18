@@ -1,7 +1,7 @@
 import { UserRole } from "@workspace/api-client-react";
 
 export const RoleLabels: Record<UserRole, string> = {
-  [UserRole.MANAGEMENT]: "Management",
+  [UserRole.MANAGEMENT]: "PMO Director",
   [UserRole.PROJECT_MANAGER]: "Project Manager",
   [UserRole.SALES]: "Sales",
   [UserRole.KONSULTAN]: "Konsultan",

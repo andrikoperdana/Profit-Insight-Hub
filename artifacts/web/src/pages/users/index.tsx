@@ -110,7 +110,7 @@ export default function UsersList() {
     return (
       <EmptyState 
         title="Access Denied" 
-        description="Only Management can view and edit user accounts." 
+        description="Only PMO Director can view and edit user accounts." 
         icon={<ShieldAlert className="h-10 w-10 text-destructive/50" />} 
       />
     );
