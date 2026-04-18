@@ -349,6 +349,14 @@ export async function customFetch<T = unknown>(
     headers.set("accept", DEFAULT_JSON_ACCEPT);
   }
 
+  // Attach bearer token from localStorage
+  if (!headers.has("authorization")) {
+    const token = localStorage.getItem("auth_token");
+    if (token) {
+      headers.set("authorization", `Bearer ${token}`);
+    }
+  }
+
   // Attach bearer token when an auth getter is configured and no
   // Authorization header has been explicitly provided.
   if (_authTokenGetter && !headers.has("authorization")) {
@@ -361,6 +369,14 @@ export async function customFetch<T = unknown>(
   const requestInfo = { method, url: resolveUrl(input) };
 
   const response = await fetch(input, { ...init, method, headers });
+
+  if (response.status === 401 && typeof window !== "undefined") {
+    // If we're not already on the login page, redirect
+    if (!window.location.pathname.includes("/login")) {
+      localStorage.removeItem("auth_token");
+      window.location.href = import.meta.env.BASE_URL + "login";
+    }
+  }
 
   if (!response.ok) {
     const errorData = await parseErrorBody(response, method);

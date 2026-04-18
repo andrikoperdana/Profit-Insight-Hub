@@ -1,0 +1,53 @@
+import type { Request, Response, NextFunction } from "express";
+import { verifyToken, type JwtPayload } from "../lib/auth.js";
+import { prisma, type UserRole } from "@workspace/db";
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: JwtPayload;
+    }
+  }
+}
+
+export async function requireAuth(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  const header = req.headers.authorization;
+  if (!header || !header.startsWith("Bearer ")) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+  const token = header.slice("Bearer ".length);
+  const payload = verifyToken(token);
+  if (!payload) {
+    res.status(401).json({ error: "Invalid token" });
+    return;
+  }
+  const user = await prisma.user.findUnique({
+    where: { id: payload.sub },
+    select: { id: true, isActive: true, role: true },
+  });
+  if (!user || !user.isActive) {
+    res.status(401).json({ error: "User not active" });
+    return;
+  }
+  req.user = { ...payload, role: user.role };
+  next();
+}
+
+export function requireRole(...roles: UserRole[]) {
+  return (req: Request, res: Response, next: NextFunction): void => {
+    if (!req.user) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+    if (!roles.includes(req.user.role)) {
+      res.status(403).json({ error: "Forbidden" });
+      return;
+    }
+    next();
+  };
+}

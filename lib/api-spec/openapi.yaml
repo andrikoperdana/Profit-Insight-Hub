@@ -1,36 +1,865 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: SecureProfit Hub API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
-    description: Health operations
+  - name: auth
+  - name: users
+  - name: clients
+  - name: projects
+  - name: resources
+  - name: timesheets
+  - name: documents
+  - name: dashboard
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
-      summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
           content:
             application/json:
+              schema: { $ref: "#/components/schemas/HealthStatus" }
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LoginBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuthResponse" }
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /users:
+    get:
+      operationId: listUsers
+      tags: [users]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
               schema:
-                $ref: "#/components/schemas/HealthStatus"
+                type: array
+                items: { $ref: "#/components/schemas/User" }
+    post:
+      operationId: createUser
+      tags: [users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateUserBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+
+  /users/{id}:
+    get:
+      operationId: getUser
+      tags: [users]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+    patch:
+      operationId: updateUser
+      tags: [users]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpdateUserBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+    delete:
+      operationId: deleteUser
+      tags: [users]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /clients:
+    get:
+      operationId: listClients
+      tags: [clients]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Client" }
+    post:
+      operationId: createClient
+      tags: [clients]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateClientBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Client" }
+
+  /clients/{id}:
+    patch:
+      operationId: updateClient
+      tags: [clients]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateClientBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Client" }
+    delete:
+      operationId: deleteClient
+      tags: [clients]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /projects:
+    get:
+      operationId: listProjects
+      tags: [projects]
+      parameters:
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Project" }
+    post:
+      operationId: createProject
+      tags: [projects]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateProjectBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Project" }
+
+  /projects/{id}:
+    get:
+      operationId: getProject
+      tags: [projects]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ProjectDetail" }
+    patch:
+      operationId: updateProject
+      tags: [projects]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpdateProjectBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Project" }
+    delete:
+      operationId: deleteProject
+      tags: [projects]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /projects/{id}/financials:
+    get:
+      operationId: getProjectFinancials
+      tags: [projects]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ProjectFinancials" }
+
+  /projects/{id}/resources:
+    get:
+      operationId: listProjectResources
+      tags: [resources]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ProjectResource" }
+    post:
+      operationId: addProjectResource
+      tags: [resources]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AddResourceBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ProjectResource" }
+
+  /resources/{resourceId}:
+    delete:
+      operationId: removeProjectResource
+      tags: [resources]
+      parameters:
+        - { name: resourceId, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /timesheets:
+    get:
+      operationId: listTimesheets
+      tags: [timesheets]
+      parameters:
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: projectId, in: query, required: false, schema: { type: string } }
+        - { name: scope, in: query, required: false, schema: { type: string, enum: [mine, approval, all] } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Timesheet" }
+    post:
+      operationId: createTimesheet
+      tags: [timesheets]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateTimesheetBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Timesheet" }
+
+  /timesheets/{id}/submit:
+    post:
+      operationId: submitTimesheet
+      tags: [timesheets]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Timesheet" }
+
+  /timesheets/{id}/approve:
+    post:
+      operationId: approveTimesheet
+      tags: [timesheets]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Timesheet" }
+
+  /timesheets/{id}/reject:
+    post:
+      operationId: rejectTimesheet
+      tags: [timesheets]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RejectTimesheetBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Timesheet" }
+
+  /timesheets/{id}:
+    delete:
+      operationId: deleteTimesheet
+      tags: [timesheets]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /projects/{id}/documents:
+    get:
+      operationId: listProjectDocuments
+      tags: [documents]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Document" }
+    post:
+      operationId: createProjectDocument
+      tags: [documents]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateDocumentBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Document" }
+
+  /documents/{id}:
+    delete:
+      operationId: deleteDocument
+      tags: [documents]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DashboardSummary" }
+
+  /dashboard/profit-trend:
+    get:
+      operationId: getProfitTrend
+      tags: [dashboard]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ProfitTrendPoint" }
+
+  /dashboard/status-breakdown:
+    get:
+      operationId: getStatusBreakdown
+      tags: [dashboard]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/StatusCount" }
+
+  /dashboard/top-projects:
+    get:
+      operationId: getTopProjects
+      tags: [dashboard]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Project" }
+
+  /dashboard/recent-activity:
+    get:
+      operationId: getRecentActivity
+      tags: [dashboard]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ActivityItem" }
+
+  /dashboard/utilization:
+    get:
+      operationId: getUtilization
+      tags: [dashboard]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/UtilizationRow" }
+
 components:
   schemas:
     HealthStatus:
       type: object
+      required: [status]
       properties:
-        status:
-          type: string
-      required:
-        - status
+        status: { type: string }
 
+    SuccessMessage:
+      type: object
+      required: [success]
+      properties:
+        success: { type: boolean }
+        message: { type: string }
+
+    UserRole:
+      type: string
+      enum: [MANAGEMENT, PROJECT_MANAGER, SALES, KONSULTAN, TECHNICAL_WRITER, ADMIN_PROJECT]
+
+    ProjectStatus:
+      type: string
+      enum: [OBSERVATION, ACTIVE, PAUSE, COMPLETE, CLOSED]
+
+    TimesheetStatus:
+      type: string
+      enum: [DRAFT, SUBMITTED, APPROVED, REJECTED]
+
+    DocumentType:
+      type: string
+      enum: [BAST, INVOICE, CONTRACT, OTHER]
+
+    User:
+      type: object
+      required: [id, email, name, role, isActive, createdAt]
+      properties:
+        id: { type: string }
+        email: { type: string }
+        name: { type: string }
+        role: { $ref: "#/components/schemas/UserRole" }
+        title: { type: string, nullable: true }
+        dailyRate: { type: number, nullable: true }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    LoginBody:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string }
+        password: { type: string }
+
+    AuthResponse:
+      type: object
+      required: [token, user]
+      properties:
+        token: { type: string }
+        user: { $ref: "#/components/schemas/User" }
+
+    CreateUserBody:
+      type: object
+      required: [email, password, name, role]
+      properties:
+        email: { type: string }
+        password: { type: string }
+        name: { type: string }
+        role: { $ref: "#/components/schemas/UserRole" }
+        title: { type: string }
+        dailyRate: { type: number }
+
+    UpdateUserBody:
+      type: object
+      properties:
+        name: { type: string }
+        role: { $ref: "#/components/schemas/UserRole" }
+        title: { type: string }
+        dailyRate: { type: number }
+        isActive: { type: boolean }
+        password: { type: string }
+
+    Client:
+      type: object
+      required: [id, name, createdAt]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        contactPerson: { type: string, nullable: true }
+        email: { type: string, nullable: true }
+        phone: { type: string, nullable: true }
+        industry: { type: string, nullable: true }
+        createdAt: { type: string }
+
+    CreateClientBody:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string }
+        contactPerson: { type: string }
+        email: { type: string }
+        phone: { type: string }
+        industry: { type: string }
+
+    Project:
+      type: object
+      required: [id, code, name, status, contractValue, estimatedCost, estimatedProfit, plannedMandays, createdAt]
+      properties:
+        id: { type: string }
+        code: { type: string }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        status: { $ref: "#/components/schemas/ProjectStatus" }
+        clientId: { type: string }
+        clientName: { type: string }
+        salesId: { type: string, nullable: true }
+        salesName: { type: string, nullable: true }
+        pmId: { type: string, nullable: true }
+        pmName: { type: string, nullable: true }
+        startDate: { type: string, nullable: true }
+        endDate: { type: string, nullable: true }
+        contractValue: { type: number }
+        estimatedCost: { type: number }
+        estimatedProfit: { type: number }
+        plannedMandays: { type: number }
+        actualMandays: { type: number }
+        actualCost: { type: number }
+        actualProfit: { type: number }
+        marginPct: { type: number }
+        createdAt: { type: string }
+
+    ProjectDetail:
+      allOf:
+        - $ref: "#/components/schemas/Project"
+        - type: object
+          properties:
+            client: { $ref: "#/components/schemas/Client" }
+            resources:
+              type: array
+              items: { $ref: "#/components/schemas/ProjectResource" }
+            documents:
+              type: array
+              items: { $ref: "#/components/schemas/Document" }
+
+    CreateProjectBody:
+      type: object
+      required: [code, name, clientId, contractValue, estimatedCost, plannedMandays]
+      properties:
+        code: { type: string }
+        name: { type: string }
+        description: { type: string }
+        clientId: { type: string }
+        salesId: { type: string }
+        pmId: { type: string }
+        status: { $ref: "#/components/schemas/ProjectStatus" }
+        startDate: { type: string }
+        endDate: { type: string }
+        contractValue: { type: number }
+        estimatedCost: { type: number }
+        plannedMandays: { type: number }
+
+    UpdateProjectBody:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        description: { type: string }
+        clientId: { type: string }
+        salesId: { type: string }
+        pmId: { type: string }
+        status: { $ref: "#/components/schemas/ProjectStatus" }
+        startDate: { type: string }
+        endDate: { type: string }
+        contractValue: { type: number }
+        estimatedCost: { type: number }
+        plannedMandays: { type: number }
+
+    ProjectResource:
+      type: object
+      required: [id, projectId, userId, userName, plannedMandays, actualMandays, dailyRate]
+      properties:
+        id: { type: string }
+        projectId: { type: string }
+        userId: { type: string }
+        userName: { type: string }
+        userRole: { $ref: "#/components/schemas/UserRole" }
+        roleInProject: { type: string, nullable: true }
+        plannedMandays: { type: number }
+        actualMandays: { type: number }
+        dailyRate: { type: number }
+
+    AddResourceBody:
+      type: object
+      required: [userId, plannedMandays, dailyRate]
+      properties:
+        userId: { type: string }
+        roleInProject: { type: string }
+        plannedMandays: { type: number }
+        dailyRate: { type: number }
+
+    Timesheet:
+      type: object
+      required: [id, projectId, projectName, userId, userName, workDate, hours, status, createdAt]
+      properties:
+        id: { type: string }
+        projectId: { type: string }
+        projectName: { type: string }
+        userId: { type: string }
+        userName: { type: string }
+        workDate: { type: string }
+        hours: { type: number }
+        description: { type: string, nullable: true }
+        status: { $ref: "#/components/schemas/TimesheetStatus" }
+        approvedById: { type: string, nullable: true }
+        approvedByName: { type: string, nullable: true }
+        approvedAt: { type: string, nullable: true }
+        rejectionReason: { type: string, nullable: true }
+        createdAt: { type: string }
+
+    CreateTimesheetBody:
+      type: object
+      required: [projectId, workDate, hours]
+      properties:
+        projectId: { type: string }
+        workDate: { type: string }
+        hours: { type: number }
+        description: { type: string }
+
+    RejectTimesheetBody:
+      type: object
+      required: [reason]
+      properties:
+        reason: { type: string }
+
+    Document:
+      type: object
+      required: [id, projectId, type, fileName, fileUrl, uploadedAt]
+      properties:
+        id: { type: string }
+        projectId: { type: string }
+        type: { $ref: "#/components/schemas/DocumentType" }
+        fileName: { type: string }
+        fileUrl: { type: string }
+        invoiceNumber: { type: string, nullable: true }
+        invoiceAmount: { type: number, nullable: true }
+        invoiceStatus: { type: string, nullable: true }
+        notes: { type: string, nullable: true }
+        uploadedById: { type: string, nullable: true }
+        uploadedByName: { type: string, nullable: true }
+        uploadedAt: { type: string }
+
+    CreateDocumentBody:
+      type: object
+      required: [type, fileName, fileUrl]
+      properties:
+        type: { $ref: "#/components/schemas/DocumentType" }
+        fileName: { type: string }
+        fileUrl: { type: string }
+        invoiceNumber: { type: string }
+        invoiceAmount: { type: number }
+        invoiceStatus: { type: string }
+        notes: { type: string }
+
+    ProjectFinancials:
+      type: object
+      required: [projectId, contractValue, estimatedCost, estimatedProfit, actualCost, actualProfit, forecastCost, forecastProfit, marginPct, plannedMandays, actualMandays, burnRatePct]
+      properties:
+        projectId: { type: string }
+        contractValue: { type: number }
+        estimatedCost: { type: number }
+        estimatedProfit: { type: number }
+        actualCost: { type: number }
+        actualProfit: { type: number }
+        forecastCost: { type: number }
+        forecastProfit: { type: number }
+        marginPct: { type: number }
+        plannedMandays: { type: number }
+        actualMandays: { type: number }
+        burnRatePct: { type: number }
+        monthly:
+          type: array
+          items: { $ref: "#/components/schemas/MonthlyFinancialPoint" }
+
+    MonthlyFinancialPoint:
+      type: object
+      required: [month, cost, revenue]
+      properties:
+        month: { type: string }
+        cost: { type: number }
+        revenue: { type: number }
+
+    DashboardSummary:
+      type: object
+      required: [totalProjects, activeProjects, totalContractValue, totalActualCost, totalActualProfit, avgMarginPct, pendingTimesheets, totalMandays]
+      properties:
+        totalProjects: { type: number }
+        activeProjects: { type: number }
+        totalContractValue: { type: number }
+        totalActualCost: { type: number }
+        totalActualProfit: { type: number }
+        avgMarginPct: { type: number }
+        pendingTimesheets: { type: number }
+        totalMandays: { type: number }
+
+    ProfitTrendPoint:
+      type: object
+      required: [month, revenue, cost, profit]
+      properties:
+        month: { type: string }
+        revenue: { type: number }
+        cost: { type: number }
+        profit: { type: number }
+
+    StatusCount:
+      type: object
+      required: [status, count, value]
+      properties:
+        status: { $ref: "#/components/schemas/ProjectStatus" }
+        count: { type: number }
+        value: { type: number }
+
+    ActivityItem:
+      type: object
+      required: [id, type, message, createdAt]
+      properties:
+        id: { type: string }
+        type: { type: string }
+        message: { type: string }
+        userName: { type: string, nullable: true }
+        projectName: { type: string, nullable: true }
+        createdAt: { type: string }
+
+    UtilizationRow:
+      type: object
+      required: [userId, userName, role, plannedMandays, actualMandays, utilizationPct]
+      properties:
+        userId: { type: string }
+        userName: { type: string }
+        role: { $ref: "#/components/schemas/UserRole" }
+        plannedMandays: { type: number }
+        actualMandays: { type: number }
+        utilizationPct: { type: number }

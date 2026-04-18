@@ -1,0 +1,160 @@
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../src/generated/client"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  MANAGEMENT
+  PROJECT_MANAGER
+  SALES
+  KONSULTAN
+  TECHNICAL_WRITER
+  ADMIN_PROJECT
+}
+
+enum ProjectStatus {
+  OBSERVATION
+  ACTIVE
+  PAUSE
+  COMPLETE
+  CLOSED
+}
+
+enum TimesheetStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  REJECTED
+}
+
+enum DocumentType {
+  BAST
+  INVOICE
+  CONTRACT
+  OTHER
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         UserRole
+  title        String?
+  dailyRate    Float?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  projectsAsSales    Project[]         @relation("ProjectSales")
+  projectsAsPm       Project[]         @relation("ProjectPm")
+  resources          ProjectResource[]
+  timesheets         Timesheet[]
+  approvedTimesheets Timesheet[]       @relation("TimesheetApprover")
+  documentsUploaded  Document[]
+  activities         Activity[]
+}
+
+model Client {
+  id            String   @id @default(cuid())
+  name          String
+  contactPerson String?
+  email         String?
+  phone         String?
+  industry      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  projects Project[]
+}
+
+model Project {
+  id             String        @id @default(cuid())
+  code           String        @unique
+  name           String
+  description    String?
+  status         ProjectStatus @default(OBSERVATION)
+  clientId       String
+  client         Client        @relation(fields: [clientId], references: [id])
+  salesId        String?
+  sales          User?         @relation("ProjectSales", fields: [salesId], references: [id])
+  pmId           String?
+  pm             User?         @relation("ProjectPm", fields: [pmId], references: [id])
+  startDate      DateTime?
+  endDate        DateTime?
+  contractValue  Float         @default(0)
+  estimatedCost  Float         @default(0)
+  plannedMandays Float         @default(0)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  resources  ProjectResource[]
+  timesheets Timesheet[]
+  documents  Document[]
+  activities Activity[]
+}
+
+model ProjectResource {
+  id             String   @id @default(cuid())
+  projectId      String
+  project        Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  roleInProject  String?
+  plannedMandays Float    @default(0)
+  dailyRate      Float    @default(0)
+  createdAt      DateTime @default(now())
+
+  @@unique([projectId, userId])
+}
+
+model Timesheet {
+  id              String          @id @default(cuid())
+  projectId       String
+  project         Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User            @relation(fields: [userId], references: [id])
+  workDate        DateTime
+  hours           Float
+  description     String?
+  status          TimesheetStatus @default(DRAFT)
+  approvedById    String?
+  approvedBy      User?           @relation("TimesheetApprover", fields: [approvedById], references: [id])
+  approvedAt      DateTime?
+  rejectionReason String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+model Document {
+  id            String       @id @default(cuid())
+  projectId     String
+  project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  type          DocumentType
+  fileName      String
+  fileUrl       String       @db.Text
+  invoiceNumber String?
+  invoiceAmount Float?
+  invoiceStatus String?
+  notes         String?
+  uploadedById  String?
+  uploadedBy    User?        @relation(fields: [uploadedById], references: [id])
+  uploadedAt    DateTime     @default(now())
+}
+
+model Activity {
+  id        String   @id @default(cuid())
+  type      String
+  message   String
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
