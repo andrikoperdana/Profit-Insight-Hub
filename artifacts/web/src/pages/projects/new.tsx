@@ -2,12 +2,12 @@ import { useAuth } from "@/lib/auth";
 import { canCreateProject } from "@/lib/roles";
 import { useCreateProject, useListClients, useListUsers } from "@workspace/api-client-react";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import { ProjectStatus, UserRole } from "@workspace/api-client-react";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, Plus, Trash2 } from "lucide-react";
 import { Link } from "wouter";
 import { useEffect } from "react";
 
@@ -21,7 +21,6 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription
 } from "@/components/ui/form";
 import {
   Select,
@@ -32,20 +31,31 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoadingPage } from "@/components/common/Loading";
+import { formatIDR } from "@/lib/format";
+
+const ROLE_RATES: Record<string, { label: string; rate: number }> = {
+  PROJECT_MANAGER: { label: "Project Manager", rate: 2_500_000 },
+  KONSULTAN: { label: "Konsultan", rate: 1_800_000 },
+  TECHNICAL_WRITER: { label: "Technical Writer", rate: 1_200_000 },
+};
+
+const resourceRowSchema = z.object({
+  role: z.string().min(1, "Role required"),
+  headcount: z.coerce.number().min(1, "At least 1"),
+  mandaysPerPerson: z.coerce.number().min(0.5, "At least 0.5"),
+});
 
 const createProjectSchema = z.object({
-  code: z.string().min(2, "Code must be at least 2 characters"),
-  name: z.string().min(3, "Name must be at least 3 characters"),
+  code: z.string().min(2, "SPK/PO Number is required"),
+  name: z.string().min(3, "Project name required"),
   description: z.string().optional(),
   clientId: z.string().min(1, "Client is required"),
-  salesId: z.string().optional(),
-  pmId: z.string().optional(),
-  status: z.nativeEnum(ProjectStatus),
+  salesId: z.string().min(1, "Sales is required"),
+  pmId: z.string().min(1, "Project Manager is required"),
   startDate: z.string().optional(),
   endDate: z.string().optional(),
-  contractValue: z.coerce.number().min(0),
-  estimatedCost: z.coerce.number().min(0),
-  plannedMandays: z.coerce.number().min(0),
+  contractValue: z.coerce.number().min(0, "Revenue must be >= 0"),
+  resources: z.array(resourceRowSchema).min(1, "Add at least one resource requirement"),
 });
 
 type FormValues = z.infer<typeof createProjectSchema>;
@@ -72,11 +82,11 @@ export default function NewProject() {
   const createProject = useCreateProject({
     mutation: {
       onSuccess: (data) => {
-        toast({ title: "Project created successfully" });
+        toast({ title: "Project created", description: `${data.code} • status: Observation` });
         setLocation(`/projects/${data.id}`);
       },
       onError: (err: any) => {
-        toast({ variant: "destructive", title: "Failed to create project", description: err.message });
+        toast({ variant: "destructive", title: "Failed to create project", description: err?.message ?? "Unknown error" });
       }
     }
   });
@@ -90,17 +100,51 @@ export default function NewProject() {
       clientId: "",
       salesId: "",
       pmId: "",
-      status: ProjectStatus.OBSERVATION,
       startDate: "",
       endDate: "",
       contractValue: 0,
-      estimatedCost: 0,
-      plannedMandays: 0,
+      resources: [{ role: "KONSULTAN", headcount: 1, mandaysPerPerson: 10 }],
     }
   });
 
+  const { fields, append, remove } = useFieldArray({ control: form.control, name: "resources" });
+
+  const watchedResources = form.watch("resources");
+  const watchedRevenue = Number(form.watch("contractValue") || 0);
+
+  const totals = (watchedResources || []).reduce(
+    (acc, r) => {
+      const head = Number(r.headcount || 0);
+      const md = Number(r.mandaysPerPerson || 0);
+      const rate = ROLE_RATES[r.role]?.rate ?? 0;
+      const totalMandays = head * md;
+      acc.mandays += totalMandays;
+      acc.cost += totalMandays * rate;
+      return acc;
+    },
+    { mandays: 0, cost: 0 }
+  );
+
+  const estimatedProfit = watchedRevenue - totals.cost;
+  const marginPct = watchedRevenue > 0 ? (estimatedProfit / watchedRevenue) * 100 : 0;
+
   const onSubmit = (data: FormValues) => {
-    createProject.mutate({ data });
+    createProject.mutate({
+      data: {
+        code: data.code,
+        name: data.name,
+        description: data.description,
+        clientId: data.clientId,
+        salesId: data.salesId,
+        pmId: data.pmId,
+        status: ProjectStatus.OBSERVATION,
+        startDate: data.startDate || undefined,
+        endDate: data.endDate || undefined,
+        contractValue: data.contractValue,
+        estimatedCost: totals.cost,
+        plannedMandays: totals.mandays,
+      }
+    });
   };
 
   if (loadingClients || loadingUsers) {
@@ -111,14 +155,14 @@ export default function NewProject() {
   const sales = users?.filter(u => u.role === UserRole.SALES || u.role === UserRole.MANAGEMENT) || [];
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-5xl mx-auto space-y-6">
       <div className="flex items-center space-x-4">
         <Button variant="outline" size="icon" asChild>
           <Link href="/projects"><ArrowLeft className="h-4 w-4" /></Link>
         </Button>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Create Project</h1>
-          <p className="text-muted-foreground">Setup a new consulting engagement.</p>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Project Registration</h1>
+          <p className="text-muted-foreground">New engagement starts in <span className="text-primary font-medium">Observation</span> status.</p>
         </div>
       </div>
 
@@ -134,8 +178,8 @@ export default function NewProject() {
                 name="code"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Project Code *</FormLabel>
-                    <FormControl><Input placeholder="PRJ-2025-001" {...field} /></FormControl>
+                    <FormLabel>SPK/PO Number *</FormLabel>
+                    <FormControl><Input placeholder="SPK-2026-005" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -157,11 +201,9 @@ export default function NewProject() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Client *</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select client" />
-                        </SelectTrigger>
+                        <SelectTrigger><SelectValue placeholder="Select client" /></SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         {clients?.map((c) => (
@@ -175,22 +217,11 @@ export default function NewProject() {
               />
               <FormField
                 control={form.control}
-                name="status"
+                name="contractValue"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Initial Status</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select status" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {Object.values(ProjectStatus).map((status) => (
-                          <SelectItem key={status} value={status}>{status}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <FormLabel>Harga Jual ke Client / Revenue (IDR) *</FormLabel>
+                    <FormControl><Input type="number" placeholder="0" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -213,44 +244,18 @@ export default function NewProject() {
             <CardHeader>
               <CardTitle>Team Assignment</CardTitle>
             </CardHeader>
-            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField
-                control={form.control}
-                name="pmId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Project Manager</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select PM" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="none">None</SelectItem>
-                        {pms.map((u) => (
-                          <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <FormField
                 control={form.control}
                 name="salesId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Sales Representative</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormLabel>Sales *</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select Sales" />
-                        </SelectTrigger>
+                        <SelectTrigger><SelectValue placeholder="Select Sales" /></SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="none">None</SelectItem>
                         {sales.map((u) => (
                           <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>
                         ))}
@@ -260,70 +265,144 @@ export default function NewProject() {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="pmId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Project Manager *</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger><SelectValue placeholder="Select PM" /></SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {pms.map((u) => (
+                          <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="grid grid-cols-2 gap-2">
+                <FormField
+                  control={form.control}
+                  name="startDate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Start Date</FormLabel>
+                      <FormControl><Input type="date" {...field} value={field.value || ""} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="endDate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>End Date</FormLabel>
+                      <FormControl><Input type="date" {...field} value={field.value || ""} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </CardContent>
           </Card>
 
           <Card className="border-border shadow-sm">
-            <CardHeader>
-              <CardTitle>Financials & Timeline</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>Resource Requirements</CardTitle>
+              <Button type="button" variant="outline" size="sm" onClick={() => append({ role: "KONSULTAN", headcount: 1, mandaysPerPerson: 5 })}>
+                <Plus className="h-4 w-4 mr-2" /> Add Row
+              </Button>
             </CardHeader>
-            <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <FormField
-                control={form.control}
-                name="contractValue"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Contract Value (IDR)</FormLabel>
-                    <FormControl><Input type="number" placeholder="0" {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="estimatedCost"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Estimated Cost (IDR)</FormLabel>
-                    <FormControl><Input type="number" placeholder="0" {...field} /></FormControl>
-                    <FormDescription>Internal cost projection</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="plannedMandays"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Planned Mandays</FormLabel>
-                    <FormControl><Input type="number" placeholder="0" {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="startDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Start Date</FormLabel>
-                    <FormControl><Input type="date" {...field} value={field.value || ""} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="endDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>End Date</FormLabel>
-                    <FormControl><Input type="date" {...field} value={field.value || ""} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <CardContent className="space-y-4">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-muted/50 text-muted-foreground">
+                    <tr>
+                      <th className="text-left p-2 font-medium">Role</th>
+                      <th className="text-right p-2 font-medium w-32">Jumlah Orang</th>
+                      <th className="text-right p-2 font-medium w-32">Mandays/Orang</th>
+                      <th className="text-right p-2 font-medium w-40">Daily Rate</th>
+                      <th className="text-right p-2 font-medium w-44">Subtotal Cost</th>
+                      <th className="w-12"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {fields.map((f, idx) => {
+                      const r = watchedResources?.[idx];
+                      const head = Number(r?.headcount || 0);
+                      const md = Number(r?.mandaysPerPerson || 0);
+                      const rate = ROLE_RATES[r?.role || ""]?.rate ?? 0;
+                      const subtotal = head * md * rate;
+                      return (
+                        <tr key={f.id} className="border-t border-border">
+                          <td className="p-2">
+                            <FormField
+                              control={form.control}
+                              name={`resources.${idx}.role`}
+                              render={({ field }) => (
+                                <Select onValueChange={field.onChange} value={field.value}>
+                                  <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
+                                  <SelectContent>
+                                    {Object.entries(ROLE_RATES).map(([key, v]) => (
+                                      <SelectItem key={key} value={key}>{v.label}</SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              )}
+                            />
+                          </td>
+                          <td className="p-2">
+                            <FormField
+                              control={form.control}
+                              name={`resources.${idx}.headcount`}
+                              render={({ field }) => (
+                                <Input type="number" min={1} className="h-9 text-right" {...field} />
+                              )}
+                            />
+                          </td>
+                          <td className="p-2">
+                            <FormField
+                              control={form.control}
+                              name={`resources.${idx}.mandaysPerPerson`}
+                              render={({ field }) => (
+                                <Input type="number" min={0.5} step={0.5} className="h-9 text-right" {...field} />
+                              )}
+                            />
+                          </td>
+                          <td className="p-2 text-right font-mono text-muted-foreground">{formatIDR(rate)}</td>
+                          <td className="p-2 text-right font-mono">{formatIDR(subtotal)}</td>
+                          <td className="p-2">
+                            <Button type="button" variant="ghost" size="icon" onClick={() => fields.length > 1 && remove(idx)} disabled={fields.length === 1}>
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              {form.formState.errors.resources?.message && (
+                <p className="text-sm text-destructive">{form.formState.errors.resources.message}</p>
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 pt-4 border-t border-border">
+                <SummaryStat label="Total Mandays" value={`${totals.mandays.toFixed(1)}`} />
+                <SummaryStat label="Estimated Operational Cost" value={formatIDR(totals.cost)} mono />
+                <SummaryStat label="Revenue" value={formatIDR(watchedRevenue)} mono />
+                <SummaryStat
+                  label="Estimated Profit"
+                  value={`${formatIDR(estimatedProfit)} (${marginPct.toFixed(1)}%)`}
+                  mono
+                  highlight={estimatedProfit >= 0 ? "good" : "bad"}
+                />
+              </div>
             </CardContent>
           </Card>
 
@@ -339,6 +418,19 @@ export default function NewProject() {
           </div>
         </form>
       </Form>
+    </div>
+  );
+}
+
+function SummaryStat({ label, value, mono, highlight }: { label: string; value: string; mono?: boolean; highlight?: "good" | "bad" }) {
+  const color =
+    highlight === "good" ? "text-primary" :
+    highlight === "bad" ? "text-destructive" :
+    "text-foreground";
+  return (
+    <div className="space-y-1">
+      <p className="text-xs text-muted-foreground uppercase tracking-wide">{label}</p>
+      <p className={`text-lg font-semibold ${color} ${mono ? "font-mono" : ""}`}>{value}</p>
     </div>
   );
 }

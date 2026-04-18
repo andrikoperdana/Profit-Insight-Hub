@@ -10,6 +10,7 @@ import Login from "@/pages/login";
 import Dashboard from "@/pages/dashboard";
 import ProjectsList from "@/pages/projects";
 import ProjectDetail from "@/pages/projects/[id]";
+import NewProject from "@/pages/projects/new";
 import TimesheetsList from "@/pages/timesheets";
 import ClientsList from "@/pages/clients";
 import UsersList from "@/pages/users";
@@ -45,6 +46,7 @@ function Router() {
       <Route path="/login" component={Login} />
       <Route path="/" component={() => <ProtectedRoute component={Dashboard} />} />
       <Route path="/projects" component={() => <ProtectedRoute component={ProjectsList} />} />
+      <Route path="/projects/new" component={() => <ProtectedRoute component={NewProject} />} />
       <Route path="/projects/:id" component={() => <ProtectedRoute component={ProjectDetail} />} />
       <Route path="/timesheets" component={() => <ProtectedRoute component={TimesheetsList} />} />
       <Route path="/clients" component={() => <ProtectedRoute component={ClientsList} />} />
