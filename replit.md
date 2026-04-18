@@ -38,6 +38,21 @@ Enforced server-side via `requireRole` middleware in `artifacts/api-server/src/m
 - Konsultan / Technical Writer: log own timesheets only
 - Admin Project: upload documents and invoices
 
+Server-side data scoping:
+- `GET /api/projects` filters by role: PM → own (`pmId`), Sales → own (`salesId`), Konsultan/TW → assigned or has timesheet, Management/Admin → all.
+- `GET /api/dashboard/resource-utilization-detail` restricted to Management + PM, with PM seeing only resources working on own projects.
+
+## Role-based dashboards
+
+`artifacts/web/src/pages/dashboard/index.tsx` routes per role to a dedicated dashboard:
+- MANAGEMENT → `ManagementDashboard` (executive KPIs, profit trend, status breakdown, aging buckets, at-risk-projects alert)
+- PROJECT_MANAGER → `PMDashboard` (PM-scoped active projects, approval inbox quick action with Approve All, my-team utilization, revenue-vs-profit chart, overdue-approval alert)
+- SALES → `SalesDashboard` (own pipeline, revenue-by-client, status pie, 6-month profitability trend)
+- KONSULTAN / TECHNICAL_WRITER → `ConsultantDashboard` (welcome banner, prominent "Input Time Sheet Hari Ini" CTA with today's hours, 14-day trend, recent submissions)
+- ADMIN_PROJECT → `AdminProjectDashboard` (closing-doc inbox + alert for projects complete >3 days)
+
+Shared `WelcomeBanner` (`artifacts/web/src/components/dashboard/WelcomeBanner.tsx`) shows time-aware greeting in Bahasa Indonesia + role label.
+
 ## Pages
 
 `/login`, `/` (dashboard), `/projects`, `/projects/new`, `/projects/:id`, `/timesheets`, `/clients`, `/users` (Management only), `/settings`.

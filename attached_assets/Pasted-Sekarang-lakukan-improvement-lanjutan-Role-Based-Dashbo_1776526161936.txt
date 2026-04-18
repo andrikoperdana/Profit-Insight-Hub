@@ -1,0 +1,55 @@
+Sekarang lakukan improvement lanjutan: **Role-Based Dashboard** (Dashboard yang berbeda sesuai role user).
+
+Saat user login, dashboard utama harus menyesuaikan secara otomatis berdasarkan role-nya.
+
+### 1. Dashboard untuk Management / Principal
+- Full Overview dengan semua metrics
+- Key Cards: Total Revenue, Total Profit, Utilization Rate, Active Projects
+- Resource Utilization section lengkap (dari improvement sebelumnya)
+- Profitability Trend chart (30 hari)
+- Alert box: Project yang rugi / forecasted rugi, Overloaded resources, Idle > 5 hari
+- Quick link ke semua menu
+
+### 2. Dashboard untuk Project Manager (PM)
+- "My Active Projects" (list project yang dia kelola)
+- Pending Approval Inbox (jumlah time sheet yang perlu di-approve hari ini + tombol Bulk Approve)
+- My Team Utilization (hanya resource di bawah projectnya)
+- Quick actions: 
+  - Tombol besar "Approve All Pending"
+  - "New Time Sheet" untuk dirinya sendiri
+- Chart: Profitability dari project-proyeknya
+
+### 3. Dashboard untuk Sales
+- "My Projects" (hanya project yang dia daftarkan)
+- Pipeline Summary: Total Revenue dari projectnya, Estimated Profit, Actual Profit
+- Status breakdown: Observation, Active, Complete, Closed
+- Profitability per project (table dengan warna hijau/merah)
+- Chart: Revenue & Profit Trend dari project miliknya
+
+### 4. Dashboard untuk Konsultan & Technical Writer
+- Sangat sederhana dan clean:
+  - Today’s Time Entry (form input cepat untuk hari ini)
+  - Weekly Summary: Total jam minggu ini, project yang sedang dikerjakan
+  - List time sheet terakhir (Approved / Pending)
+  - Button besar "Input Time Sheet Hari Ini"
+- Tidak ada financial information
+
+### 5. Dashboard untuk Admin Project
+- "Projects Ready for Closure" (filter otomatis project status = Complete)
+- List project yang perlu diproses BAST & Invoice
+- Upload area cepat untuk BAST dan Invoice
+- Status summary: Berapa project Complete yang belum Closed
+- Notifikasi jika ada project Complete lebih dari 3 hari belum diproses
+
+### Tambahan Teknis:
+- Buat komponen Dashboard yang dinamis berdasarkan role (gunakan context atau role guard)
+- Pastikan navigasi sidebar tetap sama, tapi konten dashboard utama berubah
+- Tambahkan welcome message personal: "Selamat pagi, [Nama] - [Role]"
+- Gunakan layout yang responsif, terutama untuk Konsultan & TW (mobile friendly)
+
+Implementasikan secara bertahap mulai dari Management & PM, lalu Sales, kemudian Konsultan/TW, dan terakhir Admin Project.
+
+Setelah selesai semua, tulis pesan:
+"Role-Based Dashboard Improvement telah selesai"
+
+Kemudian berikan ringkasan singkat perubahan yang dilakukan per role.

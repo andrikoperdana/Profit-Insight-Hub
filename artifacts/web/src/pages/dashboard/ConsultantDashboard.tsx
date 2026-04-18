@@ -3,19 +3,28 @@ import { Link } from "wouter";
 import { useListTimesheets } from "@workspace/api-client-react";
 import { getListTimesheetsQueryKey } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Clock, CheckCircle2, AlertCircle, Calendar } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Clock, CheckCircle2, AlertCircle, Calendar, FilePlus2 } from "lucide-react";
 import { formatDate } from "@/lib/format";
 import { SkeletonCard, TableSkeleton } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
 import { TimesheetStatusBadge } from "@/components/common/Badges";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import WelcomeBanner from "@/components/dashboard/WelcomeBanner";
 
 export default function ConsultantDashboard() {
   const params = { scope: "mine" as const };
   const { data: timesheets, isLoading } = useListTimesheets(params, {
     query: { queryKey: getListTimesheetsQueryKey(params) },
   });
+
+  const localKey = (d: Date) => {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  };
 
   const stats = useMemo(() => {
     const list = timesheets ?? [];
@@ -27,6 +36,7 @@ export default function ConsultantDashboard() {
     const last30Approved = list
       .filter((t) => t.status === "APPROVED" && new Date(t.workDate) >= monthAgo)
       .reduce((s, t) => s + t.hours, 0);
+    void localKey;
     return { approvedHours, submittedHours, rejected, last30Approved };
   }, [timesheets]);
 
@@ -37,11 +47,11 @@ export default function ConsultantDashboard() {
     for (let i = 13; i >= 0; i--) {
       const d = new Date(now);
       d.setDate(d.getDate() - i);
-      buckets[d.toISOString().slice(0, 10)] = 0;
+      buckets[localKey(d)] = 0;
     }
     for (const t of list) {
       if (t.status !== "APPROVED") continue;
-      const key = new Date(t.workDate).toISOString().slice(0, 10);
+      const key = localKey(new Date(t.workDate));
       if (key in buckets) buckets[key] += t.hours;
     }
     return Object.entries(buckets).map(([date, hours]) => ({
@@ -50,12 +60,41 @@ export default function ConsultantDashboard() {
     }));
   }, [timesheets]);
 
+  const todayKey = localKey(new Date());
+  const loggedToday = (timesheets ?? [])
+    .filter((t) => localKey(new Date(t.workDate)) === todayKey)
+    .reduce((s, t) => s + t.hours, 0);
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">My Dashboard</h1>
-        <p className="text-muted-foreground">Your time tracking summary and recent submissions.</p>
-      </div>
+      <WelcomeBanner subtitle="Catat jam kerja hari ini agar approval PM lancar." />
+
+      {/* Big quick action */}
+      <Card className="border-primary/30 bg-gradient-to-r from-primary/10 via-card to-card">
+        <CardContent className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 py-5">
+          <div>
+            <p className="text-xs uppercase tracking-wide text-primary">
+              Today · {formatDate(new Date().toISOString())}
+            </p>
+            <p className="text-xl font-bold text-foreground mt-1">
+              {loggedToday > 0
+                ? `${loggedToday.toFixed(1)} jam tercatat hari ini`
+                : "Belum ada entri hari ini"}
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {loggedToday < 8
+                ? `Sisa ~${(8 - loggedToday).toFixed(1)} jam untuk shift normal.`
+                : "Target harian tercapai. 🎯"}
+            </p>
+          </div>
+          <Link href="/timesheets">
+            <Button size="lg" className="bg-primary hover:bg-primary/90" data-testid="button-new-timesheet">
+              <FilePlus2 className="h-5 w-5 mr-2" />
+              Input Time Sheet Hari Ini
+            </Button>
+          </Link>
+        </CardContent>
+      </Card>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {isLoading ? (

@@ -217,7 +217,22 @@ router.get("/dashboard/utilization-trend", async (req, res) => {
   res.json({ days, headcount, trend });
 });
 
-router.get("/dashboard/resource-utilization-detail", async (_req, res) => {
+router.get("/dashboard/resource-utilization-detail", async (req, res) => {
+  const role = req.user!.role;
+  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER") {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  // PM only sees resources that have a current assignment OR recent timesheet
+  // on a project they own.
+  let pmProjectIdSet: Set<string> | null = null;
+  if (role === "PROJECT_MANAGER") {
+    const ownProjects = await prisma.project.findMany({
+      where: { pmId: req.user!.sub },
+      select: { id: true },
+    });
+    pmProjectIdSet = new Set(ownProjects.map((p) => p.id));
+  }
   const today = new Date();
   const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   const horizon = new Date(startOfDay);
@@ -229,15 +244,34 @@ router.get("/dashboard/resource-utilization-detail", async (_req, res) => {
   const last7Since = new Date(startOfDay);
   last7Since.setDate(last7Since.getDate() - 6);
 
+  const userWhere: any = {
+    isActive: true,
+    role: { in: ["KONSULTAN", "TECHNICAL_WRITER", "PROJECT_MANAGER"] },
+  };
+  if (pmProjectIdSet) {
+    const ids = Array.from(pmProjectIdSet);
+    userWhere.OR = [
+      { resources: { some: { projectId: { in: ids } } } },
+      { timesheets: { some: { projectId: { in: ids }, workDate: { gte: recentSince } } } },
+    ];
+  }
   const users = await prisma.user.findMany({
-    where: {
-      isActive: true,
-      role: { in: ["KONSULTAN", "TECHNICAL_WRITER", "PROJECT_MANAGER"] },
-    },
+    where: userWhere,
     include: {
-      resources: { include: { project: { include: { client: true } } } },
+      resources: {
+        where: pmProjectIdSet
+          ? { projectId: { in: Array.from(pmProjectIdSet) } }
+          : undefined,
+        include: { project: { include: { client: true } } },
+      },
       timesheets: {
-        where: { status: "APPROVED", workDate: { gte: recentSince } },
+        where: {
+          status: "APPROVED",
+          workDate: { gte: recentSince },
+          ...(pmProjectIdSet
+            ? { projectId: { in: Array.from(pmProjectIdSet) } }
+            : {}),
+        },
         include: { project: true },
       },
     },

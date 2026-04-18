@@ -12,7 +12,9 @@ import ResourceUtilizationSection from "@/components/dashboard/ResourceUtilizati
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { formatDistanceToNow } from "date-fns";
 import { Link } from "wouter";
-import { ProjectStatus } from "@workspace/api-client-react";
+import { ProjectStatus, useListProjects } from "@workspace/api-client-react";
+import WelcomeBanner from "@/components/dashboard/WelcomeBanner";
+import { AlertTriangle } from "lucide-react";
 
 export default function Dashboard() {
   const { data: summary, isLoading: loadingSummary } = useGetDashboardSummary();
@@ -21,6 +23,18 @@ export default function Dashboard() {
   const { data: topProjects, isLoading: loadingTop } = useGetTopProjects();
   const { data: recentActivity, isLoading: loadingActivity } = useGetRecentActivity();
   const { data: utilization, isLoading: loadingUtil } = useGetUtilization();
+  const { data: allProjects } = useListProjects();
+  const losingProjects = (allProjects ?? [])
+    .filter(
+      (p) =>
+        (p.status === ProjectStatus.ACTIVE || p.status === ProjectStatus.PAUSE) &&
+        p.marginPct !== null &&
+        p.marginPct !== undefined &&
+        (p.actualMandays ?? 0) > 0 &&
+        p.marginPct < 10,
+    )
+    .sort((a, b) => (a.marginPct ?? 0) - (b.marginPct ?? 0))
+    .slice(0, 5);
   const { data: aging } = useQuery<{ buckets: { lt24h: number; h24to48: number; gt48h: number; gt72h: number }; oldestHours: number; samples: any[] }>({
     queryKey: ["dashboard-pending-aging"],
     queryFn: () => customFetch<any>("/api/dashboard/pending-aging"),
@@ -38,10 +52,35 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">Dashboard</h1>
-        <p className="text-muted-foreground">System overview and key performance metrics.</p>
-      </div>
+      <WelcomeBanner subtitle="Snapshot eksekutif: kesehatan portofolio, profitabilitas, dan utilisasi tim." />
+
+      {losingProjects.length > 0 && (
+        <Card className="border-destructive/40 bg-destructive/5">
+          <CardHeader className="flex flex-row items-center gap-3 space-y-0">
+            <AlertTriangle className="h-5 w-5 text-destructive" />
+            <div className="flex-1">
+              <CardTitle className="text-base">
+                {losingProjects.length} project at risk · margin di bawah 10%
+              </CardTitle>
+              <CardDescription>
+                Pertimbangkan re-scope, renegosiasi, atau realokasi resource.
+              </CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <ul className="text-sm space-y-1">
+              {losingProjects.map((p) => (
+                <li key={p.id} className="flex items-center justify-between">
+                  <Link href={`/projects/${p.id}`} className="text-primary hover:underline font-medium">
+                    {p.code} · {p.name}
+                  </Link>
+                  <MarginBadge marginPct={p.marginPct} />
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
 
       {/* KPI Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

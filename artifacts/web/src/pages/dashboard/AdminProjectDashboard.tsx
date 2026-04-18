@@ -1,7 +1,8 @@
 import { Link } from "wouter";
 import { useListProjects, ProjectStatus } from "@workspace/api-client-react";
 import { useMemo } from "react";
-import { Briefcase, FileCheck, ClipboardList, CheckCircle2 } from "lucide-react";
+import { Briefcase, FileCheck, ClipboardList, CheckCircle2, AlertTriangle } from "lucide-react";
+import WelcomeBanner from "@/components/dashboard/WelcomeBanner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -35,15 +36,51 @@ export default function AdminProjectDashboard() {
   if (l1 || l2) return <LoadingPage />;
 
   const totalAwaitingValue = completeList.reduce((s, p) => s + p.contractValue, 0);
+  const now = Date.now();
+  const overdueDocs = completeList.filter((p) => {
+    const ref = p.endDate ? new Date(p.endDate).getTime() : new Date(p.createdAt).getTime();
+    return now - ref > 3 * 24 * 60 * 60 * 1000;
+  });
+  void user;
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">Admin Project</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Welcome, {user?.name}. Manage closing documents for completed projects.
-        </p>
-      </div>
+      <WelcomeBanner subtitle="Pantau dokumen closing (BAST + Invoice) yang menunggu untuk diunggah." />
+
+      {overdueDocs.length > 0 && (
+        <Card className="border-destructive/40 bg-destructive/5">
+          <CardHeader className="flex flex-row items-center gap-3 space-y-0">
+            <AlertTriangle className="h-5 w-5 text-destructive" />
+            <div className="flex-1">
+              <CardTitle className="text-base">
+                {overdueDocs.length} project complete &gt; 3 hari belum ada dokumen closing
+              </CardTitle>
+              <CardDescription>
+                Segera unggah BAST + Invoice agar revenue dapat ditagihkan.
+              </CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <ul className="text-sm space-y-1">
+              {overdueDocs.slice(0, 5).map((p) => (
+                <li key={p.id} className="flex items-center justify-between">
+                  <Link href={`/projects/${p.id}`} className="text-primary hover:underline font-medium">
+                    {p.code} · {p.name}
+                  </Link>
+                  <span className="text-xs text-muted-foreground">
+                    {p.endDate ? `Selesai ${formatDate(p.endDate)}` : "—"}
+                  </span>
+                </li>
+              ))}
+              {overdueDocs.length > 5 && (
+                <li className="text-xs text-muted-foreground pt-1">
+                  …dan {overdueDocs.length - 5} lainnya
+                </li>
+              )}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Kpi

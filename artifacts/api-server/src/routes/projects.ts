@@ -14,7 +14,23 @@ const writeRoles = ["MANAGEMENT", "PROJECT_MANAGER", "SALES"] as const;
 
 router.get("/projects", async (req, res) => {
   const status = req.query.status as ProjectStatus | undefined;
-  const where = status ? { status } : {};
+  const role = req.user!.role;
+  const userId = req.user!.sub;
+  const where: any = {};
+  if (status) where.status = status;
+  // Role-based scoping: PM sees own projects; Sales sees own projects.
+  // Konsultan/TW see projects they are assigned to OR have logged time on.
+  // Management/Admin Project see all.
+  if (role === "PROJECT_MANAGER") {
+    where.pmId = userId;
+  } else if (role === "SALES") {
+    where.salesId = userId;
+  } else if (role === "KONSULTAN" || role === "TECHNICAL_WRITER") {
+    where.OR = [
+      { resources: { some: { userId } } },
+      { timesheets: { some: { userId } } },
+    ];
+  }
   const projects = await prisma.project.findMany({
     where,
     include: projectInclude,

@@ -11,8 +11,9 @@ import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
   Bar, BarChart, CartesianGrid, Cell, Pie, PieChart,
-  ResponsiveContainer, Tooltip, XAxis, YAxis,
+  ResponsiveContainer, Tooltip, XAxis, YAxis, Line, LineChart,
 } from "recharts";
+import WelcomeBanner from "@/components/dashboard/WelcomeBanner";
 
 const STATUS_COLORS: Record<ProjectStatus, string> = {
   [ProjectStatus.OBSERVATION]: "hsl(var(--chart-2))",
@@ -51,6 +52,27 @@ export default function SalesDashboard() {
     return Array.from(m.entries()).map(([status, count]) => ({ status, count }));
   }, [myProjects]);
 
+  const monthlyTrend = useMemo(() => {
+    const months: { key: string; label: string; revenue: number; profit: number }[] = [];
+    const now = new Date();
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+      const label = d.toLocaleDateString("en-US", { month: "short" });
+      months.push({ key, label, revenue: 0, profit: 0 });
+    }
+    for (const p of myProjects) {
+      const ref = p.startDate ? new Date(p.startDate) : new Date(p.createdAt);
+      const key = `${ref.getFullYear()}-${String(ref.getMonth() + 1).padStart(2, "0")}`;
+      const bucket = months.find((m) => m.key === key);
+      if (bucket) {
+        bucket.revenue += p.contractValue;
+        bucket.profit += p.actualProfit ?? 0;
+      }
+    }
+    return months;
+  }, [myProjects]);
+
   const revenueByClient = useMemo(() => {
     const m = new Map<string, number>();
     for (const p of myProjects) {
@@ -64,10 +86,7 @@ export default function SalesDashboard() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">My Projects</h1>
-        <p className="text-muted-foreground">Pipeline and performance for engagements you own.</p>
-      </div>
+      <WelcomeBanner subtitle="Pipeline dan performa untuk engagement yang Anda miliki." />
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {isLoading ? (
@@ -136,6 +155,29 @@ export default function SalesDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      <Card className="border-border shadow-sm">
+        <CardHeader>
+          <CardTitle>Profitability Trend (6 Months)</CardTitle>
+          <CardDescription>Revenue vs realised profit on your projects, by start month.</CardDescription>
+        </CardHeader>
+        <CardContent className="h-[260px]">
+          {isLoading ? (
+            <div className="h-full flex items-center justify-center"><Activity className="animate-pulse text-muted" /></div>
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={monthlyTrend} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
+                <XAxis dataKey="label" stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} />
+                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v: number) => `Rp ${(v / 1_000_000).toFixed(0)}M`} />
+                <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", borderColor: "hsl(var(--border))", borderRadius: "8px" }} formatter={(v: number) => formatIDR(v)} />
+                <Line type="monotone" dataKey="revenue" name="Revenue" stroke="hsl(var(--chart-2))" strokeWidth={2} dot={{ r: 3 }} />
+                <Line type="monotone" dataKey="profit" name="Profit" stroke="hsl(var(--chart-1))" strokeWidth={2} dot={{ r: 3 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          )}
+        </CardContent>
+      </Card>
 
       <Card className="border-border shadow-sm">
         <CardHeader>
