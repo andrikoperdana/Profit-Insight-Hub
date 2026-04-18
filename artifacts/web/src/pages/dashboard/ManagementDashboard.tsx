@@ -227,32 +227,6 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* Utilization */}
-      <Card className="border-border shadow-sm">
-        <CardHeader>
-          <CardTitle>Resource Utilization</CardTitle>
-          <CardDescription>Mandays planned vs actual across team</CardDescription>
-        </CardHeader>
-        <CardContent className="h-[300px]">
-          {loadingUtil || !utilization ? (
-            <div className="h-full flex items-center justify-center"><Activity className="animate-pulse text-muted" /></div>
-          ) : (
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={utilization} margin={{ top: 10, right: 10, left: 0, bottom: 0 }} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="hsl(var(--border))" />
-                <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis dataKey="userName" type="category" width={100} stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
-                  cursor={{ fill: 'hsl(var(--muted)/0.5)' }}
-                />
-                <Bar dataKey="plannedMandays" fill="hsl(var(--muted))" radius={[0, 4, 4, 0]} />
-                <Bar dataKey="actualMandays" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          )}
-        </CardContent>
-      </Card>
     </div>
   );
 }
