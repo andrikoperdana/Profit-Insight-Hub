@@ -15,6 +15,7 @@ import TimesheetsList from "@/pages/timesheets";
 import ApprovalInbox from "@/pages/approvals";
 import ClientsList from "@/pages/clients";
 import UsersList from "@/pages/users";
+import Settings from "@/pages/settings";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -53,6 +54,7 @@ function Router() {
       <Route path="/approvals" component={() => <ProtectedRoute component={ApprovalInbox} />} />
       <Route path="/clients" component={() => <ProtectedRoute component={ClientsList} />} />
       <Route path="/users" component={() => <ProtectedRoute component={UsersList} />} />
+      <Route path="/settings" component={() => <ProtectedRoute component={Settings} />} />
       <Route component={NotFound} />
     </Switch>
   );
