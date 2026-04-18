@@ -36,3 +36,9 @@ id = "O_E99cM5WVOSyYNTCrkyw"
 uri = "file://docs/SecureProfit-Hub-Technical-Documentation.pdf"
 type = "pdf"
 title = "Technical Documentation (PDF)"
+
+[[outputs]]
+id = "X1sCdu7RVkIJdSqGB6XjY"
+uri = "file://docs/SecureProfit-Hub-Buku-Panduan-Pengguna.pdf"
+type = "pdf"
+title = "Buku Panduan Pengguna SecureProfit Hub (Bahasa Indonesia)"

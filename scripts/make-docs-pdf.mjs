@@ -377,6 +377,14 @@ await buildPdf({
   subtitle: "Architecture, data model, API & operations",
   footer: "SecureProfit Hub — Technical Documentation",
 });
+await buildPdf({
+  srcPath: path.join(docsDir, "USER_MANUAL_ID.md"),
+  outPath: path.join(docsDir, "SecureProfit-Hub-Buku-Panduan-Pengguna.pdf"),
+  title: "Buku Panduan Pengguna",
+  subtitle: "Panduan lengkap penggunaan aplikasi (Bahasa Indonesia)",
+  footer: "SecureProfit Hub — Buku Panduan Pengguna",
+});
 console.log("Generated:");
 console.log(" -", path.join(docsDir, "SecureProfit-Hub-User-Guide.pdf"));
 console.log(" -", path.join(docsDir, "SecureProfit-Hub-Technical-Documentation.pdf"));
+console.log(" -", path.join(docsDir, "SecureProfit-Hub-Buku-Panduan-Pengguna.pdf"));
