@@ -47,6 +47,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import SurveyTab from "./SurveyTab";
 import {
   Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis,
 } from "recharts";
@@ -229,6 +230,9 @@ export default function ProjectDetail() {
           <TabsTrigger value="timeline">Timeline</TabsTrigger>
           <TabsTrigger value="financials">Financials</TabsTrigger>
           <TabsTrigger value="documents">Documents</TabsTrigger>
+          {(user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER") && (
+            <TabsTrigger value="survey">Customer Survey</TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value="overview" className="pt-4 m-0">
@@ -242,6 +246,9 @@ export default function ProjectDetail() {
         </TabsContent>
         <TabsContent value="documents" className="pt-4 m-0">
           <DocumentsTab projectId={id} projectStatus={project.status} />
+        </TabsContent>
+        <TabsContent value="survey" className="pt-4 m-0">
+          <SurveyTab projectId={id} />
         </TabsContent>
       </Tabs>
     </div>

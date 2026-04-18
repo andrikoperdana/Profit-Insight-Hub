@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { prisma, type DocumentType, type Prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
+import { issueSurveyTokenIfMissing } from "../lib/surveyDefaults.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -87,6 +88,7 @@ router.post(
           where: { id: project.id },
           data: { status: "CLOSED" },
         });
+        await issueSurveyTokenIfMissing(project.id);
         await prisma.activity.create({
           data: {
             type: "project.status_changed",

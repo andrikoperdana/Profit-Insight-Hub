@@ -98,10 +98,39 @@ model Project {
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
 
-  resources  ProjectResource[]
-  timesheets Timesheet[]
-  documents  Document[]
-  activities Activity[]
+  surveyToken     String?           @unique
+  resources       ProjectResource[]
+  timesheets      Timesheet[]
+  documents       Document[]
+  activities      Activity[]
+  surveyResponses SurveyResponse[]
+}
+
+model SurveyQuestion {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  text      String
+  type      String   @default("RATING") // RATING | TEXT
+  order     Int      @default(0)
+  required  Boolean  @default(true)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SurveyResponse {
+  id                String   @id @default(cuid())
+  projectId         String
+  project           Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  submitterName     String?
+  submitterEmail    String?
+  answers           Json
+  questionsSnapshot Json?
+  lessonLearned     String?
+  createdAt         DateTime @default(now())
+
+  @@index([projectId])
+  @@index([createdAt])
 }
 
 model AuditLog {

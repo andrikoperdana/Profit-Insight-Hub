@@ -15,6 +15,7 @@ import {
   CalendarRange,
   ScrollText,
   TrendingUp,
+  ClipboardList,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -43,6 +44,7 @@ export default function Sidebar() {
     ...(canManageClients(user?.role) ? [{ href: "/clients", label: "Clients", icon: Building2 }] : []),
     ...(canManageUsers(user?.role) ? [{ href: "/users", label: "Users", icon: Users }] : []),
     ...(user?.role === "MANAGEMENT" ? [{ href: "/business-intelligence", label: "Business Intelligence", icon: TrendingUp }] : []),
+    ...(user?.role === "MANAGEMENT" ? [{ href: "/settings/survey-template", label: "Survey Template", icon: ClipboardList }] : []),
     ...(user?.role === "MANAGEMENT" ? [{ href: "/audit-logs", label: "Audit Log", icon: ScrollText }] : []),
   ];
 

@@ -12,10 +12,12 @@ import uploadsRouter from "./uploads.js";
 import capacityRouter from "./capacity.js";
 import auditLogsRouter from "./audit-logs.js";
 import biRouter from "./bi.js";
+import surveysRouter from "./surveys.js";
 
 const router: IRouter = Router();
 
 router.use(healthRouter);
+router.use(surveysRouter);
 router.use(authRouter);
 router.use(usersRouter);
 router.use(clientsRouter);

@@ -193,6 +193,8 @@ export default function Dashboard() {
         )}
       </div>
 
+      <SatisfactionWidget />
+
       {/* PM Reminder: pending timesheet aging */}
       {aging && (aging.buckets.gt48h > 0 || aging.buckets.gt72h > 0 || aging.buckets.h24to48 > 0) && (
         <Card className={`shadow-sm ${aging.buckets.gt48h + aging.buckets.gt72h > 0 ? "border-destructive/40 bg-destructive/5" : "border-amber-500/40 bg-amber-500/5"}`}>
@@ -418,5 +420,50 @@ export default function Dashboard() {
       </div>
 
     </div>
+  );
+}
+
+function SatisfactionWidget() {
+  const { data, isLoading } = useQuery<{
+    monthStart: string;
+    responseCount: number;
+    overallAverage: number;
+    perQuestion: { key: string; text: string; average: number; responseCount: number }[];
+  }>({
+    queryKey: ["/survey/summary"],
+    queryFn: () => customFetch("/api/survey/summary"),
+  });
+  if (isLoading) return <SkeletonCard />;
+  if (!data) return null;
+  return (
+    <Card className="border-border shadow-sm">
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <div>
+          <CardTitle className="text-sm font-medium text-muted-foreground">Average Client Satisfaction (this month)</CardTitle>
+          <CardDescription>{data.responseCount} response{data.responseCount === 1 ? "" : "s"} since {new Date(data.monthStart).toLocaleDateString()}</CardDescription>
+        </div>
+        <Activity className="h-4 w-4 text-primary" />
+      </CardHeader>
+      <CardContent>
+        {data.responseCount === 0 ? (
+          <div className="text-sm text-muted-foreground">No survey responses received yet this month.</div>
+        ) : (
+          <div className="flex flex-wrap items-end gap-6">
+            <div>
+              <div className="text-3xl font-bold text-primary font-mono">{data.overallAverage.toFixed(2)}</div>
+              <div className="text-xs text-muted-foreground">out of 5.00</div>
+            </div>
+            <div className="flex-1 min-w-[200px] grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+              {data.perQuestion.map((q) => (
+                <div key={q.key} className="text-xs">
+                  <div className="text-muted-foreground truncate">{q.text.split("—")[0].trim()}</div>
+                  <div className="font-mono text-foreground">{q.average.toFixed(2)} <span className="text-muted-foreground">({q.responseCount})</span></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }

@@ -20,6 +20,8 @@ import Resources from "@/pages/resources";
 import CapacityPlanning from "@/pages/capacity";
 import AuditLogPage from "@/pages/audit-logs";
 import BusinessIntelligence from "@/pages/business-intelligence";
+import SurveyTemplateEditor from "@/pages/settings/SurveyTemplate";
+import PublicSurveyPage from "@/pages/survey/[token]";
 import { ThemeProvider } from "@/lib/theme";
 
 const queryClient = new QueryClient({
@@ -51,6 +53,8 @@ function Router() {
   return (
     <Switch>
       <Route path="/login" component={Login} />
+      <Route path="/survey/:token" component={PublicSurveyPage} />
+      <Route path="/settings/survey-template" component={() => <ProtectedRoute component={SurveyTemplateEditor} />} />
       <Route path="/" component={() => <ProtectedRoute component={Dashboard} />} />
       <Route path="/projects" component={() => <ProtectedRoute component={ProjectsList} />} />
       <Route path="/projects/new" component={() => <ProtectedRoute component={NewProject} />} />

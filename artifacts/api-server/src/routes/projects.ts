@@ -7,6 +7,7 @@ import {
   computeMetrics,
 } from "../lib/serializers.js";
 import { recordAudit } from "../lib/audit.js";
+import { issueSurveyTokenIfMissing } from "../lib/surveyDefaults.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -204,12 +205,14 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
   if (b.statusChangeReason !== undefined && b.status !== undefined) {
     data.lastStatusReason = String(b.statusChangeReason ?? "") || null;
   }
-
   const updated = await prisma.project.update({
     where: { id: req.params.id },
     data,
     include: projectInclude,
   });
+  if (updated.status === "CLOSED" && !updated.surveyToken) {
+    await issueSurveyTokenIfMissing(updated.id);
+  }
   if (b.status !== undefined && beforeProj.status !== updated.status) {
     const reasonNote = b.statusChangeReason
       ? ` — Reason: ${String(b.statusChangeReason).slice(0, 200)}`

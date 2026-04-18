@@ -1,0 +1,49 @@
+Sekarang tambahkan modul baru bernama **Customer Satisfaction Survey** ke dalam SecureProfit Hub.
+
+### Persyaratan Fitur:
+- Survey hanya muncul untuk project yang statusnya sudah **Closed**.
+- Client bisa mengisi survey **tanpa login** melalui public link (contoh: /survey/[project-id] atau menggunakan unique token).
+- Hanya **PM dan Management** yang boleh melihat hasil survey. Role lain (Sales, Konsultan, TW, Admin Project) tidak bisa melihat hasilnya.
+- Template survey **bisa diedit** oleh Management (bisa tambah atau ubah pertanyaan), tapi **hasil survey yang sudah di-submit oleh client tidak boleh diedit** sama sekali (hanya read-only).
+
+### Isi Survey (default):
+Survey harus memiliki 5 pertanyaan utama dengan skala penilaian 1-5 (1 = Sangat Buruk, 5 = Sangat Baik) + kolom komentar:
+
+1. **Project Management** – Penilaian kinerja Project Manager
+2. **Kinerja Konsultan** – Penilaian kinerja para konsultan
+3. **Report Project** – Kualitas dan kelengkapan report yang diberikan
+4. **Keseluruhan Kinerja Team** – Penilaian keseluruhan tim project
+5. **Lesson Learned** – Saran / masukan / pelajaran yang didapat (text area, opsional)
+
+### Flow Kerja:
+1. Saat status project berubah menjadi **Closed**, di tab **Customer Survey** pada Project Detail muncul:
+   - Public Survey Link (bisa di-copy)
+   - Tombol "Preview Survey"
+2. Client membuka link tersebut (tanpa login) → mengisi form survey → submit.
+3. Setelah submit, hasil survey tersimpan dan langsung terlihat oleh PM & Management.
+4. Management bisa mengedit template survey (tambah pertanyaan baru atau ubah teks pertanyaan).
+5. Hasil survey tidak boleh diubah setelah di-submit (hanya view + export).
+
+### Tampilan untuk PM & Management:
+- Di Project Detail → tab **Customer Survey**:
+  - Nilai rata-rata setiap item (1-5)
+  - Grafik radar chart atau bar chart untuk 5 item
+  - Komentar Lesson Learned
+  - Tombol Export ke Excel/PDF
+- Di Dashboard Management tambahkan section ringkasan: "Average Client Satisfaction Score" bulan ini.
+
+### Technical Notes:
+- Gunakan public route khusus untuk survey (tanpa autentikasi).
+- Simpan hasil survey di tabel terpisah dengan foreign key ke project.
+- Pastikan data sensitif (hasil survey) hanya visible sesuai role.
+- Tambahkan notifikasi ke PM/Management saat ada survey baru yang di-submit.
+
+Implementasikan fitur ini dengan bersih dan profesional.
+
+Setelah selesai, tulis pesan:
+"Customer Satisfaction Survey Module telah selesai"
+
+Kemudian jelaskan:
+- Cara client mengisi survey
+- Siapa yang bisa melihat hasilnya
+- Bagaimana cara mengedit template survey

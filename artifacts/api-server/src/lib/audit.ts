@@ -24,14 +24,18 @@ export type AuditAction =
   | "document.deleted"
   | "resource.assigned"
   | "resource.updated"
-  | "resource.removed";
+  | "resource.removed"
+  | "survey.submitted"
+  | "survey.template_updated";
 
 export type EntityType =
   | "User"
   | "Project"
   | "Timesheet"
   | "Document"
-  | "ProjectResource";
+  | "ProjectResource"
+  | "SurveyResponse"
+  | "SurveyTemplate";
 
 interface AuditInput {
   action: AuditAction;
