@@ -67,7 +67,7 @@ export default function ConsultantDashboard() {
 
   return (
     <div className="space-y-6">
-      <WelcomeBanner subtitle="Catat jam kerja hari ini agar approval PM lancar." />
+      <WelcomeBanner subtitle="Log today's hours so your PM can approve quickly." />
 
       {/* Big quick action */}
       <Card className="border-primary/30 bg-gradient-to-r from-primary/10 via-card to-card">
@@ -78,19 +78,19 @@ export default function ConsultantDashboard() {
             </p>
             <p className="text-xl font-bold text-foreground mt-1">
               {loggedToday > 0
-                ? `${loggedToday.toFixed(1)} jam tercatat hari ini`
-                : "Belum ada entri hari ini"}
+                ? `${loggedToday.toFixed(1)} h logged today`
+                : "No entry yet today"}
             </p>
             <p className="text-sm text-muted-foreground mt-1">
               {loggedToday < 8
-                ? `Sisa ~${(8 - loggedToday).toFixed(1)} jam untuk shift normal.`
-                : "Target harian tercapai. 🎯"}
+                ? `~${(8 - loggedToday).toFixed(1)} h remaining for a normal shift.`
+                : "Daily target reached."}
             </p>
           </div>
           <Link href="/timesheets">
             <Button size="lg" className="bg-primary hover:bg-primary/90" data-testid="button-new-timesheet">
               <FilePlus2 className="h-5 w-5 mr-2" />
-              Input Time Sheet Hari Ini
+              Log Today's Time Sheet
             </Button>
           </Link>
         </CardContent>

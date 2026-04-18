@@ -52,7 +52,7 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <WelcomeBanner subtitle="Snapshot eksekutif: kesehatan portofolio, profitabilitas, dan utilisasi tim." />
+      <WelcomeBanner subtitle="Executive snapshot: portfolio health, profitability, and team utilization." />
 
       {losingProjects.length > 0 && (
         <Card className="border-destructive/40 bg-destructive/5">
@@ -60,10 +60,10 @@ export default function Dashboard() {
             <AlertTriangle className="h-5 w-5 text-destructive" />
             <div className="flex-1">
               <CardTitle className="text-base">
-                {losingProjects.length} project at risk · margin di bawah 10%
+                {losingProjects.length} project(s) at risk · margin below 10%
               </CardTitle>
               <CardDescription>
-                Pertimbangkan re-scope, renegosiasi, atau realokasi resource.
+                Consider re-scoping, renegotiating, or reallocating resources.
               </CardDescription>
             </div>
           </CardHeader>

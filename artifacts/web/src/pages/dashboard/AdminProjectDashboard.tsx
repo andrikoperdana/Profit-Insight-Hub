@@ -45,7 +45,7 @@ export default function AdminProjectDashboard() {
 
   return (
     <div className="space-y-6">
-      <WelcomeBanner subtitle="Pantau dokumen closing (BAST + Invoice) yang menunggu untuk diunggah." />
+      <WelcomeBanner subtitle="Track closing documents (BAST + Invoice) waiting to be uploaded." />
 
       {overdueDocs.length > 0 && (
         <Card className="border-destructive/40 bg-destructive/5">
@@ -53,10 +53,10 @@ export default function AdminProjectDashboard() {
             <AlertTriangle className="h-5 w-5 text-destructive" />
             <div className="flex-1">
               <CardTitle className="text-base">
-                {overdueDocs.length} project complete &gt; 3 hari belum ada dokumen closing
+                {overdueDocs.length} completed project(s) &gt; 3 days without closing documents
               </CardTitle>
               <CardDescription>
-                Segera unggah BAST + Invoice agar revenue dapat ditagihkan.
+                Upload BAST + Invoice promptly so revenue can be invoiced.
               </CardDescription>
             </div>
           </CardHeader>
@@ -68,13 +68,13 @@ export default function AdminProjectDashboard() {
                     {p.code} · {p.name}
                   </Link>
                   <span className="text-xs text-muted-foreground">
-                    {p.endDate ? `Selesai ${formatDate(p.endDate)}` : "—"}
+                    {p.endDate ? `Ended ${formatDate(p.endDate)}` : "—"}
                   </span>
                 </li>
               ))}
               {overdueDocs.length > 5 && (
                 <li className="text-xs text-muted-foreground pt-1">
-                  …dan {overdueDocs.length - 5} lainnya
+                  …and {overdueDocs.length - 5} more
                 </li>
               )}
             </ul>

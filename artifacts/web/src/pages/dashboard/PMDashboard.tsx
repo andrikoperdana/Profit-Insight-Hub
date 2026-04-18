@@ -183,7 +183,7 @@ export default function PMDashboard() {
 
   return (
     <div className="space-y-6">
-      <WelcomeBanner subtitle="Snapshot proyek aktif Anda, antrian approval, dan kondisi tim." />
+      <WelcomeBanner subtitle="Snapshot of your active projects, approval queue, and team status." />
 
       {/* Quick action strip */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -256,11 +256,11 @@ export default function PMDashboard() {
             <AlarmClock className="h-5 w-5 text-destructive" />
             <div className="flex-1">
               <CardTitle className="text-base">
-                {aging.buckets.gt48h + aging.buckets.gt72h} timesheet menunggu
-                lebih dari 48 jam
+                {aging.buckets.gt48h + aging.buckets.gt72h} timesheet(s) waiting
+                more than 48 hours
               </CardTitle>
               <CardDescription>
-                Konsultan/TW Anda sedang menunggu — aksikan sekarang.
+                Your consultants/writers are blocked — take action now.
               </CardDescription>
             </div>
             <Link href="/approvals">

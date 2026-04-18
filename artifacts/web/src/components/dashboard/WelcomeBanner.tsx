@@ -3,10 +3,9 @@ import { RoleLabels } from "@/lib/roles";
 
 function greeting() {
   const h = new Date().getHours();
-  if (h < 11) return "Selamat pagi";
-  if (h < 15) return "Selamat siang";
-  if (h < 18) return "Selamat sore";
-  return "Selamat malam";
+  if (h < 12) return "Good morning";
+  if (h < 17) return "Good afternoon";
+  return "Good evening";
 }
 
 export default function WelcomeBanner({ subtitle }: { subtitle?: string }) {

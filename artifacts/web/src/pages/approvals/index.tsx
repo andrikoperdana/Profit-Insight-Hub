@@ -363,11 +363,11 @@ function RejectDialog({ tsId }: { tsId: string }) {
           </DialogDescription>
         </DialogHeader>
         <div className="py-4 space-y-2">
-          <Label>Catatan Penolakan *</Label>
+          <Label>Rejection Note *</Label>
           <Textarea
             value={reason}
             onChange={(e) => setReason(e.target.value)}
-            placeholder="e.g. Deskripsi terlalu singkat, sebutkan task spesifik."
+            placeholder="e.g. Description too brief, please specify the task."
             className="resize-none h-24"
           />
         </div>
