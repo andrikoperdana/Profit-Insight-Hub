@@ -1,120 +1,121 @@
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
-import { 
-  useListTimesheets, 
-  useCreateTimesheet, 
-  useSubmitTimesheet, 
-  useApproveTimesheet, 
-  useRejectTimesheet,
+import {
+  useListTimesheets,
+  useCreateTimesheet,
   useDeleteTimesheet,
-  useListProjects
+  useListProjects,
 } from "@workspace/api-client-react";
 import { getListTimesheetsQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { UserRole, TimesheetStatus } from "@workspace/api-client-react";
+import { UserRole } from "@workspace/api-client-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { formatIDR, formatDate } from "@/lib/format";
-import { Clock, Plus, Send, Check, XCircle, Trash2, Calendar, FileText } from "lucide-react";
+import { formatDate } from "@/lib/format";
+import { Clock, Plus, Trash2, Calendar, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  Form, FormControl, FormField, FormItem, FormLabel, FormMessage,
+  Form, FormControl, FormField, FormItem, FormLabel, FormDescription, FormMessage,
 } from "@/components/ui/form";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { TimesheetStatusBadge } from "@/components/common/Badges";
 import { EmptyState } from "@/components/common/EmptyState";
 import { TableSkeleton } from "@/components/common/Loading";
+
+function earliestAllowedWorkDate(today: Date, businessDays: number): Date {
+  const d = new Date(today);
+  d.setHours(0, 0, 0, 0);
+  let remaining = businessDays;
+  while (remaining > 0) {
+    d.setDate(d.getDate() - 1);
+    const dow = d.getDay();
+    if (dow !== 0 && dow !== 6) remaining -= 1;
+  }
+  return d;
+}
+
+const today = new Date();
+const minDate = earliestAllowedWorkDate(today, 5).toISOString().slice(0, 10);
+const maxDate = today.toISOString().slice(0, 10);
 
 const logTimeSchema = z.object({
   projectId: z.string().min(1, "Project is required"),
   workDate: z.string().min(1, "Date is required"),
   hours: z.coerce.number().min(0.5, "Minimum 0.5 hours").max(24, "Maximum 24 hours"),
-  description: z.string().min(5, "Description required"),
+  description: z.string().min(5, "Description must be at least 5 characters"),
 });
 
 export default function TimesheetsWorkspace() {
   const { user } = useAuth();
-  const isPM = user?.role === UserRole.PROJECT_MANAGER || user?.role === UserRole.MANAGEMENT;
-  
-  // Default to "mine" for consultants, "approval" for PMs
-  const defaultTab = isPM ? "approval" : "mine";
-  const [activeTab, setActiveTab] = useState<"mine" | "approval" | "all">(defaultTab);
+  const isAutoApprove = user?.role === UserRole.PROJECT_MANAGER || user?.role === UserRole.MANAGEMENT;
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Timesheets</h1>
-          <p className="text-muted-foreground">Log hours, track utilization, and manage approvals.</p>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Time Tracking</h1>
+          <p className="text-muted-foreground">
+            {isAutoApprove
+              ? "Log your hours — entries you submit are auto-approved."
+              : "Log your hours. Submissions go to your Project Manager for approval."}
+          </p>
         </div>
-        <LogTimeDialog />
+        <LogTimeDialog isAutoApprove={isAutoApprove} />
       </div>
 
-      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)}>
-        <TabsList className="bg-muted">
-          <TabsTrigger value="mine">My Timesheets</TabsTrigger>
-          {isPM && <TabsTrigger value="approval">Pending Approvals</TabsTrigger>}
-          {isPM && <TabsTrigger value="all">All Team Records</TabsTrigger>}
-        </TabsList>
-        
-        <TabsContent value="mine" className="pt-4 m-0">
-          <TimesheetsTable scope="mine" />
-        </TabsContent>
-        {isPM && (
-          <TabsContent value="approval" className="pt-4 m-0">
-            <TimesheetsTable scope="approval" />
-          </TabsContent>
-        )}
-        {isPM && (
-          <TabsContent value="all" className="pt-4 m-0">
-            <TimesheetsTable scope="all" />
-          </TabsContent>
-        )}
-      </Tabs>
+      <Card className="border-border shadow-sm">
+        <CardHeader>
+          <CardTitle className="text-base">My Timesheets</CardTitle>
+          <CardDescription>Only approved entries count toward project cost calculations.</CardDescription>
+        </CardHeader>
+        <CardContent className="p-0">
+          <MyTimesheetsTable />
+        </CardContent>
+      </Card>
     </div>
   );
 }
 
-function LogTimeDialog() {
+function LogTimeDialog({ isAutoApprove }: { isAutoApprove: boolean }) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
 
   const { data: projects } = useListProjects({ status: "ACTIVE" });
 
+  const form = useForm({
+    resolver: zodResolver(logTimeSchema),
+    defaultValues: { projectId: "", workDate: maxDate, hours: 8, description: "" },
+  });
+
   const createTs = useCreateTimesheet({
     mutation: {
       onSuccess: () => {
-        toast({ title: "Timesheet saved as draft" });
+        toast({
+          title: isAutoApprove ? "Timesheet logged & approved" : "Timesheet submitted for approval",
+        });
         queryClient.invalidateQueries({ queryKey: getListTimesheetsQueryKey({ scope: "mine" }) });
+        queryClient.invalidateQueries({ queryKey: getListTimesheetsQueryKey({ scope: "approval" }) });
         setOpen(false);
-        form.reset();
+        form.reset({ projectId: "", workDate: maxDate, hours: 8, description: "" });
       },
       onError: (err: any) => {
-        toast({ variant: "destructive", title: "Failed to save", description: err.message });
-      }
-    }
-  });
-
-  const form = useForm({
-    resolver: zodResolver(logTimeSchema),
-    defaultValues: { projectId: "", workDate: new Date().toISOString().split('T')[0], hours: 8, description: "" }
+        toast({ variant: "destructive", title: "Failed to save", description: err?.message ?? "Unknown error" });
+      },
+    },
   });
 
   return (
@@ -125,17 +126,19 @@ function LogTimeDialog() {
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Log Time</DialogTitle>
-          <DialogDescription>Record your billable hours for a project.</DialogDescription>
+          <DialogDescription>
+            Record your hours. Date must be within the last 5 working days.
+          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit((d) => createTs.mutate({ data: d }))} className="space-y-4 pt-4">
             <FormField control={form.control} name="projectId" render={({ field }) => (
               <FormItem>
                 <FormLabel>Project *</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl><SelectTrigger><SelectValue placeholder="Select project" /></SelectTrigger></FormControl>
                   <SelectContent>
-                    {projects?.map(p => <SelectItem key={p.id} value={p.id}>{p.code} - {p.name}</SelectItem>)}
+                    {projects?.map(p => <SelectItem key={p.id} value={p.id}>{p.code} — {p.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -143,18 +146,33 @@ function LogTimeDialog() {
             )} />
             <div className="grid grid-cols-2 gap-4">
               <FormField control={form.control} name="workDate" render={({ field }) => (
-                <FormItem><FormLabel>Date *</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>
+                <FormItem>
+                  <FormLabel>Date *</FormLabel>
+                  <FormControl><Input type="date" min={minDate} max={maxDate} {...field} /></FormControl>
+                  <FormDescription className="text-xs">Min {minDate}</FormDescription>
+                  <FormMessage />
+                </FormItem>
               )} />
               <FormField control={form.control} name="hours" render={({ field }) => (
-                <FormItem><FormLabel>Hours *</FormLabel><FormControl><Input type="number" step="0.5" {...field} /></FormControl><FormMessage /></FormItem>
+                <FormItem>
+                  <FormLabel>Hours *</FormLabel>
+                  <FormControl><Input type="number" step="0.5" min="0.5" max="24" {...field} /></FormControl>
+                  <FormMessage />
+                </FormItem>
               )} />
             </div>
             <FormField control={form.control} name="description" render={({ field }) => (
-              <FormItem><FormLabel>Work Description *</FormLabel><FormControl><Textarea placeholder="What did you work on?" className="resize-none h-24" {...field} /></FormControl><FormMessage /></FormItem>
+              <FormItem>
+                <FormLabel>Task Description *</FormLabel>
+                <FormControl><Textarea placeholder="What did you work on?" className="resize-none h-24" {...field} /></FormControl>
+                <FormMessage />
+              </FormItem>
             )} />
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-              <Button type="submit" disabled={createTs.isPending}>Save as Draft</Button>
+              <Button type="submit" disabled={createTs.isPending}>
+                {createTs.isPending ? "Saving..." : isAutoApprove ? "Save (Auto-approved)" : "Submit for Approval"}
+              </Button>
             </DialogFooter>
           </form>
         </Form>
@@ -163,159 +181,95 @@ function LogTimeDialog() {
   );
 }
 
-function TimesheetsTable({ scope }: { scope: "mine" | "approval" | "all" }) {
+function MyTimesheetsTable() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const queryKeyParams = scope === "mine" ? {} : { scope };
-  const { data: timesheets, isLoading } = useListTimesheets(queryKeyParams, {
-    query: { queryKey: getListTimesheetsQueryKey(queryKeyParams) }
-  });
-
-  const submit = useSubmitTimesheet({
-    mutation: {
-      onSuccess: () => {
-        toast({ title: "Timesheet submitted for approval" });
-        queryClient.invalidateQueries({ queryKey: getListTimesheetsQueryKey(queryKeyParams) });
-      }
-    }
+  const params = { scope: "mine" as const };
+  const { data: timesheets, isLoading } = useListTimesheets(params, {
+    query: { queryKey: getListTimesheetsQueryKey(params) },
   });
 
   const deleteTs = useDeleteTimesheet({
     mutation: {
       onSuccess: () => {
         toast({ title: "Timesheet deleted" });
-        queryClient.invalidateQueries({ queryKey: getListTimesheetsQueryKey(queryKeyParams) });
-      }
-    }
+        queryClient.invalidateQueries({ queryKey: getListTimesheetsQueryKey(params) });
+      },
+      onError: (err: any) => {
+        toast({ variant: "destructive", title: "Cannot delete", description: err?.message });
+      },
+    },
   });
 
-  const approve = useApproveTimesheet({
-    mutation: {
-      onSuccess: () => {
-        toast({ title: "Timesheet approved" });
-        queryClient.invalidateQueries({ queryKey: getListTimesheetsQueryKey(queryKeyParams) });
-      }
-    }
-  });
-
-  if (isLoading) return <TableSkeleton columns={7} rows={8} />;
+  if (isLoading) return <div className="p-6"><TableSkeleton columns={5} rows={6} /></div>;
 
   if (!timesheets?.length) {
     return (
-      <EmptyState 
-        title={scope === "approval" ? "All caught up!" : "No timesheets found"} 
-        description={scope === "approval" ? "There are no timesheets waiting for your approval right now." : "You haven't logged any time yet."}
+      <EmptyState
+        title="No timesheets yet"
+        description='Click "Log Time" to record your first entry.'
         icon={<Clock className="h-10 w-10 text-muted-foreground/50" />}
       />
     );
   }
 
   return (
-    <Card className="border-border shadow-sm overflow-hidden">
-      <Table>
-        <TableHeader className="bg-muted/50">
-          <TableRow>
-            <TableHead>Date</TableHead>
-            {scope !== "mine" && <TableHead>Consultant</TableHead>}
-            <TableHead>Project</TableHead>
-            <TableHead>Hours</TableHead>
-            <TableHead className="max-w-[200px]">Description</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {timesheets.map((ts) => (
-            <TableRow key={ts.id}>
-              <TableCell className="whitespace-nowrap font-medium flex items-center">
+    <Table>
+      <TableHeader className="bg-muted/50">
+        <TableRow>
+          <TableHead>Date</TableHead>
+          <TableHead>Project</TableHead>
+          <TableHead className="text-right">Hours</TableHead>
+          <TableHead>Description</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead className="text-right">Actions</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {timesheets.map((ts) => (
+          <TableRow key={ts.id}>
+            <TableCell className="whitespace-nowrap">
+              <div className="flex items-center text-sm">
                 <Calendar className="h-3 w-3 mr-2 text-muted-foreground" />
                 {formatDate(ts.workDate)}
-              </TableCell>
-              {scope !== "mine" && <TableCell>{ts.userName}</TableCell>}
-              <TableCell>
-                <Link href={`/projects/${ts.projectId}`} className="hover:underline text-primary">
-                  {ts.projectName}
-                </Link>
-              </TableCell>
-              <TableCell className="font-mono">{ts.hours}</TableCell>
-              <TableCell className="max-w-[200px] truncate" title={ts.description || ""}>
-                {ts.description || "-"}
-              </TableCell>
-              <TableCell><TimesheetStatusBadge status={ts.status} /></TableCell>
-              <TableCell className="text-right space-x-1">
-                {/* Actions for "mine" tab */}
-                {scope === "mine" && ts.status === "DRAFT" && (
-                  <>
-                    <Button size="sm" variant="ghost" title="Submit" className="text-primary hover:bg-primary/10 hover:text-primary" onClick={() => submit.mutate({ id: ts.id })}>
-                      <Send className="h-4 w-4" />
-                    </Button>
-                    <Button size="sm" variant="ghost" title="Delete" className="text-destructive hover:bg-destructive/10 hover:text-destructive" onClick={() => deleteTs.mutate({ id: ts.id })}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </>
-                )}
-                {scope === "mine" && ts.status === "REJECTED" && (
-                  <Button size="sm" variant="ghost" title="Delete" className="text-destructive hover:bg-destructive/10 hover:text-destructive" onClick={() => deleteTs.mutate({ id: ts.id })}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                )}
-                
-                {/* Actions for "approval" tab */}
-                {scope === "approval" && ts.status === "SUBMITTED" && (
-                  <>
-                    <Button size="sm" variant="ghost" title="Approve" className="text-emerald-500 hover:text-emerald-600 hover:bg-emerald-500/10" onClick={() => approve.mutate({ id: ts.id })}>
-                      <Check className="h-4 w-4" />
-                    </Button>
-                    <RejectTimesheetDialog tsId={ts.id} queryKeyParams={queryKeyParams} />
-                  </>
-                )}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </Card>
-  );
-}
-
-function RejectTimesheetDialog({ tsId, queryKeyParams }: { tsId: string, queryKeyParams: any }) {
-  const [open, setOpen] = useState(false);
-  const [reason, setReason] = useState("");
-  const queryClient = useQueryClient();
-  const { toast } = useToast();
-
-  const reject = useRejectTimesheet({
-    mutation: {
-      onSuccess: () => {
-        toast({ title: "Timesheet rejected" });
-        queryClient.invalidateQueries({ queryKey: getListTimesheetsQueryKey(queryKeyParams) });
-        setOpen(false);
-      }
-    }
-  });
-
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button size="sm" variant="ghost" title="Reject" className="text-destructive hover:text-destructive hover:bg-destructive/10">
-          <XCircle className="h-4 w-4" />
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Reject Timesheet</DialogTitle>
-          <DialogDescription>Please provide a reason for rejection so the consultant can fix it.</DialogDescription>
-        </DialogHeader>
-        <div className="py-4">
-          <Label>Reason</Label>
-          <Input value={reason} onChange={e => setReason(e.target.value)} placeholder="Incomplete description..." className="mt-2" />
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-          <Button variant="destructive" onClick={() => reject.mutate({ id: tsId, data: { reason } })} disabled={!reason || reject.isPending}>Reject</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+              </div>
+            </TableCell>
+            <TableCell>
+              <Link href={`/projects/${ts.projectId}`} className="text-primary hover:underline">
+                {ts.projectName}
+              </Link>
+            </TableCell>
+            <TableCell className="text-right font-mono">{ts.hours}</TableCell>
+            <TableCell className="max-w-md">
+              <p className="text-sm text-foreground/90 line-clamp-2" title={ts.description ?? ""}>
+                {ts.description || <span className="text-muted-foreground italic">no description</span>}
+              </p>
+              {ts.status === "REJECTED" && ts.rejectionReason && (
+                <div className="mt-1 flex items-start gap-1.5 text-xs text-destructive">
+                  <AlertCircle className="h-3 w-3 mt-0.5 shrink-0" />
+                  <span>Reason: {ts.rejectionReason}</span>
+                </div>
+              )}
+            </TableCell>
+            <TableCell><TimesheetStatusBadge status={ts.status} /></TableCell>
+            <TableCell className="text-right">
+              {(ts.status === "REJECTED" || ts.status === "DRAFT" || ts.status === "SUBMITTED") && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  title="Delete"
+                  className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                  onClick={() => deleteTs.mutate({ id: ts.id })}
+                  disabled={deleteTs.isPending}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              )}
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 }

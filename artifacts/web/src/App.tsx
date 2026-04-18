@@ -12,6 +12,7 @@ import ProjectsList from "@/pages/projects";
 import ProjectDetail from "@/pages/projects/[id]";
 import NewProject from "@/pages/projects/new";
 import TimesheetsList from "@/pages/timesheets";
+import ApprovalInbox from "@/pages/approvals";
 import ClientsList from "@/pages/clients";
 import UsersList from "@/pages/users";
 
@@ -49,6 +50,7 @@ function Router() {
       <Route path="/projects/new" component={() => <ProtectedRoute component={NewProject} />} />
       <Route path="/projects/:id" component={() => <ProtectedRoute component={ProjectDetail} />} />
       <Route path="/timesheets" component={() => <ProtectedRoute component={TimesheetsList} />} />
+      <Route path="/approvals" component={() => <ProtectedRoute component={ApprovalInbox} />} />
       <Route path="/clients" component={() => <ProtectedRoute component={ClientsList} />} />
       <Route path="/users" component={() => <ProtectedRoute component={UsersList} />} />
       <Route component={NotFound} />

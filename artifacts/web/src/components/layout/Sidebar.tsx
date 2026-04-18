@@ -9,7 +9,8 @@ import {
   Building2,
   Settings,
   LogOut,
-  Shield
+  Shield,
+  Inbox
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -17,10 +18,13 @@ export default function Sidebar() {
   const [location] = useLocation();
   const { user, logout } = useAuth();
 
+  const isPM = user?.role === "PROJECT_MANAGER" || user?.role === "MANAGEMENT";
+
   const links = [
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
     { href: "/projects", label: "Projects", icon: Briefcase },
-    { href: "/timesheets", label: "Timesheets", icon: Clock },
+    { href: "/timesheets", label: "Time Tracking", icon: Clock },
+    ...(isPM ? [{ href: "/approvals", label: "Approval Inbox", icon: Inbox }] : []),
     ...(canManageClients(user?.role) ? [{ href: "/clients", label: "Clients", icon: Building2 }] : []),
     ...(canManageUsers(user?.role) ? [{ href: "/users", label: "Users", icon: Users }] : []),
   ];

@@ -68,12 +68,47 @@ router.get("/timesheets", async (req, res) => {
   res.json(list.map(serialize));
 });
 
+function startOfDay(d: Date): Date {
+  const x = new Date(d);
+  x.setHours(0, 0, 0, 0);
+  return x;
+}
+
+function earliestAllowedWorkDate(today: Date, businessDays: number): Date {
+  const d = startOfDay(today);
+  let remaining = businessDays;
+  while (remaining > 0) {
+    d.setDate(d.getDate() - 1);
+    const dow = d.getDay();
+    if (dow !== 0 && dow !== 6) remaining -= 1;
+  }
+  return d;
+}
+
 router.post("/timesheets", async (req, res) => {
   const { projectId, workDate, hours, description } = req.body || {};
   if (!projectId || !workDate || hours == null) {
     res.status(400).json({ error: "projectId, workDate, hours required" });
     return;
   }
+  const work = startOfDay(new Date(workDate));
+  const today = startOfDay(new Date());
+  if (work > today) {
+    res.status(400).json({ error: "workDate cannot be in the future" });
+    return;
+  }
+  const earliest = earliestAllowedWorkDate(today, 5);
+  if (work < earliest) {
+    res.status(400).json({
+      error: `workDate must be within the last 5 working days (on or after ${earliest.toISOString().slice(0, 10)})`,
+    });
+    return;
+  }
+
+  const role = req.user!.role;
+  const isAutoApprove = role === "PROJECT_MANAGER" || role === "MANAGEMENT";
+  const status = isAutoApprove ? "APPROVED" : "SUBMITTED";
+
   const ts = await prisma.timesheet.create({
     data: {
       projectId: String(projectId),
@@ -81,10 +116,24 @@ router.post("/timesheets", async (req, res) => {
       workDate: new Date(workDate),
       hours: Number(hours),
       description: description || null,
-      status: "DRAFT",
+      status,
+      approvedById: isAutoApprove ? req.user!.sub : null,
+      approvedAt: isAutoApprove ? new Date() : null,
     },
     include: { user: true, project: true, approvedBy: true },
   });
+
+  await prisma.activity.create({
+    data: {
+      type: isAutoApprove ? "timesheet.approved" : "timesheet.submitted",
+      message: isAutoApprove
+        ? `${ts.user.name} logged ${ts.hours}h on ${ts.project.name} (auto-approved)`
+        : `${ts.user.name} submitted ${ts.hours}h on ${ts.project.name} for approval`,
+      userId: req.user!.sub,
+      projectId: ts.projectId,
+    },
+  });
+
   res.status(201).json(serialize(ts));
 });
 
