@@ -1,0 +1,59 @@
+Sekarang lakukan improvement penting pada SecureProfit Hub.
+
+Fokus utama adalah meningkatkan **Resource Utilization** section di Dashboard Overview menjadi lebih actionable dan detail.
+
+### 1. Resource Utilization – Enhanced Version
+
+Ganti / tingkatkan section Resource Utilization menjadi seperti ini:
+
+**Summary Cards (4 cards besar):**
+- Total Resources: X orang
+- Active / Assigned: X orang (sedang di project)
+- Idle: X orang (tidak ada assignment aktif)
+- Will Finish in 2 Days: X orang (assignment selesai dalam 2 hari ke depan)
+- Overloaded: X orang (rata-rata > 8 jam/hari dalam 7 hari terakhir)
+
+**Utilization Rate:**
+- Persentase keseluruhan utilization dengan progress bar besar
+- Warna: Hijau (>70%), Kuning (40-70%), Merah (<40%)
+
+**Utilization Trend Chart:**
+- Line chart 30 hari terakhir menunjukkan utilization rate harian/mingguan
+
+**Detailed Resource Table:**
+Kolom:
+- Nama
+- Role / Level
+- Spesialisasi
+- Current Status (Active / Idle / Overloaded / Vacation)
+- Current Project (klik bisa buka detail)
+- Assignment End Date
+- Days Remaining
+- Avg Hours/Day (7 hari terakhir)
+- Utilization % (bulan ini)
+
+**Highlight Sections:**
+- "Resources Almost Free" → orang yang akan selesai dalam 2 hari (highlight orange)
+- "Idle Resources (>5 hari)" → daftar orang yang idle lama (highlight merah)
+- "Overloaded Resources" → daftar orang yang kerja terlalu berat
+
+### 2. Tambahan Improvement Penting Lainnya:
+
+- **Bulk Approval** di Approval Inbox: PM bisa pilih multiple time sheet dan approve sekaligus
+- **Auto Reminder**: Jika ada time sheet pending > 48 jam, tampilkan badge merah + notifikasi di dashboard PM
+- **Profit Margin %** di setiap project financial tab (selain nominal profit)
+- **What-if Scenario** sederhana di Project Detail Financials:
+  - Input: "Jika tambah X mandays", sistem hitung estimasi profit baru
+- **Reason Field** wajib saat mengubah status project ke Pause atau Complete
+
+### 3. UX Improvement:
+- Tambahkan filter di Resource Utilization: "Semua", "Per Principal", "Per Spesialisasi"
+- Buat section Utilization ini collapsible atau tab terpisah jika terlalu panjang
+- Pastikan mobile-friendly (khususnya untuk cards dan table)
+
+Gunakan warna konsisten: biru tua untuk background, hijau accent untuk profit/success, merah untuk warning.
+
+Implementasikan secara bertahap dan bersih. Setelah selesai, tulis pesan:
+"Improvement Penting (Resource Utilization + Enhancements) telah selesai"
+
+Kemudian tampilkan preview atau deskripsi perubahan utama.

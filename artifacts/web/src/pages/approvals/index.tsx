@@ -1,28 +1,51 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import {
   useListTimesheets,
   useApproveTimesheet,
   useRejectTimesheet,
+  customFetch,
 } from "@workspace/api-client-react";
 import { getListTimesheetsQueryKey } from "@workspace/api-client-react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { Link, useLocation } from "wouter";
-import { useEffect } from "react";
-import { Calendar, Check, Clock, Inbox, XCircle } from "lucide-react";
+import { AlarmClock, Calendar, Check, Clock, Inbox, XCircle } from "lucide-react";
 import { formatDate } from "@/lib/format";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { TableSkeleton } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
 import {
-  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+
+const OVERDUE_MS = 48 * 60 * 60 * 1000;
 
 export default function ApprovalInbox() {
   const { user } = useAuth();
@@ -40,14 +63,81 @@ export default function ApprovalInbox() {
     query: { queryKey: getListTimesheetsQueryKey(params) },
   });
 
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+
+  // Reset selections when list changes
+  useEffect(() => {
+    if (timesheets) {
+      setSelected((prev) => {
+        const ids = new Set(timesheets.map((t) => t.id));
+        return new Set([...prev].filter((id) => ids.has(id)));
+      });
+    }
+  }, [timesheets]);
+
   const approve = useApproveTimesheet({
     mutation: {
       onSuccess: () => {
         toast({ title: "Timesheet approved" });
-        queryClient.invalidateQueries({ queryKey: getListTimesheetsQueryKey(params) });
+        queryClient.invalidateQueries({
+          queryKey: getListTimesheetsQueryKey(params),
+        });
       },
     },
   });
+
+  const bulkApprove = useMutation({
+    mutationFn: (ids: string[]) =>
+      customFetch<{ approved: number; ids: string[] }>(
+        "/api/timesheets/bulk-approve",
+        { method: "POST", body: JSON.stringify({ ids }) },
+      ),
+    onSuccess: (resp) => {
+      toast({
+        title: `${resp.approved} timesheet(s) approved`,
+        description:
+          resp.approved < selected.size
+            ? `${selected.size - resp.approved} skipped (no permission or no longer pending)`
+            : undefined,
+      });
+      setSelected(new Set());
+      queryClient.invalidateQueries({
+        queryKey: getListTimesheetsQueryKey(params),
+      });
+    },
+    onError: (err: any) =>
+      toast({
+        title: "Bulk approve failed",
+        description: err?.message,
+        variant: "destructive",
+      }),
+  });
+
+  const overdueCount = useMemo(() => {
+    if (!timesheets) return 0;
+    const now = Date.now();
+    return timesheets.filter(
+      (t) => now - new Date(t.createdAt).getTime() > OVERDUE_MS,
+    ).length;
+  }, [timesheets]);
+
+  const allChecked =
+    !!timesheets?.length && selected.size === timesheets.length;
+  const someChecked = selected.size > 0 && !allChecked;
+
+  function toggleAll() {
+    if (!timesheets) return;
+    setSelected(allChecked ? new Set() : new Set(timesheets.map((t) => t.id)));
+  }
+
+  function toggleOne(id: string) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
 
   return (
     <div className="space-y-6">
@@ -56,23 +146,60 @@ export default function ApprovalInbox() {
           <Inbox className="h-7 w-7 text-primary" /> Approval Inbox
         </h1>
         <p className="text-muted-foreground">
-          Review and approve timesheets submitted by your team. Only approved entries are used in cost calculations.
+          Review and approve timesheets submitted by your team. Only approved
+          entries are used in cost calculations.
         </p>
       </div>
 
+      {overdueCount > 0 && (
+        <Card className="border-destructive/40 bg-destructive/5">
+          <CardContent className="flex items-start gap-3 pt-6">
+            <AlarmClock className="h-5 w-5 text-destructive mt-0.5" />
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-destructive">
+                {overdueCount} timesheet{overdueCount === 1 ? "" : "s"} pending
+                more than 48 hours
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Submitters are blocked on your review. Please action these soon.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <Card className="border-border shadow-sm">
         <CardHeader>
-          <CardTitle className="text-base flex items-center justify-between">
-            <span>Pending Submissions</span>
-            <span className="text-sm font-normal text-muted-foreground">
-              {timesheets?.length ?? 0} waiting
+          <CardTitle className="text-base flex items-center justify-between flex-wrap gap-2">
+            <span className="flex items-center gap-2">
+              Pending Submissions
+              <Badge variant="secondary" className="font-normal">
+                {timesheets?.length ?? 0}
+              </Badge>
             </span>
+            {selected.size > 0 && (
+              <Button
+                size="sm"
+                onClick={() => bulkApprove.mutate(Array.from(selected))}
+                disabled={bulkApprove.isPending}
+                className="bg-emerald-500 hover:bg-emerald-400 text-emerald-950"
+                data-testid="button-bulk-approve"
+              >
+                <Check className="h-4 w-4 mr-1" />
+                Approve {selected.size} selected
+              </Button>
+            )}
           </CardTitle>
-          <CardDescription>Submissions from Konsultan, Technical Writer, and Admin Project on projects you manage.</CardDescription>
+          <CardDescription>
+            Submissions from Konsultan, Technical Writer, and Admin Project on
+            projects you manage. Tick rows for bulk approval.
+          </CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           {isLoading ? (
-            <div className="p-6"><TableSkeleton columns={6} rows={6} /></div>
+            <div className="p-6">
+              <TableSkeleton columns={7} rows={6} />
+            </div>
           ) : !timesheets?.length ? (
             <EmptyState
               title="All caught up!"
@@ -83,6 +210,16 @@ export default function ApprovalInbox() {
             <Table>
               <TableHeader className="bg-muted/50">
                 <TableRow>
+                  <TableHead className="w-10">
+                    <Checkbox
+                      checked={
+                        allChecked ? true : someChecked ? "indeterminate" : false
+                      }
+                      onCheckedChange={toggleAll}
+                      aria-label="Select all"
+                      data-testid="checkbox-select-all"
+                    />
+                  </TableHead>
                   <TableHead>Date</TableHead>
                   <TableHead>Submitter</TableHead>
                   <TableHead>Project</TableHead>
@@ -92,42 +229,81 @@ export default function ApprovalInbox() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {timesheets.map((ts) => (
-                  <TableRow key={ts.id}>
-                    <TableCell className="whitespace-nowrap">
-                      <div className="flex items-center text-sm">
-                        <Calendar className="h-3 w-3 mr-2 text-muted-foreground" />
-                        {formatDate(ts.workDate)}
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-medium">{ts.userName}</TableCell>
-                    <TableCell>
-                      <Link href={`/projects/${ts.projectId}`} className="text-primary hover:underline">
-                        {ts.projectName}
-                      </Link>
-                    </TableCell>
-                    <TableCell className="text-right font-mono">{ts.hours}</TableCell>
-                    <TableCell className="max-w-md">
-                      <p className="text-sm text-foreground/90 line-clamp-2" title={ts.description ?? ""}>
-                        {ts.description || <span className="text-muted-foreground italic">no description</span>}
-                      </p>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-1">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="text-emerald-600 border-emerald-600/30 hover:bg-emerald-500/10 hover:text-emerald-500"
-                          onClick={() => approve.mutate({ id: ts.id })}
-                          disabled={approve.isPending}
+                {timesheets.map((ts) => {
+                  const submitted = new Date(ts.createdAt).getTime();
+                  const ageH = Math.round((Date.now() - submitted) / 3600000);
+                  const overdue = ageH > 48;
+                  return (
+                    <TableRow
+                      key={ts.id}
+                      className={overdue ? "bg-destructive/5" : ""}
+                    >
+                      <TableCell>
+                        <Checkbox
+                          checked={selected.has(ts.id)}
+                          onCheckedChange={() => toggleOne(ts.id)}
+                          aria-label={`Select ${ts.userName}`}
+                          data-testid={`checkbox-${ts.id}`}
+                        />
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        <div className="flex items-center text-sm">
+                          <Calendar className="h-3 w-3 mr-2 text-muted-foreground" />
+                          {formatDate(ts.workDate)}
+                        </div>
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {ts.userName}
+                        {overdue && (
+                          <Badge
+                            variant="destructive"
+                            className="ml-2 text-[10px]"
+                          >
+                            {ageH}h waiting
+                          </Badge>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <Link
+                          href={`/projects/${ts.projectId}`}
+                          className="text-primary hover:underline"
                         >
-                          <Check className="h-4 w-4 mr-1" /> Approve
-                        </Button>
-                        <RejectDialog tsId={ts.id} />
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                          {ts.projectName}
+                        </Link>
+                      </TableCell>
+                      <TableCell className="text-right font-mono">
+                        {ts.hours}
+                      </TableCell>
+                      <TableCell className="max-w-md">
+                        <p
+                          className="text-sm text-foreground/90 line-clamp-2"
+                          title={ts.description ?? ""}
+                        >
+                          {ts.description || (
+                            <span className="text-muted-foreground italic">
+                              no description
+                            </span>
+                          )}
+                        </p>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="text-emerald-600 border-emerald-600/30 hover:bg-emerald-500/10 hover:text-emerald-500"
+                            onClick={() => approve.mutate({ id: ts.id })}
+                            disabled={approve.isPending}
+                            data-testid={`approve-${ts.id}`}
+                          >
+                            <Check className="h-4 w-4 mr-1" /> Approve
+                          </Button>
+                          <RejectDialog tsId={ts.id} />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           )}
@@ -147,13 +323,22 @@ function RejectDialog({ tsId }: { tsId: string }) {
   const reject = useRejectTimesheet({
     mutation: {
       onSuccess: () => {
-        toast({ title: "Timesheet rejected", description: "The submitter has been notified." });
-        queryClient.invalidateQueries({ queryKey: getListTimesheetsQueryKey(params) });
+        toast({
+          title: "Timesheet rejected",
+          description: "The submitter has been notified.",
+        });
+        queryClient.invalidateQueries({
+          queryKey: getListTimesheetsQueryKey(params),
+        });
         setOpen(false);
         setReason("");
       },
       onError: (err: any) => {
-        toast({ variant: "destructive", title: "Failed to reject", description: err?.message });
+        toast({
+          variant: "destructive",
+          title: "Failed to reject",
+          description: err?.message,
+        });
       },
     },
   });
@@ -161,7 +346,11 @@ function RejectDialog({ tsId }: { tsId: string }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" variant="outline" className="text-destructive border-destructive/30 hover:bg-destructive/10">
+        <Button
+          size="sm"
+          variant="outline"
+          className="text-destructive border-destructive/30 hover:bg-destructive/10"
+        >
           <XCircle className="h-4 w-4 mr-1" /> Reject
         </Button>
       </DialogTrigger>
@@ -169,7 +358,8 @@ function RejectDialog({ tsId }: { tsId: string }) {
         <DialogHeader>
           <DialogTitle>Reject Timesheet</DialogTitle>
           <DialogDescription>
-            Provide a reason. The submitter will see this note and can resubmit a corrected entry.
+            Provide a reason. The submitter will see this note and can resubmit
+            a corrected entry.
           </DialogDescription>
         </DialogHeader>
         <div className="py-4 space-y-2">
@@ -182,7 +372,9 @@ function RejectDialog({ tsId }: { tsId: string }) {
           />
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+          <Button variant="outline" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
           <Button
             variant="destructive"
             onClick={() => reject.mutate({ id: tsId, data: { reason } })}

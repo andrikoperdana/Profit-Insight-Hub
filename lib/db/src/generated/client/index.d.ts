@@ -3804,6 +3804,7 @@ export namespace Prisma {
     contractValue: number | null
     estimatedCost: number | null
     plannedMandays: number | null
+    lastStatusReason: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3822,6 +3823,7 @@ export namespace Prisma {
     contractValue: number | null
     estimatedCost: number | null
     plannedMandays: number | null
+    lastStatusReason: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3840,6 +3842,7 @@ export namespace Prisma {
     contractValue: number
     estimatedCost: number
     plannedMandays: number
+    lastStatusReason: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -3872,6 +3875,7 @@ export namespace Prisma {
     contractValue?: true
     estimatedCost?: true
     plannedMandays?: true
+    lastStatusReason?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -3890,6 +3894,7 @@ export namespace Prisma {
     contractValue?: true
     estimatedCost?: true
     plannedMandays?: true
+    lastStatusReason?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -3908,6 +3913,7 @@ export namespace Prisma {
     contractValue?: true
     estimatedCost?: true
     plannedMandays?: true
+    lastStatusReason?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -4013,6 +4019,7 @@ export namespace Prisma {
     contractValue: number
     estimatedCost: number
     plannedMandays: number
+    lastStatusReason: string | null
     createdAt: Date
     updatedAt: Date
     _count: ProjectCountAggregateOutputType | null
@@ -4050,6 +4057,7 @@ export namespace Prisma {
     contractValue?: boolean
     estimatedCost?: boolean
     plannedMandays?: boolean
+    lastStatusReason?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     client?: boolean | ClientDefaultArgs<ExtArgs>
@@ -4076,6 +4084,7 @@ export namespace Prisma {
     contractValue?: boolean
     estimatedCost?: boolean
     plannedMandays?: boolean
+    lastStatusReason?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     client?: boolean | ClientDefaultArgs<ExtArgs>
@@ -4097,6 +4106,7 @@ export namespace Prisma {
     contractValue?: boolean
     estimatedCost?: boolean
     plannedMandays?: boolean
+    lastStatusReason?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
@@ -4142,6 +4152,7 @@ export namespace Prisma {
       contractValue: number
       estimatedCost: number
       plannedMandays: number
+      lastStatusReason: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["project"]>
@@ -4557,6 +4568,7 @@ export namespace Prisma {
     readonly contractValue: FieldRef<"Project", 'Float'>
     readonly estimatedCost: FieldRef<"Project", 'Float'>
     readonly plannedMandays: FieldRef<"Project", 'Float'>
+    readonly lastStatusReason: FieldRef<"Project", 'String'>
     readonly createdAt: FieldRef<"Project", 'DateTime'>
     readonly updatedAt: FieldRef<"Project", 'DateTime'>
   }
@@ -9179,6 +9191,7 @@ export namespace Prisma {
     contractValue: 'contractValue',
     estimatedCost: 'estimatedCost',
     plannedMandays: 'plannedMandays',
+    lastStatusReason: 'lastStatusReason',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -9584,6 +9597,7 @@ export namespace Prisma {
     contractValue?: FloatFilter<"Project"> | number
     estimatedCost?: FloatFilter<"Project"> | number
     plannedMandays?: FloatFilter<"Project"> | number
+    lastStatusReason?: StringNullableFilter<"Project"> | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
     client?: XOR<ClientRelationFilter, ClientWhereInput>
@@ -9609,6 +9623,7 @@ export namespace Prisma {
     contractValue?: SortOrder
     estimatedCost?: SortOrder
     plannedMandays?: SortOrder
+    lastStatusReason?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     client?: ClientOrderByWithRelationInput
@@ -9637,6 +9652,7 @@ export namespace Prisma {
     contractValue?: FloatFilter<"Project"> | number
     estimatedCost?: FloatFilter<"Project"> | number
     plannedMandays?: FloatFilter<"Project"> | number
+    lastStatusReason?: StringNullableFilter<"Project"> | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
     client?: XOR<ClientRelationFilter, ClientWhereInput>
@@ -9662,6 +9678,7 @@ export namespace Prisma {
     contractValue?: SortOrder
     estimatedCost?: SortOrder
     plannedMandays?: SortOrder
+    lastStatusReason?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ProjectCountOrderByAggregateInput
@@ -9688,6 +9705,7 @@ export namespace Prisma {
     contractValue?: FloatWithAggregatesFilter<"Project"> | number
     estimatedCost?: FloatWithAggregatesFilter<"Project"> | number
     plannedMandays?: FloatWithAggregatesFilter<"Project"> | number
+    lastStatusReason?: StringNullableWithAggregatesFilter<"Project"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
   }
@@ -10225,6 +10243,7 @@ export namespace Prisma {
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
+    lastStatusReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     client: ClientCreateNestedOneWithoutProjectsInput
@@ -10250,6 +10269,7 @@ export namespace Prisma {
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
+    lastStatusReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
@@ -10269,6 +10289,7 @@ export namespace Prisma {
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
@@ -10294,6 +10315,7 @@ export namespace Prisma {
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
@@ -10316,6 +10338,7 @@ export namespace Prisma {
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
+    lastStatusReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -10331,6 +10354,7 @@ export namespace Prisma {
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -10349,6 +10373,7 @@ export namespace Prisma {
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11016,6 +11041,7 @@ export namespace Prisma {
     contractValue?: SortOrder
     estimatedCost?: SortOrder
     plannedMandays?: SortOrder
+    lastStatusReason?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -11040,6 +11066,7 @@ export namespace Prisma {
     contractValue?: SortOrder
     estimatedCost?: SortOrder
     plannedMandays?: SortOrder
+    lastStatusReason?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -11058,6 +11085,7 @@ export namespace Prisma {
     contractValue?: SortOrder
     estimatedCost?: SortOrder
     plannedMandays?: SortOrder
+    lastStatusReason?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -12348,6 +12376,7 @@ export namespace Prisma {
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
+    lastStatusReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     client: ClientCreateNestedOneWithoutProjectsInput
@@ -12371,6 +12400,7 @@ export namespace Prisma {
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
+    lastStatusReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
@@ -12400,6 +12430,7 @@ export namespace Prisma {
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
+    lastStatusReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     client: ClientCreateNestedOneWithoutProjectsInput
@@ -12423,6 +12454,7 @@ export namespace Prisma {
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
+    lastStatusReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
@@ -12640,6 +12672,7 @@ export namespace Prisma {
     contractValue?: FloatFilter<"Project"> | number
     estimatedCost?: FloatFilter<"Project"> | number
     plannedMandays?: FloatFilter<"Project"> | number
+    lastStatusReason?: StringNullableFilter<"Project"> | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
   }
@@ -12811,6 +12844,7 @@ export namespace Prisma {
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
+    lastStatusReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
@@ -12834,6 +12868,7 @@ export namespace Prisma {
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
+    lastStatusReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
@@ -13315,6 +13350,7 @@ export namespace Prisma {
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
+    lastStatusReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     client: ClientCreateNestedOneWithoutProjectsInput
@@ -13339,6 +13375,7 @@ export namespace Prisma {
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
+    lastStatusReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
@@ -13416,6 +13453,7 @@ export namespace Prisma {
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
@@ -13440,6 +13478,7 @@ export namespace Prisma {
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
@@ -13507,6 +13546,7 @@ export namespace Prisma {
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
+    lastStatusReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     client: ClientCreateNestedOneWithoutProjectsInput
@@ -13531,6 +13571,7 @@ export namespace Prisma {
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
+    lastStatusReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
@@ -13651,6 +13692,7 @@ export namespace Prisma {
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
@@ -13675,6 +13717,7 @@ export namespace Prisma {
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
@@ -13791,6 +13834,7 @@ export namespace Prisma {
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
+    lastStatusReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     client: ClientCreateNestedOneWithoutProjectsInput
@@ -13815,6 +13859,7 @@ export namespace Prisma {
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
+    lastStatusReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
@@ -13892,6 +13937,7 @@ export namespace Prisma {
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
@@ -13916,6 +13962,7 @@ export namespace Prisma {
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
@@ -14026,6 +14073,7 @@ export namespace Prisma {
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
+    lastStatusReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     client: ClientCreateNestedOneWithoutProjectsInput
@@ -14050,6 +14098,7 @@ export namespace Prisma {
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
+    lastStatusReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
@@ -14133,6 +14182,7 @@ export namespace Prisma {
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
@@ -14157,6 +14207,7 @@ export namespace Prisma {
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
@@ -14177,6 +14228,7 @@ export namespace Prisma {
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
+    lastStatusReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14194,6 +14246,7 @@ export namespace Prisma {
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
+    lastStatusReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14267,6 +14320,7 @@ export namespace Prisma {
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
@@ -14290,6 +14344,7 @@ export namespace Prisma {
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
@@ -14311,6 +14366,7 @@ export namespace Prisma {
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14326,6 +14382,7 @@ export namespace Prisma {
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
@@ -14349,6 +14406,7 @@ export namespace Prisma {
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
@@ -14370,6 +14428,7 @@ export namespace Prisma {
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14561,6 +14620,7 @@ export namespace Prisma {
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
+    lastStatusReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14576,6 +14636,7 @@ export namespace Prisma {
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
@@ -14599,6 +14660,7 @@ export namespace Prisma {
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
@@ -14620,6 +14682,7 @@ export namespace Prisma {
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

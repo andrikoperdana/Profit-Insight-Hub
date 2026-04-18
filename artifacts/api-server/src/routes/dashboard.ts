@@ -122,6 +122,101 @@ router.get("/dashboard/recent-activity", async (_req, res) => {
   );
 });
 
+router.get("/dashboard/pending-aging", async (req, res) => {
+  const role = req.user!.role;
+  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER") {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  const where: any = { status: "SUBMITTED" };
+  if (role === "PROJECT_MANAGER") where.project = { pmId: req.user!.sub };
+  const list = await prisma.timesheet.findMany({
+    where,
+    include: { user: true, project: true },
+    orderBy: { createdAt: "asc" },
+  });
+  const now = Date.now();
+  const buckets = { lt24h: 0, h24to48: 0, gt48h: 0, gt72h: 0 };
+  let oldestHours = 0;
+  for (const t of list) {
+    const h = (now - t.createdAt.getTime()) / 3600000;
+    if (h > oldestHours) oldestHours = h;
+    if (h < 24) buckets.lt24h += 1;
+    else if (h < 48) buckets.h24to48 += 1;
+    else if (h < 72) buckets.gt48h += 1;
+    else buckets.gt72h += 1;
+  }
+  const aged = list.filter(
+    (t) => now - t.createdAt.getTime() > 48 * 60 * 60 * 1000,
+  );
+  res.json({
+    pendingTotal: list.length,
+    overdueCount: aged.length,
+    oldestHours,
+    buckets,
+    samples: aged.slice(0, 20).map((t) => ({
+      id: t.id,
+      submitterName: t.user.name,
+      projectName: t.project.name,
+      projectId: t.projectId,
+      hours: t.hours,
+      workDate: t.workDate.toISOString(),
+      submittedAt: t.createdAt.toISOString(),
+      hoursWaiting: Math.round((now - t.createdAt.getTime()) / (60 * 60 * 1000)),
+    })),
+    overdue: aged.slice(0, 20).map((t) => ({
+      id: t.id,
+      submitterName: t.user.name,
+      projectName: t.project.name,
+      projectId: t.projectId,
+      hours: t.hours,
+      workDate: t.workDate.toISOString(),
+      submittedAt: t.createdAt.toISOString(),
+      hoursWaiting: Math.round((now - t.createdAt.getTime()) / (60 * 60 * 1000)),
+    })),
+  });
+});
+
+router.get("/dashboard/utilization-trend", async (req, res) => {
+  const days = Math.min(Math.max(parseInt(String(req.query.days ?? 30), 10) || 30, 7), 90);
+  const today = new Date();
+  const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const since = new Date(startOfDay);
+  since.setDate(since.getDate() - (days - 1));
+
+  const headcount = await prisma.user.count({
+    where: {
+      isActive: true,
+      role: { in: ["KONSULTAN", "TECHNICAL_WRITER", "PROJECT_MANAGER"] },
+    },
+  });
+
+  const ts = await prisma.timesheet.findMany({
+    where: { status: "APPROVED", workDate: { gte: since } },
+    select: { workDate: true, hours: true },
+  });
+
+  const dailyHours = new Map<string, number>();
+  for (const t of ts) {
+    const k = t.workDate.toISOString().slice(0, 10);
+    dailyHours.set(k, (dailyHours.get(k) ?? 0) + t.hours);
+  }
+
+  const trend: { date: string; utilizationPct: number; hours: number }[] = [];
+  for (let i = 0; i < days; i += 1) {
+    const d = new Date(since);
+    d.setDate(d.getDate() + i);
+    const day = d.getDay();
+    const isWorkday = day !== 0 && day !== 6;
+    const k = d.toISOString().slice(0, 10);
+    const hrs = dailyHours.get(k) ?? 0;
+    const cap = isWorkday ? headcount * 8 : 0;
+    const pct = cap > 0 ? (hrs / cap) * 100 : 0;
+    trend.push({ date: k, utilizationPct: pct, hours: hrs });
+  }
+  res.json({ days, headcount, trend });
+});
+
 router.get("/dashboard/resource-utilization-detail", async (_req, res) => {
   const today = new Date();
   const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
@@ -131,13 +226,16 @@ router.get("/dashboard/resource-utilization-detail", async (_req, res) => {
   const recentSince = new Date(startOfDay);
   recentSince.setDate(recentSince.getDate() - 30);
 
+  const last7Since = new Date(startOfDay);
+  last7Since.setDate(last7Since.getDate() - 6);
+
   const users = await prisma.user.findMany({
     where: {
       isActive: true,
       role: { in: ["KONSULTAN", "TECHNICAL_WRITER", "PROJECT_MANAGER"] },
     },
     include: {
-      resources: { include: { project: true } },
+      resources: { include: { project: { include: { client: true } } } },
       timesheets: {
         where: { status: "APPROVED", workDate: { gte: recentSince } },
         include: { project: true },
@@ -167,13 +265,20 @@ router.get("/dashboard/resource-utilization-detail", async (_req, res) => {
     userName: string;
     role: string;
     title: string | null;
-    status: "ACTIVE" | "IDLE";
+    specialization: string | null;
+    status: "ACTIVE" | "IDLE" | "OVERLOADED";
     currentProjectId: string | null;
     currentProjectName: string | null;
     currentProjectStatus: string | null;
+    currentClientId: string | null;
+    currentClientName: string | null;
     assignmentEndDate: string | null;
     daysRemaining: number | null;
     finishingSoon: boolean;
+    daysSinceLastActivity: number | null;
+    idleLong: boolean;
+    overloaded: boolean;
+    avgHoursPerDay7d: number;
     monthHours: number;
     utilizationPctMonth: number;
   };
@@ -216,28 +321,72 @@ router.get("/dashboard/resource-utilization-detail", async (_req, res) => {
     const hoursThisMonth = monthMap.get(u.id) ?? 0;
     const utilizationPctMonth = (hoursThisMonth / monthCapacityHours) * 100;
 
+    // Avg hours/day in last 7 days (calendar days, divided by 7 for true average)
+    let hours7 = 0;
+    let lastTsDate: Date | null = null;
+    for (const t of u.timesheets) {
+      if (t.workDate >= last7Since) hours7 += t.hours;
+      if (!lastTsDate || t.workDate > lastTsDate) lastTsDate = t.workDate;
+    }
+    const avgHoursPerDay7d = hours7 / 7;
+    const overloaded = avgHoursPerDay7d > 8;
+
+    let daysSinceLastActivity: number | null = null;
+    if (lastTsDate) {
+      daysSinceLastActivity = Math.floor(
+        (startOfDay.getTime() - lastTsDate.getTime()) / (1000 * 60 * 60 * 24),
+      );
+    }
+    const idleLong = !isActive && (daysSinceLastActivity ?? 999) > 5;
+
+    const status: Row["status"] = overloaded
+      ? "OVERLOADED"
+      : isActive
+        ? "ACTIVE"
+        : "IDLE";
+
     return {
       userId: u.id,
       userName: u.name,
       role: u.role,
       title: u.title,
-      status: isActive ? "ACTIVE" : "IDLE",
+      specialization: u.title,
+      status,
       currentProjectId: current?.projectId ?? null,
       currentProjectName: current?.project.name ?? null,
       currentProjectStatus: current?.project.status ?? null,
+      currentClientId: current?.project.client.id ?? null,
+      currentClientName: current?.project.client.name ?? null,
       assignmentEndDate: assignmentEnd ? assignmentEnd.toISOString() : null,
       daysRemaining,
       finishingSoon,
+      daysSinceLastActivity,
+      idleLong,
+      overloaded,
+      avgHoursPerDay7d,
       monthHours: hoursThisMonth,
       utilizationPctMonth: Math.min(utilizationPctMonth, 200),
     };
   });
 
   const total = rows.length;
-  const activeCount = rows.filter((r) => r.status === "ACTIVE").length;
-  const idleCount = total - activeCount;
+  const activeCount = rows.filter(
+    (r) => r.status === "ACTIVE" || r.status === "OVERLOADED",
+  ).length;
+  const idleCount = rows.filter((r) => r.status === "IDLE").length;
+  const overloadedCount = rows.filter((r) => r.overloaded).length;
+  const idleLongCount = rows.filter((r) => r.idleLong).length;
   const finishingSoonCount = rows.filter((r) => r.finishingSoon).length;
   const utilizationPct = total > 0 ? (activeCount / total) * 100 : 0;
+
+  // Distinct principals & specializations for filter dropdowns
+  const principals = new Map<string, string>();
+  const specializations = new Set<string>();
+  for (const r of rows) {
+    if (r.currentClientId && r.currentClientName)
+      principals.set(r.currentClientId, r.currentClientName);
+    if (r.specialization) specializations.add(r.specialization);
+  }
 
   res.json({
     summary: {
@@ -246,15 +395,26 @@ router.get("/dashboard/resource-utilization-detail", async (_req, res) => {
       idle: idleCount,
       vacation: 0,
       finishingSoon: finishingSoonCount,
+      overloaded: overloadedCount,
+      idleLong: idleLongCount,
       utilizationPct,
     },
     distribution: [
-      { name: "Active", value: activeCount },
+      { name: "Active", value: activeCount - overloadedCount },
+      { name: "Overloaded", value: overloadedCount },
       { name: "Idle", value: idleCount },
-      { name: "Vacation", value: 0 },
     ],
+    filters: {
+      principals: Array.from(principals.entries()).map(([id, name]) => ({
+        id,
+        name,
+      })),
+      specializations: Array.from(specializations).sort(),
+    },
     resources: rows,
     finishingSoonList: rows.filter((r) => r.finishingSoon),
+    idleLongList: rows.filter((r) => r.idleLong),
+    overloadedList: rows.filter((r) => r.overloaded),
   });
 });
 

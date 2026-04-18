@@ -1,7 +1,10 @@
-import { useGetDashboardSummary, useGetProfitTrend, useGetStatusBreakdown, useGetTopProjects, useGetRecentActivity, useGetUtilization } from "@workspace/api-client-react";
+import { useGetDashboardSummary, useGetProfitTrend, useGetStatusBreakdown, useGetTopProjects, useGetRecentActivity, useGetUtilization, customFetch } from "@workspace/api-client-react";
+import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { formatIDR, formatPct } from "@/lib/format";
-import { Briefcase, Wallet, TrendingUp, Clock, AlertCircle, Activity } from "lucide-react";
+import { Briefcase, Wallet, TrendingUp, Clock, AlertCircle, Activity, AlarmClock } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { SkeletonCard, TableSkeleton } from "@/components/common/Loading";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
@@ -18,6 +21,12 @@ export default function Dashboard() {
   const { data: topProjects, isLoading: loadingTop } = useGetTopProjects();
   const { data: recentActivity, isLoading: loadingActivity } = useGetRecentActivity();
   const { data: utilization, isLoading: loadingUtil } = useGetUtilization();
+  const { data: aging } = useQuery<{ buckets: { lt24h: number; h24to48: number; gt48h: number; gt72h: number }; oldestHours: number; samples: any[] }>({
+    queryKey: ["dashboard-pending-aging"],
+    queryFn: () => customFetch<any>("/api/dashboard/pending-aging"),
+    refetchOnMount: "always",
+    staleTime: 0,
+  });
 
   const STATUS_COLORS: Record<ProjectStatus, string> = {
     [ProjectStatus.OBSERVATION]: "hsl(var(--chart-2))", // Blue
@@ -83,6 +92,36 @@ export default function Dashboard() {
           </>
         )}
       </div>
+
+      {/* PM Reminder: pending timesheet aging */}
+      {aging && (aging.buckets.gt48h > 0 || aging.buckets.gt72h > 0 || aging.buckets.h24to48 > 0) && (
+        <Card className={`shadow-sm ${aging.buckets.gt48h + aging.buckets.gt72h > 0 ? "border-destructive/40 bg-destructive/5" : "border-amber-500/40 bg-amber-500/5"}`}>
+          <CardHeader className="flex flex-row items-center gap-2 space-y-0">
+            <AlarmClock className={`h-5 w-5 ${aging.buckets.gt48h + aging.buckets.gt72h > 0 ? "text-destructive" : "text-amber-400"}`} />
+            <div className="flex-1">
+              <CardTitle className="text-base">Pending Approval Reminder</CardTitle>
+              <CardDescription>
+                Oldest pending timesheet has been waiting {aging.oldestHours.toFixed(0)}h.
+                {" "}
+                {aging.buckets.gt48h + aging.buckets.gt72h > 0
+                  ? "Submitters are blocked — please review now."
+                  : "Action soon to keep things on track."}
+              </CardDescription>
+            </div>
+            <Link href="/approvals">
+              <Button size="sm" variant="outline">Open Inbox</Button>
+            </Link>
+          </CardHeader>
+          <CardContent className="flex flex-wrap gap-2">
+            <Badge variant="outline">&lt; 24h: {aging.buckets.lt24h}</Badge>
+            <Badge className="bg-amber-500/15 text-amber-300 border-amber-500/40">24–48h: {aging.buckets.h24to48}</Badge>
+            <Badge variant="destructive">&gt; 48h: {aging.buckets.gt48h}</Badge>
+            {aging.buckets.gt72h > 0 && (
+              <Badge variant="destructive" className="bg-destructive/80">&gt; 72h: {aging.buckets.gt72h}</Badge>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Resource Utilization */}
       <ResourceUtilizationSection />

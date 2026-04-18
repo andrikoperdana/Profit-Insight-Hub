@@ -12,8 +12,20 @@ import {
   getListProjectDocumentsQueryKey,
   ProjectStatus,
   DocumentType,
+  customFetch,
 } from "@workspace/api-client-react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   ArrowLeft, Building2, User, Calendar, DollarSign, TrendingUp, TrendingDown,
   Activity, Flame, Upload, FileText, Trash2, CheckCircle2, AlertCircle,
@@ -59,6 +71,37 @@ export default function ProjectDetail() {
     },
   });
 
+  const [reasonDialog, setReasonDialog] = useState<{
+    open: boolean;
+    target: ProjectStatus | null;
+    reason: string;
+  }>({ open: false, target: null, reason: "" });
+
+  function handleStatusChange(next: ProjectStatus) {
+    if (!project || next === project.status) return;
+    if (next === ProjectStatus.PAUSE || next === ProjectStatus.COMPLETE) {
+      setReasonDialog({ open: true, target: next, reason: "" });
+      return;
+    }
+    updateProject.mutate({ id, data: { status: next } as any });
+  }
+
+  function confirmStatusChange() {
+    if (!reasonDialog.target) return;
+    const reason = reasonDialog.reason.trim();
+    if (!reason) return;
+    updateProject.mutate(
+      {
+        id,
+        data: { status: reasonDialog.target, statusChangeReason: reason } as any,
+      },
+      {
+        onSuccess: () =>
+          setReasonDialog({ open: false, target: null, reason: "" }),
+      },
+    );
+  }
+
   if (isLoading) return <LoadingPage />;
   if (!project) {
     return (
@@ -91,9 +134,7 @@ export default function ProjectDetail() {
             <span className="text-xs text-muted-foreground uppercase tracking-wide">Change Status</span>
             <Select
               value={project.status}
-              onValueChange={(v) =>
-                updateProject.mutate({ id, data: { status: v as any } })
-              }
+              onValueChange={(v) => handleStatusChange(v as ProjectStatus)}
               disabled={updateProject.isPending || project.status === ProjectStatus.CLOSED}
             >
               <SelectTrigger className="w-[180px]" data-testid="select-status">
@@ -110,6 +151,67 @@ export default function ProjectDetail() {
           </div>
         )}
       </div>
+
+      {project.lastStatusReason && (
+        <div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-3 text-sm text-amber-200">
+          <span className="font-semibold">Last status change reason: </span>
+          {project.lastStatusReason}
+        </div>
+      )}
+
+      <Dialog
+        open={reasonDialog.open}
+        onOpenChange={(o) =>
+          setReasonDialog((s) => ({ ...s, open: o, reason: o ? s.reason : "" }))
+        }
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              Change status to {reasonDialog.target}
+            </DialogTitle>
+            <DialogDescription>
+              Provide a reason. This will be visible on the project and recorded
+              in activity history.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2 py-2">
+            <Label>Reason *</Label>
+            <Textarea
+              value={reasonDialog.reason}
+              onChange={(e) =>
+                setReasonDialog((s) => ({ ...s, reason: e.target.value }))
+              }
+              placeholder={
+                reasonDialog.target === "PAUSE"
+                  ? "e.g. Waiting for client clarification on scope"
+                  : "e.g. All deliverables accepted by client"
+              }
+              className="resize-none h-24"
+              data-testid="status-reason-textarea"
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() =>
+                setReasonDialog({ open: false, target: null, reason: "" })
+              }
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={confirmStatusChange}
+              disabled={
+                !reasonDialog.reason.trim() || updateProject.isPending
+              }
+              data-testid="status-reason-confirm"
+            >
+              Confirm
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Tabs defaultValue="overview">
         <TabsList className="bg-muted">
@@ -236,7 +338,23 @@ function FinancialsTab({ projectId }: { projectId: string }) {
           subtitle={`${(f.actualMandays ?? 0).toFixed(1)} / ${(f.plannedMandays ?? 0).toFixed(1)} mandays`}
           progress={Math.min(f.burnRatePct ?? 0, 100)}
         />
+        <FinancialCard
+          icon={(f.marginPct ?? 0) >= 0 ? <TrendingUp className="h-4 w-4 text-primary" /> : <TrendingDown className="h-4 w-4 text-destructive" />}
+          label="Profit Margin"
+          value={formatPct(f.marginPct ?? 0)}
+          subtitle="Actual profit ÷ revenue"
+          tone={(f.marginPct ?? 0) >= 0 ? "good" : "bad"}
+        />
       </div>
+
+      <WhatIfCard
+        projectId={projectId}
+        avgRateHint={
+          (f.actualMandays ?? 0) > 0
+            ? (f.actualCost ?? 0) / (f.actualMandays ?? 1)
+            : 0
+        }
+      />
 
       <Card className="border-border shadow-sm">
         <CardHeader>
@@ -515,6 +633,110 @@ function InfoRow({ icon, label, value }: { icon: React.ReactNode; label: string;
         <p className="text-sm text-foreground truncate">{value}</p>
       </div>
     </div>
+  );
+}
+
+type WhatIfResp = {
+  projectId: string;
+  addMandays: number;
+  avgDailyRate: number;
+  base: { mandays: number; cost: number; profit: number; marginPct: number };
+  scenario: { mandays: number; cost: number; profit: number; marginPct: number };
+  deltaCost: number;
+  deltaProfit: number;
+};
+
+function WhatIfCard({ projectId, avgRateHint }: { projectId: string; avgRateHint: number }) {
+  const [add, setAdd] = useState<number>(5);
+  const { data, isFetching } = useQuery<WhatIfResp>({
+    queryKey: ["project-whatif", projectId, add],
+    queryFn: () =>
+      customFetch<WhatIfResp>(`/api/projects/${projectId}/whatif?addMandays=${add}`),
+    enabled: !!projectId && add >= 0,
+    staleTime: 0,
+  });
+
+  const baseMargin = data?.base.marginPct ?? 0;
+  const scenarioMargin = data?.scenario.marginPct ?? 0;
+  const delta = scenarioMargin - baseMargin;
+  const tone = scenarioMargin >= 0 ? "text-primary" : "text-destructive";
+
+  return (
+    <Card className="border-border shadow-sm">
+      <CardHeader>
+        <CardTitle className="text-base flex items-center gap-2">
+          <Activity className="h-4 w-4 text-primary" />
+          What-If Scenario
+        </CardTitle>
+        <p className="text-xs text-muted-foreground">
+          Project the impact on profit if more mandays are needed beyond what's already logged.
+        </p>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="flex flex-wrap items-end gap-4">
+          <div className="space-y-1">
+            <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+              Additional mandays
+            </Label>
+            <div className="flex items-center gap-2">
+              <Input
+                type="number"
+                min={0}
+                step={1}
+                value={add}
+                onChange={(e) => setAdd(Math.max(0, Number(e.target.value) || 0))}
+                className="w-32"
+                data-testid="whatif-input"
+              />
+              <input
+                type="range"
+                min={0}
+                max={60}
+                step={1}
+                value={add}
+                onChange={(e) => setAdd(Number(e.target.value))}
+                className="w-48 accent-primary"
+                data-testid="whatif-slider"
+              />
+            </div>
+          </div>
+          <div className="text-xs text-muted-foreground">
+            Avg cost/manday: <span className="font-mono text-foreground">{formatIDR(data?.avgDailyRate ?? avgRateHint ?? 0)}</span>
+          </div>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          <div className="rounded-md border border-border p-3">
+            <p className="text-xs text-muted-foreground uppercase tracking-wide">Extra Cost</p>
+            <p className="text-lg font-mono text-foreground mt-1">
+              {formatIDR(data?.deltaCost ?? 0)}
+            </p>
+          </div>
+          <div className="rounded-md border border-border p-3">
+            <p className="text-xs text-muted-foreground uppercase tracking-wide">Projected Profit</p>
+            <p className={`text-lg font-mono mt-1 ${tone}`}>
+              {formatIDR(data?.scenario.profit ?? 0)}
+            </p>
+          </div>
+          <div className="rounded-md border border-border p-3">
+            <p className="text-xs text-muted-foreground uppercase tracking-wide">Projected Margin</p>
+            <p className={`text-lg font-mono mt-1 ${tone}`}>
+              {formatPct(scenarioMargin)}
+            </p>
+            <p className="text-[10px] text-muted-foreground mt-1">
+              vs base {formatPct(baseMargin)} ·{" "}
+              <span className={delta >= 0 ? "text-primary" : "text-destructive"}>
+                {delta >= 0 ? "+" : ""}
+                {formatPct(delta)}
+              </span>
+            </p>
+          </div>
+        </div>
+        {isFetching && (
+          <p className="text-xs text-muted-foreground">Recalculating…</p>
+        )}
+      </CardContent>
+    </Card>
   );
 }
 

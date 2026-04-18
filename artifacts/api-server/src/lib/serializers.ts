@@ -83,6 +83,7 @@ export function serializeProject(project: ProjectWithRelations) {
     actualCost: m.actualCost,
     actualProfit: m.actualProfit,
     marginPct: m.marginPct,
+    lastStatusReason: project.lastStatusReason ?? null,
     createdAt: project.createdAt.toISOString(),
   };
 }

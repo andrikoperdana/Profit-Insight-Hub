@@ -157,10 +157,67 @@ router.post("/timesheets/:id/submit", async (req, res) => {
   res.json(serialize(ts));
 });
 
+router.post("/timesheets/bulk-approve", async (req, res) => {
+  const role = req.user!.role;
+  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER") {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  const ids = Array.isArray(req.body?.ids) ? (req.body.ids as string[]) : [];
+  if (ids.length === 0) {
+    res.status(400).json({ error: "ids[] required" });
+    return;
+  }
+  const candidates = await prisma.timesheet.findMany({
+    where: {
+      id: { in: ids },
+      status: "SUBMITTED",
+      ...(role === "PROJECT_MANAGER"
+        ? { project: { pmId: req.user!.sub } }
+        : {}),
+    },
+    select: { id: true, projectId: true },
+  });
+  const allowedIds = candidates.map((c) => c.id);
+  if (allowedIds.length === 0) {
+    res.json({ approved: 0, ids: [] });
+    return;
+  }
+  await prisma.timesheet.updateMany({
+    where: { id: { in: allowedIds } },
+    data: {
+      status: "APPROVED",
+      approvedById: req.user!.sub,
+      approvedAt: new Date(),
+    },
+  });
+  await prisma.activity.createMany({
+    data: candidates.map((c) => ({
+      type: "timesheet.approved",
+      message: `Timesheet bulk approved`,
+      userId: req.user!.sub,
+      projectId: c.projectId,
+    })),
+  });
+  res.json({ approved: allowedIds.length, ids: allowedIds });
+});
+
 router.post("/timesheets/:id/approve", async (req, res) => {
   const role = req.user!.role;
   if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER") {
     res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  const existing = await prisma.timesheet.findUnique({
+    where: { id: req.params.id },
+    include: { project: { select: { pmId: true } } },
+  });
+  if (!existing) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  if (role === "PROJECT_MANAGER" && existing.project.pmId !== req.user!.sub) {
+    res.status(403).json({ error: "Not your project" });
     return;
   }
   const ts = await prisma.timesheet.update({
@@ -192,6 +249,18 @@ router.post("/timesheets/:id/reject", async (req, res) => {
   const reason = String(req.body?.reason || "");
   if (!reason) {
     res.status(400).json({ error: "reason required" });
+    return;
+  }
+  const existing = await prisma.timesheet.findUnique({
+    where: { id: req.params.id },
+    include: { project: { select: { pmId: true } } },
+  });
+  if (!existing) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  if (role === "PROJECT_MANAGER" && existing.project.pmId !== req.user!.sub) {
+    res.status(403).json({ error: "Not your project" });
     return;
   }
   const ts = await prisma.timesheet.update({

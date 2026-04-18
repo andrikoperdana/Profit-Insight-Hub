@@ -75,24 +75,25 @@ model Client {
 }
 
 model Project {
-  id             String        @id @default(cuid())
-  code           String        @unique
-  name           String
-  description    String?
-  status         ProjectStatus @default(OBSERVATION)
-  clientId       String
-  client         Client        @relation(fields: [clientId], references: [id])
-  salesId        String?
-  sales          User?         @relation("ProjectSales", fields: [salesId], references: [id])
-  pmId           String?
-  pm             User?         @relation("ProjectPm", fields: [pmId], references: [id])
-  startDate      DateTime?
-  endDate        DateTime?
-  contractValue  Float         @default(0)
-  estimatedCost  Float         @default(0)
-  plannedMandays Float         @default(0)
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  id               String        @id @default(cuid())
+  code             String        @unique
+  name             String
+  description      String?
+  status           ProjectStatus @default(OBSERVATION)
+  clientId         String
+  client           Client        @relation(fields: [clientId], references: [id])
+  salesId          String?
+  sales            User?         @relation("ProjectSales", fields: [salesId], references: [id])
+  pmId             String?
+  pm               User?         @relation("ProjectPm", fields: [pmId], references: [id])
+  startDate        DateTime?
+  endDate          DateTime?
+  contractValue    Float         @default(0)
+  estimatedCost    Float         @default(0)
+  plannedMandays   Float         @default(0)
+  lastStatusReason String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 
   resources  ProjectResource[]
   timesheets Timesheet[]

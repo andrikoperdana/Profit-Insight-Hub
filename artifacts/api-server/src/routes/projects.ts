@@ -119,6 +119,24 @@ router.post("/projects", requireRole(...writeRoles), async (req, res) => {
 
 router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
   const b = req.body || {};
+
+  // If status is changing to PAUSE or COMPLETE, require statusChangeReason
+  if (b.status === "PAUSE" || b.status === "COMPLETE") {
+    const existing = await prisma.project.findUnique({
+      where: { id: req.params.id },
+      select: { status: true },
+    });
+    if (existing && existing.status !== b.status) {
+      const reason = String(b.statusChangeReason ?? "").trim();
+      if (!reason) {
+        res.status(400).json({
+          error: `statusChangeReason is required when changing status to ${b.status}`,
+        });
+        return;
+      }
+    }
+  }
+
   const data: Record<string, unknown> = {};
   if (b.code !== undefined) data.code = String(b.code);
   if (b.name !== undefined) data.name = String(b.name);
@@ -135,6 +153,9 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
   if (b.estimatedCost !== undefined) data.estimatedCost = Number(b.estimatedCost);
   if (b.plannedMandays !== undefined)
     data.plannedMandays = Number(b.plannedMandays);
+  if (b.statusChangeReason !== undefined && b.status !== undefined) {
+    data.lastStatusReason = String(b.statusChangeReason ?? "") || null;
+  }
 
   const updated = await prisma.project.update({
     where: { id: req.params.id },
@@ -142,16 +163,74 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
     include: projectInclude,
   });
   if (b.status !== undefined) {
+    const reasonNote = b.statusChangeReason
+      ? ` — Reason: ${String(b.statusChangeReason).slice(0, 200)}`
+      : "";
     await prisma.activity.create({
       data: {
         type: "project.status_changed",
-        message: `Project ${updated.code} status → ${updated.status}`,
+        message: `Project ${updated.code} status → ${updated.status}${reasonNote}`,
         userId: req.user!.sub,
         projectId: updated.id,
       },
     });
   }
   res.json(serializeProject(updated));
+});
+
+router.get("/projects/:id/whatif", async (req, res) => {
+  const addMandays = Number(req.query.addMandays ?? 0);
+  if (!isFinite(addMandays)) {
+    res.status(400).json({ error: "addMandays must be a number" });
+    return;
+  }
+  const p = await prisma.project.findUnique({
+    where: { id: req.params.id },
+    include: projectInclude,
+  });
+  if (!p) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  const m = computeMetrics(p);
+  const avgRate =
+    m.actualMandays > 0
+      ? m.actualCost / m.actualMandays
+      : p.resources.length > 0
+        ? p.resources.reduce((s, r) => s + r.dailyRate, 0) / p.resources.length
+        : 0;
+
+  const baseProjectedMandays = Math.max(p.plannedMandays, m.actualMandays);
+  const baseForecastCost = baseProjectedMandays * avgRate;
+  const baseForecastProfit = p.contractValue - baseForecastCost;
+  const baseMarginPct =
+    p.contractValue > 0 ? (baseForecastProfit / p.contractValue) * 100 : 0;
+
+  const scenarioMandays = baseProjectedMandays + addMandays;
+  const scenarioCost = scenarioMandays * avgRate;
+  const scenarioProfit = p.contractValue - scenarioCost;
+  const scenarioMarginPct =
+    p.contractValue > 0 ? (scenarioProfit / p.contractValue) * 100 : 0;
+
+  res.json({
+    projectId: p.id,
+    addMandays,
+    avgDailyRate: avgRate,
+    base: {
+      mandays: baseProjectedMandays,
+      cost: baseForecastCost,
+      profit: baseForecastProfit,
+      marginPct: baseMarginPct,
+    },
+    scenario: {
+      mandays: scenarioMandays,
+      cost: scenarioCost,
+      profit: scenarioProfit,
+      marginPct: scenarioMarginPct,
+    },
+    deltaCost: scenarioCost - baseForecastCost,
+    deltaProfit: scenarioProfit - baseForecastProfit,
+  });
 });
 
 router.delete(
