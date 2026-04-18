@@ -20,3 +20,7 @@ export function canManageUsers(role?: UserRole): boolean {
 export function canManageClients(role?: UserRole): boolean {
   return role === UserRole.MANAGEMENT || role === UserRole.PROJECT_MANAGER || role === UserRole.SALES;
 }
+
+export function canViewResources(role?: UserRole): boolean {
+  return role === UserRole.MANAGEMENT || role === UserRole.PROJECT_MANAGER;
+}
