@@ -9,7 +9,9 @@ export default function Layout({ children }: PropsWithChildren) {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <Header />
         <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
-          {children}
+          <div className="max-w-[1600px] mx-auto animate-in fade-in duration-300">
+            {children}
+          </div>
         </main>
       </div>
     </div>

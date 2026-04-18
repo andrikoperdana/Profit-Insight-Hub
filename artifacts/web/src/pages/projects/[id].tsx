@@ -118,10 +118,18 @@ export default function ProjectDetail() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
+      <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-muted-foreground">
+        <Link href="/" className="hover:text-foreground transition-colors">Dashboard</Link>
+        <span className="text-muted-foreground/40">/</span>
+        <Link href="/projects" className="hover:text-foreground transition-colors">Projects</Link>
+        <span className="text-muted-foreground/40">/</span>
+        <span className="text-foreground font-medium truncate max-w-[200px] sm:max-w-none">{project.code}</span>
+      </nav>
+
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-4">
-          <Button variant="outline" size="icon" asChild>
-            <Link href="/projects"><ArrowLeft className="h-4 w-4" /></Link>
+          <Button variant="outline" size="icon" asChild className="rounded-lg">
+            <Link href="/projects" aria-label="Back to Projects"><ArrowLeft className="h-4 w-4" /></Link>
           </Button>
           <div>
             <div className="flex items-center gap-3 flex-wrap">
