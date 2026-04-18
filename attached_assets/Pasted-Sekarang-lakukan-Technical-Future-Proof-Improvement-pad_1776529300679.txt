@@ -1,0 +1,59 @@
+Sekarang lakukan **Technical & Future-Proof Improvement** pada SecureProfit Hub.
+
+Fokus pada peningkatan kualitas kode, keamanan, maintainability, dan kesiapan untuk masa depan — **tanpa membuat API endpoint eksternal**.
+
+### Fitur & Perbaikan yang Harus Dilakukan:
+
+1. **Audit Log System (Sangat Penting)**
+   - Catat semua perubahan penting di dalam aplikasi:
+     - Perubahan status project
+     - Perubahan financial (revenue, cost, profit)
+     - Approval / Reject time sheet
+     - Generate dan upload BAST & Invoice
+     - Perubahan rate atau resource assignment
+   - Setiap log harus menyimpan:
+     - User yang melakukan aksi (nama + role)
+     - Waktu aksi
+     - Jenis aksi
+     - Deskripsi singkat
+     - Data sebelum dan sesudah (jika relevan)
+   - Buat halaman **Audit Log** yang hanya bisa diakses oleh Management dan Principal
+   - Tambahkan filter berdasarkan tanggal, user, dan jenis aksi
+
+2. **Soft Delete Implementation**
+   - Terapkan soft delete untuk:
+     - User (konsultan, PM, dll.)
+     - Project
+   - Jangan benar-benar menghapus data dari database, hanya tandai sebagai deleted
+   - Pastikan data yang di-soft delete tidak muncul di list biasa, tapi tetap bisa dilihat di Audit Log
+
+3. **Data Validation & Protection**
+   - Tambahkan validasi ketat di semua form (terutama financial dan time sheet)
+   - Cegah input jam kerja negatif atau terlalu besar
+   - Tambahkan confirmation dialog untuk aksi kritis (ubah status ke Closed, hapus user, dll.)
+
+4. **Error Handling & User Feedback**
+   - Implementasikan error handling yang baik di frontend dan backend
+   - Tampilkan pesan error yang ramah dan jelas kepada user
+   - Gunakan loading states dan skeleton loaders secara konsisten
+
+5. **Code Structure & Maintainability**
+   - Pastikan folder structure rapi dan scalable
+   - Gunakan constants untuk status project, role, dan warna tema
+   - Buat reusable components sebanyak mungkin (Card, StatusBadge, Table, dll.)
+   - Tambahkan komentar yang jelas di bagian kode yang kompleks (terutama financial calculation dan generator docx)
+
+6. **Security Improvements**
+   - Pastikan role-based access control ditegakkan dengan ketat di semua halaman dan fitur
+   - Lindungi data sensitif (rate per jam, profit, financial) agar hanya visible sesuai role
+   - Tambahkan basic rate limiting untuk login attempt (jika memungkinkan)
+
+7. **Performance Optimization**
+   - Optimasi query database agar dashboard tidak lambat saat data banyak
+   - Implementasikan pagination di tabel besar (Project List, Resource List, Audit Log)
+   - Gunakan memoization di komponen React yang sering render ulang
+
+Setelah semua improvement ini selesai, tulis pesan:
+"Technical & Future-Proof Improvements telah selesai"
+
+Kemudian berikan ringkasan singkat apa saja yang telah ditambahkan dan diubah, khususnya Audit Log dan Soft Delete.

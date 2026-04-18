@@ -49,6 +49,7 @@ model User {
   title        String?
   dailyRate    Float?
   isActive     Boolean  @default(true)
+  deletedAt    DateTime?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -59,6 +60,7 @@ model User {
   approvedTimesheets Timesheet[]       @relation("TimesheetApprover")
   documentsUploaded  Document[]
   activities         Activity[]
+  auditLogs          AuditLog[]
 }
 
 model Client {
@@ -92,6 +94,7 @@ model Project {
   estimatedCost  Float         @default(0)
   plannedMandays Float         @default(0)
   lastStatusReason String?
+  deletedAt      DateTime?
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
@@ -99,6 +102,26 @@ model Project {
   timesheets Timesheet[]
   documents  Document[]
   activities Activity[]
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
+  userName    String
+  userRole    String
+  action      String
+  entityType  String
+  entityId    String?
+  description String
+  dataBefore  Json?
+  dataAfter   Json?
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([userId])
+  @@index([action])
+  @@index([entityType, entityId])
 }
 
 model ProjectResource {

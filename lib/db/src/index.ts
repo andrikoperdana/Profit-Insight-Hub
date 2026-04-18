@@ -25,6 +25,7 @@ export type {
   Timesheet,
   Document,
   Activity,
+  AuditLog,
   UserRole,
   ProjectStatus,
   TimesheetStatus,

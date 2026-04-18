@@ -11,7 +11,7 @@ const router: IRouter = Router();
 router.use(requireAuth);
 
 router.get("/dashboard/summary", async (_req, res) => {
-  const projects = await prisma.project.findMany({ include: projectInclude });
+  const projects = await prisma.project.findMany({ where: { deletedAt: null }, include: projectInclude });
   const totalProjects = projects.length;
   const activeProjects = projects.filter((p) => p.status === "ACTIVE").length;
   let totalContractValue = 0;
@@ -48,7 +48,7 @@ router.get("/dashboard/summary", async (_req, res) => {
 
 router.get("/dashboard/profit-trend", async (_req, res) => {
   // Group approved timesheets by month for cost; spread project contract value
-  const projects = await prisma.project.findMany({ include: projectInclude });
+  const projects = await prisma.project.findMany({ where: { deletedAt: null }, include: projectInclude });
   const monthly = new Map<string, { revenue: number; cost: number }>();
 
   for (const p of projects) {
@@ -85,6 +85,7 @@ router.get("/dashboard/profit-trend", async (_req, res) => {
 router.get("/dashboard/status-breakdown", async (_req, res) => {
   const grouped = await prisma.project.groupBy({
     by: ["status"],
+    where: { deletedAt: null },
     _count: { _all: true },
     _sum: { contractValue: true },
   });
@@ -98,7 +99,7 @@ router.get("/dashboard/status-breakdown", async (_req, res) => {
 });
 
 router.get("/dashboard/top-projects", async (_req, res) => {
-  const projects = await prisma.project.findMany({ include: projectInclude });
+  const projects = await prisma.project.findMany({ where: { deletedAt: null }, include: projectInclude });
   const serialized = projects.map(serializeProject);
   serialized.sort((a, b) => b.contractValue - a.contractValue);
   res.json(serialized.slice(0, 5));
@@ -187,6 +188,7 @@ router.get("/dashboard/utilization-trend", async (req, res) => {
   const headcount = await prisma.user.count({
     where: {
       isActive: true,
+      deletedAt: null,
       role: { in: ["KONSULTAN", "TECHNICAL_WRITER", "PROJECT_MANAGER"] },
     },
   });
@@ -228,7 +230,7 @@ router.get("/dashboard/resource-utilization-detail", async (req, res) => {
   let pmProjectIdSet: Set<string> | null = null;
   if (role === "PROJECT_MANAGER") {
     const ownProjects = await prisma.project.findMany({
-      where: { pmId: req.user!.sub },
+      where: { pmId: req.user!.sub, deletedAt: null },
       select: { id: true },
     });
     pmProjectIdSet = new Set(ownProjects.map((p) => p.id));
@@ -246,6 +248,7 @@ router.get("/dashboard/resource-utilization-detail", async (req, res) => {
 
   const userWhere: any = {
     isActive: true,
+    deletedAt: null,
     role: { in: ["KONSULTAN", "TECHNICAL_WRITER", "PROJECT_MANAGER"] },
   };
   if (pmProjectIdSet) {
@@ -454,7 +457,7 @@ router.get("/dashboard/resource-utilization-detail", async (req, res) => {
 
 router.get("/dashboard/utilization", async (_req, res) => {
   const users = await prisma.user.findMany({
-    where: { isActive: true, role: { in: ["KONSULTAN", "TECHNICAL_WRITER"] } },
+    where: { isActive: true, deletedAt: null, role: { in: ["KONSULTAN", "TECHNICAL_WRITER"] } },
     include: { resources: true },
   });
   const tsAgg = await prisma.timesheet.groupBy({

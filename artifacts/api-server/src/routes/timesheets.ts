@@ -1,6 +1,9 @@
 import { Router, type IRouter } from "express";
 import { prisma, type TimesheetStatus, type Prisma } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
+import { recordAudit } from "../lib/audit.js";
+
+const MAX_HOURS_PER_ENTRY = 24;
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -91,6 +94,19 @@ router.post("/timesheets", async (req, res) => {
     res.status(400).json({ error: "projectId, workDate, hours required" });
     return;
   }
+  const hoursNum = Number(hours);
+  if (!isFinite(hoursNum) || hoursNum <= 0) {
+    res.status(400).json({ error: "hours must be a positive number" });
+    return;
+  }
+  if (hoursNum > MAX_HOURS_PER_ENTRY) {
+    res.status(400).json({ error: `hours cannot exceed ${MAX_HOURS_PER_ENTRY} per entry` });
+    return;
+  }
+  if (description && String(description).length > 1000) {
+    res.status(400).json({ error: "description too long (max 1000 chars)" });
+    return;
+  }
   const work = startOfDay(new Date(workDate));
   const today = startOfDay(new Date());
   if (work > today) {
@@ -114,7 +130,7 @@ router.post("/timesheets", async (req, res) => {
       projectId: String(projectId),
       userId: req.user!.sub,
       workDate: new Date(workDate),
-      hours: Number(hours),
+      hours: hoursNum,
       description: description || null,
       status,
       approvedById: isAutoApprove ? req.user!.sub : null,
@@ -132,6 +148,15 @@ router.post("/timesheets", async (req, res) => {
       userId: req.user!.sub,
       projectId: ts.projectId,
     },
+  });
+  await recordAudit(req, {
+    action: isAutoApprove ? "timesheet.approved" : "timesheet.created",
+    entityType: "Timesheet",
+    entityId: ts.id,
+    description: isAutoApprove
+      ? `${ts.user.name} logged ${ts.hours}h on ${ts.project.name} (auto-approved)`
+      : `${ts.user.name} submitted ${ts.hours}h on ${ts.project.name}`,
+    after: serialize(ts),
   });
 
   res.status(201).json(serialize(ts));
@@ -199,6 +224,12 @@ router.post("/timesheets/bulk-approve", async (req, res) => {
       projectId: c.projectId,
     })),
   });
+  await recordAudit(req, {
+    action: "timesheet.bulk_approved",
+    entityType: "Timesheet",
+    description: `Bulk approved ${allowedIds.length} timesheet(s)`,
+    after: { ids: allowedIds, count: allowedIds.length },
+  });
   res.json({ approved: allowedIds.length, ids: allowedIds });
 });
 
@@ -237,6 +268,14 @@ router.post("/timesheets/:id/approve", async (req, res) => {
       projectId: ts.projectId,
     },
   });
+  await recordAudit(req, {
+    action: "timesheet.approved",
+    entityType: "Timesheet",
+    entityId: ts.id,
+    description: `Approved ${ts.hours}h by ${ts.user.name} on ${ts.project.name}`,
+    before: { status: existing.status },
+    after: { status: ts.status, approvedAt: ts.approvedAt },
+  });
   res.json(serialize(ts));
 });
 
@@ -273,6 +312,14 @@ router.post("/timesheets/:id/reject", async (req, res) => {
     },
     include: { user: true, project: true, approvedBy: true },
   });
+  await recordAudit(req, {
+    action: "timesheet.rejected",
+    entityType: "Timesheet",
+    entityId: ts.id,
+    description: `Rejected ${ts.hours}h by ${ts.user.name} on ${ts.project.name} — ${reason}`,
+    before: { status: existing.status },
+    after: { status: ts.status, rejectionReason: reason },
+  });
   res.json(serialize(ts));
 });
 
@@ -296,6 +343,13 @@ router.delete("/timesheets/:id", async (req, res) => {
     return;
   }
   await prisma.timesheet.delete({ where: { id: req.params.id } });
+  await recordAudit(req, {
+    action: "timesheet.deleted",
+    entityType: "Timesheet",
+    entityId: req.params.id,
+    description: `Deleted timesheet (${existing.hours}h on ${existing.workDate.toISOString().slice(0, 10)})`,
+    before: existing,
+  });
   res.json({ success: true });
 });
 

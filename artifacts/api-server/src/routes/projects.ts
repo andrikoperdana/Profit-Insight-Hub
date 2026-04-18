@@ -6,6 +6,7 @@ import {
   projectInclude,
   computeMetrics,
 } from "../lib/serializers.js";
+import { recordAudit } from "../lib/audit.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -16,7 +17,8 @@ router.get("/projects", async (req, res) => {
   const status = req.query.status as ProjectStatus | undefined;
   const role = req.user!.role;
   const userId = req.user!.sub;
-  const where: any = {};
+  const includeDeleted = req.query.includeDeleted === "true" && role === "MANAGEMENT";
+  const where: any = includeDeleted ? {} : { deletedAt: null };
   if (status) where.status = status;
   // Role-based scoping: PM sees own projects; Sales sees own projects.
   // Konsultan/TW see projects they are assigned to OR have logged time on.
@@ -105,6 +107,13 @@ router.post("/projects", requireRole(...writeRoles), async (req, res) => {
     res.status(400).json({ error: "code, name, clientId required" });
     return;
   }
+  const cv = Number(b.contractValue || 0);
+  const ec = Number(b.estimatedCost || 0);
+  const pm = Number(b.plannedMandays || 0);
+  if (cv < 0 || ec < 0 || pm < 0) {
+    res.status(400).json({ error: "contractValue, estimatedCost, plannedMandays must be non-negative" });
+    return;
+  }
   const created = await prisma.project.create({
     data: {
       code: String(b.code),
@@ -130,19 +139,42 @@ router.post("/projects", requireRole(...writeRoles), async (req, res) => {
       projectId: created.id,
     },
   });
+  await recordAudit(req, {
+    action: "project.created",
+    entityType: "Project",
+    entityId: created.id,
+    description: `Created project ${created.code} — ${created.name}`,
+    after: serializeProject(created),
+  });
   res.status(201).json(serializeProject(created));
 });
 
 router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
   const b = req.body || {};
+  const beforeProj = await prisma.project.findUnique({
+    where: { id: req.params.id },
+    include: projectInclude,
+  });
+  if (!beforeProj) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  if (b.contractValue !== undefined && Number(b.contractValue) < 0) {
+    res.status(400).json({ error: "contractValue must be non-negative" });
+    return;
+  }
+  if (b.estimatedCost !== undefined && Number(b.estimatedCost) < 0) {
+    res.status(400).json({ error: "estimatedCost must be non-negative" });
+    return;
+  }
+  if (b.plannedMandays !== undefined && Number(b.plannedMandays) < 0) {
+    res.status(400).json({ error: "plannedMandays must be non-negative" });
+    return;
+  }
 
   // If status is changing to PAUSE or COMPLETE, require statusChangeReason
   if (b.status === "PAUSE" || b.status === "COMPLETE") {
-    const existing = await prisma.project.findUnique({
-      where: { id: req.params.id },
-      select: { status: true },
-    });
-    if (existing && existing.status !== b.status) {
+    if (beforeProj.status !== b.status) {
       const reason = String(b.statusChangeReason ?? "").trim();
       if (!reason) {
         res.status(400).json({
@@ -178,7 +210,7 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
     data,
     include: projectInclude,
   });
-  if (b.status !== undefined) {
+  if (b.status !== undefined && beforeProj.status !== updated.status) {
     const reasonNote = b.statusChangeReason
       ? ` — Reason: ${String(b.statusChangeReason).slice(0, 200)}`
       : "";
@@ -189,6 +221,23 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
         userId: req.user!.sub,
         projectId: updated.id,
       },
+    });
+    await recordAudit(req, {
+      action: "project.status_changed",
+      entityType: "Project",
+      entityId: updated.id,
+      description: `${updated.code}: ${beforeProj.status} → ${updated.status}${reasonNote}`,
+      before: { status: beforeProj.status },
+      after: { status: updated.status, reason: b.statusChangeReason ?? null },
+    });
+  } else {
+    await recordAudit(req, {
+      action: "project.updated",
+      entityType: "Project",
+      entityId: updated.id,
+      description: `Updated project ${updated.code}`,
+      before: serializeProject(beforeProj),
+      after: serializeProject(updated),
     });
   }
   res.json(serializeProject(updated));
@@ -253,7 +302,26 @@ router.delete(
   "/projects/:id",
   requireRole("MANAGEMENT"),
   async (req, res) => {
-    await prisma.project.delete({ where: { id: req.params.id } });
+    const before = await prisma.project.findUnique({
+      where: { id: req.params.id },
+      include: projectInclude,
+    });
+    if (!before) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
+    // Soft delete — keep historical timesheets, documents, financials intact.
+    const updated = await prisma.project.update({
+      where: { id: req.params.id },
+      data: { deletedAt: new Date() },
+    });
+    await recordAudit(req, {
+      action: "project.deleted",
+      entityType: "Project",
+      entityId: updated.id,
+      description: `Soft-deleted project ${before.code} — ${before.name}`,
+      before: serializeProject(before),
+    });
     res.json({ success: true });
   },
 );

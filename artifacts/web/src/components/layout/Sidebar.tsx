@@ -13,6 +13,7 @@ import {
   Inbox,
   UserCog,
   CalendarRange,
+  ScrollText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -40,6 +41,7 @@ export default function Sidebar() {
   const admin: NavLink[] = [
     ...(canManageClients(user?.role) ? [{ href: "/clients", label: "Clients", icon: Building2 }] : []),
     ...(canManageUsers(user?.role) ? [{ href: "/users", label: "Users", icon: Users }] : []),
+    ...(user?.role === "MANAGEMENT" ? [{ href: "/audit-logs", label: "Audit Log", icon: ScrollText }] : []),
   ];
 
   const initials = user?.name

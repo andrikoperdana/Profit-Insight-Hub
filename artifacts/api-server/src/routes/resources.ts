@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
+import { recordAudit } from "../lib/audit.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -49,11 +50,20 @@ router.post(
       res.status(400).json({ error: "userId required" });
       return;
     }
+    const pm = Number(plannedMandays || 0);
+    const dr = Number(dailyRate || 0);
+    if (pm < 0 || dr < 0 || !isFinite(pm) || !isFinite(dr)) {
+      res.status(400).json({ error: "plannedMandays and dailyRate must be non-negative numbers" });
+      return;
+    }
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) {
       res.status(404).json({ error: "User not found" });
       return;
     }
+    const existing = await prisma.projectResource.findUnique({
+      where: { projectId_userId: { projectId, userId } },
+    });
     const r = await prisma.projectResource.upsert({
       where: { projectId_userId: { projectId, userId } },
       update: {
@@ -69,6 +79,16 @@ router.post(
         dailyRate: Number(dailyRate || 0),
       },
       include: { user: true },
+    });
+    await recordAudit(req, {
+      action: existing ? "resource.updated" : "resource.assigned",
+      entityType: "ProjectResource",
+      entityId: r.id,
+      description: existing
+        ? `Updated ${user.name} on project ${projectId}: rate=${r.dailyRate}, mandays=${r.plannedMandays}`
+        : `Assigned ${user.name} to project ${projectId} (rate=${r.dailyRate}, mandays=${r.plannedMandays})`,
+      before: existing ?? undefined,
+      after: { id: r.id, projectId: r.projectId, userId: r.userId, roleInProject: r.roleInProject, plannedMandays: r.plannedMandays, dailyRate: r.dailyRate },
     });
     res.status(201).json({
       id: r.id,
@@ -88,8 +108,23 @@ router.delete(
   "/resources/:resourceId",
   requireRole(...writeRoles),
   async (req, res) => {
+    const before = await prisma.projectResource.findUnique({
+      where: { id: req.params.resourceId },
+      include: { user: true },
+    });
+    if (!before) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
     await prisma.projectResource.delete({
       where: { id: req.params.resourceId },
+    });
+    await recordAudit(req, {
+      action: "resource.removed",
+      entityType: "ProjectResource",
+      entityId: before.id,
+      description: `Removed ${before.user.name} from project`,
+      before: { id: before.id, projectId: before.projectId, userId: before.userId, roleInProject: before.roleInProject, plannedMandays: before.plannedMandays, dailyRate: before.dailyRate },
     });
     res.json({ success: true });
   },

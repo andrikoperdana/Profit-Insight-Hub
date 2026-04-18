@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
 import { prisma, type DocumentType, type Prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
+import { recordAudit } from "../lib/audit.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -65,6 +66,13 @@ router.post(
         projectId: req.params.id,
       },
     });
+    await recordAudit(req, {
+      action: "document.uploaded",
+      entityType: "Document",
+      entityId: d.id,
+      description: `Uploaded ${type} (${d.fileName})${d.invoiceAmount ? ` — IDR ${d.invoiceAmount}` : ""}`,
+      after: serialize(d),
+    });
 
     // Auto-close: when both BAST and INVOICE exist on a COMPLETE project, set CLOSED
     const project = await prisma.project.findUnique({
@@ -87,6 +95,14 @@ router.post(
             projectId: project.id,
           },
         });
+        await recordAudit(req, {
+          action: "project.auto_closed",
+          entityType: "Project",
+          entityId: project.id,
+          description: `Project ${project.code} auto-closed (BAST + Invoice received)`,
+          before: { status: "COMPLETE" },
+          after: { status: "CLOSED" },
+        });
       }
     }
 
@@ -98,7 +114,22 @@ router.delete(
   "/documents/:id",
   requireRole("ADMIN_PROJECT", "MANAGEMENT", "PROJECT_MANAGER"),
   async (req, res) => {
+    const before = await prisma.document.findUnique({
+      where: { id: req.params.id },
+      include: { uploadedBy: true },
+    });
+    if (!before) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
     await prisma.document.delete({ where: { id: req.params.id } });
+    await recordAudit(req, {
+      action: "document.deleted",
+      entityType: "Document",
+      entityId: before.id,
+      description: `Deleted ${before.type} ${before.fileName}`,
+      before: serialize(before),
+    });
     res.json({ success: true });
   },
 );

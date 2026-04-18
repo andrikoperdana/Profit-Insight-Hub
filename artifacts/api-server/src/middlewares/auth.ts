@@ -28,9 +28,9 @@ export async function requireAuth(
   }
   const user = await prisma.user.findUnique({
     where: { id: payload.sub },
-    select: { id: true, isActive: true, role: true },
+    select: { id: true, isActive: true, role: true, deletedAt: true },
   });
-  if (!user || !user.isActive) {
+  if (!user || !user.isActive || user.deletedAt) {
     res.status(401).json({ error: "User not active" });
     return;
   }
