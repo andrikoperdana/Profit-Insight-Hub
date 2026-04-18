@@ -1,8 +1,10 @@
-import { Router, type IRouter } from "express";
+import { Router, type IRouter, type Response } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { recordAudit, recordAuditAnon } from "../lib/audit.js";
 import { ensureDefaultSurveyQuestions, issueSurveyTokenIfMissing } from "../lib/surveyDefaults.js";
+import ExcelJS from "exceljs";
+import PDFDocument from "pdfkit";
 
 const router: IRouter = Router();
 
@@ -364,5 +366,389 @@ router.get("/survey/summary", requireAuth, requireRole("MANAGEMENT", "PROJECT_MA
     perQuestion,
   });
 });
+
+// =====================================================================
+// EXPORT ROUTES — Excel & PDF
+// =====================================================================
+
+function ratingFromAnswer(a: unknown): number | null {
+  const v = (a as { rating?: number } | null)?.rating;
+  return typeof v === "number" && v > 0 ? v : null;
+}
+function textFromAnswer(a: unknown): string {
+  const v = (a as { text?: string } | null)?.text;
+  return v ? String(v) : "";
+}
+
+async function loadProjectSurvey(projectId: string) {
+  const project = await prisma.project.findUnique({
+    where: { id: projectId },
+    include: { client: true, pm: { select: { id: true, name: true } } },
+  });
+  if (!project) return null;
+  const activeQuestions = await getActiveQuestions();
+  const responses = await prisma.surveyResponse.findMany({
+    where: { projectId },
+    orderBy: { createdAt: "desc" },
+  });
+  const allQuestions = unionQuestions(activeQuestions as StoredQuestion[], responses);
+  const aggregates = computeAggregates(responses, allQuestions);
+  return { project, allQuestions, responses, aggregates };
+}
+
+function canViewProjectSurvey(role: string, pmId: string | null, userId: string) {
+  return role === "MANAGEMENT" || role === "AUDITOR" || (role === "PROJECT_MANAGER" && pmId === userId);
+}
+
+// ---- Per-project Excel export ----
+router.get(
+  "/projects/:id/survey/export.xlsx",
+  requireAuth,
+  async (req, res) => {
+    const data = await loadProjectSurvey(req.params.id);
+    if (!data) {
+      res.status(404).json({ error: "Project not found" });
+      return;
+    }
+    if (!canViewProjectSurvey(req.user!.role, data.project.pmId, req.user!.sub)) {
+      res.status(403).json({ error: "Forbidden" });
+      return;
+    }
+
+    const wb = new ExcelJS.Workbook();
+    wb.creator = "SecureProfit Hub";
+    wb.created = new Date();
+
+    // Sheet 1: Summary
+    const s1 = wb.addWorksheet("Summary");
+    s1.columns = [
+      { header: "Field", key: "k", width: 28 },
+      { header: "Value", key: "v", width: 60 },
+    ];
+    s1.getRow(1).font = { bold: true };
+    s1.addRows([
+      { k: "Project Code", v: data.project.code },
+      { k: "Project Name", v: data.project.name },
+      { k: "Client", v: data.project.client.name },
+      { k: "Status", v: data.project.status },
+      { k: "Project Manager", v: data.project.pm?.name ?? "" },
+      { k: "Total Responses", v: data.responses.length },
+      { k: "Overall Average (out of 5)", v: Number(data.aggregates.overallAverage.toFixed(2)) },
+      { k: "Generated At", v: new Date().toISOString() },
+    ]);
+    s1.addRow({});
+    s1.addRow({ k: "Per-Question Average", v: "" }).font = { bold: true };
+    s1.addRow({ k: "Question", v: "Average / Responses" }).font = { bold: true };
+    for (const q of data.aggregates.perQuestion) {
+      s1.addRow({ k: q.text, v: `${q.average.toFixed(2)} (${q.responseCount} resp.)` });
+    }
+
+    // Sheet 2: Responses
+    const s2 = wb.addWorksheet("Responses");
+    const headers = [
+      { header: "#", key: "n", width: 5 },
+      { header: "Submitted At", key: "ts", width: 22 },
+      { header: "Submitter", key: "name", width: 24 },
+      { header: "Email", key: "email", width: 28 },
+    ];
+    for (const q of data.allQuestions) {
+      headers.push({ header: q.text, key: `q_${q.key}`, width: 28 });
+    }
+    s2.columns = headers;
+    s2.getRow(1).font = { bold: true };
+    s2.getRow(1).alignment = { vertical: "middle", wrapText: true };
+
+    data.responses.forEach((r, i) => {
+      const row: Record<string, unknown> = {
+        n: i + 1,
+        ts: r.createdAt.toISOString().replace("T", " ").slice(0, 19),
+        name: r.submitterName ?? "(Anonymous)",
+        email: r.submitterEmail ?? "",
+      };
+      for (const q of data.allQuestions) {
+        const a = (r.answers as Record<string, unknown> | null)?.[q.key];
+        row[`q_${q.key}`] = q.type === "RATING" ? ratingFromAnswer(a) ?? "" : textFromAnswer(a);
+      }
+      s2.addRow(row);
+    });
+
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    );
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="survey-${data.project.code}.xlsx"`,
+    );
+    await wb.xlsx.write(res);
+    res.end();
+  },
+);
+
+// ---- Per-project PDF export ----
+function streamPdfReport(
+  res: Response,
+  filename: string,
+  build: (doc: PDFKit.PDFDocument) => void,
+) {
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+  const doc = new PDFDocument({ size: "A4", margins: { top: 60, bottom: 60, left: 60, right: 60 } });
+  doc.pipe(res);
+  build(doc);
+  doc.end();
+}
+
+function pdfHeader(doc: PDFKit.PDFDocument, title: string, subtitle: string) {
+  doc.save();
+  doc.rect(0, 0, doc.page.width, 90).fillColor("#0f172a").fill();
+  doc.restore();
+  doc.save();
+  doc.rect(0, 90, doc.page.width, 3).fillColor("#22c55e").fill();
+  doc.restore();
+  doc.fillColor("#22c55e").font("Helvetica-Bold").fontSize(14).text("SecureProfit Hub", 60, 28);
+  doc.fillColor("#ffffff").font("Helvetica-Bold").fontSize(20).text(title, 60, 50);
+  doc.fillColor("#cbd5e1").font("Helvetica").fontSize(10).text(subtitle, 60, 72);
+  doc.moveDown(4);
+  doc.fillColor("#0f172a");
+}
+
+router.get(
+  "/projects/:id/survey/export.pdf",
+  requireAuth,
+  async (req, res) => {
+    const data = await loadProjectSurvey(req.params.id);
+    if (!data) {
+      res.status(404).json({ error: "Project not found" });
+      return;
+    }
+    if (!canViewProjectSurvey(req.user!.role, data.project.pmId, req.user!.sub)) {
+      res.status(403).json({ error: "Forbidden" });
+      return;
+    }
+    streamPdfReport(res, `survey-${data.project.code}.pdf`, (doc) => {
+      pdfHeader(doc, "Customer Satisfaction Report", `${data.project.code} — ${data.project.name}`);
+      doc.font("Helvetica").fontSize(10).fillColor("#1f2937");
+      doc.text(`Client: ${data.project.client.name}`);
+      doc.text(`Project Manager: ${data.project.pm?.name ?? "—"}`);
+      doc.text(`Status: ${data.project.status}`);
+      doc.text(`Total Responses: ${data.responses.length}`);
+      doc.text(`Generated: ${new Date().toLocaleString()}`);
+      doc.moveDown();
+
+      // Overall average highlight
+      doc.font("Helvetica-Bold").fontSize(12).fillColor("#0f172a").text("Overall Average");
+      doc.font("Helvetica-Bold").fontSize(28).fillColor("#22c55e")
+        .text(`${data.aggregates.overallAverage.toFixed(2)} / 5.00`);
+      doc.moveDown();
+
+      // Per-question table
+      doc.font("Helvetica-Bold").fontSize(12).fillColor("#0f172a").text("Per-Question Averages");
+      doc.moveDown(0.3);
+      const left = 60;
+      const colW = [320, 80, 80];
+      const drawRow = (cells: string[], opts: { head?: boolean; alt?: boolean } = {}) => {
+        const y = doc.y;
+        const rowH = 22;
+        if (opts.head) {
+          doc.save(); doc.rect(left, y, colW[0] + colW[1] + colW[2], rowH).fillColor("#0f172a").fill(); doc.restore();
+          doc.fillColor("#e2e8f0").font("Helvetica-Bold").fontSize(10);
+        } else {
+          if (opts.alt) { doc.save(); doc.rect(left, y, colW[0] + colW[1] + colW[2], rowH).fillColor("#f8fafc").fill(); doc.restore(); }
+          doc.fillColor("#1f2937").font("Helvetica").fontSize(10);
+        }
+        let x = left + 6;
+        for (let i = 0; i < cells.length; i += 1) {
+          doc.text(cells[i], x, y + 6, { width: colW[i] - 12, lineBreak: false, ellipsis: true });
+          x += colW[i];
+        }
+        doc.x = left;
+        doc.y = y + rowH;
+      };
+      drawRow(["Question", "Average", "Responses"], { head: true });
+      data.aggregates.perQuestion.forEach((q, i) => {
+        drawRow([q.text, q.average.toFixed(2), String(q.responseCount)], { alt: i % 2 === 1 });
+      });
+
+      doc.moveDown();
+      doc.font("Helvetica-Bold").fontSize(12).fillColor("#0f172a").text("Comments / Lessons Learned");
+      doc.moveDown(0.3);
+      const withText = data.responses.filter((r) => (r.lessonLearned ?? "").trim());
+      if (withText.length === 0) {
+        doc.font("Helvetica-Oblique").fontSize(10).fillColor("#64748b").text("No textual feedback provided.");
+      } else {
+        for (const r of withText) {
+          if (doc.y > doc.page.height - 100) doc.addPage();
+          doc.font("Helvetica-Bold").fontSize(10).fillColor("#0f172a")
+            .text(`${r.submitterName ?? "(Anonymous)"} — ${r.createdAt.toISOString().slice(0, 10)}`);
+          doc.font("Helvetica").fontSize(10).fillColor("#1f2937").text(r.lessonLearned ?? "", { lineGap: 2 });
+          doc.moveDown(0.5);
+        }
+      }
+    });
+  },
+);
+
+// ---- Cross-portfolio summary (this month) — Excel & PDF ----
+async function loadSummaryThisMonth(role: string, userId: string) {
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  const where: { createdAt: { gte: Date }; project?: { pmId: string } } = {
+    createdAt: { gte: monthStart },
+  };
+  if (role === "PROJECT_MANAGER") where.project = { pmId: userId };
+  const responses = await prisma.surveyResponse.findMany({
+    where,
+    orderBy: { createdAt: "desc" },
+    include: { project: { include: { client: true } } },
+  });
+  const activeRating = await prisma.surveyQuestion.findMany({
+    where: { isActive: true, type: "RATING" },
+  });
+  const allQuestions = unionQuestions(activeRating as StoredQuestion[], responses)
+    .filter((q) => q.type === "RATING");
+  const aggregates = computeAggregates(responses, allQuestions);
+  return { monthStart, responses, allQuestions, aggregates };
+}
+
+router.get(
+  "/survey/summary/export.xlsx",
+  requireAuth,
+  requireRole("MANAGEMENT", "PROJECT_MANAGER"),
+  async (req, res) => {
+    const data = await loadSummaryThisMonth(req.user!.role, req.user!.sub);
+    const wb = new ExcelJS.Workbook();
+    wb.creator = "SecureProfit Hub";
+    wb.created = new Date();
+
+    const s1 = wb.addWorksheet("Summary");
+    s1.columns = [
+      { header: "Field", key: "k", width: 30 },
+      { header: "Value", key: "v", width: 50 },
+    ];
+    s1.getRow(1).font = { bold: true };
+    s1.addRows([
+      { k: "Period (Month Start)", v: data.monthStart.toISOString().slice(0, 10) },
+      { k: "Total Responses", v: data.responses.length },
+      { k: "Overall Average (out of 5)", v: Number(data.aggregates.overallAverage.toFixed(2)) },
+      { k: "Generated At", v: new Date().toISOString() },
+    ]);
+    s1.addRow({});
+    s1.addRow({ k: "Per-Question Average", v: "" }).font = { bold: true };
+    s1.addRow({ k: "Question", v: "Average / Responses" }).font = { bold: true };
+    for (const q of data.aggregates.perQuestion) {
+      s1.addRow({ k: q.text, v: `${q.average.toFixed(2)} (${q.responseCount} resp.)` });
+    }
+
+    const s2 = wb.addWorksheet("Responses");
+    const headers = [
+      { header: "Submitted At", key: "ts", width: 22 },
+      { header: "Project Code", key: "code", width: 18 },
+      { header: "Project Name", key: "name", width: 36 },
+      { header: "Client", key: "client", width: 28 },
+      { header: "Submitter", key: "subm", width: 24 },
+      { header: "Email", key: "email", width: 28 },
+    ];
+    for (const q of data.allQuestions) headers.push({ header: q.text, key: `q_${q.key}`, width: 24 });
+    headers.push({ header: "Lesson Learned", key: "ll", width: 60 });
+    s2.columns = headers;
+    s2.getRow(1).font = { bold: true };
+    s2.getRow(1).alignment = { vertical: "middle", wrapText: true };
+
+    for (const r of data.responses) {
+      const row: Record<string, unknown> = {
+        ts: r.createdAt.toISOString().replace("T", " ").slice(0, 19),
+        code: r.project.code,
+        name: r.project.name,
+        client: r.project.client.name,
+        subm: r.submitterName ?? "(Anonymous)",
+        email: r.submitterEmail ?? "",
+        ll: r.lessonLearned ?? "",
+      };
+      for (const q of data.allQuestions) {
+        const a = (r.answers as Record<string, unknown> | null)?.[q.key];
+        row[`q_${q.key}`] = ratingFromAnswer(a) ?? "";
+      }
+      s2.addRow(row);
+    }
+
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    res.setHeader("Content-Disposition", `attachment; filename="csat-summary-${data.monthStart.toISOString().slice(0, 7)}.xlsx"`);
+    await wb.xlsx.write(res);
+    res.end();
+  },
+);
+
+router.get(
+  "/survey/summary/export.pdf",
+  requireAuth,
+  requireRole("MANAGEMENT", "PROJECT_MANAGER"),
+  async (req, res) => {
+    const data = await loadSummaryThisMonth(req.user!.role, req.user!.sub);
+    const monthLabel = data.monthStart.toLocaleString("en-US", { month: "long", year: "numeric" });
+    streamPdfReport(res, `csat-summary-${data.monthStart.toISOString().slice(0, 7)}.pdf`, (doc) => {
+      pdfHeader(doc, "Customer Satisfaction Summary", `Period: ${monthLabel}`);
+      doc.font("Helvetica").fontSize(10).fillColor("#1f2937");
+      doc.text(`Total Responses: ${data.responses.length}`);
+      doc.text(`Generated: ${new Date().toLocaleString()}`);
+      doc.moveDown();
+
+      doc.font("Helvetica-Bold").fontSize(12).fillColor("#0f172a").text("Overall Average");
+      doc.font("Helvetica-Bold").fontSize(28).fillColor("#22c55e")
+        .text(`${data.aggregates.overallAverage.toFixed(2)} / 5.00`);
+      doc.moveDown();
+
+      doc.font("Helvetica-Bold").fontSize(12).fillColor("#0f172a").text("Per-Question Averages");
+      doc.moveDown(0.3);
+      const left = 60;
+      const colW = [320, 80, 80];
+      const drawRow = (cells: string[], opts: { head?: boolean; alt?: boolean } = {}) => {
+        const y = doc.y;
+        const rowH = 22;
+        if (opts.head) {
+          doc.save(); doc.rect(left, y, colW[0] + colW[1] + colW[2], rowH).fillColor("#0f172a").fill(); doc.restore();
+          doc.fillColor("#e2e8f0").font("Helvetica-Bold").fontSize(10);
+        } else {
+          if (opts.alt) { doc.save(); doc.rect(left, y, colW[0] + colW[1] + colW[2], rowH).fillColor("#f8fafc").fill(); doc.restore(); }
+          doc.fillColor("#1f2937").font("Helvetica").fontSize(10);
+        }
+        let x = left + 6;
+        for (let i = 0; i < cells.length; i += 1) {
+          doc.text(cells[i], x, y + 6, { width: colW[i] - 12, lineBreak: false, ellipsis: true });
+          x += colW[i];
+        }
+        doc.x = left;
+        doc.y = y + rowH;
+      };
+      drawRow(["Question", "Average", "Responses"], { head: true });
+      data.aggregates.perQuestion.forEach((q, i) => {
+        drawRow([q.text, q.average.toFixed(2), String(q.responseCount)], { alt: i % 2 === 1 });
+      });
+
+      doc.moveDown();
+      doc.font("Helvetica-Bold").fontSize(12).fillColor("#0f172a").text("Recent Responses");
+      doc.moveDown(0.3);
+      for (const r of data.responses.slice(0, 30)) {
+        if (doc.y > doc.page.height - 100) doc.addPage();
+        const ratings = data.allQuestions
+          .map((q) => {
+            const v = ratingFromAnswer((r.answers as Record<string, unknown> | null)?.[q.key]);
+            return v ? `${q.key.split("_")[0]}=${v}` : null;
+          })
+          .filter(Boolean)
+          .join(", ");
+        doc.font("Helvetica-Bold").fontSize(10).fillColor("#0f172a")
+          .text(`${r.project.code} — ${r.project.client.name}`);
+        doc.font("Helvetica").fontSize(9).fillColor("#64748b")
+          .text(`${r.createdAt.toISOString().slice(0, 10)} • ${r.submitterName ?? "(Anonymous)"} • ${ratings}`);
+        if (r.lessonLearned) {
+          doc.font("Helvetica-Oblique").fontSize(9).fillColor("#1f2937")
+            .text(`"${r.lessonLearned}"`, { lineGap: 1 });
+        }
+        doc.moveDown(0.4);
+      }
+    });
+  },
+);
 
 export default router;

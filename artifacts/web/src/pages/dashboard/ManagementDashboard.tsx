@@ -442,7 +442,23 @@ function SatisfactionWidget() {
           <CardTitle className="text-sm font-medium text-muted-foreground">Average Client Satisfaction (this month)</CardTitle>
           <CardDescription>{data.responseCount} response{data.responseCount === 1 ? "" : "s"} since {new Date(data.monthStart).toLocaleDateString()}</CardDescription>
         </div>
-        <Activity className="h-4 w-4 text-primary" />
+        <div className="flex items-center gap-2">
+          {data.responseCount > 0 && (
+            <>
+              <Button size="sm" variant="outline" asChild>
+                <a href={`${import.meta.env.BASE_URL}api/survey/summary/export.xlsx`} download>
+                  <Download className="h-3.5 w-3.5 mr-1" />Excel
+                </a>
+              </Button>
+              <Button size="sm" variant="outline" asChild>
+                <a href={`${import.meta.env.BASE_URL}api/survey/summary/export.pdf`} download>
+                  <Download className="h-3.5 w-3.5 mr-1" />PDF
+                </a>
+              </Button>
+            </>
+          )}
+          <Activity className="h-4 w-4 text-primary" />
+        </div>
       </CardHeader>
       <CardContent>
         {data.responseCount === 0 ? (

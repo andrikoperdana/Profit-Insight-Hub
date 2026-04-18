@@ -193,9 +193,21 @@ export default function SurveyTab({ projectId }: { projectId: string }) {
                   <CardTitle className="text-base">Score Distribution</CardTitle>
                   <CardDescription>Average rating per question</CardDescription>
                 </div>
-                <Button size="sm" variant="outline" onClick={exportCsv}>
-                  <Download className="h-4 w-4 mr-2" />Export CSV
-                </Button>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline" onClick={exportCsv}>
+                    <Download className="h-4 w-4 mr-2" />CSV
+                  </Button>
+                  <Button size="sm" variant="outline" asChild>
+                    <a href={`${baseUrl}api/projects/${projectId}/survey/export.xlsx`} download>
+                      <Download className="h-4 w-4 mr-2" />Excel
+                    </a>
+                  </Button>
+                  <Button size="sm" variant="outline" asChild>
+                    <a href={`${baseUrl}api/projects/${projectId}/survey/export.pdf`} download>
+                      <Download className="h-4 w-4 mr-2" />PDF
+                    </a>
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent style={{ height: 320 }}>
                 <ResponsiveContainer width="100%" height="100%">
