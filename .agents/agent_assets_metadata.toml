@@ -12,3 +12,15 @@ id = "AAofWIGsGuNtwSs1u73lr"
 uri = "file://docs/SecureProfit_Hub_Technical_Documentation.pdf"
 type = "pdf"
 title = "SecureProfit Hub — Technical Documentation"
+
+[[outputs]]
+id = "FUzdvaeCJBIofJ6buU8UR"
+uri = "file://docs/USER_GUIDE.md"
+type = "text"
+title = "SecureProfit Hub — User Guide"
+
+[[outputs]]
+id = "Cd5bRN0t7KBKD_asz7OQe"
+uri = "file://docs/TECHNICAL_DOCS.md"
+type = "text"
+title = "SecureProfit Hub — Technical Documentation"
