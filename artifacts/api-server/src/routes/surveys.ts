@@ -5,6 +5,7 @@ import { recordAudit, recordAuditAnon } from "../lib/audit.js";
 import { ensureDefaultSurveyQuestions, issueSurveyTokenIfMissing } from "../lib/surveyDefaults.js";
 import ExcelJS from "exceljs";
 import PDFDocument from "pdfkit";
+import { randomBytes } from "node:crypto";
 
 const router: IRouter = Router();
 
@@ -186,6 +187,80 @@ router.post("/public/surveys/:token", async (req, res) => {
 // =====================================================================
 // AUTHENTICATED ROUTES
 // =====================================================================
+
+// One-time demo seed (MANAGEMENT only) — closes a few projects and
+// inserts realistic CSAT responses dated within the current month.
+// Idempotent: refuses to run if any SurveyResponse already exists.
+const DEMO_RESPONSES = [
+  { submitterName: "Pak Budi Santoso", submitterEmail: "budi.santoso@banknusantara.co.id", lessonLearned: "Tim sangat profesional dan komunikasi rutin setiap minggu sangat membantu kami memahami progres.", ratings: { project_management: 5, consultant_performance: 5, report_quality: 4, team_overall: 5 } },
+  { submitterName: "Ibu Rina Wijaya", submitterEmail: "rina.wijaya@teleselaras.id", lessonLearned: "Laporan akhir sangat detail. Saran: jadwal kick-off bisa dipercepat 1 minggu untuk proyek selanjutnya.", ratings: { project_management: 4, consultant_performance: 5, report_quality: 5, team_overall: 4 } },
+  { submitterName: "Pak Andi Pratama", submitterEmail: "andi.pratama@energiprima.co.id", lessonLearned: "Hasil pengujian penetrasi sesuai harapan. Mohon disertakan executive summary yang lebih ringkas.", ratings: { project_management: 4, consultant_performance: 4, report_quality: 4, team_overall: 4 } },
+  { submitterName: "Ibu Sari Mulyani", submitterEmail: null, lessonLearned: "Sangat puas. Konsultan sangat responsif terhadap pertanyaan teknis kami.", ratings: { project_management: 5, consultant_performance: 5, report_quality: 5, team_overall: 5 } },
+  { submitterName: null, submitterEmail: null, lessonLearned: "Secara umum baik. Saran agar dokumentasi konfigurasi disertakan langsung saat handover.", ratings: { project_management: 3, consultant_performance: 4, report_quality: 4, team_overall: 4 } },
+  { submitterName: "Pak Reza Hakim", submitterEmail: "reza@retailmaju.co.id", lessonLearned: "Pelaksanaan rapi, hasil rekomendasi sangat actionable. Terima kasih!", ratings: { project_management: 5, consultant_performance: 4, report_quality: 5, team_overall: 5 } },
+];
+
+router.post("/survey/seed-demo", requireAuth, requireRole("MANAGEMENT"), async (req, res) => {
+  const existingResponses = await prisma.surveyResponse.count();
+  if (existingResponses > 0) {
+    res.status(409).json({ error: "Survey responses already exist", existingResponses });
+    return;
+  }
+  await ensureDefaultSurveyQuestions();
+  const candidates = await prisma.project.findMany({
+    where: { status: { in: ["COMPLETE", "ACTIVE", "PAUSE", "OBSERVATION", "CLOSED"] } },
+    take: 6,
+    orderBy: { createdAt: "asc" },
+    include: { client: true },
+  });
+  if (candidates.length === 0) {
+    res.status(400).json({ error: "No projects found to attach surveys to" });
+    return;
+  }
+  const questions = await prisma.surveyQuestion.findMany({ where: { isActive: true }, orderBy: { order: "asc" } });
+  const snapshot = questions.map((q) => ({ key: q.key, text: q.text, type: q.type, order: q.order, required: q.required }));
+  const now = new Date();
+  const monthStart = new Date(now.getUTCFullYear(), now.getUTCMonth(), 1);
+  const projectsClosed: string[] = [];
+  let respCount = 0;
+  let respIdx = 0;
+  for (let i = 0; i < candidates.length; i += 1) {
+    const project = candidates[i];
+    let surveyToken = project.surveyToken;
+    if (project.status !== "CLOSED" || !surveyToken) {
+      surveyToken = surveyToken ?? randomBytes(24).toString("base64url");
+      await prisma.project.update({ where: { id: project.id }, data: { status: "CLOSED", surveyToken } });
+      projectsClosed.push(project.code);
+    }
+    const count = i < 3 ? 2 : 1;
+    for (let k = 0; k < count; k += 1) {
+      const tpl = DEMO_RESPONSES[respIdx % DEMO_RESPONSES.length];
+      respIdx += 1;
+      const dayOffset = Math.floor(((now.getTime() - monthStart.getTime()) / 86400000) * Math.random());
+      const createdAt = new Date(monthStart.getTime() + dayOffset * 86400000 + respIdx * 3600000);
+      await prisma.surveyResponse.create({
+        data: {
+          projectId: project.id,
+          submitterName: tpl.submitterName,
+          submitterEmail: tpl.submitterEmail,
+          lessonLearned: tpl.lessonLearned,
+          answers: {
+            project_management: { rating: tpl.ratings.project_management },
+            consultant_performance: { rating: tpl.ratings.consultant_performance },
+            report_quality: { rating: tpl.ratings.report_quality },
+            team_overall: { rating: tpl.ratings.team_overall },
+            lesson_learned: { text: tpl.lessonLearned },
+          },
+          questionsSnapshot: snapshot,
+          createdAt,
+        },
+      });
+      respCount += 1;
+    }
+  }
+  await recordAudit(req, "SEED_DEMO_CSAT", "Survey", null, { projectsClosed, responses: respCount });
+  res.json({ ok: true, projectsClosed, responses: respCount });
+});
 
 // Template management — MANAGEMENT only
 router.get("/survey/template", requireAuth, requireRole("MANAGEMENT"), async (_req, res) => {

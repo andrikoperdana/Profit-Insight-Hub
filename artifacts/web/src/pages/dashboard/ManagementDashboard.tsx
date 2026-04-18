@@ -1,5 +1,6 @@
 import { useGetDashboardSummary, useGetProfitTrend, useGetStatusBreakdown, useGetTopProjects, useGetRecentActivity, useGetUtilization, customFetch } from "@workspace/api-client-react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { formatIDR, formatPct } from "@/lib/format";
 import { Briefcase, Wallet, TrendingUp, Clock, AlertCircle, Activity, AlarmClock, Download } from "lucide-react";
@@ -424,6 +425,7 @@ export default function Dashboard() {
 }
 
 function SatisfactionWidget() {
+  const queryClient = useQueryClient();
   const { data, isLoading } = useQuery<{
     monthStart: string;
     responseCount: number;
@@ -433,6 +435,20 @@ function SatisfactionWidget() {
     queryKey: ["/survey/summary"],
     queryFn: () => customFetch("/api/survey/summary"),
   });
+  const [seeding, setSeeding] = useState(false);
+  const onSeed = async () => {
+    if (!confirm("Isi data contoh CSAT? Ini akan menutup beberapa proyek dan membuat ~11 respons survei. Hanya jalankan sekali.")) return;
+    setSeeding(true);
+    try {
+      const r = await customFetch("/api/survey/seed-demo", { method: "POST" });
+      alert(`Berhasil. ${r.responses} respons dibuat, ${r.projectsClosed?.length ?? 0} proyek ditutup.`);
+      queryClient.invalidateQueries();
+    } catch (e: unknown) {
+      alert(`Gagal: ${e instanceof Error ? e.message : String(e)}`);
+    } finally {
+      setSeeding(false);
+    }
+  };
   if (isLoading) return <SkeletonCard />;
   if (!data) return null;
   return (
@@ -462,7 +478,12 @@ function SatisfactionWidget() {
       </CardHeader>
       <CardContent>
         {data.responseCount === 0 ? (
-          <div className="text-sm text-muted-foreground">No survey responses received yet this month.</div>
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <div className="text-sm text-muted-foreground">No survey responses received yet this month.</div>
+            <Button size="sm" variant="outline" onClick={onSeed} disabled={seeding} data-testid="button-seed-csat-demo">
+              {seeding ? "Seeding…" : "Load demo data"}
+            </Button>
+          </div>
         ) : (
           <div className="flex flex-wrap items-end gap-6">
             <div>
