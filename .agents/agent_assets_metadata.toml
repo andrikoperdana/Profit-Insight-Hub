@@ -1,0 +1,14 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "VaMECNkMzOFllpMSgSi8-"
+uri = "file://docs/SecureProfit_Hub_User_Guide.pdf"
+type = "pdf"
+title = "SecureProfit Hub — User Guide (Panduan Pengguna)"
+
+[[outputs]]
+id = "AAofWIGsGuNtwSs1u73lr"
+uri = "file://docs/SecureProfit_Hub_Technical_Documentation.pdf"
+type = "pdf"
+title = "SecureProfit Hub — Technical Documentation"
