@@ -5,6 +5,7 @@ import { Briefcase, Wallet, TrendingUp, Clock, AlertCircle, Activity } from "luc
 import { SkeletonCard, TableSkeleton } from "@/components/common/Loading";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
+import ResourceUtilizationSection from "@/components/dashboard/ResourceUtilizationSection";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { formatDistanceToNow } from "date-fns";
 import { Link } from "wouter";
@@ -82,6 +83,9 @@ export default function Dashboard() {
           </>
         )}
       </div>
+
+      {/* Resource Utilization */}
+      <ResourceUtilizationSection />
 
       <div className="grid gap-6 md:grid-cols-7 lg:grid-cols-7">
         {/* Profit Trend Chart */}

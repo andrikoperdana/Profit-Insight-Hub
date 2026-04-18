@@ -122,6 +122,142 @@ router.get("/dashboard/recent-activity", async (_req, res) => {
   );
 });
 
+router.get("/dashboard/resource-utilization-detail", async (_req, res) => {
+  const today = new Date();
+  const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const horizon = new Date(startOfDay);
+  horizon.setDate(horizon.getDate() + 2);
+  const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+  const recentSince = new Date(startOfDay);
+  recentSince.setDate(recentSince.getDate() - 30);
+
+  const users = await prisma.user.findMany({
+    where: {
+      isActive: true,
+      role: { in: ["KONSULTAN", "TECHNICAL_WRITER", "PROJECT_MANAGER"] },
+    },
+    include: {
+      resources: { include: { project: true } },
+      timesheets: {
+        where: { status: "APPROVED", workDate: { gte: recentSince } },
+        include: { project: true },
+      },
+    },
+    orderBy: { name: "asc" },
+  });
+
+  const monthHours = await prisma.timesheet.groupBy({
+    by: ["userId"],
+    where: { status: "APPROVED", workDate: { gte: monthStart } },
+    _sum: { hours: true },
+  });
+  const monthMap = new Map<string, number>();
+  for (const m of monthHours) monthMap.set(m.userId, m._sum.hours ?? 0);
+
+  // Workdays in current month so far
+  let workdaysSoFar = 0;
+  for (let d = new Date(monthStart); d <= startOfDay; d.setDate(d.getDate() + 1)) {
+    const day = d.getDay();
+    if (day !== 0 && day !== 6) workdaysSoFar += 1;
+  }
+  const monthCapacityHours = Math.max(workdaysSoFar, 1) * 8;
+
+  type Row = {
+    userId: string;
+    userName: string;
+    role: string;
+    title: string | null;
+    status: "ACTIVE" | "IDLE";
+    currentProjectId: string | null;
+    currentProjectName: string | null;
+    currentProjectStatus: string | null;
+    assignmentEndDate: string | null;
+    daysRemaining: number | null;
+    finishingSoon: boolean;
+    monthHours: number;
+    utilizationPctMonth: number;
+  };
+
+  const rows: Row[] = users.map((u) => {
+    const liveResources = u.resources.filter(
+      (r) => r.project.status === "ACTIVE" || r.project.status === "PAUSE",
+    );
+    const recentProjectIds = new Set(
+      u.timesheets
+        .filter(
+          (t) => t.project.status === "ACTIVE" || t.project.status === "PAUSE",
+        )
+        .map((t) => t.projectId),
+    );
+    const isActive = liveResources.length > 0 || recentProjectIds.size > 0;
+
+    // Pick the soonest-finishing live assignment as the "current" project
+    let current: (typeof liveResources)[number] | null = null;
+    for (const r of liveResources) {
+      if (!current) {
+        current = r;
+        continue;
+      }
+      const a = r.project.endDate?.getTime() ?? Infinity;
+      const b = current.project.endDate?.getTime() ?? Infinity;
+      if (a < b) current = r;
+    }
+
+    let assignmentEnd: Date | null = current?.project.endDate ?? null;
+    let daysRemaining: number | null = null;
+    let finishingSoon = false;
+    if (assignmentEnd) {
+      const ms = assignmentEnd.getTime() - startOfDay.getTime();
+      daysRemaining = Math.ceil(ms / (1000 * 60 * 60 * 24));
+      finishingSoon =
+        isActive && daysRemaining >= 0 && daysRemaining <= 2;
+    }
+
+    const hoursThisMonth = monthMap.get(u.id) ?? 0;
+    const utilizationPctMonth = (hoursThisMonth / monthCapacityHours) * 100;
+
+    return {
+      userId: u.id,
+      userName: u.name,
+      role: u.role,
+      title: u.title,
+      status: isActive ? "ACTIVE" : "IDLE",
+      currentProjectId: current?.projectId ?? null,
+      currentProjectName: current?.project.name ?? null,
+      currentProjectStatus: current?.project.status ?? null,
+      assignmentEndDate: assignmentEnd ? assignmentEnd.toISOString() : null,
+      daysRemaining,
+      finishingSoon,
+      monthHours: hoursThisMonth,
+      utilizationPctMonth: Math.min(utilizationPctMonth, 200),
+    };
+  });
+
+  const total = rows.length;
+  const activeCount = rows.filter((r) => r.status === "ACTIVE").length;
+  const idleCount = total - activeCount;
+  const finishingSoonCount = rows.filter((r) => r.finishingSoon).length;
+  const utilizationPct = total > 0 ? (activeCount / total) * 100 : 0;
+
+  res.json({
+    summary: {
+      total,
+      active: activeCount,
+      idle: idleCount,
+      vacation: 0,
+      finishingSoon: finishingSoonCount,
+      utilizationPct,
+    },
+    distribution: [
+      { name: "Active", value: activeCount },
+      { name: "Idle", value: idleCount },
+      { name: "Vacation", value: 0 },
+    ],
+    resources: rows,
+    finishingSoonList: rows.filter((r) => r.finishingSoon),
+  });
+});
+
 router.get("/dashboard/utilization", async (_req, res) => {
   const users = await prisma.user.findMany({
     where: { isActive: true, role: { in: ["KONSULTAN", "TECHNICAL_WRITER"] } },
