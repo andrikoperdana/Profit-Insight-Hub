@@ -148,8 +148,11 @@ export default function Dashboard() {
                       <Cell key={`cell-${index}`} fill={STATUS_COLORS[entry.status]} />
                     ))}
                   </Pie>
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
+                  <Tooltip
+                    contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px', color: 'hsl(var(--foreground))' }}
+                    itemStyle={{ color: 'hsl(var(--foreground))' }}
+                    labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 600 }}
+                    formatter={(value: number, _name, props: any) => [`${value} project${value === 1 ? '' : 's'}`, props?.payload?.status ?? props?.name]}
                   />
                 </PieChart>
               </ResponsiveContainer>
