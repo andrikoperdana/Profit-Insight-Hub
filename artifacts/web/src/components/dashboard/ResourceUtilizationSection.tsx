@@ -43,7 +43,10 @@ import {
   AlertTriangle,
   Flame,
   TimerOff,
+  Download,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { exportSheets } from "@/lib/exports";
 import { Link } from "wouter";
 import { format } from "date-fns";
 
@@ -216,6 +219,41 @@ export default function ResourceUtilizationSection() {
               ))}
             </SelectContent>
           </Select>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const rows = filteredResources.map((r) => ({
+                Resource: r.userName,
+                Role: r.role,
+                Specialization: r.specialization ?? "",
+                Status: r.status,
+                CurrentProject: r.currentProjectName ?? "",
+                Principal: r.currentClientName ?? "",
+                AssignmentEnd: r.assignmentEndDate ?? "",
+                DaysRemaining: r.daysRemaining ?? "",
+                AvgHoursPerDay7d: Number((r.avgHoursPerDay7d ?? 0).toFixed(2)),
+                MonthHours: Number((r.monthHours ?? 0).toFixed(2)),
+                MonthUtilizationPct: Number((r.utilizationPctMonth ?? 0).toFixed(1)),
+              }));
+              const summaryRows = [{
+                Total: summary.total,
+                Active: summary.active,
+                Idle: summary.idle,
+                Overloaded: summary.overloaded,
+                FinishingSoon: summary.finishingSoon,
+                IdleLong: summary.idleLong,
+                UtilizationPct: Number(summary.utilizationPct.toFixed(1)),
+              }];
+              exportSheets("resource-utilization", [
+                { name: "Resources", rows },
+                { name: "Summary", rows: summaryRows },
+              ]);
+            }}
+            data-testid="button-export-resources"
+          >
+            <Download className="h-4 w-4 mr-2" /> Export
+          </Button>
         </div>
       </div>
 

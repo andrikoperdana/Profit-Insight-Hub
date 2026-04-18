@@ -17,6 +17,8 @@ import ClientsList from "@/pages/clients";
 import UsersList from "@/pages/users";
 import Settings from "@/pages/settings";
 import Resources from "@/pages/resources";
+import CapacityPlanning from "@/pages/capacity";
+import { ThemeProvider } from "@/lib/theme";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -54,6 +56,7 @@ function Router() {
       <Route path="/timesheets" component={() => <ProtectedRoute component={TimesheetsList} />} />
       <Route path="/approvals" component={() => <ProtectedRoute component={ApprovalInbox} />} />
       <Route path="/resources" component={() => <ProtectedRoute component={Resources} />} />
+      <Route path="/capacity" component={() => <ProtectedRoute component={CapacityPlanning} />} />
       <Route path="/clients" component={() => <ProtectedRoute component={ClientsList} />} />
       <Route path="/users" component={() => <ProtectedRoute component={UsersList} />} />
       <Route path="/settings" component={() => <ProtectedRoute component={Settings} />} />
@@ -65,6 +68,7 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
       <TooltipProvider>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
           <AuthProvider>
@@ -73,6 +77,7 @@ function App() {
         </WouterRouter>
         <Toaster />
       </TooltipProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

@@ -11,7 +11,8 @@ import {
   LogOut,
   Shield,
   Inbox,
-  UserCog
+  UserCog,
+  CalendarRange,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -27,6 +28,7 @@ export default function Sidebar() {
     { href: "/timesheets", label: "Time Tracking", icon: Clock },
     ...(isPM ? [{ href: "/approvals", label: "Approval Inbox", icon: Inbox }] : []),
     ...(canViewResources(user?.role) ? [{ href: "/resources", label: "Resources", icon: UserCog }] : []),
+    ...(isPM ? [{ href: "/capacity", label: "Capacity Planning", icon: CalendarRange }] : []),
     ...(canManageClients(user?.role) ? [{ href: "/clients", label: "Clients", icon: Building2 }] : []),
     ...(canManageUsers(user?.role) ? [{ href: "/users", label: "Users", icon: Users }] : []),
   ];

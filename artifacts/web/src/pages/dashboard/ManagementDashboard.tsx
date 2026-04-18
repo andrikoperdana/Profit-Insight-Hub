@@ -2,7 +2,9 @@ import { useGetDashboardSummary, useGetProfitTrend, useGetStatusBreakdown, useGe
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { formatIDR, formatPct } from "@/lib/format";
-import { Briefcase, Wallet, TrendingUp, Clock, AlertCircle, Activity, AlarmClock } from "lucide-react";
+import { Briefcase, Wallet, TrendingUp, Clock, AlertCircle, Activity, AlarmClock, Download } from "lucide-react";
+import { exportSheets } from "@/lib/exports";
+import { classifyProject, type ProjectType } from "@/lib/projectType";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SkeletonCard, TableSkeleton } from "@/components/common/Loading";
@@ -50,8 +52,67 @@ export default function Dashboard() {
     [ProjectStatus.CLOSED]: "hsl(var(--chart-5))",      // Slate
   };
 
+  // Project Type Analysis: classify projects by type and compute profitability per type
+  const projectTypeStats = (() => {
+    const map = new Map<ProjectType, { type: ProjectType; count: number; revenue: number; cost: number; profit: number }>();
+    for (const p of allProjects ?? []) {
+      const t = classifyProject({ name: p.name, code: p.code });
+      const cur = map.get(t) ?? { type: t, count: 0, revenue: 0, cost: 0, profit: 0 };
+      cur.count += 1;
+      cur.revenue += p.contractValue ?? 0;
+      const ac = (p as any).actualCost ?? 0;
+      const ap = (p as any).actualProfit ?? ((p.contractValue ?? 0) - ac);
+      cur.cost += ac;
+      cur.profit += ap;
+      map.set(t, cur);
+    }
+    return Array.from(map.values())
+      .map((r) => ({ ...r, marginPct: r.revenue > 0 ? (r.profit / r.revenue) * 100 : 0 }))
+      .sort((a, b) => b.profit - a.profit);
+  })();
+
+  function handleExportUtilization() {
+    const utilRows = (utilization ?? []).map((u: any) => ({
+      Resource: u.userName,
+      Role: u.role,
+      PlannedMandays: Number((u.plannedMandays ?? 0).toFixed(2)),
+      ActualMandays: Number((u.actualMandays ?? 0).toFixed(2)),
+      UtilizationPct: Number((u.utilizationPct ?? 0).toFixed(1)),
+    }));
+    const summaryRows = summary
+      ? [{
+          ActiveProjects: summary.activeProjects,
+          TotalProjects: summary.totalProjects,
+          TotalContractValue: summary.totalContractValue,
+          TotalActualCost: summary.totalActualCost,
+          TotalActualProfit: summary.totalActualProfit,
+          AvgMarginPct: Number((summary.avgMarginPct ?? 0).toFixed(2)),
+          PendingTimesheets: summary.pendingTimesheets,
+          TotalMandays: Number((summary.totalMandays ?? 0).toFixed(2)),
+        }]
+      : [];
+    const projTypeRows = projectTypeStats.map((t) => ({
+      Type: t.type,
+      Count: t.count,
+      Revenue: t.revenue,
+      ActualCost: t.cost,
+      Profit: t.profit,
+      MarginPct: Number(t.marginPct.toFixed(2)),
+    }));
+    exportSheets("dashboard-overview", [
+      { name: "Summary", rows: summaryRows },
+      { name: "Utilization", rows: utilRows },
+      { name: "By Project Type", rows: projTypeRows },
+    ]);
+  }
+
   return (
     <div className="space-y-6">
+      <div className="flex justify-end -mb-3">
+        <Button variant="outline" size="sm" onClick={handleExportUtilization} data-testid="button-export-overview">
+          <Download className="h-4 w-4 mr-2" /> Export Report
+        </Button>
+      </div>
       <WelcomeBanner subtitle="Executive snapshot: portfolio health, profitability, and team utilization." />
 
       {losingProjects.length > 0 && (
@@ -242,6 +303,57 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Project Type Analysis */}
+      {projectTypeStats.length > 0 && (
+        <div className="grid gap-6 md:grid-cols-7">
+          <Card className="md:col-span-4 border-border shadow-sm">
+            <CardHeader>
+              <CardTitle>Profitability by Project Type</CardTitle>
+              <CardDescription>Total profit and revenue grouped by service line</CardDescription>
+            </CardHeader>
+            <CardContent className="h-[280px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={projectTypeStats} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
+                  <XAxis dataKey="type" stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} />
+                  <YAxis stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `Rp ${(v / 1_000_000).toFixed(0)}M`} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: "hsl(var(--card))", borderColor: "hsl(var(--border))", borderRadius: 8 }}
+                    formatter={(v: number) => formatIDR(v)}
+                  />
+                  <Bar dataKey="revenue" name="Revenue" fill="hsl(var(--chart-2))" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="profit" name="Profit" fill="hsl(var(--chart-1))" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+          <Card className="md:col-span-3 border-border shadow-sm flex flex-col">
+            <CardHeader>
+              <CardTitle>Top 5 Most Profitable Types</CardTitle>
+              <CardDescription>Ranked by total profit</CardDescription>
+            </CardHeader>
+            <CardContent className="flex-1">
+              <div className="space-y-3">
+                {projectTypeStats.slice(0, 5).map((t) => (
+                  <div key={t.type} className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="font-medium text-sm truncate">{t.type}</p>
+                      <p className="text-xs text-muted-foreground">{t.count} project{t.count === 1 ? "" : "s"} · {formatIDR(t.revenue)} revenue</p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className={`font-mono text-sm font-semibold ${t.profit >= 0 ? "text-emerald-400" : "text-destructive"}`}>
+                        {formatIDR(t.profit)}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground">{formatPct(t.marginPct)} margin</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       <div className="grid gap-6 md:grid-cols-2">
         {/* Top Projects */}

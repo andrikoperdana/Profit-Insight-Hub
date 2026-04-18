@@ -5,7 +5,8 @@ import {
   useListProjects,
   ProjectStatus,
 } from "@workspace/api-client-react";
-import { Bell, Menu, Inbox, FileWarning, ClipboardCheck } from "lucide-react";
+import { Bell, Menu, Inbox, FileWarning, ClipboardCheck, Sun, Moon } from "lucide-react";
+import { useTheme } from "@/lib/theme";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,7 @@ import { Link } from "wouter";
 
 export default function Header() {
   const { user, logout } = useAuth();
+  const { theme, toggle: toggleTheme } = useTheme();
 
   const isPM = !!user && (user.role === "PROJECT_MANAGER" || user.role === "MANAGEMENT");
   const isAdminProject = user?.role === "ADMIN_PROJECT";
@@ -70,6 +72,19 @@ export default function Header() {
       <div className="flex-1" />
 
       <div className="flex items-center space-x-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={toggleTheme}
+          aria-label="Toggle theme"
+          data-testid="button-theme-toggle"
+        >
+          {theme === "dark" ? (
+            <Sun className="h-5 w-5 text-muted-foreground" />
+          ) : (
+            <Moon className="h-5 w-5 text-muted-foreground" />
+          )}
+        </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="relative" data-testid="button-notifications">

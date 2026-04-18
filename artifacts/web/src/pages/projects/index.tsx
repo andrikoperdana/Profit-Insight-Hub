@@ -2,10 +2,12 @@ import { useListProjects } from "@workspace/api-client-react";
 import { getListProjectsQueryKey } from "@workspace/api-client-react";
 import { Link } from "wouter";
 import { useState } from "react";
-import { Plus, Search, Filter } from "lucide-react";
+import { Plus, Search, Filter, Download } from "lucide-react";
 import { formatIDR } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
 import { canCreateProject } from "@/lib/roles";
+import { exportSheets } from "@/lib/exports";
+import { classifyProject } from "@/lib/projectType";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,13 +43,43 @@ export default function ProjectsList() {
           <p className="text-muted-foreground">Manage active consulting engagements.</p>
         </div>
         
-        {canCreateProject(user?.role) && (
-          <Button asChild className="shrink-0">
-            <Link href="/projects/new">
-              <Plus className="h-4 w-4 mr-2" /> New Project
-            </Link>
+        <div className="flex gap-2 shrink-0">
+          <Button
+            variant="outline"
+            onClick={() => {
+              const rows = (filteredProjects ?? []).map((p) => ({
+                Code: p.code,
+                Name: p.name,
+                Type: classifyProject({ name: p.name, code: p.code }),
+                Client: p.clientName ?? "",
+                PM: p.pmName ?? "",
+                Sales: (p as any).salesName ?? "",
+                Status: p.status,
+                ContractValue: p.contractValue,
+                EstimatedCost: (p as any).estimatedCost ?? 0,
+                EstimatedProfit: (p as any).estimatedProfit ?? 0,
+                ActualCost: (p as any).actualCost ?? 0,
+                ActualProfit: (p as any).actualProfit ?? 0,
+                MarginPct: p.marginPct,
+                PlannedMandays: (p as any).plannedMandays ?? 0,
+                ActualMandays: (p as any).actualMandays ?? 0,
+                StartDate: (p as any).startDate ?? "",
+                EndDate: (p as any).endDate ?? "",
+              }));
+              exportSheets("project-profitability", [{ name: "Projects", rows }]);
+            }}
+            data-testid="button-export-projects"
+          >
+            <Download className="h-4 w-4 mr-2" /> Export
           </Button>
-        )}
+          {canCreateProject(user?.role) && (
+            <Button asChild>
+              <Link href="/projects/new">
+                <Plus className="h-4 w-4 mr-2" /> New Project
+              </Link>
+            </Button>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">

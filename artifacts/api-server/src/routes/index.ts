@@ -9,6 +9,7 @@ import timesheetsRouter from "./timesheets.js";
 import documentsRouter from "./documents.js";
 import dashboardRouter from "./dashboard.js";
 import uploadsRouter from "./uploads.js";
+import capacityRouter from "./capacity.js";
 
 const router: IRouter = Router();
 
@@ -22,5 +23,6 @@ router.use(timesheetsRouter);
 router.use(documentsRouter);
 router.use(dashboardRouter);
 router.use(uploadsRouter);
+router.use(capacityRouter);
 
 export default router;

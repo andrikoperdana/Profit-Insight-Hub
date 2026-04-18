@@ -1,0 +1,58 @@
+Sekarang kita masuk ke improvement untuk Phase 2/3.
+
+Tambahkan fitur-fitur berikut yang akan sangat meningkatkan nilai bisnis dari SecureProfit Hub:
+
+### 1. Capacity Planning Calendar (Fitur Utama)
+- Buat halaman baru bernama **Capacity Planning** (bisa diakses oleh Management dan PM)
+- Tampilkan kalender mingguan / bulanan
+- Setiap resource (konsultan, TW, Admin Project) ditampilkan dengan warna:
+  - Hijau = Available
+  - Biru = Assigned / Active
+  - Merah = Overloaded
+  - Abu-abu = Vacation / Idle
+- Tampilkan berapa slot kosong per hari untuk setiap level (Junior, Senior, Technical Writer, dll.)
+- Filter: per Principal, per Spesialisasi, atau semua resource
+- Highlight hari-hari dengan banyak resource idle atau overloaded
+
+### 2. Gantt Chart Enhancement (upgrade dari sebelumnya)
+- Di tab Timeline pada Project Detail, tingkatkan Gantt Chart agar:
+  - Menampilkan assignment per individu (nama + role)
+  - Progress bar berdasarkan approved hours vs estimasi mandays
+  - Milestone untuk tanggal Complete dan Closed
+  - Warning jika assignment melebihi target end date
+
+### 3. Excel Report Export (Sangat Penting)
+- Tambahkan tombol "Export Report" di beberapa tempat:
+  - Dashboard Overview → Export Utilization Report (Excel)
+  - Project List → Export Profitability Report
+  - Resource Utilization → Export Resource Detail
+- Isi report harus mencakup:
+  - Utilization per resource dan per Principal
+  - Profitability per project (Revenue, Actual Cost, Profit, Margin %)
+  - Summary bulan ini dan quarter
+
+### 4. Project Type Analysis
+- Tambahkan di Dashboard Management:
+  - Chart "Profitability by Project Type" (Pentest, GRC, SOC, Threat Hunting, Fraud Investigation, dll.)
+  - Table Top 5 Most Profitable Project Types
+
+### 5. Dark Mode
+- Implementasikan Dark Mode toggle di navbar
+- Pastikan semua komponen (termasuk charts dan tables) mendukung dark mode dengan baik
+
+### Prioritas Implementasi:
+1. Capacity Planning Calendar (fitur paling dibutuhkan di Phase 2)
+2. Excel Report Export
+3. Upgrade Gantt Chart
+4. Project Type Analysis
+5. Dark Mode (bisa dilakukan bersamaan)
+
+Gunakan library yang sesuai:
+- Untuk Calendar: react-big-calendar atau fullcalendar
+- Untuk Excel Export: xlsx library
+- Pastikan semua fitur baru tetap responsive dan konsisten dengan tema cyber security (biru-hijau)
+
+Setelah semua fitur ini selesai, tulis pesan:
+"Phase 2/3 Improvements (Capacity Planning, Excel Export, Gantt Enhancement, Project Type Analysis, Dark Mode) telah selesai"
+
+Kemudian berikan ringkasan singkat apa saja yang sudah ditambahkan.
