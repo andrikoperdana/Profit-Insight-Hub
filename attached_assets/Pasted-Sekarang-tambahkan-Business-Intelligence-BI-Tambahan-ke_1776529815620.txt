@@ -1,0 +1,65 @@
+Sekarang tambahkan **Business Intelligence (BI) Tambahan** ke dalam SecureProfit Hub untuk membantu manajemen mengambil keputusan lebih baik.
+
+Fitur ini terutama ditujukan untuk Management / Principal.
+
+### 1. Profitability by Project Type
+- Buat section baru di Dashboard Management bernama **"Profitability by Project Type"**
+- Chart (Bar + Pie) yang menampilkan:
+  - Rata-rata Profit Margin (%) per jenis project
+  - Total Revenue dan Total Profit per jenis project
+- Jenis project yang didukung: Penetration Testing, GRC, SOC, Threat Modeling, Threat Hunting, Fraud Investigation, dan "Others"
+- Tampilkan ranking: Top 3 jenis project paling profitable
+
+### 2. Principal / Team Performance Dashboard
+- Buat halaman atau section **"Team Performance"**
+- Tampilkan per Principal:
+  - Total Revenue timnya
+  - Total Profit timnya
+  - Average Utilization Rate timnya
+  - Average Profit Margin timnya
+  - Jumlah project yang ditangani
+- Ranking Principal berdasarkan profit yang dihasilkan timnya
+- Table perbandingan antar Principal
+
+### 3. Resource Demand Forecast (3 Bulan ke Depan)
+- Buat chart **"Resource Demand Forecast"**
+- Prediksi kebutuhan resource untuk 3 bulan mendatang berdasarkan:
+  - Project yang sedang Active + Observation
+  - Estimasi mandays yang masih tersisa
+- Tampilkan dalam bentuk stacked bar chart per bulan:
+  - Kebutuhan Junior
+  - Kebutuhan Senior/Consultant
+  - Kebutuhan Technical Writer
+  - Kebutuhan Admin Project
+- Highlight jika ada kekurangan resource di bulan tertentu
+
+### 4. Overall Business Health Metrics
+Tambahkan di Dashboard Management (bagian atas):
+- **Overall Profit Margin** bulan ini dan quarter ini (%)
+- **Average Project Duration** (dalam hari)
+- **Utilization Rate Trend** (3 bulan terakhir)
+- **Project Success Rate** (berapa % project yang Closed dengan profit positif)
+- **Top 5 Most Profitable Projects** (dengan nominal profit)
+
+### 5. Interactive Filters
+- Semua chart BI harus bisa difilter berdasarkan:
+  - Periode (This Month, This Quarter, This Year, Custom Date)
+  - Principal (semua atau per orang)
+  - Project Type
+
+### Technical Notes:
+- Gunakan Recharts untuk semua visualisasi
+- Buat data dihitung secara real-time atau cache sederhana
+- Pastikan performa tetap baik meskipun ada banyak project
+- Tampilan harus clean, profesional, dan mudah dibaca (gunakan warna hijau untuk positif, merah untuk negatif)
+
+Prioritaskan implementasi dalam urutan ini:
+1. Profitability by Project Type
+2. Principal / Team Performance
+3. Overall Business Health Metrics
+4. Resource Demand Forecast
+
+Setelah semua fitur Business Intelligence selesai, tulis pesan:
+"Business Intelligence Tambahan telah selesai"
+
+Kemudian berikan ringkasan singkat fitur yang ditambahkan dan deskripsi visual utama.

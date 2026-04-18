@@ -11,6 +11,7 @@ import dashboardRouter from "./dashboard.js";
 import uploadsRouter from "./uploads.js";
 import capacityRouter from "./capacity.js";
 import auditLogsRouter from "./audit-logs.js";
+import biRouter from "./bi.js";
 
 const router: IRouter = Router();
 
@@ -26,5 +27,6 @@ router.use(dashboardRouter);
 router.use(uploadsRouter);
 router.use(capacityRouter);
 router.use(auditLogsRouter);
+router.use(biRouter);
 
 export default router;

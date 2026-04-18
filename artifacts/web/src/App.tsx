@@ -19,6 +19,7 @@ import Settings from "@/pages/settings";
 import Resources from "@/pages/resources";
 import CapacityPlanning from "@/pages/capacity";
 import AuditLogPage from "@/pages/audit-logs";
+import BusinessIntelligence from "@/pages/business-intelligence";
 import { ThemeProvider } from "@/lib/theme";
 
 const queryClient = new QueryClient({
@@ -62,6 +63,7 @@ function Router() {
       <Route path="/users" component={() => <ProtectedRoute component={UsersList} />} />
       <Route path="/settings" component={() => <ProtectedRoute component={Settings} />} />
       <Route path="/audit-logs" component={() => <ProtectedRoute component={AuditLogPage} />} />
+      <Route path="/business-intelligence" component={() => <ProtectedRoute component={BusinessIntelligence} />} />
       <Route component={NotFound} />
     </Switch>
   );
