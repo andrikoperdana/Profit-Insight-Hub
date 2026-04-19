@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/lib/auth";
+import { downloadAuthed } from "@/lib/exports";
 import { Link2, Copy, ExternalLink, Download, MessageSquare, Star } from "lucide-react";
 
 type Question = { key: string; text: string; type: "RATING" | "TEXT"; order: number; required: boolean };
@@ -197,15 +198,11 @@ export default function SurveyTab({ projectId }: { projectId: string }) {
                   <Button size="sm" variant="outline" onClick={exportCsv}>
                     <Download className="h-4 w-4 mr-2" />CSV
                   </Button>
-                  <Button size="sm" variant="outline" asChild>
-                    <a href={`${baseUrl}api/projects/${projectId}/survey/export.xlsx`} download>
-                      <Download className="h-4 w-4 mr-2" />Excel
-                    </a>
+                  <Button size="sm" variant="outline" onClick={() => downloadAuthed(`${baseUrl}api/projects/${projectId}/survey/export.xlsx`, `survey-${projectId}.xlsx`).catch((e) => alert(`Gagal download: ${e.message}`))}>
+                    <Download className="h-4 w-4 mr-2" />Excel
                   </Button>
-                  <Button size="sm" variant="outline" asChild>
-                    <a href={`${baseUrl}api/projects/${projectId}/survey/export.pdf`} download>
-                      <Download className="h-4 w-4 mr-2" />PDF
-                    </a>
+                  <Button size="sm" variant="outline" onClick={() => downloadAuthed(`${baseUrl}api/projects/${projectId}/survey/export.pdf`, `survey-${projectId}.pdf`).catch((e) => alert(`Gagal download: ${e.message}`))}>
+                    <Download className="h-4 w-4 mr-2" />PDF
                   </Button>
                 </div>
               </CardHeader>

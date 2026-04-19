@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { formatIDR, formatPct } from "@/lib/format";
 import { Briefcase, Wallet, TrendingUp, Clock, AlertCircle, Activity, AlarmClock, Download } from "lucide-react";
-import { exportSheets } from "@/lib/exports";
+import { exportSheets, downloadAuthed } from "@/lib/exports";
 import { classifyProject, type ProjectType } from "@/lib/projectType";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -461,15 +461,11 @@ function SatisfactionWidget() {
         <div className="flex items-center gap-2">
           {data.responseCount > 0 && (
             <>
-              <Button size="sm" variant="outline" asChild>
-                <a href={`${import.meta.env.BASE_URL}api/survey/summary/export.xlsx`} download>
-                  <Download className="h-3.5 w-3.5 mr-1" />Excel
-                </a>
+              <Button size="sm" variant="outline" onClick={() => downloadAuthed(`${import.meta.env.BASE_URL}api/survey/summary/export.xlsx`, `csat-summary.xlsx`).catch((e) => alert(`Gagal download: ${e.message}`))}>
+                <Download className="h-3.5 w-3.5 mr-1" />Excel
               </Button>
-              <Button size="sm" variant="outline" asChild>
-                <a href={`${import.meta.env.BASE_URL}api/survey/summary/export.pdf`} download>
-                  <Download className="h-3.5 w-3.5 mr-1" />PDF
-                </a>
+              <Button size="sm" variant="outline" onClick={() => downloadAuthed(`${import.meta.env.BASE_URL}api/survey/summary/export.pdf`, `csat-summary.pdf`).catch((e) => alert(`Gagal download: ${e.message}`))}>
+                <Download className="h-3.5 w-3.5 mr-1" />PDF
               </Button>
             </>
           )}
