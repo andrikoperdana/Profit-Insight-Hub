@@ -109,11 +109,6 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-end -mb-3">
-        <Button variant="outline" size="sm" onClick={handleExportUtilization} data-testid="button-export-overview">
-          <Download className="h-4 w-4 mr-2" /> Export Report
-        </Button>
-      </div>
       <WelcomeBanner subtitle="Executive snapshot: portfolio health, profitability, and team utilization." />
 
       {losingProjects.length > 0 && (
