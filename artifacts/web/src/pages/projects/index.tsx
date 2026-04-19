@@ -1,6 +1,7 @@
-import { useListProjects } from "@workspace/api-client-react";
+import { useListProjects, customFetch } from "@workspace/api-client-react";
 import { getListProjectsQueryKey } from "@workspace/api-client-react";
 import { Link } from "wouter";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Plus, Search, Filter, Download } from "lucide-react";
 import { formatIDR } from "@/lib/format";
@@ -21,13 +22,31 @@ import { ProjectStatus } from "@workspace/api-client-react";
 
 export default function ProjectsList() {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [seeding, setSeeding] = useState(false);
 
   const { data: projects, isLoading } = useListProjects(
     statusFilter === "all" ? {} : { status: statusFilter },
     { query: { queryKey: ["projects", statusFilter] } }
   );
+
+  const nonClosedCount = (projects ?? []).filter(p => p.status !== "CLOSED" && p.status !== "COMPLETE").length;
+  const showSeed = user?.role === "MANAGEMENT" && statusFilter === "all" && nonClosedCount < 3;
+  const onSeed = async () => {
+    if (!confirm("Tambah 9 proyek contoh (3 OBSERVATION + 3 ACTIVE + 3 PAUSE)?")) return;
+    setSeeding(true);
+    try {
+      const r = await customFetch("/api/projects/seed-demo", { method: "POST" });
+      alert(`Berhasil. Dibuat: ${r.created?.length ?? 0}, dilewati: ${r.skipped?.length ?? 0}.`);
+      queryClient.invalidateQueries();
+    } catch (e: unknown) {
+      alert(`Gagal: ${e instanceof Error ? e.message : String(e)}`);
+    } finally {
+      setSeeding(false);
+    }
+  };
 
   const filteredProjects = projects?.filter(p => 
     p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -72,6 +91,11 @@ export default function ProjectsList() {
           >
             <Download className="h-4 w-4 mr-2" /> Export
           </Button>
+          {showSeed && (
+            <Button variant="outline" onClick={onSeed} disabled={seeding} data-testid="button-seed-projects-demo">
+              {seeding ? "Seeding…" : "Load 9 demo projects"}
+            </Button>
+          )}
           {canCreateProject(user?.role) && (
             <Button asChild>
               <Link href="/projects/new">
