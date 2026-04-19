@@ -101,7 +101,7 @@ type TrendResp = {
 };
 
 const ROLE_LABEL: Record<string, string> = {
-  KONSULTAN: "Konsultan",
+  KONSULTAN: "Consultant",
   TECHNICAL_WRITER: "Technical Writer",
   PROJECT_MANAGER: "Project Manager",
 };

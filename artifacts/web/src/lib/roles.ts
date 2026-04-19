@@ -4,7 +4,7 @@ export const RoleLabels: Record<UserRole, string> = {
   [UserRole.MANAGEMENT]: "PMO Director",
   [UserRole.PROJECT_MANAGER]: "Project Manager",
   [UserRole.SALES]: "Sales",
-  [UserRole.KONSULTAN]: "Konsultan",
+  [UserRole.KONSULTAN]: "Consultant",
   [UserRole.TECHNICAL_WRITER]: "Technical Writer",
   [UserRole.ADMIN_PROJECT]: "Admin Project",
 };

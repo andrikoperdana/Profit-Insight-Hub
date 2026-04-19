@@ -191,7 +191,7 @@ export default function ApprovalInbox() {
             )}
           </CardTitle>
           <CardDescription>
-            Submissions from Konsultan, Technical Writer, and Admin Project on
+            Submissions from Consultant, Technical Writer, and Admin Project on
             projects you manage. Tick rows for bulk approval.
           </CardDescription>
         </CardHeader>

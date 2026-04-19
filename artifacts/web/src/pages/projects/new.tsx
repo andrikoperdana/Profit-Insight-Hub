@@ -35,7 +35,7 @@ import { formatIDR } from "@/lib/format";
 
 const ROLE_RATES: Record<string, { label: string; rate: number }> = {
   PROJECT_MANAGER: { label: "Project Manager", rate: 2_500_000 },
-  KONSULTAN: { label: "Konsultan", rate: 1_800_000 },
+  KONSULTAN: { label: "Consultant", rate: 1_800_000 },
   TECHNICAL_WRITER: { label: "Technical Writer", rate: 1_200_000 },
 };
 

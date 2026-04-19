@@ -68,7 +68,7 @@ export default function Login() {
     { email: "management@secureprofit.id", role: "PMO Director" },
     { email: "pm@secureprofit.id", role: "Project Manager" },
     { email: "sales@secureprofit.id", role: "Sales" },
-    { email: "konsultan@secureprofit.id", role: "Konsultan" },
+    { email: "konsultan@secureprofit.id", role: "Consultant" },
     { email: "writer@secureprofit.id", role: "Technical Writer" },
     { email: "admin@secureprofit.id", role: "Admin Project" },
   ];

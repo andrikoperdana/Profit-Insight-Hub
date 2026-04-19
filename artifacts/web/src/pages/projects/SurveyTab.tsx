@@ -198,10 +198,10 @@ export default function SurveyTab({ projectId }: { projectId: string }) {
                   <Button size="sm" variant="outline" onClick={exportCsv}>
                     <Download className="h-4 w-4 mr-2" />CSV
                   </Button>
-                  <Button size="sm" variant="outline" onClick={() => downloadAuthed(`${baseUrl}api/projects/${projectId}/survey/export.xlsx`, `survey-${projectId}.xlsx`).catch((e) => alert(`Gagal download: ${e.message}`))}>
+                  <Button size="sm" variant="outline" onClick={() => downloadAuthed(`${baseUrl}api/projects/${projectId}/survey/export.xlsx`, `survey-${projectId}.xlsx`).catch((e) => alert(`Download failed: ${e.message}`))}>
                     <Download className="h-4 w-4 mr-2" />Excel
                   </Button>
-                  <Button size="sm" variant="outline" onClick={() => downloadAuthed(`${baseUrl}api/projects/${projectId}/survey/export.pdf`, `survey-${projectId}.pdf`).catch((e) => alert(`Gagal download: ${e.message}`))}>
+                  <Button size="sm" variant="outline" onClick={() => downloadAuthed(`${baseUrl}api/projects/${projectId}/survey/export.pdf`, `survey-${projectId}.pdf`).catch((e) => alert(`Download failed: ${e.message}`))}>
                     <Download className="h-4 w-4 mr-2" />PDF
                   </Button>
                 </div>

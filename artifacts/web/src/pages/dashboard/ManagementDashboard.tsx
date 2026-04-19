@@ -437,14 +437,14 @@ function SatisfactionWidget() {
   });
   const [seeding, setSeeding] = useState(false);
   const onSeed = async () => {
-    if (!confirm("Isi data contoh CSAT? Ini akan menutup beberapa proyek dan membuat ~11 respons survei. Hanya jalankan sekali.")) return;
+    if (!confirm("Load CSAT demo data? This will close a few projects and create ~11 survey responses. Run once only.")) return;
     setSeeding(true);
     try {
       const r = await customFetch("/api/survey/seed-demo", { method: "POST" });
-      alert(`Berhasil. ${r.responses} respons dibuat, ${r.projectsClosed?.length ?? 0} proyek ditutup.`);
+      alert(`Success. ${r.responses} responses created, ${r.projectsClosed?.length ?? 0} projects closed.`);
       queryClient.invalidateQueries();
     } catch (e: unknown) {
-      alert(`Gagal: ${e instanceof Error ? e.message : String(e)}`);
+      alert(`Failed: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
       setSeeding(false);
     }
@@ -461,10 +461,10 @@ function SatisfactionWidget() {
         <div className="flex items-center gap-2">
           {data.responseCount > 0 && (
             <>
-              <Button size="sm" variant="outline" onClick={() => downloadAuthed(`${import.meta.env.BASE_URL}api/survey/summary/export.xlsx`, `csat-summary.xlsx`).catch((e) => alert(`Gagal download: ${e.message}`))}>
+              <Button size="sm" variant="outline" onClick={() => downloadAuthed(`${import.meta.env.BASE_URL}api/survey/summary/export.xlsx`, `csat-summary.xlsx`).catch((e) => alert(`Download failed: ${e.message}`))}>
                 <Download className="h-3.5 w-3.5 mr-1" />Excel
               </Button>
-              <Button size="sm" variant="outline" onClick={() => downloadAuthed(`${import.meta.env.BASE_URL}api/survey/summary/export.pdf`, `csat-summary.pdf`).catch((e) => alert(`Gagal download: ${e.message}`))}>
+              <Button size="sm" variant="outline" onClick={() => downloadAuthed(`${import.meta.env.BASE_URL}api/survey/summary/export.pdf`, `csat-summary.pdf`).catch((e) => alert(`Download failed: ${e.message}`))}>
                 <Download className="h-3.5 w-3.5 mr-1" />PDF
               </Button>
             </>

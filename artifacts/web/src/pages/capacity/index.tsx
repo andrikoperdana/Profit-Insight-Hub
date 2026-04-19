@@ -127,7 +127,7 @@ export default function CapacityPlanning() {
       AvailableSlots: s.available,
       Assigned: s.assigned,
       Overloaded: s.overloaded,
-      Konsultan_Available: s.byRole?.KONSULTAN?.available ?? 0,
+      Consultant_Available: s.byRole?.KONSULTAN?.available ?? 0,
       TW_Available: s.byRole?.TECHNICAL_WRITER?.available ?? 0,
       Admin_Available: s.byRole?.ADMIN_PROJECT?.available ?? 0,
     }));
@@ -193,7 +193,7 @@ export default function CapacityPlanning() {
           <SelectTrigger className="w-[170px]"><SelectValue placeholder="Role" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All roles</SelectItem>
-            <SelectItem value="KONSULTAN">Konsultan</SelectItem>
+            <SelectItem value="KONSULTAN">Consultant</SelectItem>
             <SelectItem value="TECHNICAL_WRITER">Technical Writer</SelectItem>
             <SelectItem value="ADMIN_PROJECT">Admin Project</SelectItem>
             <SelectItem value="PROJECT_MANAGER">Project Manager</SelectItem>

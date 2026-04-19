@@ -35,14 +35,14 @@ export default function ProjectsList() {
   const nonClosedCount = (projects ?? []).filter(p => p.status !== "CLOSED" && p.status !== "COMPLETE").length;
   const showSeed = user?.role === "MANAGEMENT" && statusFilter === "all" && nonClosedCount < 3;
   const onSeed = async () => {
-    if (!confirm("Tambah 9 proyek contoh (3 OBSERVATION + 3 ACTIVE + 3 PAUSE)?")) return;
+    if (!confirm("Add 9 sample projects (3 OBSERVATION + 3 ACTIVE + 3 PAUSE)?")) return;
     setSeeding(true);
     try {
       const r = await customFetch("/api/projects/seed-demo", { method: "POST" });
-      alert(`Berhasil. Dibuat: ${r.created?.length ?? 0}, dilewati: ${r.skipped?.length ?? 0}.`);
+      alert(`Success. Created: ${r.created?.length ?? 0}, skipped: ${r.skipped?.length ?? 0}.`);
       queryClient.invalidateQueries();
     } catch (e: unknown) {
-      alert(`Gagal: ${e instanceof Error ? e.message : String(e)}`);
+      alert(`Failed: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
       setSeeding(false);
     }

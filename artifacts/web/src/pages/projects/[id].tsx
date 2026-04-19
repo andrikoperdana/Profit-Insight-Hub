@@ -279,21 +279,21 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
   const addMutation = useAddProjectResource({
     mutation: {
       onSuccess: () => {
-        toast({ title: "Resource ditambahkan", description: "Anggota tim berhasil ditugaskan ke proyek." });
+        toast({ title: "Resource added", description: "Team member assigned to this project." });
         setAddOpen(false);
         setForm({ userId: "", roleInProject: "", plannedMandays: "10", dailyRate: "1500000" });
         invalidate();
       },
-      onError: (e: any) => toast({ title: "Gagal", description: e?.message ?? "Tidak dapat menambah resource", variant: "destructive" }),
+      onError: (e: any) => toast({ title: "Failed", description: e?.message ?? "Could not add resource", variant: "destructive" }),
     },
   });
   const removeMutation = useRemoveProjectResource({
     mutation: {
       onSuccess: () => {
-        toast({ title: "Resource dihapus", description: "Anggota tim dilepas dari proyek." });
+        toast({ title: "Resource removed", description: "Team member unassigned from this project." });
         invalidate();
       },
-      onError: (e: any) => toast({ title: "Gagal", description: e?.message ?? "Tidak dapat menghapus resource", variant: "destructive" }),
+      onError: (e: any) => toast({ title: "Failed", description: e?.message ?? "Could not remove resource", variant: "destructive" }),
     },
   });
 
@@ -307,7 +307,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
 
   const handleAdd = () => {
     if (!form.userId) {
-      toast({ title: "Pilih anggota tim", variant: "destructive" });
+      toast({ title: "Please select a team member", variant: "destructive" });
       return;
     }
     addMutation.mutate({
@@ -326,24 +326,24 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
       <Card className="border-border shadow-sm">
         <CardHeader className="flex flex-row items-start justify-between gap-4">
           <div>
-            <CardTitle className="text-base">Tim yang Terlibat dalam Proyek Ini</CardTitle>
+            <CardTitle className="text-base">People Involved in This Project</CardTitle>
             <CardDescription>
-              Daftar konsultan, project manager, dan pendukung lain yang ditugaskan pada {project?.code ?? "proyek"}. Kolom <span className="font-medium text-foreground">Mandays</span> menunjukkan rencana vs realisasi (timesheet yang sudah disetujui), sedangkan <span className="font-medium text-foreground">Daily Rate</span> dipakai untuk perhitungan estimated cost.
+              List of consultants, project managers, and other contributors assigned to {project?.code ?? "this project"}. The <span className="font-medium text-foreground">Mandays</span> column shows planned vs actual (from approved timesheets), and the <span className="font-medium text-foreground">Daily Rate</span> is used to compute estimated cost.
             </CardDescription>
           </div>
           {canEdit && (
             <Button size="sm" onClick={() => setAddOpen(true)} className="shrink-0">
-              + Tambah Resource
+              + Add Resource
             </Button>
           )}
         </CardHeader>
         <CardContent>
           {list.length === 0 ? (
             <div className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-              Belum ada resource yang ditugaskan pada proyek ini.
+              No resources assigned to this project yet.
               {canEdit && (
                 <div className="mt-3">
-                  <Button size="sm" onClick={() => setAddOpen(true)}>+ Tambah Resource Pertama</Button>
+                  <Button size="sm" onClick={() => setAddOpen(true)}>+ Add First Resource</Button>
                 </div>
               )}
             </div>
@@ -352,13 +352,13 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-left text-xs text-muted-foreground border-b border-border">
-                    <th className="py-2 pr-3 font-medium">Nama</th>
-                    <th className="py-2 pr-3 font-medium">Peran di Proyek</th>
-                    <th className="py-2 pr-3 font-medium">Role Sistem</th>
+                    <th className="py-2 pr-3 font-medium">Name</th>
+                    <th className="py-2 pr-3 font-medium">Project Role</th>
+                    <th className="py-2 pr-3 font-medium">System Role</th>
                     <th className="py-2 pr-3 font-medium text-right">Planned (md)</th>
                     <th className="py-2 pr-3 font-medium text-right">Actual (md)</th>
                     <th className="py-2 pr-3 font-medium text-right">Daily Rate</th>
-                    <th className="py-2 pr-3 font-medium text-right">Est. Biaya</th>
+                    <th className="py-2 pr-3 font-medium text-right">Est. Cost</th>
                     {canEdit && <th className="py-2 pr-3 font-medium text-right w-12"></th>}
                   </tr>
                 </thead>
@@ -370,7 +370,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                     return (
                       <tr key={r.id ?? r.userId} className="border-b border-border/40 hover:bg-muted/30">
                         <td className="py-2 pr-3 font-medium">{r.userName ?? "—"}</td>
-                        <td className="py-2 pr-3">{r.roleInProject ?? <span className="text-muted-foreground italic">tidak diisi</span>}</td>
+                        <td className="py-2 pr-3">{r.roleInProject ?? <span className="text-muted-foreground italic">not set</span>}</td>
                         <td className="py-2 pr-3"><Badge variant="outline" className="text-[10px]">{r.userRole}</Badge></td>
                         <td className="py-2 pr-3 text-right font-mono">{planned.toFixed(1)}</td>
                         <td className="py-2 pr-3 text-right font-mono">
@@ -391,11 +391,11 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                               className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
                               disabled={removeMutation.isPending}
                               onClick={() => {
-                                if (confirm(`Hapus ${r.userName} dari proyek ini?`)) {
+                                if (confirm(`Remove ${r.userName} from this project?`)) {
                                   removeMutation.mutate({ resourceId: r.id });
                                 }
                               }}
-                              title="Hapus dari proyek"
+                              title="Remove from project"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                             </Button>
@@ -407,7 +407,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                 </tbody>
                 <tfoot>
                   <tr className="text-xs font-medium">
-                    <td colSpan={3} className="py-2 pr-3 text-muted-foreground">Total ({list.length} orang)</td>
+                    <td colSpan={3} className="py-2 pr-3 text-muted-foreground">Total ({list.length} {list.length === 1 ? "person" : "people"})</td>
                     <td className="py-2 pr-3 text-right font-mono">{totalPlanned.toFixed(1)}</td>
                     <td className="py-2 pr-3 text-right font-mono">{totalActual.toFixed(1)}</td>
                     <td className="py-2 pr-3"></td>
@@ -424,17 +424,17 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
       <Dialog open={addOpen} onOpenChange={setAddOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Tambah Resource ke {project?.code ?? "Proyek"}</DialogTitle>
+            <DialogTitle>Add Resource to {project?.code ?? "Project"}</DialogTitle>
             <DialogDescription>
-              Tugaskan anggota tim (konsultan, technical writer, PM, atau admin) ke proyek ini. Mandays dan daily rate dipakai untuk perhitungan estimated cost di tab Financials.
+              Assign a team member (consultant, technical writer, PM, or admin) to this project. Mandays and daily rate are used to compute estimated cost on the Financials tab.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 pt-2">
             <div className="space-y-1.5">
-              <Label>Anggota Tim</Label>
+              <Label>Team Member</Label>
               <Select value={form.userId} onValueChange={(v) => setForm({ ...form, userId: v })}>
                 <SelectTrigger>
-                  <SelectValue placeholder={availableUsers.length === 0 ? "Semua user sudah ditugaskan" : "Pilih user"} />
+                  <SelectValue placeholder={availableUsers.length === 0 ? "All users are already assigned" : "Select a user"} />
                 </SelectTrigger>
                 <SelectContent>
                   {availableUsers.map((u: any) => (
@@ -446,9 +446,9 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label>Peran di Proyek <span className="text-muted-foreground text-xs">(opsional)</span></Label>
+              <Label>Project Role <span className="text-muted-foreground text-xs">(optional)</span></Label>
               <Input
-                placeholder="contoh: Lead Consultant, Penetration Tester"
+                placeholder="e.g. Lead Consultant, Penetration Tester"
                 value={form.roleInProject}
                 onChange={(e) => setForm({ ...form, roleInProject: e.target.value })}
               />
@@ -476,13 +476,13 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
               </div>
             </div>
             <p className="text-xs text-muted-foreground">
-              Estimated cost untuk assignment ini: <span className="font-mono text-foreground">{formatIDR((Number(form.plannedMandays) || 0) * (Number(form.dailyRate) || 0))}</span>
+              Estimated cost for this assignment: <span className="font-mono text-foreground">{formatIDR((Number(form.plannedMandays) || 0) * (Number(form.dailyRate) || 0))}</span>
             </p>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setAddOpen(false)} disabled={addMutation.isPending}>Batal</Button>
+            <Button variant="outline" onClick={() => setAddOpen(false)} disabled={addMutation.isPending}>Cancel</Button>
             <Button onClick={handleAdd} disabled={addMutation.isPending || !form.userId}>
-              {addMutation.isPending ? "Menyimpan..." : "Tambah"}
+              {addMutation.isPending ? "Saving..." : "Add"}
             </Button>
           </DialogFooter>
         </DialogContent>
