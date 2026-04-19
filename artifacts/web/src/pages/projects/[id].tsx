@@ -229,6 +229,7 @@ export default function ProjectDetail() {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="timeline">Timeline</TabsTrigger>
           <TabsTrigger value="financials">Financials</TabsTrigger>
+          <TabsTrigger value="resources">Resources</TabsTrigger>
           <TabsTrigger value="documents">Documents</TabsTrigger>
           {(user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER") && (
             <TabsTrigger value="survey">Customer Survey</TabsTrigger>
@@ -244,6 +245,9 @@ export default function ProjectDetail() {
         <TabsContent value="financials" className="pt-4 m-0">
           <FinancialsTab projectId={id} />
         </TabsContent>
+        <TabsContent value="resources" className="pt-4 m-0">
+          <ResourcesTab projectId={id} project={project} />
+        </TabsContent>
         <TabsContent value="documents" className="pt-4 m-0">
           <DocumentsTab projectId={id} projectStatus={project.status} />
         </TabsContent>
@@ -251,6 +255,85 @@ export default function ProjectDetail() {
           <SurveyTab projectId={id} />
         </TabsContent>
       </Tabs>
+    </div>
+  );
+}
+
+function ResourcesTab({ projectId, project }: { projectId: string; project: any }) {
+  const { data: resources, isLoading } = useListProjectResources(projectId);
+  if (isLoading) return <LoadingPage />;
+  const list = resources ?? [];
+  const totalPlanned = list.reduce((s: number, r: any) => s + (r.plannedMandays ?? 0), 0);
+  const totalActual = list.reduce((s: number, r: any) => s + (r.actualMandays ?? 0), 0);
+  const estCost = list.reduce((s: number, r: any) => s + (r.plannedMandays ?? 0) * (r.dailyRate ?? 0), 0);
+  return (
+    <div className="space-y-6">
+      <Card className="border-border shadow-sm">
+        <CardHeader>
+          <CardTitle className="text-base">Tim yang Terlibat dalam Proyek Ini</CardTitle>
+          <CardDescription>
+            Daftar konsultan, project manager, dan pendukung lain yang ditugaskan pada {project?.code ?? "proyek"}. Kolom <span className="font-medium text-foreground">Mandays</span> menunjukkan rencana vs realisasi (timesheet yang sudah disetujui), sedangkan <span className="font-medium text-foreground">Daily Rate</span> dipakai untuk perhitungan estimated cost.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {list.length === 0 ? (
+            <div className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+              Belum ada resource yang ditugaskan pada proyek ini.
+              <div className="mt-1 text-xs">PM atau Manajemen dapat menambahkannya dari menu <Link href="/resources" className="text-primary underline">Resources</Link>.</div>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-left text-xs text-muted-foreground border-b border-border">
+                    <th className="py-2 pr-3 font-medium">Nama</th>
+                    <th className="py-2 pr-3 font-medium">Peran di Proyek</th>
+                    <th className="py-2 pr-3 font-medium">Role Sistem</th>
+                    <th className="py-2 pr-3 font-medium text-right">Planned (md)</th>
+                    <th className="py-2 pr-3 font-medium text-right">Actual (md)</th>
+                    <th className="py-2 pr-3 font-medium text-right">Daily Rate</th>
+                    <th className="py-2 pr-3 font-medium text-right">Est. Biaya</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {list.map((r: any) => {
+                    const planned = r.plannedMandays ?? 0;
+                    const actual = r.actualMandays ?? 0;
+                    const pct = planned > 0 ? (actual / planned) * 100 : 0;
+                    return (
+                      <tr key={r.id ?? r.userId} className="border-b border-border/40 hover:bg-muted/30">
+                        <td className="py-2 pr-3 font-medium">{r.userName ?? "—"}</td>
+                        <td className="py-2 pr-3">{r.roleInProject ?? <span className="text-muted-foreground italic">tidak diisi</span>}</td>
+                        <td className="py-2 pr-3"><Badge variant="outline" className="text-[10px]">{r.userRole}</Badge></td>
+                        <td className="py-2 pr-3 text-right font-mono">{planned.toFixed(1)}</td>
+                        <td className="py-2 pr-3 text-right font-mono">
+                          {actual.toFixed(1)}
+                          {planned > 0 && (
+                            <span className={`ml-2 text-[10px] ${pct > 100 ? "text-destructive" : pct >= 80 ? "text-amber-500" : "text-muted-foreground"}`}>
+                              ({pct.toFixed(0)}%)
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-2 pr-3 text-right font-mono">{formatIDR(r.dailyRate ?? 0)}</td>
+                        <td className="py-2 pr-3 text-right font-mono">{formatIDR(planned * (r.dailyRate ?? 0))}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+                <tfoot>
+                  <tr className="text-xs font-medium">
+                    <td colSpan={3} className="py-2 pr-3 text-muted-foreground">Total ({list.length} orang)</td>
+                    <td className="py-2 pr-3 text-right font-mono">{totalPlanned.toFixed(1)}</td>
+                    <td className="py-2 pr-3 text-right font-mono">{totalActual.toFixed(1)}</td>
+                    <td className="py-2 pr-3"></td>
+                    <td className="py-2 pr-3 text-right font-mono text-primary">{formatIDR(estCost)}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

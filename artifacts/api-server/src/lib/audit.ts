@@ -26,7 +26,9 @@ export type AuditAction =
   | "resource.updated"
   | "resource.removed"
   | "survey.submitted"
-  | "survey.template_updated";
+  | "survey.template_updated"
+  | "survey.seed_demo"
+  | "project.seed_demo";
 
 export type EntityType =
   | "User"

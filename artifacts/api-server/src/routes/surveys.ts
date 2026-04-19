@@ -258,7 +258,12 @@ router.post("/survey/seed-demo", requireAuth, requireRole("MANAGEMENT"), async (
       respCount += 1;
     }
   }
-  await recordAudit(req, "SEED_DEMO_CSAT", "Survey", null, { projectsClosed, responses: respCount });
+  await recordAudit(req, {
+    action: "survey.seed_demo",
+    entityType: "Survey",
+    description: `Seeded ${respCount} CSAT responses across ${projectsClosed.length} closed projects`,
+    after: { projectsClosed, responses: respCount },
+  });
   res.json({ ok: true, projectsClosed, responses: respCount });
 });
 

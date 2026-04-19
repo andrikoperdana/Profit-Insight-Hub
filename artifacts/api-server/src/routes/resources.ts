@@ -10,6 +10,33 @@ const writeRoles = ["MANAGEMENT", "PROJECT_MANAGER"] as const;
 
 router.get("/projects/:id/resources", async (req, res) => {
   const projectId = req.params.id;
+  const userId = req.user?.sub;
+  const role = req.user?.role;
+  const project = await prisma.project.findUnique({
+    where: { id: projectId },
+    select: { id: true, pmId: true, salesId: true },
+  });
+  if (!project) {
+    res.status(404).json({ error: "Project not found" });
+    return;
+  }
+  // RBAC: management/admin/finance see all; PM only owned; Sales only owned;
+  // Consultant/TechWriter only if assigned to this project.
+  const broad = role === "MANAGEMENT" || role === "ADMIN_PROJECT";
+  let allowed = broad;
+  if (!allowed && role === "PROJECT_MANAGER" && project.pmId === userId) allowed = true;
+  if (!allowed && role === "SALES" && project.salesId === userId) allowed = true;
+  if (!allowed && (role === "KONSULTAN" || role === "TECHNICAL_WRITER")) {
+    const assigned = await prisma.projectResource.findFirst({
+      where: { projectId, userId: userId ?? "" },
+      select: { id: true },
+    });
+    if (assigned) allowed = true;
+  }
+  if (!allowed) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
   const resources = await prisma.projectResource.findMany({
     where: { projectId },
     include: { user: true },

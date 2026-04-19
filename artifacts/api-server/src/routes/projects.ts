@@ -45,9 +45,13 @@ router.post("/projects/seed-demo", requireRole("MANAGEMENT"), async (req, res) =
     const m = last.code.match(/SPH-2026-(\d+)/);
     if (m) nextNum = parseInt(m[1], 10) + 1;
   }
+  const consultants = await prisma.user.findMany({
+    where: { role: { in: ["KONSULTAN", "TECHNICAL_WRITER"] } },
+  });
   const today = new Date();
   const created: string[] = [];
   const skipped: string[] = [];
+  let resourcesCreated = 0;
   for (let i = 0; i < DEMO_PROJECTS.length; i += 1) {
     const p = DEMO_PROJECTS[i];
     const exists = await prisma.project.findFirst({ where: { name: p.name, status: p.status } });
@@ -75,9 +79,39 @@ router.post("/projects/seed-demo", requireRole("MANAGEMENT"), async (req, res) =
       },
     });
     created.push(project.code);
+
+    // Assign PM + 2 consultants for ACTIVE/PAUSE; just PM for OBSERVATION
+    const assignments: { userId: string; role: string; share: number; rate: number }[] = [
+      { userId: pm.id, role: "Project Manager", share: 0.2, rate: 2_500_000 },
+    ];
+    if (p.status !== "OBSERVATION" && consultants.length > 0) {
+      const c1 = consultants[i % consultants.length];
+      const c2 = consultants[(i + 1) % consultants.length];
+      assignments.push({ userId: c1.id, role: "Lead Consultant", share: 0.5, rate: 1_800_000 });
+      if (c2.id !== c1.id) {
+        assignments.push({ userId: c2.id, role: "Consultant", share: 0.3, rate: 1_500_000 });
+      }
+    }
+    for (const a of assignments) {
+      await prisma.projectResource.create({
+        data: {
+          projectId: project.id,
+          userId: a.userId,
+          roleInProject: a.role,
+          plannedMandays: Math.round(p.mandays * a.share),
+          dailyRate: a.rate,
+        },
+      });
+      resourcesCreated += 1;
+    }
   }
-  await recordAudit(req, "SEED_DEMO_PROJECTS", "Project", null, { created, skipped });
-  res.json({ ok: true, created, skipped });
+  await recordAudit(req, {
+    action: "project.seed_demo",
+    entityType: "Project",
+    description: `Seeded ${created.length} demo projects (${resourcesCreated} resource assignments)`,
+    after: { created, skipped, resourcesCreated },
+  });
+  res.json({ ok: true, created, skipped, resourcesCreated });
 });
 
 router.get("/projects", async (req, res) => {
