@@ -41,6 +41,7 @@ import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
 import { LoadingPage } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
 import { useAuth } from "@/lib/auth";
+import { RoleLabels } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
 
 import { Button } from "@/components/ui/button";
@@ -371,7 +372,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                       <tr key={r.id ?? r.userId} className="border-b border-border/40 hover:bg-muted/30">
                         <td className="py-2 pr-3 font-medium">{r.userName ?? "—"}</td>
                         <td className="py-2 pr-3">{r.roleInProject ?? <span className="text-muted-foreground italic">not set</span>}</td>
-                        <td className="py-2 pr-3"><Badge variant="outline" className="text-[10px]">{r.userRole}</Badge></td>
+                        <td className="py-2 pr-3"><Badge variant="outline" className="text-[10px]">{RoleLabels[r.userRole as keyof typeof RoleLabels] ?? r.userRole}</Badge></td>
                         <td className="py-2 pr-3 text-right font-mono">{planned.toFixed(1)}</td>
                         <td className="py-2 pr-3 text-right font-mono">
                           {actual.toFixed(1)}
