@@ -266,9 +266,16 @@ Klik notifikasi untuk langsung menuju halaman terkait. Tombol **Mark all as read
 
 ---
 
-## Bagian 13 — Ekspor Data ke Excel
+## Bagian 13 — Ekspor Data ke Excel & PDF
 
-Pada hampir setiap halaman daftar (Projects, Timesheet, P&L, Utilization, Audit Log, Survey Responses) tersedia tombol **Export Excel** atau **Export CSV**. Berkas yang diunduh dapat dibuka langsung di Microsoft Excel atau Google Sheets.
+Pada hampir setiap halaman daftar (Projects, Timesheet, P&L, Utilization, Audit Log, Survey Responses) tersedia tombol **Export Excel**, **Export CSV**, atau **Export PDF**. Berkas Excel/CSV dapat dibuka langsung di Microsoft Excel atau Google Sheets; berkas PDF siap dicetak atau dilampirkan ke email.
+
+Khusus untuk Customer Satisfaction:
+
+- Pada tab **Customer Satisfaction** detail proyek tersedia tiga tombol: **CSV**, **Excel**, dan **PDF**.
+- Pada widget **Average Client Satisfaction** di Dashboard Manajemen tersedia dua tombol: **Excel** dan **PDF** untuk ringkasan portofolio bulan berjalan.
+
+Berkas Excel CSAT berisi dua sheet — *Summary* (rata-rata per pertanyaan) dan *Responses* (setiap respons sebagai satu baris). Berkas PDF dirancang dengan tema cyber-security (deep blue + cyber green) berisi highlight rata-rata, tabel per pertanyaan, dan daftar komentar/lessons learned.
 
 ---
 
@@ -334,11 +341,15 @@ Pada tab **Customer Satisfaction** detail proyek, PM dan Manajemen melihat:
 
 - **Diagram radar** rata-rata rating per pertanyaan.
 - **Daftar respons individu** lengkap dengan komentar.
-- Tombol **Export CSV** untuk analisis lanjutan.
+- Tombol **CSV**, **Excel**, dan **PDF** untuk mengunduh data per proyek.
 
-Pada **Dashboard Manajemen** terdapat widget yang menampilkan rata-rata kepuasan bulan berjalan dan rincian per pertanyaan untuk seluruh proyek.
+Pada **Dashboard Manajemen** terdapat widget **Average Client Satisfaction (this month)** yang menampilkan rata-rata kepuasan bulan berjalan dan rincian per pertanyaan untuk seluruh proyek, beserta tombol **Excel** dan **PDF** untuk mengunduh ringkasan portofolio.
 
-### 16.5 Mengubah Template Pertanyaan
+### 16.5 Mengisi Data Contoh (Sekali-Pakai)
+
+Apabila widget masih menampilkan "No survey responses received yet this month" — biasanya pada lingkungan baru — pengguna **MANAGEMENT** akan melihat tombol kecil **Load demo data** di kanan widget. Klik sekali, konfirmasi, dan sistem akan otomatis menutup beberapa proyek serta membuat sekitar 11 respons survei contoh dengan tanggal di bulan berjalan. Tombol akan hilang setelah ada respons. Fungsi ini bersifat idempoten — panggilan kedua akan ditolak secara otomatis.
+
+### 16.6 Mengubah Template Pertanyaan
 
 Pengguna **MANAGEMENT** dapat membuka **Settings → Survey Template** untuk menambah, menonaktifkan, atau mengubah teks pertanyaan. Respons lama tetap dapat dibaca utuh karena sistem menyimpan **snapshot pertanyaan** pada saat respons dikirim.
 
