@@ -53,3 +53,57 @@ id = "X1sCdu7RVkIJdSqGB6XjY"
 uri = "file://docs/SecureProfit-Hub-Buku-Panduan-Pengguna.pdf"
 type = "pdf"
 title = "Buku Panduan Pengguna (PDF) — versi update"
+
+[[outputs]]
+id = "moCN30yJHf2Z1W23u-Na6"
+uri = "file://.local/outputs/Profit-Insight-Hub.pptx"
+type = "slides"
+title = "Profit Insight Hub.pptx"
+
+[[outputs]]
+id = "2jVK2f4M8_ysuQG3s04xE"
+uri = "file://docs/modules/README.md"
+type = "text"
+title = "Index — Technical Documentation"
+
+[[outputs]]
+id = "dWRjZ-UFJRRu7HirxK3c0"
+uri = "file://docs/modules/01-dashboard.md"
+type = "text"
+title = "1. Dashboard"
+
+[[outputs]]
+id = "6Msy4nHfC1ojiTx9FwKq8"
+uri = "file://docs/modules/02-projects-clients.md"
+type = "text"
+title = "2. Projects & Clients"
+
+[[outputs]]
+id = "_JDSMspEgsHSMEl0l2p-8"
+uri = "file://docs/modules/03-resources-capacity.md"
+type = "text"
+title = "3. Resources & Capacity"
+
+[[outputs]]
+id = "e4dwU_m1Rc8gBNDpI0-S9"
+uri = "file://docs/modules/04-profitability-finance.md"
+type = "text"
+title = "4. Profitability & Finance"
+
+[[outputs]]
+id = "YZtHBOdJojbmZFMIejhld"
+uri = "file://docs/modules/05-timesheets-approvals.md"
+type = "text"
+title = "5. Timesheets & Approvals"
+
+[[outputs]]
+id = "nGqVK5p2ilBMfwAN4VTrr"
+uri = "file://docs/modules/06-business-intelligence-csat.md"
+type = "text"
+title = "6. Business Intelligence & CSAT"
+
+[[outputs]]
+id = "crl_68zej5dK6U68wKywM"
+uri = "file://docs/modules/07-governance-rbac.md"
+type = "text"
+title = "7. Governance & RBAC"
