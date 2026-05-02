@@ -1,1 +1,66 @@
-[]
+[
+  {
+    "id": "1d3a86fe-0e7e-4b45-9b41-0a37cf8d2b01",
+    "position": 1,
+    "filepath": "src/pages/slides/Title.tsx",
+    "title": "SecureProfit Hub",
+    "description": "Project & profitability OS for IT security consulting.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "2d3a86fe-0e7e-4b45-9b41-0a37cf8d2b02",
+    "position": 2,
+    "filepath": "src/pages/slides/Problem.tsx",
+    "title": "The Problem",
+    "description": "Why generic PSA tools miss the security beat.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "3d3a86fe-0e7e-4b45-9b41-0a37cf8d2b03",
+    "position": 3,
+    "filepath": "src/pages/slides/Platform.tsx",
+    "title": "The Platform",
+    "description": "Four modules covering the whole engagement.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "4d3a86fe-0e7e-4b45-9b41-0a37cf8d2b04",
+    "position": 4,
+    "filepath": "src/pages/slides/Lifecycle.tsx",
+    "title": "Project Lifecycle",
+    "description": "RFP through invoice, gated and owned.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "5d3a86fe-0e7e-4b45-9b41-0a37cf8d2b05",
+    "position": 5,
+    "filepath": "src/pages/slides/Profitability.tsx",
+    "title": "Real-time Profitability",
+    "description": "Live margin, burn vs. plan, at-risk alerts.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "6d3a86fe-0e7e-4b45-9b41-0a37cf8d2b06",
+    "position": 6,
+    "filepath": "src/pages/slides/People.tsx",
+    "title": "People & Capacity",
+    "description": "Utilization, skills, bench in one view.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "7d3a86fe-0e7e-4b45-9b41-0a37cf8d2b07",
+    "position": 7,
+    "filepath": "src/pages/slides/Governance.tsx",
+    "title": "Governance & Audit",
+    "description": "Six roles, audit log, BI, CSAT.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "8d3a86fe-0e7e-4b45-9b41-0a37cf8d2b08",
+    "position": 8,
+    "filepath": "src/pages/slides/Closing.tsx",
+    "title": "Get Started",
+    "description": "Spin up a demo workspace.",
+    "speakerNotes": ""
+  }
+]

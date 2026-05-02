@@ -4,22 +4,27 @@
   --color-primary: var(--slide-primary);
   --color-accent: var(--slide-accent);
   --color-bg: var(--slide-bg);
+  --color-bg-elevated: var(--slide-bg-elevated);
   --color-text: var(--slide-text);
   --color-muted: var(--slide-muted);
+  --color-border: var(--slide-border);
   --font-display: var(--font-display-family);
   --font-body: var(--font-body-family);
+  --font-mono: var(--font-mono-family);
 }
 
 :root {
-  /* Replace these with brand colors */
-  --slide-primary: #4f46e5;
-  --slide-accent: #06b6d4;
-  --slide-bg: #f8fafc;
-  --slide-text: #0f172a;
-  --slide-muted: #64748b;
-  --font-display-family: "Inter", system-ui, sans-serif;
-  --font-body-family: "Inter", system-ui, sans-serif;
-  color-scheme: light;
+  --slide-primary: #22c55e;
+  --slide-accent: #34d399;
+  --slide-bg: #0f172a;
+  --slide-bg-elevated: #1e293b;
+  --slide-text: #f1f5f9;
+  --slide-muted: #94a3b8;
+  --slide-border: #334155;
+  --font-display-family: "Space Grotesk", system-ui, sans-serif;
+  --font-body-family: "Space Grotesk", system-ui, sans-serif;
+  --font-mono-family: "JetBrains Mono", ui-monospace, monospace;
+  color-scheme: dark;
 }
 
 html,
@@ -33,6 +38,7 @@ body,
 body {
   background: var(--slide-bg);
   color: var(--slide-text);
+  font-family: var(--font-body-family);
 }
 
 .slide {

@@ -1,5 +1,16 @@
 uploads = []
-generated = []
+
+[[generated]]
+id = "aU5sepsDH4fJTVrsy6P9H"
+uri = "file://artifacts/secureprofit-deck/public/hero.png"
+type = "image"
+title = "secureprofit hero"
+
+[[generated]]
+id = "Apkg3_DNU0WjFn-qcKPcQ"
+uri = "file://artifacts/secureprofit-deck/public/divider.png"
+type = "image"
+title = "secureprofit divider"
 
 [[outputs]]
 id = "VaMECNkMzOFllpMSgSi8-"
