@@ -9,6 +9,8 @@
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "html-to-docx": "^1.8.0",
+    "marked": "^18.0.2",
     "tsx": "catalog:"
   }
 }

@@ -107,3 +107,9 @@ id = "crl_68zej5dK6U68wKywM"
 uri = "file://docs/modules/07-governance-rbac.md"
 type = "text"
 title = "7. Governance & RBAC"
+
+[[outputs]]
+id = "k_ffhWebAq3NYrQQL-WmV"
+uri = "file://docs/SecureProfitHub-Modules.docx"
+type = "word_document"
+title = "SecureProfit Hub — Technical Documentation (DOCX)"
