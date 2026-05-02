@@ -1,0 +1,31 @@
+kind = "slides"
+previewPath = "/secureprofit-deck/"
+title = "SecureProfit Hub Deck"
+version = "1.0.0"
+id = "artifacts/secureprofit-deck"
+router = "path"
+
+[[integratedSkills]]
+name = "slides"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/secureprofit-deck/" ]
+localPort = 23670
+
+[services.development]
+run = "pnpm --filter @workspace/secureprofit-deck run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/secureprofit-deck", "run", "build" ]
+publicDir = "artifacts/secureprofit-deck/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23670"
+BASE_PATH = "/secureprofit-deck/"
