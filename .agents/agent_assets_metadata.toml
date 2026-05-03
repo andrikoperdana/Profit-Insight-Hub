@@ -12,6 +12,12 @@ uri = "file://artifacts/secureprofit-deck/public/divider.png"
 type = "image"
 title = "secureprofit divider"
 
+[[generated]]
+id = "BlUJ9nMwUwTWYMTQfY2Fl"
+uri = "file://artifacts/sentinelscan-deck/public/hero-cyber.png"
+type = "image"
+title = "cybersecurity hero"
+
 [[outputs]]
 id = "VaMECNkMzOFllpMSgSi8-"
 uri = "file://docs/SecureProfit_Hub_User_Guide.pdf"
@@ -113,3 +119,9 @@ id = "k_ffhWebAq3NYrQQL-WmV"
 uri = "file://docs/SecureProfitHub-Modules.docx"
 type = "word_document"
 title = "SecureProfit Hub — Technical Documentation (DOCX)"
+
+[[outputs]]
+id = "bKgDVmPriQjv9HW5GY0Zh"
+uri = "file://.local/outputs/SentinelScan-Pitch-Deck.pptx"
+type = "slides"
+title = "SentinelScan Pitch Deck (PPTX)"
