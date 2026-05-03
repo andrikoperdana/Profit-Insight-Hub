@@ -77,3 +77,9 @@ externalPort = 4200
 
 [nix]
 channel = "stable-25_05"
+
+[userenv]
+
+[userenv.production]
+PENTEST_JWT_SECRET = "k26bL+77NKDEjGd+pQENDccTd1jP7jlct/7sJnPCTYqq6mrsEi5U7BVVSMMlfNmV"
+PENTEST_CRED_KEY = "c0DwaEmyLQNqs094k8HIZyKx+tP/48XBlsDah+V7HoA="
