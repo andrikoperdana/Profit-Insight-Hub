@@ -1,0 +1,31 @@
+kind = "slides"
+previewPath = "/sentinelscan-deck/"
+title = "SentinelScan Pitch Deck"
+version = "1.0.0"
+id = "artifacts/sentinelscan-deck"
+router = "path"
+
+[[integratedSkills]]
+name = "slides"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/sentinelscan-deck/" ]
+localPort = 22402
+
+[services.development]
+run = "pnpm --filter @workspace/sentinelscan-deck run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/sentinelscan-deck", "run", "build" ]
+publicDir = "artifacts/sentinelscan-deck/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22402"
+BASE_PATH = "/sentinelscan-deck/"
