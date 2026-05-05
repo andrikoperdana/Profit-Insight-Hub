@@ -68,6 +68,7 @@ const salesIntakeSchema = z.object({
   code: z.string().min(2, "Nomor SPK/PO wajib diisi"),
   name: z.string().min(3, "Nama project wajib diisi"),
   clientId: z.string().min(1, "Pilih client"),
+  contractValue: z.coerce.number().min(0, "Nilai project tidak boleh negatif"),
 });
 type SalesIntake = z.infer<typeof salesIntakeSchema>;
 
@@ -97,7 +98,7 @@ function SalesIntakeForm() {
 
   const form = useForm<SalesIntake>({
     resolver: zodResolver(salesIntakeSchema),
-    defaultValues: { code: "", name: "", clientId: "" },
+    defaultValues: { code: "", name: "", clientId: "", contractValue: 0 },
   });
 
   const onSubmit = (data: SalesIntake) => {
@@ -106,6 +107,7 @@ function SalesIntakeForm() {
         code: data.code,
         name: data.name,
         clientId: data.clientId,
+        contractValue: data.contractValue,
         status: ProjectStatus.DRAFT,
       },
     });
@@ -133,7 +135,7 @@ function SalesIntakeForm() {
             <CardHeader>
               <CardTitle>Informasi Project</CardTitle>
               <CardDescription>
-                Hanya 3 hal yang perlu Anda isi sekarang. Detail lain (revenue, mandays, tim) diisi oleh PM.
+                Isi 4 data dasar berikut. Detail lain (mandays, tim, biaya, jadwal) diisi oleh PM setelah ditugaskan.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -175,6 +177,26 @@ function SalesIntakeForm() {
                         ))}
                       </SelectContent>
                     </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="contractValue"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nilai Project / Harga Jual ke Client (IDR) *</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min={0}
+                        placeholder="cth. 250000000"
+                        className="font-mono"
+                        data-testid="input-intake-contract-value"
+                        {...field}
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

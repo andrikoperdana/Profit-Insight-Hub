@@ -276,7 +276,7 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
   const role = req.user!.role;
   const userId = req.user!.sub;
 
-  const SALES_ALLOWED = new Set(["code", "name", "description", "clientId"]);
+  const SALES_ALLOWED = new Set(["code", "name", "description", "clientId", "contractValue"]);
   const PM_FORBIDDEN = new Set(["salesId", "pmId"]);
 
   if (role === "SALES") {
