@@ -381,10 +381,34 @@ function TaskFormDialog({
   });
 
   const submitting = create.isPending || update.isPending;
-  const canSubmit = title.trim().length > 0 && !submitting;
+
+  // HTML <input type="date"> happily emits e.g. "82026-05-05" if the user
+  // typed extra digits in the year — JS Date accepts it but Prisma 500s on
+  // the resulting extended-year ISO ("+082026-05-05"). Block it here so the
+  // user gets a clear error before round-tripping.
+  function isValidDate(s: string): boolean {
+    if (!s) return true;
+    const m = /^(\d{4})-\d{2}-\d{2}$/.exec(s);
+    if (!m) return false;
+    const y = Number(m[1]);
+    return y >= 1900 && y <= 9999;
+  }
+  const startDateValid = isValidDate(startDate);
+  const endDateValid = isValidDate(endDate);
+  const datesValid = startDateValid && endDateValid;
+  const canSubmit = title.trim().length > 0 && datesValid && !submitting;
 
   function handleSubmit() {
-    if (!canSubmit) return;
+    if (!canSubmit) {
+      if (!datesValid) {
+        toast({
+          title: "Invalid date",
+          description: "Year must be between 1900 and 9999 (use YYYY-MM-DD).",
+          variant: "destructive",
+        });
+      }
+      return;
+    }
     const payload: Record<string, unknown> = {
       title: title.trim(),
       description: description.trim() || undefined,
@@ -442,11 +466,33 @@ function TaskFormDialog({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <Label>Start Date</Label>
-              <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+              <Input
+                type="date"
+                min="1900-01-01"
+                max="9999-12-31"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                aria-invalid={!startDateValid}
+                className={!startDateValid ? "border-destructive" : ""}
+              />
+              {!startDateValid && (
+                <p className="mt-1 text-xs text-destructive">Use a 4-digit year (YYYY-MM-DD).</p>
+              )}
             </div>
             <div>
               <Label>End Date</Label>
-              <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+              <Input
+                type="date"
+                min="1900-01-01"
+                max="9999-12-31"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                aria-invalid={!endDateValid}
+                className={!endDateValid ? "border-destructive" : ""}
+              />
+              {!endDateValid && (
+                <p className="mt-1 text-xs text-destructive">Use a 4-digit year (YYYY-MM-DD).</p>
+              )}
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">

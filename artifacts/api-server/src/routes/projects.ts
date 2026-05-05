@@ -14,6 +14,24 @@ router.use(requireAuth);
 
 const writeRoles = ["MANAGEMENT", "PROJECT_MANAGER", "SALES"] as const;
 
+// Safely parse a YYYY-MM-DD date string from a client.
+// Returns:
+//   - null      → empty/missing input (treat as "clear the field")
+//   - null      → input is present but malformed (caller should 400 it)
+//   - Date      → valid, in-range date
+// Rejects extended-year ISO strings like "+062026-05-05" or "82026-05-05" that
+// JS's Date accepts but Prisma cannot serialize, causing 500s.
+function parseSafeDate(value: unknown): Date | null {
+  if (value === undefined || value === null || value === "") return null;
+  const raw = String(value);
+  const ymd = /^(\d{4})-\d{2}-\d{2}/.exec(raw);
+  if (!ymd) return null;
+  const year = Number(ymd[1]);
+  if (year < 1900 || year > 9999) return null;
+  const d = new Date(raw);
+  return isNaN(d.getTime()) ? null : d;
+}
+
 // One-time demo seed (MANAGEMENT only) — adds 9 sample projects
 // across OBSERVATION/ACTIVE/PAUSE. Idempotent: skips codes that already exist.
 const DEMO_PROJECTS: { status: ProjectStatus; name: string; value: number; mandays: number }[] = [
@@ -223,6 +241,16 @@ router.post("/projects", requireRole(...writeRoles), async (req, res) => {
     : ((b.status as ProjectStatus) || "DRAFT");
   const salesId = isSales ? req.user!.sub : (b.salesId || null);
   const pmId = isSales ? null : (b.pmId || null);
+  const startDate = parseSafeDate(b.startDate);
+  if (b.startDate && startDate === null) {
+    res.status(400).json({ error: "startDate must be a valid YYYY-MM-DD date" });
+    return;
+  }
+  const endDate = parseSafeDate(b.endDate);
+  if (b.endDate && endDate === null) {
+    res.status(400).json({ error: "endDate must be a valid YYYY-MM-DD date" });
+    return;
+  }
   const created = await prisma.project.create({
     data: {
       code: String(b.code),
@@ -232,8 +260,8 @@ router.post("/projects", requireRole(...writeRoles), async (req, res) => {
       salesId,
       pmId,
       status,
-      startDate: b.startDate ? new Date(b.startDate) : null,
-      endDate: b.endDate ? new Date(b.endDate) : null,
+      startDate,
+      endDate,
       contractValue: Number(b.contractValue || 0),
       estimatedCost: Number(b.estimatedCost || 0),
       plannedMandays: Number(b.plannedMandays || 0),
@@ -372,10 +400,22 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
   if (b.salesId !== undefined) data.salesId = b.salesId || null;
   if (b.pmId !== undefined) data.pmId = b.pmId || null;
   if (b.status !== undefined) data.status = b.status as ProjectStatus;
-  if (b.startDate !== undefined)
-    data.startDate = b.startDate ? new Date(b.startDate) : null;
-  if (b.endDate !== undefined)
-    data.endDate = b.endDate ? new Date(b.endDate) : null;
+  if (b.startDate !== undefined) {
+    const d = parseSafeDate(b.startDate);
+    if (b.startDate && d === null) {
+      res.status(400).json({ error: "startDate must be a valid YYYY-MM-DD date" });
+      return;
+    }
+    data.startDate = d;
+  }
+  if (b.endDate !== undefined) {
+    const d = parseSafeDate(b.endDate);
+    if (b.endDate && d === null) {
+      res.status(400).json({ error: "endDate must be a valid YYYY-MM-DD date" });
+      return;
+    }
+    data.endDate = d;
+  }
   if (b.contractValue !== undefined) data.contractValue = Number(b.contractValue);
   if (b.estimatedCost !== undefined) data.estimatedCost = Number(b.estimatedCost);
   if (b.plannedMandays !== undefined)

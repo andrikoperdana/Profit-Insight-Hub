@@ -59,7 +59,16 @@ const taskInclude = {
 function parseDateOrNull(value: unknown): Date | null | undefined {
   if (value === undefined) return undefined;
   if (value === null || value === "") return null;
-  const d = new Date(String(value));
+  const raw = String(value);
+  // Reject extended-year ISO strings (e.g. "+062026-05-05" or "82026-05-05")
+  // up front: HTML <input type="date"> uses YYYY-MM-DD, so the year must be
+  // exactly 4 digits. Anything else is a typo we should refuse cleanly
+  // instead of letting Prisma 500 on it.
+  const ymd = /^(\d{4})-\d{2}-\d{2}/.exec(raw);
+  if (!ymd) return undefined;
+  const year = Number(ymd[1]);
+  if (year < 1900 || year > 9999) return undefined;
+  const d = new Date(raw);
   if (isNaN(d.getTime())) return undefined;
   return d;
 }
