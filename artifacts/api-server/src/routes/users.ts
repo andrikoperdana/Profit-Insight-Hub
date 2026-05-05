@@ -98,12 +98,12 @@ router.patch("/users/:id", async (req, res) => {
   const data: Record<string, unknown> = {};
   if (name !== undefined) data.name = String(name);
   if (title !== undefined) data.title = title || null;
-  if (dailyRate !== undefined)
-    data.dailyRate = dailyRate != null ? Number(dailyRate) : null;
   if (password) data.passwordHash = await hashPassword(String(password));
   if (isAdmin) {
     if (role !== undefined) data.role = role as UserRole;
     if (isActive !== undefined) data.isActive = Boolean(isActive);
+    if (dailyRate !== undefined)
+      data.dailyRate = dailyRate != null ? Number(dailyRate) : null;
   }
   const u = await prisma.user.update({ where: { id: targetId }, data });
   await recordAudit(req, {

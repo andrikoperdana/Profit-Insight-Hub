@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import { canManageUsers, RoleLabels } from "@/lib/roles";
 import { useListUsers, useCreateUser, useUpdateUser } from "@workspace/api-client-react";
 import { getListUsersQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Users, Plus, Shield, ShieldAlert, CheckCircle2, XCircle } from "lucide-react";
+import { Plus, ShieldAlert, Pencil, Download } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -56,11 +56,74 @@ const userSchema = z.object({
 
 type UserFormValues = z.infer<typeof userSchema>;
 
+const editUserSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  role: z.nativeEnum(UserRole),
+  title: z.string().optional(),
+  dailyRate: z.coerce.number().min(0).optional(),
+  password: z.string().optional().refine(
+    (v) => !v || v.length >= 6,
+    { message: "Password must be at least 6 characters" }
+  ),
+});
+
+type EditUserFormValues = z.infer<typeof editUserSchema>;
+
+type UserRow = {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  title?: string | null;
+  dailyRate?: number | null;
+  isActive: boolean;
+};
+
+function csvEscape(value: unknown): string {
+  if (value === null || value === undefined) return "";
+  let s = String(value);
+  // Neutralize spreadsheet formula injection (=, +, -, @, tab, CR)
+  if (s.length > 0 && /^[=+\-@\t\r]/.test(s)) {
+    s = "'" + s;
+  }
+  if (s.includes(",") || s.includes('"') || s.includes("\n") || s.includes("\r")) {
+    return `"${s.replace(/"/g, '""')}"`;
+  }
+  return s;
+}
+
+function downloadUsersCsv(users: UserRow[]) {
+  const headers = ["Name", "Email", "Role", "Title", "Daily Rate (IDR)", "Status"];
+  const rows = users.map((u) => [
+    u.name,
+    u.email,
+    RoleLabels[u.role] ?? u.role,
+    u.title ?? "",
+    u.dailyRate ?? "",
+    u.isActive ? "Active" : "Inactive",
+  ]);
+  const csv = [headers, ...rows]
+    .map((row) => row.map(csvEscape).join(","))
+    .join("\r\n");
+  const bom = "\uFEFF";
+  const blob = new Blob([bom + csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const date = new Date().toISOString().slice(0, 10);
+  a.href = url;
+  a.download = `personnel-${date}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 export default function UsersList() {
   const { user: currentUser } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState<UserRow | null>(null);
 
   const { data: users, isLoading } = useListUsers({
     query: { queryKey: getListUsersQueryKey() }
@@ -91,17 +154,70 @@ export default function UsersList() {
     }
   });
 
+  const editUserMutation = useUpdateUser({
+    mutation: {
+      onSuccess: () => {
+        toast({ title: "User updated successfully" });
+        queryClient.invalidateQueries({ queryKey: getListUsersQueryKey() });
+        setEditingUser(null);
+      },
+      onError: (err: any) => {
+        toast({ variant: "destructive", title: "Failed to update user", description: err.message });
+      }
+    }
+  });
+
   const form = useForm<UserFormValues>({
     resolver: zodResolver(userSchema),
     defaultValues: { name: "", email: "", password: "password123", role: UserRole.KONSULTAN, title: "", dailyRate: 0 }
   });
 
+  const editForm = useForm<EditUserFormValues>({
+    resolver: zodResolver(editUserSchema),
+    defaultValues: { name: "", role: UserRole.KONSULTAN, title: "", dailyRate: 0, password: "" }
+  });
+
+  useEffect(() => {
+    if (editingUser) {
+      editForm.reset({
+        name: editingUser.name,
+        role: editingUser.role,
+        title: editingUser.title ?? "",
+        dailyRate: editingUser.dailyRate ?? 0,
+        password: "",
+      });
+    }
+  }, [editingUser, editForm]);
+
   const onSubmit = (data: UserFormValues) => {
     createUser.mutate({ data });
   };
 
+  const onEditSubmit = (data: EditUserFormValues) => {
+    if (!editingUser) return;
+    const payload: Record<string, unknown> = {
+      name: data.name,
+      role: data.role,
+      title: data.title || null,
+      dailyRate: data.dailyRate ?? 0,
+    };
+    if (data.password && data.password.length > 0) {
+      payload.password = data.password;
+    }
+    editUserMutation.mutate({ id: editingUser.id, data: payload as any });
+  };
+
   const toggleStatus = (id: string, currentStatus: boolean) => {
     updateUser.mutate({ id, data: { isActive: !currentStatus } });
+  };
+
+  const handleExportCsv = () => {
+    if (!users || users.length === 0) {
+      toast({ variant: "destructive", title: "No data to export" });
+      return;
+    }
+    downloadUsersCsv(users as UserRow[]);
+    toast({ title: "CSV exported", description: `${users.length} users exported.` });
   };
 
   const hasAccess = canManageUsers(currentUser?.role);
@@ -124,114 +240,126 @@ export default function UsersList() {
           <p className="text-muted-foreground">Manage user accounts and role assignments.</p>
         </div>
         
-        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-          <DialogTrigger asChild>
-            <Button className="gap-2">
-              <Plus className="h-4 w-4" /> New User
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[500px]">
-            <DialogHeader>
-              <DialogTitle>Create New User</DialogTitle>
-              <DialogDescription>Add a new personnel to the system.</DialogDescription>
-            </DialogHeader>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Full Name *</FormLabel>
-                        <FormControl><Input placeholder="John Doe" {...field} /></FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email *</FormLabel>
-                        <FormControl><Input type="email" placeholder="john@domain.com" {...field} /></FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Initial Password *</FormLabel>
-                        <FormControl><Input type="password" {...field} /></FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="role"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>System Role *</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select a role" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {Object.entries(RoleLabels).map(([key, label]) => (
-                              <SelectItem key={key} value={key}>{label}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            className="gap-2"
+            onClick={handleExportCsv}
+            disabled={!users || users.length === 0}
+            data-testid="button-export-csv"
+          >
+            <Download className="h-4 w-4" /> Export CSV
+          </Button>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="title"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Job Title</FormLabel>
-                        <FormControl><Input placeholder="Senior Pentester" {...field} value={field.value || ""} /></FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="dailyRate"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Daily Rate (IDR)</FormLabel>
-                        <FormControl><Input type="number" placeholder="1500000" {...field} value={field.value || ""} /></FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <DialogFooter className="pt-4">
-                  <Button type="button" variant="outline" onClick={() => setIsCreateOpen(false)}>Cancel</Button>
-                  <Button type="submit" disabled={createUser.isPending}>
-                    {createUser.isPending ? "Creating..." : "Create User"}
-                  </Button>
-                </DialogFooter>
-              </form>
-            </Form>
-          </DialogContent>
-        </Dialog>
+          <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+            <DialogTrigger asChild>
+              <Button className="gap-2" data-testid="button-new-user">
+                <Plus className="h-4 w-4" /> New User
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[500px]">
+              <DialogHeader>
+                <DialogTitle>Create New User</DialogTitle>
+                <DialogDescription>Add a new personnel to the system.</DialogDescription>
+              </DialogHeader>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Full Name *</FormLabel>
+                          <FormControl><Input placeholder="John Doe" {...field} /></FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email *</FormLabel>
+                          <FormControl><Input type="email" placeholder="john@domain.com" {...field} /></FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Initial Password *</FormLabel>
+                          <FormControl><Input type="password" {...field} /></FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="role"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>System Role *</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select a role" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {Object.entries(RoleLabels).map(([key, label]) => (
+                                <SelectItem key={key} value={key}>{label}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="title"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Job Title</FormLabel>
+                          <FormControl><Input placeholder="Senior Pentester" {...field} value={field.value || ""} /></FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="dailyRate"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Daily Rate (IDR)</FormLabel>
+                          <FormControl><Input type="number" placeholder="1500000" {...field} value={field.value || ""} /></FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <DialogFooter className="pt-4">
+                    <Button type="button" variant="outline" onClick={() => setIsCreateOpen(false)}>Cancel</Button>
+                    <Button type="submit" disabled={createUser.isPending}>
+                      {createUser.isPending ? "Creating..." : "Create User"}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       {isLoading ? (
@@ -283,15 +411,26 @@ export default function UsersList() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        onClick={() => toggleStatus(u.id, u.isActive)}
-                        className={u.isActive ? "text-destructive hover:text-destructive/80" : "text-emerald-500 hover:text-emerald-500/80"}
-                        disabled={updateUser.isPending && updateUser.variables?.id === u.id}
-                      >
-                        {u.isActive ? "Deactivate" : "Activate"}
-                      </Button>
+                      <div className="flex items-center justify-end gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setEditingUser(u as UserRow)}
+                          data-testid={`button-edit-${u.id}`}
+                        >
+                          <Pencil className="h-3.5 w-3.5 mr-1" /> Edit
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => toggleStatus(u.id, u.isActive)}
+                          className={u.isActive ? "text-destructive hover:text-destructive/80" : "text-emerald-500 hover:text-emerald-500/80"}
+                          disabled={updateUser.isPending && updateUser.variables?.id === u.id}
+                          data-testid={`button-toggle-${u.id}`}
+                        >
+                          {u.isActive ? "Deactivate" : "Activate"}
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 );
@@ -300,6 +439,100 @@ export default function UsersList() {
           </Table>
         </Card>
       )}
+
+      <Dialog open={!!editingUser} onOpenChange={(open) => { if (!open) setEditingUser(null); }}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Edit User</DialogTitle>
+            <DialogDescription>
+              {editingUser ? `Update details for ${editingUser.email}. Email cannot be changed.` : ""}
+            </DialogDescription>
+          </DialogHeader>
+          <Form {...editForm}>
+            <form onSubmit={editForm.handleSubmit(onEditSubmit)} className="space-y-4 py-4">
+              <FormField
+                control={editForm.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Full Name *</FormLabel>
+                    <FormControl><Input placeholder="John Doe" {...field} data-testid="input-edit-name" /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={editForm.control}
+                  name="role"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>System Role *</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger data-testid="select-edit-role">
+                            <SelectValue placeholder="Select a role" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {Object.entries(RoleLabels).map(([key, label]) => (
+                            <SelectItem key={key} value={key}>{label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={editForm.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Job Title</FormLabel>
+                      <FormControl><Input placeholder="Senior Pentester" {...field} value={field.value || ""} data-testid="input-edit-title" /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={editForm.control}
+                  name="dailyRate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Daily Rate (IDR)</FormLabel>
+                      <FormControl><Input type="number" placeholder="1500000" {...field} value={field.value ?? ""} data-testid="input-edit-rate" /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={editForm.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Reset Password</FormLabel>
+                      <FormControl><Input type="password" placeholder="Leave blank to keep" {...field} value={field.value || ""} data-testid="input-edit-password" /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <DialogFooter className="pt-4">
+                <Button type="button" variant="outline" onClick={() => setEditingUser(null)}>Cancel</Button>
+                <Button type="submit" disabled={editUserMutation.isPending} data-testid="button-save-edit">
+                  {editUserMutation.isPending ? "Saving..." : "Save Changes"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
