@@ -895,7 +895,8 @@ function OverviewTab({ project }: { project: any }) {
 
   const canEdit =
     user?.role === "MANAGEMENT" ||
-    (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id);
+    (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id) ||
+    (user?.role === "SALES" && project.salesId === user?.id);
 
   const [form, setForm] = useState({
     clientId: project.clientId ?? "",

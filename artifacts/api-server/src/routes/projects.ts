@@ -276,7 +276,16 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
   const role = req.user!.role;
   const userId = req.user!.sub;
 
-  const SALES_ALLOWED = new Set(["code", "name", "description", "clientId", "contractValue"]);
+  // Sales intake form (DRAFT only) — limited to the intake fields.
+  const SALES_DRAFT_ALLOWED = new Set([
+    "code", "name", "description", "clientId", "contractValue",
+  ]);
+  // Sales editing the Overview of an in-flight project (own project, any status):
+  // may update the same descriptive/financial fields PM can, but cannot reassign
+  // people (salesId/pmId), reassign the client, or change project status.
+  const SALES_ONGOING_FORBIDDEN = new Set([
+    "salesId", "pmId", "clientId", "status", "statusChangeReason",
+  ]);
   // PMs may not reassign people (salesId/pmId) nor reassign the client (set during Sales intake).
   const PM_FORBIDDEN = new Set(["salesId", "pmId", "clientId"]);
 
@@ -285,18 +294,26 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
       res.status(403).json({ error: "You can only update projects you submitted" });
       return;
     }
-    if (beforeProj.status !== "DRAFT") {
-      res.status(403).json({ error: "Sales can only edit projects while still in DRAFT" });
-      return;
-    }
-    const violating = Object.keys(b).filter(
-      (k) => b[k] !== undefined && !SALES_ALLOWED.has(k),
-    );
-    if (violating.length) {
-      res.status(403).json({
-        error: `Sales is not allowed to change: ${violating.join(", ")}`,
-      });
-      return;
+    if (beforeProj.status === "DRAFT") {
+      const violating = Object.keys(b).filter(
+        (k) => b[k] !== undefined && !SALES_DRAFT_ALLOWED.has(k),
+      );
+      if (violating.length) {
+        res.status(403).json({
+          error: `Sales is not allowed to change: ${violating.join(", ")}`,
+        });
+        return;
+      }
+    } else {
+      const violating = Object.keys(b).filter(
+        (k) => b[k] !== undefined && SALES_ONGOING_FORBIDDEN.has(k),
+      );
+      if (violating.length) {
+        res.status(403).json({
+          error: `Sales is not allowed to change: ${violating.join(", ")}`,
+        });
+        return;
+      }
     }
   } else if (role === "PROJECT_MANAGER") {
     if (beforeProj.pmId !== userId) {
