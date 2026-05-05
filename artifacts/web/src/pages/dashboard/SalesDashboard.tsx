@@ -93,19 +93,19 @@ export default function SalesDashboard() {
 
   return (
     <div className="space-y-6">
-      <WelcomeBanner subtitle="Pipeline dan performa untuk engagement yang Anda miliki." />
+      <WelcomeBanner subtitle="Pipeline and performance for engagements you own." />
 
       <Card className="border-primary/30 bg-primary/5">
         <CardContent className="flex items-center justify-between gap-4 py-4">
           <div>
-            <p className="text-xs uppercase tracking-wide text-primary font-semibold">Daftarkan Project Baru</p>
+            <p className="text-xs uppercase tracking-wide text-primary font-semibold">Register a New Project</p>
             <p className="text-sm text-muted-foreground mt-1">
-              Isi 3 hal saja — Nama Project, Nomor SPK, dan Client. PMO akan menugaskan PM.
+              Fill in just 3 fields — Project Name, SPK Number, and Client. PMO will assign a PM.
             </p>
           </div>
           <Link href="/projects/new">
             <Button data-testid="button-new-project">
-              <FilePlus2 className="h-4 w-4 mr-2" /> Project Baru
+              <FilePlus2 className="h-4 w-4 mr-2" /> New Project
             </Button>
           </Link>
         </CardContent>
@@ -117,10 +117,10 @@ export default function SalesDashboard() {
             <Clock className="h-5 w-5 text-purple-400" />
             <div className="flex-1">
               <CardTitle className="text-base">
-                {myDrafts.length} project menunggu penugasan PM
+                {myDrafts.length} project(s) awaiting PM assignment
               </CardTitle>
               <CardDescription>
-                Diteruskan ke PMO Director — PM akan ditugaskan dan melengkapi detail.
+                Forwarded to the PMO Director — a PM will be assigned and complete the details.
               </CardDescription>
             </div>
           </CardHeader>

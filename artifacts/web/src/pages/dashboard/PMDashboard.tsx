@@ -197,10 +197,10 @@ export default function PMDashboard() {
             <Sparkles className="h-5 w-5 text-purple-400" />
             <div className="flex-1">
               <CardTitle className="text-base">
-                {myDrafts.length} project baru ditugaskan kepada Anda
+                {myDrafts.length} new project(s) assigned to you
               </CardTitle>
               <CardDescription>
-                Lengkapi detail (revenue, mandays, tim, jadwal) untuk memulai project.
+                Complete the details (revenue, mandays, team, schedule) to start the project.
               </CardDescription>
             </div>
           </CardHeader>
@@ -220,7 +220,7 @@ export default function PMDashboard() {
                   </div>
                   <Link href={`/projects/${p.id}`}>
                     <Button size="sm" data-testid={`button-complete-draft-${p.id}`}>
-                      Lengkapi Detail <ArrowRight className="h-3.5 w-3.5 ml-1" />
+                      Complete Details <ArrowRight className="h-3.5 w-3.5 ml-1" />
                     </Button>
                   </Link>
                 </li>

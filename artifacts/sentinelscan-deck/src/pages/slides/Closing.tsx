@@ -14,15 +14,15 @@ export default function Closing() {
 
         <div>
           <p className="font-body text-accent text-[1.3vw] tracking-[0.3em] uppercase mb-[3vh]">
-            Coba sekarang
+            Try it now
           </p>
           <h2 className="font-display font-bold text-[6vw] leading-[0.95] tracking-tight text-text text-balance max-w-[75vw]">
-            Pentest pertama
-            <span className="block text-accent">dalam hitungan menit.</span>
+            Your first pentest
+            <span className="block text-accent">in minutes.</span>
           </h2>
           <p className="font-body text-muted text-[1.5vw] leading-relaxed mt-[4vh] max-w-[55vw]">
-            Daftar akun, definisikan scope, jalankan scan, dan dapatkan
-            laporan PDF lengkap untuk engagement pertama Anda.
+            Sign up, define a scope, run the scan, and receive
+            a complete PDF report for your first engagement.
           </p>
         </div>
 

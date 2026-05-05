@@ -441,13 +441,13 @@ function PendingAssignmentSection({ projects }: { projects: any[] }) {
   const updateProject = useUpdateProject({
     mutation: {
       onSuccess: async () => {
-        toast({ title: "PM ditugaskan", description: "Project diteruskan ke Project Manager." });
+        toast({ title: "PM assigned", description: "Project forwarded to the Project Manager." });
         await qc.refetchQueries({ queryKey: getListProjectsQueryKey() });
         setSelected(null);
         setPmId("");
       },
       onError: (err: any) => {
-        toast({ variant: "destructive", title: "Gagal menugaskan PM", description: err?.message ?? "Unknown error" });
+        toast({ variant: "destructive", title: "Failed to assign PM", description: err?.message ?? "Unknown error" });
       },
     },
   });
@@ -471,10 +471,10 @@ function PendingAssignmentSection({ projects }: { projects: any[] }) {
           <UserPlus className="h-5 w-5 text-purple-400" />
           <div className="flex-1">
             <CardTitle className="text-base">
-              {projects.length} project menunggu penugasan PM
+              {projects.length} project(s) awaiting PM assignment
             </CardTitle>
             <CardDescription>
-              Project baru dari Sales — tugaskan Project Manager untuk melengkapi detail.
+              New projects from Sales — assign a Project Manager to complete the details.
             </CardDescription>
           </div>
         </CardHeader>
@@ -494,7 +494,7 @@ function PendingAssignmentSection({ projects }: { projects: any[] }) {
                   </p>
                 </div>
                 <Button size="sm" onClick={() => openAssign(p)} data-testid={`button-assign-pm-${p.id}`}>
-                  <UserPlus className="h-3.5 w-3.5 mr-1" /> Tugaskan PM
+                  <UserPlus className="h-3.5 w-3.5 mr-1" /> Assign PM
                 </Button>
               </li>
             ))}
@@ -505,15 +505,15 @@ function PendingAssignmentSection({ projects }: { projects: any[] }) {
       <Dialog open={!!selected} onOpenChange={(o) => { if (!o) { setSelected(null); setPmId(""); } }}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Tugaskan Project Manager</DialogTitle>
+            <DialogTitle>Assign Project Manager</DialogTitle>
             <DialogDescription>
-              {selected ? <>Untuk <span className="font-mono">{selected.code}</span> — {selected.name}</> : null}
+              {selected ? <>For <span className="font-mono">{selected.code}</span> — {selected.name}</> : null}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
-            <label className="text-sm font-medium">Pilih PM</label>
+            <label className="text-sm font-medium">Select PM</label>
             <Select value={pmId} onValueChange={setPmId}>
-              <SelectTrigger data-testid="select-pm-assignment"><SelectValue placeholder="Pilih Project Manager" /></SelectTrigger>
+              <SelectTrigger data-testid="select-pm-assignment"><SelectValue placeholder="Select Project Manager" /></SelectTrigger>
               <SelectContent>
                 {pms.map((u) => (
                   <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>
@@ -521,17 +521,17 @@ function PendingAssignmentSection({ projects }: { projects: any[] }) {
               </SelectContent>
             </Select>
             <p className="text-xs text-muted-foreground">
-              PM akan menerima project ini di dashboard mereka dan dapat melengkapi detail (revenue, mandays, tim, jadwal).
+              The PM will receive this project on their dashboard and can complete the details (revenue, mandays, team, schedule).
             </p>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => { setSelected(null); setPmId(""); }}>Batal</Button>
+            <Button variant="outline" onClick={() => { setSelected(null); setPmId(""); }}>Cancel</Button>
             <Button
               onClick={handleAssign}
               disabled={!pmId || updateProject.isPending}
               data-testid="button-confirm-assign-pm"
             >
-              {updateProject.isPending ? "Menugaskan..." : "Tugaskan"}
+              {updateProject.isPending ? "Assigning..." : "Assign"}
             </Button>
           </DialogFooter>
         </DialogContent>

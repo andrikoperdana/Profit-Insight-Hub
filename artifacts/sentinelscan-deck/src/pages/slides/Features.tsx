@@ -4,10 +4,10 @@ export default function Features() {
       <div className="h-full flex flex-col px-[8vw] py-[9vh]">
         <div className="mb-[6vh]">
           <p className="font-body text-accent text-[1.1vw] tracking-[0.3em] uppercase mb-[2vh]">
-            03 — Kapabilitas
+            03 — Capabilities
           </p>
           <h2 className="font-display font-bold text-[4.4vw] leading-[1] tracking-tight text-text max-w-[70vw]">
-            Tiga pilar yang membedakan.
+            Three differentiating pillars.
           </h2>
         </div>
 
@@ -22,7 +22,7 @@ export default function Features() {
               </h3>
               <p className="font-body text-muted text-[1.25vw] leading-relaxed">
                 ZAP, Nuclei, DNS recon, OpenAPI fuzzing, header &amp;
-                TLS probe, dan SAST berjalan paralel pada setiap engagement.
+                TLS probe, and SAST run in parallel on every engagement.
               </p>
             </div>
           </div>
@@ -36,8 +36,8 @@ export default function Features() {
                 Dashboard &amp; admin
               </h3>
               <p className="font-body text-muted text-[1.25vw] leading-relaxed">
-                Kelola engagement, finding, role pentester, dan
-                approval user dari satu UI ber-otentikasi JWT.
+                Manage engagements, findings, pentester roles, and
+                user approval from a single JWT-authenticated UI.
               </p>
             </div>
           </div>
@@ -48,11 +48,11 @@ export default function Features() {
                 03
               </p>
               <h3 className="font-display font-bold text-text text-[2.2vw] leading-tight mb-[2vh]">
-                Laporan PDF auditable
+                Auditable PDF reports
               </h3>
               <p className="font-body text-muted text-[1.25vw] leading-relaxed">
-                Cover, executive summary, heatmap, retest delta, dan
-                detail finding lengkap — siap dikirim ke klien.
+                Cover, executive summary, heatmap, retest delta, and
+                full finding details — ready to deliver to the client.
               </p>
             </div>
           </div>

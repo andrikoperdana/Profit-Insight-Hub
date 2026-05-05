@@ -4,10 +4,10 @@ export default function Workflow() {
       <div className="h-full flex flex-col px-[8vw] py-[9vh]">
         <div className="mb-[6vh]">
           <p className="font-body text-accent text-[1.1vw] tracking-[0.3em] uppercase mb-[2vh]">
-            04 — Alur kerja
+            04 — Workflow
           </p>
           <h2 className="font-display font-bold text-[4.4vw] leading-[1] tracking-tight text-text max-w-[70vw]">
-            Dari kickoff ke laporan dalam empat langkah.
+            From kickoff to report in four steps.
           </h2>
         </div>
 
@@ -18,11 +18,11 @@ export default function Workflow() {
               <span className="h-[1px] flex-1 bg-accent/40" />
             </div>
             <h3 className="font-display font-bold text-text text-[1.9vw] leading-tight mb-[1.5vh]">
-              Definisikan scope
+              Define scope
             </h3>
             <p className="font-body text-muted text-[1.15vw] leading-relaxed">
-              Daftarkan target web, API base URL, klasifikasi data,
-              dan rules of engagement.
+              Register web targets, API base URLs, data classification,
+              and rules of engagement.
             </p>
           </div>
 
@@ -32,11 +32,11 @@ export default function Workflow() {
               <span className="h-[1px] flex-1 bg-accent/40" />
             </div>
             <h3 className="font-display font-bold text-text text-[1.9vw] leading-tight mb-[1.5vh]">
-              Jalankan scan
+              Run the scan
             </h3>
             <p className="font-body text-muted text-[1.15vw] leading-relaxed">
-              Tujuh engine berjalan paralel; progres dan log
-              tersedia real-time di dashboard.
+              Seven engines run in parallel; progress and logs
+              are available in real time on the dashboard.
             </p>
           </div>
 
@@ -46,11 +46,11 @@ export default function Workflow() {
               <span className="h-[1px] flex-1 bg-accent/40" />
             </div>
             <h3 className="font-display font-bold text-text text-[1.9vw] leading-tight mb-[1.5vh]">
-              Triage &amp; verifikasi
+              Triage &amp; verify
             </h3>
             <p className="font-body text-muted text-[1.15vw] leading-relaxed">
-              Pentester menambah PoC, mengubah severity, atau
-              menandai false positive dari satu antarmuka.
+              Pentesters add PoCs, change severity, or
+              flag false positives from a single interface.
             </p>
           </div>
 
@@ -60,11 +60,11 @@ export default function Workflow() {
               <span className="h-[1px] flex-1 bg-accent/40" />
             </div>
             <h3 className="font-display font-bold text-text text-[1.9vw] leading-tight mb-[1.5vh]">
-              Kirim laporan
+              Deliver the report
             </h3>
             <p className="font-body text-muted text-[1.15vw] leading-relaxed">
-              Generate PDF lengkap dengan cover, executive summary,
-              heatmap, dan retest delta — versi-trackable.
+              Generate a PDF complete with cover, executive summary,
+              heatmap, and retest delta — fully version-trackable.
             </p>
           </div>
         </div>

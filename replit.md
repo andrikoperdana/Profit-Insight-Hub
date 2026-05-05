@@ -21,13 +21,13 @@ DRAFT (Sales intake, awaiting PMO assignment) → OBSERVATION (PM completed deta
 
 ### Draft intake flow (Sales → PMO → PM)
 
-1. **Sales** opens `/projects/new` — sees a minimal 4-field intake form (Name + SPK + Client + Nilai Project / contractValue) and submits. Server forces `status=DRAFT`, `salesId=req.user.sub`, `pmId=null` regardless of body. The Sales-entered `contractValue` is later pre-filled into the PM's DraftCompletionCard Revenue input.
-2. **PMO Director (MANAGEMENT)** sees the project on the dashboard under a purple "Pending PM Assignment" card. Clicking "Tugaskan PM" opens a dialog with a PM dropdown that PATCHes `pmId`. The 409 invariant prevents reassigning if a PM is already set on a DRAFT project.
-3. **PM (PROJECT_MANAGER)** sees the project on their dashboard under "Project baru ditugaskan kepada Anda". Clicking "Lengkapi Detail" opens `/projects/:id` where a purple `DraftCompletionCard` is rendered above the tabs (visible only when `status === DRAFT`). PM fills Description, Start/End dates, Revenue, Planned Mandays, Estimated Cost, then clicks "Simpan & Pindah ke Observation" — server validates required fields and transitions status to OBSERVATION.
+1. **Sales** opens `/projects/new` — sees a minimal 4-field intake form (Name + SPK + Client + Project Value / contractValue) and submits. Server forces `status=DRAFT`, `salesId=req.user.sub`, `pmId=null` regardless of body. The Sales-entered `contractValue` is later pre-filled into the PM's DraftCompletionCard Revenue input.
+2. **PMO Director (MANAGEMENT)** sees the project on the dashboard under a purple "Pending PM Assignment" card. Clicking "Assign PM" opens a dialog with a PM dropdown that PATCHes `pmId`. The 409 invariant prevents reassigning if a PM is already set on a DRAFT project.
+3. **PM (PROJECT_MANAGER)** sees the project on their dashboard under "New project(s) assigned to you". Clicking "Complete Details" opens `/projects/:id` where a purple `DraftCompletionCard` is rendered above the tabs (visible only when `status === DRAFT`). PM fills Description, Start/End dates, Revenue, Planned Mandays, Estimated Cost, then clicks "Save & Move to Observation" — server validates required fields and transitions status to OBSERVATION.
 
 ### Expenses tab (PM cost capture beyond resources)
 
-PM and Management can open the **Expenses** tab on `/projects/:id` to log additional project costs (software, hardware, lisensi, perjalanan, lain-lain). New rows appear in a table with the running "Biaya Tambahan" total and update the project's `additionalCost` / `actualCost` immediately (Financials tab reflects the new total). PM can only add/delete expenses on projects assigned to them; Management has no project-ownership restriction.
+PM and Management can open the **Expenses** tab on `/projects/:id` to log additional project costs (software, hardware, license, travel, other). New rows appear in a table with the running "Additional Cost" total and update the project's `additionalCost` / `actualCost` immediately (Financials tab reflects the new total). PM can only add/delete expenses on projects assigned to them; Management has no project-ownership restriction.
 
 ### PATCH /api/projects/:id authorization rules
 
@@ -78,10 +78,10 @@ Server-side data scoping:
 - MANAGEMENT → `ManagementDashboard` (executive KPIs, profit trend, status breakdown, aging buckets, at-risk-projects alert)
 - PROJECT_MANAGER → `PMDashboard` (PM-scoped active projects, approval inbox quick action with Approve All, my-team utilization, revenue-vs-profit chart, overdue-approval alert)
 - SALES → `SalesDashboard` (own pipeline, revenue-by-client, status pie, 6-month profitability trend)
-- KONSULTAN / TECHNICAL_WRITER → `ConsultantDashboard` (welcome banner, prominent "Input Time Sheet Hari Ini" CTA with today's hours, 14-day trend, recent submissions)
+- KONSULTAN / TECHNICAL_WRITER → `ConsultantDashboard` (welcome banner, prominent "Log Today's Time Sheet" CTA with today's hours, 14-day trend, recent submissions)
 - ADMIN_PROJECT → `AdminProjectDashboard` (closing-doc inbox + alert for projects complete >3 days)
 
-Shared `WelcomeBanner` (`artifacts/web/src/components/dashboard/WelcomeBanner.tsx`) shows time-aware greeting in Bahasa Indonesia + role label.
+Shared `WelcomeBanner` (`artifacts/web/src/components/dashboard/WelcomeBanner.tsx`) shows a time-aware greeting + role label.
 
 ## Pages
 

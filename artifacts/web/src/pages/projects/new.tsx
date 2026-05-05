@@ -65,10 +65,10 @@ export default function NewProject() {
 /* ------------------------------------------------------------------ */
 
 const salesIntakeSchema = z.object({
-  code: z.string().min(2, "Nomor SPK/PO wajib diisi"),
-  name: z.string().min(3, "Nama project wajib diisi"),
-  clientId: z.string().min(1, "Pilih client"),
-  contractValue: z.coerce.number().min(0, "Nilai project tidak boleh negatif"),
+  code: z.string().min(2, "SPK/PO Number is required"),
+  name: z.string().min(3, "Project name is required"),
+  clientId: z.string().min(1, "Select a client"),
+  contractValue: z.coerce.number().min(0, "Project value cannot be negative"),
 });
 type SalesIntake = z.infer<typeof salesIntakeSchema>;
 
@@ -81,15 +81,15 @@ function SalesIntakeForm() {
     mutation: {
       onSuccess: (data) => {
         toast({
-          title: "Project terkirim ke PMO",
-          description: `${data.code} • menunggu penugasan PM`,
+          title: "Project submitted to PMO",
+          description: `${data.code} • awaiting PM assignment`,
         });
         setLocation("/");
       },
       onError: (err: any) => {
         toast({
           variant: "destructive",
-          title: "Gagal mengirim project",
+          title: "Failed to submit project",
           description: err?.message ?? "Unknown error",
         });
       },
@@ -122,9 +122,9 @@ function SalesIntakeForm() {
           <Link href="/"><ArrowLeft className="h-4 w-4" /></Link>
         </Button>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Daftarkan Project Baru</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Register a New Project</h1>
           <p className="text-muted-foreground">
-            Isi data dasar — PMO Director akan menugaskan Project Manager dan PM akan melengkapi detailnya.
+            Fill in the basic information — the PMO Director will assign a Project Manager and the PM will complete the details.
           </p>
         </div>
       </div>
@@ -133,9 +133,9 @@ function SalesIntakeForm() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <Card className="border-border shadow-sm">
             <CardHeader>
-              <CardTitle>Informasi Project</CardTitle>
+              <CardTitle>Project Information</CardTitle>
               <CardDescription>
-                Isi 4 data dasar berikut. Detail lain (mandays, tim, biaya, jadwal) diisi oleh PM setelah ditugaskan.
+                Fill in these 4 basic fields. Other details (mandays, team, cost, schedule) are filled in by the PM after assignment.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -144,8 +144,8 @@ function SalesIntakeForm() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nama Project *</FormLabel>
-                    <FormControl><Input placeholder="cth. Pentest Web Application Bank XYZ" {...field} /></FormControl>
+                    <FormLabel>Project Name *</FormLabel>
+                    <FormControl><Input placeholder="e.g. Pentest Web Application Bank XYZ" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -155,8 +155,8 @@ function SalesIntakeForm() {
                 name="code"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nomor SPK / PO *</FormLabel>
-                    <FormControl><Input placeholder="cth. SPK-2026-005" {...field} /></FormControl>
+                    <FormLabel>SPK / PO Number *</FormLabel>
+                    <FormControl><Input placeholder="e.g. SPK-2026-005" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -169,7 +169,7 @@ function SalesIntakeForm() {
                     <FormLabel>Client *</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
-                        <SelectTrigger><SelectValue placeholder="Pilih client" /></SelectTrigger>
+                        <SelectTrigger><SelectValue placeholder="Select client" /></SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         {clients?.map((c) => (
@@ -186,12 +186,12 @@ function SalesIntakeForm() {
                 name="contractValue"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nilai Project / Harga Jual ke Client (IDR) *</FormLabel>
+                    <FormLabel>Project Value / Selling Price to Client (IDR) *</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
                         min={0}
-                        placeholder="cth. 250000000"
+                        placeholder="e.g. 250000000"
                         className="font-mono"
                         data-testid="input-intake-contract-value"
                         {...field}
@@ -206,11 +206,11 @@ function SalesIntakeForm() {
 
           <div className="flex justify-end space-x-4">
             <Button variant="outline" asChild>
-              <Link href="/">Batal</Link>
+              <Link href="/">Cancel</Link>
             </Button>
             <Button type="submit" disabled={createProject.isPending} data-testid="button-submit-intake">
-              {createProject.isPending ? "Mengirim..." : (
-                <><Send className="mr-2 h-4 w-4" /> Kirim ke PMO</>
+              {createProject.isPending ? "Submitting..." : (
+                <><Send className="mr-2 h-4 w-4" /> Submit to PMO</>
               )}
             </Button>
           </div>
@@ -394,7 +394,7 @@ function FullProjectForm() {
                 name="contractValue"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Harga Jual ke Client / Revenue (IDR) *</FormLabel>
+                    <FormLabel>Selling Price to Client / Revenue (IDR) *</FormLabel>
                     <FormControl><Input type="number" placeholder="0" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
@@ -499,8 +499,8 @@ function FullProjectForm() {
                   <thead className="bg-muted/50 text-muted-foreground">
                     <tr>
                       <th className="text-left p-2 font-medium">Role</th>
-                      <th className="text-right p-2 font-medium w-32">Jumlah Orang</th>
-                      <th className="text-right p-2 font-medium w-32">Mandays/Orang</th>
+                      <th className="text-right p-2 font-medium w-32">Headcount</th>
+                      <th className="text-right p-2 font-medium w-32">Mandays/Person</th>
                       <th className="text-right p-2 font-medium w-40">Daily Rate</th>
                       <th className="text-right p-2 font-medium w-44">Subtotal Cost</th>
                       <th className="w-12"></th>

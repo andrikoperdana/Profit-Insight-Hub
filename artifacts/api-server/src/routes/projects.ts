@@ -66,7 +66,7 @@ router.post("/projects/seed-demo", requireRole("MANAGEMENT"), async (req, res) =
       data: {
         code,
         name: p.name,
-        description: `${p.name} untuk ${client.name}.`,
+        description: `${p.name} for ${client.name}.`,
         status: p.status,
         clientId: client.id,
         salesId: sales.id,

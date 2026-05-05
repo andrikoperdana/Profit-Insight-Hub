@@ -11,40 +11,40 @@
     "id": "ss-02-problem",
     "position": 2,
     "filepath": "src/pages/slides/Problem.tsx",
-    "title": "Masalah",
-    "description": "Pentest manual mahal, lambat, tidak konsisten",
+    "title": "Problem",
+    "description": "Manual pentests are expensive, slow, and inconsistent",
     "speakerNotes": ""
   },
   {
     "id": "ss-03-solution",
     "position": 3,
     "filepath": "src/pages/slides/Solution.tsx",
-    "title": "Solusi",
-    "description": "Satu platform, tujuh engine scanning, satu laporan",
+    "title": "Solution",
+    "description": "One platform, seven scanning engines, one report",
     "speakerNotes": ""
   },
   {
     "id": "ss-04-features",
     "position": 4,
     "filepath": "src/pages/slides/Features.tsx",
-    "title": "Kapabilitas",
-    "description": "Multi-engine, dashboard, laporan PDF auditable",
+    "title": "Capabilities",
+    "description": "Multi-engine, dashboard, auditable PDF reports",
     "speakerNotes": ""
   },
   {
     "id": "ss-05-workflow",
     "position": 5,
     "filepath": "src/pages/slides/Workflow.tsx",
-    "title": "Alur kerja",
-    "description": "Dari kickoff ke laporan dalam empat langkah",
+    "title": "Workflow",
+    "description": "From kickoff to report in four steps",
     "speakerNotes": ""
   },
   {
     "id": "ss-06-closing",
     "position": 6,
     "filepath": "src/pages/slides/Closing.tsx",
-    "title": "Coba sekarang",
-    "description": "Closing slide dengan demo URL",
+    "title": "Try it now",
+    "description": "Closing slide with demo URL",
     "speakerNotes": ""
   }
 ]

@@ -283,9 +283,9 @@ export default function ProjectDetail() {
 const EXPENSE_CATEGORIES: { value: string; label: string }[] = [
   { value: "SOFTWARE", label: "Software" },
   { value: "HARDWARE", label: "Hardware" },
-  { value: "LICENSE", label: "Lisensi" },
-  { value: "TRAVEL", label: "Perjalanan" },
-  { value: "OTHER", label: "Lain-lain" },
+  { value: "LICENSE", label: "License" },
+  { value: "TRAVEL", label: "Travel" },
+  { value: "OTHER", label: "Other" },
 ];
 
 function expenseCategoryLabel(value: string): string {
@@ -312,35 +312,35 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
   const addMutation = useAddProjectExpense({
     mutation: {
       onSuccess: () => {
-        toast({ title: "Biaya tersimpan", description: "Total biaya project diperbarui." });
+        toast({ title: "Expense saved", description: "Project total cost updated." });
         setDescription("");
         setAmount("");
         invalidateAll();
       },
       onError: (e: any) =>
-        toast({ variant: "destructive", title: "Gagal menyimpan biaya", description: e?.message ?? "Unknown error" }),
+        toast({ variant: "destructive", title: "Failed to save expense", description: e?.message ?? "Unknown error" }),
     },
   });
 
   const removeMutation = useRemoveProjectExpense({
     mutation: {
       onSuccess: () => {
-        toast({ title: "Biaya dihapus" });
+        toast({ title: "Expense removed" });
         invalidateAll();
       },
       onError: (e: any) =>
-        toast({ variant: "destructive", title: "Gagal menghapus biaya", description: e?.message ?? "Unknown error" }),
+        toast({ variant: "destructive", title: "Failed to remove expense", description: e?.message ?? "Unknown error" }),
     },
   });
 
   function handleAdd() {
     const amt = Number(amount);
     if (!description.trim()) {
-      toast({ variant: "destructive", title: "Deskripsi wajib diisi" });
+      toast({ variant: "destructive", title: "Description is required" });
       return;
     }
     if (!isFinite(amt) || amt <= 0) {
-      toast({ variant: "destructive", title: "Nominal tidak valid", description: "Nominal harus angka positif." });
+      toast({ variant: "destructive", title: "Invalid amount", description: "Amount must be a positive number." });
       return;
     }
     addMutation.mutate({
@@ -365,27 +365,27 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
     <div className="space-y-6">
       <Card className="border-border shadow-sm">
         <CardHeader>
-          <CardTitle className="text-base">Biaya Tambahan Project</CardTitle>
+          <CardTitle className="text-base">Additional Project Expenses</CardTitle>
           <CardDescription>
-            Catat pembelian atau biaya di luar resource (mis. software, hardware, lisensi). Nilai ini otomatis menambah <span className="font-medium text-foreground">total biaya project</span> dan memengaruhi profit/margin di tab Financials.
+            Record purchases or costs outside of resource time (e.g. software, hardware, licenses). These values automatically add to the <span className="font-medium text-foreground">project total cost</span> and affect profit/margin in the Financials tab.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-            <SummaryStatInline label="Biaya Resource" value={formatIDR(resourceCost)} />
-            <SummaryStatInline label="Biaya Tambahan" value={formatIDR(totalAdditional)} highlight />
-            <SummaryStatInline label="Total Biaya" value={formatIDR(totalCost)} />
+            <SummaryStatInline label="Resource Cost" value={formatIDR(resourceCost)} />
+            <SummaryStatInline label="Additional Cost" value={formatIDR(totalAdditional)} highlight />
+            <SummaryStatInline label="Total Cost" value={formatIDR(totalCost)} />
             <SummaryStatInline
-              label="Sisa vs Revenue"
+              label="Remaining vs Revenue"
               value={formatIDR((project?.contractValue ?? 0) - totalCost)}
             />
           </div>
 
           <div className="rounded-md border border-dashed border-border p-4 space-y-3">
-            <div className="text-sm font-medium text-foreground">Tambah Biaya Baru</div>
+            <div className="text-sm font-medium text-foreground">Add New Expense</div>
             <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
               <div className="md:col-span-3">
-                <Label htmlFor="exp-category">Kategori</Label>
+                <Label htmlFor="exp-category">Category</Label>
                 <Select value={category} onValueChange={setCategory}>
                   <SelectTrigger id="exp-category" className="mt-1" data-testid="select-expense-category">
                     <SelectValue />
@@ -398,18 +398,18 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
                 </Select>
               </div>
               <div className="md:col-span-5">
-                <Label htmlFor="exp-desc">Deskripsi *</Label>
+                <Label htmlFor="exp-desc">Description *</Label>
                 <Input
                   id="exp-desc"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="cth. Lisensi Burp Suite Pro 1 tahun"
+                  placeholder="e.g. Burp Suite Pro license, 1 year"
                   className="mt-1"
                   data-testid="input-expense-description"
                 />
               </div>
               <div className="md:col-span-2">
-                <Label htmlFor="exp-amount">Nominal (IDR) *</Label>
+                <Label htmlFor="exp-amount">Amount (IDR) *</Label>
                 <Input
                   id="exp-amount"
                   type="number"
@@ -422,7 +422,7 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
                 />
               </div>
               <div className="md:col-span-2">
-                <Label htmlFor="exp-date">Tanggal</Label>
+                <Label htmlFor="exp-date">Date</Label>
                 <Input
                   id="exp-date"
                   type="date"
@@ -440,25 +440,25 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
                 data-testid="button-add-expense"
               >
                 <Plus className="h-4 w-4 mr-2" />
-                Tambah Biaya
+                Add Expense
               </Button>
             </div>
           </div>
 
           {list.length === 0 ? (
             <div className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-              Belum ada biaya tambahan. Tambahkan pembelian software, hardware, atau biaya lain di atas.
+              No additional expenses yet. Record software, hardware, or other purchases above.
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-left text-xs text-muted-foreground border-b border-border">
-                    <th className="py-2 pr-3 font-medium">Tanggal</th>
-                    <th className="py-2 pr-3 font-medium">Kategori</th>
-                    <th className="py-2 pr-3 font-medium">Deskripsi</th>
-                    <th className="py-2 pr-3 font-medium">Diinput Oleh</th>
-                    <th className="py-2 pr-3 font-medium text-right">Nominal</th>
+                    <th className="py-2 pr-3 font-medium">Date</th>
+                    <th className="py-2 pr-3 font-medium">Category</th>
+                    <th className="py-2 pr-3 font-medium">Description</th>
+                    <th className="py-2 pr-3 font-medium">Created By</th>
+                    <th className="py-2 pr-3 font-medium text-right">Amount</th>
                     <th className="py-2 pr-3 font-medium text-right w-12"></th>
                   </tr>
                 </thead>
@@ -480,11 +480,11 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
                           disabled={removeMutation.isPending}
                           data-testid={`button-remove-expense-${e.id}`}
                           onClick={() => {
-                            if (confirm(`Hapus biaya "${e.description}"?`)) {
+                            if (confirm(`Remove expense "${e.description}"?`)) {
                               removeMutation.mutate({ expenseId: e.id });
                             }
                           }}
-                          title="Hapus"
+                          title="Remove"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -493,7 +493,7 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
                   ))}
                   <tr className="bg-muted/30">
                     <td colSpan={4} className="py-2 pr-3 text-right text-xs uppercase tracking-wide text-muted-foreground">
-                      Total Biaya Tambahan
+                      Total Additional Cost
                     </td>
                     <td className="py-2 pr-3 text-right font-mono font-semibold">{formatIDR(totalAdditional)}</td>
                     <td></td>
@@ -530,11 +530,11 @@ function DraftCompletionCard({ project }: { project: any }) {
   const update = useUpdateProject({
     mutation: {
       onSuccess: async () => {
-        toast({ title: "Detail tersimpan", description: "Project pindah ke status Observation." });
+        toast({ title: "Details saved", description: "Project moved to Observation status." });
         await qc.refetchQueries({ queryKey: getGetProjectQueryKey(project.id) });
       },
       onError: (e: any) =>
-        toast({ variant: "destructive", title: "Gagal menyimpan", description: e?.message ?? "Unknown error" }),
+        toast({ variant: "destructive", title: "Failed to save", description: e?.message ?? "Unknown error" }),
     },
   });
 
@@ -543,14 +543,14 @@ function DraftCompletionCard({ project }: { project: any }) {
     const ec = Number(estimatedCost);
     const pm = Number(plannedMandays);
     if (cv < 0 || ec < 0 || pm < 0) {
-      toast({ variant: "destructive", title: "Nilai tidak valid", description: "Revenue, biaya, dan mandays tidak boleh negatif." });
+      toast({ variant: "destructive", title: "Invalid value", description: "Revenue, cost, and mandays cannot be negative." });
       return;
     }
     if (promoteToObservation && (!cv || !pm || !startDate || !endDate)) {
       toast({
         variant: "destructive",
-        title: "Lengkapi field wajib",
-        description: "Revenue, Planned Mandays, Start Date, dan End Date wajib diisi sebelum pindah ke Observation.",
+        title: "Required fields missing",
+        description: "Revenue, Planned Mandays, Start Date, and End Date are required before moving to Observation.",
       });
       return;
     }
@@ -571,20 +571,20 @@ function DraftCompletionCard({ project }: { project: any }) {
   return (
     <Card className="border-purple-500/40 bg-purple-500/5 shadow-sm">
       <CardHeader>
-        <CardTitle className="text-base">Lengkapi Detail Project (DRAFT)</CardTitle>
+        <CardTitle className="text-base">Complete Project Details (DRAFT)</CardTitle>
         <CardDescription>
-          Isi data finansial, jadwal, dan deskripsi. Tambah resource di tab <span className="font-medium">Resources</span>. Setelah lengkap, pindahkan project ke status <span className="font-medium">Observation</span> untuk memulai eksekusi.
+          Fill in financial data, schedule, and description. Add resources in the <span className="font-medium">Resources</span> tab. Once complete, move the project to <span className="font-medium">Observation</span> status to start execution.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2">
-            <Label htmlFor="draft-description">Deskripsi</Label>
+            <Label htmlFor="draft-description">Description</Label>
             <Textarea
               id="draft-description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Scope of work dan informasi tambahan..."
+              placeholder="Scope of work and additional information..."
               className="resize-none h-20 mt-1"
               data-testid="input-draft-description"
             />
@@ -598,7 +598,7 @@ function DraftCompletionCard({ project }: { project: any }) {
             <Input id="draft-end" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="mt-1" data-testid="input-draft-end" />
           </div>
           <div>
-            <Label htmlFor="draft-revenue">Revenue / Harga Jual (IDR) *</Label>
+            <Label htmlFor="draft-revenue">Revenue / Selling Price (IDR) *</Label>
             <Input id="draft-revenue" type="number" min={0} value={contractValue} onChange={(e) => setContractValue(e.target.value)} className="mt-1 font-mono" data-testid="input-draft-revenue" />
           </div>
           <div>
@@ -617,14 +617,14 @@ function DraftCompletionCard({ project }: { project: any }) {
             disabled={update.isPending}
             data-testid="button-save-draft"
           >
-            Simpan sebagai DRAFT
+            Save as DRAFT
           </Button>
           <Button
             onClick={() => handleSave(true)}
             disabled={update.isPending}
             data-testid="button-promote-observation"
           >
-            Simpan & Pindah ke Observation
+            Save & Move to Observation
           </Button>
         </div>
       </CardContent>
@@ -894,7 +894,7 @@ function OverviewTab({ project }: { project: any }) {
           <CardTitle className="text-base">Financial Estimation</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Stat label="Revenue (Harga Jual)" value={formatIDR(project.contractValue)} />
+          <Stat label="Revenue (Selling Price)" value={formatIDR(project.contractValue)} />
           <Stat label="Estimated Operational Cost" value={formatIDR(project.estimatedCost)} muted />
           <Stat label="Estimated Profit" value={formatIDR(project.estimatedProfit)} highlight />
           <div className="flex items-center justify-between pt-3 border-t border-border">
@@ -929,7 +929,7 @@ function FinancialsTab({ projectId }: { projectId: string }) {
           icon={<DollarSign className="h-4 w-4 text-primary" />}
           label="Revenue"
           value={formatIDR(f.contractValue)}
-          subtitle="Contract value (Harga Jual)"
+          subtitle="Contract value (Selling Price)"
         />
         <FinancialCard
           icon={<Activity className="h-4 w-4 text-muted-foreground" />}
@@ -1114,7 +1114,7 @@ function DocumentsTab({ projectId, projectStatus }: { projectId: string; project
           <UploadCard
             type="BAST"
             label="BAST"
-            description="Berita Acara Serah Terima (PDF)"
+            description="Handover Acceptance Report (PDF)"
             done={hasBast}
             onUpload={(f) => handleUpload(f, "BAST")}
           />

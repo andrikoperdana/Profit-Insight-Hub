@@ -25,12 +25,12 @@ export default function Title() {
             Penetration Testing Platform
           </p>
           <h1 className="font-display font-bold text-[6.4vw] leading-[0.95] tracking-tight text-text text-balance">
-            Pentest yang
-            <span className="block text-accent">otomatis &amp; auditable.</span>
+            Pentests that are
+            <span className="block text-accent">automated &amp; auditable.</span>
           </h1>
           <p className="font-body text-muted text-[1.7vw] mt-[3.5vh] max-w-[55vw] leading-relaxed">
-            Greybox security testing dengan multi-engine scanning,
-            laporan PDF siap-kirim, dan jejak audit untuk setiap engagement.
+            Greybox security testing with multi-engine scanning,
+            ready-to-send PDF reports, and an audit trail for every engagement.
           </p>
         </div>
 

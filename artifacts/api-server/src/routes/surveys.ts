@@ -192,12 +192,12 @@ router.post("/public/surveys/:token", async (req, res) => {
 // inserts realistic CSAT responses dated within the current month.
 // Idempotent: refuses to run if any SurveyResponse already exists.
 const DEMO_RESPONSES = [
-  { submitterName: "Pak Budi Santoso", submitterEmail: "budi.santoso@banknusantara.co.id", lessonLearned: "Tim sangat profesional dan komunikasi rutin setiap minggu sangat membantu kami memahami progres.", ratings: { project_management: 5, consultant_performance: 5, report_quality: 4, team_overall: 5 } },
-  { submitterName: "Ibu Rina Wijaya", submitterEmail: "rina.wijaya@teleselaras.id", lessonLearned: "Laporan akhir sangat detail. Saran: jadwal kick-off bisa dipercepat 1 minggu untuk proyek selanjutnya.", ratings: { project_management: 4, consultant_performance: 5, report_quality: 5, team_overall: 4 } },
-  { submitterName: "Pak Andi Pratama", submitterEmail: "andi.pratama@energiprima.co.id", lessonLearned: "Hasil pengujian penetrasi sesuai harapan. Mohon disertakan executive summary yang lebih ringkas.", ratings: { project_management: 4, consultant_performance: 4, report_quality: 4, team_overall: 4 } },
-  { submitterName: "Ibu Sari Mulyani", submitterEmail: null, lessonLearned: "Sangat puas. Konsultan sangat responsif terhadap pertanyaan teknis kami.", ratings: { project_management: 5, consultant_performance: 5, report_quality: 5, team_overall: 5 } },
-  { submitterName: null, submitterEmail: null, lessonLearned: "Secara umum baik. Saran agar dokumentasi konfigurasi disertakan langsung saat handover.", ratings: { project_management: 3, consultant_performance: 4, report_quality: 4, team_overall: 4 } },
-  { submitterName: "Pak Reza Hakim", submitterEmail: "reza@retailmaju.co.id", lessonLearned: "Pelaksanaan rapi, hasil rekomendasi sangat actionable. Terima kasih!", ratings: { project_management: 5, consultant_performance: 4, report_quality: 5, team_overall: 5 } },
+  { submitterName: "Mr. Budi Santoso", submitterEmail: "budi.santoso@banknusantara.co.id", lessonLearned: "The team was very professional and the weekly communication cadence really helped us understand progress.", ratings: { project_management: 5, consultant_performance: 5, report_quality: 4, team_overall: 5 } },
+  { submitterName: "Ms. Rina Wijaya", submitterEmail: "rina.wijaya@teleselaras.id", lessonLearned: "The final report was very detailed. Suggestion: the kick-off schedule could be brought forward by 1 week for future projects.", ratings: { project_management: 4, consultant_performance: 5, report_quality: 5, team_overall: 4 } },
+  { submitterName: "Mr. Andi Pratama", submitterEmail: "andi.pratama@energiprima.co.id", lessonLearned: "The penetration testing results met our expectations. Please include a more concise executive summary.", ratings: { project_management: 4, consultant_performance: 4, report_quality: 4, team_overall: 4 } },
+  { submitterName: "Ms. Sari Mulyani", submitterEmail: null, lessonLearned: "Very satisfied. The consultant was highly responsive to our technical questions.", ratings: { project_management: 5, consultant_performance: 5, report_quality: 5, team_overall: 5 } },
+  { submitterName: null, submitterEmail: null, lessonLearned: "Generally good. Suggestion: include configuration documentation directly at handover.", ratings: { project_management: 3, consultant_performance: 4, report_quality: 4, team_overall: 4 } },
+  { submitterName: "Mr. Reza Hakim", submitterEmail: "reza@retailmaju.co.id", lessonLearned: "Execution was tidy and the recommendations are very actionable. Thank you!", ratings: { project_management: 5, consultant_performance: 4, report_quality: 5, team_overall: 5 } },
 ];
 
 router.post("/survey/seed-demo", requireAuth, requireRole("MANAGEMENT"), async (req, res) => {
