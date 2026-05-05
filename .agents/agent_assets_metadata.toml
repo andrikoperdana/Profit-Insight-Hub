@@ -143,3 +143,15 @@ id = "I4sNDhdTldnZ3-fu4ymR-"
 uri = "file://attached_assets/erd/secureprofit-erd.mmd.txt"
 type = "text"
 title = "Mermaid source (editable)"
+
+[[outputs]]
+id = "jqYZHcAxsiyRdlEiOkCZ6"
+uri = "file://attached_assets/erd/secureprofit-erd.pdf"
+type = "pdf"
+title = "SecureProfit Hub — ERD (PDF)"
+
+[[outputs]]
+id = "yVYqgjz4mtRWQrCyC5znL"
+uri = "file://attached_assets/erd/secureprofit-erd.jpg"
+type = "image"
+title = "SecureProfit Hub — ERD (JPG)"
