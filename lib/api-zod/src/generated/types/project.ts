@@ -26,7 +26,9 @@ export interface Project {
   estimatedProfit: number;
   plannedMandays: number;
   actualMandays?: number;
-  actualCost?: number;
+  actualCost: number;
+  resourceCost: number;
+  additionalCost: number;
   actualProfit?: number;
   marginPct?: number;
   createdAt: string;

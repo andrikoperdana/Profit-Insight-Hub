@@ -13,7 +13,7 @@ Full-stack web application for an Indonesian IT security consulting firm. Tracks
 
 ## Domain entities (Prisma)
 
-User, Client, Project, ProjectResource (per-project staffing with planned mandays + daily rate), Timesheet (DRAFT → SUBMITTED → APPROVED/REJECTED), Document (BAST/INVOICE/CONTRACT/REPORT/OTHER, base64 data URL in DB), Activity (audit trail).
+User, Client, Project, ProjectResource (per-project staffing with planned mandays + daily rate), Timesheet (DRAFT → SUBMITTED → APPROVED/REJECTED), Document (BAST/INVOICE/CONTRACT/REPORT/OTHER, base64 data URL in DB), Activity (audit trail), ProjectExpense (additional non-resource project costs: SOFTWARE/HARDWARE/LICENSE/TRAVEL/OTHER, with category, description, amount, spentAt, createdById).
 
 ## Project lifecycle statuses
 
@@ -25,6 +25,10 @@ DRAFT (Sales intake, awaiting PMO assignment) → OBSERVATION (PM completed deta
 2. **PMO Director (MANAGEMENT)** sees the project on the dashboard under a purple "Pending PM Assignment" card. Clicking "Tugaskan PM" opens a dialog with a PM dropdown that PATCHes `pmId`. The 409 invariant prevents reassigning if a PM is already set on a DRAFT project.
 3. **PM (PROJECT_MANAGER)** sees the project on their dashboard under "Project baru ditugaskan kepada Anda". Clicking "Lengkapi Detail" opens `/projects/:id` where a purple `DraftCompletionCard` is rendered above the tabs (visible only when `status === DRAFT`). PM fills Description, Start/End dates, Revenue, Planned Mandays, Estimated Cost, then clicks "Simpan & Pindah ke Observation" — server validates required fields and transitions status to OBSERVATION.
 
+### Expenses tab (PM cost capture beyond resources)
+
+PM and Management can open the **Expenses** tab on `/projects/:id` to log additional project costs (software, hardware, lisensi, perjalanan, lain-lain). New rows appear in a table with the running "Biaya Tambahan" total and update the project's `additionalCost` / `actualCost` immediately (Financials tab reflects the new total). PM can only add/delete expenses on projects assigned to them; Management has no project-ownership restriction.
+
 ### PATCH /api/projects/:id authorization rules
 
 Field-level + ownership guards in `artifacts/api-server/src/routes/projects.ts`:
@@ -35,10 +39,23 @@ Field-level + ownership guards in `artifacts/api-server/src/routes/projects.ts`:
 ## Financials computation
 
 Computed in `artifacts/api-server/src/lib/serializers.ts`:
-- `actualCost` = sum over APPROVED timesheets of `(hours / 8) * resource.dailyRate`
+- `resourceCost` = sum over APPROVED timesheets of `(hours / 8) * resource.dailyRate`
+- `additionalCost` = sum of all `ProjectExpense.amount` rows for the project (software/hardware/license/travel/other purchased outside resource time)
+- `actualCost` = `resourceCost + additionalCost`
 - `actualProfit` = `contractValue - actualCost`
 - `marginPct` = `actualProfit / contractValue * 100`
 - Forecast: linear projection of cost based on burn rate
+
+### Additional project expenses (Expenses tab)
+
+PMs and Management can record non-resource costs on `/projects/:id` → "Expenses" tab. Endpoints in `artifacts/api-server/src/routes/expenses.ts`:
+- `GET /api/projects/:id/expenses` — open to any authenticated user (mirrors GET /projects/:id visibility).
+- `POST /api/projects/:id/expenses` — `requireRole(MANAGEMENT, PROJECT_MANAGER)`; PM additionally restricted to projects where `pmId === userId`.
+- `DELETE /api/expenses/:expenseId` — same restrictions as POST.
+
+Allowed categories: `SOFTWARE`, `HARDWARE`, `LICENSE`, `TRAVEL`, `OTHER`. Each create/delete is recorded in the audit log (`expense.created` / `expense.deleted`). The Expenses tab on the project detail page is gated to MANAGEMENT and PROJECT_MANAGER roles. Frontend hooks: `useListProjectExpenses`, `useAddProjectExpense`, `useRemoveProjectExpense` from `@workspace/api-client-react`.
+
+**Express router gotcha:** Avoid `router.use(requireRole(...))` at the top of a sub-router that is mounted via `router.use(subRouter)` (no path prefix). Express runs the sub-router's middleware for *every* incoming request before path matching, so a router-level `requireRole` will reject requests destined for *other* sibling routers (e.g. previously biRouter's router-level `requireRole("MANAGEMENT")` blocked PM requests to `/projects/:id/expenses`). Apply `requireAuth` / `requireRole` per-route instead, or mount the router under a path prefix (`router.use("/bi", biRouter)`).
 
 `/api/projects/:id/financials` aggregates approved timesheets per month and pairs with contract value spread evenly across active months for chart rendering.
 

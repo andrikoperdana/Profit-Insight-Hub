@@ -7,6 +7,7 @@ type ProjectWithRelations = Prisma.ProjectGetPayload<{
     pm: true;
     resources: { include: { user: true } };
     timesheets: { include: { user: true } };
+    expenses: true;
   };
 }>;
 
@@ -14,6 +15,8 @@ type UserBasic = Prisma.UserGetPayload<object>;
 
 export interface ProjectMetrics {
   actualMandays: number;
+  resourceCost: number;
+  additionalCost: number;
   actualCost: number;
   actualProfit: number;
   marginPct: number;
@@ -28,14 +31,19 @@ export function computeMetrics(project: ProjectWithRelations): ProjectMetrics {
   }
 
   let actualMandays = 0;
-  let actualCost = 0;
+  let resourceCost = 0;
   for (const ts of project.timesheets) {
     if (ts.status !== "APPROVED") continue;
     const days = ts.hours / 8;
     actualMandays += days;
     const rate = rateMap.get(ts.userId) ?? ts.user?.dailyRate ?? 0;
-    actualCost += days * rate;
+    resourceCost += days * rate;
   }
+  const additionalCost = (project.expenses ?? []).reduce(
+    (sum, e) => sum + (e.amount ?? 0),
+    0,
+  );
+  const actualCost = resourceCost + additionalCost;
   const actualProfit = project.contractValue - actualCost;
   const marginPct =
     project.contractValue > 0
@@ -43,7 +51,15 @@ export function computeMetrics(project: ProjectWithRelations): ProjectMetrics {
       : 0;
   const estimatedProfit = project.contractValue - project.estimatedCost;
 
-  return { actualMandays, actualCost, actualProfit, marginPct, estimatedProfit };
+  return {
+    actualMandays,
+    resourceCost,
+    additionalCost,
+    actualCost,
+    actualProfit,
+    marginPct,
+    estimatedProfit,
+  };
 }
 
 export function serializeUser(u: UserBasic) {
@@ -81,6 +97,8 @@ export function serializeProject(project: ProjectWithRelations) {
     plannedMandays: project.plannedMandays,
     actualMandays: m.actualMandays,
     actualCost: m.actualCost,
+    resourceCost: m.resourceCost,
+    additionalCost: m.additionalCost,
     actualProfit: m.actualProfit,
     marginPct: m.marginPct,
     lastStatusReason: project.lastStatusReason ?? null,
@@ -94,4 +112,5 @@ export const projectInclude = {
   pm: true,
   resources: { include: { user: true } },
   timesheets: { include: { user: true } },
+  expenses: true,
 } as const;

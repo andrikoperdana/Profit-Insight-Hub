@@ -13,6 +13,10 @@ import {
   getListProjectResourcesQueryKey,
   useListUsers,
   useListTimesheets,
+  useListProjectExpenses,
+  useAddProjectExpense,
+  useRemoveProjectExpense,
+  getListProjectExpensesQueryKey,
   getGetProjectQueryKey,
   getGetProjectFinancialsQueryKey,
   getListProjectDocumentsQueryKey,
@@ -34,7 +38,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
   ArrowLeft, Building2, User, Calendar, DollarSign, TrendingUp, TrendingDown,
-  Activity, Flame, Upload, FileText, Trash2, CheckCircle2, AlertCircle,
+  Activity, Flame, Upload, FileText, Trash2, CheckCircle2, AlertCircle, Plus,
 } from "lucide-react";
 import { formatIDR, formatDate, formatPct } from "@/lib/format";
 import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
@@ -239,6 +243,9 @@ export default function ProjectDetail() {
           <TabsTrigger value="timeline">Timeline</TabsTrigger>
           <TabsTrigger value="financials">Financials</TabsTrigger>
           <TabsTrigger value="resources">Resources</TabsTrigger>
+          {(user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER") && (
+            <TabsTrigger value="expenses" data-testid="tab-trigger-expenses">Expenses</TabsTrigger>
+          )}
           <TabsTrigger value="documents">Documents</TabsTrigger>
           {(user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER") && (
             <TabsTrigger value="survey">Customer Survey</TabsTrigger>
@@ -257,6 +264,11 @@ export default function ProjectDetail() {
         <TabsContent value="resources" className="pt-4 m-0">
           <ResourcesTab projectId={id} project={project} />
         </TabsContent>
+        {(user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER") && (
+          <TabsContent value="expenses" className="pt-4 m-0">
+            <ExpensesTab projectId={id} project={project} />
+          </TabsContent>
+        )}
         <TabsContent value="documents" className="pt-4 m-0">
           <DocumentsTab projectId={id} projectStatus={project.status} />
         </TabsContent>
@@ -264,6 +276,243 @@ export default function ProjectDetail() {
           <SurveyTab projectId={id} />
         </TabsContent>
       </Tabs>
+    </div>
+  );
+}
+
+const EXPENSE_CATEGORIES: { value: string; label: string }[] = [
+  { value: "SOFTWARE", label: "Software" },
+  { value: "HARDWARE", label: "Hardware" },
+  { value: "LICENSE", label: "Lisensi" },
+  { value: "TRAVEL", label: "Perjalanan" },
+  { value: "OTHER", label: "Lain-lain" },
+];
+
+function expenseCategoryLabel(value: string): string {
+  return EXPENSE_CATEGORIES.find((c) => c.value === value)?.label ?? value;
+}
+
+function ExpensesTab({ projectId, project }: { projectId: string; project: any }) {
+  const { toast } = useToast();
+  const qc = useQueryClient();
+  const { data: expenses, isLoading } = useListProjectExpenses(projectId);
+
+  const [category, setCategory] = useState<string>("SOFTWARE");
+  const [description, setDescription] = useState("");
+  const [amount, setAmount] = useState("");
+  const [spentAt, setSpentAt] = useState<string>(new Date().toISOString().slice(0, 10));
+
+  const invalidateAll = () => {
+    qc.invalidateQueries({ queryKey: getListProjectExpensesQueryKey(projectId) });
+    qc.invalidateQueries({ queryKey: getGetProjectQueryKey(projectId) });
+    qc.invalidateQueries({ queryKey: getGetProjectFinancialsQueryKey(projectId) });
+    qc.invalidateQueries({ queryKey: ["/projects"] });
+  };
+
+  const addMutation = useAddProjectExpense({
+    mutation: {
+      onSuccess: () => {
+        toast({ title: "Biaya tersimpan", description: "Total biaya project diperbarui." });
+        setDescription("");
+        setAmount("");
+        invalidateAll();
+      },
+      onError: (e: any) =>
+        toast({ variant: "destructive", title: "Gagal menyimpan biaya", description: e?.message ?? "Unknown error" }),
+    },
+  });
+
+  const removeMutation = useRemoveProjectExpense({
+    mutation: {
+      onSuccess: () => {
+        toast({ title: "Biaya dihapus" });
+        invalidateAll();
+      },
+      onError: (e: any) =>
+        toast({ variant: "destructive", title: "Gagal menghapus biaya", description: e?.message ?? "Unknown error" }),
+    },
+  });
+
+  function handleAdd() {
+    const amt = Number(amount);
+    if (!description.trim()) {
+      toast({ variant: "destructive", title: "Deskripsi wajib diisi" });
+      return;
+    }
+    if (!isFinite(amt) || amt <= 0) {
+      toast({ variant: "destructive", title: "Nominal tidak valid", description: "Nominal harus angka positif." });
+      return;
+    }
+    addMutation.mutate({
+      id: projectId,
+      data: {
+        category,
+        description: description.trim(),
+        amount: amt,
+        spentAt: spentAt || undefined,
+      },
+    });
+  }
+
+  if (isLoading) return <LoadingPage />;
+
+  const list = expenses ?? [];
+  const totalAdditional = list.reduce((s: number, e: any) => s + (e.amount ?? 0), 0);
+  const resourceCost = project?.resourceCost ?? 0;
+  const totalCost = resourceCost + totalAdditional;
+
+  return (
+    <div className="space-y-6">
+      <Card className="border-border shadow-sm">
+        <CardHeader>
+          <CardTitle className="text-base">Biaya Tambahan Project</CardTitle>
+          <CardDescription>
+            Catat pembelian atau biaya di luar resource (mis. software, hardware, lisensi). Nilai ini otomatis menambah <span className="font-medium text-foreground">total biaya project</span> dan memengaruhi profit/margin di tab Financials.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+            <SummaryStatInline label="Biaya Resource" value={formatIDR(resourceCost)} />
+            <SummaryStatInline label="Biaya Tambahan" value={formatIDR(totalAdditional)} highlight />
+            <SummaryStatInline label="Total Biaya" value={formatIDR(totalCost)} />
+            <SummaryStatInline
+              label="Sisa vs Revenue"
+              value={formatIDR((project?.contractValue ?? 0) - totalCost)}
+            />
+          </div>
+
+          <div className="rounded-md border border-dashed border-border p-4 space-y-3">
+            <div className="text-sm font-medium text-foreground">Tambah Biaya Baru</div>
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
+              <div className="md:col-span-3">
+                <Label htmlFor="exp-category">Kategori</Label>
+                <Select value={category} onValueChange={setCategory}>
+                  <SelectTrigger id="exp-category" className="mt-1" data-testid="select-expense-category">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {EXPENSE_CATEGORIES.map((c) => (
+                      <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="md:col-span-5">
+                <Label htmlFor="exp-desc">Deskripsi *</Label>
+                <Input
+                  id="exp-desc"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="cth. Lisensi Burp Suite Pro 1 tahun"
+                  className="mt-1"
+                  data-testid="input-expense-description"
+                />
+              </div>
+              <div className="md:col-span-2">
+                <Label htmlFor="exp-amount">Nominal (IDR) *</Label>
+                <Input
+                  id="exp-amount"
+                  type="number"
+                  min={0}
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder="0"
+                  className="mt-1 font-mono"
+                  data-testid="input-expense-amount"
+                />
+              </div>
+              <div className="md:col-span-2">
+                <Label htmlFor="exp-date">Tanggal</Label>
+                <Input
+                  id="exp-date"
+                  type="date"
+                  value={spentAt}
+                  onChange={(e) => setSpentAt(e.target.value)}
+                  className="mt-1"
+                  data-testid="input-expense-date"
+                />
+              </div>
+            </div>
+            <div className="flex justify-end">
+              <Button
+                onClick={handleAdd}
+                disabled={addMutation.isPending}
+                data-testid="button-add-expense"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Tambah Biaya
+              </Button>
+            </div>
+          </div>
+
+          {list.length === 0 ? (
+            <div className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+              Belum ada biaya tambahan. Tambahkan pembelian software, hardware, atau biaya lain di atas.
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-left text-xs text-muted-foreground border-b border-border">
+                    <th className="py-2 pr-3 font-medium">Tanggal</th>
+                    <th className="py-2 pr-3 font-medium">Kategori</th>
+                    <th className="py-2 pr-3 font-medium">Deskripsi</th>
+                    <th className="py-2 pr-3 font-medium">Diinput Oleh</th>
+                    <th className="py-2 pr-3 font-medium text-right">Nominal</th>
+                    <th className="py-2 pr-3 font-medium text-right w-12"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {list.map((e: any) => (
+                    <tr key={e.id} className="border-b border-border/40 hover:bg-muted/30" data-testid={`row-expense-${e.id}`}>
+                      <td className="py-2 pr-3 text-muted-foreground">{formatDate(e.spentAt)}</td>
+                      <td className="py-2 pr-3">
+                        <Badge variant="outline" className="text-[10px]">{expenseCategoryLabel(e.category)}</Badge>
+                      </td>
+                      <td className="py-2 pr-3">{e.description}</td>
+                      <td className="py-2 pr-3 text-muted-foreground">{e.createdByName ?? "—"}</td>
+                      <td className="py-2 pr-3 text-right font-mono">{formatIDR(e.amount)}</td>
+                      <td className="py-2 pr-3 text-right">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
+                          disabled={removeMutation.isPending}
+                          data-testid={`button-remove-expense-${e.id}`}
+                          onClick={() => {
+                            if (confirm(`Hapus biaya "${e.description}"?`)) {
+                              removeMutation.mutate({ expenseId: e.id });
+                            }
+                          }}
+                          title="Hapus"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                  <tr className="bg-muted/30">
+                    <td colSpan={4} className="py-2 pr-3 text-right text-xs uppercase tracking-wide text-muted-foreground">
+                      Total Biaya Tambahan
+                    </td>
+                    <td className="py-2 pr-3 text-right font-mono font-semibold">{formatIDR(totalAdditional)}</td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function SummaryStatInline({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
+  return (
+    <div className={`rounded-md border p-3 ${highlight ? "border-primary/40 bg-primary/5" : "border-border bg-card"}`}>
+      <div className="text-[10px] uppercase tracking-wide text-muted-foreground">{label}</div>
+      <div className="font-mono font-semibold mt-1">{value}</div>
     </div>
   );
 }

@@ -246,7 +246,9 @@ export const ListProjectsResponseItem = zod.object({
   estimatedProfit: zod.number(),
   plannedMandays: zod.number(),
   actualMandays: zod.number().optional(),
-  actualCost: zod.number().optional(),
+  actualCost: zod.number(),
+  resourceCost: zod.number(),
+  additionalCost: zod.number(),
   actualProfit: zod.number().optional(),
   marginPct: zod.number().optional(),
   createdAt: zod.string(),
@@ -301,7 +303,9 @@ export const GetProjectResponse = zod
     estimatedProfit: zod.number(),
     plannedMandays: zod.number(),
     actualMandays: zod.number().optional(),
-    actualCost: zod.number().optional(),
+    actualCost: zod.number(),
+    resourceCost: zod.number(),
+    additionalCost: zod.number(),
     actualProfit: zod.number().optional(),
     marginPct: zod.number().optional(),
     createdAt: zod.string(),
@@ -411,7 +415,9 @@ export const UpdateProjectResponse = zod.object({
   estimatedProfit: zod.number(),
   plannedMandays: zod.number(),
   actualMandays: zod.number().optional(),
-  actualCost: zod.number().optional(),
+  actualCost: zod.number(),
+  resourceCost: zod.number(),
+  additionalCost: zod.number(),
   actualProfit: zod.number().optional(),
   marginPct: zod.number().optional(),
   createdAt: zod.string(),
@@ -498,6 +504,45 @@ export const RemoveProjectResourceParams = zod.object({
 });
 
 export const RemoveProjectResourceResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+export const ListProjectExpensesParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const ListProjectExpensesResponseItem = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  category: zod.enum(["SOFTWARE", "HARDWARE", "LICENSE", "TRAVEL", "OTHER"]),
+  description: zod.string(),
+  amount: zod.number(),
+  spentAt: zod.string(),
+  createdById: zod.string().nullish(),
+  createdByName: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+export const ListProjectExpensesResponse = zod.array(
+  ListProjectExpensesResponseItem,
+);
+
+export const AddProjectExpenseParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const AddProjectExpenseBody = zod.object({
+  category: zod.enum(["SOFTWARE", "HARDWARE", "LICENSE", "TRAVEL", "OTHER"]),
+  description: zod.string(),
+  amount: zod.number(),
+  spentAt: zod.string().optional(),
+});
+
+export const RemoveProjectExpenseParams = zod.object({
+  expenseId: zod.coerce.string(),
+});
+
+export const RemoveProjectExpenseResponse = zod.object({
   success: zod.boolean(),
   message: zod.string().optional(),
 });
@@ -715,7 +760,9 @@ export const GetTopProjectsResponseItem = zod.object({
   estimatedProfit: zod.number(),
   plannedMandays: zod.number(),
   actualMandays: zod.number().optional(),
-  actualCost: zod.number().optional(),
+  actualCost: zod.number(),
+  resourceCost: zod.number(),
+  additionalCost: zod.number(),
   actualProfit: zod.number().optional(),
   marginPct: zod.number().optional(),
   createdAt: zod.string(),

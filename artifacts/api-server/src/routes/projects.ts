@@ -421,21 +421,25 @@ router.get("/projects/:id/whatif", async (req, res) => {
     return;
   }
   const m = computeMetrics(p);
+  // Forecast labor rate uses ONLY resource (timesheet) cost so that fixed
+  // one-off additional expenses (software/hardware purchases) are not
+  // converted into a pseudo daily-rate and double-extrapolated across
+  // future mandays. Additional expenses are added on top as a fixed term.
   const avgRate =
     m.actualMandays > 0
-      ? m.actualCost / m.actualMandays
+      ? m.resourceCost / m.actualMandays
       : p.resources.length > 0
         ? p.resources.reduce((s, r) => s + r.dailyRate, 0) / p.resources.length
         : 0;
 
   const baseProjectedMandays = Math.max(p.plannedMandays, m.actualMandays);
-  const baseForecastCost = baseProjectedMandays * avgRate;
+  const baseForecastCost = baseProjectedMandays * avgRate + m.additionalCost;
   const baseForecastProfit = p.contractValue - baseForecastCost;
   const baseMarginPct =
     p.contractValue > 0 ? (baseForecastProfit / p.contractValue) * 100 : 0;
 
   const scenarioMandays = baseProjectedMandays + addMandays;
-  const scenarioCost = scenarioMandays * avgRate;
+  const scenarioCost = scenarioMandays * avgRate + m.additionalCost;
   const scenarioProfit = p.contractValue - scenarioCost;
   const scenarioMarginPct =
     p.contractValue > 0 ? (scenarioProfit / p.contractValue) * 100 : 0;
@@ -505,14 +509,17 @@ router.get("/projects/:id/financials", async (req, res) => {
 
   // Forecast: linear projection — if you've burned X% of mandays,
   // assume cost scales to fully consume planned mandays at current rate.
+  // Use resourceCost (timesheet-derived) for rate so fixed additional
+  // expenses (software/hardware) are not extrapolated; add them as a
+  // fixed term to the forecast total.
   const projectedMandays = Math.max(p.plannedMandays, m.actualMandays);
   const avgRate =
     m.actualMandays > 0
-      ? m.actualCost / m.actualMandays
+      ? m.resourceCost / m.actualMandays
       : p.resources.length > 0
         ? p.resources.reduce((s, r) => s + r.dailyRate, 0) / p.resources.length
         : 0;
-  const forecastCost = projectedMandays * avgRate;
+  const forecastCost = projectedMandays * avgRate + m.additionalCost;
   const forecastProfit = p.contractValue - forecastCost;
 
   // Monthly aggregation of approved timesheets

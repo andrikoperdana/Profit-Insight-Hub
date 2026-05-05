@@ -13,6 +13,7 @@ import capacityRouter from "./capacity.js";
 import auditLogsRouter from "./audit-logs.js";
 import biRouter from "./bi.js";
 import surveysRouter from "./surveys.js";
+import expensesRouter from "./expenses.js";
 
 const router: IRouter = Router();
 
@@ -30,5 +31,6 @@ router.use(uploadsRouter);
 router.use(capacityRouter);
 router.use(auditLogsRouter);
 router.use(biRouter);
+router.use(expensesRouter);
 
 export default router;

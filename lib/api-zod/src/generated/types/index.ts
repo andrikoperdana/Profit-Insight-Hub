@@ -7,6 +7,8 @@
  */
 
 export * from "./activityItem";
+export * from "./addProjectExpenseBody";
+export * from "./addProjectExpenseBodyCategory";
 export * from "./addResourceBody";
 export * from "./authResponse";
 export * from "./client";
@@ -27,6 +29,8 @@ export * from "./monthlyFinancialPoint";
 export * from "./profitTrendPoint";
 export * from "./project";
 export * from "./projectDetail";
+export * from "./projectExpense";
+export * from "./projectExpenseCategory";
 export * from "./projectFinancials";
 export * from "./projectResource";
 export * from "./projectStatus";

@@ -62,6 +62,7 @@ model User {
   documentsUploaded  Document[]
   activities         Activity[]
   auditLogs          AuditLog[]
+  projectExpenses    ProjectExpense[]
 }
 
 model Client {
@@ -105,6 +106,7 @@ model Project {
   documents       Document[]
   activities      Activity[]
   surveyResponses SurveyResponse[]
+  expenses        ProjectExpense[]
 }
 
 model SurveyQuestion {
@@ -200,6 +202,23 @@ model Document {
   uploadedById  String?
   uploadedBy    User?        @relation(fields: [uploadedById], references: [id])
   uploadedAt    DateTime     @default(now())
+}
+
+model ProjectExpense {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  category    String
+  description String
+  amount      Float
+  spentAt     DateTime @default(now())
+  createdById String?
+  createdBy   User?    @relation(fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([spentAt])
 }
 
 model Activity {

@@ -5,8 +5,6 @@ import { computeMetrics, projectInclude } from "../lib/serializers.js";
 import { classifyProject, PROJECT_TYPES, type ProjectType } from "../lib/projectType.js";
 
 const router: IRouter = Router();
-router.use(requireAuth);
-router.use(requireRole("MANAGEMENT"));
 
 type Period = "month" | "quarter" | "year" | "custom";
 
@@ -38,7 +36,7 @@ function inRange(d: Date | null | undefined, from: Date, to: Date): boolean {
   return t >= from.getTime() && t <= to.getTime();
 }
 
-router.get("/bi/overview", async (req, res) => {
+router.get("/bi/overview", requireAuth, requireRole("MANAGEMENT"), async (req, res) => {
   const { from, to, label } = resolvePeriod(req);
   const principalId = req.query.principalId ? String(req.query.principalId) : null;
   const projectTypeFilter = req.query.projectType ? String(req.query.projectType) : null;
@@ -90,6 +88,11 @@ router.get("/bi/overview", async (req, res) => {
       cost += days * (rateMap.get(ts.userId) ?? ts.user?.dailyRate ?? 0);
       const k = `${ts.workDate.getFullYear()}-${ts.workDate.getMonth()}`;
       monthsTouched.add(k);
+    }
+    // Include additional project expenses (software/hardware/etc) that fall within the period
+    for (const e of p.expenses ?? []) {
+      if (!inRange(e.spentAt, from, to)) continue;
+      cost += e.amount ?? 0;
     }
     // Pro-rate revenue across project lifetime falling in range
     let revenue = 0;
@@ -403,6 +406,11 @@ router.get("/bi/overview", async (req, res) => {
         if (!inRange(ts.workDate, s, e)) continue;
         const days = ts.hours / 8;
         cost += days * (rateMap.get(ts.userId) ?? ts.user?.dailyRate ?? 0);
+      }
+      // Additional project expenses falling in the range count as cost too
+      for (const ex of p.expenses ?? []) {
+        if (!inRange(ex.spentAt, s, e)) continue;
+        cost += ex.amount ?? 0;
       }
       if (p.startDate && p.endDate) {
         const total = p.endDate.getTime() - p.startDate.getTime();

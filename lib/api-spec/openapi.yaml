@@ -15,6 +15,7 @@ tags:
   - name: resources
   - name: timesheets
   - name: documents
+  - name: expenses
   - name: dashboard
 
 paths:
@@ -309,6 +310,50 @@ paths:
       tags: [resources]
       parameters:
         - { name: resourceId, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /projects/{id}/expenses:
+    get:
+      operationId: listProjectExpenses
+      tags: [expenses]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ProjectExpense" }
+    post:
+      operationId: addProjectExpense
+      tags: [expenses]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AddProjectExpenseBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ProjectExpense" }
+
+  /expenses/{expenseId}:
+    delete:
+      operationId: removeProjectExpense
+      tags: [expenses]
+      parameters:
+        - { name: expenseId, in: path, required: true, schema: { type: string } }
       responses:
         "200":
           description: OK
@@ -627,7 +672,7 @@ components:
 
     Project:
       type: object
-      required: [id, code, name, status, contractValue, estimatedCost, estimatedProfit, plannedMandays, createdAt]
+      required: [id, code, name, status, contractValue, estimatedCost, estimatedProfit, plannedMandays, actualCost, resourceCost, additionalCost, createdAt]
       properties:
         id: { type: string }
         code: { type: string }
@@ -648,9 +693,34 @@ components:
         plannedMandays: { type: number }
         actualMandays: { type: number }
         actualCost: { type: number }
+        resourceCost: { type: number }
+        additionalCost: { type: number }
         actualProfit: { type: number }
         marginPct: { type: number }
         createdAt: { type: string }
+
+    ProjectExpense:
+      type: object
+      required: [id, projectId, category, description, amount, spentAt, createdAt]
+      properties:
+        id: { type: string }
+        projectId: { type: string }
+        category: { type: string, enum: [SOFTWARE, HARDWARE, LICENSE, TRAVEL, OTHER] }
+        description: { type: string }
+        amount: { type: number }
+        spentAt: { type: string }
+        createdById: { type: string, nullable: true }
+        createdByName: { type: string, nullable: true }
+        createdAt: { type: string }
+
+    AddProjectExpenseBody:
+      type: object
+      required: [category, description, amount]
+      properties:
+        category: { type: string, enum: [SOFTWARE, HARDWARE, LICENSE, TRAVEL, OTHER] }
+        description: { type: string }
+        amount: { type: number }
+        spentAt: { type: string }
 
     ProjectDetail:
       allOf:

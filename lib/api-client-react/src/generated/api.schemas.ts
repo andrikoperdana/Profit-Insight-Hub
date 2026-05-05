@@ -131,10 +131,53 @@ export interface Project {
   estimatedProfit: number;
   plannedMandays: number;
   actualMandays?: number;
-  actualCost?: number;
+  actualCost: number;
+  resourceCost: number;
+  additionalCost: number;
   actualProfit?: number;
   marginPct?: number;
   createdAt: string;
+}
+
+export type ProjectExpenseCategory =
+  (typeof ProjectExpenseCategory)[keyof typeof ProjectExpenseCategory];
+
+export const ProjectExpenseCategory = {
+  SOFTWARE: "SOFTWARE",
+  HARDWARE: "HARDWARE",
+  LICENSE: "LICENSE",
+  TRAVEL: "TRAVEL",
+  OTHER: "OTHER",
+} as const;
+
+export interface ProjectExpense {
+  id: string;
+  projectId: string;
+  category: ProjectExpenseCategory;
+  description: string;
+  amount: number;
+  spentAt: string;
+  createdById?: string | null;
+  createdByName?: string | null;
+  createdAt: string;
+}
+
+export type AddProjectExpenseBodyCategory =
+  (typeof AddProjectExpenseBodyCategory)[keyof typeof AddProjectExpenseBodyCategory];
+
+export const AddProjectExpenseBodyCategory = {
+  SOFTWARE: "SOFTWARE",
+  HARDWARE: "HARDWARE",
+  LICENSE: "LICENSE",
+  TRAVEL: "TRAVEL",
+  OTHER: "OTHER",
+} as const;
+
+export interface AddProjectExpenseBody {
+  category: AddProjectExpenseBodyCategory;
+  description: string;
+  amount: number;
+  spentAt?: string;
 }
 
 export interface ProjectResource {
