@@ -2,8 +2,9 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { customFetch, useListUsers } from "@workspace/api-client-react";
 import { useAuth } from "@/lib/auth";
-import { ScrollText, Filter, ChevronLeft, ChevronRight, RefreshCw } from "lucide-react";
+import { ScrollText, Filter, ChevronLeft, ChevronRight, RefreshCw, Download } from "lucide-react";
 import { formatDate } from "@/lib/format";
+import { exportCsv } from "@/lib/exports";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -255,6 +256,28 @@ export default function AuditLogPage() {
             <div className="flex items-end gap-2">
               <Button variant="outline" onClick={resetFilters} className="flex-1">
                 Reset
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => {
+                  const rows = (data?.items ?? []).map((log) => ({
+                    Time: log.createdAt,
+                    User: log.userName,
+                    Role: log.userRole,
+                    Action: log.action,
+                    Entity: ACTION_GROUPS[log.action] ?? log.entityType,
+                    EntityId: log.entityId ?? "",
+                    Description: log.description,
+                  }));
+                  exportCsv("audit-logs", rows);
+                }}
+                disabled={!data?.items?.length}
+                aria-label="Export CSV"
+                data-testid="button-export-audit-csv"
+                title="Export current page to CSV"
+              >
+                <Download className="w-4 h-4" />
               </Button>
               <Button
                 variant="outline"

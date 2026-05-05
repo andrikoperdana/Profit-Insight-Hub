@@ -13,7 +13,8 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formatDate } from "@/lib/format";
-import { Clock, Plus, Trash2, Calendar, AlertCircle } from "lucide-react";
+import { exportCsv } from "@/lib/exports";
+import { Clock, Plus, Trash2, Calendar, AlertCircle, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
 
@@ -34,6 +35,8 @@ import {
 import { TimesheetStatusBadge } from "@/components/common/Badges";
 import { EmptyState } from "@/components/common/EmptyState";
 import { TableSkeleton } from "@/components/common/Loading";
+import { Pagination, usePagination } from "@/components/common/Pagination";
+import { Button as UIButton } from "@/components/ui/button";
 
 function earliestAllowedWorkDate(today: Date, businessDays: number): Date {
   const d = new Date(today);
@@ -202,6 +205,21 @@ function MyTimesheetsTable() {
     },
   });
 
+  const pager = usePagination(timesheets);
+
+  function handleExportCsv() {
+    const rows = (timesheets ?? []).map((ts) => ({
+      Date: ts.workDate ?? "",
+      Project: ts.projectName ?? "",
+      Hours: ts.hours ?? 0,
+      Description: ts.description ?? "",
+      Status: ts.status,
+      RejectionReason: ts.rejectionReason ?? "",
+      SubmittedAt: ts.createdAt ?? "",
+    }));
+    exportCsv("my-timesheets", rows);
+  }
+
   if (isLoading) return <div className="p-6"><TableSkeleton columns={5} rows={6} /></div>;
 
   if (!timesheets?.length) {
@@ -215,6 +233,17 @@ function MyTimesheetsTable() {
   }
 
   return (
+    <>
+    <div className="flex justify-end px-4 pt-3">
+      <UIButton
+        variant="outline"
+        size="sm"
+        onClick={handleExportCsv}
+        data-testid="button-export-timesheets-csv"
+      >
+        <Download className="h-4 w-4 mr-2" /> Export CSV
+      </UIButton>
+    </div>
     <Table>
       <TableHeader className="bg-muted/50">
         <TableRow>
@@ -227,7 +256,7 @@ function MyTimesheetsTable() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {timesheets.map((ts) => (
+        {pager.pageItems.map((ts) => (
           <TableRow key={ts.id}>
             <TableCell className="whitespace-nowrap">
               <div className="flex items-center text-sm">
@@ -271,5 +300,15 @@ function MyTimesheetsTable() {
         ))}
       </TableBody>
     </Table>
+    <Pagination
+      page={pager.page}
+      pageSize={pager.pageSize}
+      total={pager.total}
+      totalPages={pager.totalPages}
+      onPageChange={pager.setPage}
+      onPageSizeChange={pager.setPageSize}
+      testId="timesheets-pagination"
+    />
+    </>
   );
 }

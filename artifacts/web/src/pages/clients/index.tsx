@@ -4,11 +4,12 @@ import { canManageClients } from "@/lib/roles";
 import { useListClients, useCreateClient } from "@workspace/api-client-react";
 import { getListClientsQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Building2, Plus, Mail, Phone, MapPin } from "lucide-react";
+import { Building2, Plus, Mail, Phone, MapPin, Download } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
+import { exportCsv } from "@/lib/exports";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,6 +34,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { TableSkeleton } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
+import { Pagination, usePagination } from "@/components/common/Pagination";
 
 const clientSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -77,6 +79,20 @@ export default function ClientsList() {
     createClient.mutate({ data });
   };
 
+  const pager = usePagination(clients);
+
+  function handleExportCsv() {
+    const rows = (clients ?? []).map((c) => ({
+      Company: c.name,
+      Industry: c.industry ?? "",
+      ContactPerson: c.contactPerson ?? "",
+      Email: c.email ?? "",
+      Phone: c.phone ?? "",
+      AddedAt: c.createdAt ?? "",
+    }));
+    exportCsv("clients", rows);
+  }
+
   const hasAccess = canManageClients(user?.role);
 
   if (!hasAccess) {
@@ -97,12 +113,22 @@ export default function ClientsList() {
           <p className="text-muted-foreground">Manage client directory and contact info.</p>
         </div>
         
-        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-          <DialogTrigger asChild>
-            <Button className="gap-2">
-              <Plus className="h-4 w-4" /> New Client
-            </Button>
-          </DialogTrigger>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            className="gap-2"
+            onClick={handleExportCsv}
+            disabled={!clients?.length}
+            data-testid="button-export-clients-csv"
+          >
+            <Download className="h-4 w-4" /> Export CSV
+          </Button>
+          <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+            <DialogTrigger asChild>
+              <Button className="gap-2">
+                <Plus className="h-4 w-4" /> New Client
+              </Button>
+            </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Create New Client</DialogTitle>
@@ -177,6 +203,7 @@ export default function ClientsList() {
             </Form>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       {isLoading ? (
@@ -200,7 +227,7 @@ export default function ClientsList() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {clients.map((client) => (
+              {pager.pageItems.map((client) => (
                 <TableRow key={client.id} className="group">
                   <TableCell>
                     <div className="font-medium text-foreground">{client.name}</div>
@@ -227,6 +254,15 @@ export default function ClientsList() {
               ))}
             </TableBody>
           </Table>
+          <Pagination
+            page={pager.page}
+            pageSize={pager.pageSize}
+            total={pager.total}
+            totalPages={pager.totalPages}
+            onPageChange={pager.setPage}
+            onPageSizeChange={pager.setPageSize}
+            testId="clients-pagination"
+          />
         </Card>
       )}
     </div>

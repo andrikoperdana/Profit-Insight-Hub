@@ -48,13 +48,16 @@ export default function Dashboard() {
     staleTime: 0,
   });
 
+  // Match the colors used by ProjectStatusBadge across the app so the donut
+  // legend reads the same as every status badge users see elsewhere.
+  // (chart-4 = orange and chart-5 = red — wrong for COMPLETE/CLOSED.)
   const STATUS_COLORS: Record<ProjectStatus, string> = {
-    [ProjectStatus.DRAFT]: "hsl(280, 60%, 60%)",        // Purple
-    [ProjectStatus.OBSERVATION]: "hsl(var(--chart-2))", // Blue
-    [ProjectStatus.ACTIVE]: "hsl(var(--chart-1))",      // Green
-    [ProjectStatus.PAUSE]: "hsl(var(--chart-3))",       // Amber
-    [ProjectStatus.COMPLETE]: "hsl(var(--chart-4))",    // Emerald
-    [ProjectStatus.CLOSED]: "hsl(var(--chart-5))",      // Slate
+    [ProjectStatus.DRAFT]: "hsl(271, 81%, 56%)",        // purple-500
+    [ProjectStatus.OBSERVATION]: "hsl(217, 91%, 60%)",  // blue-500
+    [ProjectStatus.ACTIVE]: "hsl(var(--primary))",      // primary green
+    [ProjectStatus.PAUSE]: "hsl(38, 92%, 50%)",         // amber-500
+    [ProjectStatus.COMPLETE]: "hsl(160, 84%, 39%)",     // emerald-500
+    [ProjectStatus.CLOSED]: "hsl(215, 16%, 47%)",       // slate-500
   };
 
   const pendingAssignment = (allProjects ?? []).filter(

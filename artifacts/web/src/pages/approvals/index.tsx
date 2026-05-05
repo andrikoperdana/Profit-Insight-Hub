@@ -10,8 +10,9 @@ import { getListTimesheetsQueryKey } from "@workspace/api-client-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { Link, useLocation } from "wouter";
-import { AlarmClock, Calendar, Check, Clock, Inbox, XCircle } from "lucide-react";
+import { AlarmClock, Calendar, Check, Clock, Download, Inbox, XCircle } from "lucide-react";
 import { formatDate } from "@/lib/format";
+import { exportCsv } from "@/lib/exports";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -31,6 +32,7 @@ import {
 } from "@/components/ui/table";
 import { TableSkeleton } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
+import { Pagination, usePagination } from "@/components/common/Pagination";
 import {
   Dialog,
   DialogContent,
@@ -125,6 +127,21 @@ export default function ApprovalInbox() {
     !!timesheets?.length && selected.size === timesheets.length;
   const someChecked = selected.size > 0 && !allChecked;
 
+  const pager = usePagination(timesheets);
+
+  function handleExportCsv() {
+    const rows = (timesheets ?? []).map((ts) => ({
+      Date: ts.workDate ?? "",
+      Submitter: ts.userName ?? "",
+      Project: ts.projectName ?? "",
+      Hours: ts.hours ?? 0,
+      Description: ts.description ?? "",
+      SubmittedAt: ts.createdAt ?? "",
+      AgeHours: Math.round((Date.now() - new Date(ts.createdAt).getTime()) / 3600000),
+    }));
+    exportCsv("approval-inbox", rows);
+  }
+
   function toggleAll() {
     if (!timesheets) return;
     setSelected(allChecked ? new Set() : new Set(timesheets.map((t) => t.id)));
@@ -177,18 +194,29 @@ export default function ApprovalInbox() {
                 {timesheets?.length ?? 0}
               </Badge>
             </span>
-            {selected.size > 0 && (
+            <span className="flex items-center gap-2">
               <Button
                 size="sm"
-                onClick={() => bulkApprove.mutate(Array.from(selected))}
-                disabled={bulkApprove.isPending}
-                className="bg-emerald-500 hover:bg-emerald-400 text-emerald-950"
-                data-testid="button-bulk-approve"
+                variant="outline"
+                onClick={handleExportCsv}
+                disabled={!timesheets?.length}
+                data-testid="button-export-approvals-csv"
               >
-                <Check className="h-4 w-4 mr-1" />
-                Approve {selected.size} selected
+                <Download className="h-4 w-4 mr-1" /> CSV
               </Button>
-            )}
+              {selected.size > 0 && (
+                <Button
+                  size="sm"
+                  onClick={() => bulkApprove.mutate(Array.from(selected))}
+                  disabled={bulkApprove.isPending}
+                  className="bg-emerald-500 hover:bg-emerald-400 text-emerald-950"
+                  data-testid="button-bulk-approve"
+                >
+                  <Check className="h-4 w-4 mr-1" />
+                  Approve {selected.size} selected
+                </Button>
+              )}
+            </span>
           </CardTitle>
           <CardDescription>
             Submissions from Consultant, Technical Writer, and Admin Project on
@@ -229,7 +257,7 @@ export default function ApprovalInbox() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {timesheets.map((ts) => {
+                {pager.pageItems.map((ts) => {
                   const submitted = new Date(ts.createdAt).getTime();
                   const ageH = Math.round((Date.now() - submitted) / 3600000);
                   const overdue = ageH > 48;
@@ -306,6 +334,17 @@ export default function ApprovalInbox() {
                 })}
               </TableBody>
             </Table>
+          )}
+          {timesheets && timesheets.length > 0 && (
+            <Pagination
+              page={pager.page}
+              pageSize={pager.pageSize}
+              total={pager.total}
+              totalPages={pager.totalPages}
+              onPageChange={pager.setPage}
+              onPageSizeChange={pager.setPageSize}
+              testId="approvals-pagination"
+            />
           )}
         </CardContent>
       </Card>

@@ -34,10 +34,12 @@ import {
 import { useAuth } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "@/lib/format";
+import { exportCsv } from "@/lib/exports";
 import { EmptyState } from "@/components/common/EmptyState";
 import { TableSkeleton } from "@/components/common/Loading";
+import { Pagination, usePagination } from "@/components/common/Pagination";
 import {
-  Plus, Trash2, Clock, Pencil, ListChecks, Loader2, CalendarRange,
+  Plus, Trash2, Clock, Pencil, ListChecks, Loader2, CalendarRange, Download,
 } from "lucide-react";
 
 const STATUS_LABELS: Record<TaskStatus, string> = {
@@ -111,6 +113,21 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
     return { total, done, inProgress, totalHours };
   }, [tasks]);
 
+  const pager = usePagination(tasks ?? [], { resetKey: projectId });
+
+  function handleExportCsv() {
+    const rows = (tasks ?? []).map((t) => ({
+      Title: t.title,
+      Description: t.description ?? "",
+      Status: STATUS_LABELS[t.status],
+      Assignee: t.assigneeName ?? "",
+      StartDate: t.startDate ?? "",
+      EndDate: t.endDate ?? "",
+      LoggedHours: Number((t.loggedHours ?? 0).toFixed(2)),
+    }));
+    exportCsv(`tasks-${projectId}`, rows);
+  }
+
   return (
     <div className="space-y-4">
       <div className="grid gap-3 grid-cols-2 md:grid-cols-4">
@@ -128,11 +145,22 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
               Assign work to project resources and track clocked-in hours.
             </CardDescription>
           </div>
-          {isManager && (
-            <Button onClick={() => setCreateOpen(true)} data-testid="button-new-task">
-              <Plus className="h-4 w-4 mr-2" /> New Task
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleExportCsv}
+              disabled={!tasks?.length}
+              data-testid="button-export-tasks-csv"
+            >
+              <Download className="h-4 w-4 mr-2" /> CSV
             </Button>
-          )}
+            {isManager && (
+              <Button onClick={() => setCreateOpen(true)} data-testid="button-new-task">
+                <Plus className="h-4 w-4 mr-2" /> New Task
+              </Button>
+            )}
+          </div>
         </CardHeader>
         <CardContent className="p-0">
           {isLoading ? (
@@ -159,7 +187,7 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {tasks.map((t) => {
+                {pager.pageItems.map((t) => {
                   const isAssignee = t.assigneeId === user?.id;
                   const canEdit = isManager;
                   const canChangeStatus = isManager || isAssignee;
@@ -236,6 +264,17 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
                 })}
               </TableBody>
             </Table>
+          )}
+          {tasks && tasks.length > 0 && (
+            <Pagination
+              page={pager.page}
+              pageSize={pager.pageSize}
+              total={pager.total}
+              totalPages={pager.totalPages}
+              onPageChange={pager.setPage}
+              onPageSizeChange={pager.setPageSize}
+              testId="tasks-pagination"
+            />
           )}
         </CardContent>
       </Card>

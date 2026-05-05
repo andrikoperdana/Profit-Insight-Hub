@@ -43,6 +43,7 @@ import {
 import { Card } from "@/components/ui/card";
 import { TableSkeleton } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
+import { Pagination, usePagination } from "@/components/common/Pagination";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const userSchema = z.object({
@@ -221,6 +222,7 @@ export default function UsersList() {
   };
 
   const hasAccess = canManageUsers(currentUser?.role);
+  const pager = usePagination(users as UserRow[] | undefined);
 
   if (!hasAccess) {
     return (
@@ -379,7 +381,7 @@ export default function UsersList() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {users.map((u) => {
+              {pager.pageItems.map((u) => {
                 const initials = u.name.split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2);
                 return (
                   <TableRow key={u.id} className="group">
@@ -437,6 +439,15 @@ export default function UsersList() {
               })}
             </TableBody>
           </Table>
+          <Pagination
+            page={pager.page}
+            pageSize={pager.pageSize}
+            total={pager.total}
+            totalPages={pager.totalPages}
+            onPageChange={pager.setPage}
+            onPageSizeChange={pager.setPageSize}
+            testId="users-pagination"
+          />
         </Card>
       )}
 

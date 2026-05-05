@@ -35,6 +35,8 @@ import { format } from "date-fns";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { exportCsv } from "@/lib/exports";
+import { Pagination, usePagination } from "@/components/common/Pagination";
 
 type Row = {
   userId: string;
@@ -181,6 +183,10 @@ export default function ResourcesPage() {
       filterLabel[filter],
       `resources-${filter}-${format(new Date(), "yyyyMMdd-HHmm")}`,
     );
+  const handleExportCsv = () =>
+    exportCsv(`resources-${filter}`, toExportRows(filtered));
+
+  const pager = usePagination(filtered, { resetKey: `${filter}|${search}` });
 
   return (
     <div className="space-y-6">
@@ -194,6 +200,15 @@ export default function ResourcesPage() {
           </p>
         </div>
         <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={handleExportCsv}
+            disabled={!filtered.length}
+            data-testid="export-csv"
+          >
+            <Download className="mr-2 h-4 w-4" />
+            Export CSV
+          </Button>
           <Button
             variant="outline"
             onClick={handleExportXlsx}
@@ -367,7 +382,7 @@ export default function ResourcesPage() {
                         </TableCell>
                       </TableRow>
                     ) : (
-                      filtered.map((r) => {
+                      pager.pageItems.map((r) => {
                         const tone = utilizationTone(r.utilizationPctMonth);
                         return (
                           <TableRow key={r.userId}>
@@ -454,6 +469,18 @@ export default function ResourcesPage() {
                   </TableBody>
                 </Table>
               </div>
+              {filtered.length > 0 && (
+                <Pagination
+                  page={pager.page}
+                  pageSize={pager.pageSize}
+                  total={pager.total}
+                  totalPages={pager.totalPages}
+                  onPageChange={pager.setPage}
+                  onPageSizeChange={pager.setPageSize}
+                  className="border-t-0"
+                  testId="resources-pagination"
+                />
+              )}
             </TabsContent>
           </Tabs>
         </CardContent>

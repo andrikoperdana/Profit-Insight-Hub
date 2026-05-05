@@ -7,7 +7,7 @@ import { Plus, Search, Filter, Download } from "lucide-react";
 import { formatIDR } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
 import { canCreateProject } from "@/lib/roles";
-import { exportSheets } from "@/lib/exports";
+import { exportSheets, exportCsv } from "@/lib/exports";
 import { classifyProject } from "@/lib/projectType";
 
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card } from "@/components/ui/card";
 import { TableSkeleton } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
+import { Pagination, usePagination } from "@/components/common/Pagination";
 import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
 import { ProjectStatus } from "@workspace/api-client-react";
 
@@ -54,6 +55,30 @@ export default function ProjectsList() {
     (p.clientName && p.clientName.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
+  const projectExportRows = (filteredProjects ?? []).map((p) => ({
+    Code: p.code,
+    Name: p.name,
+    Type: classifyProject({ name: p.name, code: p.code }),
+    Client: p.clientName ?? "",
+    PM: p.pmName ?? "",
+    Sales: (p as any).salesName ?? "",
+    Status: p.status,
+    ContractValue: p.contractValue,
+    EstimatedCost: (p as any).estimatedCost ?? 0,
+    EstimatedProfit: (p as any).estimatedProfit ?? 0,
+    ActualCost: (p as any).actualCost ?? 0,
+    ActualProfit: (p as any).actualProfit ?? 0,
+    MarginPct: p.marginPct,
+    PlannedMandays: (p as any).plannedMandays ?? 0,
+    ActualMandays: (p as any).actualMandays ?? 0,
+    StartDate: (p as any).startDate ?? "",
+    EndDate: (p as any).endDate ?? "",
+  }));
+
+  const pager = usePagination(filteredProjects, {
+    resetKey: `${statusFilter}|${searchQuery}`,
+  });
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -65,31 +90,19 @@ export default function ProjectsList() {
         <div className="flex gap-2 shrink-0">
           <Button
             variant="outline"
-            onClick={() => {
-              const rows = (filteredProjects ?? []).map((p) => ({
-                Code: p.code,
-                Name: p.name,
-                Type: classifyProject({ name: p.name, code: p.code }),
-                Client: p.clientName ?? "",
-                PM: p.pmName ?? "",
-                Sales: (p as any).salesName ?? "",
-                Status: p.status,
-                ContractValue: p.contractValue,
-                EstimatedCost: (p as any).estimatedCost ?? 0,
-                EstimatedProfit: (p as any).estimatedProfit ?? 0,
-                ActualCost: (p as any).actualCost ?? 0,
-                ActualProfit: (p as any).actualProfit ?? 0,
-                MarginPct: p.marginPct,
-                PlannedMandays: (p as any).plannedMandays ?? 0,
-                ActualMandays: (p as any).actualMandays ?? 0,
-                StartDate: (p as any).startDate ?? "",
-                EndDate: (p as any).endDate ?? "",
-              }));
-              exportSheets("project-profitability", [{ name: "Projects", rows }]);
-            }}
+            onClick={() => exportCsv("projects", projectExportRows)}
+            disabled={projectExportRows.length === 0}
+            data-testid="button-export-projects-csv"
+          >
+            <Download className="h-4 w-4 mr-2" /> CSV
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => exportSheets("project-profitability", [{ name: "Projects", rows: projectExportRows }])}
+            disabled={projectExportRows.length === 0}
             data-testid="button-export-projects"
           >
-            <Download className="h-4 w-4 mr-2" /> Export
+            <Download className="h-4 w-4 mr-2" /> XLSX
           </Button>
           {showSeed && (
             <Button variant="outline" onClick={onSeed} disabled={seeding} data-testid="button-seed-projects-demo">
@@ -150,7 +163,7 @@ export default function ProjectsList() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredProjects.map((project) => (
+              {pager.pageItems.map((project) => (
                 <TableRow key={project.id} className="group cursor-pointer hover:bg-muted/30">
                   <TableCell>
                     <Link href={`/projects/${project.id}`} className="block h-full w-full outline-none">
@@ -167,6 +180,15 @@ export default function ProjectsList() {
               ))}
             </TableBody>
           </Table>
+          <Pagination
+            page={pager.page}
+            pageSize={pager.pageSize}
+            total={pager.total}
+            totalPages={pager.totalPages}
+            onPageChange={pager.setPage}
+            onPageSizeChange={pager.setPageSize}
+            testId="projects-pagination"
+          />
         </Card>
       )}
     </div>
