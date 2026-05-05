@@ -225,7 +225,14 @@ export const ListProjectsResponseItem = zod.object({
   code: zod.string(),
   name: zod.string(),
   description: zod.string().nullish(),
-  status: zod.enum(["OBSERVATION", "ACTIVE", "PAUSE", "COMPLETE", "CLOSED"]),
+  status: zod.enum([
+    "DRAFT",
+    "OBSERVATION",
+    "ACTIVE",
+    "PAUSE",
+    "COMPLETE",
+    "CLOSED",
+  ]),
   clientId: zod.string().optional(),
   clientName: zod.string().optional(),
   salesId: zod.string().nullish(),
@@ -254,13 +261,13 @@ export const CreateProjectBody = zod.object({
   salesId: zod.string().optional(),
   pmId: zod.string().optional(),
   status: zod
-    .enum(["OBSERVATION", "ACTIVE", "PAUSE", "COMPLETE", "CLOSED"])
+    .enum(["DRAFT", "OBSERVATION", "ACTIVE", "PAUSE", "COMPLETE", "CLOSED"])
     .optional(),
   startDate: zod.string().optional(),
   endDate: zod.string().optional(),
-  contractValue: zod.number(),
-  estimatedCost: zod.number(),
-  plannedMandays: zod.number(),
+  contractValue: zod.number().optional(),
+  estimatedCost: zod.number().optional(),
+  plannedMandays: zod.number().optional(),
 });
 
 export const GetProjectParams = zod.object({
@@ -273,7 +280,14 @@ export const GetProjectResponse = zod
     code: zod.string(),
     name: zod.string(),
     description: zod.string().nullish(),
-    status: zod.enum(["OBSERVATION", "ACTIVE", "PAUSE", "COMPLETE", "CLOSED"]),
+    status: zod.enum([
+      "DRAFT",
+      "OBSERVATION",
+      "ACTIVE",
+      "PAUSE",
+      "COMPLETE",
+      "CLOSED",
+    ]),
     clientId: zod.string().optional(),
     clientName: zod.string().optional(),
     salesId: zod.string().nullish(),
@@ -362,7 +376,7 @@ export const UpdateProjectBody = zod.object({
   salesId: zod.string().optional(),
   pmId: zod.string().optional(),
   status: zod
-    .enum(["OBSERVATION", "ACTIVE", "PAUSE", "COMPLETE", "CLOSED"])
+    .enum(["DRAFT", "OBSERVATION", "ACTIVE", "PAUSE", "COMPLETE", "CLOSED"])
     .optional(),
   startDate: zod.string().optional(),
   endDate: zod.string().optional(),
@@ -376,7 +390,14 @@ export const UpdateProjectResponse = zod.object({
   code: zod.string(),
   name: zod.string(),
   description: zod.string().nullish(),
-  status: zod.enum(["OBSERVATION", "ACTIVE", "PAUSE", "COMPLETE", "CLOSED"]),
+  status: zod.enum([
+    "DRAFT",
+    "OBSERVATION",
+    "ACTIVE",
+    "PAUSE",
+    "COMPLETE",
+    "CLOSED",
+  ]),
   clientId: zod.string().optional(),
   clientName: zod.string().optional(),
   salesId: zod.string().nullish(),
@@ -653,7 +674,14 @@ export const GetProfitTrendResponseItem = zod.object({
 export const GetProfitTrendResponse = zod.array(GetProfitTrendResponseItem);
 
 export const GetStatusBreakdownResponseItem = zod.object({
-  status: zod.enum(["OBSERVATION", "ACTIVE", "PAUSE", "COMPLETE", "CLOSED"]),
+  status: zod.enum([
+    "DRAFT",
+    "OBSERVATION",
+    "ACTIVE",
+    "PAUSE",
+    "COMPLETE",
+    "CLOSED",
+  ]),
   count: zod.number(),
   value: zod.number(),
 });
@@ -666,7 +694,14 @@ export const GetTopProjectsResponseItem = zod.object({
   code: zod.string(),
   name: zod.string(),
   description: zod.string().nullish(),
-  status: zod.enum(["OBSERVATION", "ACTIVE", "PAUSE", "COMPLETE", "CLOSED"]),
+  status: zod.enum([
+    "DRAFT",
+    "OBSERVATION",
+    "ACTIVE",
+    "PAUSE",
+    "COMPLETE",
+    "CLOSED",
+  ]),
   clientId: zod.string().optional(),
   clientName: zod.string().optional(),
   salesId: zod.string().nullish(),

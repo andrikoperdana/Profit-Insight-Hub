@@ -9,6 +9,7 @@
 export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus];
 
 export const ProjectStatus = {
+  DRAFT: "DRAFT",
   OBSERVATION: "OBSERVATION",
   ACTIVE: "ACTIVE",
   PAUSE: "PAUSE",

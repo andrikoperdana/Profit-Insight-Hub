@@ -229,6 +229,10 @@ export default function ProjectDetail() {
         </DialogContent>
       </Dialog>
 
+      {project.status === ProjectStatus.DRAFT && canChangeStatus && (
+        <DraftCompletionCard project={project} />
+      )}
+
       <Tabs defaultValue="overview">
         <TabsList className="bg-muted">
           <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -261,6 +265,121 @@ export default function ProjectDetail() {
         </TabsContent>
       </Tabs>
     </div>
+  );
+}
+
+function DraftCompletionCard({ project }: { project: any }) {
+  const { toast } = useToast();
+  const qc = useQueryClient();
+  const [description, setDescription] = useState<string>(project.description ?? "");
+  const [startDate, setStartDate] = useState<string>(project.startDate ? project.startDate.slice(0, 10) : "");
+  const [endDate, setEndDate] = useState<string>(project.endDate ? project.endDate.slice(0, 10) : "");
+  const [contractValue, setContractValue] = useState<string>(String(project.contractValue ?? 0));
+  const [plannedMandays, setPlannedMandays] = useState<string>(String(project.plannedMandays ?? 0));
+  const [estimatedCost, setEstimatedCost] = useState<string>(String(project.estimatedCost ?? 0));
+
+  const update = useUpdateProject({
+    mutation: {
+      onSuccess: async () => {
+        toast({ title: "Detail tersimpan", description: "Project pindah ke status Observation." });
+        await qc.refetchQueries({ queryKey: getGetProjectQueryKey(project.id) });
+      },
+      onError: (e: any) =>
+        toast({ variant: "destructive", title: "Gagal menyimpan", description: e?.message ?? "Unknown error" }),
+    },
+  });
+
+  function handleSave(promoteToObservation: boolean) {
+    const cv = Number(contractValue);
+    const ec = Number(estimatedCost);
+    const pm = Number(plannedMandays);
+    if (cv < 0 || ec < 0 || pm < 0) {
+      toast({ variant: "destructive", title: "Nilai tidak valid", description: "Revenue, biaya, dan mandays tidak boleh negatif." });
+      return;
+    }
+    if (promoteToObservation && (!cv || !pm || !startDate || !endDate)) {
+      toast({
+        variant: "destructive",
+        title: "Lengkapi field wajib",
+        description: "Revenue, Planned Mandays, Start Date, dan End Date wajib diisi sebelum pindah ke Observation.",
+      });
+      return;
+    }
+    update.mutate({
+      id: project.id,
+      data: {
+        description: description || null,
+        startDate: startDate || undefined,
+        endDate: endDate || undefined,
+        contractValue: cv,
+        estimatedCost: ec,
+        plannedMandays: pm,
+        ...(promoteToObservation ? { status: ProjectStatus.OBSERVATION } : {}),
+      } as any,
+    });
+  }
+
+  return (
+    <Card className="border-purple-500/40 bg-purple-500/5 shadow-sm">
+      <CardHeader>
+        <CardTitle className="text-base">Lengkapi Detail Project (DRAFT)</CardTitle>
+        <CardDescription>
+          Isi data finansial, jadwal, dan deskripsi. Tambah resource di tab <span className="font-medium">Resources</span>. Setelah lengkap, pindahkan project ke status <span className="font-medium">Observation</span> untuk memulai eksekusi.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="md:col-span-2">
+            <Label htmlFor="draft-description">Deskripsi</Label>
+            <Textarea
+              id="draft-description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Scope of work dan informasi tambahan..."
+              className="resize-none h-20 mt-1"
+              data-testid="input-draft-description"
+            />
+          </div>
+          <div>
+            <Label htmlFor="draft-start">Start Date *</Label>
+            <Input id="draft-start" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="mt-1" data-testid="input-draft-start" />
+          </div>
+          <div>
+            <Label htmlFor="draft-end">End Date *</Label>
+            <Input id="draft-end" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="mt-1" data-testid="input-draft-end" />
+          </div>
+          <div>
+            <Label htmlFor="draft-revenue">Revenue / Harga Jual (IDR) *</Label>
+            <Input id="draft-revenue" type="number" min={0} value={contractValue} onChange={(e) => setContractValue(e.target.value)} className="mt-1 font-mono" data-testid="input-draft-revenue" />
+          </div>
+          <div>
+            <Label htmlFor="draft-mandays">Planned Mandays *</Label>
+            <Input id="draft-mandays" type="number" min={0} step="0.5" value={plannedMandays} onChange={(e) => setPlannedMandays(e.target.value)} className="mt-1 font-mono" data-testid="input-draft-mandays" />
+          </div>
+          <div>
+            <Label htmlFor="draft-cost">Estimated Cost (IDR)</Label>
+            <Input id="draft-cost" type="number" min={0} value={estimatedCost} onChange={(e) => setEstimatedCost(e.target.value)} className="mt-1 font-mono" data-testid="input-draft-cost" />
+          </div>
+        </div>
+        <div className="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-border">
+          <Button
+            variant="outline"
+            onClick={() => handleSave(false)}
+            disabled={update.isPending}
+            data-testid="button-save-draft"
+          >
+            Simpan sebagai DRAFT
+          </Button>
+          <Button
+            onClick={() => handleSave(true)}
+            disabled={update.isPending}
+            data-testid="button-promote-observation"
+          >
+            Simpan & Pindah ke Observation
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 

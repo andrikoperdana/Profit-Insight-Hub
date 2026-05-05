@@ -545,7 +545,7 @@ components:
 
     ProjectStatus:
       type: string
-      enum: [OBSERVATION, ACTIVE, PAUSE, COMPLETE, CLOSED]
+      enum: [DRAFT, OBSERVATION, ACTIVE, PAUSE, COMPLETE, CLOSED]
 
     TimesheetStatus:
       type: string
@@ -667,7 +667,7 @@ components:
 
     CreateProjectBody:
       type: object
-      required: [code, name, clientId, contractValue, estimatedCost, plannedMandays]
+      required: [code, name, clientId]
       properties:
         code: { type: string }
         name: { type: string }

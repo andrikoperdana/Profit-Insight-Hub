@@ -17,7 +17,7 @@ export interface CreateProjectBody {
   status?: ProjectStatus;
   startDate?: string;
   endDate?: string;
-  contractValue: number;
-  estimatedCost: number;
-  plannedMandays: number;
+  contractValue?: number;
+  estimatedCost?: number;
+  plannedMandays?: number;
 }

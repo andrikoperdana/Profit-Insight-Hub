@@ -1,3 +1,12 @@
+declare global {
+  interface ImportMeta {
+    readonly env: {
+      readonly BASE_URL: string;
+      readonly [key: string]: string | boolean | undefined;
+    };
+  }
+}
+
 export type CustomFetchOptions = RequestInit & {
   responseType?: "json" | "text" | "blob" | "auto";
 };

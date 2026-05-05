@@ -215,15 +215,23 @@ router.post("/projects", requireRole(...writeRoles), async (req, res) => {
     res.status(400).json({ error: "contractValue, estimatedCost, plannedMandays must be non-negative" });
     return;
   }
+  // Sales-role submissions are always DRAFT, owned by the submitting Sales,
+  // and cannot pre-assign a PM. PMO Director assigns the PM later.
+  const isSales = req.user!.role === "SALES";
+  const status: ProjectStatus = isSales
+    ? "DRAFT"
+    : ((b.status as ProjectStatus) || "DRAFT");
+  const salesId = isSales ? req.user!.sub : (b.salesId || null);
+  const pmId = isSales ? null : (b.pmId || null);
   const created = await prisma.project.create({
     data: {
       code: String(b.code),
       name: String(b.name),
       description: b.description || null,
       clientId: String(b.clientId),
-      salesId: b.salesId || null,
-      pmId: b.pmId || null,
-      status: (b.status as ProjectStatus) || "OBSERVATION",
+      salesId,
+      pmId,
+      status,
       startDate: b.startDate ? new Date(b.startDate) : null,
       endDate: b.endDate ? new Date(b.endDate) : null,
       contractValue: Number(b.contractValue || 0),
@@ -260,6 +268,58 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
     res.status(404).json({ error: "Not found" });
     return;
   }
+
+  // Field-level + ownership authorization.
+  // SALES: only their own DRAFT projects, may update basic intake fields only.
+  // PROJECT_MANAGER: only projects assigned to them; may update all detail fields.
+  // MANAGEMENT: full access (PMO Director can assign PMs and edit anything).
+  const role = req.user!.role;
+  const userId = req.user!.sub;
+
+  const SALES_ALLOWED = new Set(["code", "name", "description", "clientId"]);
+  const PM_FORBIDDEN = new Set(["salesId", "pmId"]);
+
+  if (role === "SALES") {
+    if (beforeProj.salesId !== userId) {
+      res.status(403).json({ error: "You can only update projects you submitted" });
+      return;
+    }
+    if (beforeProj.status !== "DRAFT") {
+      res.status(403).json({ error: "Sales can only edit projects while still in DRAFT" });
+      return;
+    }
+    const violating = Object.keys(b).filter(
+      (k) => b[k] !== undefined && !SALES_ALLOWED.has(k),
+    );
+    if (violating.length) {
+      res.status(403).json({
+        error: `Sales is not allowed to change: ${violating.join(", ")}`,
+      });
+      return;
+    }
+  } else if (role === "PROJECT_MANAGER") {
+    if (beforeProj.pmId !== userId) {
+      res.status(403).json({ error: "You can only update projects assigned to you" });
+      return;
+    }
+    const violating = Object.keys(b).filter(
+      (k) => b[k] !== undefined && PM_FORBIDDEN.has(k),
+    );
+    if (violating.length) {
+      res.status(403).json({
+        error: `Project Manager is not allowed to reassign: ${violating.join(", ")}`,
+      });
+      return;
+    }
+  }
+
+  // PMO PM-assignment invariant: when MANAGEMENT sets pmId on a DRAFT project
+  // (the typical assignment path), the project must currently have no PM.
+  if (role === "MANAGEMENT" && b.pmId && beforeProj.status === "DRAFT" && beforeProj.pmId && beforeProj.pmId !== b.pmId) {
+    res.status(409).json({ error: "Project already has an assigned PM" });
+    return;
+  }
+
   if (b.contractValue !== undefined && Number(b.contractValue) < 0) {
     res.status(400).json({ error: "contractValue must be non-negative" });
     return;

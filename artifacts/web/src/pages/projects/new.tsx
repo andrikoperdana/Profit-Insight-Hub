@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import { ProjectStatus, UserRole } from "@workspace/api-client-react";
-import { ArrowLeft, Save, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, Save, Plus, Trash2, Send } from "lucide-react";
 import { Link } from "wouter";
 import { useEffect } from "react";
 
@@ -29,7 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoadingPage } from "@/components/common/Loading";
 import { formatIDR } from "@/lib/format";
 
@@ -38,6 +38,169 @@ const ROLE_RATES: Record<string, { label: string; rate: number }> = {
   KONSULTAN: { label: "Consultant", rate: 1_800_000 },
   TECHNICAL_WRITER: { label: "Technical Writer", rate: 1_200_000 },
 };
+
+export default function NewProject() {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [, setLocation] = useLocation();
+
+  useEffect(() => {
+    if (!canCreateProject(user?.role)) {
+      toast({
+        variant: "destructive",
+        title: "Access Denied",
+        description: "You do not have permission to create projects.",
+      });
+      setLocation("/projects");
+    }
+  }, [user, setLocation, toast]);
+
+  if (!user) return <LoadingPage />;
+  if (user.role === UserRole.SALES) return <SalesIntakeForm />;
+  return <FullProjectForm />;
+}
+
+/* ------------------------------------------------------------------ */
+/* Sales: minimal intake form (Project Name + SPK + Client)           */
+/* ------------------------------------------------------------------ */
+
+const salesIntakeSchema = z.object({
+  code: z.string().min(2, "Nomor SPK/PO wajib diisi"),
+  name: z.string().min(3, "Nama project wajib diisi"),
+  clientId: z.string().min(1, "Pilih client"),
+});
+type SalesIntake = z.infer<typeof salesIntakeSchema>;
+
+function SalesIntakeForm() {
+  const { toast } = useToast();
+  const [, setLocation] = useLocation();
+  const { data: clients, isLoading: loadingClients } = useListClients();
+
+  const createProject = useCreateProject({
+    mutation: {
+      onSuccess: (data) => {
+        toast({
+          title: "Project terkirim ke PMO",
+          description: `${data.code} • menunggu penugasan PM`,
+        });
+        setLocation("/");
+      },
+      onError: (err: any) => {
+        toast({
+          variant: "destructive",
+          title: "Gagal mengirim project",
+          description: err?.message ?? "Unknown error",
+        });
+      },
+    },
+  });
+
+  const form = useForm<SalesIntake>({
+    resolver: zodResolver(salesIntakeSchema),
+    defaultValues: { code: "", name: "", clientId: "" },
+  });
+
+  const onSubmit = (data: SalesIntake) => {
+    createProject.mutate({
+      data: {
+        code: data.code,
+        name: data.name,
+        clientId: data.clientId,
+        status: ProjectStatus.DRAFT,
+      },
+    });
+  };
+
+  if (loadingClients) return <LoadingPage />;
+
+  return (
+    <div className="max-w-2xl mx-auto space-y-6">
+      <div className="flex items-center space-x-4">
+        <Button variant="outline" size="icon" asChild>
+          <Link href="/"><ArrowLeft className="h-4 w-4" /></Link>
+        </Button>
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Daftarkan Project Baru</h1>
+          <p className="text-muted-foreground">
+            Isi data dasar — PMO Director akan menugaskan Project Manager dan PM akan melengkapi detailnya.
+          </p>
+        </div>
+      </div>
+
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <Card className="border-border shadow-sm">
+            <CardHeader>
+              <CardTitle>Informasi Project</CardTitle>
+              <CardDescription>
+                Hanya 3 hal yang perlu Anda isi sekarang. Detail lain (revenue, mandays, tim) diisi oleh PM.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nama Project *</FormLabel>
+                    <FormControl><Input placeholder="cth. Pentest Web Application Bank XYZ" {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="code"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nomor SPK / PO *</FormLabel>
+                    <FormControl><Input placeholder="cth. SPK-2026-005" {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="clientId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Client *</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger><SelectValue placeholder="Pilih client" /></SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {clients?.map((c) => (
+                          <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
+
+          <div className="flex justify-end space-x-4">
+            <Button variant="outline" asChild>
+              <Link href="/">Batal</Link>
+            </Button>
+            <Button type="submit" disabled={createProject.isPending} data-testid="button-submit-intake">
+              {createProject.isPending ? "Mengirim..." : (
+                <><Send className="mr-2 h-4 w-4" /> Kirim ke PMO</>
+              )}
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Management/PM: full project form                                   */
+/* ------------------------------------------------------------------ */
 
 const resourceRowSchema = z.object({
   role: z.string().min(1, "Role required"),
@@ -61,21 +224,9 @@ const createProjectSchema = z.object({
 
 type FormValues = z.infer<typeof createProjectSchema>;
 
-export default function NewProject() {
-  const { user } = useAuth();
+function FullProjectForm() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
-
-  useEffect(() => {
-    if (!canCreateProject(user?.role)) {
-      toast({
-        variant: "destructive",
-        title: "Access Denied",
-        description: "You do not have permission to create projects."
-      });
-      setLocation("/projects");
-    }
-  }, [user, setLocation, toast]);
 
   const { data: clients, isLoading: loadingClients } = useListClients();
   const { data: users, isLoading: loadingUsers } = useListUsers();
@@ -88,8 +239,8 @@ export default function NewProject() {
       },
       onError: (err: any) => {
         toast({ variant: "destructive", title: "Failed to create project", description: err?.message ?? "Unknown error" });
-      }
-    }
+      },
+    },
   });
 
   const form = useForm<FormValues>({
@@ -105,7 +256,7 @@ export default function NewProject() {
       endDate: "",
       contractValue: 0,
       resources: [{ role: "KONSULTAN", headcount: 1, mandaysPerPerson: 10, dailyRate: ROLE_RATES.KONSULTAN.rate }],
-    }
+    },
   });
 
   const { fields, append, remove } = useFieldArray({ control: form.control, name: "resources" });
@@ -123,7 +274,7 @@ export default function NewProject() {
       acc.cost += totalMandays * rate;
       return acc;
     },
-    { mandays: 0, cost: 0 }
+    { mandays: 0, cost: 0 },
   );
 
   const estimatedProfit = watchedRevenue - totals.cost;
@@ -144,7 +295,7 @@ export default function NewProject() {
         contractValue: data.contractValue,
         estimatedCost: totals.cost,
         plannedMandays: totals.mandays,
-      }
+      },
     });
   };
 
@@ -152,8 +303,8 @@ export default function NewProject() {
     return <LoadingPage />;
   }
 
-  const pms = users?.filter(u => u.role === UserRole.PROJECT_MANAGER || u.role === UserRole.MANAGEMENT) || [];
-  const sales = users?.filter(u => u.role === UserRole.SALES || u.role === UserRole.MANAGEMENT) || [];
+  const pms = users?.filter((u) => u.role === UserRole.PROJECT_MANAGER || u.role === UserRole.MANAGEMENT) || [];
+  const sales = users?.filter((u) => u.role === UserRole.SALES || u.role === UserRole.MANAGEMENT) || [];
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -450,8 +601,8 @@ export default function NewProject() {
 function SummaryStat({ label, value, mono, highlight }: { label: string; value: string; mono?: boolean; highlight?: "good" | "bad" }) {
   const color =
     highlight === "good" ? "text-primary" :
-    highlight === "bad" ? "text-destructive" :
-    "text-foreground";
+      highlight === "bad" ? "text-destructive" :
+        "text-foreground";
   return (
     <div className="space-y-1">
       <p className="text-xs text-muted-foreground uppercase tracking-wide">{label}</p>

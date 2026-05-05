@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 
 export function ProjectStatusBadge({ status, className }: { status: ProjectStatus; className?: string }) {
   const config: Record<ProjectStatus, { label: string; className: string }> = {
+    [ProjectStatus.DRAFT]: { label: "Draft", className: "bg-purple-500/10 text-purple-400 border-purple-500/20" },
     [ProjectStatus.OBSERVATION]: { label: "Observation", className: "bg-blue-500/10 text-blue-500 border-blue-500/20" },
     [ProjectStatus.ACTIVE]: { label: "Active", className: "bg-primary/10 text-primary border-primary/20" },
     [ProjectStatus.PAUSE]: { label: "Pause", className: "bg-amber-500/10 text-amber-500 border-amber-500/20" },

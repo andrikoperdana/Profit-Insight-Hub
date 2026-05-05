@@ -28,6 +28,7 @@ export const UserRole = {
 export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus];
 
 export const ProjectStatus = {
+  DRAFT: "DRAFT",
   OBSERVATION: "OBSERVATION",
   ACTIVE: "ACTIVE",
   PAUSE: "PAUSE",
@@ -179,9 +180,9 @@ export interface CreateProjectBody {
   status?: ProjectStatus;
   startDate?: string;
   endDate?: string;
-  contractValue: number;
-  estimatedCost: number;
-  plannedMandays: number;
+  contractValue?: number;
+  estimatedCost?: number;
+  plannedMandays?: number;
 }
 
 export interface UpdateProjectBody {

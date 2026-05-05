@@ -3,7 +3,8 @@ import { Link } from "wouter";
 import { useAuth } from "@/lib/auth";
 import { useListProjects, ProjectStatus } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Briefcase, Wallet, TrendingUp, Target, Activity } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Briefcase, Wallet, TrendingUp, Target, Activity, FilePlus2, Clock } from "lucide-react";
 import { formatIDR, formatPct } from "@/lib/format";
 import { SkeletonCard, TableSkeleton } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
@@ -16,6 +17,7 @@ import {
 import WelcomeBanner from "@/components/dashboard/WelcomeBanner";
 
 const STATUS_COLORS: Record<ProjectStatus, string> = {
+  [ProjectStatus.DRAFT]: "hsl(280, 60%, 60%)",
   [ProjectStatus.OBSERVATION]: "hsl(var(--chart-2))",
   [ProjectStatus.ACTIVE]: "hsl(var(--chart-1))",
   [ProjectStatus.PAUSE]: "hsl(var(--chart-3))",
@@ -30,6 +32,11 @@ export default function SalesDashboard() {
   const myProjects = useMemo(
     () => (allProjects ?? []).filter((p) => p.salesId === user?.id),
     [allProjects, user]
+  );
+
+  const myDrafts = useMemo(
+    () => myProjects.filter((p) => p.status === ProjectStatus.DRAFT),
+    [myProjects]
   );
 
   const stats = useMemo(() => {
@@ -87,6 +94,53 @@ export default function SalesDashboard() {
   return (
     <div className="space-y-6">
       <WelcomeBanner subtitle="Pipeline dan performa untuk engagement yang Anda miliki." />
+
+      <Card className="border-primary/30 bg-primary/5">
+        <CardContent className="flex items-center justify-between gap-4 py-4">
+          <div>
+            <p className="text-xs uppercase tracking-wide text-primary font-semibold">Daftarkan Project Baru</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              Isi 3 hal saja — Nama Project, Nomor SPK, dan Client. PMO akan menugaskan PM.
+            </p>
+          </div>
+          <Link href="/projects/new">
+            <Button data-testid="button-new-project">
+              <FilePlus2 className="h-4 w-4 mr-2" /> Project Baru
+            </Button>
+          </Link>
+        </CardContent>
+      </Card>
+
+      {myDrafts.length > 0 && (
+        <Card className="border-purple-500/30 bg-purple-500/5">
+          <CardHeader className="flex flex-row items-center gap-2 space-y-0">
+            <Clock className="h-5 w-5 text-purple-400" />
+            <div className="flex-1">
+              <CardTitle className="text-base">
+                {myDrafts.length} project menunggu penugasan PM
+              </CardTitle>
+              <CardDescription>
+                Diteruskan ke PMO Director — PM akan ditugaskan dan melengkapi detail.
+              </CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <ul className="text-sm divide-y divide-border">
+              {myDrafts.map((p) => (
+                <li key={p.id} className="flex items-center justify-between py-2">
+                  <div>
+                    <Link href={`/projects/${p.id}`} className="font-medium text-foreground hover:text-primary">
+                      {p.name}
+                    </Link>
+                    <span className="text-xs text-muted-foreground font-mono ml-2">{p.code}</span>
+                  </div>
+                  <span className="text-xs text-muted-foreground">{p.clientName ?? "-"}</span>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {isLoading ? (

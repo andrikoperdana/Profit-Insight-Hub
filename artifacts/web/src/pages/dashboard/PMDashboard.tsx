@@ -41,6 +41,8 @@ import {
   TrendingUp,
   AlertTriangle,
   Users,
+  Sparkles,
+  ArrowRight,
 } from "lucide-react";
 import {
   Bar,
@@ -113,6 +115,10 @@ export default function PMDashboard() {
       p.status === ProjectStatus.ACTIVE ||
       p.status === ProjectStatus.OBSERVATION,
   );
+  const myDrafts = useMemo(
+    () => myProjects.filter((p) => p.status === ProjectStatus.DRAFT),
+    [myProjects],
+  );
 
   const myPendingCount = pendingTimesheets?.length ?? 0;
   const myProjectsRevenue = myProjects.reduce(
@@ -184,6 +190,45 @@ export default function PMDashboard() {
   return (
     <div className="space-y-6">
       <WelcomeBanner subtitle="Snapshot of your active projects, approval queue, and team status." />
+
+      {myDrafts.length > 0 && (
+        <Card className="border-purple-500/40 bg-purple-500/5">
+          <CardHeader className="flex flex-row items-center gap-3 space-y-0">
+            <Sparkles className="h-5 w-5 text-purple-400" />
+            <div className="flex-1">
+              <CardTitle className="text-base">
+                {myDrafts.length} project baru ditugaskan kepada Anda
+              </CardTitle>
+              <CardDescription>
+                Lengkapi detail (revenue, mandays, tim, jadwal) untuk memulai project.
+              </CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <ul className="text-sm divide-y divide-border">
+              {myDrafts.map((p) => (
+                <li key={p.id} className="flex items-center justify-between py-3 gap-3">
+                  <div className="min-w-0 flex-1">
+                    <Link href={`/projects/${p.id}`} className="font-medium text-foreground hover:text-primary truncate block">
+                      {p.name}
+                    </Link>
+                    <p className="text-xs text-muted-foreground">
+                      <span className="font-mono">{p.code}</span>
+                      <span className="mx-1">·</span>
+                      {p.clientName ?? "-"}
+                    </p>
+                  </div>
+                  <Link href={`/projects/${p.id}`}>
+                    <Button size="sm" data-testid={`button-complete-draft-${p.id}`}>
+                      Lengkapi Detail <ArrowRight className="h-3.5 w-3.5 ml-1" />
+                    </Button>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Quick action strip */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

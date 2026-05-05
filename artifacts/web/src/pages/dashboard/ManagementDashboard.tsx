@@ -1,13 +1,16 @@
-import { useGetDashboardSummary, useGetProfitTrend, useGetStatusBreakdown, useGetTopProjects, useGetRecentActivity, useGetUtilization, customFetch } from "@workspace/api-client-react";
+import { useGetDashboardSummary, useGetProfitTrend, useGetStatusBreakdown, useGetTopProjects, useGetRecentActivity, useGetUtilization, customFetch, useListUsers, useUpdateProject, getListProjectsQueryKey, UserRole } from "@workspace/api-client-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { formatIDR, formatPct } from "@/lib/format";
-import { Briefcase, Wallet, TrendingUp, Clock, AlertCircle, Activity, AlarmClock, Download } from "lucide-react";
+import { Briefcase, Wallet, TrendingUp, Clock, AlertCircle, Activity, AlarmClock, Download, UserPlus } from "lucide-react";
 import { exportSheets, downloadAuthed } from "@/lib/exports";
 import { classifyProject, type ProjectType } from "@/lib/projectType";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
 import { SkeletonCard, TableSkeleton } from "@/components/common/Loading";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
@@ -46,12 +49,17 @@ export default function Dashboard() {
   });
 
   const STATUS_COLORS: Record<ProjectStatus, string> = {
+    [ProjectStatus.DRAFT]: "hsl(280, 60%, 60%)",        // Purple
     [ProjectStatus.OBSERVATION]: "hsl(var(--chart-2))", // Blue
     [ProjectStatus.ACTIVE]: "hsl(var(--chart-1))",      // Green
     [ProjectStatus.PAUSE]: "hsl(var(--chart-3))",       // Amber
     [ProjectStatus.COMPLETE]: "hsl(var(--chart-4))",    // Emerald
     [ProjectStatus.CLOSED]: "hsl(var(--chart-5))",      // Slate
   };
+
+  const pendingAssignment = (allProjects ?? []).filter(
+    (p) => p.status === ProjectStatus.DRAFT && !p.pmId,
+  );
 
   // Project Type Analysis: classify projects by type and compute profitability per type
   const projectTypeStats = (() => {
@@ -110,6 +118,10 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <WelcomeBanner subtitle="Executive snapshot: portfolio health, profitability, and team utilization." />
+
+      {pendingAssignment.length > 0 && (
+        <PendingAssignmentSection projects={pendingAssignment} />
+      )}
 
       {losingProjects.length > 0 && (
         <Card className="border-destructive/40 bg-destructive/5">
@@ -416,6 +428,115 @@ export default function Dashboard() {
       </div>
 
     </div>
+  );
+}
+
+function PendingAssignmentSection({ projects }: { projects: any[] }) {
+  const { toast } = useToast();
+  const qc = useQueryClient();
+  const { data: users } = useListUsers();
+  const [selected, setSelected] = useState<any | null>(null);
+  const [pmId, setPmId] = useState<string>("");
+
+  const updateProject = useUpdateProject({
+    mutation: {
+      onSuccess: async () => {
+        toast({ title: "PM ditugaskan", description: "Project diteruskan ke Project Manager." });
+        await qc.refetchQueries({ queryKey: getListProjectsQueryKey() });
+        setSelected(null);
+        setPmId("");
+      },
+      onError: (err: any) => {
+        toast({ variant: "destructive", title: "Gagal menugaskan PM", description: err?.message ?? "Unknown error" });
+      },
+    },
+  });
+
+  const pms = (users ?? []).filter((u) => u.role === UserRole.PROJECT_MANAGER || u.role === UserRole.MANAGEMENT);
+
+  function openAssign(project: any) {
+    setSelected(project);
+    setPmId("");
+  }
+
+  function handleAssign() {
+    if (!selected || !pmId) return;
+    updateProject.mutate({ id: selected.id, data: { pmId } });
+  }
+
+  return (
+    <>
+      <Card className="border-purple-500/40 bg-purple-500/5">
+        <CardHeader className="flex flex-row items-center gap-3 space-y-0">
+          <UserPlus className="h-5 w-5 text-purple-400" />
+          <div className="flex-1">
+            <CardTitle className="text-base">
+              {projects.length} project menunggu penugasan PM
+            </CardTitle>
+            <CardDescription>
+              Project baru dari Sales — tugaskan Project Manager untuk melengkapi detail.
+            </CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-0">
+          <ul className="text-sm divide-y divide-border">
+            {projects.map((p) => (
+              <li key={p.id} className="flex items-center justify-between py-3 gap-3">
+                <div className="min-w-0 flex-1">
+                  <Link href={`/projects/${p.id}`} className="font-medium text-foreground hover:text-primary truncate block">
+                    {p.name}
+                  </Link>
+                  <p className="text-xs text-muted-foreground">
+                    <span className="font-mono">{p.code}</span>
+                    <span className="mx-1">·</span>
+                    {p.clientName ?? "-"}
+                    {p.salesName && <><span className="mx-1">·</span>Sales: {p.salesName}</>}
+                  </p>
+                </div>
+                <Button size="sm" onClick={() => openAssign(p)} data-testid={`button-assign-pm-${p.id}`}>
+                  <UserPlus className="h-3.5 w-3.5 mr-1" /> Tugaskan PM
+                </Button>
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
+
+      <Dialog open={!!selected} onOpenChange={(o) => { if (!o) { setSelected(null); setPmId(""); } }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Tugaskan Project Manager</DialogTitle>
+            <DialogDescription>
+              {selected ? <>Untuk <span className="font-mono">{selected.code}</span> — {selected.name}</> : null}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Pilih PM</label>
+            <Select value={pmId} onValueChange={setPmId}>
+              <SelectTrigger data-testid="select-pm-assignment"><SelectValue placeholder="Pilih Project Manager" /></SelectTrigger>
+              <SelectContent>
+                {pms.map((u) => (
+                  <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground">
+              PM akan menerima project ini di dashboard mereka dan dapat melengkapi detail (revenue, mandays, tim, jadwal).
+            </p>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setSelected(null); setPmId(""); }}>Batal</Button>
+            <Button
+              onClick={handleAssign}
+              disabled={!pmId || updateProject.isPending}
+              data-testid="button-confirm-assign-pm"
+            >
+              {updateProject.isPending ? "Menugaskan..." : "Tugaskan"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
