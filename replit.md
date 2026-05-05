@@ -47,8 +47,12 @@ PM and Management can open the **Expenses** tab on `/projects/:id` to log additi
 
 Field-level + ownership guards in `artifacts/api-server/src/routes/projects.ts`:
 - **SALES**: only their own DRAFT projects (`salesId === userId && status === "DRAFT"`); allowed fields = {`code`, `name`, `description`, `clientId`, `contractValue`}; everything else returns 403.
-- **PROJECT_MANAGER**: only own assignments (`pmId === userId`); all fields except `salesId`/`pmId` (cannot reassign).
+- **PROJECT_MANAGER**: only own assignments (`pmId === userId`); all fields except `salesId`/`pmId`/`clientId` (cannot reassign people or the client; the client is set during Sales intake).
 - **MANAGEMENT**: full access. The PMO assignment invariant returns 409 if attempting to set `pmId` on a DRAFT project that already has one.
+
+### Editable Overview tab
+
+The Overview tab on `/projects/:id` is editable by MANAGEMENT or the assigned PM via an "Edit" button (hidden on DRAFT, where `DraftCompletionCard` handles intake). When essential fields are missing on a non-DRAFT project (Client, Start/End Date, Contract Value, Planned Mandays, Estimated Cost, Description), a yellow banner prompts the editor to fill them in. Save uses a two-step flow: inline edit → "Review & Save" opens a confirmation dialog showing the proposed values plus a warning listing any still-missing fields; "Confirm & Save" issues the PATCH. The Client field is only shown as a Select when the editor is MANAGEMENT; PMs see Client as read-only (and the backend's `PM_FORBIDDEN` set rejects any direct attempt to change `clientId`).
 
 ## Financials computation
 

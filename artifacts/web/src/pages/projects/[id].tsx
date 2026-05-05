@@ -12,11 +12,13 @@ import {
   useRemoveProjectResource,
   getListProjectResourcesQueryKey,
   useListUsers,
+  useListClients,
   useListTimesheets,
   useListProjectExpenses,
   useAddProjectExpense,
   useRemoveProjectExpense,
   getListProjectExpensesQueryKey,
+  getListClientsQueryKey,
   getGetProjectQueryKey,
   getGetProjectFinancialsQueryKey,
   getListProjectDocumentsQueryKey,
@@ -39,6 +41,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   ArrowLeft, Building2, User, Calendar, DollarSign, TrendingUp, TrendingDown,
   Activity, Flame, Upload, FileText, Trash2, CheckCircle2, AlertCircle, Plus,
+  Pencil, AlertTriangle,
 } from "lucide-react";
 import { formatIDR, formatDate, formatPct } from "@/lib/format";
 import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
@@ -865,53 +868,442 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
   );
 }
 
-function OverviewTab({ project }: { project: any }) {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <Card className="border-border shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-base">Project Information</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <InfoRow icon={<Building2 className="h-4 w-4" />} label="Client" value={project.clientName ?? "-"} />
-          <InfoRow icon={<User className="h-4 w-4" />} label="Sales" value={project.salesName ?? "-"} />
-          <InfoRow icon={<User className="h-4 w-4" />} label="Project Manager" value={project.pmName ?? "-"} />
-          <InfoRow
-            icon={<Calendar className="h-4 w-4" />}
-            label="Timeline"
-            value={
-              project.startDate || project.endDate
-                ? `${project.startDate ? formatDate(project.startDate) : "?"} → ${project.endDate ? formatDate(project.endDate) : "?"}`
-                : "Not set"
-            }
-          />
-          {project.description && (
-            <div className="pt-3 border-t border-border">
-              <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Description</p>
-              <p className="text-sm text-foreground whitespace-pre-wrap">{project.description}</p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+type RequiredField = { key: string; label: string };
 
-      <Card className="border-border shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-base">Financial Estimation</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Stat label="Revenue (Selling Price)" value={formatIDR(project.contractValue)} />
-          <Stat label="Estimated Operational Cost" value={formatIDR(project.estimatedCost)} muted />
-          <Stat label="Estimated Profit" value={formatIDR(project.estimatedProfit)} highlight />
-          <div className="flex items-center justify-between pt-3 border-t border-border">
-            <p className="text-xs text-muted-foreground uppercase tracking-wide">Margin</p>
-            <MarginBadge marginPct={project.marginPct} />
-          </div>
-          <div className="flex items-center justify-between">
-            <p className="text-xs text-muted-foreground uppercase tracking-wide">Planned Mandays</p>
-            <p className="font-mono text-sm">{project.plannedMandays.toFixed(1)}</p>
-          </div>
-        </CardContent>
-      </Card>
+function getMissingRequiredFields(project: any): RequiredField[] {
+  const missing: RequiredField[] = [];
+  if (!project.clientId) missing.push({ key: "clientId", label: "Client" });
+  if (!project.startDate) missing.push({ key: "startDate", label: "Start Date" });
+  if (!project.endDate) missing.push({ key: "endDate", label: "End Date" });
+  if (!project.contractValue || Number(project.contractValue) <= 0)
+    missing.push({ key: "contractValue", label: "Revenue (Selling Price)" });
+  if (!project.plannedMandays || Number(project.plannedMandays) <= 0)
+    missing.push({ key: "plannedMandays", label: "Planned Mandays" });
+  if (!project.estimatedCost || Number(project.estimatedCost) <= 0)
+    missing.push({ key: "estimatedCost", label: "Estimated Cost" });
+  if (!project.description || !String(project.description).trim())
+    missing.push({ key: "description", label: "Description" });
+  return missing;
+}
+
+function OverviewTab({ project }: { project: any }) {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const qc = useQueryClient();
+  const [isEditing, setIsEditing] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
+  const canEdit =
+    user?.role === "MANAGEMENT" ||
+    (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id);
+
+  const [form, setForm] = useState({
+    clientId: project.clientId ?? "",
+    description: project.description ?? "",
+    startDate: project.startDate ? String(project.startDate).slice(0, 10) : "",
+    endDate: project.endDate ? String(project.endDate).slice(0, 10) : "",
+    contractValue: String(project.contractValue ?? 0),
+    estimatedCost: String(project.estimatedCost ?? 0),
+    plannedMandays: String(project.plannedMandays ?? 0),
+  });
+
+  const { data: clients } = useListClients({
+    query: {
+      queryKey: getListClientsQueryKey(),
+      enabled: isEditing && user?.role === "MANAGEMENT",
+    },
+  });
+
+  const update = useUpdateProject({
+    mutation: {
+      onSuccess: async () => {
+        toast({ title: "Overview updated", description: "Project details saved." });
+        await qc.refetchQueries({ queryKey: getGetProjectQueryKey(project.id) });
+        await qc.invalidateQueries({ queryKey: getGetProjectFinancialsQueryKey(project.id) });
+        setConfirmOpen(false);
+        setIsEditing(false);
+      },
+      onError: (e: any) =>
+        toast({
+          variant: "destructive",
+          title: "Failed to save",
+          description: e?.message ?? "Unknown error",
+        }),
+    },
+  });
+
+  function startEdit() {
+    setForm({
+      clientId: project.clientId ?? "",
+      description: project.description ?? "",
+      startDate: project.startDate ? String(project.startDate).slice(0, 10) : "",
+      endDate: project.endDate ? String(project.endDate).slice(0, 10) : "",
+      contractValue: String(project.contractValue ?? 0),
+      estimatedCost: String(project.estimatedCost ?? 0),
+      plannedMandays: String(project.plannedMandays ?? 0),
+    });
+    setIsEditing(true);
+  }
+
+  function cancelEdit() {
+    setIsEditing(false);
+  }
+
+  function previewMissingFields(): RequiredField[] {
+    const draft = {
+      clientId: form.clientId,
+      startDate: form.startDate,
+      endDate: form.endDate,
+      contractValue: Number(form.contractValue),
+      plannedMandays: Number(form.plannedMandays),
+      estimatedCost: Number(form.estimatedCost),
+      description: form.description,
+    };
+    return getMissingRequiredFields(draft);
+  }
+
+  function handleSaveClick() {
+    const cv = Number(form.contractValue);
+    const ec = Number(form.estimatedCost);
+    const pm = Number(form.plannedMandays);
+    if (cv < 0 || ec < 0 || pm < 0) {
+      toast({
+        variant: "destructive",
+        title: "Invalid value",
+        description: "Revenue, cost, and mandays cannot be negative.",
+      });
+      return;
+    }
+    if (form.startDate && form.endDate && form.endDate < form.startDate) {
+      toast({
+        variant: "destructive",
+        title: "Invalid timeline",
+        description: "End date cannot be before start date.",
+      });
+      return;
+    }
+    setConfirmOpen(true);
+  }
+
+  function confirmAndSave() {
+    const data: Record<string, unknown> = {
+      description: form.description.trim() || null,
+      startDate: form.startDate || undefined,
+      endDate: form.endDate || undefined,
+      contractValue: Number(form.contractValue),
+      estimatedCost: Number(form.estimatedCost),
+      plannedMandays: Number(form.plannedMandays),
+    };
+    // Only MANAGEMENT can reassign the client (backend also enforces this).
+    if (user?.role === "MANAGEMENT" && form.clientId && form.clientId !== project.clientId) {
+      data.clientId = form.clientId;
+    }
+    update.mutate({ id: project.id, data: data as any });
+  }
+
+  const currentMissing = getMissingRequiredFields(project);
+  const isDraft = project.status === ProjectStatus.DRAFT;
+
+  return (
+    <div className="space-y-4">
+      {!isDraft && currentMissing.length > 0 && canEdit && !isEditing && (
+        <Card className="border-amber-500/40 bg-amber-500/5 shadow-sm">
+          <CardContent className="flex flex-col sm:flex-row sm:items-center gap-3 py-4">
+            <AlertTriangle className="h-5 w-5 text-amber-500 shrink-0" />
+            <div className="flex-1">
+              <p className="text-sm font-medium text-foreground">
+                {currentMissing.length} required field{currentMissing.length > 1 ? "s" : ""} missing
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Complete the project information so financial estimates and reporting stay accurate:{" "}
+                <span className="text-foreground">
+                  {currentMissing.map((m) => m.label).join(", ")}
+                </span>
+                .
+              </p>
+            </div>
+            <Button
+              size="sm"
+              onClick={startEdit}
+              className="shrink-0"
+              data-testid="button-overview-fix-missing"
+            >
+              <Pencil className="h-4 w-4 mr-1.5" />
+              Fill in
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card className="border-border shadow-sm">
+          <CardHeader className="flex flex-row items-start justify-between gap-2">
+            <CardTitle className="text-base">Project Information</CardTitle>
+            {canEdit && !isEditing && !isDraft && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={startEdit}
+                data-testid="button-overview-edit"
+              >
+                <Pencil className="h-3.5 w-3.5 mr-1.5" />
+                Edit
+              </Button>
+            )}
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {!isEditing ? (
+              <>
+                <InfoRow icon={<Building2 className="h-4 w-4" />} label="Client" value={project.clientName ?? "-"} />
+                <InfoRow icon={<User className="h-4 w-4" />} label="Sales" value={project.salesName ?? "-"} />
+                <InfoRow icon={<User className="h-4 w-4" />} label="Project Manager" value={project.pmName ?? "-"} />
+                <InfoRow
+                  icon={<Calendar className="h-4 w-4" />}
+                  label="Timeline"
+                  value={
+                    project.startDate || project.endDate
+                      ? `${project.startDate ? formatDate(project.startDate) : "?"} → ${project.endDate ? formatDate(project.endDate) : "?"}`
+                      : "Not set"
+                  }
+                />
+                {project.description ? (
+                  <div className="pt-3 border-t border-border">
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Description</p>
+                    <p className="text-sm text-foreground whitespace-pre-wrap">{project.description}</p>
+                  </div>
+                ) : (
+                  <div className="pt-3 border-t border-border">
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Description</p>
+                    <p className="text-sm text-muted-foreground italic">Not set</p>
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                {user?.role === "MANAGEMENT" ? (
+                  <div>
+                    <Label htmlFor="ov-client">Client *</Label>
+                    <Select
+                      value={form.clientId}
+                      onValueChange={(v) => setForm({ ...form, clientId: v })}
+                    >
+                      <SelectTrigger id="ov-client" className="mt-1" data-testid="input-overview-client">
+                        <SelectValue placeholder="Select a client" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {(clients ?? []).map((c: any) => (
+                          <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                ) : (
+                  <InfoRow icon={<Building2 className="h-4 w-4" />} label="Client" value={project.clientName ?? "-"} />
+                )}
+                <InfoRow icon={<User className="h-4 w-4" />} label="Sales" value={project.salesName ?? "-"} />
+                <InfoRow icon={<User className="h-4 w-4" />} label="Project Manager" value={project.pmName ?? "-"} />
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <Label htmlFor="ov-start">Start Date *</Label>
+                    <Input
+                      id="ov-start"
+                      type="date"
+                      value={form.startDate}
+                      onChange={(e) => setForm({ ...form, startDate: e.target.value })}
+                      className="mt-1"
+                      data-testid="input-overview-start"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="ov-end">End Date *</Label>
+                    <Input
+                      id="ov-end"
+                      type="date"
+                      value={form.endDate}
+                      onChange={(e) => setForm({ ...form, endDate: e.target.value })}
+                      className="mt-1"
+                      data-testid="input-overview-end"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="ov-description">Description *</Label>
+                  <Textarea
+                    id="ov-description"
+                    value={form.description}
+                    onChange={(e) => setForm({ ...form, description: e.target.value })}
+                    placeholder="Scope of work, deliverables, key notes..."
+                    className="resize-none h-24 mt-1"
+                    data-testid="input-overview-description"
+                  />
+                </div>
+              </>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="border-border shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-base">Financial Estimation</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {!isEditing ? (
+              <>
+                <Stat label="Revenue (Selling Price)" value={formatIDR(project.contractValue)} />
+                <Stat label="Estimated Operational Cost" value={formatIDR(project.estimatedCost)} muted />
+                <Stat label="Estimated Profit" value={formatIDR(project.estimatedProfit)} highlight />
+                <div className="flex items-center justify-between pt-3 border-t border-border">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wide">Margin</p>
+                  <MarginBadge marginPct={project.marginPct} />
+                </div>
+                <div className="flex items-center justify-between">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wide">Planned Mandays</p>
+                  <p className="font-mono text-sm">{project.plannedMandays.toFixed(1)}</p>
+                </div>
+              </>
+            ) : (
+              <>
+                <div>
+                  <Label htmlFor="ov-revenue">Revenue / Selling Price (IDR) *</Label>
+                  <Input
+                    id="ov-revenue"
+                    type="number"
+                    min={0}
+                    value={form.contractValue}
+                    onChange={(e) => setForm({ ...form, contractValue: e.target.value })}
+                    className="mt-1 font-mono"
+                    data-testid="input-overview-revenue"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="ov-cost">Estimated Operational Cost (IDR) *</Label>
+                  <Input
+                    id="ov-cost"
+                    type="number"
+                    min={0}
+                    value={form.estimatedCost}
+                    onChange={(e) => setForm({ ...form, estimatedCost: e.target.value })}
+                    className="mt-1 font-mono"
+                    data-testid="input-overview-cost"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="ov-mandays">Planned Mandays *</Label>
+                  <Input
+                    id="ov-mandays"
+                    type="number"
+                    min={0}
+                    step="0.5"
+                    value={form.plannedMandays}
+                    onChange={(e) => setForm({ ...form, plannedMandays: e.target.value })}
+                    className="mt-1 font-mono"
+                    data-testid="input-overview-mandays"
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground pt-2 border-t border-border">
+                  Margin and profit estimate are calculated automatically once you save.
+                </p>
+              </>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {isEditing && (
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          <Button
+            variant="ghost"
+            onClick={cancelEdit}
+            disabled={update.isPending}
+            data-testid="button-overview-cancel"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSaveClick}
+            disabled={update.isPending}
+            data-testid="button-overview-save"
+          >
+            Review &amp; Save
+          </Button>
+        </div>
+      )}
+
+      <Dialog open={confirmOpen} onOpenChange={(o) => !update.isPending && setConfirmOpen(o)}>
+        <DialogContent data-testid="dialog-overview-confirm">
+          <DialogHeader>
+            <DialogTitle>Confirm Overview Changes</DialogTitle>
+            <DialogDescription>
+              Please review the values below before saving. These details drive the project's financial reporting.
+            </DialogDescription>
+          </DialogHeader>
+          {(() => {
+            const missing = previewMissingFields();
+            return (
+              <div className="space-y-4">
+                {missing.length > 0 && (
+                  <div className="rounded-md border border-amber-500/40 bg-amber-500/10 p-3 flex gap-2">
+                    <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
+                    <div className="text-sm">
+                      <p className="font-medium text-foreground">
+                        Some recommended fields are still empty
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        You can save anyway, but reporting and financials will be incomplete until these are filled in: {" "}
+                        <span className="text-foreground">{missing.map((m) => m.label).join(", ")}</span>.
+                      </p>
+                    </div>
+                  </div>
+                )}
+                <div className="space-y-2 text-sm">
+                  <ConfirmRow label="Client" value={
+                    (clients ?? []).find((c: any) => c.id === form.clientId)?.name
+                      ?? project.clientName
+                      ?? "-"
+                  } />
+                  <ConfirmRow label="Timeline" value={
+                    form.startDate || form.endDate
+                      ? `${form.startDate ? formatDate(form.startDate) : "?"} → ${form.endDate ? formatDate(form.endDate) : "?"}`
+                      : "Not set"
+                  } />
+                  <ConfirmRow label="Revenue" value={formatIDR(Number(form.contractValue) || 0)} />
+                  <ConfirmRow label="Estimated Cost" value={formatIDR(Number(form.estimatedCost) || 0)} />
+                  <ConfirmRow label="Planned Mandays" value={(Number(form.plannedMandays) || 0).toFixed(1)} />
+                  <ConfirmRow label="Description" value={form.description.trim() || "—"} multiline />
+                </div>
+              </div>
+            );
+          })()}
+          <DialogFooter>
+            <Button
+              variant="ghost"
+              onClick={() => setConfirmOpen(false)}
+              disabled={update.isPending}
+              data-testid="button-overview-confirm-back"
+            >
+              Back to edit
+            </Button>
+            <Button
+              onClick={confirmAndSave}
+              disabled={update.isPending}
+              data-testid="button-overview-confirm-save"
+            >
+              {update.isPending ? "Saving…" : "Confirm & Save"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+function ConfirmRow({ label, value, multiline }: { label: string; value: string; multiline?: boolean }) {
+  return (
+    <div className={multiline ? "" : "flex items-center justify-between gap-3"}>
+      <span className="text-xs text-muted-foreground uppercase tracking-wide">{label}</span>
+      <span className={`${multiline ? "block mt-1 text-sm whitespace-pre-wrap" : "font-mono text-sm text-right"} text-foreground`}>
+        {value}
+      </span>
     </div>
   );
 }

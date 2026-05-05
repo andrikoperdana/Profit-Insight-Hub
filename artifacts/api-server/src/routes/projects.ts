@@ -277,7 +277,8 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
   const userId = req.user!.sub;
 
   const SALES_ALLOWED = new Set(["code", "name", "description", "clientId", "contractValue"]);
-  const PM_FORBIDDEN = new Set(["salesId", "pmId"]);
+  // PMs may not reassign people (salesId/pmId) nor reassign the client (set during Sales intake).
+  const PM_FORBIDDEN = new Set(["salesId", "pmId", "clientId"]);
 
   if (role === "SALES") {
     if (beforeProj.salesId !== userId) {
