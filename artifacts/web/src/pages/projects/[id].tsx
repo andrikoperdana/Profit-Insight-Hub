@@ -48,7 +48,7 @@ import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
 import { LoadingPage } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
 import { useAuth } from "@/lib/auth";
-import { RoleLabels } from "@/lib/roles";
+import { RoleLabels, canViewProjectFinancials } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
 
 import { Button } from "@/components/ui/button";
@@ -246,7 +246,9 @@ export default function ProjectDetail() {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="timeline">Timeline</TabsTrigger>
           <TabsTrigger value="tasks" data-testid="tab-trigger-tasks">Tasks</TabsTrigger>
-          <TabsTrigger value="financials">Financials</TabsTrigger>
+          {canViewProjectFinancials(user?.role) && (
+            <TabsTrigger value="financials">Financials</TabsTrigger>
+          )}
           <TabsTrigger value="resources">Resources</TabsTrigger>
           {(user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER") && (
             <TabsTrigger value="expenses" data-testid="tab-trigger-expenses">Expenses</TabsTrigger>
@@ -266,9 +268,11 @@ export default function ProjectDetail() {
         <TabsContent value="tasks" className="pt-4 m-0">
           <TasksTab projectId={id} project={project} />
         </TabsContent>
-        <TabsContent value="financials" className="pt-4 m-0">
-          <FinancialsTab projectId={id} />
-        </TabsContent>
+        {canViewProjectFinancials(user?.role) && (
+          <TabsContent value="financials" className="pt-4 m-0">
+            <FinancialsTab projectId={id} />
+          </TabsContent>
+        )}
         <TabsContent value="resources" className="pt-4 m-0">
           <ResourcesTab projectId={id} project={project} />
         </TabsContent>
@@ -1145,18 +1149,24 @@ function OverviewTab({ project }: { project: any }) {
 
         <Card className="border-border shadow-sm">
           <CardHeader>
-            <CardTitle className="text-base">Financial Estimation</CardTitle>
+            <CardTitle className="text-base">
+              {canViewProjectFinancials(user?.role) ? "Financial Estimation" : "Effort Estimation"}
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {!isEditing ? (
               <>
-                <Stat label="Revenue (Selling Price)" value={formatIDR(project.contractValue)} />
-                <Stat label="Estimated Operational Cost" value={formatIDR(project.estimatedCost)} muted />
-                <Stat label="Estimated Profit" value={formatIDR(project.estimatedProfit)} highlight />
-                <div className="flex items-center justify-between pt-3 border-t border-border">
-                  <p className="text-xs text-muted-foreground uppercase tracking-wide">Margin</p>
-                  <MarginBadge marginPct={project.marginPct} />
-                </div>
+                {canViewProjectFinancials(user?.role) ? (
+                  <>
+                    <Stat label="Revenue (Selling Price)" value={formatIDR(project.contractValue)} />
+                    <Stat label="Estimated Operational Cost" value={formatIDR(project.estimatedCost)} muted />
+                    <Stat label="Estimated Profit" value={formatIDR(project.estimatedProfit)} highlight />
+                    <div className="flex items-center justify-between pt-3 border-t border-border">
+                      <p className="text-xs text-muted-foreground uppercase tracking-wide">Margin</p>
+                      <MarginBadge marginPct={project.marginPct} />
+                    </div>
+                  </>
+                ) : null}
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-muted-foreground uppercase tracking-wide">Planned Mandays</p>
                   <p className="font-mono text-sm">{project.plannedMandays.toFixed(1)}</p>
