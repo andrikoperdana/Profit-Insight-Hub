@@ -1,0 +1,178 @@
+erDiagram
+    User {
+      string id PK
+      string email UK
+      string passwordHash
+      string name
+      UserRole role
+      string title
+      float dailyRate
+      boolean isActive
+      datetime deletedAt
+      datetime createdAt
+      datetime updatedAt
+    }
+    Client {
+      string id PK
+      string name
+      string contactPerson
+      string email
+      string phone
+      string industry
+      datetime createdAt
+      datetime updatedAt
+    }
+    Project {
+      string id PK
+      string code UK
+      string name
+      string description
+      ProjectStatus status
+      string clientId FK
+      string salesId FK
+      string pmId FK
+      datetime startDate
+      datetime endDate
+      float contractValue
+      float estimatedCost
+      float plannedMandays
+      string lastStatusReason
+      string surveyToken UK
+      datetime deletedAt
+      datetime createdAt
+      datetime updatedAt
+    }
+    ProjectResource {
+      string id PK
+      string projectId FK
+      string userId FK
+      string roleInProject
+      float plannedMandays
+      float dailyRate
+      datetime createdAt
+    }
+    Task {
+      string id PK
+      string projectId FK
+      string title
+      string description
+      TaskStatus status
+      datetime startDate
+      datetime endDate
+      string assigneeId FK
+      string createdById FK
+      datetime createdAt
+      datetime updatedAt
+    }
+    TaskTimeLog {
+      string id PK
+      string taskId FK
+      string userId FK
+      float hours
+      string note
+      datetime loggedAt
+      datetime createdAt
+    }
+    Timesheet {
+      string id PK
+      string projectId FK
+      string userId FK
+      datetime workDate
+      float hours
+      string description
+      TimesheetStatus status
+      string approvedById FK
+      datetime approvedAt
+      string rejectionReason
+      datetime createdAt
+      datetime updatedAt
+    }
+    Document {
+      string id PK
+      string projectId FK
+      DocumentType type
+      string fileName
+      string fileUrl
+      string invoiceNumber
+      float invoiceAmount
+      string invoiceStatus
+      string notes
+      string uploadedById FK
+      datetime uploadedAt
+    }
+    ProjectExpense {
+      string id PK
+      string projectId FK
+      string category
+      string description
+      float amount
+      datetime spentAt
+      string createdById FK
+      datetime createdAt
+      datetime updatedAt
+    }
+    Activity {
+      string id PK
+      string type
+      string message
+      string userId FK
+      string projectId FK
+      datetime createdAt
+    }
+    AuditLog {
+      string id PK
+      string userId FK
+      string userName
+      string userRole
+      string action
+      string entityType
+      string entityId
+      string description
+      json dataBefore
+      json dataAfter
+      datetime createdAt
+    }
+    SurveyQuestion {
+      string id PK
+      string key UK
+      string text
+      string type
+      int order
+      boolean required
+      boolean isActive
+      datetime createdAt
+      datetime updatedAt
+    }
+    SurveyResponse {
+      string id PK
+      string projectId FK
+      string submitterName
+      string submitterEmail
+      json answers
+      json questionsSnapshot
+      string lessonLearned
+      datetime createdAt
+    }
+
+    Client          ||--o{ Project          : "has"
+    User            ||--o{ Project          : "PM of"
+    User            ||--o{ Project          : "Sales for"
+    Project         ||--o{ ProjectResource  : "staffs"
+    User            ||--o{ ProjectResource  : "assigned to"
+    Project         ||--o{ Task             : "contains"
+    User            ||--o{ Task             : "assigned"
+    User            ||--o{ Task             : "created"
+    Task            ||--o{ TaskTimeLog      : "logs"
+    User            ||--o{ TaskTimeLog      : "logged by"
+    Project         ||--o{ Timesheet        : "tracks"
+    User            ||--o{ Timesheet        : "submitted"
+    User            ||--o{ Timesheet        : "approved"
+    Project         ||--o{ Document         : "stores"
+    User            ||--o{ Document         : "uploaded"
+    Project         ||--o{ ProjectExpense   : "incurs"
+    User            ||--o{ ProjectExpense   : "recorded by"
+    Project         ||--o{ Activity         : "logs"
+    User            ||--o{ Activity         : "performed"
+    User            ||--o{ AuditLog         : "performed"
+    Project         ||--o{ SurveyResponse   : "received"
+  

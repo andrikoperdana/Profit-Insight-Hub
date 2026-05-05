@@ -125,3 +125,21 @@ id = "bKgDVmPriQjv9HW5GY0Zh"
 uri = "file://.local/outputs/SentinelScan-Pitch-Deck.pptx"
 type = "slides"
 title = "SentinelScan Pitch Deck (PPTX)"
+
+[[outputs]]
+id = "BdG5NUMBboohmwHEtNJTB"
+uri = "file://attached_assets/erd/secureprofit-erd.svg"
+type = "image"
+title = "SecureProfit Hub — ERD (SVG, scalable)"
+
+[[outputs]]
+id = "M2KJmLGBNQ104i__uunEM"
+uri = "file://attached_assets/erd/secureprofit-erd.png"
+type = "image"
+title = "SecureProfit Hub — ERD (PNG)"
+
+[[outputs]]
+id = "I4sNDhdTldnZ3-fu4ymR-"
+uri = "file://attached_assets/erd/secureprofit-erd.mmd.txt"
+type = "text"
+title = "Mermaid source (editable)"
