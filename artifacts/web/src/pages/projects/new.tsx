@@ -43,6 +43,7 @@ const resourceRowSchema = z.object({
   role: z.string().min(1, "Role required"),
   headcount: z.coerce.number().min(1, "At least 1"),
   mandaysPerPerson: z.coerce.number().min(0.5, "At least 0.5"),
+  dailyRate: z.coerce.number().min(0, "Daily rate must be >= 0"),
 });
 
 const createProjectSchema = z.object({
@@ -103,7 +104,7 @@ export default function NewProject() {
       startDate: "",
       endDate: "",
       contractValue: 0,
-      resources: [{ role: "KONSULTAN", headcount: 1, mandaysPerPerson: 10 }],
+      resources: [{ role: "KONSULTAN", headcount: 1, mandaysPerPerson: 10, dailyRate: ROLE_RATES.KONSULTAN.rate }],
     }
   });
 
@@ -116,7 +117,7 @@ export default function NewProject() {
     (acc, r) => {
       const head = Number(r.headcount || 0);
       const md = Number(r.mandaysPerPerson || 0);
-      const rate = ROLE_RATES[r.role]?.rate ?? 0;
+      const rate = Number(r.dailyRate || 0);
       const totalMandays = head * md;
       acc.mandays += totalMandays;
       acc.cost += totalMandays * rate;
@@ -315,7 +316,7 @@ export default function NewProject() {
           <Card className="border-border shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Resource Requirements</CardTitle>
-              <Button type="button" variant="outline" size="sm" onClick={() => append({ role: "KONSULTAN", headcount: 1, mandaysPerPerson: 5 })}>
+              <Button type="button" variant="outline" size="sm" onClick={() => append({ role: "KONSULTAN", headcount: 1, mandaysPerPerson: 5, dailyRate: ROLE_RATES.KONSULTAN.rate })}>
                 <Plus className="h-4 w-4 mr-2" /> Add Row
               </Button>
             </CardHeader>
@@ -337,7 +338,7 @@ export default function NewProject() {
                       const r = watchedResources?.[idx];
                       const head = Number(r?.headcount || 0);
                       const md = Number(r?.mandaysPerPerson || 0);
-                      const rate = ROLE_RATES[r?.role || ""]?.rate ?? 0;
+                      const rate = Number(r?.dailyRate || 0);
                       const subtotal = head * md * rate;
                       return (
                         <tr key={f.id} className="border-t border-border">
@@ -346,7 +347,16 @@ export default function NewProject() {
                               control={form.control}
                               name={`resources.${idx}.role`}
                               render={({ field }) => (
-                                <Select onValueChange={field.onChange} value={field.value}>
+                                <Select
+                                  onValueChange={(v) => {
+                                    field.onChange(v);
+                                    const defaultRate = ROLE_RATES[v]?.rate;
+                                    if (defaultRate !== undefined) {
+                                      form.setValue(`resources.${idx}.dailyRate`, defaultRate, { shouldDirty: true });
+                                    }
+                                  }}
+                                  value={field.value}
+                                >
                                   <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
                                   <SelectContent>
                                     {Object.entries(ROLE_RATES).map(([key, v]) => (
@@ -375,7 +385,22 @@ export default function NewProject() {
                               )}
                             />
                           </td>
-                          <td className="p-2 text-right font-mono text-muted-foreground">{formatIDR(rate)}</td>
+                          <td className="p-2">
+                            <FormField
+                              control={form.control}
+                              name={`resources.${idx}.dailyRate`}
+                              render={({ field }) => (
+                                <Input
+                                  type="number"
+                                  min={0}
+                                  step={50000}
+                                  className="h-9 text-right font-mono"
+                                  data-testid={`input-daily-rate-${idx}`}
+                                  {...field}
+                                />
+                              )}
+                            />
+                          </td>
                           <td className="p-2 text-right font-mono">{formatIDR(subtotal)}</td>
                           <td className="p-2">
                             <Button type="button" variant="ghost" size="icon" onClick={() => fields.length > 1 && remove(idx)} disabled={fields.length === 1}>
