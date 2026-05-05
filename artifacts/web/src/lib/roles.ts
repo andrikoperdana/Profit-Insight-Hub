@@ -24,3 +24,9 @@ export function canManageClients(role?: UserRole): boolean {
 export function canViewResources(role?: UserRole): boolean {
   return role === UserRole.MANAGEMENT || role === UserRole.PROJECT_MANAGER;
 }
+
+// Technical writers and consultants are delivery roles — they should not
+// see commercial figures (contract value, margin, cost, profit) on lists.
+export function canViewProjectFinancials(role?: UserRole): boolean {
+  return role !== UserRole.TECHNICAL_WRITER && role !== UserRole.KONSULTAN;
+}

@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Plus, Search, Filter, Download } from "lucide-react";
 import { formatIDR } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
-import { canCreateProject } from "@/lib/roles";
+import { canCreateProject, canViewProjectFinancials } from "@/lib/roles";
 import { exportSheets, exportCsv } from "@/lib/exports";
 import { classifyProject } from "@/lib/projectType";
 
@@ -55,25 +55,32 @@ export default function ProjectsList() {
     (p.clientName && p.clientName.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  const projectExportRows = (filteredProjects ?? []).map((p) => ({
-    Code: p.code,
-    Name: p.name,
-    Type: classifyProject({ name: p.name, code: p.code }),
-    Client: p.clientName ?? "",
-    PM: p.pmName ?? "",
-    Sales: (p as any).salesName ?? "",
-    Status: p.status,
-    ContractValue: p.contractValue,
-    EstimatedCost: (p as any).estimatedCost ?? 0,
-    EstimatedProfit: (p as any).estimatedProfit ?? 0,
-    ActualCost: (p as any).actualCost ?? 0,
-    ActualProfit: (p as any).actualProfit ?? 0,
-    MarginPct: p.marginPct,
-    PlannedMandays: (p as any).plannedMandays ?? 0,
-    ActualMandays: (p as any).actualMandays ?? 0,
-    StartDate: (p as any).startDate ?? "",
-    EndDate: (p as any).endDate ?? "",
-  }));
+  const showFinancials = canViewProjectFinancials(user?.role);
+
+  const projectExportRows = (filteredProjects ?? []).map((p) => {
+    const base: Record<string, unknown> = {
+      Code: p.code,
+      Name: p.name,
+      Type: classifyProject({ name: p.name, code: p.code }),
+      Client: p.clientName ?? "",
+      PM: p.pmName ?? "",
+      Sales: (p as any).salesName ?? "",
+      Status: p.status,
+    };
+    if (showFinancials) {
+      base.ContractValue = p.contractValue;
+      base.EstimatedCost = (p as any).estimatedCost ?? 0;
+      base.EstimatedProfit = (p as any).estimatedProfit ?? 0;
+      base.ActualCost = (p as any).actualCost ?? 0;
+      base.ActualProfit = (p as any).actualProfit ?? 0;
+      base.MarginPct = p.marginPct;
+    }
+    base.PlannedMandays = (p as any).plannedMandays ?? 0;
+    base.ActualMandays = (p as any).actualMandays ?? 0;
+    base.StartDate = (p as any).startDate ?? "";
+    base.EndDate = (p as any).endDate ?? "";
+    return base;
+  });
 
   const pager = usePagination(filteredProjects, {
     resetKey: `${statusFilter}|${searchQuery}`,
@@ -157,8 +164,12 @@ export default function ProjectsList() {
                 <TableHead>Project</TableHead>
                 <TableHead>Client</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead className="text-right">Contract Value</TableHead>
-                <TableHead className="text-center">Margin</TableHead>
+                {showFinancials && (
+                  <>
+                    <TableHead className="text-right">Contract Value</TableHead>
+                    <TableHead className="text-center">Margin</TableHead>
+                  </>
+                )}
                 <TableHead className="text-right">PM</TableHead>
               </TableRow>
             </TableHeader>
@@ -173,8 +184,12 @@ export default function ProjectsList() {
                   </TableCell>
                   <TableCell>{project.clientName || "-"}</TableCell>
                   <TableCell><ProjectStatusBadge status={project.status} /></TableCell>
-                  <TableCell className="text-right font-mono text-sm">{formatIDR(project.contractValue)}</TableCell>
-                  <TableCell className="text-center"><MarginBadge marginPct={project.marginPct} /></TableCell>
+                  {showFinancials && (
+                    <>
+                      <TableCell className="text-right font-mono text-sm">{formatIDR(project.contractValue)}</TableCell>
+                      <TableCell className="text-center"><MarginBadge marginPct={project.marginPct} /></TableCell>
+                    </>
+                  )}
                   <TableCell className="text-right text-muted-foreground text-sm">{project.pmName || "-"}</TableCell>
                 </TableRow>
               ))}
