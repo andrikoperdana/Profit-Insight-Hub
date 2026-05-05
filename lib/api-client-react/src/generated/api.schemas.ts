@@ -55,6 +55,69 @@ export const DocumentType = {
   OTHER: "OTHER",
 } as const;
 
+export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus];
+
+export const TaskStatus = {
+  TODO: "TODO",
+  IN_PROGRESS: "IN_PROGRESS",
+  BLOCKED: "BLOCKED",
+  DONE: "DONE",
+} as const;
+
+export interface Task {
+  id: string;
+  projectId: string;
+  projectCode?: string | null;
+  projectName?: string | null;
+  title: string;
+  description?: string | null;
+  status: TaskStatus;
+  startDate?: string | null;
+  endDate?: string | null;
+  assigneeId?: string | null;
+  assigneeName?: string | null;
+  createdById?: string | null;
+  createdByName?: string | null;
+  loggedHours: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateTaskBody {
+  title: string;
+  description?: string | null;
+  status?: TaskStatus;
+  startDate?: string | null;
+  endDate?: string | null;
+  assigneeId?: string | null;
+}
+
+export interface UpdateTaskBody {
+  title?: string;
+  description?: string | null;
+  status?: TaskStatus;
+  startDate?: string | null;
+  endDate?: string | null;
+  assigneeId?: string | null;
+}
+
+export interface TaskTimeLog {
+  id: string;
+  taskId: string;
+  userId: string;
+  userName?: string | null;
+  hours: number;
+  note?: string | null;
+  loggedAt: string;
+  createdAt: string;
+}
+
+export interface LogTaskTimeBody {
+  hours: number;
+  note?: string;
+  loggedAt?: string;
+}
+
 export interface User {
   id: string;
   email: string;

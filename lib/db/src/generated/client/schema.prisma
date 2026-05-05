@@ -41,6 +41,13 @@ enum DocumentType {
   OTHER
 }
 
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  BLOCKED
+  DONE
+}
+
 model User {
   id           String    @id @default(cuid())
   email        String    @unique
@@ -63,6 +70,9 @@ model User {
   activities         Activity[]
   auditLogs          AuditLog[]
   projectExpenses    ProjectExpense[]
+  tasksAssigned      Task[]            @relation("TaskAssignee")
+  tasksCreated       Task[]            @relation("TaskCreator")
+  taskTimeLogs       TaskTimeLog[]
 }
 
 model Client {
@@ -107,6 +117,7 @@ model Project {
   activities      Activity[]
   surveyResponses SurveyResponse[]
   expenses        ProjectExpense[]
+  tasks           Task[]
 }
 
 model SurveyQuestion {
@@ -230,4 +241,43 @@ model Activity {
   projectId String?
   project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
+}
+
+model Task {
+  id          String     @id @default(cuid())
+  projectId   String
+  project     Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  status      TaskStatus @default(TODO)
+  startDate   DateTime?
+  endDate     DateTime?
+  assigneeId  String?
+  assignee    User?      @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  createdById String?
+  createdBy   User?      @relation("TaskCreator", fields: [createdById], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  timeLogs TaskTimeLog[]
+
+  @@index([projectId])
+  @@index([assigneeId])
+  @@index([status])
+}
+
+model TaskTimeLog {
+  id        String   @id @default(cuid())
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  hours     Float
+  note      String?
+  loggedAt  DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  @@index([taskId])
+  @@index([userId])
+  @@index([loggedAt])
 }

@@ -28,7 +28,13 @@ export type AuditAction =
   | "survey.submitted"
   | "survey.template_updated"
   | "survey.seed_demo"
-  | "project.seed_demo";
+  | "project.seed_demo"
+  | "expense.created"
+  | "expense.deleted"
+  | "task.created"
+  | "task.updated"
+  | "task.deleted"
+  | "task.time_logged";
 
 export type EntityType =
   | "User"
@@ -37,7 +43,10 @@ export type EntityType =
   | "Document"
   | "ProjectResource"
   | "SurveyResponse"
-  | "SurveyTemplate";
+  | "SurveyTemplate"
+  | "ProjectExpense"
+  | "Task"
+  | "TaskTimeLog";
 
 interface AuditInput {
   action: AuditAction;

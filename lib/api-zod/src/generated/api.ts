@@ -699,6 +699,130 @@ export const DeleteDocumentResponse = zod.object({
   message: zod.string().optional(),
 });
 
+export const ListProjectTasksParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const ListProjectTasksResponseItem = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  projectCode: zod.string().nullish(),
+  projectName: zod.string().nullish(),
+  title: zod.string(),
+  description: zod.string().nullish(),
+  status: zod.enum(["TODO", "IN_PROGRESS", "BLOCKED", "DONE"]),
+  startDate: zod.string().nullish(),
+  endDate: zod.string().nullish(),
+  assigneeId: zod.string().nullish(),
+  assigneeName: zod.string().nullish(),
+  createdById: zod.string().nullish(),
+  createdByName: zod.string().nullish(),
+  loggedHours: zod.number(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+export const ListProjectTasksResponse = zod.array(ListProjectTasksResponseItem);
+
+export const CreateProjectTaskParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const CreateProjectTaskBody = zod.object({
+  title: zod.string(),
+  description: zod.string().nullish(),
+  status: zod.enum(["TODO", "IN_PROGRESS", "BLOCKED", "DONE"]).optional(),
+  startDate: zod.string().nullish(),
+  endDate: zod.string().nullish(),
+  assigneeId: zod.string().nullish(),
+});
+
+export const ListMyTasksResponseItem = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  projectCode: zod.string().nullish(),
+  projectName: zod.string().nullish(),
+  title: zod.string(),
+  description: zod.string().nullish(),
+  status: zod.enum(["TODO", "IN_PROGRESS", "BLOCKED", "DONE"]),
+  startDate: zod.string().nullish(),
+  endDate: zod.string().nullish(),
+  assigneeId: zod.string().nullish(),
+  assigneeName: zod.string().nullish(),
+  createdById: zod.string().nullish(),
+  createdByName: zod.string().nullish(),
+  loggedHours: zod.number(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+export const ListMyTasksResponse = zod.array(ListMyTasksResponseItem);
+
+export const UpdateTaskParams = zod.object({
+  taskId: zod.coerce.string(),
+});
+
+export const UpdateTaskBody = zod.object({
+  title: zod.string().optional(),
+  description: zod.string().nullish(),
+  status: zod.enum(["TODO", "IN_PROGRESS", "BLOCKED", "DONE"]).optional(),
+  startDate: zod.string().nullish(),
+  endDate: zod.string().nullish(),
+  assigneeId: zod.string().nullish(),
+});
+
+export const UpdateTaskResponse = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  projectCode: zod.string().nullish(),
+  projectName: zod.string().nullish(),
+  title: zod.string(),
+  description: zod.string().nullish(),
+  status: zod.enum(["TODO", "IN_PROGRESS", "BLOCKED", "DONE"]),
+  startDate: zod.string().nullish(),
+  endDate: zod.string().nullish(),
+  assigneeId: zod.string().nullish(),
+  assigneeName: zod.string().nullish(),
+  createdById: zod.string().nullish(),
+  createdByName: zod.string().nullish(),
+  loggedHours: zod.number(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+export const DeleteTaskParams = zod.object({
+  taskId: zod.coerce.string(),
+});
+
+export const DeleteTaskResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+export const ListTaskTimeLogsParams = zod.object({
+  taskId: zod.coerce.string(),
+});
+
+export const ListTaskTimeLogsResponseItem = zod.object({
+  id: zod.string(),
+  taskId: zod.string(),
+  userId: zod.string(),
+  userName: zod.string().nullish(),
+  hours: zod.number(),
+  note: zod.string().nullish(),
+  loggedAt: zod.string(),
+  createdAt: zod.string(),
+});
+export const ListTaskTimeLogsResponse = zod.array(ListTaskTimeLogsResponseItem);
+
+export const LogTaskTimeParams = zod.object({
+  taskId: zod.coerce.string(),
+});
+
+export const LogTaskTimeBody = zod.object({
+  hours: zod.number(),
+  note: zod.string().optional(),
+  loggedAt: zod.string().optional(),
+});
+
 export const GetDashboardSummaryResponse = zod.object({
   totalProjects: zod.number(),
   activeProjects: zod.number(),

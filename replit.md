@@ -13,7 +13,7 @@ Full-stack web application for an Indonesian IT security consulting firm. Tracks
 
 ## Domain entities (Prisma)
 
-User, Client, Project, ProjectResource (per-project staffing with planned mandays + daily rate), Timesheet (DRAFT → SUBMITTED → APPROVED/REJECTED), Document (BAST/INVOICE/CONTRACT/REPORT/OTHER, base64 data URL in DB), Activity (audit trail), ProjectExpense (additional non-resource project costs: SOFTWARE/HARDWARE/LICENSE/TRAVEL/OTHER, with category, description, amount, spentAt, createdById).
+User, Client, Project, ProjectResource (per-project staffing with planned mandays + daily rate), Timesheet (DRAFT → SUBMITTED → APPROVED/REJECTED), Document (BAST/INVOICE/CONTRACT/REPORT/OTHER, base64 data URL in DB), Activity (audit trail), ProjectExpense (additional non-resource project costs: SOFTWARE/HARDWARE/LICENSE/TRAVEL/OTHER), **Task** (per-project work items with TODO/IN_PROGRESS/BLOCKED/DONE status, assignee, optional start/end dates), **TaskTimeLog** (clock-in entries by the assignee against a Task; cascades on task delete).
 
 ## Project lifecycle statuses
 
@@ -24,6 +24,20 @@ DRAFT (Sales intake, awaiting PMO assignment) → OBSERVATION (PM completed deta
 1. **Sales** opens `/projects/new` — sees a minimal 4-field intake form (Name + SPK + Client + Project Value / contractValue) and submits. Server forces `status=DRAFT`, `salesId=req.user.sub`, `pmId=null` regardless of body. The Sales-entered `contractValue` is later pre-filled into the PM's DraftCompletionCard Revenue input.
 2. **PMO Director (MANAGEMENT)** sees the project on the dashboard under a purple "Pending PM Assignment" card. Clicking "Assign PM" opens a dialog with a PM dropdown that PATCHes `pmId`. The 409 invariant prevents reassigning if a PM is already set on a DRAFT project.
 3. **PM (PROJECT_MANAGER)** sees the project on their dashboard under "New project(s) assigned to you". Clicking "Complete Details" opens `/projects/:id` where a purple `DraftCompletionCard` is rendered above the tabs (visible only when `status === DRAFT`). PM fills Description, Start/End dates, Revenue, Planned Mandays, Estimated Cost, then clicks "Save & Move to Observation" — server validates required fields and transitions status to OBSERVATION.
+
+### Tasks tab (PM/MGMT assigns work, assignee logs hours)
+
+Project detail page → "Tasks" tab (between Timeline and Financials). MGMT and the PM-of-project can create/edit/delete tasks; the assignee can change status and log hours. Logged hours roll up into the per-task `loggedHours` and surface on the **Consultant Dashboard** "My Tasks" card with a quick "Log" dialog. Endpoints in `artifacts/api-server/src/routes/tasks.ts`:
+
+- `GET /api/projects/:id/tasks` — visibility same as `/projects/:id/resources` (MGMT/ADMIN_PROJECT all; PM own; Sales own; Konsultan/TW only if a resource on the project).
+- `POST /api/projects/:id/tasks` — MGMT or PM-of-project; assignee must be a `ProjectResource` of that project.
+- `GET /api/tasks/mine` — caller's own assigned tasks.
+- `PATCH /api/tasks/:taskId` — MGMT/PM may change all fields; assignee may change `status` only.
+- `DELETE /api/tasks/:taskId` — MGMT or PM-of-project.
+- `GET /api/tasks/:taskId/time-logs` — MGMT/PM-of-project or the assignee.
+- `POST /api/tasks/:taskId/time-logs` — assignee only; `hours` ∈ (0, 24]; recorded with optional `note` and `loggedAt`.
+
+Audit actions: `task.created`, `task.updated`, `task.deleted`, `task.time_logged`. Frontend hooks: `useListProjectTasks`, `useCreateProjectTask`, `useUpdateTask`, `useDeleteTask`, `useListMyTasks`, `useListTaskTimeLogs`, `useLogTaskTime`. Components: `artifacts/web/src/pages/projects/TasksTab.tsx` and `MyTasksCard` inside `ConsultantDashboard.tsx`.
 
 ### Expenses tab (PM cost capture beyond resources)
 
@@ -103,7 +117,7 @@ Seed file: `lib/db/src/seed.ts`. Re-run with `pnpm --filter @workspace/db run se
 
 - Regenerate Prisma: `pnpm --filter @workspace/db exec prisma generate`
 - Push schema: `pnpm --filter @workspace/db exec prisma db push`
-- Regenerate API client/zod: `pnpm --filter @workspace/api-spec run codegen`
+- Regenerate API client/zod: `pnpm --filter @workspace/api-spec run codegen` (post-step `lib/api-spec/scripts/fix-zod-barrel.mjs` rewrites `lib/api-zod/src/index.ts` to only re-export `./generated/api`, avoiding the orval-generated barrel ambiguity between zod schemas in `api.ts` and TS interfaces in `generated/types/`)
 - Reseed DB: `pnpm --filter @workspace/db run seed`
 
 ## Conventions

@@ -57,6 +57,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import SurveyTab from "./SurveyTab";
+import TasksTab from "./TasksTab";
 import {
   Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis,
 } from "recharts";
@@ -241,6 +242,7 @@ export default function ProjectDetail() {
         <TabsList className="bg-muted">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="timeline">Timeline</TabsTrigger>
+          <TabsTrigger value="tasks" data-testid="tab-trigger-tasks">Tasks</TabsTrigger>
           <TabsTrigger value="financials">Financials</TabsTrigger>
           <TabsTrigger value="resources">Resources</TabsTrigger>
           {(user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER") && (
@@ -257,6 +259,9 @@ export default function ProjectDetail() {
         </TabsContent>
         <TabsContent value="timeline" className="pt-4 m-0">
           <TimelineTab projectId={id} project={project} />
+        </TabsContent>
+        <TabsContent value="tasks" className="pt-4 m-0">
+          <TasksTab projectId={id} project={project} />
         </TabsContent>
         <TabsContent value="financials" className="pt-4 m-0">
           <FinancialsTab projectId={id} />

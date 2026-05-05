@@ -16,6 +16,7 @@ tags:
   - name: timesheets
   - name: documents
   - name: expenses
+  - name: tasks
   - name: dashboard
 
 paths:
@@ -493,6 +494,110 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/SuccessMessage" }
 
+  /projects/{id}/tasks:
+    get:
+      operationId: listProjectTasks
+      tags: [tasks]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Task" }
+    post:
+      operationId: createProjectTask
+      tags: [tasks]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateTaskBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Task" }
+
+  /tasks/mine:
+    get:
+      operationId: listMyTasks
+      tags: [tasks]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Task" }
+
+  /tasks/{taskId}:
+    patch:
+      operationId: updateTask
+      tags: [tasks]
+      parameters:
+        - { name: taskId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpdateTaskBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Task" }
+    delete:
+      operationId: deleteTask
+      tags: [tasks]
+      parameters:
+        - { name: taskId, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /tasks/{taskId}/time-logs:
+    get:
+      operationId: listTaskTimeLogs
+      tags: [tasks]
+      parameters:
+        - { name: taskId, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/TaskTimeLog" }
+    post:
+      operationId: logTaskTime
+      tags: [tasks]
+      parameters:
+        - { name: taskId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LogTaskTimeBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TaskTimeLog" }
+
   /dashboard/summary:
     get:
       operationId: getDashboardSummary
@@ -599,6 +704,73 @@ components:
     DocumentType:
       type: string
       enum: [BAST, INVOICE, CONTRACT, OTHER]
+
+    TaskStatus:
+      type: string
+      enum: [TODO, IN_PROGRESS, BLOCKED, DONE]
+
+    Task:
+      type: object
+      required: [id, projectId, title, status, loggedHours, createdAt, updatedAt]
+      properties:
+        id: { type: string }
+        projectId: { type: string }
+        projectCode: { type: string, nullable: true }
+        projectName: { type: string, nullable: true }
+        title: { type: string }
+        description: { type: string, nullable: true }
+        status: { $ref: "#/components/schemas/TaskStatus" }
+        startDate: { type: string, nullable: true }
+        endDate: { type: string, nullable: true }
+        assigneeId: { type: string, nullable: true }
+        assigneeName: { type: string, nullable: true }
+        createdById: { type: string, nullable: true }
+        createdByName: { type: string, nullable: true }
+        loggedHours: { type: number }
+        createdAt: { type: string }
+        updatedAt: { type: string }
+
+    CreateTaskBody:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string }
+        description: { type: string, nullable: true }
+        status: { $ref: "#/components/schemas/TaskStatus" }
+        startDate: { type: string, nullable: true }
+        endDate: { type: string, nullable: true }
+        assigneeId: { type: string, nullable: true }
+
+    UpdateTaskBody:
+      type: object
+      properties:
+        title: { type: string }
+        description: { type: string, nullable: true }
+        status: { $ref: "#/components/schemas/TaskStatus" }
+        startDate: { type: string, nullable: true }
+        endDate: { type: string, nullable: true }
+        assigneeId: { type: string, nullable: true }
+
+    TaskTimeLog:
+      type: object
+      required: [id, taskId, userId, hours, loggedAt, createdAt]
+      properties:
+        id: { type: string }
+        taskId: { type: string }
+        userId: { type: string }
+        userName: { type: string, nullable: true }
+        hours: { type: number }
+        note: { type: string, nullable: true }
+        loggedAt: { type: string }
+        createdAt: { type: string }
+
+    LogTaskTimeBody:
+      type: object
+      required: [hours]
+      properties:
+        hours: { type: number }
+        note: { type: string }
+        loggedAt: { type: string }
 
     User:
       type: object
