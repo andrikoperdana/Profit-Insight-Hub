@@ -11,7 +11,7 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
-  Bar, BarChart, CartesianGrid, Cell, Pie, PieChart,
+  Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart,
   ResponsiveContainer, Tooltip, XAxis, YAxis, Line, LineChart,
 } from "recharts";
 import WelcomeBanner from "@/components/dashboard/WelcomeBanner";
@@ -197,12 +197,23 @@ export default function SalesDashboard() {
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={statusChart} cx="50%" cy="50%" innerRadius={60} outerRadius={85} paddingAngle={4} dataKey="count" nameKey="status">
+                  <Pie data={statusChart} cx="50%" cy="45%" innerRadius={55} outerRadius={80} paddingAngle={4} dataKey="count" nameKey="status">
                     {statusChart.map((e, i) => (
                       <Cell key={i} fill={STATUS_COLORS[e.status]} />
                     ))}
                   </Pie>
-                  <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", borderColor: "hsl(var(--border))", borderRadius: "8px" }} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: "hsl(var(--card))", borderColor: "hsl(var(--border))", borderRadius: "8px", color: "hsl(var(--foreground))" }}
+                    itemStyle={{ color: "hsl(var(--foreground))" }}
+                    labelStyle={{ color: "hsl(var(--foreground))", fontWeight: 600 }}
+                    formatter={(value: number, _name, props: any) => [`${value} project${value === 1 ? "" : "s"}`, props?.payload?.status ?? props?.name]}
+                  />
+                  <Legend
+                    verticalAlign="bottom"
+                    height={36}
+                    iconType="circle"
+                    formatter={(value: string) => <span className="text-xs text-muted-foreground">{value}</span>}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             )}
