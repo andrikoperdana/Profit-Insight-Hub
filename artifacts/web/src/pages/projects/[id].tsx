@@ -912,10 +912,14 @@ function OverviewTab({ project }: { project: any }) {
     plannedMandays: String(project.plannedMandays ?? 0),
   });
 
+  const isDraft = project.status === ProjectStatus.DRAFT;
+  const isSalesDraftEdit = isDraft && user?.role === "SALES";
+  const canPickClient = user?.role === "MANAGEMENT" || isSalesDraftEdit;
+
   const { data: clients } = useListClients({
     query: {
       queryKey: getListClientsQueryKey(),
-      enabled: isEditing && user?.role === "MANAGEMENT",
+      enabled: isEditing && canPickClient,
     },
   });
 
@@ -991,23 +995,27 @@ function OverviewTab({ project }: { project: any }) {
   }
 
   function confirmAndSave() {
-    const data: Record<string, unknown> = {
-      description: form.description.trim() || null,
-      startDate: form.startDate || undefined,
-      endDate: form.endDate || undefined,
-      contractValue: Number(form.contractValue),
-      estimatedCost: Number(form.estimatedCost),
-      plannedMandays: Number(form.plannedMandays),
-    };
-    // Only MANAGEMENT can reassign the client (backend also enforces this).
-    if (user?.role === "MANAGEMENT" && form.clientId && form.clientId !== project.clientId) {
+    const data: Record<string, unknown> = isSalesDraftEdit
+      ? {
+          description: form.description.trim() || null,
+          contractValue: Number(form.contractValue),
+        }
+      : {
+          description: form.description.trim() || null,
+          startDate: form.startDate || undefined,
+          endDate: form.endDate || undefined,
+          contractValue: Number(form.contractValue),
+          estimatedCost: Number(form.estimatedCost),
+          plannedMandays: Number(form.plannedMandays),
+        };
+    // MANAGEMENT may reassign the client at any time; SALES may also (re)assign while DRAFT.
+    if (canPickClient && form.clientId && form.clientId !== project.clientId) {
       data.clientId = form.clientId;
     }
     update.mutate({ id: project.id, data: data as any });
   }
 
   const currentMissing = getMissingRequiredFields(project);
-  const isDraft = project.status === ProjectStatus.DRAFT;
 
   return (
     <div className="space-y-4">
@@ -1044,7 +1052,7 @@ function OverviewTab({ project }: { project: any }) {
         <Card className="border-border shadow-sm">
           <CardHeader className="flex flex-row items-start justify-between gap-2">
             <CardTitle className="text-base">Project Information</CardTitle>
-            {canEdit && !isEditing && !isDraft && (
+            {canEdit && !isEditing && (!isDraft || isSalesDraftEdit) && (
               <Button
                 size="sm"
                 variant="outline"
@@ -1085,7 +1093,7 @@ function OverviewTab({ project }: { project: any }) {
               </>
             ) : (
               <>
-                {user?.role === "MANAGEMENT" ? (
+                {canPickClient ? (
                   <div>
                     <Label htmlFor="ov-client">Client *</Label>
                     <Select
@@ -1107,32 +1115,34 @@ function OverviewTab({ project }: { project: any }) {
                 )}
                 <InfoRow icon={<User className="h-4 w-4" />} label="Sales" value={project.salesName ?? "-"} />
                 <InfoRow icon={<User className="h-4 w-4" />} label="Project Manager" value={project.pmName ?? "-"} />
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <Label htmlFor="ov-start">Start Date *</Label>
-                    <Input
-                      id="ov-start"
-                      type="date"
-                      value={form.startDate}
-                      onChange={(e) => setForm({ ...form, startDate: e.target.value })}
-                      className="mt-1"
-                      data-testid="input-overview-start"
-                    />
+                {!isSalesDraftEdit && (
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label htmlFor="ov-start">Start Date *</Label>
+                      <Input
+                        id="ov-start"
+                        type="date"
+                        value={form.startDate}
+                        onChange={(e) => setForm({ ...form, startDate: e.target.value })}
+                        className="mt-1"
+                        data-testid="input-overview-start"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="ov-end">End Date *</Label>
+                      <Input
+                        id="ov-end"
+                        type="date"
+                        value={form.endDate}
+                        onChange={(e) => setForm({ ...form, endDate: e.target.value })}
+                        className="mt-1"
+                        data-testid="input-overview-end"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <Label htmlFor="ov-end">End Date *</Label>
-                    <Input
-                      id="ov-end"
-                      type="date"
-                      value={form.endDate}
-                      onChange={(e) => setForm({ ...form, endDate: e.target.value })}
-                      className="mt-1"
-                      data-testid="input-overview-end"
-                    />
-                  </div>
-                </div>
+                )}
                 <div>
-                  <Label htmlFor="ov-description">Description *</Label>
+                  <Label htmlFor="ov-description">Description {isSalesDraftEdit ? "" : "*"}</Label>
                   <Textarea
                     id="ov-description"
                     value={form.description}
@@ -1142,6 +1152,11 @@ function OverviewTab({ project }: { project: any }) {
                     data-testid="input-overview-description"
                   />
                 </div>
+                {isSalesDraftEdit && (
+                  <p className="text-xs text-muted-foreground pt-2 border-t border-border">
+                    Timeline, estimated cost, and planned mandays are completed by the assigned Project Manager once they pick up this draft.
+                  </p>
+                )}
               </>
             )}
           </CardContent>
@@ -1186,31 +1201,35 @@ function OverviewTab({ project }: { project: any }) {
                     data-testid="input-overview-revenue"
                   />
                 </div>
-                <div>
-                  <Label htmlFor="ov-cost">Estimated Operational Cost (IDR) *</Label>
-                  <Input
-                    id="ov-cost"
-                    type="number"
-                    min={0}
-                    value={form.estimatedCost}
-                    onChange={(e) => setForm({ ...form, estimatedCost: e.target.value })}
-                    className="mt-1 font-mono"
-                    data-testid="input-overview-cost"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="ov-mandays">Planned Mandays *</Label>
-                  <Input
-                    id="ov-mandays"
-                    type="number"
-                    min={0}
-                    step="0.5"
-                    value={form.plannedMandays}
-                    onChange={(e) => setForm({ ...form, plannedMandays: e.target.value })}
-                    className="mt-1 font-mono"
-                    data-testid="input-overview-mandays"
-                  />
-                </div>
+                {!isSalesDraftEdit && (
+                  <>
+                    <div>
+                      <Label htmlFor="ov-cost">Estimated Operational Cost (IDR) *</Label>
+                      <Input
+                        id="ov-cost"
+                        type="number"
+                        min={0}
+                        value={form.estimatedCost}
+                        onChange={(e) => setForm({ ...form, estimatedCost: e.target.value })}
+                        className="mt-1 font-mono"
+                        data-testid="input-overview-cost"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="ov-mandays">Planned Mandays *</Label>
+                      <Input
+                        id="ov-mandays"
+                        type="number"
+                        min={0}
+                        step="0.5"
+                        value={form.plannedMandays}
+                        onChange={(e) => setForm({ ...form, plannedMandays: e.target.value })}
+                        className="mt-1 font-mono"
+                        data-testid="input-overview-mandays"
+                      />
+                    </div>
+                  </>
+                )}
                 <p className="text-xs text-muted-foreground pt-2 border-t border-border">
                   Margin and profit estimate are calculated automatically once you save.
                 </p>
