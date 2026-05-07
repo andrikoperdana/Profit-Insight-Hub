@@ -110,7 +110,7 @@ router.post(
       });
       if (activeCount >= 2) {
         res.status(409).json({
-          error: `${user.name} sudah berada di ${activeCount} project aktif (maksimum 2 untuk Konsultan).`,
+          error: `${user.name} is already on ${activeCount} active project(s) (maximum 2 for Consultants).`,
         });
         return;
       }
