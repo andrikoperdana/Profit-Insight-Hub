@@ -4,7 +4,23 @@ import { useAuth } from "@/lib/auth";
 import { useListProjects, ProjectStatus } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Briefcase, Wallet, TrendingUp, Target, Activity, FilePlus2, Clock } from "lucide-react";
+import { Briefcase, Wallet, TrendingUp, Target, Activity, FilePlus2, Clock, AlertTriangle } from "lucide-react";
+import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+function SpkMissingIcon() {
+  return (
+    <TooltipProvider delayDuration={150}>
+      <UITooltip>
+        <TooltipTrigger asChild>
+          <span className="inline-flex" data-testid="icon-spk-missing">
+            <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
+          </span>
+        </TooltipTrigger>
+        <TooltipContent>This project does not have an SPK/PO Number yet</TooltipContent>
+      </UITooltip>
+    </TooltipProvider>
+  );
+}
 import { formatIDR, formatPct } from "@/lib/format";
 import { SkeletonCard, TableSkeleton } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
@@ -131,7 +147,10 @@ export default function SalesDashboard() {
                 <li key={p.id} className="flex items-center justify-between py-2">
                   <div>
                     <Link href={`/projects/${p.id}`} className="font-medium text-foreground hover:text-primary">
-                      {p.name}
+                      <span className="inline-flex items-center gap-1.5">
+                        {p.name}
+                        {!p.spkFileUrl && <SpkMissingIcon />}
+                      </span>
                     </Link>
                     <span className="text-xs text-muted-foreground font-mono ml-2">{p.code}</span>
                   </div>
@@ -272,7 +291,12 @@ export default function SalesDashboard() {
                   <TableRow key={p.id} className="cursor-pointer hover:bg-muted/30">
                     <TableCell>
                       <Link href={`/projects/${p.id}`} className="block">
-                        <div className="font-medium text-foreground hover:text-primary transition-colors">{p.name}</div>
+                        <div className="font-medium text-foreground hover:text-primary transition-colors">
+                          <span className="inline-flex items-center gap-1.5">
+                            {p.name}
+                            {!p.spkFileUrl && <SpkMissingIcon />}
+                          </span>
+                        </div>
                         <div className="text-xs text-muted-foreground font-mono">{p.code}</div>
                       </Link>
                     </TableCell>

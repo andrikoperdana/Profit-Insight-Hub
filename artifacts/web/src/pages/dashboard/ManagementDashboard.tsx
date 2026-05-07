@@ -21,6 +21,22 @@ import { Link } from "wouter";
 import { ProjectStatus, useListProjects } from "@workspace/api-client-react";
 import WelcomeBanner from "@/components/dashboard/WelcomeBanner";
 import { AlertTriangle } from "lucide-react";
+import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+function SpkMissingIcon() {
+  return (
+    <TooltipProvider delayDuration={150}>
+      <UITooltip>
+        <TooltipTrigger asChild>
+          <span className="inline-flex" data-testid="icon-spk-missing">
+            <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
+          </span>
+        </TooltipTrigger>
+        <TooltipContent>This project does not have an SPK/PO Number yet</TooltipContent>
+      </UITooltip>
+    </TooltipProvider>
+  );
+}
 
 export default function Dashboard() {
   const { data: summary, isLoading: loadingSummary } = useGetDashboardSummary();
@@ -488,7 +504,10 @@ function PendingAssignmentSection({ projects }: { projects: any[] }) {
               <li key={p.id} className="flex items-center justify-between py-3 gap-3">
                 <div className="min-w-0 flex-1">
                   <Link href={`/projects/${p.id}`} className="font-medium text-foreground hover:text-primary truncate block">
-                    {p.name}
+                    <span className="inline-flex items-center gap-1.5">
+                      {p.name}
+                      {!p.spkFileUrl && <SpkMissingIcon />}
+                    </span>
                   </Link>
                   <p className="text-xs text-muted-foreground">
                     <span className="font-mono">{p.code}</span>

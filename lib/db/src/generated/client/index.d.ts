@@ -4762,6 +4762,10 @@ export namespace Prisma {
     reportCoverUrl: string | null
     reportLink: string | null
     reportSubmittedAt: Date | null
+    spkFileUrl: string | null
+    spkFileName: string | null
+    contractFileUrl: string | null
+    contractFileName: string | null
     deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4788,6 +4792,10 @@ export namespace Prisma {
     reportCoverUrl: string | null
     reportLink: string | null
     reportSubmittedAt: Date | null
+    spkFileUrl: string | null
+    spkFileName: string | null
+    contractFileUrl: string | null
+    contractFileName: string | null
     deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4814,6 +4822,10 @@ export namespace Prisma {
     reportCoverUrl: number
     reportLink: number
     reportSubmittedAt: number
+    spkFileUrl: number
+    spkFileName: number
+    contractFileUrl: number
+    contractFileName: number
     deletedAt: number
     createdAt: number
     updatedAt: number
@@ -4854,6 +4866,10 @@ export namespace Prisma {
     reportCoverUrl?: true
     reportLink?: true
     reportSubmittedAt?: true
+    spkFileUrl?: true
+    spkFileName?: true
+    contractFileUrl?: true
+    contractFileName?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -4880,6 +4896,10 @@ export namespace Prisma {
     reportCoverUrl?: true
     reportLink?: true
     reportSubmittedAt?: true
+    spkFileUrl?: true
+    spkFileName?: true
+    contractFileUrl?: true
+    contractFileName?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -4906,6 +4926,10 @@ export namespace Prisma {
     reportCoverUrl?: true
     reportLink?: true
     reportSubmittedAt?: true
+    spkFileUrl?: true
+    spkFileName?: true
+    contractFileUrl?: true
+    contractFileName?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -5019,6 +5043,10 @@ export namespace Prisma {
     reportCoverUrl: string | null
     reportLink: string | null
     reportSubmittedAt: Date | null
+    spkFileUrl: string | null
+    spkFileName: string | null
+    contractFileUrl: string | null
+    contractFileName: string | null
     deletedAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -5064,6 +5092,10 @@ export namespace Prisma {
     reportCoverUrl?: boolean
     reportLink?: boolean
     reportSubmittedAt?: boolean
+    spkFileUrl?: boolean
+    spkFileName?: boolean
+    contractFileUrl?: boolean
+    contractFileName?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -5103,6 +5135,10 @@ export namespace Prisma {
     reportCoverUrl?: boolean
     reportLink?: boolean
     reportSubmittedAt?: boolean
+    spkFileUrl?: boolean
+    spkFileName?: boolean
+    contractFileUrl?: boolean
+    contractFileName?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -5134,6 +5170,10 @@ export namespace Prisma {
     reportCoverUrl?: boolean
     reportLink?: boolean
     reportSubmittedAt?: boolean
+    spkFileUrl?: boolean
+    spkFileName?: boolean
+    contractFileUrl?: boolean
+    contractFileName?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -5199,6 +5239,10 @@ export namespace Prisma {
       reportCoverUrl: string | null
       reportLink: string | null
       reportSubmittedAt: Date | null
+      spkFileUrl: string | null
+      spkFileName: string | null
+      contractFileUrl: string | null
+      contractFileName: string | null
       deletedAt: Date | null
       createdAt: Date
       updatedAt: Date
@@ -5627,6 +5671,10 @@ export namespace Prisma {
     readonly reportCoverUrl: FieldRef<"Project", 'String'>
     readonly reportLink: FieldRef<"Project", 'String'>
     readonly reportSubmittedAt: FieldRef<"Project", 'DateTime'>
+    readonly spkFileUrl: FieldRef<"Project", 'String'>
+    readonly spkFileName: FieldRef<"Project", 'String'>
+    readonly contractFileUrl: FieldRef<"Project", 'String'>
+    readonly contractFileName: FieldRef<"Project", 'String'>
     readonly deletedAt: FieldRef<"Project", 'DateTime'>
     readonly createdAt: FieldRef<"Project", 'DateTime'>
     readonly updatedAt: FieldRef<"Project", 'DateTime'>
@@ -17356,6 +17404,10 @@ export namespace Prisma {
     reportCoverUrl: 'reportCoverUrl',
     reportLink: 'reportLink',
     reportSubmittedAt: 'reportSubmittedAt',
+    spkFileUrl: 'spkFileUrl',
+    spkFileName: 'spkFileName',
+    contractFileUrl: 'contractFileUrl',
+    contractFileName: 'contractFileName',
     deletedAt: 'deletedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -17948,6 +18000,10 @@ export namespace Prisma {
     reportCoverUrl?: StringNullableFilter<"Project"> | string | null
     reportLink?: StringNullableFilter<"Project"> | string | null
     reportSubmittedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
+    spkFileUrl?: StringNullableFilter<"Project"> | string | null
+    spkFileName?: StringNullableFilter<"Project"> | string | null
+    contractFileUrl?: StringNullableFilter<"Project"> | string | null
+    contractFileName?: StringNullableFilter<"Project"> | string | null
     deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
@@ -17986,6 +18042,10 @@ export namespace Prisma {
     reportCoverUrl?: SortOrderInput | SortOrder
     reportLink?: SortOrderInput | SortOrder
     reportSubmittedAt?: SortOrderInput | SortOrder
+    spkFileUrl?: SortOrderInput | SortOrder
+    spkFileName?: SortOrderInput | SortOrder
+    contractFileUrl?: SortOrderInput | SortOrder
+    contractFileName?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -18028,6 +18088,10 @@ export namespace Prisma {
     reportCoverUrl?: StringNullableFilter<"Project"> | string | null
     reportLink?: StringNullableFilter<"Project"> | string | null
     reportSubmittedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
+    spkFileUrl?: StringNullableFilter<"Project"> | string | null
+    spkFileName?: StringNullableFilter<"Project"> | string | null
+    contractFileUrl?: StringNullableFilter<"Project"> | string | null
+    contractFileName?: StringNullableFilter<"Project"> | string | null
     deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
@@ -18065,6 +18129,10 @@ export namespace Prisma {
     reportCoverUrl?: SortOrderInput | SortOrder
     reportLink?: SortOrderInput | SortOrder
     reportSubmittedAt?: SortOrderInput | SortOrder
+    spkFileUrl?: SortOrderInput | SortOrder
+    spkFileName?: SortOrderInput | SortOrder
+    contractFileUrl?: SortOrderInput | SortOrder
+    contractFileName?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -18099,6 +18167,10 @@ export namespace Prisma {
     reportCoverUrl?: StringNullableWithAggregatesFilter<"Project"> | string | null
     reportLink?: StringNullableWithAggregatesFilter<"Project"> | string | null
     reportSubmittedAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
+    spkFileUrl?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    spkFileName?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    contractFileUrl?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    contractFileName?: StringNullableWithAggregatesFilter<"Project"> | string | null
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
@@ -19224,6 +19296,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19262,6 +19338,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19290,6 +19370,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19328,6 +19412,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19361,6 +19449,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -19382,6 +19474,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19408,6 +19504,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20742,6 +20842,10 @@ export namespace Prisma {
     reportCoverUrl?: SortOrder
     reportLink?: SortOrder
     reportSubmittedAt?: SortOrder
+    spkFileUrl?: SortOrder
+    spkFileName?: SortOrder
+    contractFileUrl?: SortOrder
+    contractFileName?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -20774,6 +20878,10 @@ export namespace Prisma {
     reportCoverUrl?: SortOrder
     reportLink?: SortOrder
     reportSubmittedAt?: SortOrder
+    spkFileUrl?: SortOrder
+    spkFileName?: SortOrder
+    contractFileUrl?: SortOrder
+    contractFileName?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -20800,6 +20908,10 @@ export namespace Prisma {
     reportCoverUrl?: SortOrder
     reportLink?: SortOrder
     reportSubmittedAt?: SortOrder
+    spkFileUrl?: SortOrder
+    spkFileName?: SortOrder
+    contractFileUrl?: SortOrder
+    contractFileName?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -23266,6 +23378,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23302,6 +23418,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23340,6 +23460,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23376,6 +23500,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23414,6 +23542,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23450,6 +23582,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23488,6 +23624,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23524,6 +23664,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23954,6 +24098,10 @@ export namespace Prisma {
     reportCoverUrl?: StringNullableFilter<"Project"> | string | null
     reportLink?: StringNullableFilter<"Project"> | string | null
     reportSubmittedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
+    spkFileUrl?: StringNullableFilter<"Project"> | string | null
+    spkFileName?: StringNullableFilter<"Project"> | string | null
+    contractFileUrl?: StringNullableFilter<"Project"> | string | null
+    contractFileName?: StringNullableFilter<"Project"> | string | null
     deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
@@ -24335,6 +24483,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24371,6 +24523,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25351,6 +25507,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25388,6 +25548,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25431,6 +25595,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25468,6 +25636,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25623,6 +25795,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25660,6 +25836,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25764,6 +25944,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25801,6 +25985,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25895,6 +26083,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25932,6 +26124,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26097,6 +26293,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26134,6 +26334,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26295,6 +26499,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26332,6 +26540,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26436,6 +26648,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26473,6 +26689,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26567,6 +26787,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26604,6 +26828,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26708,6 +26936,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26745,6 +26977,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26900,6 +27136,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26937,6 +27177,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -27047,6 +27291,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27084,6 +27332,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27111,6 +27363,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -27148,6 +27404,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -27341,6 +27601,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27378,6 +27642,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27887,6 +28155,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -27912,6 +28184,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -27937,6 +28213,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -27962,6 +28242,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28110,6 +28394,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28146,6 +28434,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28178,6 +28470,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28199,6 +28495,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28235,6 +28535,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28267,6 +28571,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28288,6 +28596,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28324,6 +28636,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28356,6 +28672,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28377,6 +28697,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28413,6 +28737,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28445,6 +28773,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28855,6 +29187,10 @@ export namespace Prisma {
     reportCoverUrl?: string | null
     reportLink?: string | null
     reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28876,6 +29212,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28912,6 +29252,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28944,6 +29288,10 @@ export namespace Prisma {
     reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     reportLink?: NullableStringFieldUpdateOperationsInput | string | null
     reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

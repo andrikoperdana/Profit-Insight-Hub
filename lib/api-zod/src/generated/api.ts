@@ -121,6 +121,10 @@ export const UpdateProjectReportResponse = zod.object({
   reportCoverUrl: zod.string().nullish(),
   reportLink: zod.string().nullish(),
   reportSubmittedAt: zod.string().nullish(),
+  spkFileUrl: zod.string().nullish(),
+  spkFileName: zod.string().nullish(),
+  contractFileUrl: zod.string().nullish(),
+  contractFileName: zod.string().nullish(),
   createdAt: zod.string(),
 });
 
@@ -376,6 +380,10 @@ export const ListProjectsResponseItem = zod.object({
   reportCoverUrl: zod.string().nullish(),
   reportLink: zod.string().nullish(),
   reportSubmittedAt: zod.string().nullish(),
+  spkFileUrl: zod.string().nullish(),
+  spkFileName: zod.string().nullish(),
+  contractFileUrl: zod.string().nullish(),
+  contractFileName: zod.string().nullish(),
   createdAt: zod.string(),
 });
 export const ListProjectsResponse = zod.array(ListProjectsResponseItem);
@@ -403,6 +411,10 @@ export const CreateProjectBody = zod.object({
   contractValue: zod.number().optional(),
   estimatedCost: zod.number().optional(),
   plannedMandays: zod.number().optional(),
+  spkFileUrl: zod.string().nullish(),
+  spkFileName: zod.string().nullish(),
+  contractFileUrl: zod.string().nullish(),
+  contractFileName: zod.string().nullish(),
 });
 
 export const GetProjectParams = zod.object({
@@ -449,6 +461,10 @@ export const GetProjectResponse = zod
     reportCoverUrl: zod.string().nullish(),
     reportLink: zod.string().nullish(),
     reportSubmittedAt: zod.string().nullish(),
+    spkFileUrl: zod.string().nullish(),
+    spkFileName: zod.string().nullish(),
+    contractFileUrl: zod.string().nullish(),
+    contractFileName: zod.string().nullish(),
     createdAt: zod.string(),
   })
   .and(
@@ -539,6 +555,10 @@ export const UpdateProjectBody = zod.object({
   contractValue: zod.number().optional(),
   estimatedCost: zod.number().optional(),
   plannedMandays: zod.number().optional(),
+  spkFileUrl: zod.string().nullish(),
+  spkFileName: zod.string().nullish(),
+  contractFileUrl: zod.string().nullish(),
+  contractFileName: zod.string().nullish(),
 });
 
 export const UpdateProjectResponse = zod.object({
@@ -580,6 +600,10 @@ export const UpdateProjectResponse = zod.object({
   reportCoverUrl: zod.string().nullish(),
   reportLink: zod.string().nullish(),
   reportSubmittedAt: zod.string().nullish(),
+  spkFileUrl: zod.string().nullish(),
+  spkFileName: zod.string().nullish(),
+  contractFileUrl: zod.string().nullish(),
+  contractFileName: zod.string().nullish(),
   createdAt: zod.string(),
 });
 
@@ -1058,6 +1082,10 @@ export const GetTopProjectsResponseItem = zod.object({
   reportCoverUrl: zod.string().nullish(),
   reportLink: zod.string().nullish(),
   reportSubmittedAt: zod.string().nullish(),
+  spkFileUrl: zod.string().nullish(),
+  spkFileName: zod.string().nullish(),
+  contractFileUrl: zod.string().nullish(),
+  contractFileName: zod.string().nullish(),
   createdAt: zod.string(),
 });
 export const GetTopProjectsResponse = zod.array(GetTopProjectsResponseItem);

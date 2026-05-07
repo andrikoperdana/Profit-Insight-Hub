@@ -1342,6 +1342,51 @@ function OverviewTab({ project }: { project: any }) {
                 <InfoRow icon={<User className="h-4 w-4" />} label="Sales" value={project.salesName ?? "-"} />
                 <InfoRow icon={<User className="h-4 w-4" />} label="Project Manager" value={project.pmName ?? "-"} />
                 <InfoRow
+                  icon={<FileText className="h-4 w-4" />}
+                  label="SPK / PO Number"
+                  value={project.code ?? "-"}
+                />
+                <div className="flex items-start gap-3">
+                  <FileText className="h-4 w-4 text-muted-foreground mt-1 shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide">SPK / PO File</p>
+                    {project.spkFileUrl ? (
+                      <a
+                        href={project.spkFileUrl}
+                        download={project.spkFileName ?? "spk.pdf"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-primary hover:underline truncate block"
+                        data-testid="link-overview-spk-file"
+                      >
+                        {project.spkFileName ?? "Download SPK / PO"}
+                      </a>
+                    ) : (
+                      <p className="text-sm text-muted-foreground italic">Not uploaded</p>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <FileText className="h-4 w-4 text-muted-foreground mt-1 shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide">Contract File</p>
+                    {project.contractFileUrl ? (
+                      <a
+                        href={project.contractFileUrl}
+                        download={project.contractFileName ?? "contract.pdf"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-primary hover:underline truncate block"
+                        data-testid="link-overview-contract-file"
+                      >
+                        {project.contractFileName ?? "Download Contract"}
+                      </a>
+                    ) : (
+                      <p className="text-sm text-muted-foreground italic">Not uploaded</p>
+                    )}
+                  </div>
+                </div>
+                <InfoRow
                   icon={<Calendar className="h-4 w-4" />}
                   label="Timeline"
                   value={

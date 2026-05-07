@@ -10,6 +10,22 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { ProjectStatusBadge } from "@/components/common/Badges";
+import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+function SpkMissingIcon() {
+  return (
+    <TooltipProvider delayDuration={150}>
+      <UITooltip>
+        <TooltipTrigger asChild>
+          <span className="inline-flex" data-testid="icon-spk-missing">
+            <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
+          </span>
+        </TooltipTrigger>
+        <TooltipContent>This project does not have an SPK/PO Number yet</TooltipContent>
+      </UITooltip>
+    </TooltipProvider>
+  );
+}
 import { LoadingPage } from "@/components/common/Loading";
 import { formatIDR, formatDate } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
@@ -139,7 +155,10 @@ export default function AdminProjectDashboard() {
                   <TableRow key={p.id} data-testid={`row-complete-${p.code}`}>
                     <TableCell>
                       <Link href={`/projects/${p.id}`} className="text-primary hover:underline font-medium">
-                        {p.name}
+                        <span className="inline-flex items-center gap-1.5">
+                          {p.name}
+                          {!p.spkFileUrl && <SpkMissingIcon />}
+                        </span>
                       </Link>
                       <p className="text-xs text-muted-foreground font-mono">{p.code}</p>
                     </TableCell>

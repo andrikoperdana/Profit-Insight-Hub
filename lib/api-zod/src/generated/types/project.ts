@@ -38,5 +38,9 @@ export interface Project {
   reportCoverUrl?: string | null;
   reportLink?: string | null;
   reportSubmittedAt?: string | null;
+  spkFileUrl?: string | null;
+  spkFileName?: string | null;
+  contractFileUrl?: string | null;
+  contractFileName?: string | null;
   createdAt: string;
 }

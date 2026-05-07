@@ -949,6 +949,10 @@ components:
         reportCoverUrl: { type: string, nullable: true }
         reportLink: { type: string, nullable: true }
         reportSubmittedAt: { type: string, nullable: true }
+        spkFileUrl: { type: string, nullable: true }
+        spkFileName: { type: string, nullable: true }
+        contractFileUrl: { type: string, nullable: true }
+        contractFileName: { type: string, nullable: true }
         createdAt: { type: string }
 
     ProjectExpense:
@@ -1003,6 +1007,10 @@ components:
         contractValue: { type: number }
         estimatedCost: { type: number }
         plannedMandays: { type: number }
+        spkFileUrl: { type: string, nullable: true }
+        spkFileName: { type: string, nullable: true }
+        contractFileUrl: { type: string, nullable: true }
+        contractFileName: { type: string, nullable: true }
 
     UpdateProjectBody:
       type: object
@@ -1022,6 +1030,10 @@ components:
         contractValue: { type: number }
         estimatedCost: { type: number }
         plannedMandays: { type: number }
+        spkFileUrl: { type: string, nullable: true }
+        spkFileName: { type: string, nullable: true }
+        contractFileUrl: { type: string, nullable: true }
+        contractFileName: { type: string, nullable: true }
 
     UpdateProjectReportBody:
       type: object

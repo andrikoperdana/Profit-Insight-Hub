@@ -7,9 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import { ProjectStatus, UserRole } from "@workspace/api-client-react";
-import { ArrowLeft, Save, Plus, Trash2, Send } from "lucide-react";
+import { ArrowLeft, Save, Plus, Trash2, Send, FileText, X } from "lucide-react";
 import { Link } from "wouter";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,6 +32,78 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoadingPage } from "@/components/common/Loading";
 import { formatIDR } from "@/lib/format";
+
+const MAX_PDF_BYTES = 4 * 1024 * 1024;
+
+function PdfUploadField({
+  label,
+  fileName,
+  onChange,
+  testId,
+}: {
+  label: string;
+  fileName: string | null;
+  onChange: (data: { url: string; name: string } | null) => void;
+  testId: string;
+}) {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const { toast } = useToast();
+
+  function handleFile(file: File | null) {
+    if (!file) return;
+    if (file.type !== "application/pdf") {
+      toast({ variant: "destructive", title: "Invalid file type", description: "Only PDF files are accepted." });
+      return;
+    }
+    if (file.size > MAX_PDF_BYTES) {
+      toast({ variant: "destructive", title: "File too large", description: "PDF must be 4 MB or smaller." });
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => onChange({ url: String(reader.result), name: file.name });
+    reader.onerror = () => toast({ variant: "destructive", title: "Read failed", description: "Could not read the PDF file." });
+    reader.readAsDataURL(file);
+  }
+
+  return (
+    <div className="space-y-1.5">
+      <label className="text-sm font-medium leading-none">{label}</label>
+      <input
+        ref={inputRef}
+        type="file"
+        accept="application/pdf"
+        className="hidden"
+        onChange={(e) => handleFile(e.target.files?.[0] ?? null)}
+        data-testid={`${testId}-input`}
+      />
+      {fileName ? (
+        <div className="flex items-center gap-2 rounded-md border border-border bg-muted/30 px-3 py-2 text-sm">
+          <FileText className="h-4 w-4 text-primary shrink-0" />
+          <span className="truncate flex-1" data-testid={`${testId}-filename`}>{fileName}</span>
+          <Button
+            type="button"
+            size="sm"
+            variant="ghost"
+            onClick={() => { onChange(null); if (inputRef.current) inputRef.current.value = ""; }}
+            data-testid={`${testId}-clear`}
+          >
+            <X className="h-3.5 w-3.5" />
+          </Button>
+        </div>
+      ) : (
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full justify-start font-normal"
+          onClick={() => inputRef.current?.click()}
+          data-testid={`${testId}-button`}
+        >
+          <FileText className="h-4 w-4 mr-2" /> Upload PDF (max 4 MB)
+        </Button>
+      )}
+    </div>
+  );
+}
 
 const ROLE_RATES: Record<string, { label: string; rate: number }> = {
   PROJECT_MANAGER: { label: "Project Manager", rate: 2_500_000 },
@@ -101,6 +173,9 @@ function SalesIntakeForm() {
     defaultValues: { code: "", name: "", clientId: "", contractValue: 0 },
   });
 
+  const [spkFile, setSpkFile] = useState<{ url: string; name: string } | null>(null);
+  const [contractFile, setContractFile] = useState<{ url: string; name: string } | null>(null);
+
   const onSubmit = (data: SalesIntake) => {
     createProject.mutate({
       data: {
@@ -109,6 +184,10 @@ function SalesIntakeForm() {
         clientId: data.clientId,
         contractValue: data.contractValue,
         status: ProjectStatus.DRAFT,
+        spkFileUrl: spkFile?.url ?? null,
+        spkFileName: spkFile?.name ?? null,
+        contractFileUrl: contractFile?.url ?? null,
+        contractFileName: contractFile?.name ?? null,
       },
     });
   };
@@ -201,6 +280,18 @@ function SalesIntakeForm() {
                   </FormItem>
                 )}
               />
+              <PdfUploadField
+                label="SPK / PO File (PDF)"
+                fileName={spkFile?.name ?? null}
+                onChange={setSpkFile}
+                testId="upload-intake-spk"
+              />
+              <PdfUploadField
+                label="Contract File (PDF)"
+                fileName={contractFile?.name ?? null}
+                onChange={setContractFile}
+                testId="upload-intake-contract"
+              />
             </CardContent>
           </Card>
 
@@ -283,6 +374,9 @@ function FullProjectForm() {
 
   const { fields, append, remove } = useFieldArray({ control: form.control, name: "resources" });
 
+  const [spkFile, setSpkFile] = useState<{ url: string; name: string } | null>(null);
+  const [contractFile, setContractFile] = useState<{ url: string; name: string } | null>(null);
+
   const watchedResources = form.watch("resources");
   const watchedRevenue = Number(form.watch("contractValue") || 0);
 
@@ -317,6 +411,10 @@ function FullProjectForm() {
         contractValue: data.contractValue,
         estimatedCost: totals.cost,
         plannedMandays: totals.mandays,
+        spkFileUrl: spkFile?.url ?? null,
+        spkFileName: spkFile?.name ?? null,
+        contractFileUrl: contractFile?.url ?? null,
+        contractFileName: contractFile?.name ?? null,
       },
     });
   };
@@ -410,6 +508,18 @@ function FullProjectForm() {
                     <FormMessage />
                   </FormItem>
                 )}
+              />
+              <PdfUploadField
+                label="SPK / PO File (PDF)"
+                fileName={spkFile?.name ?? null}
+                onChange={setSpkFile}
+                testId="upload-full-spk"
+              />
+              <PdfUploadField
+                label="Contract File (PDF)"
+                fileName={contractFile?.name ?? null}
+                onChange={setContractFile}
+                testId="upload-full-contract"
               />
             </CardContent>
           </Card>

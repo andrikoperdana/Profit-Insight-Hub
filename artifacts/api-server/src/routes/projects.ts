@@ -22,6 +22,37 @@ const writeRoles = ["MANAGEMENT", "PROJECT_MANAGER", "SALES"] as const;
 //   - Date      → valid, in-range date
 // Rejects extended-year ISO strings like "+062026-05-05" or "82026-05-05" that
 // JS's Date accepts but Prisma cannot serialize, causing 500s.
+// Validate a base64-encoded PDF data URL. Returns:
+//   - undefined → input is empty (treat as "clear the field"; caller stores null)
+//   - string    → valid data URL
+//   - throws    → invalid (caller should 400)
+const MAX_PDF_BYTES_SERVER = 4 * 1024 * 1024;
+function validatePdfDataUrl(value: unknown, fieldName: string): string | undefined {
+  if (value === undefined || value === null || value === "") return undefined;
+  const raw = String(value);
+  const m = /^data:application\/pdf(?:;[^,]*)?;base64,([A-Za-z0-9+/=]+)$/.exec(raw);
+  if (!m) {
+    const err: Error & { status?: number } = new Error(`${fieldName} must be a base64-encoded application/pdf data URL`);
+    err.status = 400;
+    throw err;
+  }
+  const b64 = m[1];
+  // Decoded length = (b64.length * 3 / 4) - padding
+  const padding = b64.endsWith("==") ? 2 : b64.endsWith("=") ? 1 : 0;
+  const decodedSize = Math.floor((b64.length * 3) / 4) - padding;
+  if (decodedSize > MAX_PDF_BYTES_SERVER) {
+    const err: Error & { status?: number } = new Error(`${fieldName} exceeds 4 MB size limit`);
+    err.status = 400;
+    throw err;
+  }
+  return raw;
+}
+
+function sanitizeFileName(value: unknown): string | undefined {
+  if (value === undefined || value === null || value === "") return undefined;
+  return String(value).slice(0, 255);
+}
+
 function parseSafeDate(value: unknown): Date | null {
   if (value === undefined || value === null || value === "") return null;
   const raw = String(value);
@@ -263,6 +294,16 @@ router.post("/projects", requireRole(...writeRoles), async (req, res) => {
     res.status(400).json({ error: "endDate must be a valid YYYY-MM-DD date" });
     return;
   }
+  let spkFileUrl: string | null = null;
+  let contractFileUrl: string | null = null;
+  try {
+    spkFileUrl = validatePdfDataUrl(b.spkFileUrl, "spkFileUrl") ?? null;
+    contractFileUrl = validatePdfDataUrl(b.contractFileUrl, "contractFileUrl") ?? null;
+  } catch (e) {
+    const err = e as Error & { status?: number };
+    res.status(err.status ?? 400).json({ error: err.message });
+    return;
+  }
   const created = await prisma.project.create({
     data: {
       code: String(b.code),
@@ -277,6 +318,10 @@ router.post("/projects", requireRole(...writeRoles), async (req, res) => {
       contractValue: Number(b.contractValue || 0),
       estimatedCost: Number(b.estimatedCost || 0),
       plannedMandays: Number(b.plannedMandays || 0),
+      spkFileUrl,
+      spkFileName: spkFileUrl ? sanitizeFileName(b.spkFileName) ?? null : null,
+      contractFileUrl,
+      contractFileName: contractFileUrl ? sanitizeFileName(b.contractFileName) ?? null : null,
     },
     include: projectInclude,
   });
@@ -319,6 +364,7 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
   // Sales intake form (DRAFT only) — limited to the intake fields.
   const SALES_DRAFT_ALLOWED = new Set([
     "code", "name", "description", "clientId", "contractValue",
+    "spkFileUrl", "spkFileName", "contractFileUrl", "contractFileName",
   ]);
   // Sales editing the Overview of an in-flight project (own project, any status):
   // may update the same descriptive/financial fields PM can, but cannot reassign
@@ -439,6 +485,30 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
   if (b.statusChangeReason !== undefined && b.status !== undefined) {
     data.lastStatusReason = String(b.statusChangeReason ?? "") || null;
   }
+  if (b.spkFileUrl !== undefined) {
+    try {
+      const v = validatePdfDataUrl(b.spkFileUrl, "spkFileUrl");
+      data.spkFileUrl = v ?? null;
+      if (!v) data.spkFileName = null;
+    } catch (e) {
+      const err = e as Error & { status?: number };
+      res.status(err.status ?? 400).json({ error: err.message });
+      return;
+    }
+  }
+  if (b.spkFileName !== undefined) data.spkFileName = sanitizeFileName(b.spkFileName) ?? null;
+  if (b.contractFileUrl !== undefined) {
+    try {
+      const v = validatePdfDataUrl(b.contractFileUrl, "contractFileUrl");
+      data.contractFileUrl = v ?? null;
+      if (!v) data.contractFileName = null;
+    } catch (e) {
+      const err = e as Error & { status?: number };
+      res.status(err.status ?? 400).json({ error: err.message });
+      return;
+    }
+  }
+  if (b.contractFileName !== undefined) data.contractFileName = sanitizeFileName(b.contractFileName) ?? null;
   let updated = await prisma.project.update({
     where: { id: req.params.id },
     data,

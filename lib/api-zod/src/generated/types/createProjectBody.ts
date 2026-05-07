@@ -20,4 +20,8 @@ export interface CreateProjectBody {
   contractValue?: number;
   estimatedCost?: number;
   plannedMandays?: number;
+  spkFileUrl?: string | null;
+  spkFileName?: string | null;
+  contractFileUrl?: string | null;
+  contractFileName?: string | null;
 }

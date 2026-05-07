@@ -117,6 +117,10 @@ model Project {
   reportCoverUrl    String?       @db.Text
   reportLink        String?       @db.Text
   reportSubmittedAt DateTime?
+  spkFileUrl        String?       @db.Text
+  spkFileName       String?
+  contractFileUrl   String?       @db.Text
+  contractFileName  String?
   deletedAt         DateTime?
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt

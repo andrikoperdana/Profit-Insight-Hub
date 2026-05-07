@@ -207,6 +207,10 @@ export interface Project {
   reportCoverUrl?: string | null;
   reportLink?: string | null;
   reportSubmittedAt?: string | null;
+  spkFileUrl?: string | null;
+  spkFileName?: string | null;
+  contractFileUrl?: string | null;
+  contractFileName?: string | null;
   createdAt: string;
 }
 
@@ -297,6 +301,10 @@ export interface CreateProjectBody {
   contractValue?: number;
   estimatedCost?: number;
   plannedMandays?: number;
+  spkFileUrl?: string | null;
+  spkFileName?: string | null;
+  contractFileUrl?: string | null;
+  contractFileName?: string | null;
 }
 
 export interface UpdateProjectBody {
@@ -315,6 +323,10 @@ export interface UpdateProjectBody {
   contractValue?: number;
   estimatedCost?: number;
   plannedMandays?: number;
+  spkFileUrl?: string | null;
+  spkFileName?: string | null;
+  contractFileUrl?: string | null;
+  contractFileName?: string | null;
 }
 
 export interface UpdateProjectReportBody {
