@@ -1,0 +1,137 @@
+2026-05-07T15:53:43Z info: Deployment: f21d80e6-4f5e-4a69-ba26-cc0fee1ec9b5
+2026-05-07T15:53:43Z info: Build: c8ed0dd6-0847-4aed-960f-86339ca54cc5
+2026-05-07T15:54:51Z info: Running Security Scan
+2026-05-07T15:55:02Z info: Security Scan Complete
+2026-05-07T15:55:13Z info: Installing packages
+--> pnpm install
+
+--> pnpm install
+
+Scope: all 12 workspace projects
+
+Scope: all 12 workspace projects
+
+
+   ╭─────────────────────────────────────────╮
+   │                                         │
+   │   Update available! 10.26.1 → 11.0.8.   │
+   │   Changelog: https://pnpm.io/v/11.0.8   │
+   │    To update, run: pnpm add -g pnpm     │
+   │                                         │
+   ╰─────────────────────────────────────────╯
+
+
+
+   ╭─────────────────────────────────────────╮
+   │                                         │
+   │   Update available! 10.26.1 → 11.0.8.   │
+   │   Changelog: https://pnpm.io/v/11.0.8   │
+   │    To update, run: pnpm add -g pnpm     │
+   │                                         │
+   ╰─────────────────────────────────────────╯
+
+
+Lockfile is up to date, resolution step is skipped
+
+Lockfile is up to date, resolution step is skipped
+
+Already up to date
+
+Already up to date
+
+. preinstall$ sh -c 'rm -f package-lock.json yarn.lock; case "$npm_config_user_agent" in pnpm/*) ;; *) echo "Use pnpm instead" >&2; exit 1 ;; esac'
+
+. preinstall$ sh -c 'rm -f package-lock.json yarn.lock; case "$npm_config_user_agent" in pnpm/*) ;; *) echo "Use pnpm instead" >&2; exit 1 ;; esac'
+
+. preinstall: Done
+
+Done in 3.3s using pnpm v10.26.1
+
+Done in 3.3s using pnpm v10.26.1
+
+2026-05-07T15:55:17Z info: Starting Build
+
+> @workspace/api-server@0.0.0 build /home/runner/workspace/artifacts/api-server
+> node ./build.mjs
+
+
+
+  dist/index.mjs                       2.5mb ⚠️
+  dist/pino-worker.mjs               153.4kb
+  dist/pino-file.mjs                 142.1kb
+  dist/pino-pretty.mjs               114.6kb
+  dist/thread-stream-worker.mjs        7.3kb
+  dist/index.mjs.map                   4.0mb
+  dist/pino-worker.mjs.map           256.9kb
+  dist/pino-file.mjs.map             229.0kb
+  dist/pino-pretty.mjs.map           203.9kb
+  dist/thread-stream-worker.mjs.map   12.0kb
+
+⚡ Done in 398ms
+
+
+> @workspace/pentest@0.0.0 build /home/runner/workspace/artifacts/pentest
+> vite build --config vite.config.ts
+
+
+vite v7.3.1 building client environment for production...
+
+transforming...
+
+✓ 1748 modules transformed.
+
+rendering chunks...
+
+computing gzip size...
+
+dist/public/index.html                   0.77 kB │ gzip:  0.42 kB
+
+dist/public/assets/index-Bs1oVKik.css   80.80 kB │ gzip: 14.34 kB
+dist/public/assets/index-B1FZ5wCW.js   319.65 kB │ gzip: 94.04 kB
+✓ built in 2.48s
+
+
+> @workspace/web@0.0.0 build /home/runner/workspace/artifacts/web
+> vite build --config vite.config.ts
+
+
+vite v7.3.1 building client environment for production...
+
+transforming...
+
+src/components/ui/tooltip.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+
+src/components/ui/select.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+
+src/components/ui/label.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+
+src/components/ui/progress.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+
+src/components/ui/sheet.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+
+src/components/ui/dropdown-menu.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+
+✓ 3586 modules transformed.
+
+rendering chunks...
+
+computing gzip size...
+
+dist/public/assets/purify.es-21m173o_.js           22.71 kB │ gzip:   8.68 kB
+dist/public/assets/index.es-Dsp9QYgd.js           158.79 kB │ gzip:  52.90 kB
+dist/public/assets/html2canvas.esm-DXEQVQnt.js    201.04 kB │ gzip:  47.07 kB
+dist/public/assets/index-CciNkLRL.js            2,005.65 kB │ gzip: 584.94 kB
+
+✓ built in 8.85s
+
+Removed all cached metadata files
+
+Removed 38548 files
+
+Removed 727 packages
+
+2026-05-07T15:55:37Z info: Pushing pid1 binary layer...
+2026-05-07T15:55:45Z info: Pushing Repl layer...
+2026-05-07T15:55:45Z info: Pushing hosting layer...
+2026-05-07T15:55:47Z info: Created hosting layer
+2026-05-07T15:55:51Z info: Created pid1 binary layer
