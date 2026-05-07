@@ -6,11 +6,14 @@ import {
   useListProjects,
   useListMyTasks,
   useLogTaskTime,
+  useUpdateProjectReport,
   getListTimesheetsQueryKey,
   getListMyTasksQueryKey,
+  getListProjectsQueryKey,
   type Task,
   type TaskStatus,
 } from "@workspace/api-client-react";
+import { useAuth } from "@/lib/auth";
 import { useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,7 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Clock, CheckCircle2, AlertCircle, Calendar, Zap, Loader2, ListChecks, ChevronRight } from "lucide-react";
+import { Clock, CheckCircle2, AlertCircle, Calendar, Zap, Loader2, ListChecks, ChevronRight, FileText, Upload } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
@@ -146,6 +149,8 @@ export default function ConsultantDashboard() {
       </Card>
 
       <MyTasksCard />
+
+      <MyReportAssignmentsCard />
 
       <Card className="rounded-xl border-border shadow-sm">
         <CardHeader>
@@ -557,6 +562,139 @@ function KpiCard({
         <div className="text-xl sm:text-2xl font-bold text-foreground">{value}</div>
         {sub && <p className="text-[11px] sm:text-xs text-muted-foreground mt-1">{sub}</p>}
       </CardContent>
+    </Card>
+  );
+}
+
+function MyReportAssignmentsCard() {
+  const { user } = useAuth();
+  const isWriter = user?.role === "TECHNICAL_WRITER";
+  const qc = useQueryClient();
+  const { toast } = useToast();
+  const { data: projects } = useListProjects(
+    {},
+    { query: { queryKey: getListProjectsQueryKey({}), enabled: isWriter } },
+  );
+
+  const myProjects = useMemo(
+    () => (projects ?? []).filter((p: any) => p.technicalWriterId === user?.id),
+    [projects, user?.id],
+  );
+
+  const [openId, setOpenId] = useState<string | null>(null);
+  const editing = myProjects.find((p: any) => p.id === openId) || null;
+  const [coverUrl, setCoverUrl] = useState<string>("");
+  const [reportLink, setReportLink] = useState<string>("");
+
+  const update = useUpdateProjectReport({
+    mutation: {
+      onSuccess: () => {
+        toast({ title: "Report saved" });
+        qc.invalidateQueries({ queryKey: getListProjectsQueryKey({}) });
+        setOpenId(null);
+      },
+      onError: (e: any) =>
+        toast({ title: "Failed", description: e?.message ?? "Could not save", variant: "destructive" }),
+    },
+  });
+
+  if (!isWriter) return null;
+
+  return (
+    <Card className="rounded-xl border-border shadow-sm">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <FileText className="h-4 w-4 text-primary" /> My Report Assignments
+        </CardTitle>
+        <CardDescription>Projects where you are the assigned Technical Writer. Upload cover photo and Drive link.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        {myProjects.length === 0 ? (
+          <EmptyState title="No report assignments" description="The PM will assign you on the project's Resources tab." />
+        ) : (
+          <div className="space-y-2">
+            {myProjects.map((p: any) => {
+              const submitted = !!p.reportSubmittedAt;
+              return (
+                <div key={p.id} className="flex items-center justify-between rounded-md border border-border p-3">
+                  <div className="min-w-0">
+                    <Link href={`/projects/${p.id}`} className="text-primary hover:underline font-medium text-sm">
+                      {p.code} · {p.name}
+                    </Link>
+                    <div className="text-xs text-muted-foreground mt-0.5">
+                      {submitted ? `Submitted ${formatDate(p.reportSubmittedAt)}` : "Not yet submitted"}
+                    </div>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant={submitted ? "outline" : "default"}
+                    onClick={() => {
+                      setOpenId(p.id);
+                      setCoverUrl(p.reportCoverUrl ?? "");
+                      setReportLink(p.reportLink ?? "");
+                    }}
+                    data-testid={`button-tw-upload-${p.id}`}
+                  >
+                    <Upload className="h-3.5 w-3.5 mr-1" /> {submitted ? "Edit" : "Upload"}
+                  </Button>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </CardContent>
+
+      <Dialog open={!!editing} onOpenChange={(o) => !o && setOpenId(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Report — {editing?.code}</DialogTitle>
+            <DialogDescription>Upload the cover image and paste the report link.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 pt-2">
+            <div className="space-y-1.5">
+              <Label>Cover photo</Label>
+              {coverUrl && (
+                <img src={coverUrl} alt="cover" className="w-full h-40 object-cover rounded-md border border-border" />
+              )}
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (!f) return;
+                  if (f.size > 4 * 1024 * 1024) {
+                    toast({ title: "File too large", description: "Max 4 MB", variant: "destructive" });
+                    return;
+                  }
+                  const r = new FileReader();
+                  r.onload = () => setCoverUrl(String(r.result || ""));
+                  r.readAsDataURL(f);
+                }}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Report link</Label>
+              <Input
+                placeholder="https://drive.google.com/..."
+                value={reportLink}
+                onChange={(e) => setReportLink(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpenId(null)}>Cancel</Button>
+            <Button
+              onClick={() => editing && update.mutate({
+                id: editing.id,
+                data: { reportCoverUrl: coverUrl || null, reportLink: reportLink || null } as any,
+              })}
+              disabled={update.isPending}
+            >
+              {update.isPending ? "Saving..." : "Save"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }

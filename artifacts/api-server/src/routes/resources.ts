@@ -14,7 +14,7 @@ router.get("/projects/:id/resources", async (req, res) => {
   const role = req.user?.role;
   const project = await prisma.project.findUnique({
     where: { id: projectId },
-    select: { id: true, pmId: true, salesId: true },
+    select: { id: true, pmId: true, salesId: true, technicalWriterId: true, adminProjectId: true },
   });
   if (!project) {
     res.status(404).json({ error: "Project not found" });
@@ -26,6 +26,7 @@ router.get("/projects/:id/resources", async (req, res) => {
   let allowed = broad;
   if (!allowed && role === "PROJECT_MANAGER" && project.pmId === userId) allowed = true;
   if (!allowed && role === "SALES" && project.salesId === userId) allowed = true;
+  if (!allowed && role === "TECHNICAL_WRITER" && project.technicalWriterId === userId) allowed = true;
   if (!allowed && (role === "KONSULTAN" || role === "TECHNICAL_WRITER")) {
     const assigned = await prisma.projectResource.findFirst({
       where: { projectId, userId: userId ?? "" },
@@ -91,6 +92,29 @@ router.post(
     const existing = await prisma.projectResource.findUnique({
       where: { projectId_userId: { projectId, userId } },
     });
+    // Konsultan capacity rule: a Konsultan can be active on at most 2 projects
+    // (active = OBSERVATION or ACTIVE). Counts only NEW assignments, not updates
+    // to an existing assignment on the same project.
+    const targetProject = await prisma.project.findUnique({
+      where: { id: projectId },
+      select: { status: true },
+    });
+    const targetIsActive =
+      !!targetProject && (targetProject.status === "OBSERVATION" || targetProject.status === "ACTIVE");
+    if (!existing && user.role === "KONSULTAN" && targetIsActive) {
+      const activeCount = await prisma.projectResource.count({
+        where: {
+          userId: user.id,
+          project: { status: { in: ["OBSERVATION", "ACTIVE"] }, deletedAt: null },
+        },
+      });
+      if (activeCount >= 2) {
+        res.status(409).json({
+          error: `${user.name} sudah berada di ${activeCount} project aktif (maksimum 2 untuk Konsultan).`,
+        });
+        return;
+      }
+    }
     const r = await prisma.projectResource.upsert({
       where: { projectId_userId: { projectId, userId } },
       update: {

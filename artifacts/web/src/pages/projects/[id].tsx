@@ -4,6 +4,7 @@ import {
   useGetProject,
   useGetProjectFinancials,
   useUpdateProject,
+  useUpdateProjectReport,
   useListProjectDocuments,
   useCreateProjectDocument,
   useDeleteDocument,
@@ -11,7 +12,7 @@ import {
   useAddProjectResource,
   useRemoveProjectResource,
   getListProjectResourcesQueryKey,
-  useListUsers,
+  useListAvailableUsers,
   useListClients,
   useListTimesheets,
   useListProjectExpenses,
@@ -169,6 +170,7 @@ export default function ProjectDetail() {
                 <SelectItem value={ProjectStatus.ACTIVE}>Active</SelectItem>
                 <SelectItem value={ProjectStatus.PAUSE}>Pause</SelectItem>
                 <SelectItem value={ProjectStatus.COMPLETE}>Complete</SelectItem>
+                <SelectItem value={ProjectStatus.NO_NEED_CONSULTANT}>No Need Consultant</SelectItem>
                 <SelectItem value={ProjectStatus.CLOSED} disabled>Closed (auto)</SelectItem>
               </SelectContent>
             </Select>
@@ -253,7 +255,17 @@ export default function ProjectDetail() {
           {(user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER") && (
             <TabsTrigger value="expenses" data-testid="tab-trigger-expenses">Expenses</TabsTrigger>
           )}
-          <TabsTrigger value="documents">Documents</TabsTrigger>
+          {(user?.role === "MANAGEMENT" ||
+            (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id) ||
+            (user?.role === "TECHNICAL_WRITER" && project.technicalWriterId === user?.id) ||
+            (user?.role === "ADMIN_PROJECT" && project.adminProjectId === user?.id)) && (
+            <TabsTrigger value="report" data-testid="tab-trigger-report">Report</TabsTrigger>
+          )}
+          {(user?.role === "MANAGEMENT" ||
+            (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id) ||
+            (user?.role === "ADMIN_PROJECT" && project.adminProjectId === user?.id)) && (
+            <TabsTrigger value="documents">Documents</TabsTrigger>
+          )}
           {(user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER") && (
             <TabsTrigger value="survey">Customer Survey</TabsTrigger>
           )}
@@ -281,6 +293,9 @@ export default function ProjectDetail() {
             <ExpensesTab projectId={id} project={project} />
           </TabsContent>
         )}
+        <TabsContent value="report" className="pt-4 m-0">
+          <ReportTab projectId={id} project={project} />
+        </TabsContent>
         <TabsContent value="documents" className="pt-4 m-0">
           <DocumentsTab projectId={id} projectStatus={project.status} />
         </TabsContent>
@@ -648,11 +663,37 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const canEdit = user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER";
+  const canEdit =
+    user?.role === "MANAGEMENT" ||
+    (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id);
   const { data: resources, isLoading } = useListProjectResources(projectId);
-  const { data: users } = useListUsers();
+  const { data: konsultanPool } = useListAvailableUsers(
+    { role: "KONSULTAN" },
+    { query: { enabled: canEdit, queryKey: ["users-available", "KONSULTAN"] } }
+  );
+  const { data: writerPool } = useListAvailableUsers(
+    { role: "TECHNICAL_WRITER" },
+    { query: { enabled: canEdit, queryKey: ["users-available", "TECHNICAL_WRITER"] } }
+  );
+  const { data: adminPool } = useListAvailableUsers(
+    { role: "ADMIN_PROJECT" },
+    { query: { enabled: canEdit, queryKey: ["users-available", "ADMIN_PROJECT"] } }
+  );
   const [addOpen, setAddOpen] = useState(false);
   const [form, setForm] = useState({ userId: "", roleInProject: "", plannedMandays: "10", dailyRate: "1500000" });
+
+  const updateProject = useUpdateProject({
+    mutation: {
+      onSuccess: () => {
+        toast({ title: "Assignment updated" });
+        queryClient.invalidateQueries({ queryKey: getGetProjectQueryKey(projectId) });
+        queryClient.invalidateQueries({ queryKey: ["users-available", "TECHNICAL_WRITER"] });
+        queryClient.invalidateQueries({ queryKey: ["users-available", "ADMIN_PROJECT"] });
+      },
+      onError: (e: any) =>
+        toast({ title: "Failed", description: e?.message ?? "Could not update", variant: "destructive" }),
+    },
+  });
 
   const invalidate = () =>
     queryClient.invalidateQueries({ queryKey: getListProjectResourcesQueryKey(projectId) });
@@ -679,12 +720,16 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
   });
 
   if (isLoading) return <LoadingPage />;
-  const list = resources ?? [];
+  const allList = resources ?? [];
+  // Konsultan-only main team list. TW is shown in its own dropdown card below.
+  const list = allList.filter((r: any) => r.userRole === "KONSULTAN");
   const totalPlanned = list.reduce((s: number, r: any) => s + (r.plannedMandays ?? 0), 0);
   const totalActual = list.reduce((s: number, r: any) => s + (r.actualMandays ?? 0), 0);
   const estCost = list.reduce((s: number, r: any) => s + (r.plannedMandays ?? 0) * (r.dailyRate ?? 0), 0);
-  const assignedIds = new Set(list.map((r: any) => r.userId));
-  const availableUsers = (users ?? []).filter((u: any) => u.isActive !== false && !assignedIds.has(u.id));
+  const assignedKonsultanIds = new Set(list.map((r: any) => r.userId));
+  const availableKonsultan = (konsultanPool ?? []).filter(
+    (u: any) => !assignedKonsultanIds.has(u.id) && (!u.atCapacity || form.userId === u.id),
+  );
 
   const handleAdd = () => {
     if (!form.userId) {
@@ -702,19 +747,99 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
     });
   };
 
+  const writerName =
+    project.technicalWriterName ??
+    (writerPool ?? []).find((u: any) => u.id === project.technicalWriterId)?.name ??
+    null;
+  const adminName =
+    project.adminProjectName ??
+    (adminPool ?? []).find((u: any) => u.id === project.adminProjectId)?.name ??
+    null;
+
   return (
     <div className="space-y-6">
+      {/* Single-pick assignment cards */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card className="border-border shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-base">Technical Writer</CardTitle>
+            <CardDescription>One Technical Writer is assigned per project to deliver the report.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {canEdit ? (
+              <Select
+                value={project.technicalWriterId ?? "_none"}
+                onValueChange={(v) =>
+                  updateProject.mutate({ id: projectId, data: { technicalWriterId: v === "_none" ? null : v } as any })
+                }
+              >
+                <SelectTrigger data-testid="select-tw">
+                  <SelectValue placeholder="Select Technical Writer" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="_none">— Unassigned —</SelectItem>
+                  {(writerPool ?? []).map((u: any) => (
+                    <SelectItem key={u.id} value={u.id}>
+                      {u.name}{" "}
+                      <span className="text-xs text-muted-foreground">
+                        ({u.activeProjectCount} active)
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : (
+              <p className="text-sm">{writerName ?? <span className="text-muted-foreground italic">Unassigned</span>}</p>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="border-border shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-base">Admin Project</CardTitle>
+            <CardDescription>Handles BAST &amp; Invoice closing documents for this project.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {canEdit ? (
+              <Select
+                value={project.adminProjectId ?? "_none"}
+                onValueChange={(v) =>
+                  updateProject.mutate({ id: projectId, data: { adminProjectId: v === "_none" ? null : v } as any })
+                }
+              >
+                <SelectTrigger data-testid="select-ap">
+                  <SelectValue placeholder="Select Admin Project" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="_none">— Unassigned —</SelectItem>
+                  {(adminPool ?? []).map((u: any) => (
+                    <SelectItem key={u.id} value={u.id}>
+                      {u.name}{" "}
+                      <span className="text-xs text-muted-foreground">
+                        ({u.activeProjectCount} active)
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : (
+              <p className="text-sm">{adminName ?? <span className="text-muted-foreground italic">Unassigned</span>}</p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
       <Card className="border-border shadow-sm">
         <CardHeader className="flex flex-row items-start justify-between gap-4">
           <div>
-            <CardTitle className="text-base">People Involved in This Project</CardTitle>
+            <CardTitle className="text-base">Konsultan Team</CardTitle>
             <CardDescription>
-              List of consultants, project managers, and other contributors assigned to {project?.code ?? "this project"}. The <span className="font-medium text-foreground">Mandays</span> column shows planned vs actual (from approved timesheets), and the <span className="font-medium text-foreground">Daily Rate</span> is used to compute estimated cost.
+              Konsultan assigned to {project?.code ?? "this project"}. Each Konsultan can be active on a maximum of 2 projects (OBSERVATION or ACTIVE).
             </CardDescription>
           </div>
           {canEdit && (
-            <Button size="sm" onClick={() => setAddOpen(true)} className="shrink-0">
-              + Add Resource
+            <Button size="sm" onClick={() => setAddOpen(true)} className="shrink-0" data-testid="button-add-konsultan">
+              + Add Konsultan
             </Button>
           )}
         </CardHeader>
@@ -805,22 +930,28 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
       <Dialog open={addOpen} onOpenChange={setAddOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add Resource to {project?.code ?? "Project"}</DialogTitle>
+            <DialogTitle>Add Konsultan to {project?.code ?? "Project"}</DialogTitle>
             <DialogDescription>
-              Assign a team member (consultant, technical writer, PM, or admin) to this project. Mandays and daily rate are used to compute estimated cost on the Financials tab.
+              Each Konsultan can be active on a maximum of 2 projects. Konsultans already at capacity are hidden from the list.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 pt-2">
             <div className="space-y-1.5">
-              <Label>Team Member</Label>
-              <Select value={form.userId} onValueChange={(v) => setForm({ ...form, userId: v })}>
+              <Label>Konsultan</Label>
+              <Select value={form.userId} onValueChange={(v) => {
+                const picked = (konsultanPool ?? []).find((u: any) => u.id === v);
+                setForm({ ...form, userId: v, dailyRate: picked?.dailyRate ? String(picked.dailyRate) : form.dailyRate });
+              }}>
                 <SelectTrigger>
-                  <SelectValue placeholder={availableUsers.length === 0 ? "All users are already assigned" : "Select a user"} />
+                  <SelectValue placeholder={availableKonsultan.length === 0 ? "No Konsultan available" : "Select a Konsultan"} />
                 </SelectTrigger>
                 <SelectContent>
-                  {availableUsers.map((u: any) => (
+                  {availableKonsultan.map((u: any) => (
                     <SelectItem key={u.id} value={u.id}>
-                      {u.name} <span className="text-muted-foreground text-xs">— {u.role}</span>
+                      {u.name}{" "}
+                      <span className="text-muted-foreground text-xs">
+                        — {u.activeProjectCount}/2 active
+                      </span>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -868,6 +999,146 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+function ReportTab({ projectId, project }: { projectId: string; project: any }) {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const qc = useQueryClient();
+  const canEdit =
+    user?.role === "MANAGEMENT" ||
+    (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id) ||
+    (user?.role === "TECHNICAL_WRITER" && project.technicalWriterId === user?.id);
+
+  const [coverUrl, setCoverUrl] = useState<string>(project.reportCoverUrl ?? "");
+  const [reportLink, setReportLink] = useState<string>(project.reportLink ?? "");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const update = useUpdateProjectReport({
+    mutation: {
+      onSuccess: () => {
+        toast({ title: "Report saved" });
+        qc.invalidateQueries({ queryKey: getGetProjectQueryKey(projectId) });
+      },
+      onError: (e: any) =>
+        toast({ title: "Failed", description: e?.message ?? "Could not save", variant: "destructive" }),
+    },
+  });
+
+  const handleFile = (file: File) => {
+    if (file.size > 4 * 1024 * 1024) {
+      toast({ title: "File too large", description: "Max 4 MB", variant: "destructive" });
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => setCoverUrl(String(reader.result || ""));
+    reader.readAsDataURL(file);
+  };
+
+  return (
+    <div className="space-y-6">
+      <Card className="border-border shadow-sm">
+        <CardHeader>
+          <CardTitle className="text-base flex items-center gap-2">
+            <FileText className="h-4 w-4 text-primary" />
+            Project Report
+          </CardTitle>
+          <CardDescription>
+            Upload the report cover image and paste the report link (e.g. Google Drive). When both are filled, the PM and Admin Project will be notified.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {project.reportSubmittedAt && (
+            <div className="rounded-md border border-emerald-500/30 bg-emerald-500/5 p-3 text-sm text-emerald-500 flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4" />
+              Submitted on {formatDate(project.reportSubmittedAt)}
+            </div>
+          )}
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label>Cover photo</Label>
+              {coverUrl ? (
+                <div className="relative">
+                  <img
+                    src={coverUrl}
+                    alt="Report cover"
+                    className="w-full h-48 object-cover rounded-md border border-border"
+                  />
+                  {canEdit && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="absolute top-2 right-2"
+                      onClick={() => setCoverUrl("")}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  )}
+                </div>
+              ) : (
+                <div
+                  className="rounded-md border border-dashed border-border p-6 text-center cursor-pointer hover:bg-muted/30"
+                  onClick={() => canEdit && fileInputRef.current?.click()}
+                >
+                  <Upload className="h-6 w-6 text-muted-foreground mx-auto mb-2" />
+                  <p className="text-xs text-muted-foreground">
+                    {canEdit ? "Click to upload (max 4 MB)" : "No cover uploaded"}
+                  </p>
+                </div>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}
+                className="hidden"
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f) handleFile(f);
+                  e.currentTarget.value = "";
+                }}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Report link</Label>
+              <Input
+                placeholder="https://drive.google.com/..."
+                value={reportLink}
+                onChange={(e) => setReportLink(e.target.value)}
+                disabled={!canEdit}
+                data-testid="input-report-link"
+              />
+              {reportLink && (
+                <a
+                  href={reportLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-xs text-primary underline break-all"
+                >
+                  {reportLink}
+                </a>
+              )}
+            </div>
+          </div>
+          {canEdit && (
+            <div className="flex justify-end">
+              <Button
+                onClick={() =>
+                  update.mutate({
+                    id: projectId,
+                    data: { reportCoverUrl: coverUrl || null, reportLink: reportLink || null } as any,
+                  })
+                }
+                disabled={update.isPending}
+                data-testid="button-save-report"
+              >
+                {update.isPending ? "Saving..." : "Save report"}
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

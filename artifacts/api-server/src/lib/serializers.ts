@@ -5,6 +5,8 @@ type ProjectWithRelations = Prisma.ProjectGetPayload<{
     client: true;
     sales: true;
     pm: true;
+    technicalWriter: true;
+    adminProject: true;
     resources: { include: { user: true } };
     timesheets: { include: { user: true } };
     expenses: true;
@@ -89,6 +91,13 @@ export function serializeProject(project: ProjectWithRelations) {
     salesName: project.sales?.name ?? null,
     pmId: project.pmId,
     pmName: project.pm?.name ?? null,
+    technicalWriterId: project.technicalWriterId ?? null,
+    technicalWriterName: project.technicalWriter?.name ?? null,
+    adminProjectId: project.adminProjectId ?? null,
+    adminProjectName: project.adminProject?.name ?? null,
+    reportCoverUrl: project.reportCoverUrl ?? null,
+    reportLink: project.reportLink ?? null,
+    reportSubmittedAt: project.reportSubmittedAt?.toISOString() ?? null,
     startDate: project.startDate?.toISOString() ?? null,
     endDate: project.endDate?.toISOString() ?? null,
     contractValue: project.contractValue,
@@ -110,6 +119,8 @@ export const projectInclude = {
   client: true,
   sales: true,
   pm: true,
+  technicalWriter: true,
+  adminProject: true,
   resources: { include: { user: true } },
   timesheets: { include: { user: true } },
   expenses: true,

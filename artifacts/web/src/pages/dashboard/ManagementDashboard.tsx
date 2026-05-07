@@ -58,6 +58,7 @@ export default function Dashboard() {
     [ProjectStatus.PAUSE]: "hsl(38, 92%, 50%)",         // amber-500
     [ProjectStatus.COMPLETE]: "hsl(160, 84%, 39%)",     // emerald-500
     [ProjectStatus.CLOSED]: "hsl(215, 16%, 47%)",       // slate-500
+    [ProjectStatus.NO_NEED_CONSULTANT]: "hsl(25, 95%, 53%)",
   };
 
   const pendingAssignment = (allProjects ?? []).filter(

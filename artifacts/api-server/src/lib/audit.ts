@@ -34,7 +34,8 @@ export type AuditAction =
   | "task.created"
   | "task.updated"
   | "task.deleted"
-  | "task.time_logged";
+  | "task.time_logged"
+  | "project.report_updated";
 
 export type EntityType =
   | "User"

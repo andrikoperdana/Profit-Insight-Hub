@@ -7,6 +7,123 @@
  */
 import * as zod from "zod";
 
+export const ListNotificationsResponseItem = zod.object({
+  id: zod.string(),
+  userId: zod.string(),
+  type: zod.string(),
+  title: zod.string(),
+  message: zod.string(),
+  link: zod.string().nullish(),
+  readAt: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+export const ListNotificationsResponse = zod.array(
+  ListNotificationsResponseItem,
+);
+
+export const MarkAllNotificationsReadResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+export const MarkNotificationReadParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const MarkNotificationReadResponse = zod.object({
+  id: zod.string(),
+  userId: zod.string(),
+  type: zod.string(),
+  title: zod.string(),
+  message: zod.string(),
+  link: zod.string().nullish(),
+  readAt: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+
+export const ListAvailableUsersQueryParams = zod.object({
+  role: zod.enum([
+    "MANAGEMENT",
+    "PROJECT_MANAGER",
+    "SALES",
+    "KONSULTAN",
+    "TECHNICAL_WRITER",
+    "ADMIN_PROJECT",
+  ]),
+});
+
+export const ListAvailableUsersResponseItem = zod.object({
+  id: zod.string(),
+  name: zod.string(),
+  email: zod.string().optional(),
+  role: zod.enum([
+    "MANAGEMENT",
+    "PROJECT_MANAGER",
+    "SALES",
+    "KONSULTAN",
+    "TECHNICAL_WRITER",
+    "ADMIN_PROJECT",
+  ]),
+  title: zod.string().nullish(),
+  dailyRate: zod.number().nullish(),
+  activeProjectCount: zod.number(),
+  atCapacity: zod.boolean(),
+});
+export const ListAvailableUsersResponse = zod.array(
+  ListAvailableUsersResponseItem,
+);
+
+export const UpdateProjectReportParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const UpdateProjectReportBody = zod.object({
+  reportCoverUrl: zod.string().nullish(),
+  reportLink: zod.string().nullish(),
+});
+
+export const UpdateProjectReportResponse = zod.object({
+  id: zod.string(),
+  code: zod.string(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  status: zod.enum([
+    "DRAFT",
+    "OBSERVATION",
+    "ACTIVE",
+    "NO_NEED_CONSULTANT",
+    "PAUSE",
+    "COMPLETE",
+    "CLOSED",
+  ]),
+  clientId: zod.string().optional(),
+  clientName: zod.string().optional(),
+  salesId: zod.string().nullish(),
+  salesName: zod.string().nullish(),
+  pmId: zod.string().nullish(),
+  pmName: zod.string().nullish(),
+  technicalWriterId: zod.string().nullish(),
+  technicalWriterName: zod.string().nullish(),
+  adminProjectId: zod.string().nullish(),
+  adminProjectName: zod.string().nullish(),
+  startDate: zod.string().nullish(),
+  endDate: zod.string().nullish(),
+  contractValue: zod.number(),
+  estimatedCost: zod.number(),
+  estimatedProfit: zod.number(),
+  plannedMandays: zod.number(),
+  actualMandays: zod.number().optional(),
+  actualCost: zod.number(),
+  resourceCost: zod.number(),
+  additionalCost: zod.number(),
+  actualProfit: zod.number().optional(),
+  marginPct: zod.number().optional(),
+  reportCoverUrl: zod.string().nullish(),
+  reportLink: zod.string().nullish(),
+  reportSubmittedAt: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
 });
@@ -229,6 +346,7 @@ export const ListProjectsResponseItem = zod.object({
     "DRAFT",
     "OBSERVATION",
     "ACTIVE",
+    "NO_NEED_CONSULTANT",
     "PAUSE",
     "COMPLETE",
     "CLOSED",
@@ -239,6 +357,10 @@ export const ListProjectsResponseItem = zod.object({
   salesName: zod.string().nullish(),
   pmId: zod.string().nullish(),
   pmName: zod.string().nullish(),
+  technicalWriterId: zod.string().nullish(),
+  technicalWriterName: zod.string().nullish(),
+  adminProjectId: zod.string().nullish(),
+  adminProjectName: zod.string().nullish(),
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   contractValue: zod.number(),
@@ -251,6 +373,9 @@ export const ListProjectsResponseItem = zod.object({
   additionalCost: zod.number(),
   actualProfit: zod.number().optional(),
   marginPct: zod.number().optional(),
+  reportCoverUrl: zod.string().nullish(),
+  reportLink: zod.string().nullish(),
+  reportSubmittedAt: zod.string().nullish(),
   createdAt: zod.string(),
 });
 export const ListProjectsResponse = zod.array(ListProjectsResponseItem);
@@ -263,7 +388,15 @@ export const CreateProjectBody = zod.object({
   salesId: zod.string().optional(),
   pmId: zod.string().optional(),
   status: zod
-    .enum(["DRAFT", "OBSERVATION", "ACTIVE", "PAUSE", "COMPLETE", "CLOSED"])
+    .enum([
+      "DRAFT",
+      "OBSERVATION",
+      "ACTIVE",
+      "NO_NEED_CONSULTANT",
+      "PAUSE",
+      "COMPLETE",
+      "CLOSED",
+    ])
     .optional(),
   startDate: zod.string().optional(),
   endDate: zod.string().optional(),
@@ -286,6 +419,7 @@ export const GetProjectResponse = zod
       "DRAFT",
       "OBSERVATION",
       "ACTIVE",
+      "NO_NEED_CONSULTANT",
       "PAUSE",
       "COMPLETE",
       "CLOSED",
@@ -296,6 +430,10 @@ export const GetProjectResponse = zod
     salesName: zod.string().nullish(),
     pmId: zod.string().nullish(),
     pmName: zod.string().nullish(),
+    technicalWriterId: zod.string().nullish(),
+    technicalWriterName: zod.string().nullish(),
+    adminProjectId: zod.string().nullish(),
+    adminProjectName: zod.string().nullish(),
     startDate: zod.string().nullish(),
     endDate: zod.string().nullish(),
     contractValue: zod.number(),
@@ -308,6 +446,9 @@ export const GetProjectResponse = zod
     additionalCost: zod.number(),
     actualProfit: zod.number().optional(),
     marginPct: zod.number().optional(),
+    reportCoverUrl: zod.string().nullish(),
+    reportLink: zod.string().nullish(),
+    reportSubmittedAt: zod.string().nullish(),
     createdAt: zod.string(),
   })
   .and(
@@ -379,9 +520,20 @@ export const UpdateProjectBody = zod.object({
   clientId: zod.string().optional(),
   salesId: zod.string().optional(),
   pmId: zod.string().optional(),
+  technicalWriterId: zod.string().nullish(),
+  adminProjectId: zod.string().nullish(),
   status: zod
-    .enum(["DRAFT", "OBSERVATION", "ACTIVE", "PAUSE", "COMPLETE", "CLOSED"])
+    .enum([
+      "DRAFT",
+      "OBSERVATION",
+      "ACTIVE",
+      "NO_NEED_CONSULTANT",
+      "PAUSE",
+      "COMPLETE",
+      "CLOSED",
+    ])
     .optional(),
+  statusChangeReason: zod.string().optional(),
   startDate: zod.string().optional(),
   endDate: zod.string().optional(),
   contractValue: zod.number().optional(),
@@ -398,6 +550,7 @@ export const UpdateProjectResponse = zod.object({
     "DRAFT",
     "OBSERVATION",
     "ACTIVE",
+    "NO_NEED_CONSULTANT",
     "PAUSE",
     "COMPLETE",
     "CLOSED",
@@ -408,6 +561,10 @@ export const UpdateProjectResponse = zod.object({
   salesName: zod.string().nullish(),
   pmId: zod.string().nullish(),
   pmName: zod.string().nullish(),
+  technicalWriterId: zod.string().nullish(),
+  technicalWriterName: zod.string().nullish(),
+  adminProjectId: zod.string().nullish(),
+  adminProjectName: zod.string().nullish(),
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   contractValue: zod.number(),
@@ -420,6 +577,9 @@ export const UpdateProjectResponse = zod.object({
   additionalCost: zod.number(),
   actualProfit: zod.number().optional(),
   marginPct: zod.number().optional(),
+  reportCoverUrl: zod.string().nullish(),
+  reportLink: zod.string().nullish(),
+  reportSubmittedAt: zod.string().nullish(),
   createdAt: zod.string(),
 });
 
@@ -847,6 +1007,7 @@ export const GetStatusBreakdownResponseItem = zod.object({
     "DRAFT",
     "OBSERVATION",
     "ACTIVE",
+    "NO_NEED_CONSULTANT",
     "PAUSE",
     "COMPLETE",
     "CLOSED",
@@ -867,6 +1028,7 @@ export const GetTopProjectsResponseItem = zod.object({
     "DRAFT",
     "OBSERVATION",
     "ACTIVE",
+    "NO_NEED_CONSULTANT",
     "PAUSE",
     "COMPLETE",
     "CLOSED",
@@ -877,6 +1039,10 @@ export const GetTopProjectsResponseItem = zod.object({
   salesName: zod.string().nullish(),
   pmId: zod.string().nullish(),
   pmName: zod.string().nullish(),
+  technicalWriterId: zod.string().nullish(),
+  technicalWriterName: zod.string().nullish(),
+  adminProjectId: zod.string().nullish(),
+  adminProjectName: zod.string().nullish(),
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   contractValue: zod.number(),
@@ -889,6 +1055,9 @@ export const GetTopProjectsResponseItem = zod.object({
   additionalCost: zod.number(),
   actualProfit: zod.number().optional(),
   marginPct: zod.number().optional(),
+  reportCoverUrl: zod.string().nullish(),
+  reportLink: zod.string().nullish(),
+  reportSubmittedAt: zod.string().nullish(),
   createdAt: zod.string(),
 });
 export const GetTopProjectsResponse = zod.array(GetTopProjectsResponseItem);

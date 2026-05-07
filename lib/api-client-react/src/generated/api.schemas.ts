@@ -31,6 +31,7 @@ export const ProjectStatus = {
   DRAFT: "DRAFT",
   OBSERVATION: "OBSERVATION",
   ACTIVE: "ACTIVE",
+  NO_NEED_CONSULTANT: "NO_NEED_CONSULTANT",
   PAUSE: "PAUSE",
   COMPLETE: "COMPLETE",
   CLOSED: "CLOSED",
@@ -187,6 +188,10 @@ export interface Project {
   salesName?: string | null;
   pmId?: string | null;
   pmName?: string | null;
+  technicalWriterId?: string | null;
+  technicalWriterName?: string | null;
+  adminProjectId?: string | null;
+  adminProjectName?: string | null;
   startDate?: string | null;
   endDate?: string | null;
   contractValue: number;
@@ -199,6 +204,9 @@ export interface Project {
   additionalCost: number;
   actualProfit?: number;
   marginPct?: number;
+  reportCoverUrl?: string | null;
+  reportLink?: string | null;
+  reportSubmittedAt?: string | null;
   createdAt: string;
 }
 
@@ -298,12 +306,42 @@ export interface UpdateProjectBody {
   clientId?: string;
   salesId?: string;
   pmId?: string;
+  technicalWriterId?: string | null;
+  adminProjectId?: string | null;
   status?: ProjectStatus;
+  statusChangeReason?: string;
   startDate?: string;
   endDate?: string;
   contractValue?: number;
   estimatedCost?: number;
   plannedMandays?: number;
+}
+
+export interface UpdateProjectReportBody {
+  reportCoverUrl?: string | null;
+  reportLink?: string | null;
+}
+
+export interface AvailableUser {
+  id: string;
+  name: string;
+  email?: string;
+  role: UserRole;
+  title?: string | null;
+  dailyRate?: number | null;
+  activeProjectCount: number;
+  atCapacity: boolean;
+}
+
+export interface Notification {
+  id: string;
+  userId: string;
+  type: string;
+  title: string;
+  message: string;
+  link?: string | null;
+  readAt?: string | null;
+  createdAt: string;
 }
 
 export interface AddResourceBody {
@@ -414,6 +452,10 @@ export interface UtilizationRow {
   actualMandays: number;
   utilizationPct: number;
 }
+
+export type ListAvailableUsersParams = {
+  role: UserRole;
+};
 
 export type ListProjectsParams = {
   status?: string;

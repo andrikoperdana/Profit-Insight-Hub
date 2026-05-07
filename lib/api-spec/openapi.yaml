@@ -18,8 +18,81 @@ tags:
   - name: expenses
   - name: tasks
   - name: dashboard
+  - name: notifications
+  - name: report
 
 paths:
+  /notifications:
+    get:
+      operationId: listNotifications
+      tags: [notifications]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Notification" }
+  /notifications/read-all:
+    post:
+      operationId: markAllNotificationsRead
+      tags: [notifications]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+  /notifications/{id}/read:
+    post:
+      operationId: markNotificationRead
+      tags: [notifications]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Notification" }
+
+  /users/available:
+    get:
+      operationId: listAvailableUsers
+      tags: [users]
+      parameters:
+        - name: role
+          in: query
+          required: true
+          schema: { $ref: "#/components/schemas/UserRole" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/AvailableUser" }
+
+  /projects/{id}/report:
+    patch:
+      operationId: updateProjectReport
+      tags: [report]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpdateProjectReportBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Project" }
+
   /healthz:
     get:
       operationId: healthCheck
@@ -695,7 +768,7 @@ components:
 
     ProjectStatus:
       type: string
-      enum: [DRAFT, OBSERVATION, ACTIVE, PAUSE, COMPLETE, CLOSED]
+      enum: [DRAFT, OBSERVATION, ACTIVE, NO_NEED_CONSULTANT, PAUSE, COMPLETE, CLOSED]
 
     TimesheetStatus:
       type: string
@@ -857,6 +930,10 @@ components:
         salesName: { type: string, nullable: true }
         pmId: { type: string, nullable: true }
         pmName: { type: string, nullable: true }
+        technicalWriterId: { type: string, nullable: true }
+        technicalWriterName: { type: string, nullable: true }
+        adminProjectId: { type: string, nullable: true }
+        adminProjectName: { type: string, nullable: true }
         startDate: { type: string, nullable: true }
         endDate: { type: string, nullable: true }
         contractValue: { type: number }
@@ -869,6 +946,9 @@ components:
         additionalCost: { type: number }
         actualProfit: { type: number }
         marginPct: { type: number }
+        reportCoverUrl: { type: string, nullable: true }
+        reportLink: { type: string, nullable: true }
+        reportSubmittedAt: { type: string, nullable: true }
         createdAt: { type: string }
 
     ProjectExpense:
@@ -933,12 +1013,47 @@ components:
         clientId: { type: string }
         salesId: { type: string }
         pmId: { type: string }
+        technicalWriterId: { type: string, nullable: true }
+        adminProjectId: { type: string, nullable: true }
         status: { $ref: "#/components/schemas/ProjectStatus" }
+        statusChangeReason: { type: string }
         startDate: { type: string }
         endDate: { type: string }
         contractValue: { type: number }
         estimatedCost: { type: number }
         plannedMandays: { type: number }
+
+    UpdateProjectReportBody:
+      type: object
+      properties:
+        reportCoverUrl: { type: string, nullable: true }
+        reportLink: { type: string, nullable: true }
+
+    AvailableUser:
+      type: object
+      required: [id, name, role, activeProjectCount, atCapacity]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        email: { type: string }
+        role: { $ref: "#/components/schemas/UserRole" }
+        title: { type: string, nullable: true }
+        dailyRate: { type: number, nullable: true }
+        activeProjectCount: { type: integer }
+        atCapacity: { type: boolean }
+
+    Notification:
+      type: object
+      required: [id, userId, type, title, message, createdAt]
+      properties:
+        id: { type: string }
+        userId: { type: string }
+        type: { type: string }
+        title: { type: string }
+        message: { type: string }
+        link: { type: string, nullable: true }
+        readAt: { type: string, nullable: true }
+        createdAt: { type: string }
 
     ProjectResource:
       type: object

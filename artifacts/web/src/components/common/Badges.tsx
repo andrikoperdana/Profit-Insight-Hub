@@ -10,6 +10,7 @@ export function ProjectStatusBadge({ status, className }: { status: ProjectStatu
     [ProjectStatus.PAUSE]: { label: "Pause", className: "bg-amber-500/10 text-amber-500 border-amber-500/20" },
     [ProjectStatus.COMPLETE]: { label: "Complete", className: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" },
     [ProjectStatus.CLOSED]: { label: "Closed", className: "bg-slate-500/10 text-slate-500 border-slate-500/20" },
+    [ProjectStatus.NO_NEED_CONSULTANT]: { label: "No Need Consultant", className: "bg-orange-500/10 text-orange-500 border-orange-500/20" },
   };
 
   const current = config[status] || { label: status, className: "bg-gray-500/10 text-gray-500 border-gray-500/20" };

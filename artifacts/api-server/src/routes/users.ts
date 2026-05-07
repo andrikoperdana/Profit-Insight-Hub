@@ -18,6 +18,63 @@ router.get("/users", async (req, res) => {
   res.json(users.map(serializeUser));
 });
 
+router.get("/users/available", async (req, res) => {
+  const callerRole = req.user!.role;
+  if (callerRole !== "MANAGEMENT" && callerRole !== "PROJECT_MANAGER") {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  const role = String(req.query.role || "") as UserRole;
+  const validRoles: UserRole[] = [
+    "MANAGEMENT", "PROJECT_MANAGER", "SALES",
+    "KONSULTAN", "TECHNICAL_WRITER", "ADMIN_PROJECT",
+  ];
+  if (!validRoles.includes(role)) {
+    res.status(400).json({ error: "role required" });
+    return;
+  }
+  const users = await prisma.user.findMany({
+    where: { role, deletedAt: null, isActive: true },
+    orderBy: { name: "asc" },
+  });
+  // Count active project assignments per user.
+  // For KONSULTAN: count ProjectResource where project.status in OBSERVATION/ACTIVE.
+  // For TW/AP: count direct assignments via Project.technicalWriterId / adminProjectId.
+  const result = await Promise.all(
+    users.map(async (u) => {
+      let activeProjectCount = 0;
+      if (role === "KONSULTAN") {
+        activeProjectCount = await prisma.projectResource.count({
+          where: {
+            userId: u.id,
+            project: { status: { in: ["OBSERVATION", "ACTIVE"] }, deletedAt: null },
+          },
+        });
+      } else if (role === "TECHNICAL_WRITER") {
+        activeProjectCount = await prisma.project.count({
+          where: { technicalWriterId: u.id, status: { in: ["OBSERVATION", "ACTIVE"] }, deletedAt: null },
+        });
+      } else if (role === "ADMIN_PROJECT") {
+        activeProjectCount = await prisma.project.count({
+          where: { adminProjectId: u.id, status: { in: ["OBSERVATION", "ACTIVE", "NO_NEED_CONSULTANT"] }, deletedAt: null },
+        });
+      }
+      const atCapacity = role === "KONSULTAN" ? activeProjectCount >= 2 : false;
+      return {
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        role: u.role,
+        title: u.title,
+        dailyRate: u.dailyRate,
+        activeProjectCount,
+        atCapacity,
+      };
+    }),
+  );
+  res.json(result);
+});
+
 router.get("/users/:id", async (req, res) => {
   const u = await prisma.user.findUnique({ where: { id: req.params.id } });
   if (!u) {

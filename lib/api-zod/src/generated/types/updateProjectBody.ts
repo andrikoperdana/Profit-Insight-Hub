@@ -14,7 +14,10 @@ export interface UpdateProjectBody {
   clientId?: string;
   salesId?: string;
   pmId?: string;
+  technicalWriterId?: string | null;
+  adminProjectId?: string | null;
   status?: ProjectStatus;
+  statusChangeReason?: string;
   startDate?: string;
   endDate?: string;
   contractValue?: number;

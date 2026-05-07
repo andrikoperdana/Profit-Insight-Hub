@@ -78,6 +78,11 @@ export type Task = $Result.DefaultSelection<Prisma.$TaskPayload>
  * 
  */
 export type TaskTimeLog = $Result.DefaultSelection<Prisma.$TaskTimeLogPayload>
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = $Result.DefaultSelection<Prisma.$NotificationPayload>
 
 /**
  * Enums
@@ -99,6 +104,7 @@ export const ProjectStatus: {
   DRAFT: 'DRAFT',
   OBSERVATION: 'OBSERVATION',
   ACTIVE: 'ACTIVE',
+  NO_NEED_CONSULTANT: 'NO_NEED_CONSULTANT',
   PAUSE: 'PAUSE',
   COMPLETE: 'COMPLETE',
   CLOSED: 'CLOSED'
@@ -410,6 +416,16 @@ export class PrismaClient<
     * ```
     */
   get taskTimeLog(): Prisma.TaskTimeLogDelegate<ExtArgs>;
+
+  /**
+   * `prisma.notification`: Exposes CRUD operations for the **Notification** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Notifications
+    * const notifications = await prisma.notification.findMany()
+    * ```
+    */
+  get notification(): Prisma.NotificationDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -863,7 +879,8 @@ export namespace Prisma {
     ProjectExpense: 'ProjectExpense',
     Activity: 'Activity',
     Task: 'Task',
-    TaskTimeLog: 'TaskTimeLog'
+    TaskTimeLog: 'TaskTimeLog',
+    Notification: 'Notification'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -879,7 +896,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "client" | "project" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectExpense" | "activity" | "task" | "taskTimeLog"
+      modelProps: "user" | "client" | "project" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectExpense" | "activity" | "task" | "taskTimeLog" | "notification"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1793,6 +1810,76 @@ export namespace Prisma {
           }
         }
       }
+      Notification: {
+        payload: Prisma.$NotificationPayload<ExtArgs>
+        fields: Prisma.NotificationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.NotificationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.NotificationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          findFirst: {
+            args: Prisma.NotificationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.NotificationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          findMany: {
+            args: Prisma.NotificationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>[]
+          }
+          create: {
+            args: Prisma.NotificationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          createMany: {
+            args: Prisma.NotificationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.NotificationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>[]
+          }
+          delete: {
+            args: Prisma.NotificationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          update: {
+            args: Prisma.NotificationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          deleteMany: {
+            args: Prisma.NotificationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.NotificationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.NotificationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          aggregate: {
+            args: Prisma.NotificationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateNotification>
+          }
+          groupBy: {
+            args: Prisma.NotificationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<NotificationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.NotificationCountArgs<ExtArgs>
+            result: $Utils.Optional<NotificationCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1956,6 +2043,8 @@ export namespace Prisma {
   export type UserCountOutputType = {
     projectsAsSales: number
     projectsAsPm: number
+    projectsAsTw: number
+    projectsAsAdmin: number
     resources: number
     timesheets: number
     approvedTimesheets: number
@@ -1966,11 +2055,14 @@ export namespace Prisma {
     tasksAssigned: number
     tasksCreated: number
     taskTimeLogs: number
+    notifications: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     projectsAsSales?: boolean | UserCountOutputTypeCountProjectsAsSalesArgs
     projectsAsPm?: boolean | UserCountOutputTypeCountProjectsAsPmArgs
+    projectsAsTw?: boolean | UserCountOutputTypeCountProjectsAsTwArgs
+    projectsAsAdmin?: boolean | UserCountOutputTypeCountProjectsAsAdminArgs
     resources?: boolean | UserCountOutputTypeCountResourcesArgs
     timesheets?: boolean | UserCountOutputTypeCountTimesheetsArgs
     approvedTimesheets?: boolean | UserCountOutputTypeCountApprovedTimesheetsArgs
@@ -1981,6 +2073,7 @@ export namespace Prisma {
     tasksAssigned?: boolean | UserCountOutputTypeCountTasksAssignedArgs
     tasksCreated?: boolean | UserCountOutputTypeCountTasksCreatedArgs
     taskTimeLogs?: boolean | UserCountOutputTypeCountTaskTimeLogsArgs
+    notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
   }
 
   // Custom InputTypes
@@ -2005,6 +2098,20 @@ export namespace Prisma {
    * UserCountOutputType without action
    */
   export type UserCountOutputTypeCountProjectsAsPmArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountProjectsAsTwArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountProjectsAsAdminArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectWhereInput
   }
 
@@ -2076,6 +2183,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountTaskTimeLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TaskTimeLogWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NotificationWhereInput
   }
 
 
@@ -2478,6 +2592,8 @@ export namespace Prisma {
     updatedAt?: boolean
     projectsAsSales?: boolean | User$projectsAsSalesArgs<ExtArgs>
     projectsAsPm?: boolean | User$projectsAsPmArgs<ExtArgs>
+    projectsAsTw?: boolean | User$projectsAsTwArgs<ExtArgs>
+    projectsAsAdmin?: boolean | User$projectsAsAdminArgs<ExtArgs>
     resources?: boolean | User$resourcesArgs<ExtArgs>
     timesheets?: boolean | User$timesheetsArgs<ExtArgs>
     approvedTimesheets?: boolean | User$approvedTimesheetsArgs<ExtArgs>
@@ -2488,6 +2604,7 @@ export namespace Prisma {
     tasksAssigned?: boolean | User$tasksAssignedArgs<ExtArgs>
     tasksCreated?: boolean | User$tasksCreatedArgs<ExtArgs>
     taskTimeLogs?: boolean | User$taskTimeLogsArgs<ExtArgs>
+    notifications?: boolean | User$notificationsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2522,6 +2639,8 @@ export namespace Prisma {
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     projectsAsSales?: boolean | User$projectsAsSalesArgs<ExtArgs>
     projectsAsPm?: boolean | User$projectsAsPmArgs<ExtArgs>
+    projectsAsTw?: boolean | User$projectsAsTwArgs<ExtArgs>
+    projectsAsAdmin?: boolean | User$projectsAsAdminArgs<ExtArgs>
     resources?: boolean | User$resourcesArgs<ExtArgs>
     timesheets?: boolean | User$timesheetsArgs<ExtArgs>
     approvedTimesheets?: boolean | User$approvedTimesheetsArgs<ExtArgs>
@@ -2532,6 +2651,7 @@ export namespace Prisma {
     tasksAssigned?: boolean | User$tasksAssignedArgs<ExtArgs>
     tasksCreated?: boolean | User$tasksCreatedArgs<ExtArgs>
     taskTimeLogs?: boolean | User$taskTimeLogsArgs<ExtArgs>
+    notifications?: boolean | User$notificationsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2541,6 +2661,8 @@ export namespace Prisma {
     objects: {
       projectsAsSales: Prisma.$ProjectPayload<ExtArgs>[]
       projectsAsPm: Prisma.$ProjectPayload<ExtArgs>[]
+      projectsAsTw: Prisma.$ProjectPayload<ExtArgs>[]
+      projectsAsAdmin: Prisma.$ProjectPayload<ExtArgs>[]
       resources: Prisma.$ProjectResourcePayload<ExtArgs>[]
       timesheets: Prisma.$TimesheetPayload<ExtArgs>[]
       approvedTimesheets: Prisma.$TimesheetPayload<ExtArgs>[]
@@ -2551,6 +2673,7 @@ export namespace Prisma {
       tasksAssigned: Prisma.$TaskPayload<ExtArgs>[]
       tasksCreated: Prisma.$TaskPayload<ExtArgs>[]
       taskTimeLogs: Prisma.$TaskTimeLogPayload<ExtArgs>[]
+      notifications: Prisma.$NotificationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2930,6 +3053,8 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     projectsAsSales<T extends User$projectsAsSalesArgs<ExtArgs> = {}>(args?: Subset<T, User$projectsAsSalesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany"> | Null>
     projectsAsPm<T extends User$projectsAsPmArgs<ExtArgs> = {}>(args?: Subset<T, User$projectsAsPmArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany"> | Null>
+    projectsAsTw<T extends User$projectsAsTwArgs<ExtArgs> = {}>(args?: Subset<T, User$projectsAsTwArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany"> | Null>
+    projectsAsAdmin<T extends User$projectsAsAdminArgs<ExtArgs> = {}>(args?: Subset<T, User$projectsAsAdminArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany"> | Null>
     resources<T extends User$resourcesArgs<ExtArgs> = {}>(args?: Subset<T, User$resourcesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectResourcePayload<ExtArgs>, T, "findMany"> | Null>
     timesheets<T extends User$timesheetsArgs<ExtArgs> = {}>(args?: Subset<T, User$timesheetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimesheetPayload<ExtArgs>, T, "findMany"> | Null>
     approvedTimesheets<T extends User$approvedTimesheetsArgs<ExtArgs> = {}>(args?: Subset<T, User$approvedTimesheetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimesheetPayload<ExtArgs>, T, "findMany"> | Null>
@@ -2940,6 +3065,7 @@ export namespace Prisma {
     tasksAssigned<T extends User$tasksAssignedArgs<ExtArgs> = {}>(args?: Subset<T, User$tasksAssignedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany"> | Null>
     tasksCreated<T extends User$tasksCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$tasksCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany"> | Null>
     taskTimeLogs<T extends User$taskTimeLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$taskTimeLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskTimeLogPayload<ExtArgs>, T, "findMany"> | Null>
+    notifications<T extends User$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3334,6 +3460,46 @@ export namespace Prisma {
   }
 
   /**
+   * User.projectsAsTw
+   */
+  export type User$projectsAsTwArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Project
+     */
+    select?: ProjectSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectInclude<ExtArgs> | null
+    where?: ProjectWhereInput
+    orderBy?: ProjectOrderByWithRelationInput | ProjectOrderByWithRelationInput[]
+    cursor?: ProjectWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectScalarFieldEnum | ProjectScalarFieldEnum[]
+  }
+
+  /**
+   * User.projectsAsAdmin
+   */
+  export type User$projectsAsAdminArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Project
+     */
+    select?: ProjectSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectInclude<ExtArgs> | null
+    where?: ProjectWhereInput
+    orderBy?: ProjectOrderByWithRelationInput | ProjectOrderByWithRelationInput[]
+    cursor?: ProjectWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectScalarFieldEnum | ProjectScalarFieldEnum[]
+  }
+
+  /**
    * User.resources
    */
   export type User$resourcesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3531,6 +3697,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TaskTimeLogScalarFieldEnum | TaskTimeLogScalarFieldEnum[]
+  }
+
+  /**
+   * User.notifications
+   */
+  export type User$notificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    where?: NotificationWhereInput
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    cursor?: NotificationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
   }
 
   /**
@@ -4565,12 +4751,17 @@ export namespace Prisma {
     clientId: string | null
     salesId: string | null
     pmId: string | null
+    technicalWriterId: string | null
+    adminProjectId: string | null
     startDate: Date | null
     endDate: Date | null
     contractValue: number | null
     estimatedCost: number | null
     plannedMandays: number | null
     lastStatusReason: string | null
+    reportCoverUrl: string | null
+    reportLink: string | null
+    reportSubmittedAt: Date | null
     deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4586,12 +4777,17 @@ export namespace Prisma {
     clientId: string | null
     salesId: string | null
     pmId: string | null
+    technicalWriterId: string | null
+    adminProjectId: string | null
     startDate: Date | null
     endDate: Date | null
     contractValue: number | null
     estimatedCost: number | null
     plannedMandays: number | null
     lastStatusReason: string | null
+    reportCoverUrl: string | null
+    reportLink: string | null
+    reportSubmittedAt: Date | null
     deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4607,12 +4803,17 @@ export namespace Prisma {
     clientId: number
     salesId: number
     pmId: number
+    technicalWriterId: number
+    adminProjectId: number
     startDate: number
     endDate: number
     contractValue: number
     estimatedCost: number
     plannedMandays: number
     lastStatusReason: number
+    reportCoverUrl: number
+    reportLink: number
+    reportSubmittedAt: number
     deletedAt: number
     createdAt: number
     updatedAt: number
@@ -4642,12 +4843,17 @@ export namespace Prisma {
     clientId?: true
     salesId?: true
     pmId?: true
+    technicalWriterId?: true
+    adminProjectId?: true
     startDate?: true
     endDate?: true
     contractValue?: true
     estimatedCost?: true
     plannedMandays?: true
     lastStatusReason?: true
+    reportCoverUrl?: true
+    reportLink?: true
+    reportSubmittedAt?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -4663,12 +4869,17 @@ export namespace Prisma {
     clientId?: true
     salesId?: true
     pmId?: true
+    technicalWriterId?: true
+    adminProjectId?: true
     startDate?: true
     endDate?: true
     contractValue?: true
     estimatedCost?: true
     plannedMandays?: true
     lastStatusReason?: true
+    reportCoverUrl?: true
+    reportLink?: true
+    reportSubmittedAt?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -4684,12 +4895,17 @@ export namespace Prisma {
     clientId?: true
     salesId?: true
     pmId?: true
+    technicalWriterId?: true
+    adminProjectId?: true
     startDate?: true
     endDate?: true
     contractValue?: true
     estimatedCost?: true
     plannedMandays?: true
     lastStatusReason?: true
+    reportCoverUrl?: true
+    reportLink?: true
+    reportSubmittedAt?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -4792,12 +5008,17 @@ export namespace Prisma {
     clientId: string
     salesId: string | null
     pmId: string | null
+    technicalWriterId: string | null
+    adminProjectId: string | null
     startDate: Date | null
     endDate: Date | null
     contractValue: number
     estimatedCost: number
     plannedMandays: number
     lastStatusReason: string | null
+    reportCoverUrl: string | null
+    reportLink: string | null
+    reportSubmittedAt: Date | null
     deletedAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -4832,12 +5053,17 @@ export namespace Prisma {
     clientId?: boolean
     salesId?: boolean
     pmId?: boolean
+    technicalWriterId?: boolean
+    adminProjectId?: boolean
     startDate?: boolean
     endDate?: boolean
     contractValue?: boolean
     estimatedCost?: boolean
     plannedMandays?: boolean
     lastStatusReason?: boolean
+    reportCoverUrl?: boolean
+    reportLink?: boolean
+    reportSubmittedAt?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4845,6 +5071,8 @@ export namespace Prisma {
     client?: boolean | ClientDefaultArgs<ExtArgs>
     sales?: boolean | Project$salesArgs<ExtArgs>
     pm?: boolean | Project$pmArgs<ExtArgs>
+    technicalWriter?: boolean | Project$technicalWriterArgs<ExtArgs>
+    adminProject?: boolean | Project$adminProjectArgs<ExtArgs>
     resources?: boolean | Project$resourcesArgs<ExtArgs>
     timesheets?: boolean | Project$timesheetsArgs<ExtArgs>
     documents?: boolean | Project$documentsArgs<ExtArgs>
@@ -4864,12 +5092,17 @@ export namespace Prisma {
     clientId?: boolean
     salesId?: boolean
     pmId?: boolean
+    technicalWriterId?: boolean
+    adminProjectId?: boolean
     startDate?: boolean
     endDate?: boolean
     contractValue?: boolean
     estimatedCost?: boolean
     plannedMandays?: boolean
     lastStatusReason?: boolean
+    reportCoverUrl?: boolean
+    reportLink?: boolean
+    reportSubmittedAt?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4877,6 +5110,8 @@ export namespace Prisma {
     client?: boolean | ClientDefaultArgs<ExtArgs>
     sales?: boolean | Project$salesArgs<ExtArgs>
     pm?: boolean | Project$pmArgs<ExtArgs>
+    technicalWriter?: boolean | Project$technicalWriterArgs<ExtArgs>
+    adminProject?: boolean | Project$adminProjectArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
 
   export type ProjectSelectScalar = {
@@ -4888,12 +5123,17 @@ export namespace Prisma {
     clientId?: boolean
     salesId?: boolean
     pmId?: boolean
+    technicalWriterId?: boolean
+    adminProjectId?: boolean
     startDate?: boolean
     endDate?: boolean
     contractValue?: boolean
     estimatedCost?: boolean
     plannedMandays?: boolean
     lastStatusReason?: boolean
+    reportCoverUrl?: boolean
+    reportLink?: boolean
+    reportSubmittedAt?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4904,6 +5144,8 @@ export namespace Prisma {
     client?: boolean | ClientDefaultArgs<ExtArgs>
     sales?: boolean | Project$salesArgs<ExtArgs>
     pm?: boolean | Project$pmArgs<ExtArgs>
+    technicalWriter?: boolean | Project$technicalWriterArgs<ExtArgs>
+    adminProject?: boolean | Project$adminProjectArgs<ExtArgs>
     resources?: boolean | Project$resourcesArgs<ExtArgs>
     timesheets?: boolean | Project$timesheetsArgs<ExtArgs>
     documents?: boolean | Project$documentsArgs<ExtArgs>
@@ -4917,6 +5159,8 @@ export namespace Prisma {
     client?: boolean | ClientDefaultArgs<ExtArgs>
     sales?: boolean | Project$salesArgs<ExtArgs>
     pm?: boolean | Project$pmArgs<ExtArgs>
+    technicalWriter?: boolean | Project$technicalWriterArgs<ExtArgs>
+    adminProject?: boolean | Project$adminProjectArgs<ExtArgs>
   }
 
   export type $ProjectPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4925,6 +5169,8 @@ export namespace Prisma {
       client: Prisma.$ClientPayload<ExtArgs>
       sales: Prisma.$UserPayload<ExtArgs> | null
       pm: Prisma.$UserPayload<ExtArgs> | null
+      technicalWriter: Prisma.$UserPayload<ExtArgs> | null
+      adminProject: Prisma.$UserPayload<ExtArgs> | null
       resources: Prisma.$ProjectResourcePayload<ExtArgs>[]
       timesheets: Prisma.$TimesheetPayload<ExtArgs>[]
       documents: Prisma.$DocumentPayload<ExtArgs>[]
@@ -4942,12 +5188,17 @@ export namespace Prisma {
       clientId: string
       salesId: string | null
       pmId: string | null
+      technicalWriterId: string | null
+      adminProjectId: string | null
       startDate: Date | null
       endDate: Date | null
       contractValue: number
       estimatedCost: number
       plannedMandays: number
       lastStatusReason: string | null
+      reportCoverUrl: string | null
+      reportLink: string | null
+      reportSubmittedAt: Date | null
       deletedAt: Date | null
       createdAt: Date
       updatedAt: Date
@@ -5319,6 +5570,8 @@ export namespace Prisma {
     client<T extends ClientDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ClientDefaultArgs<ExtArgs>>): Prisma__ClientClient<$Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     sales<T extends Project$salesArgs<ExtArgs> = {}>(args?: Subset<T, Project$salesArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     pm<T extends Project$pmArgs<ExtArgs> = {}>(args?: Subset<T, Project$pmArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    technicalWriter<T extends Project$technicalWriterArgs<ExtArgs> = {}>(args?: Subset<T, Project$technicalWriterArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    adminProject<T extends Project$adminProjectArgs<ExtArgs> = {}>(args?: Subset<T, Project$adminProjectArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     resources<T extends Project$resourcesArgs<ExtArgs> = {}>(args?: Subset<T, Project$resourcesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectResourcePayload<ExtArgs>, T, "findMany"> | Null>
     timesheets<T extends Project$timesheetsArgs<ExtArgs> = {}>(args?: Subset<T, Project$timesheetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimesheetPayload<ExtArgs>, T, "findMany"> | Null>
     documents<T extends Project$documentsArgs<ExtArgs> = {}>(args?: Subset<T, Project$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany"> | Null>
@@ -5363,12 +5616,17 @@ export namespace Prisma {
     readonly clientId: FieldRef<"Project", 'String'>
     readonly salesId: FieldRef<"Project", 'String'>
     readonly pmId: FieldRef<"Project", 'String'>
+    readonly technicalWriterId: FieldRef<"Project", 'String'>
+    readonly adminProjectId: FieldRef<"Project", 'String'>
     readonly startDate: FieldRef<"Project", 'DateTime'>
     readonly endDate: FieldRef<"Project", 'DateTime'>
     readonly contractValue: FieldRef<"Project", 'Float'>
     readonly estimatedCost: FieldRef<"Project", 'Float'>
     readonly plannedMandays: FieldRef<"Project", 'Float'>
     readonly lastStatusReason: FieldRef<"Project", 'String'>
+    readonly reportCoverUrl: FieldRef<"Project", 'String'>
+    readonly reportLink: FieldRef<"Project", 'String'>
+    readonly reportSubmittedAt: FieldRef<"Project", 'DateTime'>
     readonly deletedAt: FieldRef<"Project", 'DateTime'>
     readonly createdAt: FieldRef<"Project", 'DateTime'>
     readonly updatedAt: FieldRef<"Project", 'DateTime'>
@@ -5709,6 +5967,36 @@ export namespace Prisma {
    * Project.pm
    */
   export type Project$pmArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * Project.technicalWriter
+   */
+  export type Project$technicalWriterArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * Project.adminProject
+   */
+  export type Project$adminProjectArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the User
      */
@@ -16035,6 +16323,975 @@ export namespace Prisma {
 
 
   /**
+   * Model Notification
+   */
+
+  export type AggregateNotification = {
+    _count: NotificationCountAggregateOutputType | null
+    _min: NotificationMinAggregateOutputType | null
+    _max: NotificationMaxAggregateOutputType | null
+  }
+
+  export type NotificationMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    type: string | null
+    title: string | null
+    message: string | null
+    link: string | null
+    readAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type NotificationMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    type: string | null
+    title: string | null
+    message: string | null
+    link: string | null
+    readAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type NotificationCountAggregateOutputType = {
+    id: number
+    userId: number
+    type: number
+    title: number
+    message: number
+    link: number
+    readAt: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type NotificationMinAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    title?: true
+    message?: true
+    link?: true
+    readAt?: true
+    createdAt?: true
+  }
+
+  export type NotificationMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    title?: true
+    message?: true
+    link?: true
+    readAt?: true
+    createdAt?: true
+  }
+
+  export type NotificationCountAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    title?: true
+    message?: true
+    link?: true
+    readAt?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type NotificationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Notification to aggregate.
+     */
+    where?: NotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notifications to fetch.
+     */
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: NotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Notifications
+    **/
+    _count?: true | NotificationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: NotificationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: NotificationMaxAggregateInputType
+  }
+
+  export type GetNotificationAggregateType<T extends NotificationAggregateArgs> = {
+        [P in keyof T & keyof AggregateNotification]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateNotification[P]>
+      : GetScalarType<T[P], AggregateNotification[P]>
+  }
+
+
+
+
+  export type NotificationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NotificationWhereInput
+    orderBy?: NotificationOrderByWithAggregationInput | NotificationOrderByWithAggregationInput[]
+    by: NotificationScalarFieldEnum[] | NotificationScalarFieldEnum
+    having?: NotificationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: NotificationCountAggregateInputType | true
+    _min?: NotificationMinAggregateInputType
+    _max?: NotificationMaxAggregateInputType
+  }
+
+  export type NotificationGroupByOutputType = {
+    id: string
+    userId: string
+    type: string
+    title: string
+    message: string
+    link: string | null
+    readAt: Date | null
+    createdAt: Date
+    _count: NotificationCountAggregateOutputType | null
+    _min: NotificationMinAggregateOutputType | null
+    _max: NotificationMaxAggregateOutputType | null
+  }
+
+  type GetNotificationGroupByPayload<T extends NotificationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<NotificationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof NotificationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], NotificationGroupByOutputType[P]>
+            : GetScalarType<T[P], NotificationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type NotificationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    title?: boolean
+    message?: boolean
+    link?: boolean
+    readAt?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["notification"]>
+
+  export type NotificationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    title?: boolean
+    message?: boolean
+    link?: boolean
+    readAt?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["notification"]>
+
+  export type NotificationSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    title?: boolean
+    message?: boolean
+    link?: boolean
+    readAt?: boolean
+    createdAt?: boolean
+  }
+
+  export type NotificationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type NotificationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $NotificationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Notification"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      type: string
+      title: string
+      message: string
+      link: string | null
+      readAt: Date | null
+      createdAt: Date
+    }, ExtArgs["result"]["notification"]>
+    composites: {}
+  }
+
+  type NotificationGetPayload<S extends boolean | null | undefined | NotificationDefaultArgs> = $Result.GetResult<Prisma.$NotificationPayload, S>
+
+  type NotificationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<NotificationFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: NotificationCountAggregateInputType | true
+    }
+
+  export interface NotificationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Notification'], meta: { name: 'Notification' } }
+    /**
+     * Find zero or one Notification that matches the filter.
+     * @param {NotificationFindUniqueArgs} args - Arguments to find a Notification
+     * @example
+     * // Get one Notification
+     * const notification = await prisma.notification.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends NotificationFindUniqueArgs>(args: SelectSubset<T, NotificationFindUniqueArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Notification that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {NotificationFindUniqueOrThrowArgs} args - Arguments to find a Notification
+     * @example
+     * // Get one Notification
+     * const notification = await prisma.notification.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends NotificationFindUniqueOrThrowArgs>(args: SelectSubset<T, NotificationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Notification that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationFindFirstArgs} args - Arguments to find a Notification
+     * @example
+     * // Get one Notification
+     * const notification = await prisma.notification.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends NotificationFindFirstArgs>(args?: SelectSubset<T, NotificationFindFirstArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Notification that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationFindFirstOrThrowArgs} args - Arguments to find a Notification
+     * @example
+     * // Get one Notification
+     * const notification = await prisma.notification.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends NotificationFindFirstOrThrowArgs>(args?: SelectSubset<T, NotificationFindFirstOrThrowArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Notifications that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Notifications
+     * const notifications = await prisma.notification.findMany()
+     * 
+     * // Get first 10 Notifications
+     * const notifications = await prisma.notification.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const notificationWithIdOnly = await prisma.notification.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends NotificationFindManyArgs>(args?: SelectSubset<T, NotificationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Notification.
+     * @param {NotificationCreateArgs} args - Arguments to create a Notification.
+     * @example
+     * // Create one Notification
+     * const Notification = await prisma.notification.create({
+     *   data: {
+     *     // ... data to create a Notification
+     *   }
+     * })
+     * 
+     */
+    create<T extends NotificationCreateArgs>(args: SelectSubset<T, NotificationCreateArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Notifications.
+     * @param {NotificationCreateManyArgs} args - Arguments to create many Notifications.
+     * @example
+     * // Create many Notifications
+     * const notification = await prisma.notification.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends NotificationCreateManyArgs>(args?: SelectSubset<T, NotificationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Notifications and returns the data saved in the database.
+     * @param {NotificationCreateManyAndReturnArgs} args - Arguments to create many Notifications.
+     * @example
+     * // Create many Notifications
+     * const notification = await prisma.notification.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Notifications and only return the `id`
+     * const notificationWithIdOnly = await prisma.notification.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends NotificationCreateManyAndReturnArgs>(args?: SelectSubset<T, NotificationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a Notification.
+     * @param {NotificationDeleteArgs} args - Arguments to delete one Notification.
+     * @example
+     * // Delete one Notification
+     * const Notification = await prisma.notification.delete({
+     *   where: {
+     *     // ... filter to delete one Notification
+     *   }
+     * })
+     * 
+     */
+    delete<T extends NotificationDeleteArgs>(args: SelectSubset<T, NotificationDeleteArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Notification.
+     * @param {NotificationUpdateArgs} args - Arguments to update one Notification.
+     * @example
+     * // Update one Notification
+     * const notification = await prisma.notification.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends NotificationUpdateArgs>(args: SelectSubset<T, NotificationUpdateArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Notifications.
+     * @param {NotificationDeleteManyArgs} args - Arguments to filter Notifications to delete.
+     * @example
+     * // Delete a few Notifications
+     * const { count } = await prisma.notification.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends NotificationDeleteManyArgs>(args?: SelectSubset<T, NotificationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Notifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Notifications
+     * const notification = await prisma.notification.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends NotificationUpdateManyArgs>(args: SelectSubset<T, NotificationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Notification.
+     * @param {NotificationUpsertArgs} args - Arguments to update or create a Notification.
+     * @example
+     * // Update or create a Notification
+     * const notification = await prisma.notification.upsert({
+     *   create: {
+     *     // ... data to create a Notification
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Notification we want to update
+     *   }
+     * })
+     */
+    upsert<T extends NotificationUpsertArgs>(args: SelectSubset<T, NotificationUpsertArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Notifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationCountArgs} args - Arguments to filter Notifications to count.
+     * @example
+     * // Count the number of Notifications
+     * const count = await prisma.notification.count({
+     *   where: {
+     *     // ... the filter for the Notifications we want to count
+     *   }
+     * })
+    **/
+    count<T extends NotificationCountArgs>(
+      args?: Subset<T, NotificationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], NotificationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Notification.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends NotificationAggregateArgs>(args: Subset<T, NotificationAggregateArgs>): Prisma.PrismaPromise<GetNotificationAggregateType<T>>
+
+    /**
+     * Group by Notification.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends NotificationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: NotificationGroupByArgs['orderBy'] }
+        : { orderBy?: NotificationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, NotificationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetNotificationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Notification model
+   */
+  readonly fields: NotificationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Notification.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__NotificationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Notification model
+   */ 
+  interface NotificationFieldRefs {
+    readonly id: FieldRef<"Notification", 'String'>
+    readonly userId: FieldRef<"Notification", 'String'>
+    readonly type: FieldRef<"Notification", 'String'>
+    readonly title: FieldRef<"Notification", 'String'>
+    readonly message: FieldRef<"Notification", 'String'>
+    readonly link: FieldRef<"Notification", 'String'>
+    readonly readAt: FieldRef<"Notification", 'DateTime'>
+    readonly createdAt: FieldRef<"Notification", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Notification findUnique
+   */
+  export type NotificationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which Notification to fetch.
+     */
+    where: NotificationWhereUniqueInput
+  }
+
+  /**
+   * Notification findUniqueOrThrow
+   */
+  export type NotificationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which Notification to fetch.
+     */
+    where: NotificationWhereUniqueInput
+  }
+
+  /**
+   * Notification findFirst
+   */
+  export type NotificationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which Notification to fetch.
+     */
+    where?: NotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notifications to fetch.
+     */
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Notifications.
+     */
+    cursor?: NotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Notifications.
+     */
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
+  }
+
+  /**
+   * Notification findFirstOrThrow
+   */
+  export type NotificationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which Notification to fetch.
+     */
+    where?: NotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notifications to fetch.
+     */
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Notifications.
+     */
+    cursor?: NotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Notifications.
+     */
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
+  }
+
+  /**
+   * Notification findMany
+   */
+  export type NotificationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which Notifications to fetch.
+     */
+    where?: NotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notifications to fetch.
+     */
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Notifications.
+     */
+    cursor?: NotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notifications.
+     */
+    skip?: number
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
+  }
+
+  /**
+   * Notification create
+   */
+  export type NotificationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Notification.
+     */
+    data: XOR<NotificationCreateInput, NotificationUncheckedCreateInput>
+  }
+
+  /**
+   * Notification createMany
+   */
+  export type NotificationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Notifications.
+     */
+    data: NotificationCreateManyInput | NotificationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Notification createManyAndReturn
+   */
+  export type NotificationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Notifications.
+     */
+    data: NotificationCreateManyInput | NotificationCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Notification update
+   */
+  export type NotificationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Notification.
+     */
+    data: XOR<NotificationUpdateInput, NotificationUncheckedUpdateInput>
+    /**
+     * Choose, which Notification to update.
+     */
+    where: NotificationWhereUniqueInput
+  }
+
+  /**
+   * Notification updateMany
+   */
+  export type NotificationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Notifications.
+     */
+    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyInput>
+    /**
+     * Filter which Notifications to update
+     */
+    where?: NotificationWhereInput
+  }
+
+  /**
+   * Notification upsert
+   */
+  export type NotificationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Notification to update in case it exists.
+     */
+    where: NotificationWhereUniqueInput
+    /**
+     * In case the Notification found by the `where` argument doesn't exist, create a new Notification with this data.
+     */
+    create: XOR<NotificationCreateInput, NotificationUncheckedCreateInput>
+    /**
+     * In case the Notification was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<NotificationUpdateInput, NotificationUncheckedUpdateInput>
+  }
+
+  /**
+   * Notification delete
+   */
+  export type NotificationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter which Notification to delete.
+     */
+    where: NotificationWhereUniqueInput
+  }
+
+  /**
+   * Notification deleteMany
+   */
+  export type NotificationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Notifications to delete
+     */
+    where?: NotificationWhereInput
+  }
+
+  /**
+   * Notification without action
+   */
+  export type NotificationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -16088,12 +17345,17 @@ export namespace Prisma {
     clientId: 'clientId',
     salesId: 'salesId',
     pmId: 'pmId',
+    technicalWriterId: 'technicalWriterId',
+    adminProjectId: 'adminProjectId',
     startDate: 'startDate',
     endDate: 'endDate',
     contractValue: 'contractValue',
     estimatedCost: 'estimatedCost',
     plannedMandays: 'plannedMandays',
     lastStatusReason: 'lastStatusReason',
+    reportCoverUrl: 'reportCoverUrl',
+    reportLink: 'reportLink',
+    reportSubmittedAt: 'reportSubmittedAt',
     deletedAt: 'deletedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -16252,6 +17514,20 @@ export namespace Prisma {
   };
 
   export type TaskTimeLogScalarFieldEnum = (typeof TaskTimeLogScalarFieldEnum)[keyof typeof TaskTimeLogScalarFieldEnum]
+
+
+  export const NotificationScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    type: 'type',
+    title: 'title',
+    message: 'message',
+    link: 'link',
+    readAt: 'readAt',
+    createdAt: 'createdAt'
+  };
+
+  export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -16467,6 +17743,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     projectsAsSales?: ProjectListRelationFilter
     projectsAsPm?: ProjectListRelationFilter
+    projectsAsTw?: ProjectListRelationFilter
+    projectsAsAdmin?: ProjectListRelationFilter
     resources?: ProjectResourceListRelationFilter
     timesheets?: TimesheetListRelationFilter
     approvedTimesheets?: TimesheetListRelationFilter
@@ -16477,6 +17755,7 @@ export namespace Prisma {
     tasksAssigned?: TaskListRelationFilter
     tasksCreated?: TaskListRelationFilter
     taskTimeLogs?: TaskTimeLogListRelationFilter
+    notifications?: NotificationListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -16493,6 +17772,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     projectsAsSales?: ProjectOrderByRelationAggregateInput
     projectsAsPm?: ProjectOrderByRelationAggregateInput
+    projectsAsTw?: ProjectOrderByRelationAggregateInput
+    projectsAsAdmin?: ProjectOrderByRelationAggregateInput
     resources?: ProjectResourceOrderByRelationAggregateInput
     timesheets?: TimesheetOrderByRelationAggregateInput
     approvedTimesheets?: TimesheetOrderByRelationAggregateInput
@@ -16503,6 +17784,7 @@ export namespace Prisma {
     tasksAssigned?: TaskOrderByRelationAggregateInput
     tasksCreated?: TaskOrderByRelationAggregateInput
     taskTimeLogs?: TaskTimeLogOrderByRelationAggregateInput
+    notifications?: NotificationOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -16522,6 +17804,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     projectsAsSales?: ProjectListRelationFilter
     projectsAsPm?: ProjectListRelationFilter
+    projectsAsTw?: ProjectListRelationFilter
+    projectsAsAdmin?: ProjectListRelationFilter
     resources?: ProjectResourceListRelationFilter
     timesheets?: TimesheetListRelationFilter
     approvedTimesheets?: TimesheetListRelationFilter
@@ -16532,6 +17816,7 @@ export namespace Prisma {
     tasksAssigned?: TaskListRelationFilter
     tasksCreated?: TaskListRelationFilter
     taskTimeLogs?: TaskTimeLogListRelationFilter
+    notifications?: NotificationListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -16652,12 +17937,17 @@ export namespace Prisma {
     clientId?: StringFilter<"Project"> | string
     salesId?: StringNullableFilter<"Project"> | string | null
     pmId?: StringNullableFilter<"Project"> | string | null
+    technicalWriterId?: StringNullableFilter<"Project"> | string | null
+    adminProjectId?: StringNullableFilter<"Project"> | string | null
     startDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     endDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     contractValue?: FloatFilter<"Project"> | number
     estimatedCost?: FloatFilter<"Project"> | number
     plannedMandays?: FloatFilter<"Project"> | number
     lastStatusReason?: StringNullableFilter<"Project"> | string | null
+    reportCoverUrl?: StringNullableFilter<"Project"> | string | null
+    reportLink?: StringNullableFilter<"Project"> | string | null
+    reportSubmittedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
@@ -16665,6 +17955,8 @@ export namespace Prisma {
     client?: XOR<ClientRelationFilter, ClientWhereInput>
     sales?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     pm?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    technicalWriter?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    adminProject?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     resources?: ProjectResourceListRelationFilter
     timesheets?: TimesheetListRelationFilter
     documents?: DocumentListRelationFilter
@@ -16683,12 +17975,17 @@ export namespace Prisma {
     clientId?: SortOrder
     salesId?: SortOrderInput | SortOrder
     pmId?: SortOrderInput | SortOrder
+    technicalWriterId?: SortOrderInput | SortOrder
+    adminProjectId?: SortOrderInput | SortOrder
     startDate?: SortOrderInput | SortOrder
     endDate?: SortOrderInput | SortOrder
     contractValue?: SortOrder
     estimatedCost?: SortOrder
     plannedMandays?: SortOrder
     lastStatusReason?: SortOrderInput | SortOrder
+    reportCoverUrl?: SortOrderInput | SortOrder
+    reportLink?: SortOrderInput | SortOrder
+    reportSubmittedAt?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -16696,6 +17993,8 @@ export namespace Prisma {
     client?: ClientOrderByWithRelationInput
     sales?: UserOrderByWithRelationInput
     pm?: UserOrderByWithRelationInput
+    technicalWriter?: UserOrderByWithRelationInput
+    adminProject?: UserOrderByWithRelationInput
     resources?: ProjectResourceOrderByRelationAggregateInput
     timesheets?: TimesheetOrderByRelationAggregateInput
     documents?: DocumentOrderByRelationAggregateInput
@@ -16718,18 +18017,25 @@ export namespace Prisma {
     clientId?: StringFilter<"Project"> | string
     salesId?: StringNullableFilter<"Project"> | string | null
     pmId?: StringNullableFilter<"Project"> | string | null
+    technicalWriterId?: StringNullableFilter<"Project"> | string | null
+    adminProjectId?: StringNullableFilter<"Project"> | string | null
     startDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     endDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     contractValue?: FloatFilter<"Project"> | number
     estimatedCost?: FloatFilter<"Project"> | number
     plannedMandays?: FloatFilter<"Project"> | number
     lastStatusReason?: StringNullableFilter<"Project"> | string | null
+    reportCoverUrl?: StringNullableFilter<"Project"> | string | null
+    reportLink?: StringNullableFilter<"Project"> | string | null
+    reportSubmittedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
     client?: XOR<ClientRelationFilter, ClientWhereInput>
     sales?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     pm?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    technicalWriter?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    adminProject?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     resources?: ProjectResourceListRelationFilter
     timesheets?: TimesheetListRelationFilter
     documents?: DocumentListRelationFilter
@@ -16748,12 +18054,17 @@ export namespace Prisma {
     clientId?: SortOrder
     salesId?: SortOrderInput | SortOrder
     pmId?: SortOrderInput | SortOrder
+    technicalWriterId?: SortOrderInput | SortOrder
+    adminProjectId?: SortOrderInput | SortOrder
     startDate?: SortOrderInput | SortOrder
     endDate?: SortOrderInput | SortOrder
     contractValue?: SortOrder
     estimatedCost?: SortOrder
     plannedMandays?: SortOrder
     lastStatusReason?: SortOrderInput | SortOrder
+    reportCoverUrl?: SortOrderInput | SortOrder
+    reportLink?: SortOrderInput | SortOrder
+    reportSubmittedAt?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -16777,12 +18088,17 @@ export namespace Prisma {
     clientId?: StringWithAggregatesFilter<"Project"> | string
     salesId?: StringNullableWithAggregatesFilter<"Project"> | string | null
     pmId?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    technicalWriterId?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    adminProjectId?: StringNullableWithAggregatesFilter<"Project"> | string | null
     startDate?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     endDate?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     contractValue?: FloatWithAggregatesFilter<"Project"> | number
     estimatedCost?: FloatWithAggregatesFilter<"Project"> | number
     plannedMandays?: FloatWithAggregatesFilter<"Project"> | number
     lastStatusReason?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    reportCoverUrl?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    reportLink?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    reportSubmittedAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
@@ -17584,6 +18900,76 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"TaskTimeLog"> | Date | string
   }
 
+  export type NotificationWhereInput = {
+    AND?: NotificationWhereInput | NotificationWhereInput[]
+    OR?: NotificationWhereInput[]
+    NOT?: NotificationWhereInput | NotificationWhereInput[]
+    id?: StringFilter<"Notification"> | string
+    userId?: StringFilter<"Notification"> | string
+    type?: StringFilter<"Notification"> | string
+    title?: StringFilter<"Notification"> | string
+    message?: StringFilter<"Notification"> | string
+    link?: StringNullableFilter<"Notification"> | string | null
+    readAt?: DateTimeNullableFilter<"Notification"> | Date | string | null
+    createdAt?: DateTimeFilter<"Notification"> | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type NotificationOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    link?: SortOrderInput | SortOrder
+    readAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type NotificationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: NotificationWhereInput | NotificationWhereInput[]
+    OR?: NotificationWhereInput[]
+    NOT?: NotificationWhereInput | NotificationWhereInput[]
+    userId?: StringFilter<"Notification"> | string
+    type?: StringFilter<"Notification"> | string
+    title?: StringFilter<"Notification"> | string
+    message?: StringFilter<"Notification"> | string
+    link?: StringNullableFilter<"Notification"> | string | null
+    readAt?: DateTimeNullableFilter<"Notification"> | Date | string | null
+    createdAt?: DateTimeFilter<"Notification"> | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type NotificationOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    link?: SortOrderInput | SortOrder
+    readAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: NotificationCountOrderByAggregateInput
+    _max?: NotificationMaxOrderByAggregateInput
+    _min?: NotificationMinOrderByAggregateInput
+  }
+
+  export type NotificationScalarWhereWithAggregatesInput = {
+    AND?: NotificationScalarWhereWithAggregatesInput | NotificationScalarWhereWithAggregatesInput[]
+    OR?: NotificationScalarWhereWithAggregatesInput[]
+    NOT?: NotificationScalarWhereWithAggregatesInput | NotificationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Notification"> | string
+    userId?: StringWithAggregatesFilter<"Notification"> | string
+    type?: StringWithAggregatesFilter<"Notification"> | string
+    title?: StringWithAggregatesFilter<"Notification"> | string
+    message?: StringWithAggregatesFilter<"Notification"> | string
+    link?: StringNullableWithAggregatesFilter<"Notification"> | string | null
+    readAt?: DateTimeNullableWithAggregatesFilter<"Notification"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Notification"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -17598,6 +18984,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
@@ -17608,6 +18996,7 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -17624,6 +19013,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
@@ -17634,6 +19025,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -17650,6 +19042,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
@@ -17660,6 +19054,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -17676,6 +19071,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -17686,6 +19083,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -17823,6 +19221,9 @@ export namespace Prisma {
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17830,6 +19231,8 @@ export namespace Prisma {
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
+    technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
+    adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -17848,12 +19251,17 @@ export namespace Prisma {
     clientId: string
     salesId?: string | null
     pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17879,6 +19287,9 @@ export namespace Prisma {
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17886,6 +19297,8 @@ export namespace Prisma {
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
+    technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
+    adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -17904,12 +19317,17 @@ export namespace Prisma {
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17932,12 +19350,17 @@ export namespace Prisma {
     clientId: string
     salesId?: string | null
     pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17956,6 +19379,9 @@ export namespace Prisma {
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17971,12 +19397,17 @@ export namespace Prisma {
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18816,6 +20247,82 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type NotificationCreateInput = {
+    id?: string
+    type: string
+    title: string
+    message: string
+    link?: string | null
+    readAt?: Date | string | null
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutNotificationsInput
+  }
+
+  export type NotificationUncheckedCreateInput = {
+    id?: string
+    userId: string
+    type: string
+    title: string
+    message: string
+    link?: string | null
+    readAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type NotificationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutNotificationsNestedInput
+  }
+
+  export type NotificationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationCreateManyInput = {
+    id?: string
+    userId: string
+    type: string
+    title: string
+    message: string
+    link?: string | null
+    readAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type NotificationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -18945,6 +20452,12 @@ export namespace Prisma {
     none?: TaskTimeLogWhereInput
   }
 
+  export type NotificationListRelationFilter = {
+    every?: NotificationWhereInput
+    some?: NotificationWhereInput
+    none?: NotificationWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -18983,6 +20496,10 @@ export namespace Prisma {
   }
 
   export type TaskTimeLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type NotificationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -19214,12 +20731,17 @@ export namespace Prisma {
     clientId?: SortOrder
     salesId?: SortOrder
     pmId?: SortOrder
+    technicalWriterId?: SortOrder
+    adminProjectId?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
     contractValue?: SortOrder
     estimatedCost?: SortOrder
     plannedMandays?: SortOrder
     lastStatusReason?: SortOrder
+    reportCoverUrl?: SortOrder
+    reportLink?: SortOrder
+    reportSubmittedAt?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -19241,12 +20763,17 @@ export namespace Prisma {
     clientId?: SortOrder
     salesId?: SortOrder
     pmId?: SortOrder
+    technicalWriterId?: SortOrder
+    adminProjectId?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
     contractValue?: SortOrder
     estimatedCost?: SortOrder
     plannedMandays?: SortOrder
     lastStatusReason?: SortOrder
+    reportCoverUrl?: SortOrder
+    reportLink?: SortOrder
+    reportSubmittedAt?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -19262,12 +20789,17 @@ export namespace Prisma {
     clientId?: SortOrder
     salesId?: SortOrder
     pmId?: SortOrder
+    technicalWriterId?: SortOrder
+    adminProjectId?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
     contractValue?: SortOrder
     estimatedCost?: SortOrder
     plannedMandays?: SortOrder
     lastStatusReason?: SortOrder
+    reportCoverUrl?: SortOrder
+    reportLink?: SortOrder
+    reportSubmittedAt?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -19908,6 +21440,39 @@ export namespace Prisma {
     hours?: SortOrder
   }
 
+  export type NotificationCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    link?: SortOrder
+    readAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type NotificationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    link?: SortOrder
+    readAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type NotificationMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    message?: SortOrder
+    link?: SortOrder
+    readAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
   export type ProjectCreateNestedManyWithoutSalesInput = {
     create?: XOR<ProjectCreateWithoutSalesInput, ProjectUncheckedCreateWithoutSalesInput> | ProjectCreateWithoutSalesInput[] | ProjectUncheckedCreateWithoutSalesInput[]
     connectOrCreate?: ProjectCreateOrConnectWithoutSalesInput | ProjectCreateOrConnectWithoutSalesInput[]
@@ -19919,6 +21484,20 @@ export namespace Prisma {
     create?: XOR<ProjectCreateWithoutPmInput, ProjectUncheckedCreateWithoutPmInput> | ProjectCreateWithoutPmInput[] | ProjectUncheckedCreateWithoutPmInput[]
     connectOrCreate?: ProjectCreateOrConnectWithoutPmInput | ProjectCreateOrConnectWithoutPmInput[]
     createMany?: ProjectCreateManyPmInputEnvelope
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+  }
+
+  export type ProjectCreateNestedManyWithoutTechnicalWriterInput = {
+    create?: XOR<ProjectCreateWithoutTechnicalWriterInput, ProjectUncheckedCreateWithoutTechnicalWriterInput> | ProjectCreateWithoutTechnicalWriterInput[] | ProjectUncheckedCreateWithoutTechnicalWriterInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutTechnicalWriterInput | ProjectCreateOrConnectWithoutTechnicalWriterInput[]
+    createMany?: ProjectCreateManyTechnicalWriterInputEnvelope
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+  }
+
+  export type ProjectCreateNestedManyWithoutAdminProjectInput = {
+    create?: XOR<ProjectCreateWithoutAdminProjectInput, ProjectUncheckedCreateWithoutAdminProjectInput> | ProjectCreateWithoutAdminProjectInput[] | ProjectUncheckedCreateWithoutAdminProjectInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutAdminProjectInput | ProjectCreateOrConnectWithoutAdminProjectInput[]
+    createMany?: ProjectCreateManyAdminProjectInputEnvelope
     connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
   }
 
@@ -19992,6 +21571,13 @@ export namespace Prisma {
     connect?: TaskTimeLogWhereUniqueInput | TaskTimeLogWhereUniqueInput[]
   }
 
+  export type NotificationCreateNestedManyWithoutUserInput = {
+    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
+    createMany?: NotificationCreateManyUserInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+  }
+
   export type ProjectUncheckedCreateNestedManyWithoutSalesInput = {
     create?: XOR<ProjectCreateWithoutSalesInput, ProjectUncheckedCreateWithoutSalesInput> | ProjectCreateWithoutSalesInput[] | ProjectUncheckedCreateWithoutSalesInput[]
     connectOrCreate?: ProjectCreateOrConnectWithoutSalesInput | ProjectCreateOrConnectWithoutSalesInput[]
@@ -20003,6 +21589,20 @@ export namespace Prisma {
     create?: XOR<ProjectCreateWithoutPmInput, ProjectUncheckedCreateWithoutPmInput> | ProjectCreateWithoutPmInput[] | ProjectUncheckedCreateWithoutPmInput[]
     connectOrCreate?: ProjectCreateOrConnectWithoutPmInput | ProjectCreateOrConnectWithoutPmInput[]
     createMany?: ProjectCreateManyPmInputEnvelope
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+  }
+
+  export type ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput = {
+    create?: XOR<ProjectCreateWithoutTechnicalWriterInput, ProjectUncheckedCreateWithoutTechnicalWriterInput> | ProjectCreateWithoutTechnicalWriterInput[] | ProjectUncheckedCreateWithoutTechnicalWriterInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutTechnicalWriterInput | ProjectCreateOrConnectWithoutTechnicalWriterInput[]
+    createMany?: ProjectCreateManyTechnicalWriterInputEnvelope
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+  }
+
+  export type ProjectUncheckedCreateNestedManyWithoutAdminProjectInput = {
+    create?: XOR<ProjectCreateWithoutAdminProjectInput, ProjectUncheckedCreateWithoutAdminProjectInput> | ProjectCreateWithoutAdminProjectInput[] | ProjectUncheckedCreateWithoutAdminProjectInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutAdminProjectInput | ProjectCreateOrConnectWithoutAdminProjectInput[]
+    createMany?: ProjectCreateManyAdminProjectInputEnvelope
     connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
   }
 
@@ -20076,6 +21676,13 @@ export namespace Prisma {
     connect?: TaskTimeLogWhereUniqueInput | TaskTimeLogWhereUniqueInput[]
   }
 
+  export type NotificationUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
+    createMany?: NotificationCreateManyUserInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -20133,6 +21740,34 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
     update?: ProjectUpdateWithWhereUniqueWithoutPmInput | ProjectUpdateWithWhereUniqueWithoutPmInput[]
     updateMany?: ProjectUpdateManyWithWhereWithoutPmInput | ProjectUpdateManyWithWhereWithoutPmInput[]
+    deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
+  }
+
+  export type ProjectUpdateManyWithoutTechnicalWriterNestedInput = {
+    create?: XOR<ProjectCreateWithoutTechnicalWriterInput, ProjectUncheckedCreateWithoutTechnicalWriterInput> | ProjectCreateWithoutTechnicalWriterInput[] | ProjectUncheckedCreateWithoutTechnicalWriterInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutTechnicalWriterInput | ProjectCreateOrConnectWithoutTechnicalWriterInput[]
+    upsert?: ProjectUpsertWithWhereUniqueWithoutTechnicalWriterInput | ProjectUpsertWithWhereUniqueWithoutTechnicalWriterInput[]
+    createMany?: ProjectCreateManyTechnicalWriterInputEnvelope
+    set?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    disconnect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    delete?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    update?: ProjectUpdateWithWhereUniqueWithoutTechnicalWriterInput | ProjectUpdateWithWhereUniqueWithoutTechnicalWriterInput[]
+    updateMany?: ProjectUpdateManyWithWhereWithoutTechnicalWriterInput | ProjectUpdateManyWithWhereWithoutTechnicalWriterInput[]
+    deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
+  }
+
+  export type ProjectUpdateManyWithoutAdminProjectNestedInput = {
+    create?: XOR<ProjectCreateWithoutAdminProjectInput, ProjectUncheckedCreateWithoutAdminProjectInput> | ProjectCreateWithoutAdminProjectInput[] | ProjectUncheckedCreateWithoutAdminProjectInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutAdminProjectInput | ProjectCreateOrConnectWithoutAdminProjectInput[]
+    upsert?: ProjectUpsertWithWhereUniqueWithoutAdminProjectInput | ProjectUpsertWithWhereUniqueWithoutAdminProjectInput[]
+    createMany?: ProjectCreateManyAdminProjectInputEnvelope
+    set?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    disconnect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    delete?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    update?: ProjectUpdateWithWhereUniqueWithoutAdminProjectInput | ProjectUpdateWithWhereUniqueWithoutAdminProjectInput[]
+    updateMany?: ProjectUpdateManyWithWhereWithoutAdminProjectInput | ProjectUpdateManyWithWhereWithoutAdminProjectInput[]
     deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
   }
 
@@ -20276,6 +21911,20 @@ export namespace Prisma {
     deleteMany?: TaskTimeLogScalarWhereInput | TaskTimeLogScalarWhereInput[]
   }
 
+  export type NotificationUpdateManyWithoutUserNestedInput = {
+    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
+    upsert?: NotificationUpsertWithWhereUniqueWithoutUserInput | NotificationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: NotificationCreateManyUserInputEnvelope
+    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    update?: NotificationUpdateWithWhereUniqueWithoutUserInput | NotificationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: NotificationUpdateManyWithWhereWithoutUserInput | NotificationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  }
+
   export type ProjectUncheckedUpdateManyWithoutSalesNestedInput = {
     create?: XOR<ProjectCreateWithoutSalesInput, ProjectUncheckedCreateWithoutSalesInput> | ProjectCreateWithoutSalesInput[] | ProjectUncheckedCreateWithoutSalesInput[]
     connectOrCreate?: ProjectCreateOrConnectWithoutSalesInput | ProjectCreateOrConnectWithoutSalesInput[]
@@ -20301,6 +21950,34 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
     update?: ProjectUpdateWithWhereUniqueWithoutPmInput | ProjectUpdateWithWhereUniqueWithoutPmInput[]
     updateMany?: ProjectUpdateManyWithWhereWithoutPmInput | ProjectUpdateManyWithWhereWithoutPmInput[]
+    deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
+  }
+
+  export type ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput = {
+    create?: XOR<ProjectCreateWithoutTechnicalWriterInput, ProjectUncheckedCreateWithoutTechnicalWriterInput> | ProjectCreateWithoutTechnicalWriterInput[] | ProjectUncheckedCreateWithoutTechnicalWriterInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutTechnicalWriterInput | ProjectCreateOrConnectWithoutTechnicalWriterInput[]
+    upsert?: ProjectUpsertWithWhereUniqueWithoutTechnicalWriterInput | ProjectUpsertWithWhereUniqueWithoutTechnicalWriterInput[]
+    createMany?: ProjectCreateManyTechnicalWriterInputEnvelope
+    set?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    disconnect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    delete?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    update?: ProjectUpdateWithWhereUniqueWithoutTechnicalWriterInput | ProjectUpdateWithWhereUniqueWithoutTechnicalWriterInput[]
+    updateMany?: ProjectUpdateManyWithWhereWithoutTechnicalWriterInput | ProjectUpdateManyWithWhereWithoutTechnicalWriterInput[]
+    deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
+  }
+
+  export type ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput = {
+    create?: XOR<ProjectCreateWithoutAdminProjectInput, ProjectUncheckedCreateWithoutAdminProjectInput> | ProjectCreateWithoutAdminProjectInput[] | ProjectUncheckedCreateWithoutAdminProjectInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutAdminProjectInput | ProjectCreateOrConnectWithoutAdminProjectInput[]
+    upsert?: ProjectUpsertWithWhereUniqueWithoutAdminProjectInput | ProjectUpsertWithWhereUniqueWithoutAdminProjectInput[]
+    createMany?: ProjectCreateManyAdminProjectInputEnvelope
+    set?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    disconnect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    delete?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    update?: ProjectUpdateWithWhereUniqueWithoutAdminProjectInput | ProjectUpdateWithWhereUniqueWithoutAdminProjectInput[]
+    updateMany?: ProjectUpdateManyWithWhereWithoutAdminProjectInput | ProjectUpdateManyWithWhereWithoutAdminProjectInput[]
     deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
   }
 
@@ -20444,6 +22121,20 @@ export namespace Prisma {
     deleteMany?: TaskTimeLogScalarWhereInput | TaskTimeLogScalarWhereInput[]
   }
 
+  export type NotificationUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
+    upsert?: NotificationUpsertWithWhereUniqueWithoutUserInput | NotificationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: NotificationCreateManyUserInputEnvelope
+    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    update?: NotificationUpdateWithWhereUniqueWithoutUserInput | NotificationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: NotificationUpdateManyWithWhereWithoutUserInput | NotificationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  }
+
   export type ProjectCreateNestedManyWithoutClientInput = {
     create?: XOR<ProjectCreateWithoutClientInput, ProjectUncheckedCreateWithoutClientInput> | ProjectCreateWithoutClientInput[] | ProjectUncheckedCreateWithoutClientInput[]
     connectOrCreate?: ProjectCreateOrConnectWithoutClientInput | ProjectCreateOrConnectWithoutClientInput[]
@@ -20501,6 +22192,18 @@ export namespace Prisma {
   export type UserCreateNestedOneWithoutProjectsAsPmInput = {
     create?: XOR<UserCreateWithoutProjectsAsPmInput, UserUncheckedCreateWithoutProjectsAsPmInput>
     connectOrCreate?: UserCreateOrConnectWithoutProjectsAsPmInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutProjectsAsTwInput = {
+    create?: XOR<UserCreateWithoutProjectsAsTwInput, UserUncheckedCreateWithoutProjectsAsTwInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProjectsAsTwInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutProjectsAsAdminInput = {
+    create?: XOR<UserCreateWithoutProjectsAsAdminInput, UserUncheckedCreateWithoutProjectsAsAdminInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProjectsAsAdminInput
     connect?: UserWhereUniqueInput
   }
 
@@ -20640,6 +22343,26 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProjectsAsPmInput, UserUpdateWithoutProjectsAsPmInput>, UserUncheckedUpdateWithoutProjectsAsPmInput>
+  }
+
+  export type UserUpdateOneWithoutProjectsAsTwNestedInput = {
+    create?: XOR<UserCreateWithoutProjectsAsTwInput, UserUncheckedCreateWithoutProjectsAsTwInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProjectsAsTwInput
+    upsert?: UserUpsertWithoutProjectsAsTwInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProjectsAsTwInput, UserUpdateWithoutProjectsAsTwInput>, UserUncheckedUpdateWithoutProjectsAsTwInput>
+  }
+
+  export type UserUpdateOneWithoutProjectsAsAdminNestedInput = {
+    create?: XOR<UserCreateWithoutProjectsAsAdminInput, UserUncheckedCreateWithoutProjectsAsAdminInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProjectsAsAdminInput
+    upsert?: UserUpsertWithoutProjectsAsAdminInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProjectsAsAdminInput, UserUpdateWithoutProjectsAsAdminInput>, UserUncheckedUpdateWithoutProjectsAsAdminInput>
   }
 
   export type ProjectResourceUpdateManyWithoutProjectNestedInput = {
@@ -21168,6 +22891,20 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTaskTimeLogsInput, UserUpdateWithoutTaskTimeLogsInput>, UserUncheckedUpdateWithoutTaskTimeLogsInput>
   }
 
+  export type UserCreateNestedOneWithoutNotificationsInput = {
+    create?: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutNotificationsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
+    create?: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutNotificationsInput
+    upsert?: UserUpsertWithoutNotificationsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutNotificationsInput, UserUpdateWithoutNotificationsInput>, UserUncheckedUpdateWithoutNotificationsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -21526,12 +23263,17 @@ export namespace Prisma {
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     surveyToken?: string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
+    technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
+    adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -21549,12 +23291,17 @@ export namespace Prisma {
     status?: $Enums.ProjectStatus
     clientId: string
     pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -21590,12 +23337,17 @@ export namespace Prisma {
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     surveyToken?: string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
+    technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
+    adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -21613,12 +23365,17 @@ export namespace Prisma {
     status?: $Enums.ProjectStatus
     clientId: string
     salesId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -21639,6 +23396,154 @@ export namespace Prisma {
 
   export type ProjectCreateManyPmInputEnvelope = {
     data: ProjectCreateManyPmInput | ProjectCreateManyPmInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProjectCreateWithoutTechnicalWriterInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    surveyToken?: string | null
+    client: ClientCreateNestedOneWithoutProjectsInput
+    sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
+    pm?: UserCreateNestedOneWithoutProjectsAsPmInput
+    adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    resources?: ProjectResourceCreateNestedManyWithoutProjectInput
+    timesheets?: TimesheetCreateNestedManyWithoutProjectInput
+    documents?: DocumentCreateNestedManyWithoutProjectInput
+    activities?: ActivityCreateNestedManyWithoutProjectInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
+    expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
+    tasks?: TaskCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectUncheckedCreateWithoutTechnicalWriterInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    clientId: string
+    salesId?: string | null
+    pmId?: string | null
+    adminProjectId?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    surveyToken?: string | null
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutProjectInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
+    expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutTechnicalWriterInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutTechnicalWriterInput, ProjectUncheckedCreateWithoutTechnicalWriterInput>
+  }
+
+  export type ProjectCreateManyTechnicalWriterInputEnvelope = {
+    data: ProjectCreateManyTechnicalWriterInput | ProjectCreateManyTechnicalWriterInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProjectCreateWithoutAdminProjectInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    surveyToken?: string | null
+    client: ClientCreateNestedOneWithoutProjectsInput
+    sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
+    pm?: UserCreateNestedOneWithoutProjectsAsPmInput
+    technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
+    resources?: ProjectResourceCreateNestedManyWithoutProjectInput
+    timesheets?: TimesheetCreateNestedManyWithoutProjectInput
+    documents?: DocumentCreateNestedManyWithoutProjectInput
+    activities?: ActivityCreateNestedManyWithoutProjectInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
+    expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
+    tasks?: TaskCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectUncheckedCreateWithoutAdminProjectInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    clientId: string
+    salesId?: string | null
+    pmId?: string | null
+    technicalWriterId?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    surveyToken?: string | null
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutProjectInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
+    expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutAdminProjectInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutAdminProjectInput, ProjectUncheckedCreateWithoutAdminProjectInput>
+  }
+
+  export type ProjectCreateManyAdminProjectInputEnvelope = {
+    data: ProjectCreateManyAdminProjectInput | ProjectCreateManyAdminProjectInput[]
     skipDuplicates?: boolean
   }
 
@@ -21980,6 +23885,36 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type NotificationCreateWithoutUserInput = {
+    id?: string
+    type: string
+    title: string
+    message: string
+    link?: string | null
+    readAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type NotificationUncheckedCreateWithoutUserInput = {
+    id?: string
+    type: string
+    title: string
+    message: string
+    link?: string | null
+    readAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type NotificationCreateOrConnectWithoutUserInput = {
+    where: NotificationWhereUniqueInput
+    create: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput>
+  }
+
+  export type NotificationCreateManyUserInputEnvelope = {
+    data: NotificationCreateManyUserInput | NotificationCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ProjectUpsertWithWhereUniqueWithoutSalesInput = {
     where: ProjectWhereUniqueInput
     update: XOR<ProjectUpdateWithoutSalesInput, ProjectUncheckedUpdateWithoutSalesInput>
@@ -22008,12 +23943,17 @@ export namespace Prisma {
     clientId?: StringFilter<"Project"> | string
     salesId?: StringNullableFilter<"Project"> | string | null
     pmId?: StringNullableFilter<"Project"> | string | null
+    technicalWriterId?: StringNullableFilter<"Project"> | string | null
+    adminProjectId?: StringNullableFilter<"Project"> | string | null
     startDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     endDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     contractValue?: FloatFilter<"Project"> | number
     estimatedCost?: FloatFilter<"Project"> | number
     plannedMandays?: FloatFilter<"Project"> | number
     lastStatusReason?: StringNullableFilter<"Project"> | string | null
+    reportCoverUrl?: StringNullableFilter<"Project"> | string | null
+    reportLink?: StringNullableFilter<"Project"> | string | null
+    reportSubmittedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
@@ -22034,6 +23974,38 @@ export namespace Prisma {
   export type ProjectUpdateManyWithWhereWithoutPmInput = {
     where: ProjectScalarWhereInput
     data: XOR<ProjectUpdateManyMutationInput, ProjectUncheckedUpdateManyWithoutPmInput>
+  }
+
+  export type ProjectUpsertWithWhereUniqueWithoutTechnicalWriterInput = {
+    where: ProjectWhereUniqueInput
+    update: XOR<ProjectUpdateWithoutTechnicalWriterInput, ProjectUncheckedUpdateWithoutTechnicalWriterInput>
+    create: XOR<ProjectCreateWithoutTechnicalWriterInput, ProjectUncheckedCreateWithoutTechnicalWriterInput>
+  }
+
+  export type ProjectUpdateWithWhereUniqueWithoutTechnicalWriterInput = {
+    where: ProjectWhereUniqueInput
+    data: XOR<ProjectUpdateWithoutTechnicalWriterInput, ProjectUncheckedUpdateWithoutTechnicalWriterInput>
+  }
+
+  export type ProjectUpdateManyWithWhereWithoutTechnicalWriterInput = {
+    where: ProjectScalarWhereInput
+    data: XOR<ProjectUpdateManyMutationInput, ProjectUncheckedUpdateManyWithoutTechnicalWriterInput>
+  }
+
+  export type ProjectUpsertWithWhereUniqueWithoutAdminProjectInput = {
+    where: ProjectWhereUniqueInput
+    update: XOR<ProjectUpdateWithoutAdminProjectInput, ProjectUncheckedUpdateWithoutAdminProjectInput>
+    create: XOR<ProjectCreateWithoutAdminProjectInput, ProjectUncheckedCreateWithoutAdminProjectInput>
+  }
+
+  export type ProjectUpdateWithWhereUniqueWithoutAdminProjectInput = {
+    where: ProjectWhereUniqueInput
+    data: XOR<ProjectUpdateWithoutAdminProjectInput, ProjectUncheckedUpdateWithoutAdminProjectInput>
+  }
+
+  export type ProjectUpdateManyWithWhereWithoutAdminProjectInput = {
+    where: ProjectScalarWhereInput
+    data: XOR<ProjectUpdateManyMutationInput, ProjectUncheckedUpdateManyWithoutAdminProjectInput>
   }
 
   export type ProjectResourceUpsertWithWhereUniqueWithoutUserInput = {
@@ -22318,6 +24290,36 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"TaskTimeLog"> | Date | string
   }
 
+  export type NotificationUpsertWithWhereUniqueWithoutUserInput = {
+    where: NotificationWhereUniqueInput
+    update: XOR<NotificationUpdateWithoutUserInput, NotificationUncheckedUpdateWithoutUserInput>
+    create: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput>
+  }
+
+  export type NotificationUpdateWithWhereUniqueWithoutUserInput = {
+    where: NotificationWhereUniqueInput
+    data: XOR<NotificationUpdateWithoutUserInput, NotificationUncheckedUpdateWithoutUserInput>
+  }
+
+  export type NotificationUpdateManyWithWhereWithoutUserInput = {
+    where: NotificationScalarWhereInput
+    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type NotificationScalarWhereInput = {
+    AND?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+    OR?: NotificationScalarWhereInput[]
+    NOT?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+    id?: StringFilter<"Notification"> | string
+    userId?: StringFilter<"Notification"> | string
+    type?: StringFilter<"Notification"> | string
+    title?: StringFilter<"Notification"> | string
+    message?: StringFilter<"Notification"> | string
+    link?: StringNullableFilter<"Notification"> | string | null
+    readAt?: DateTimeNullableFilter<"Notification"> | Date | string | null
+    createdAt?: DateTimeFilter<"Notification"> | Date | string
+  }
+
   export type ProjectCreateWithoutClientInput = {
     id?: string
     code: string
@@ -22330,12 +24332,17 @@ export namespace Prisma {
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     surveyToken?: string | null
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
+    technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
+    adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -22353,12 +24360,17 @@ export namespace Prisma {
     status?: $Enums.ProjectStatus
     salesId?: string | null
     pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -22438,6 +24450,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
@@ -22448,6 +24462,7 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProjectsAsSalesInput = {
@@ -22463,6 +24478,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
@@ -22473,6 +24490,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProjectsAsSalesInput = {
@@ -22493,6 +24511,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
@@ -22503,6 +24523,7 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProjectsAsPmInput = {
@@ -22518,6 +24539,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
@@ -22528,11 +24551,134 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProjectsAsPmInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutProjectsAsPmInput, UserUncheckedCreateWithoutProjectsAsPmInput>
+  }
+
+  export type UserCreateWithoutProjectsAsTwInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutProjectsAsTwInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutProjectsAsTwInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutProjectsAsTwInput, UserUncheckedCreateWithoutProjectsAsTwInput>
+  }
+
+  export type UserCreateWithoutProjectsAsAdminInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutProjectsAsAdminInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutProjectsAsAdminInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutProjectsAsAdminInput, UserUncheckedCreateWithoutProjectsAsAdminInput>
   }
 
   export type ProjectResourceCreateWithoutProjectInput = {
@@ -22820,6 +24966,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
@@ -22830,6 +24978,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsAsSalesInput = {
@@ -22845,6 +24994,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -22855,6 +25006,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutProjectsAsPmInput = {
@@ -22881,6 +25033,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
@@ -22891,6 +25045,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsAsPmInput = {
@@ -22906,6 +25061,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -22916,6 +25073,141 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUpsertWithoutProjectsAsTwInput = {
+    update: XOR<UserUpdateWithoutProjectsAsTwInput, UserUncheckedUpdateWithoutProjectsAsTwInput>
+    create: XOR<UserCreateWithoutProjectsAsTwInput, UserUncheckedCreateWithoutProjectsAsTwInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutProjectsAsTwInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutProjectsAsTwInput, UserUncheckedUpdateWithoutProjectsAsTwInput>
+  }
+
+  export type UserUpdateWithoutProjectsAsTwInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutProjectsAsTwInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUpsertWithoutProjectsAsAdminInput = {
+    update: XOR<UserUpdateWithoutProjectsAsAdminInput, UserUncheckedUpdateWithoutProjectsAsAdminInput>
+    create: XOR<UserCreateWithoutProjectsAsAdminInput, UserUncheckedCreateWithoutProjectsAsAdminInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutProjectsAsAdminInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutProjectsAsAdminInput, UserUncheckedUpdateWithoutProjectsAsAdminInput>
+  }
+
+  export type UserUpdateWithoutProjectsAsAdminInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutProjectsAsAdminInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProjectResourceUpsertWithWhereUniqueWithoutProjectInput = {
@@ -23056,6 +25348,9 @@ export namespace Prisma {
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23063,6 +25358,8 @@ export namespace Prisma {
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
+    technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
+    adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -23080,12 +25377,17 @@ export namespace Prisma {
     clientId: string
     salesId?: string | null
     pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23126,6 +25428,9 @@ export namespace Prisma {
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23133,6 +25438,8 @@ export namespace Prisma {
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
+    technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
+    adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -23150,12 +25457,17 @@ export namespace Prisma {
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23182,6 +25494,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
@@ -23191,6 +25505,7 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -23207,6 +25522,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
@@ -23216,6 +25533,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -23248,6 +25566,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
@@ -23257,6 +25577,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -23273,6 +25594,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -23282,6 +25605,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProjectCreateWithoutResourcesInput = {
@@ -23296,6 +25620,9 @@ export namespace Prisma {
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23303,6 +25630,8 @@ export namespace Prisma {
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
+    technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
+    adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
     activities?: ActivityCreateNestedManyWithoutProjectInput
@@ -23320,12 +25649,17 @@ export namespace Prisma {
     clientId: string
     salesId?: string | null
     pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23357,6 +25691,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -23366,6 +25702,7 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutResourcesInput = {
@@ -23382,6 +25719,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -23391,6 +25730,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutResourcesInput = {
@@ -23421,6 +25761,9 @@ export namespace Prisma {
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23428,6 +25771,8 @@ export namespace Prisma {
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
+    technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
+    adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
     activities?: ActivityUpdateManyWithoutProjectNestedInput
@@ -23445,12 +25790,17 @@ export namespace Prisma {
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23488,6 +25838,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -23497,6 +25849,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutResourcesInput = {
@@ -23513,6 +25866,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -23522,6 +25877,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProjectCreateWithoutTimesheetsInput = {
@@ -23536,6 +25892,9 @@ export namespace Prisma {
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23543,6 +25902,8 @@ export namespace Prisma {
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
+    technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
+    adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
     activities?: ActivityCreateNestedManyWithoutProjectInput
@@ -23560,12 +25921,17 @@ export namespace Prisma {
     clientId: string
     salesId?: string | null
     pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23597,6 +25963,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -23606,6 +25974,7 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTimesheetsInput = {
@@ -23622,6 +25991,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -23631,6 +26002,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTimesheetsInput = {
@@ -23652,6 +26024,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -23661,6 +26035,7 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutApprovedTimesheetsInput = {
@@ -23677,6 +26052,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -23686,6 +26063,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutApprovedTimesheetsInput = {
@@ -23716,6 +26094,9 @@ export namespace Prisma {
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23723,6 +26104,8 @@ export namespace Prisma {
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
+    technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
+    adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
     activities?: ActivityUpdateManyWithoutProjectNestedInput
@@ -23740,12 +26123,17 @@ export namespace Prisma {
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23783,6 +26171,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -23792,6 +26182,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTimesheetsInput = {
@@ -23808,6 +26199,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -23817,6 +26210,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutApprovedTimesheetsInput = {
@@ -23844,6 +26238,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -23853,6 +26249,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutApprovedTimesheetsInput = {
@@ -23869,6 +26266,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -23878,6 +26277,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProjectCreateWithoutDocumentsInput = {
@@ -23892,6 +26292,9 @@ export namespace Prisma {
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23899,6 +26302,8 @@ export namespace Prisma {
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
+    technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
+    adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     activities?: ActivityCreateNestedManyWithoutProjectInput
@@ -23916,12 +26321,17 @@ export namespace Prisma {
     clientId: string
     salesId?: string | null
     pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23953,6 +26363,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
@@ -23962,6 +26374,7 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutDocumentsUploadedInput = {
@@ -23978,6 +26391,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
@@ -23987,6 +26402,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutDocumentsUploadedInput = {
@@ -24017,6 +26433,9 @@ export namespace Prisma {
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24024,6 +26443,8 @@ export namespace Prisma {
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
+    technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
+    adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     activities?: ActivityUpdateManyWithoutProjectNestedInput
@@ -24041,12 +26462,17 @@ export namespace Prisma {
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24084,6 +26510,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
@@ -24093,6 +26521,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDocumentsUploadedInput = {
@@ -24109,6 +26538,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -24118,6 +26549,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProjectCreateWithoutExpensesInput = {
@@ -24132,6 +26564,9 @@ export namespace Prisma {
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24139,6 +26574,8 @@ export namespace Prisma {
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
+    technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
+    adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -24156,12 +26593,17 @@ export namespace Prisma {
     clientId: string
     salesId?: string | null
     pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24193,6 +26635,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
@@ -24202,6 +26646,7 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProjectExpensesInput = {
@@ -24218,6 +26663,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
@@ -24227,6 +26674,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProjectExpensesInput = {
@@ -24257,6 +26705,9 @@ export namespace Prisma {
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24264,6 +26715,8 @@ export namespace Prisma {
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
+    technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
+    adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -24281,12 +26734,17 @@ export namespace Prisma {
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24324,6 +26782,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
@@ -24333,6 +26793,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectExpensesInput = {
@@ -24349,6 +26810,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -24358,6 +26821,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutActivitiesInput = {
@@ -24374,6 +26838,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
@@ -24383,6 +26849,7 @@ export namespace Prisma {
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutActivitiesInput = {
@@ -24399,6 +26866,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
@@ -24408,6 +26877,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutActivitiesInput = {
@@ -24427,6 +26897,9 @@ export namespace Prisma {
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24434,6 +26907,8 @@ export namespace Prisma {
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
+    technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
+    adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -24451,12 +26926,17 @@ export namespace Prisma {
     clientId: string
     salesId?: string | null
     pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24499,6 +26979,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
@@ -24508,6 +26990,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutActivitiesInput = {
@@ -24524,6 +27007,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -24533,6 +27018,7 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProjectUpsertWithoutActivitiesInput = {
@@ -24558,6 +27044,9 @@ export namespace Prisma {
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24565,6 +27054,8 @@ export namespace Prisma {
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
+    technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
+    adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -24582,12 +27073,17 @@ export namespace Prisma {
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24612,6 +27108,9 @@ export namespace Prisma {
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24619,6 +27118,8 @@ export namespace Prisma {
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
+    technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
+    adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -24636,12 +27137,17 @@ export namespace Prisma {
     clientId: string
     salesId?: string | null
     pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24673,6 +27179,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
@@ -24682,6 +27190,7 @@ export namespace Prisma {
     projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
     tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTasksAssignedInput = {
@@ -24698,6 +27207,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
@@ -24707,6 +27218,7 @@ export namespace Prisma {
     projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
     tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTasksAssignedInput = {
@@ -24728,6 +27240,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
@@ -24737,6 +27251,7 @@ export namespace Prisma {
     projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTasksCreatedInput = {
@@ -24753,6 +27268,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
@@ -24762,6 +27279,7 @@ export namespace Prisma {
     projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTasksCreatedInput = {
@@ -24820,6 +27338,9 @@ export namespace Prisma {
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24827,6 +27348,8 @@ export namespace Prisma {
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
+    technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
+    adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -24844,12 +27367,17 @@ export namespace Prisma {
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24887,6 +27415,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
@@ -24896,6 +27426,7 @@ export namespace Prisma {
     projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
     tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTasksAssignedInput = {
@@ -24912,6 +27443,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -24921,6 +27454,7 @@ export namespace Prisma {
     projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
     tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutTasksCreatedInput = {
@@ -24948,6 +27482,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
@@ -24957,6 +27493,7 @@ export namespace Prisma {
     projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTasksCreatedInput = {
@@ -24973,6 +27510,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -24982,6 +27521,7 @@ export namespace Prisma {
     projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TaskTimeLogUpsertWithWhereUniqueWithoutTaskInput = {
@@ -25047,6 +27587,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
@@ -25056,6 +27598,7 @@ export namespace Prisma {
     projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
     tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
     tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTaskTimeLogsInput = {
@@ -25072,6 +27615,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
@@ -25081,6 +27626,7 @@ export namespace Prisma {
     projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
     tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
     tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTaskTimeLogsInput = {
@@ -25152,6 +27698,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
@@ -25161,6 +27709,7 @@ export namespace Prisma {
     projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
     tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTaskTimeLogsInput = {
@@ -25177,6 +27726,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -25186,6 +27737,135 @@ export namespace Prisma {
     projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutNotificationsInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutNotificationsInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutNotificationsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
+  }
+
+  export type UserUpsertWithoutNotificationsInput = {
+    update: XOR<UserUpdateWithoutNotificationsInput, UserUncheckedUpdateWithoutNotificationsInput>
+    create: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutNotificationsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutNotificationsInput, UserUncheckedUpdateWithoutNotificationsInput>
+  }
+
+  export type UserUpdateWithoutNotificationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutNotificationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProjectCreateManySalesInput = {
@@ -25196,12 +27876,17 @@ export namespace Prisma {
     status?: $Enums.ProjectStatus
     clientId: string
     pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25216,12 +27901,67 @@ export namespace Prisma {
     status?: $Enums.ProjectStatus
     clientId: string
     salesId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    surveyToken?: string | null
+  }
+
+  export type ProjectCreateManyTechnicalWriterInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    clientId: string
+    salesId?: string | null
+    pmId?: string | null
+    adminProjectId?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    surveyToken?: string | null
+  }
+
+  export type ProjectCreateManyAdminProjectInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    clientId: string
+    salesId?: string | null
+    pmId?: string | null
+    technicalWriterId?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25345,6 +28085,16 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type NotificationCreateManyUserInput = {
+    id?: string
+    type: string
+    title: string
+    message: string
+    link?: string | null
+    readAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
   export type ProjectUpdateWithoutSalesInput = {
     id?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
@@ -25357,12 +28107,17 @@ export namespace Prisma {
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
+    technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
+    adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -25380,12 +28135,17 @@ export namespace Prisma {
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     clientId?: StringFieldUpdateOperationsInput | string
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25407,12 +28167,17 @@ export namespace Prisma {
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     clientId?: StringFieldUpdateOperationsInput | string
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25431,12 +28196,17 @@ export namespace Prisma {
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
+    technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
+    adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -25454,12 +28224,17 @@ export namespace Prisma {
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25481,12 +28256,195 @@ export namespace Prisma {
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ProjectUpdateWithoutTechnicalWriterInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
+    sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
+    pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
+    adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
+    timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUpdateManyWithoutProjectNestedInput
+    activities?: ActivityUpdateManyWithoutProjectNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
+    expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutTechnicalWriterInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    clientId?: StringFieldUpdateOperationsInput | string
+    salesId?: NullableStringFieldUpdateOperationsInput | string | null
+    pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutProjectNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
+    expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateManyWithoutTechnicalWriterInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    clientId?: StringFieldUpdateOperationsInput | string
+    salesId?: NullableStringFieldUpdateOperationsInput | string | null
+    pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ProjectUpdateWithoutAdminProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
+    sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
+    pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
+    technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
+    resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
+    timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUpdateManyWithoutProjectNestedInput
+    activities?: ActivityUpdateManyWithoutProjectNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
+    expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutAdminProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    clientId?: StringFieldUpdateOperationsInput | string
+    salesId?: NullableStringFieldUpdateOperationsInput | string | null
+    pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutProjectNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
+    expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateManyWithoutAdminProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    clientId?: StringFieldUpdateOperationsInput | string
+    salesId?: NullableStringFieldUpdateOperationsInput | string | null
+    pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25848,6 +28806,36 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type NotificationUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ProjectCreateManyClientInput = {
     id?: string
     code: string
@@ -25856,12 +28844,17 @@ export namespace Prisma {
     status?: $Enums.ProjectStatus
     salesId?: string | null
     pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25880,12 +28873,17 @@ export namespace Prisma {
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
+    technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
+    adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -25903,12 +28901,17 @@ export namespace Prisma {
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25930,12 +28933,17 @@ export namespace Prisma {
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26365,6 +29373,10 @@ export namespace Prisma {
      * @deprecated Use TaskTimeLogDefaultArgs instead
      */
     export type TaskTimeLogArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = TaskTimeLogDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use NotificationDefaultArgs instead
+     */
+    export type NotificationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = NotificationDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

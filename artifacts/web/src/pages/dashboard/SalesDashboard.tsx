@@ -23,6 +23,7 @@ const STATUS_COLORS: Record<ProjectStatus, string> = {
   [ProjectStatus.PAUSE]: "hsl(var(--chart-3))",
   [ProjectStatus.COMPLETE]: "hsl(var(--chart-4))",
   [ProjectStatus.CLOSED]: "hsl(var(--chart-5))",
+  [ProjectStatus.NO_NEED_CONSULTANT]: "hsl(25, 95%, 53%)",
 };
 
 export default function SalesDashboard() {

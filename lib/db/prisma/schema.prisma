@@ -22,6 +22,7 @@ enum ProjectStatus {
   DRAFT
   OBSERVATION
   ACTIVE
+  NO_NEED_CONSULTANT
   PAUSE
   COMPLETE
   CLOSED
@@ -63,6 +64,8 @@ model User {
 
   projectsAsSales    Project[]         @relation("ProjectSales")
   projectsAsPm       Project[]         @relation("ProjectPm")
+  projectsAsTw       Project[]         @relation("ProjectTechWriter")
+  projectsAsAdmin    Project[]         @relation("ProjectAdmin")
   resources          ProjectResource[]
   timesheets         Timesheet[]
   approvedTimesheets Timesheet[]       @relation("TimesheetApprover")
@@ -73,6 +76,7 @@ model User {
   tasksAssigned      Task[]            @relation("TaskAssignee")
   tasksCreated       Task[]            @relation("TaskCreator")
   taskTimeLogs       TaskTimeLog[]
+  notifications      Notification[]
 }
 
 model Client {
@@ -100,12 +104,19 @@ model Project {
   sales          User?         @relation("ProjectSales", fields: [salesId], references: [id])
   pmId           String?
   pm             User?         @relation("ProjectPm", fields: [pmId], references: [id])
+  technicalWriterId String?
+  technicalWriter   User?      @relation("ProjectTechWriter", fields: [technicalWriterId], references: [id])
+  adminProjectId    String?
+  adminProject      User?      @relation("ProjectAdmin", fields: [adminProjectId], references: [id])
   startDate      DateTime?
   endDate        DateTime?
   contractValue  Float         @default(0)
   estimatedCost  Float         @default(0)
   plannedMandays Float         @default(0)
   lastStatusReason String?
+  reportCoverUrl   String?     @db.Text
+  reportLink       String?     @db.Text
+  reportSubmittedAt DateTime?
   deletedAt      DateTime?
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
@@ -280,4 +291,19 @@ model TaskTimeLog {
   @@index([taskId])
   @@index([userId])
   @@index([loggedAt])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  title     String
+  message   String
+  link      String?
+  readAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId, readAt])
+  @@index([userId, createdAt])
 }

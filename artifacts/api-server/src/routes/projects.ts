@@ -8,6 +8,7 @@ import {
 } from "../lib/serializers.js";
 import { recordAudit } from "../lib/audit.js";
 import { issueSurveyTokenIfMissing } from "../lib/surveyDefaults.js";
+import { notifyUsers } from "../lib/notifications.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -146,10 +147,21 @@ router.get("/projects", async (req, res) => {
     where.pmId = userId;
   } else if (role === "SALES") {
     where.salesId = userId;
-  } else if (role === "KONSULTAN" || role === "TECHNICAL_WRITER") {
+  } else if (role === "KONSULTAN") {
     where.OR = [
       { resources: { some: { userId } } },
       { timesheets: { some: { userId } } },
+    ];
+  } else if (role === "TECHNICAL_WRITER") {
+    where.OR = [
+      { resources: { some: { userId } } },
+      { timesheets: { some: { userId } } },
+      { technicalWriterId: userId },
+    ];
+  } else if (role === "ADMIN_PROJECT") {
+    where.OR = [
+      { adminProjectId: userId },
+      { status: { in: ["COMPLETE", "CLOSED"] } },
     ];
   }
   const projects = await prisma.project.findMany({
@@ -313,8 +325,10 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
   // people (salesId/pmId), reassign the client, or change project status.
   const SALES_ONGOING_FORBIDDEN = new Set([
     "salesId", "pmId", "clientId", "status", "statusChangeReason",
+    "technicalWriterId", "adminProjectId",
   ]);
   // PMs may not reassign people (salesId/pmId) nor reassign the client (set during Sales intake).
+  // PMs CAN assign TW and Admin Project for their own projects.
   const PM_FORBIDDEN = new Set(["salesId", "pmId", "clientId"]);
 
   if (role === "SALES") {
@@ -399,6 +413,8 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
   if (b.clientId !== undefined) data.clientId = String(b.clientId);
   if (b.salesId !== undefined) data.salesId = b.salesId || null;
   if (b.pmId !== undefined) data.pmId = b.pmId || null;
+  if (b.technicalWriterId !== undefined) data.technicalWriterId = b.technicalWriterId || null;
+  if (b.adminProjectId !== undefined) data.adminProjectId = b.adminProjectId || null;
   if (b.status !== undefined) data.status = b.status as ProjectStatus;
   if (b.startDate !== undefined) {
     const d = parseSafeDate(b.startDate);
@@ -423,13 +439,51 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
   if (b.statusChangeReason !== undefined && b.status !== undefined) {
     data.lastStatusReason = String(b.statusChangeReason ?? "") || null;
   }
-  const updated = await prisma.project.update({
+  let updated = await prisma.project.update({
     where: { id: req.params.id },
     data,
     include: projectInclude,
   });
+  // NO_NEED_CONSULTANT cascade: when entering this status, release all
+  // KONSULTAN resources and clear the assigned Technical Writer. Admin Project
+  // remains so closing documents can still be uploaded.
+  if (b.status === "NO_NEED_CONSULTANT" && beforeProj.status !== "NO_NEED_CONSULTANT") {
+    await prisma.projectResource.deleteMany({
+      where: {
+        projectId: updated.id,
+        user: { role: { in: ["KONSULTAN", "TECHNICAL_WRITER"] } },
+      },
+    });
+    if (updated.technicalWriterId) {
+      await prisma.project.update({
+        where: { id: updated.id },
+        data: { technicalWriterId: null },
+      });
+    }
+    updated = await prisma.project.findUnique({
+      where: { id: updated.id },
+      include: projectInclude,
+    }) as typeof updated;
+  }
   if (updated.status === "CLOSED" && !updated.surveyToken) {
     await issueSurveyTokenIfMissing(updated.id);
+  }
+  // Notify newly assigned TW or Admin Project
+  if (b.technicalWriterId !== undefined && updated.technicalWriterId && updated.technicalWriterId !== beforeProj.technicalWriterId) {
+    await notifyUsers([updated.technicalWriterId], {
+      type: "project.assigned_writer",
+      title: "You've been assigned as Technical Writer",
+      message: `${updated.code} — ${updated.name}`,
+      link: `/projects/${updated.id}`,
+    });
+  }
+  if (b.adminProjectId !== undefined && updated.adminProjectId && updated.adminProjectId !== beforeProj.adminProjectId) {
+    await notifyUsers([updated.adminProjectId], {
+      type: "project.assigned_admin",
+      title: "You've been assigned as Admin Project",
+      message: `${updated.code} — ${updated.name}`,
+      link: `/projects/${updated.id}`,
+    });
   }
   if (b.status !== undefined && beforeProj.status !== updated.status) {
     const reasonNote = b.statusChangeReason
@@ -459,6 +513,62 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
       description: `Updated project ${updated.code}`,
       before: serializeProject(beforeProj),
       after: serializeProject(updated),
+    });
+  }
+  res.json(serializeProject(updated));
+});
+
+router.patch("/projects/:id/report", async (req, res) => {
+  const role = req.user!.role;
+  const userId = req.user!.sub;
+  const project = await prisma.project.findUnique({
+    where: { id: req.params.id },
+    select: { id: true, code: true, name: true, pmId: true, adminProjectId: true,
+      technicalWriterId: true, reportCoverUrl: true, reportLink: true, reportSubmittedAt: true },
+  });
+  if (!project) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  const allowed =
+    role === "MANAGEMENT" ||
+    (role === "PROJECT_MANAGER" && project.pmId === userId) ||
+    (role === "TECHNICAL_WRITER" && project.technicalWriterId === userId);
+  if (!allowed) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  const b = req.body || {};
+  const data: Record<string, unknown> = {};
+  if (b.reportCoverUrl !== undefined) data.reportCoverUrl = b.reportCoverUrl || null;
+  if (b.reportLink !== undefined) data.reportLink = b.reportLink || null;
+  const nextCover = data.reportCoverUrl !== undefined ? data.reportCoverUrl : project.reportCoverUrl;
+  const nextLink = data.reportLink !== undefined ? data.reportLink : project.reportLink;
+  const wasComplete = !!(project.reportCoverUrl && project.reportLink);
+  const nowComplete = !!(nextCover && nextLink);
+  if (nowComplete && !wasComplete) {
+    data.reportSubmittedAt = new Date();
+  } else if (!nowComplete) {
+    data.reportSubmittedAt = null;
+  }
+  const updated = await prisma.project.update({
+    where: { id: project.id },
+    data,
+    include: projectInclude,
+  });
+  await recordAudit(req, {
+    action: "project.report_updated",
+    entityType: "Project",
+    entityId: updated.id,
+    description: `Updated report on ${updated.code}`,
+    after: { reportCoverUrl: updated.reportCoverUrl, reportLink: updated.reportLink },
+  });
+  if (nowComplete && !wasComplete) {
+    await notifyUsers([updated.pmId, updated.adminProjectId], {
+      type: "report.submitted",
+      title: "Report submitted",
+      message: `Report for ${updated.code} — ${updated.name} is ready for review`,
+      link: `/projects/${updated.id}`,
     });
   }
   res.json(serializeProject(updated));

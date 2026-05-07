@@ -3,8 +3,14 @@ import { RoleLabels } from "@/lib/roles";
 import {
   useListTimesheets,
   useListProjects,
+  useListNotifications,
+  useMarkNotificationRead,
+  useMarkAllNotificationsRead,
+  getListNotificationsQueryKey,
   ProjectStatus,
 } from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import { Bell, Menu, Inbox, FileWarning, ClipboardCheck, Sun, Moon } from "lucide-react";
 import { useTheme } from "@/lib/theme";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -25,6 +31,27 @@ import { Link } from "wouter";
 export default function Header() {
   const { user, logout } = useAuth();
   const { theme, toggle: toggleTheme } = useTheme();
+  const qc = useQueryClient();
+  const [, navigate] = useLocation();
+
+  const { data: notifications } = useListNotifications({
+    query: {
+      queryKey: getListNotificationsQueryKey(),
+      refetchInterval: 30000,
+      enabled: !!user,
+    },
+  });
+  const markRead = useMarkNotificationRead({
+    mutation: {
+      onSuccess: () => qc.invalidateQueries({ queryKey: getListNotificationsQueryKey() }),
+    },
+  });
+  const markAllRead = useMarkAllNotificationsRead({
+    mutation: {
+      onSuccess: () => qc.invalidateQueries({ queryKey: getListNotificationsQueryKey() }),
+    },
+  });
+  const unreadNotifs = (notifications ?? []).filter((n: any) => !n.readAt);
 
   const isPM = !!user && (user.role === "PROJECT_MANAGER" || user.role === "MANAGEMENT");
   const isAdminProject = user?.role === "ADMIN_PROJECT";
@@ -47,7 +74,7 @@ export default function Header() {
   const completeCount = completeProjects?.length ?? 0;
   const rejectedCount = rejectedTs?.length ?? 0;
 
-  const totalNotif = (isPM ? pendingCount : 0) + (isAdminProject ? completeCount : 0) + (isConsultant ? rejectedCount : 0);
+  const totalNotif = (isPM ? pendingCount : 0) + (isAdminProject ? completeCount : 0) + (isConsultant ? rejectedCount : 0) + unreadNotifs.length;
 
   const initials = user?.name
     ? user.name.split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2)
@@ -96,10 +123,21 @@ export default function Header() {
               )}
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-80" align="end">
+          <DropdownMenuContent className="w-80 max-h-[480px] overflow-y-auto" align="end">
             <DropdownMenuLabel className="flex items-center justify-between">
               <span>Notifications</span>
-              <Badge variant="outline" className="text-[10px]">{totalNotif}</Badge>
+              <div className="flex items-center gap-2">
+                <Badge variant="outline" className="text-[10px]">{totalNotif}</Badge>
+                {unreadNotifs.length > 0 && (
+                  <button
+                    type="button"
+                    className="text-[10px] text-primary hover:underline"
+                    onClick={() => markAllRead.mutate()}
+                  >
+                    Mark all read
+                  </button>
+                )}
+              </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             {totalNotif === 0 && (
@@ -107,6 +145,25 @@ export default function Header() {
                 You're all caught up.
               </div>
             )}
+
+            {(notifications ?? []).slice(0, 10).map((n: any) => (
+              <DropdownMenuItem
+                key={n.id}
+                className="flex items-start gap-3 cursor-pointer"
+                onSelect={(e) => {
+                  e.preventDefault();
+                  if (!n.readAt) markRead.mutate({ id: n.id });
+                  if (n.link) navigate(n.link);
+                }}
+                data-testid={`notif-${n.id}`}
+              >
+                <Bell className={`h-4 w-4 mt-0.5 ${n.readAt ? "text-muted-foreground" : "text-primary"}`} />
+                <div className="flex-1 min-w-0">
+                  <p className={`text-sm ${n.readAt ? "" : "font-medium"}`}>{n.title}</p>
+                  <p className="text-xs text-muted-foreground line-clamp-2">{n.message}</p>
+                </div>
+              </DropdownMenuItem>
+            ))}
 
             {isPM && pendingCount > 0 && (
               <DropdownMenuItem asChild>

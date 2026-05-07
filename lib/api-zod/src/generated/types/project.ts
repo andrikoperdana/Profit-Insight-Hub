@@ -19,6 +19,10 @@ export interface Project {
   salesName?: string | null;
   pmId?: string | null;
   pmName?: string | null;
+  technicalWriterId?: string | null;
+  technicalWriterName?: string | null;
+  adminProjectId?: string | null;
+  adminProjectName?: string | null;
   startDate?: string | null;
   endDate?: string | null;
   contractValue: number;
@@ -31,5 +35,8 @@ export interface Project {
   additionalCost: number;
   actualProfit?: number;
   marginPct?: number;
+  reportCoverUrl?: string | null;
+  reportLink?: string | null;
+  reportSubmittedAt?: string | null;
   createdAt: string;
 }
