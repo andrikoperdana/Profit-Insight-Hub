@@ -91,3 +91,6 @@ channel = "stable-25_05"
 [userenv.production]
 PENTEST_JWT_SECRET = "k26bL+77NKDEjGd+pQENDccTd1jP7jlct/7sJnPCTYqq6mrsEi5U7BVVSMMlfNmV"
 PENTEST_CRED_KEY = "c0DwaEmyLQNqs094k8HIZyKx+tP/48XBlsDah+V7HoA="
+
+[userenv.shared]
+BOOTSTRAP_TOKEN = "bsp_tlp688a5o5fg4idky03zm"
