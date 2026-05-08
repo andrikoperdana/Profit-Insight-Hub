@@ -22,17 +22,18 @@ export default function Title() {
           </span>
         </div>
 
-        <div className="max-w-[68vw]">
+        <div className="max-w-[72vw]">
           <div className="font-mono text-[1vw] tracking-[0.3em] text-primary uppercase mb-[3vh]">
-            Product Overview · v1.0
+            Role &amp; Workflow Overview · v1.1
           </div>
-          <h1 className="font-display font-bold text-[6.4vw] leading-[0.95] tracking-tight text-text text-wrap-balance">
-            Project &amp; profitability OS
-            <span className="block text-primary">for security consulting.</span>
+          <h1 className="font-display font-bold text-[6vw] leading-[0.95] tracking-tight text-text text-wrap-balance">
+            Sepuluh peran, satu alur,
+            <span className="block text-primary">dari prospek ke survei kepuasan.</span>
           </h1>
-          <p className="mt-[3.5vh] text-[1.7vw] text-muted max-w-[55vw] leading-snug">
-            One workspace where projects, people, and profit move in sync — built for
-            Indonesian IT security consulting firms.
+          <p className="mt-[3.5vh] text-[1.6vw] text-muted max-w-[58vw] leading-snug">
+            Bagaimana Sales, PMO, PM, Konsultan, Technical Writer, Admin Project,
+            tiga Principal supervisor, dan Site Admin berkolaborasi pada satu
+            platform — mulai pembuatan proyek sampai CSAT otomatis terkirim.
           </p>
         </div>
 
@@ -41,7 +42,7 @@ export default function Title() {
             Jakarta · 2026
           </div>
           <div className="font-mono text-[0.95vw] text-muted tracking-widest">
-            01 / 08
+            01 / 10
           </div>
         </div>
       </div>

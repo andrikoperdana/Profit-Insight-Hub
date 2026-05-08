@@ -14,49 +14,50 @@ export default function Closing() {
           </span>
         </div>
 
-        <div className="max-w-[75vw]">
+        <div className="max-w-[78vw]">
           <div className="font-mono text-[1vw] tracking-[0.3em] text-primary uppercase mb-[3vh]">
-            What's next
+            Ringkasan
           </div>
-          <h1 className="font-display font-bold text-[6.5vw] leading-[0.95] tracking-tight text-wrap-balance">
-            Run the engagement.
-            <span className="block text-primary">See the margin.</span>
+          <h1 className="font-display font-bold text-[5.6vw] leading-[0.95] tracking-tight text-wrap-balance">
+            Sepuluh peran, satu jalur,
+            <span className="block text-primary">profit dan kepuasan terukur.</span>
           </h1>
-          <p className="mt-[3.5vh] text-[1.6vw] text-muted max-w-[55vw] leading-snug">
-            Spin up a demo workspace, load nine sample projects, and walk every
-            screen — from RFP to BAST — in under five minutes.
+          <p className="mt-[3.5vh] text-[1.4vw] text-muted max-w-[60vw] leading-snug">
+            Sales mulai. PMO mengarahkan. PM mengeksekusi. Principal menjaga SDM.
+            Konsultan, writer, dan admin menyelesaikan. Site Admin mengamankan.
+            Klien menutupnya dengan CSAT — semuanya pada satu platform.
           </p>
         </div>
 
         <div className="grid grid-cols-3 gap-[2vw] border-t border-border pt-[3vh]">
           <div>
             <div className="font-mono text-[0.85vw] text-primary tracking-widest uppercase mb-[0.8vh]">
-              Try it
+              Login demo
             </div>
-            <div className="font-display font-semibold text-[1.4vw]">
-              Live preview workspace
-            </div>
-          </div>
-          <div>
-            <div className="font-mono text-[0.85vw] text-primary tracking-widest uppercase mb-[0.8vh]">
-              Stack
-            </div>
-            <div className="font-display font-semibold text-[1.4vw]">
-              React · Express · Postgres
+            <div className="font-display font-semibold text-[1.3vw]">
+              Semua password: <span className="font-mono">password123</span>
             </div>
           </div>
           <div>
             <div className="font-mono text-[0.85vw] text-primary tracking-widest uppercase mb-[0.8vh]">
-              Built for
+              Coba langsung
             </div>
-            <div className="font-display font-semibold text-[1.4vw]">
-              Indonesian security firms
+            <div className="font-display font-semibold text-[1.3vw]">
+              Jelajahi tiap dashboard per role
+            </div>
+          </div>
+          <div>
+            <div className="font-mono text-[0.85vw] text-primary tracking-widest uppercase mb-[0.8vh]">
+              Dibangun untuk
+            </div>
+            <div className="font-display font-semibold text-[1.3vw]">
+              Konsultansi keamanan IT Indonesia
             </div>
           </div>
         </div>
 
         <div className="absolute bottom-[4vh] right-[8vw] font-mono text-[0.95vw] text-muted tracking-widest">
-          08 / 08
+          10 / 10
         </div>
       </div>
     </div>
