@@ -17,10 +17,12 @@ import expensesRouter from "./expenses.js";
 import tasksRouter from "./tasks.js";
 import notificationsRouter from "./notifications.js";
 import principalRouter from "./principal.js";
+import adminBootstrapRouter from "./admin-bootstrap.js";
 
 const router: IRouter = Router();
 
 router.use(healthRouter);
+router.use("/admin", adminBootstrapRouter);
 router.use(surveysRouter);
 router.use(authRouter);
 router.use(usersRouter);
