@@ -755,8 +755,10 @@ export default function UsersList() {
               {watchedEditRole === UserRole.MANAGEMENT && (() => {
                 const allPms = ((users ?? []) as any[]).filter((u) => u.role === UserRole.PROJECT_MANAGER);
                 return (
-                  <FormItem>
-                    <FormLabel>Project Managers under this PMO Director</FormLabel>
+                  <div className="space-y-2">
+                    <div className="text-sm font-medium text-foreground">
+                      Project Managers under this PMO Director
+                    </div>
                     {allPms.length === 0 ? (
                       <p className="text-sm text-muted-foreground">No PMs exist yet.</p>
                     ) : (
@@ -791,7 +793,7 @@ export default function UsersList() {
                     <p className="text-xs text-muted-foreground">
                       Toggling a PM here reassigns their PMO Director.
                     </p>
-                  </FormItem>
+                  </div>
                 );
               })()}
 
@@ -799,8 +801,10 @@ export default function UsersList() {
                 const reportRole = PRINCIPAL_TO_REPORT_ROLE[watchedEditRole as UserRole];
                 const pool = ((users ?? []) as any[]).filter((u) => u.role === reportRole);
                 return (
-                  <FormItem>
-                    <FormLabel>Direct reports ({reportRole ? RoleLabels[reportRole] : ""})</FormLabel>
+                  <div className="space-y-2">
+                    <div className="text-sm font-medium text-foreground">
+                      Direct reports ({reportRole ? RoleLabels[reportRole] : ""})
+                    </div>
                     {pool.length === 0 ? (
                       <p className="text-sm text-muted-foreground">No users to assign.</p>
                     ) : (
@@ -835,7 +839,7 @@ export default function UsersList() {
                     <p className="text-xs text-muted-foreground">
                       Toggling a person here reassigns their Principal supervisor.
                     </p>
-                  </FormItem>
+                  </div>
                 );
               })()}
 
