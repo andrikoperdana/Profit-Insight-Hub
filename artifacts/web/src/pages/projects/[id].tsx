@@ -51,6 +51,7 @@ import { formatIDR, formatDate, formatPct } from "@/lib/format";
 import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
 import { LoadingPage } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
+import { PdfUploadField, type PdfFileData } from "@/components/common/PdfUploadField";
 import { useAuth } from "@/lib/auth";
 import { RoleLabels, canViewProjectFinancials } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
@@ -1602,6 +1603,75 @@ function getMissingRequiredFields(project: any): RequiredField[] {
   return missing;
 }
 
+function OverviewFileSlot({
+  label,
+  url,
+  fileName,
+  canEdit,
+  uploading,
+  testIdPrefix,
+  downloadFallback,
+  downloadLinkLabel,
+  onUpload,
+  onRemove,
+}: {
+  label: string;
+  url: string | null | undefined;
+  fileName: string | null | undefined;
+  canEdit: boolean;
+  uploading: boolean;
+  testIdPrefix: string;
+  downloadFallback: string;
+  downloadLinkLabel: string;
+  onUpload: (data: PdfFileData) => void;
+  onRemove: () => void;
+}) {
+  return (
+    <div className="flex items-start gap-3">
+      <FileText className="h-4 w-4 text-muted-foreground mt-1 shrink-0" />
+      <div className="flex-1 min-w-0 space-y-1.5">
+        <p className="text-xs text-muted-foreground uppercase tracking-wide">{label}</p>
+        {url ? (
+          <div className="flex items-center gap-2">
+            <a
+              href={url}
+              download={fileName ?? downloadFallback}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-primary hover:underline truncate block flex-1"
+              data-testid={`link-${testIdPrefix}-file`}
+            >
+              {fileName ?? downloadLinkLabel}
+            </a>
+            {canEdit && (
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                onClick={onRemove}
+                disabled={uploading}
+                data-testid={`button-${testIdPrefix}-remove`}
+              >
+                <X className="h-3.5 w-3.5" />
+              </Button>
+            )}
+          </div>
+        ) : canEdit ? (
+          <PdfUploadField
+            label=""
+            fileName={null}
+            onChange={(data) => { if (data) onUpload(data); }}
+            testId={`upload-${testIdPrefix}`}
+            disabled={uploading}
+          />
+        ) : (
+          <p className="text-sm text-muted-foreground italic">Not uploaded</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function OverviewTab({ project }: { project: any }) {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -1787,46 +1857,50 @@ function OverviewTab({ project }: { project: any }) {
                   label="SPK / PO Number"
                   value={project.code ?? "-"}
                 />
-                <div className="flex items-start gap-3">
-                  <FileText className="h-4 w-4 text-muted-foreground mt-1 shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs text-muted-foreground uppercase tracking-wide">SPK / PO File</p>
-                    {project.spkFileUrl ? (
-                      <a
-                        href={project.spkFileUrl}
-                        download={project.spkFileName ?? "spk.pdf"}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-primary hover:underline truncate block"
-                        data-testid="link-overview-spk-file"
-                      >
-                        {project.spkFileName ?? "Download SPK / PO"}
-                      </a>
-                    ) : (
-                      <p className="text-sm text-muted-foreground italic">Not uploaded</p>
-                    )}
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <FileText className="h-4 w-4 text-muted-foreground mt-1 shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs text-muted-foreground uppercase tracking-wide">Contract File</p>
-                    {project.contractFileUrl ? (
-                      <a
-                        href={project.contractFileUrl}
-                        download={project.contractFileName ?? "contract.pdf"}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-primary hover:underline truncate block"
-                        data-testid="link-overview-contract-file"
-                      >
-                        {project.contractFileName ?? "Download Contract"}
-                      </a>
-                    ) : (
-                      <p className="text-sm text-muted-foreground italic">Not uploaded</p>
-                    )}
-                  </div>
-                </div>
+                <OverviewFileSlot
+                  label="SPK / PO File"
+                  url={project.spkFileUrl}
+                  fileName={project.spkFileName}
+                  canEdit={canEdit}
+                  uploading={update.isPending}
+                  testIdPrefix="overview-spk"
+                  downloadFallback="spk.pdf"
+                  downloadLinkLabel="Download SPK / PO"
+                  onUpload={(data) =>
+                    update.mutate({
+                      id: project.id,
+                      data: { spkFileUrl: data.url, spkFileName: data.name } as any,
+                    })
+                  }
+                  onRemove={() =>
+                    update.mutate({
+                      id: project.id,
+                      data: { spkFileUrl: null, spkFileName: null } as any,
+                    })
+                  }
+                />
+                <OverviewFileSlot
+                  label="Contract File"
+                  url={project.contractFileUrl}
+                  fileName={project.contractFileName}
+                  canEdit={canEdit}
+                  uploading={update.isPending}
+                  testIdPrefix="overview-contract"
+                  downloadFallback="contract.pdf"
+                  downloadLinkLabel="Download Contract"
+                  onUpload={(data) =>
+                    update.mutate({
+                      id: project.id,
+                      data: { contractFileUrl: data.url, contractFileName: data.name } as any,
+                    })
+                  }
+                  onRemove={() =>
+                    update.mutate({
+                      id: project.id,
+                      data: { contractFileUrl: null, contractFileName: null } as any,
+                    })
+                  }
+                />
                 <InfoRow
                   icon={<Calendar className="h-4 w-4" />}
                   label="Timeline"
