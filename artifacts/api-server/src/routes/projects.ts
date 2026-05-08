@@ -14,7 +14,13 @@ import { notifyUsers } from "../lib/notifications.js";
 const router: IRouter = Router();
 router.use(requireAuth);
 
-const writeRoles = ["MANAGEMENT", "PROJECT_MANAGER", "SALES"] as const;
+const writeRoles = [
+  "MANAGEMENT",
+  "PROJECT_MANAGER",
+  "SALES",
+  "PRINCIPAL_TECHNICAL_WRITER",
+  "PRINCIPAL_ADMIN_PROJECT",
+] as const;
 
 // Safely parse a YYYY-MM-DD date string from a client.
 // Returns:
@@ -418,6 +424,45 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
         error: `Project Manager is not allowed to reassign: ${violating.join(", ")}`,
       });
       return;
+    }
+  } else if (role === "PRINCIPAL_TECHNICAL_WRITER" || role === "PRINCIPAL_ADMIN_PROJECT") {
+    // Principal TW / Principal AP may only assign their supervised single-pick
+    // role on this project. They may not change anything else.
+    const allowedField =
+      role === "PRINCIPAL_TECHNICAL_WRITER" ? "technicalWriterId" : "adminProjectId";
+    const targetRole =
+      role === "PRINCIPAL_TECHNICAL_WRITER" ? "TECHNICAL_WRITER" : "ADMIN_PROJECT";
+    const violating = Object.keys(b).filter(
+      (k) => b[k] !== undefined && k !== allowedField,
+    );
+    if (violating.length) {
+      res.status(403).json({
+        error: `Principal may only set ${allowedField} on this project`,
+      });
+      return;
+    }
+    if (!["OBSERVATION", "ACTIVE"].includes(beforeProj.status as string)) {
+      res.status(403).json({
+        error: "Principal can only assign on OBSERVATION or ACTIVE projects",
+      });
+      return;
+    }
+    const newId = b[allowedField];
+    if (newId) {
+      const target = await prisma.user.findUnique({
+        where: { id: String(newId) },
+        select: { role: true, principalId: true },
+      });
+      if (!target || target.role !== targetRole) {
+        res.status(400).json({ error: `Selected user is not a ${targetRole}` });
+        return;
+      }
+      if (target.principalId !== userId) {
+        res.status(403).json({
+          error: "You may only assign your direct supervisees",
+        });
+        return;
+      }
     }
   }
 

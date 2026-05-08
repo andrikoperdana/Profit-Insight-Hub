@@ -4,6 +4,7 @@ import {
   useListProjectsNeedingResource,
   useListUsersUnderSupervision,
   useProposeProjectResource,
+  useUpdateProject,
   useListAvailableUsers,
   ProjectStatus,
 } from "@workspace/api-client-react";
@@ -36,6 +37,12 @@ export default function PrincipalDashboard() {
   const [proposeFor, setProposeFor] = useState<{ id: string; name: string; code: string } | null>(null);
   const [form, setForm] = useState({ userId: "", roleInProject: "", plannedMandays: "10", dailyRate: "1500000" });
 
+  // KONSULTAN principals propose via ProjectResource (PM accepts later).
+  // TW / AP are single-pick fields on Project — assign directly; PM may override.
+  const isSinglePickPrincipal =
+    user?.role === "PRINCIPAL_TECHNICAL_WRITER" ||
+    user?.role === "PRINCIPAL_ADMIN_PROJECT";
+
   const propose = useProposeProjectResource({
     mutation: {
       onSuccess: () => {
@@ -49,9 +56,31 @@ export default function PrincipalDashboard() {
     },
   });
 
+  const updateProject = useUpdateProject({
+    mutation: {
+      onSuccess: () => {
+        toast({ title: "Resource assigned", description: "PM may override later if needed." });
+        setProposeFor(null);
+        setForm({ userId: "", roleInProject: "", plannedMandays: "10", dailyRate: "1500000" });
+        refetchProjects();
+      },
+      onError: (e: any) =>
+        toast({ variant: "destructive", title: "Could not assign", description: e?.message ?? "Unknown error" }),
+    },
+  });
+
   const submitPropose = () => {
     if (!proposeFor || !form.userId) {
       toast({ variant: "destructive", title: "Pick a team member" });
+      return;
+    }
+    if (isSinglePickPrincipal) {
+      const field =
+        user?.role === "PRINCIPAL_TECHNICAL_WRITER" ? "technicalWriterId" : "adminProjectId";
+      updateProject.mutate({
+        id: proposeFor.id,
+        data: { [field]: form.userId } as any,
+      });
       return;
     }
     propose.mutate({
@@ -191,25 +220,31 @@ export default function PrincipalDashboard() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-1.5">
-              <Label>Project Role <span className="text-muted-foreground text-xs">(optional)</span></Label>
-              <Input value={form.roleInProject} onChange={(e) => setForm({ ...form, roleInProject: e.target.value })} placeholder="e.g. Lead Auditor" />
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <Label>Planned Mandays</Label>
-                <Input type="number" min="0" step="0.5" value={form.plannedMandays} onChange={(e) => setForm({ ...form, plannedMandays: e.target.value })} />
-              </div>
-              <div className="space-y-1.5">
-                <Label>Daily Rate (IDR)</Label>
-                <Input type="number" min="0" step="100000" value={form.dailyRate} onChange={(e) => setForm({ ...form, dailyRate: e.target.value })} />
-              </div>
-            </div>
+            {!isSinglePickPrincipal && (
+              <>
+                <div className="space-y-1.5">
+                  <Label>Project Role <span className="text-muted-foreground text-xs">(optional)</span></Label>
+                  <Input value={form.roleInProject} onChange={(e) => setForm({ ...form, roleInProject: e.target.value })} placeholder="e.g. Lead Auditor" />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <Label>Planned Mandays</Label>
+                    <Input type="number" min="0" step="0.5" value={form.plannedMandays} onChange={(e) => setForm({ ...form, plannedMandays: e.target.value })} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>Daily Rate (IDR)</Label>
+                    <Input type="number" min="0" step="100000" value={form.dailyRate} onChange={(e) => setForm({ ...form, dailyRate: e.target.value })} />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setProposeFor(null)} disabled={propose.isPending}>Cancel</Button>
-            <Button onClick={submitPropose} disabled={propose.isPending || !form.userId}>
-              {propose.isPending ? "Proposing…" : "Propose"}
+            <Button variant="outline" onClick={() => setProposeFor(null)} disabled={propose.isPending || updateProject.isPending}>Cancel</Button>
+            <Button onClick={submitPropose} disabled={propose.isPending || updateProject.isPending || !form.userId}>
+              {propose.isPending || updateProject.isPending
+                ? (isSinglePickPrincipal ? "Assigning…" : "Proposing…")
+                : (isSinglePickPrincipal ? "Assign" : "Propose")}
             </Button>
           </DialogFooter>
         </DialogContent>

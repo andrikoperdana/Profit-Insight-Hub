@@ -13,6 +13,7 @@ import {
   useRemoveProjectResource,
   getListProjectResourcesQueryKey,
   useListAvailableUsers,
+  useListUsersUnderSupervision,
   useListClients,
   useListTimesheets,
   useListProjectExpenses,
@@ -673,6 +674,17 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
     user?.role === "PRINCIPAL_TECHNICAL_WRITER" ? "TECHNICAL_WRITER" :
     user?.role === "PRINCIPAL_ADMIN_PROJECT" ? "ADMIN_PROJECT" : null;
   const canPrincipalManageRow = (r: any) => principalSupervises != null && r.userRole === principalSupervises;
+  const projectIsAssignable = project.status === "OBSERVATION" || project.status === "ACTIVE";
+  const canPrincipalEditTw =
+    user?.role === "PRINCIPAL_TECHNICAL_WRITER" && projectIsAssignable;
+  const canPrincipalEditAp =
+    user?.role === "PRINCIPAL_ADMIN_PROJECT" && projectIsAssignable;
+  const { data: supervisees } = useListUsersUnderSupervision({
+    query: {
+      enabled: canPrincipalEditTw || canPrincipalEditAp,
+      queryKey: ["users-under-supervision"],
+    },
+  } as any);
   const { data: resources, isLoading } = useListProjectResources(projectId);
   const { data: konsultanPool } = useListAvailableUsers(
     { role: "KONSULTAN" },
@@ -795,6 +807,32 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                   ))}
                 </SelectContent>
               </Select>
+            ) : canPrincipalEditTw ? (
+              <>
+                <Select
+                  value={project.technicalWriterId ?? "_none"}
+                  onValueChange={(v) =>
+                    updateProject.mutate({ id: projectId, data: { technicalWriterId: v === "_none" ? null : v } as any })
+                  }
+                >
+                  <SelectTrigger data-testid="select-tw-principal">
+                    <SelectValue placeholder="Assign one of your writers" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="_none">— Unassigned —</SelectItem>
+                    {(supervisees ?? [])
+                      .filter((u: any) => u.role === "TECHNICAL_WRITER")
+                      .map((u: any) => (
+                        <SelectItem key={u.id} value={u.id}>
+                          {u.name}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  As Principal Technical Writer you may assign one of your direct supervisees. PM may override later.
+                </p>
+              </>
             ) : (
               <p className="text-sm">{writerName ?? <span className="text-muted-foreground italic">Unassigned</span>}</p>
             )}
@@ -829,6 +867,32 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                   ))}
                 </SelectContent>
               </Select>
+            ) : canPrincipalEditAp ? (
+              <>
+                <Select
+                  value={project.adminProjectId ?? "_none"}
+                  onValueChange={(v) =>
+                    updateProject.mutate({ id: projectId, data: { adminProjectId: v === "_none" ? null : v } as any })
+                  }
+                >
+                  <SelectTrigger data-testid="select-ap-principal">
+                    <SelectValue placeholder="Assign one of your admins" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="_none">— Unassigned —</SelectItem>
+                    {(supervisees ?? [])
+                      .filter((u: any) => u.role === "ADMIN_PROJECT")
+                      .map((u: any) => (
+                        <SelectItem key={u.id} value={u.id}>
+                          {u.name}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  As Principal Admin Project you may assign one of your direct supervisees. PM may override later.
+                </p>
+              </>
             ) : (
               <p className="text-sm">{adminName ?? <span className="text-muted-foreground italic">Unassigned</span>}</p>
             )}
