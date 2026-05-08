@@ -10,6 +10,7 @@ import {
   useDeleteDocument,
   useListProjectResources,
   useAddProjectResource,
+  useProposeProjectResource,
   useRemoveProjectResource,
   getListProjectResourcesQueryKey,
   useListAvailableUsers,
@@ -679,9 +680,11 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
     user?.role === "PRINCIPAL_TECHNICAL_WRITER" && projectIsAssignable;
   const canPrincipalEditAp =
     user?.role === "PRINCIPAL_ADMIN_PROJECT" && projectIsAssignable;
+  const canPrincipalProposeKonsultan =
+    user?.role === "PRINCIPAL_KONSULTAN" && projectIsAssignable;
   const { data: supervisees } = useListUsersUnderSupervision({
     query: {
-      enabled: canPrincipalEditTw || canPrincipalEditAp,
+      enabled: canPrincipalEditTw || canPrincipalEditAp || canPrincipalProposeKonsultan,
       queryKey: ["users-under-supervision"],
     },
   } as any);
@@ -728,6 +731,17 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
       onError: (e: any) => toast({ title: "Failed", description: e?.message ?? "Could not add resource", variant: "destructive" }),
     },
   });
+  const proposeMutation = useProposeProjectResource({
+    mutation: {
+      onSuccess: () => {
+        toast({ title: "Konsultan proposed", description: "PM has been notified to accept." });
+        setAddOpen(false);
+        setForm({ userId: "", roleInProject: "", plannedMandays: "10", dailyRate: "1500000" });
+        invalidate();
+      },
+      onError: (e: any) => toast({ title: "Failed", description: e?.message ?? "Could not propose Konsultan", variant: "destructive" }),
+    },
+  });
   const removeMutation = useRemoveProjectResource({
     mutation: {
       onSuccess: () => {
@@ -749,13 +763,17 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
   const availableKonsultan = (konsultanPool ?? []).filter(
     (u: any) => !assignedKonsultanIds.has(u.id) && (!u.atCapacity || form.userId === u.id),
   );
+  const principalKonsultanPool = (supervisees ?? []).filter(
+    (u: any) => u.role === "KONSULTAN" && !assignedKonsultanIds.has(u.id),
+  );
+  const konsultanOptions = canEdit ? availableKonsultan : principalKonsultanPool;
 
   const handleAdd = () => {
     if (!form.userId) {
       toast({ title: "Please select a team member", variant: "destructive" });
       return;
     }
-    addMutation.mutate({
+    const payload = {
       id: projectId,
       data: {
         userId: form.userId,
@@ -763,7 +781,12 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
         plannedMandays: Number(form.plannedMandays) || 0,
         dailyRate: Number(form.dailyRate) || 0,
       },
-    });
+    };
+    if (canEdit) {
+      addMutation.mutate(payload);
+    } else if (canPrincipalProposeKonsultan) {
+      proposeMutation.mutate(payload);
+    }
   };
 
   const writerName =
@@ -908,19 +931,25 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
               Konsultan assigned to {project?.code ?? "this project"}. Each Konsultan can be active on a maximum of 2 projects (OBSERVATION or ACTIVE).
             </CardDescription>
           </div>
-          {canEdit && (
+          {canEdit ? (
             <Button size="sm" onClick={() => setAddOpen(true)} className="shrink-0" data-testid="button-add-konsultan">
               + Add Konsultan
             </Button>
-          )}
+          ) : canPrincipalProposeKonsultan ? (
+            <Button size="sm" onClick={() => setAddOpen(true)} className="shrink-0" data-testid="button-propose-konsultan">
+              + Propose Konsultan
+            </Button>
+          ) : null}
         </CardHeader>
         <CardContent>
           {list.length === 0 ? (
             <div className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
               No resources assigned to this project yet.
-              {canEdit && (
+              {(canEdit || canPrincipalProposeKonsultan) && (
                 <div className="mt-3">
-                  <Button size="sm" onClick={() => setAddOpen(true)}>+ Add First Resource</Button>
+                  <Button size="sm" onClick={() => setAddOpen(true)}>
+                    {canEdit ? "+ Add First Resource" : "+ Propose Konsultan"}
+                  </Button>
                 </div>
               )}
             </div>
@@ -1001,28 +1030,35 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
       <Dialog open={addOpen} onOpenChange={setAddOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add Konsultan to {project?.code ?? "Project"}</DialogTitle>
+            <DialogTitle>
+              {canEdit ? "Add" : "Propose"} Konsultan to {project?.code ?? "Project"}
+            </DialogTitle>
             <DialogDescription>
-              Each Konsultan can be active on a maximum of 2 projects. Konsultans already at capacity are hidden from the list.
+              {canEdit
+                ? "Each Konsultan can be active on a maximum of 2 projects. Konsultans already at capacity are hidden from the list."
+                : "Pick one of your supervisees to propose. The PM will be notified and may accept or replace your proposal."}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 pt-2">
             <div className="space-y-1.5">
               <Label>Konsultan</Label>
               <Select value={form.userId} onValueChange={(v) => {
-                const picked = (konsultanPool ?? []).find((u: any) => u.id === v);
+                const pool = canEdit ? (konsultanPool ?? []) : principalKonsultanPool;
+                const picked = pool.find((u: any) => u.id === v);
                 setForm({ ...form, userId: v, dailyRate: picked?.dailyRate ? String(picked.dailyRate) : form.dailyRate });
               }}>
                 <SelectTrigger>
-                  <SelectValue placeholder={availableKonsultan.length === 0 ? "No Konsultan available" : "Select a Konsultan"} />
+                  <SelectValue placeholder={konsultanOptions.length === 0 ? "No Konsultan available" : "Select a Konsultan"} />
                 </SelectTrigger>
                 <SelectContent>
-                  {availableKonsultan.map((u: any) => (
+                  {konsultanOptions.map((u: any) => (
                     <SelectItem key={u.id} value={u.id}>
-                      {u.name}{" "}
-                      <span className="text-muted-foreground text-xs">
-                        — {u.activeProjectCount}/2 active
-                      </span>
+                      {u.name}
+                      {canEdit && (
+                        <span className="text-muted-foreground text-xs">
+                          {" "}— {u.activeProjectCount}/2 active
+                        </span>
+                      )}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -1063,9 +1099,11 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
             </p>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setAddOpen(false)} disabled={addMutation.isPending}>Cancel</Button>
-            <Button onClick={handleAdd} disabled={addMutation.isPending || !form.userId}>
-              {addMutation.isPending ? "Saving..." : "Add"}
+            <Button variant="outline" onClick={() => setAddOpen(false)} disabled={addMutation.isPending || proposeMutation.isPending}>Cancel</Button>
+            <Button onClick={handleAdd} disabled={addMutation.isPending || proposeMutation.isPending || !form.userId}>
+              {addMutation.isPending || proposeMutation.isPending
+                ? (canEdit ? "Saving..." : "Proposing...")
+                : (canEdit ? "Add" : "Propose")}
             </Button>
           </DialogFooter>
         </DialogContent>

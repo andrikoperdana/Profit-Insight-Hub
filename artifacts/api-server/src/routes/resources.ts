@@ -30,11 +30,13 @@ async function canWriteResourceFor(opts: {
     if (proj.pmId !== callerId) return { ok: false, status: 403, error: "Only the assigned PM may modify resources on this project" };
     return { ok: true };
   }
-  if (callerRole.startsWith("PRINCIPAL_")) {
-    const expectedRole = PRINCIPAL_TO_REPORT_ROLE[callerRole];
+  if (callerRole === "PRINCIPAL_KONSULTAN") {
+    // Only the Konsultan principal interacts with ProjectResource rows.
+    // PRINCIPAL_TECHNICAL_WRITER / PRINCIPAL_ADMIN_PROJECT use the single-pick
+    // fields on Project (PATCH /projects/:id) and must not write resource rows.
     const target = await prisma.user.findUnique({ where: { id: targetUserId }, select: { role: true, principalId: true } });
     if (!target) return { ok: false, status: 404, error: "Target user not found" };
-    if (target.role !== expectedRole) return { ok: false, status: 403, error: "Principal can only manage resources of their supervised role" };
+    if (target.role !== "KONSULTAN") return { ok: false, status: 403, error: "Principal can only manage resources of their supervised role" };
     if (target.principalId !== callerId) return { ok: false, status: 403, error: "Principal can only manage their own supervisees" };
     return { ok: true };
   }
@@ -216,10 +218,18 @@ router.post(
   async (req, res) => upsertResource(req, res, { propose: false }),
 );
 
-router.post("/projects/:id/resources/propose", async (req, res) => {
-  const callerRole = req.user!.role;
-  if (!callerRole.startsWith("PRINCIPAL_")) {
-    res.status(403).json({ error: "Only Principal roles may propose resources" });
+router.post("/projects/:id/resources/propose", requireRole("PRINCIPAL_KONSULTAN"), async (req, res) => {
+  // Status guard: proposals only allowed on assignable projects.
+  const project = await prisma.project.findUnique({
+    where: { id: req.params.id },
+    select: { status: true },
+  });
+  if (!project) {
+    res.status(404).json({ error: "Project not found" });
+    return;
+  }
+  if (project.status !== "OBSERVATION" && project.status !== "ACTIVE") {
+    res.status(409).json({ error: "Resources can only be proposed on OBSERVATION or ACTIVE projects" });
     return;
   }
   await upsertResource(req, res, { propose: true });
