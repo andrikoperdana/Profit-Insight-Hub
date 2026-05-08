@@ -253,6 +253,9 @@ export default function Dashboard() {
         </Card>
       )}
 
+      {/* PM Allocation: managers reporting up to PMO */}
+      <PMAllocationCard />
+
       {/* Resource Utilization */}
       <ResourceUtilizationSection />
 
@@ -633,6 +636,71 @@ function SatisfactionWidget() {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function PMAllocationCard() {
+  const { data: users } = useListUsers();
+  const { data: projects } = useListProjects();
+  const pms = (users ?? []).filter((u: any) => u.role === UserRole.PROJECT_MANAGER && u.isActive);
+  type Row = { id: string; name: string; title: string | null; active: number; observation: number; draft: number; totalActiveValue: number; inFlight: number; tone: string };
+  const rows: Row[] = pms.map((pm: any) => {
+    const owned = (projects ?? []).filter((p: any) => p.pmId === pm.id);
+    const active = owned.filter((p: any) => p.status === ProjectStatus.ACTIVE).length;
+    const observation = owned.filter((p: any) => p.status === ProjectStatus.OBSERVATION).length;
+    const draft = owned.filter((p: any) => p.status === ProjectStatus.DRAFT).length;
+    const totalActiveValue = owned
+      .filter((p: any) => p.status === ProjectStatus.ACTIVE || p.status === ProjectStatus.OBSERVATION)
+      .reduce((s: number, p: any) => s + (p.contractValue ?? 0), 0);
+    const inFlight = active + observation;
+    const tone = inFlight >= 6 ? "text-destructive" : inFlight >= 4 ? "text-amber-500" : "text-emerald-500";
+    return { id: pm.id, name: pm.name, title: pm.title, active, observation, draft, totalActiveValue, inFlight, tone };
+  }).sort((a, b) => b.inFlight - a.inFlight);
+
+  return (
+    <Card className="border-border shadow-sm">
+      <CardHeader>
+        <CardTitle className="text-base">PM Allocation</CardTitle>
+        <CardDescription>
+          Project Managers reporting to PMO and how many in-flight projects each is carrying.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {rows.length === 0 ? (
+          <p className="text-sm text-muted-foreground italic">No active Project Managers.</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-xs text-muted-foreground border-b border-border">
+                  <th className="py-2 pr-3 font-medium">Project Manager</th>
+                  <th className="py-2 pr-3 font-medium text-right">In-flight</th>
+                  <th className="py-2 pr-3 font-medium text-right">Active</th>
+                  <th className="py-2 pr-3 font-medium text-right">Observation</th>
+                  <th className="py-2 pr-3 font-medium text-right">Draft</th>
+                  <th className="py-2 pr-3 font-medium text-right">In-flight Contract Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((r) => (
+                  <tr key={r.id} className="border-b border-border/40 hover:bg-muted/30">
+                    <td className="py-2 pr-3">
+                      <p className="font-medium">{r.name}</p>
+                      {r.title && <p className="text-xs text-muted-foreground">{r.title}</p>}
+                    </td>
+                    <td className={`py-2 pr-3 text-right font-mono font-semibold ${r.tone}`}>{r.inFlight}</td>
+                    <td className="py-2 pr-3 text-right font-mono">{r.active}</td>
+                    <td className="py-2 pr-3 text-right font-mono">{r.observation}</td>
+                    <td className="py-2 pr-3 text-right font-mono">{r.draft}</td>
+                    <td className="py-2 pr-3 text-right font-mono">{formatIDR(r.totalActiveValue)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </CardContent>

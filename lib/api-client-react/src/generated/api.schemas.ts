@@ -23,6 +23,9 @@ export const UserRole = {
   KONSULTAN: "KONSULTAN",
   TECHNICAL_WRITER: "TECHNICAL_WRITER",
   ADMIN_PROJECT: "ADMIN_PROJECT",
+  PRINCIPAL_KONSULTAN: "PRINCIPAL_KONSULTAN",
+  PRINCIPAL_TECHNICAL_WRITER: "PRINCIPAL_TECHNICAL_WRITER",
+  PRINCIPAL_ADMIN_PROJECT: "PRINCIPAL_ADMIN_PROJECT",
 } as const;
 
 export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus];
@@ -127,6 +130,8 @@ export interface User {
   title?: string | null;
   dailyRate?: number | null;
   isActive: boolean;
+  managerId?: string | null;
+  principalId?: string | null;
   createdAt: string;
 }
 
@@ -147,6 +152,8 @@ export interface CreateUserBody {
   role: UserRole;
   title?: string;
   dailyRate?: number;
+  managerId?: string | null;
+  principalId?: string | null;
 }
 
 export interface UpdateUserBody {
@@ -156,6 +163,8 @@ export interface UpdateUserBody {
   dailyRate?: number;
   isActive?: boolean;
   password?: string;
+  managerId?: string | null;
+  principalId?: string | null;
 }
 
 export interface Client {
@@ -265,6 +274,10 @@ export interface ProjectResource {
   plannedMandays: number;
   actualMandays: number;
   dailyRate: number;
+  proposedById?: string | null;
+  proposedByName?: string | null;
+  proposedAt?: string | null;
+  acceptedAt?: string | null;
 }
 
 export interface Document {

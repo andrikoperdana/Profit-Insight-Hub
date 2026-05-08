@@ -94,7 +94,10 @@ export namespace $Enums {
   SALES: 'SALES',
   KONSULTAN: 'KONSULTAN',
   TECHNICAL_WRITER: 'TECHNICAL_WRITER',
-  ADMIN_PROJECT: 'ADMIN_PROJECT'
+  ADMIN_PROJECT: 'ADMIN_PROJECT',
+  PRINCIPAL_KONSULTAN: 'PRINCIPAL_KONSULTAN',
+  PRINCIPAL_TECHNICAL_WRITER: 'PRINCIPAL_TECHNICAL_WRITER',
+  PRINCIPAL_ADMIN_PROJECT: 'PRINCIPAL_ADMIN_PROJECT'
 };
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
@@ -2041,11 +2044,14 @@ export namespace Prisma {
    */
 
   export type UserCountOutputType = {
+    reports: number
+    supervisees: number
     projectsAsSales: number
     projectsAsPm: number
     projectsAsTw: number
     projectsAsAdmin: number
     resources: number
+    proposedResources: number
     timesheets: number
     approvedTimesheets: number
     documentsUploaded: number
@@ -2059,11 +2065,14 @@ export namespace Prisma {
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    reports?: boolean | UserCountOutputTypeCountReportsArgs
+    supervisees?: boolean | UserCountOutputTypeCountSuperviseesArgs
     projectsAsSales?: boolean | UserCountOutputTypeCountProjectsAsSalesArgs
     projectsAsPm?: boolean | UserCountOutputTypeCountProjectsAsPmArgs
     projectsAsTw?: boolean | UserCountOutputTypeCountProjectsAsTwArgs
     projectsAsAdmin?: boolean | UserCountOutputTypeCountProjectsAsAdminArgs
     resources?: boolean | UserCountOutputTypeCountResourcesArgs
+    proposedResources?: boolean | UserCountOutputTypeCountProposedResourcesArgs
     timesheets?: boolean | UserCountOutputTypeCountTimesheetsArgs
     approvedTimesheets?: boolean | UserCountOutputTypeCountApprovedTimesheetsArgs
     documentsUploaded?: boolean | UserCountOutputTypeCountDocumentsUploadedArgs
@@ -2085,6 +2094,20 @@ export namespace Prisma {
      * Select specific fields to fetch from the UserCountOutputType
      */
     select?: UserCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSuperviseesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
   }
 
   /**
@@ -2119,6 +2142,13 @@ export namespace Prisma {
    * UserCountOutputType without action
    */
   export type UserCountOutputTypeCountResourcesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectResourceWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountProposedResourcesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectResourceWhereInput
   }
 
@@ -2376,6 +2406,8 @@ export namespace Prisma {
     deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    managerId: string | null
+    principalId: string | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -2390,6 +2422,8 @@ export namespace Prisma {
     deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    managerId: string | null
+    principalId: string | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -2404,6 +2438,8 @@ export namespace Prisma {
     deletedAt: number
     createdAt: number
     updatedAt: number
+    managerId: number
+    principalId: number
     _all: number
   }
 
@@ -2428,6 +2464,8 @@ export namespace Prisma {
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
+    managerId?: true
+    principalId?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -2442,6 +2480,8 @@ export namespace Prisma {
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
+    managerId?: true
+    principalId?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -2456,6 +2496,8 @@ export namespace Prisma {
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
+    managerId?: true
+    principalId?: true
     _all?: true
   }
 
@@ -2557,6 +2599,8 @@ export namespace Prisma {
     deletedAt: Date | null
     createdAt: Date
     updatedAt: Date
+    managerId: string | null
+    principalId: string | null
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -2590,11 +2634,18 @@ export namespace Prisma {
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    managerId?: boolean
+    principalId?: boolean
+    manager?: boolean | User$managerArgs<ExtArgs>
+    reports?: boolean | User$reportsArgs<ExtArgs>
+    principal?: boolean | User$principalArgs<ExtArgs>
+    supervisees?: boolean | User$superviseesArgs<ExtArgs>
     projectsAsSales?: boolean | User$projectsAsSalesArgs<ExtArgs>
     projectsAsPm?: boolean | User$projectsAsPmArgs<ExtArgs>
     projectsAsTw?: boolean | User$projectsAsTwArgs<ExtArgs>
     projectsAsAdmin?: boolean | User$projectsAsAdminArgs<ExtArgs>
     resources?: boolean | User$resourcesArgs<ExtArgs>
+    proposedResources?: boolean | User$proposedResourcesArgs<ExtArgs>
     timesheets?: boolean | User$timesheetsArgs<ExtArgs>
     approvedTimesheets?: boolean | User$approvedTimesheetsArgs<ExtArgs>
     documentsUploaded?: boolean | User$documentsUploadedArgs<ExtArgs>
@@ -2620,6 +2671,10 @@ export namespace Prisma {
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    managerId?: boolean
+    principalId?: boolean
+    manager?: boolean | User$managerArgs<ExtArgs>
+    principal?: boolean | User$principalArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -2634,14 +2689,21 @@ export namespace Prisma {
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    managerId?: boolean
+    principalId?: boolean
   }
 
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    manager?: boolean | User$managerArgs<ExtArgs>
+    reports?: boolean | User$reportsArgs<ExtArgs>
+    principal?: boolean | User$principalArgs<ExtArgs>
+    supervisees?: boolean | User$superviseesArgs<ExtArgs>
     projectsAsSales?: boolean | User$projectsAsSalesArgs<ExtArgs>
     projectsAsPm?: boolean | User$projectsAsPmArgs<ExtArgs>
     projectsAsTw?: boolean | User$projectsAsTwArgs<ExtArgs>
     projectsAsAdmin?: boolean | User$projectsAsAdminArgs<ExtArgs>
     resources?: boolean | User$resourcesArgs<ExtArgs>
+    proposedResources?: boolean | User$proposedResourcesArgs<ExtArgs>
     timesheets?: boolean | User$timesheetsArgs<ExtArgs>
     approvedTimesheets?: boolean | User$approvedTimesheetsArgs<ExtArgs>
     documentsUploaded?: boolean | User$documentsUploadedArgs<ExtArgs>
@@ -2654,16 +2716,24 @@ export namespace Prisma {
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    manager?: boolean | User$managerArgs<ExtArgs>
+    principal?: boolean | User$principalArgs<ExtArgs>
+  }
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
+      manager: Prisma.$UserPayload<ExtArgs> | null
+      reports: Prisma.$UserPayload<ExtArgs>[]
+      principal: Prisma.$UserPayload<ExtArgs> | null
+      supervisees: Prisma.$UserPayload<ExtArgs>[]
       projectsAsSales: Prisma.$ProjectPayload<ExtArgs>[]
       projectsAsPm: Prisma.$ProjectPayload<ExtArgs>[]
       projectsAsTw: Prisma.$ProjectPayload<ExtArgs>[]
       projectsAsAdmin: Prisma.$ProjectPayload<ExtArgs>[]
       resources: Prisma.$ProjectResourcePayload<ExtArgs>[]
+      proposedResources: Prisma.$ProjectResourcePayload<ExtArgs>[]
       timesheets: Prisma.$TimesheetPayload<ExtArgs>[]
       approvedTimesheets: Prisma.$TimesheetPayload<ExtArgs>[]
       documentsUploaded: Prisma.$DocumentPayload<ExtArgs>[]
@@ -2687,6 +2757,8 @@ export namespace Prisma {
       deletedAt: Date | null
       createdAt: Date
       updatedAt: Date
+      managerId: string | null
+      principalId: string | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -3051,11 +3123,16 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    manager<T extends User$managerArgs<ExtArgs> = {}>(args?: Subset<T, User$managerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    reports<T extends User$reportsArgs<ExtArgs> = {}>(args?: Subset<T, User$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany"> | Null>
+    principal<T extends User$principalArgs<ExtArgs> = {}>(args?: Subset<T, User$principalArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    supervisees<T extends User$superviseesArgs<ExtArgs> = {}>(args?: Subset<T, User$superviseesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany"> | Null>
     projectsAsSales<T extends User$projectsAsSalesArgs<ExtArgs> = {}>(args?: Subset<T, User$projectsAsSalesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany"> | Null>
     projectsAsPm<T extends User$projectsAsPmArgs<ExtArgs> = {}>(args?: Subset<T, User$projectsAsPmArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany"> | Null>
     projectsAsTw<T extends User$projectsAsTwArgs<ExtArgs> = {}>(args?: Subset<T, User$projectsAsTwArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany"> | Null>
     projectsAsAdmin<T extends User$projectsAsAdminArgs<ExtArgs> = {}>(args?: Subset<T, User$projectsAsAdminArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany"> | Null>
     resources<T extends User$resourcesArgs<ExtArgs> = {}>(args?: Subset<T, User$resourcesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectResourcePayload<ExtArgs>, T, "findMany"> | Null>
+    proposedResources<T extends User$proposedResourcesArgs<ExtArgs> = {}>(args?: Subset<T, User$proposedResourcesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectResourcePayload<ExtArgs>, T, "findMany"> | Null>
     timesheets<T extends User$timesheetsArgs<ExtArgs> = {}>(args?: Subset<T, User$timesheetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimesheetPayload<ExtArgs>, T, "findMany"> | Null>
     approvedTimesheets<T extends User$approvedTimesheetsArgs<ExtArgs> = {}>(args?: Subset<T, User$approvedTimesheetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimesheetPayload<ExtArgs>, T, "findMany"> | Null>
     documentsUploaded<T extends User$documentsUploadedArgs<ExtArgs> = {}>(args?: Subset<T, User$documentsUploadedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany"> | Null>
@@ -3106,6 +3183,8 @@ export namespace Prisma {
     readonly deletedAt: FieldRef<"User", 'DateTime'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
+    readonly managerId: FieldRef<"User", 'String'>
+    readonly principalId: FieldRef<"User", 'String'>
   }
     
 
@@ -3327,6 +3406,10 @@ export namespace Prisma {
      */
     data: UserCreateManyInput | UserCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -3420,6 +3503,76 @@ export namespace Prisma {
   }
 
   /**
+   * User.manager
+   */
+  export type User$managerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * User.reports
+   */
+  export type User$reportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    cursor?: UserWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * User.principal
+   */
+  export type User$principalArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * User.supervisees
+   */
+  export type User$superviseesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    cursor?: UserWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
    * User.projectsAsSales
    */
   export type User$projectsAsSalesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3503,6 +3656,26 @@ export namespace Prisma {
    * User.resources
    */
   export type User$resourcesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectResource
+     */
+    select?: ProjectResourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectResourceInclude<ExtArgs> | null
+    where?: ProjectResourceWhereInput
+    orderBy?: ProjectResourceOrderByWithRelationInput | ProjectResourceOrderByWithRelationInput[]
+    cursor?: ProjectResourceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectResourceScalarFieldEnum | ProjectResourceScalarFieldEnum[]
+  }
+
+  /**
+   * User.proposedResources
+   */
+  export type User$proposedResourcesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the ProjectResource
      */
@@ -9173,6 +9346,9 @@ export namespace Prisma {
     roleInProject: string | null
     plannedMandays: number | null
     dailyRate: number | null
+    proposedById: string | null
+    proposedAt: Date | null
+    acceptedAt: Date | null
     createdAt: Date | null
   }
 
@@ -9183,6 +9359,9 @@ export namespace Prisma {
     roleInProject: string | null
     plannedMandays: number | null
     dailyRate: number | null
+    proposedById: string | null
+    proposedAt: Date | null
+    acceptedAt: Date | null
     createdAt: Date | null
   }
 
@@ -9193,6 +9372,9 @@ export namespace Prisma {
     roleInProject: number
     plannedMandays: number
     dailyRate: number
+    proposedById: number
+    proposedAt: number
+    acceptedAt: number
     createdAt: number
     _all: number
   }
@@ -9215,6 +9397,9 @@ export namespace Prisma {
     roleInProject?: true
     plannedMandays?: true
     dailyRate?: true
+    proposedById?: true
+    proposedAt?: true
+    acceptedAt?: true
     createdAt?: true
   }
 
@@ -9225,6 +9410,9 @@ export namespace Prisma {
     roleInProject?: true
     plannedMandays?: true
     dailyRate?: true
+    proposedById?: true
+    proposedAt?: true
+    acceptedAt?: true
     createdAt?: true
   }
 
@@ -9235,6 +9423,9 @@ export namespace Prisma {
     roleInProject?: true
     plannedMandays?: true
     dailyRate?: true
+    proposedById?: true
+    proposedAt?: true
+    acceptedAt?: true
     createdAt?: true
     _all?: true
   }
@@ -9332,6 +9523,9 @@ export namespace Prisma {
     roleInProject: string | null
     plannedMandays: number
     dailyRate: number
+    proposedById: string | null
+    proposedAt: Date | null
+    acceptedAt: Date | null
     createdAt: Date
     _count: ProjectResourceCountAggregateOutputType | null
     _avg: ProjectResourceAvgAggregateOutputType | null
@@ -9361,9 +9555,13 @@ export namespace Prisma {
     roleInProject?: boolean
     plannedMandays?: boolean
     dailyRate?: boolean
+    proposedById?: boolean
+    proposedAt?: boolean
+    acceptedAt?: boolean
     createdAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
+    proposedBy?: boolean | ProjectResource$proposedByArgs<ExtArgs>
   }, ExtArgs["result"]["projectResource"]>
 
   export type ProjectResourceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -9373,9 +9571,13 @@ export namespace Prisma {
     roleInProject?: boolean
     plannedMandays?: boolean
     dailyRate?: boolean
+    proposedById?: boolean
+    proposedAt?: boolean
+    acceptedAt?: boolean
     createdAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
+    proposedBy?: boolean | ProjectResource$proposedByArgs<ExtArgs>
   }, ExtArgs["result"]["projectResource"]>
 
   export type ProjectResourceSelectScalar = {
@@ -9385,16 +9587,21 @@ export namespace Prisma {
     roleInProject?: boolean
     plannedMandays?: boolean
     dailyRate?: boolean
+    proposedById?: boolean
+    proposedAt?: boolean
+    acceptedAt?: boolean
     createdAt?: boolean
   }
 
   export type ProjectResourceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
+    proposedBy?: boolean | ProjectResource$proposedByArgs<ExtArgs>
   }
   export type ProjectResourceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
+    proposedBy?: boolean | ProjectResource$proposedByArgs<ExtArgs>
   }
 
   export type $ProjectResourcePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9402,6 +9609,7 @@ export namespace Prisma {
     objects: {
       project: Prisma.$ProjectPayload<ExtArgs>
       user: Prisma.$UserPayload<ExtArgs>
+      proposedBy: Prisma.$UserPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -9410,6 +9618,9 @@ export namespace Prisma {
       roleInProject: string | null
       plannedMandays: number
       dailyRate: number
+      proposedById: string | null
+      proposedAt: Date | null
+      acceptedAt: Date | null
       createdAt: Date
     }, ExtArgs["result"]["projectResource"]>
     composites: {}
@@ -9777,6 +9988,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    proposedBy<T extends ProjectResource$proposedByArgs<ExtArgs> = {}>(args?: Subset<T, ProjectResource$proposedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9812,6 +10024,9 @@ export namespace Prisma {
     readonly roleInProject: FieldRef<"ProjectResource", 'String'>
     readonly plannedMandays: FieldRef<"ProjectResource", 'Float'>
     readonly dailyRate: FieldRef<"ProjectResource", 'Float'>
+    readonly proposedById: FieldRef<"ProjectResource", 'String'>
+    readonly proposedAt: FieldRef<"ProjectResource", 'DateTime'>
+    readonly acceptedAt: FieldRef<"ProjectResource", 'DateTime'>
     readonly createdAt: FieldRef<"ProjectResource", 'DateTime'>
   }
     
@@ -10128,6 +10343,21 @@ export namespace Prisma {
      * Filter which ProjectResources to delete
      */
     where?: ProjectResourceWhereInput
+  }
+
+  /**
+   * ProjectResource.proposedBy
+   */
+  export type ProjectResource$proposedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
   }
 
   /**
@@ -17364,7 +17594,9 @@ export namespace Prisma {
     isActive: 'isActive',
     deletedAt: 'deletedAt',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    managerId: 'managerId',
+    principalId: 'principalId'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -17470,6 +17702,9 @@ export namespace Prisma {
     roleInProject: 'roleInProject',
     plannedMandays: 'plannedMandays',
     dailyRate: 'dailyRate',
+    proposedById: 'proposedById',
+    proposedAt: 'proposedAt',
+    acceptedAt: 'acceptedAt',
     createdAt: 'createdAt'
   };
 
@@ -17793,11 +18028,18 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    managerId?: StringNullableFilter<"User"> | string | null
+    principalId?: StringNullableFilter<"User"> | string | null
+    manager?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    reports?: UserListRelationFilter
+    principal?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    supervisees?: UserListRelationFilter
     projectsAsSales?: ProjectListRelationFilter
     projectsAsPm?: ProjectListRelationFilter
     projectsAsTw?: ProjectListRelationFilter
     projectsAsAdmin?: ProjectListRelationFilter
     resources?: ProjectResourceListRelationFilter
+    proposedResources?: ProjectResourceListRelationFilter
     timesheets?: TimesheetListRelationFilter
     approvedTimesheets?: TimesheetListRelationFilter
     documentsUploaded?: DocumentListRelationFilter
@@ -17822,11 +18064,18 @@ export namespace Prisma {
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    managerId?: SortOrderInput | SortOrder
+    principalId?: SortOrderInput | SortOrder
+    manager?: UserOrderByWithRelationInput
+    reports?: UserOrderByRelationAggregateInput
+    principal?: UserOrderByWithRelationInput
+    supervisees?: UserOrderByRelationAggregateInput
     projectsAsSales?: ProjectOrderByRelationAggregateInput
     projectsAsPm?: ProjectOrderByRelationAggregateInput
     projectsAsTw?: ProjectOrderByRelationAggregateInput
     projectsAsAdmin?: ProjectOrderByRelationAggregateInput
     resources?: ProjectResourceOrderByRelationAggregateInput
+    proposedResources?: ProjectResourceOrderByRelationAggregateInput
     timesheets?: TimesheetOrderByRelationAggregateInput
     approvedTimesheets?: TimesheetOrderByRelationAggregateInput
     documentsUploaded?: DocumentOrderByRelationAggregateInput
@@ -17854,11 +18103,18 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    managerId?: StringNullableFilter<"User"> | string | null
+    principalId?: StringNullableFilter<"User"> | string | null
+    manager?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    reports?: UserListRelationFilter
+    principal?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    supervisees?: UserListRelationFilter
     projectsAsSales?: ProjectListRelationFilter
     projectsAsPm?: ProjectListRelationFilter
     projectsAsTw?: ProjectListRelationFilter
     projectsAsAdmin?: ProjectListRelationFilter
     resources?: ProjectResourceListRelationFilter
+    proposedResources?: ProjectResourceListRelationFilter
     timesheets?: TimesheetListRelationFilter
     approvedTimesheets?: TimesheetListRelationFilter
     documentsUploaded?: DocumentListRelationFilter
@@ -17883,6 +18139,8 @@ export namespace Prisma {
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    managerId?: SortOrderInput | SortOrder
+    principalId?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -17905,6 +18163,8 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    managerId?: StringNullableWithAggregatesFilter<"User"> | string | null
+    principalId?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
 
   export type ClientWhereInput = {
@@ -18416,9 +18676,13 @@ export namespace Prisma {
     roleInProject?: StringNullableFilter<"ProjectResource"> | string | null
     plannedMandays?: FloatFilter<"ProjectResource"> | number
     dailyRate?: FloatFilter<"ProjectResource"> | number
+    proposedById?: StringNullableFilter<"ProjectResource"> | string | null
+    proposedAt?: DateTimeNullableFilter<"ProjectResource"> | Date | string | null
+    acceptedAt?: DateTimeNullableFilter<"ProjectResource"> | Date | string | null
     createdAt?: DateTimeFilter<"ProjectResource"> | Date | string
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
     user?: XOR<UserRelationFilter, UserWhereInput>
+    proposedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
   }
 
   export type ProjectResourceOrderByWithRelationInput = {
@@ -18428,9 +18692,13 @@ export namespace Prisma {
     roleInProject?: SortOrderInput | SortOrder
     plannedMandays?: SortOrder
     dailyRate?: SortOrder
+    proposedById?: SortOrderInput | SortOrder
+    proposedAt?: SortOrderInput | SortOrder
+    acceptedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     project?: ProjectOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
+    proposedBy?: UserOrderByWithRelationInput
   }
 
   export type ProjectResourceWhereUniqueInput = Prisma.AtLeast<{
@@ -18444,9 +18712,13 @@ export namespace Prisma {
     roleInProject?: StringNullableFilter<"ProjectResource"> | string | null
     plannedMandays?: FloatFilter<"ProjectResource"> | number
     dailyRate?: FloatFilter<"ProjectResource"> | number
+    proposedById?: StringNullableFilter<"ProjectResource"> | string | null
+    proposedAt?: DateTimeNullableFilter<"ProjectResource"> | Date | string | null
+    acceptedAt?: DateTimeNullableFilter<"ProjectResource"> | Date | string | null
     createdAt?: DateTimeFilter<"ProjectResource"> | Date | string
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
     user?: XOR<UserRelationFilter, UserWhereInput>
+    proposedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
   }, "id" | "projectId_userId">
 
   export type ProjectResourceOrderByWithAggregationInput = {
@@ -18456,6 +18728,9 @@ export namespace Prisma {
     roleInProject?: SortOrderInput | SortOrder
     plannedMandays?: SortOrder
     dailyRate?: SortOrder
+    proposedById?: SortOrderInput | SortOrder
+    proposedAt?: SortOrderInput | SortOrder
+    acceptedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: ProjectResourceCountOrderByAggregateInput
     _avg?: ProjectResourceAvgOrderByAggregateInput
@@ -18474,6 +18749,9 @@ export namespace Prisma {
     roleInProject?: StringNullableWithAggregatesFilter<"ProjectResource"> | string | null
     plannedMandays?: FloatWithAggregatesFilter<"ProjectResource"> | number
     dailyRate?: FloatWithAggregatesFilter<"ProjectResource"> | number
+    proposedById?: StringNullableWithAggregatesFilter<"ProjectResource"> | string | null
+    proposedAt?: DateTimeNullableWithAggregatesFilter<"ProjectResource"> | Date | string | null
+    acceptedAt?: DateTimeNullableWithAggregatesFilter<"ProjectResource"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"ProjectResource"> | Date | string
   }
 
@@ -19054,11 +19332,16 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -19083,11 +19366,16 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -19112,11 +19400,16 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -19141,11 +19434,16 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -19170,6 +19468,8 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    managerId?: string | null
+    principalId?: string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -19198,6 +19498,8 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ClientCreateInput = {
@@ -19776,9 +20078,12 @@ export namespace Prisma {
     roleInProject?: string | null
     plannedMandays?: number
     dailyRate?: number
+    proposedAt?: Date | string | null
+    acceptedAt?: Date | string | null
     createdAt?: Date | string
     project: ProjectCreateNestedOneWithoutResourcesInput
     user: UserCreateNestedOneWithoutResourcesInput
+    proposedBy?: UserCreateNestedOneWithoutProposedResourcesInput
   }
 
   export type ProjectResourceUncheckedCreateInput = {
@@ -19788,6 +20093,9 @@ export namespace Prisma {
     roleInProject?: string | null
     plannedMandays?: number
     dailyRate?: number
+    proposedById?: string | null
+    proposedAt?: Date | string | null
+    acceptedAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -19796,9 +20104,12 @@ export namespace Prisma {
     roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     dailyRate?: FloatFieldUpdateOperationsInput | number
+    proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutResourcesNestedInput
     user?: UserUpdateOneRequiredWithoutResourcesNestedInput
+    proposedBy?: UserUpdateOneWithoutProposedResourcesNestedInput
   }
 
   export type ProjectResourceUncheckedUpdateInput = {
@@ -19808,6 +20119,9 @@ export namespace Prisma {
     roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     dailyRate?: FloatFieldUpdateOperationsInput | number
+    proposedById?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -19818,6 +20132,9 @@ export namespace Prisma {
     roleInProject?: string | null
     plannedMandays?: number
     dailyRate?: number
+    proposedById?: string | null
+    proposedAt?: Date | string | null
+    acceptedAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -19826,6 +20143,8 @@ export namespace Prisma {
     roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     dailyRate?: FloatFieldUpdateOperationsInput | number
+    proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -19836,6 +20155,9 @@ export namespace Prisma {
     roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     dailyRate?: FloatFieldUpdateOperationsInput | number
+    proposedById?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -20498,6 +20820,17 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type UserNullableRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
+  export type UserListRelationFilter = {
+    every?: UserWhereInput
+    some?: UserWhereInput
+    none?: UserWhereInput
+  }
+
   export type ProjectListRelationFilter = {
     every?: ProjectWhereInput
     some?: ProjectWhereInput
@@ -20563,6 +20896,10 @@ export namespace Prisma {
     nulls?: NullsOrder
   }
 
+  export type UserOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type ProjectOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -20615,6 +20952,8 @@ export namespace Prisma {
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    managerId?: SortOrder
+    principalId?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
@@ -20633,6 +20972,8 @@ export namespace Prisma {
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    managerId?: SortOrder
+    principalId?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -20647,6 +20988,8 @@ export namespace Prisma {
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    managerId?: SortOrder
+    principalId?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
@@ -20805,11 +21148,6 @@ export namespace Prisma {
   export type ClientRelationFilter = {
     is?: ClientWhereInput
     isNot?: ClientWhereInput
-  }
-
-  export type UserNullableRelationFilter = {
-    is?: UserWhereInput | null
-    isNot?: UserWhereInput | null
   }
 
   export type SurveyResponseListRelationFilter = {
@@ -21204,6 +21542,9 @@ export namespace Prisma {
     roleInProject?: SortOrder
     plannedMandays?: SortOrder
     dailyRate?: SortOrder
+    proposedById?: SortOrder
+    proposedAt?: SortOrder
+    acceptedAt?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -21219,6 +21560,9 @@ export namespace Prisma {
     roleInProject?: SortOrder
     plannedMandays?: SortOrder
     dailyRate?: SortOrder
+    proposedById?: SortOrder
+    proposedAt?: SortOrder
+    acceptedAt?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -21229,6 +21573,9 @@ export namespace Prisma {
     roleInProject?: SortOrder
     plannedMandays?: SortOrder
     dailyRate?: SortOrder
+    proposedById?: SortOrder
+    proposedAt?: SortOrder
+    acceptedAt?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -21585,6 +21932,32 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type UserCreateNestedOneWithoutReportsInput = {
+    create?: XOR<UserCreateWithoutReportsInput, UserUncheckedCreateWithoutReportsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReportsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedManyWithoutManagerInput = {
+    create?: XOR<UserCreateWithoutManagerInput, UserUncheckedCreateWithoutManagerInput> | UserCreateWithoutManagerInput[] | UserUncheckedCreateWithoutManagerInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutManagerInput | UserCreateOrConnectWithoutManagerInput[]
+    createMany?: UserCreateManyManagerInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type UserCreateNestedOneWithoutSuperviseesInput = {
+    create?: XOR<UserCreateWithoutSuperviseesInput, UserUncheckedCreateWithoutSuperviseesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSuperviseesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedManyWithoutPrincipalInput = {
+    create?: XOR<UserCreateWithoutPrincipalInput, UserUncheckedCreateWithoutPrincipalInput> | UserCreateWithoutPrincipalInput[] | UserUncheckedCreateWithoutPrincipalInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutPrincipalInput | UserCreateOrConnectWithoutPrincipalInput[]
+    createMany?: UserCreateManyPrincipalInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
   export type ProjectCreateNestedManyWithoutSalesInput = {
     create?: XOR<ProjectCreateWithoutSalesInput, ProjectUncheckedCreateWithoutSalesInput> | ProjectCreateWithoutSalesInput[] | ProjectUncheckedCreateWithoutSalesInput[]
     connectOrCreate?: ProjectCreateOrConnectWithoutSalesInput | ProjectCreateOrConnectWithoutSalesInput[]
@@ -21617,6 +21990,13 @@ export namespace Prisma {
     create?: XOR<ProjectResourceCreateWithoutUserInput, ProjectResourceUncheckedCreateWithoutUserInput> | ProjectResourceCreateWithoutUserInput[] | ProjectResourceUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ProjectResourceCreateOrConnectWithoutUserInput | ProjectResourceCreateOrConnectWithoutUserInput[]
     createMany?: ProjectResourceCreateManyUserInputEnvelope
+    connect?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
+  }
+
+  export type ProjectResourceCreateNestedManyWithoutProposedByInput = {
+    create?: XOR<ProjectResourceCreateWithoutProposedByInput, ProjectResourceUncheckedCreateWithoutProposedByInput> | ProjectResourceCreateWithoutProposedByInput[] | ProjectResourceUncheckedCreateWithoutProposedByInput[]
+    connectOrCreate?: ProjectResourceCreateOrConnectWithoutProposedByInput | ProjectResourceCreateOrConnectWithoutProposedByInput[]
+    createMany?: ProjectResourceCreateManyProposedByInputEnvelope
     connect?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
   }
 
@@ -21690,6 +22070,20 @@ export namespace Prisma {
     connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
   }
 
+  export type UserUncheckedCreateNestedManyWithoutManagerInput = {
+    create?: XOR<UserCreateWithoutManagerInput, UserUncheckedCreateWithoutManagerInput> | UserCreateWithoutManagerInput[] | UserUncheckedCreateWithoutManagerInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutManagerInput | UserCreateOrConnectWithoutManagerInput[]
+    createMany?: UserCreateManyManagerInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type UserUncheckedCreateNestedManyWithoutPrincipalInput = {
+    create?: XOR<UserCreateWithoutPrincipalInput, UserUncheckedCreateWithoutPrincipalInput> | UserCreateWithoutPrincipalInput[] | UserUncheckedCreateWithoutPrincipalInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutPrincipalInput | UserCreateOrConnectWithoutPrincipalInput[]
+    createMany?: UserCreateManyPrincipalInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
   export type ProjectUncheckedCreateNestedManyWithoutSalesInput = {
     create?: XOR<ProjectCreateWithoutSalesInput, ProjectUncheckedCreateWithoutSalesInput> | ProjectCreateWithoutSalesInput[] | ProjectUncheckedCreateWithoutSalesInput[]
     connectOrCreate?: ProjectCreateOrConnectWithoutSalesInput | ProjectCreateOrConnectWithoutSalesInput[]
@@ -21722,6 +22116,13 @@ export namespace Prisma {
     create?: XOR<ProjectResourceCreateWithoutUserInput, ProjectResourceUncheckedCreateWithoutUserInput> | ProjectResourceCreateWithoutUserInput[] | ProjectResourceUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ProjectResourceCreateOrConnectWithoutUserInput | ProjectResourceCreateOrConnectWithoutUserInput[]
     createMany?: ProjectResourceCreateManyUserInputEnvelope
+    connect?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
+  }
+
+  export type ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput = {
+    create?: XOR<ProjectResourceCreateWithoutProposedByInput, ProjectResourceUncheckedCreateWithoutProposedByInput> | ProjectResourceCreateWithoutProposedByInput[] | ProjectResourceUncheckedCreateWithoutProposedByInput[]
+    connectOrCreate?: ProjectResourceCreateOrConnectWithoutProposedByInput | ProjectResourceCreateOrConnectWithoutProposedByInput[]
+    createMany?: ProjectResourceCreateManyProposedByInputEnvelope
     connect?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
   }
 
@@ -21827,6 +22228,54 @@ export namespace Prisma {
     set?: Date | string
   }
 
+  export type UserUpdateOneWithoutReportsNestedInput = {
+    create?: XOR<UserCreateWithoutReportsInput, UserUncheckedCreateWithoutReportsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReportsInput
+    upsert?: UserUpsertWithoutReportsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReportsInput, UserUpdateWithoutReportsInput>, UserUncheckedUpdateWithoutReportsInput>
+  }
+
+  export type UserUpdateManyWithoutManagerNestedInput = {
+    create?: XOR<UserCreateWithoutManagerInput, UserUncheckedCreateWithoutManagerInput> | UserCreateWithoutManagerInput[] | UserUncheckedCreateWithoutManagerInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutManagerInput | UserCreateOrConnectWithoutManagerInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutManagerInput | UserUpsertWithWhereUniqueWithoutManagerInput[]
+    createMany?: UserCreateManyManagerInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutManagerInput | UserUpdateWithWhereUniqueWithoutManagerInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutManagerInput | UserUpdateManyWithWhereWithoutManagerInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type UserUpdateOneWithoutSuperviseesNestedInput = {
+    create?: XOR<UserCreateWithoutSuperviseesInput, UserUncheckedCreateWithoutSuperviseesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSuperviseesInput
+    upsert?: UserUpsertWithoutSuperviseesInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSuperviseesInput, UserUpdateWithoutSuperviseesInput>, UserUncheckedUpdateWithoutSuperviseesInput>
+  }
+
+  export type UserUpdateManyWithoutPrincipalNestedInput = {
+    create?: XOR<UserCreateWithoutPrincipalInput, UserUncheckedCreateWithoutPrincipalInput> | UserCreateWithoutPrincipalInput[] | UserUncheckedCreateWithoutPrincipalInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutPrincipalInput | UserCreateOrConnectWithoutPrincipalInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutPrincipalInput | UserUpsertWithWhereUniqueWithoutPrincipalInput[]
+    createMany?: UserCreateManyPrincipalInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutPrincipalInput | UserUpdateWithWhereUniqueWithoutPrincipalInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutPrincipalInput | UserUpdateManyWithWhereWithoutPrincipalInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
   export type ProjectUpdateManyWithoutSalesNestedInput = {
     create?: XOR<ProjectCreateWithoutSalesInput, ProjectUncheckedCreateWithoutSalesInput> | ProjectCreateWithoutSalesInput[] | ProjectUncheckedCreateWithoutSalesInput[]
     connectOrCreate?: ProjectCreateOrConnectWithoutSalesInput | ProjectCreateOrConnectWithoutSalesInput[]
@@ -21894,6 +22343,20 @@ export namespace Prisma {
     connect?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
     update?: ProjectResourceUpdateWithWhereUniqueWithoutUserInput | ProjectResourceUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ProjectResourceUpdateManyWithWhereWithoutUserInput | ProjectResourceUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ProjectResourceScalarWhereInput | ProjectResourceScalarWhereInput[]
+  }
+
+  export type ProjectResourceUpdateManyWithoutProposedByNestedInput = {
+    create?: XOR<ProjectResourceCreateWithoutProposedByInput, ProjectResourceUncheckedCreateWithoutProposedByInput> | ProjectResourceCreateWithoutProposedByInput[] | ProjectResourceUncheckedCreateWithoutProposedByInput[]
+    connectOrCreate?: ProjectResourceCreateOrConnectWithoutProposedByInput | ProjectResourceCreateOrConnectWithoutProposedByInput[]
+    upsert?: ProjectResourceUpsertWithWhereUniqueWithoutProposedByInput | ProjectResourceUpsertWithWhereUniqueWithoutProposedByInput[]
+    createMany?: ProjectResourceCreateManyProposedByInputEnvelope
+    set?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
+    disconnect?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
+    delete?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
+    connect?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
+    update?: ProjectResourceUpdateWithWhereUniqueWithoutProposedByInput | ProjectResourceUpdateWithWhereUniqueWithoutProposedByInput[]
+    updateMany?: ProjectResourceUpdateManyWithWhereWithoutProposedByInput | ProjectResourceUpdateManyWithWhereWithoutProposedByInput[]
     deleteMany?: ProjectResourceScalarWhereInput | ProjectResourceScalarWhereInput[]
   }
 
@@ -22037,6 +22500,34 @@ export namespace Prisma {
     deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
   }
 
+  export type UserUncheckedUpdateManyWithoutManagerNestedInput = {
+    create?: XOR<UserCreateWithoutManagerInput, UserUncheckedCreateWithoutManagerInput> | UserCreateWithoutManagerInput[] | UserUncheckedCreateWithoutManagerInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutManagerInput | UserCreateOrConnectWithoutManagerInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutManagerInput | UserUpsertWithWhereUniqueWithoutManagerInput[]
+    createMany?: UserCreateManyManagerInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutManagerInput | UserUpdateWithWhereUniqueWithoutManagerInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutManagerInput | UserUpdateManyWithWhereWithoutManagerInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type UserUncheckedUpdateManyWithoutPrincipalNestedInput = {
+    create?: XOR<UserCreateWithoutPrincipalInput, UserUncheckedCreateWithoutPrincipalInput> | UserCreateWithoutPrincipalInput[] | UserUncheckedCreateWithoutPrincipalInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutPrincipalInput | UserCreateOrConnectWithoutPrincipalInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutPrincipalInput | UserUpsertWithWhereUniqueWithoutPrincipalInput[]
+    createMany?: UserCreateManyPrincipalInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutPrincipalInput | UserUpdateWithWhereUniqueWithoutPrincipalInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutPrincipalInput | UserUpdateManyWithWhereWithoutPrincipalInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
   export type ProjectUncheckedUpdateManyWithoutSalesNestedInput = {
     create?: XOR<ProjectCreateWithoutSalesInput, ProjectUncheckedCreateWithoutSalesInput> | ProjectCreateWithoutSalesInput[] | ProjectUncheckedCreateWithoutSalesInput[]
     connectOrCreate?: ProjectCreateOrConnectWithoutSalesInput | ProjectCreateOrConnectWithoutSalesInput[]
@@ -22104,6 +22595,20 @@ export namespace Prisma {
     connect?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
     update?: ProjectResourceUpdateWithWhereUniqueWithoutUserInput | ProjectResourceUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ProjectResourceUpdateManyWithWhereWithoutUserInput | ProjectResourceUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ProjectResourceScalarWhereInput | ProjectResourceScalarWhereInput[]
+  }
+
+  export type ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput = {
+    create?: XOR<ProjectResourceCreateWithoutProposedByInput, ProjectResourceUncheckedCreateWithoutProposedByInput> | ProjectResourceCreateWithoutProposedByInput[] | ProjectResourceUncheckedCreateWithoutProposedByInput[]
+    connectOrCreate?: ProjectResourceCreateOrConnectWithoutProposedByInput | ProjectResourceCreateOrConnectWithoutProposedByInput[]
+    upsert?: ProjectResourceUpsertWithWhereUniqueWithoutProposedByInput | ProjectResourceUpsertWithWhereUniqueWithoutProposedByInput[]
+    createMany?: ProjectResourceCreateManyProposedByInputEnvelope
+    set?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
+    disconnect?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
+    delete?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
+    connect?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
+    update?: ProjectResourceUpdateWithWhereUniqueWithoutProposedByInput | ProjectResourceUpdateWithWhereUniqueWithoutProposedByInput[]
+    updateMany?: ProjectResourceUpdateManyWithWhereWithoutProposedByInput | ProjectResourceUpdateManyWithWhereWithoutProposedByInput[]
     deleteMany?: ProjectResourceScalarWhereInput | ProjectResourceScalarWhereInput[]
   }
 
@@ -22723,6 +23228,12 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type UserCreateNestedOneWithoutProposedResourcesInput = {
+    create?: XOR<UserCreateWithoutProposedResourcesInput, UserUncheckedCreateWithoutProposedResourcesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProposedResourcesInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type ProjectUpdateOneRequiredWithoutResourcesNestedInput = {
     create?: XOR<ProjectCreateWithoutResourcesInput, ProjectUncheckedCreateWithoutResourcesInput>
     connectOrCreate?: ProjectCreateOrConnectWithoutResourcesInput
@@ -22737,6 +23248,16 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutResourcesInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutResourcesInput, UserUpdateWithoutResourcesInput>, UserUncheckedUpdateWithoutResourcesInput>
+  }
+
+  export type UserUpdateOneWithoutProposedResourcesNestedInput = {
+    create?: XOR<UserCreateWithoutProposedResourcesInput, UserUncheckedCreateWithoutProposedResourcesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProposedResourcesInput
+    upsert?: UserUpsertWithoutProposedResourcesInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProposedResourcesInput, UserUpdateWithoutProposedResourcesInput>, UserUncheckedUpdateWithoutProposedResourcesInput>
   }
 
   export type ProjectCreateNestedOneWithoutTimesheetsInput = {
@@ -23363,6 +23884,300 @@ export namespace Prisma {
     _max?: NestedEnumTaskStatusFilter<$PrismaModel>
   }
 
+  export type UserCreateWithoutReportsInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    manager?: UserCreateNestedOneWithoutReportsInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutReportsInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    managerId?: string | null
+    principalId?: string | null
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutReportsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutReportsInput, UserUncheckedCreateWithoutReportsInput>
+  }
+
+  export type UserCreateWithoutManagerInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutManagerInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutManagerInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutManagerInput, UserUncheckedCreateWithoutManagerInput>
+  }
+
+  export type UserCreateManyManagerInputEnvelope = {
+    data: UserCreateManyManagerInput | UserCreateManyManagerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserCreateWithoutSuperviseesInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutSuperviseesInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutSuperviseesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSuperviseesInput, UserUncheckedCreateWithoutSuperviseesInput>
+  }
+
+  export type UserCreateWithoutPrincipalInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutPrincipalInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    managerId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutPrincipalInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPrincipalInput, UserUncheckedCreateWithoutPrincipalInput>
+  }
+
+  export type UserCreateManyPrincipalInputEnvelope = {
+    data: UserCreateManyPrincipalInput | UserCreateManyPrincipalInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ProjectCreateWithoutSalesInput = {
     id?: string
     code: string
@@ -23696,8 +24511,11 @@ export namespace Prisma {
     roleInProject?: string | null
     plannedMandays?: number
     dailyRate?: number
+    proposedAt?: Date | string | null
+    acceptedAt?: Date | string | null
     createdAt?: Date | string
     project: ProjectCreateNestedOneWithoutResourcesInput
+    proposedBy?: UserCreateNestedOneWithoutProposedResourcesInput
   }
 
   export type ProjectResourceUncheckedCreateWithoutUserInput = {
@@ -23706,6 +24524,9 @@ export namespace Prisma {
     roleInProject?: string | null
     plannedMandays?: number
     dailyRate?: number
+    proposedById?: string | null
+    proposedAt?: Date | string | null
+    acceptedAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -23716,6 +24537,40 @@ export namespace Prisma {
 
   export type ProjectResourceCreateManyUserInputEnvelope = {
     data: ProjectResourceCreateManyUserInput | ProjectResourceCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProjectResourceCreateWithoutProposedByInput = {
+    id?: string
+    roleInProject?: string | null
+    plannedMandays?: number
+    dailyRate?: number
+    proposedAt?: Date | string | null
+    acceptedAt?: Date | string | null
+    createdAt?: Date | string
+    project: ProjectCreateNestedOneWithoutResourcesInput
+    user: UserCreateNestedOneWithoutResourcesInput
+  }
+
+  export type ProjectResourceUncheckedCreateWithoutProposedByInput = {
+    id?: string
+    projectId: string
+    userId: string
+    roleInProject?: string | null
+    plannedMandays?: number
+    dailyRate?: number
+    proposedAt?: Date | string | null
+    acceptedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type ProjectResourceCreateOrConnectWithoutProposedByInput = {
+    where: ProjectResourceWhereUniqueInput
+    create: XOR<ProjectResourceCreateWithoutProposedByInput, ProjectResourceUncheckedCreateWithoutProposedByInput>
+  }
+
+  export type ProjectResourceCreateManyProposedByInputEnvelope = {
+    data: ProjectResourceCreateManyProposedByInput | ProjectResourceCreateManyProposedByInput[]
     skipDuplicates?: boolean
   }
 
@@ -24059,6 +24914,211 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type UserUpsertWithoutReportsInput = {
+    update: XOR<UserUpdateWithoutReportsInput, UserUncheckedUpdateWithoutReportsInput>
+    create: XOR<UserCreateWithoutReportsInput, UserUncheckedCreateWithoutReportsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutReportsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutReportsInput, UserUncheckedUpdateWithoutReportsInput>
+  }
+
+  export type UserUpdateWithoutReportsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutReportsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUpsertWithWhereUniqueWithoutManagerInput = {
+    where: UserWhereUniqueInput
+    update: XOR<UserUpdateWithoutManagerInput, UserUncheckedUpdateWithoutManagerInput>
+    create: XOR<UserCreateWithoutManagerInput, UserUncheckedCreateWithoutManagerInput>
+  }
+
+  export type UserUpdateWithWhereUniqueWithoutManagerInput = {
+    where: UserWhereUniqueInput
+    data: XOR<UserUpdateWithoutManagerInput, UserUncheckedUpdateWithoutManagerInput>
+  }
+
+  export type UserUpdateManyWithWhereWithoutManagerInput = {
+    where: UserScalarWhereInput
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutManagerInput>
+  }
+
+  export type UserScalarWhereInput = {
+    AND?: UserScalarWhereInput | UserScalarWhereInput[]
+    OR?: UserScalarWhereInput[]
+    NOT?: UserScalarWhereInput | UserScalarWhereInput[]
+    id?: StringFilter<"User"> | string
+    email?: StringFilter<"User"> | string
+    passwordHash?: StringFilter<"User"> | string
+    name?: StringFilter<"User"> | string
+    role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
+    title?: StringNullableFilter<"User"> | string | null
+    dailyRate?: FloatNullableFilter<"User"> | number | null
+    isActive?: BoolFilter<"User"> | boolean
+    deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
+    managerId?: StringNullableFilter<"User"> | string | null
+    principalId?: StringNullableFilter<"User"> | string | null
+  }
+
+  export type UserUpsertWithoutSuperviseesInput = {
+    update: XOR<UserUpdateWithoutSuperviseesInput, UserUncheckedUpdateWithoutSuperviseesInput>
+    create: XOR<UserCreateWithoutSuperviseesInput, UserUncheckedCreateWithoutSuperviseesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSuperviseesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSuperviseesInput, UserUncheckedUpdateWithoutSuperviseesInput>
+  }
+
+  export type UserUpdateWithoutSuperviseesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSuperviseesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUpsertWithWhereUniqueWithoutPrincipalInput = {
+    where: UserWhereUniqueInput
+    update: XOR<UserUpdateWithoutPrincipalInput, UserUncheckedUpdateWithoutPrincipalInput>
+    create: XOR<UserCreateWithoutPrincipalInput, UserUncheckedCreateWithoutPrincipalInput>
+  }
+
+  export type UserUpdateWithWhereUniqueWithoutPrincipalInput = {
+    where: UserWhereUniqueInput
+    data: XOR<UserUpdateWithoutPrincipalInput, UserUncheckedUpdateWithoutPrincipalInput>
+  }
+
+  export type UserUpdateManyWithWhereWithoutPrincipalInput = {
+    where: UserScalarWhereInput
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutPrincipalInput>
+  }
+
   export type ProjectUpsertWithWhereUniqueWithoutSalesInput = {
     where: ProjectWhereUniqueInput
     update: XOR<ProjectUpdateWithoutSalesInput, ProjectUncheckedUpdateWithoutSalesInput>
@@ -24182,7 +25242,26 @@ export namespace Prisma {
     roleInProject?: StringNullableFilter<"ProjectResource"> | string | null
     plannedMandays?: FloatFilter<"ProjectResource"> | number
     dailyRate?: FloatFilter<"ProjectResource"> | number
+    proposedById?: StringNullableFilter<"ProjectResource"> | string | null
+    proposedAt?: DateTimeNullableFilter<"ProjectResource"> | Date | string | null
+    acceptedAt?: DateTimeNullableFilter<"ProjectResource"> | Date | string | null
     createdAt?: DateTimeFilter<"ProjectResource"> | Date | string
+  }
+
+  export type ProjectResourceUpsertWithWhereUniqueWithoutProposedByInput = {
+    where: ProjectResourceWhereUniqueInput
+    update: XOR<ProjectResourceUpdateWithoutProposedByInput, ProjectResourceUncheckedUpdateWithoutProposedByInput>
+    create: XOR<ProjectResourceCreateWithoutProposedByInput, ProjectResourceUncheckedCreateWithoutProposedByInput>
+  }
+
+  export type ProjectResourceUpdateWithWhereUniqueWithoutProposedByInput = {
+    where: ProjectResourceWhereUniqueInput
+    data: XOR<ProjectResourceUpdateWithoutProposedByInput, ProjectResourceUncheckedUpdateWithoutProposedByInput>
+  }
+
+  export type ProjectResourceUpdateManyWithWhereWithoutProposedByInput = {
+    where: ProjectResourceScalarWhereInput
+    data: XOR<ProjectResourceUpdateManyMutationInput, ProjectResourceUncheckedUpdateManyWithoutProposedByInput>
   }
 
   export type TimesheetUpsertWithWhereUniqueWithoutUserInput = {
@@ -24605,10 +25684,15 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -24633,10 +25717,15 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -24666,10 +25755,15 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -24694,10 +25788,15 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -24727,10 +25826,15 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -24755,10 +25859,15 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -24788,10 +25897,15 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -24816,10 +25930,15 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -24842,8 +25961,11 @@ export namespace Prisma {
     roleInProject?: string | null
     plannedMandays?: number
     dailyRate?: number
+    proposedAt?: Date | string | null
+    acceptedAt?: Date | string | null
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutResourcesInput
+    proposedBy?: UserCreateNestedOneWithoutProposedResourcesInput
   }
 
   export type ProjectResourceUncheckedCreateWithoutProjectInput = {
@@ -24852,6 +25974,9 @@ export namespace Prisma {
     roleInProject?: string | null
     plannedMandays?: number
     dailyRate?: number
+    proposedById?: string | null
+    proposedAt?: Date | string | null
+    acceptedAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -25121,10 +26246,15 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -25149,10 +26279,15 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -25188,10 +26323,15 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -25216,10 +26356,15 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -25255,10 +26400,15 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -25283,10 +26433,15 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -25322,10 +26477,15 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -25350,10 +26510,15 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -25664,11 +26829,16 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -25692,11 +26862,16 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -25736,11 +26911,16 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -25764,11 +26944,16 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -25869,10 +27054,15 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -25897,10 +27087,15 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -25916,6 +27111,77 @@ export namespace Prisma {
   export type UserCreateOrConnectWithoutResourcesInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutResourcesInput, UserUncheckedCreateWithoutResourcesInput>
+  }
+
+  export type UserCreateWithoutProposedResourcesInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutProposedResourcesInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutProposedResourcesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutProposedResourcesInput, UserUncheckedCreateWithoutProposedResourcesInput>
   }
 
   export type ProjectUpsertWithoutResourcesInput = {
@@ -26024,10 +27290,15 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -26052,10 +27323,92 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUpsertWithoutProposedResourcesInput = {
+    update: XOR<UserUpdateWithoutProposedResourcesInput, UserUncheckedUpdateWithoutProposedResourcesInput>
+    create: XOR<UserCreateWithoutProposedResourcesInput, UserUncheckedCreateWithoutProposedResourcesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutProposedResourcesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutProposedResourcesInput, UserUncheckedUpdateWithoutProposedResourcesInput>
+  }
+
+  export type UserUpdateWithoutProposedResourcesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutProposedResourcesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -26157,11 +27510,16 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
     activities?: ActivityCreateNestedManyWithoutUserInput
@@ -26185,11 +27543,16 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
     activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
@@ -26218,11 +27581,16 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
     activities?: ActivityCreateNestedManyWithoutUserInput
@@ -26246,11 +27614,16 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
     activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
@@ -26373,11 +27746,16 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
     activities?: ActivityUpdateManyWithoutUserNestedInput
@@ -26401,11 +27779,16 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
@@ -26440,11 +27823,16 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
     activities?: ActivityUpdateManyWithoutUserNestedInput
@@ -26468,11 +27856,16 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
@@ -26573,11 +27966,16 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     activities?: ActivityCreateNestedManyWithoutUserInput
@@ -26601,11 +27999,16 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
@@ -26728,11 +28131,16 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     activities?: ActivityUpdateManyWithoutUserNestedInput
@@ -26756,11 +28164,16 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
@@ -26861,11 +28274,16 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -26889,11 +28307,16 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -27016,11 +28439,16 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -27044,11 +28472,16 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -27072,11 +28505,16 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -27100,11 +28538,16 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -27221,11 +28664,16 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -27249,11 +28697,16 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -27437,11 +28890,16 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -27465,11 +28923,16 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -27498,11 +28961,16 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -27526,11 +28994,16 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -27681,11 +29154,16 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -27709,11 +29187,16 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -27748,11 +29231,16 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -27776,11 +29264,16 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -27853,11 +29346,16 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -27881,11 +29379,16 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -27964,11 +29467,16 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -27992,11 +29500,16 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -28020,11 +29533,16 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -28048,11 +29566,16 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -28092,11 +29615,16 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -28120,11 +29648,16 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -28134,6 +29667,36 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateManyManagerInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    principalId?: string | null
+  }
+
+  export type UserCreateManyPrincipalInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    managerId?: string | null
   }
 
   export type ProjectCreateManySalesInput = {
@@ -28258,6 +29821,21 @@ export namespace Prisma {
     roleInProject?: string | null
     plannedMandays?: number
     dailyRate?: number
+    proposedById?: string | null
+    proposedAt?: Date | string | null
+    acceptedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type ProjectResourceCreateManyProposedByInput = {
+    id?: string
+    projectId: string
+    userId: string
+    roleInProject?: string | null
+    plannedMandays?: number
+    dailyRate?: number
+    proposedAt?: Date | string | null
+    acceptedAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -28377,6 +29955,168 @@ export namespace Prisma {
     link?: string | null
     readAt?: Date | string | null
     createdAt?: Date | string
+  }
+
+  export type UserUpdateWithoutManagerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutManagerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateManyWithoutManagerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type UserUpdateWithoutPrincipalInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPrincipalInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateManyWithoutPrincipalInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProjectUpdateWithoutSalesInput = {
@@ -28788,8 +30528,11 @@ export namespace Prisma {
     roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     dailyRate?: FloatFieldUpdateOperationsInput | number
+    proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutResourcesNestedInput
+    proposedBy?: UserUpdateOneWithoutProposedResourcesNestedInput
   }
 
   export type ProjectResourceUncheckedUpdateWithoutUserInput = {
@@ -28798,6 +30541,9 @@ export namespace Prisma {
     roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     dailyRate?: FloatFieldUpdateOperationsInput | number
+    proposedById?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -28807,6 +30553,45 @@ export namespace Prisma {
     roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     dailyRate?: FloatFieldUpdateOperationsInput | number
+    proposedById?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectResourceUpdateWithoutProposedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    dailyRate?: FloatFieldUpdateOperationsInput | number
+    proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutResourcesNestedInput
+    user?: UserUpdateOneRequiredWithoutResourcesNestedInput
+  }
+
+  export type ProjectResourceUncheckedUpdateWithoutProposedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    dailyRate?: FloatFieldUpdateOperationsInput | number
+    proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectResourceUncheckedUpdateManyWithoutProposedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    dailyRate?: FloatFieldUpdateOperationsInput | number
+    proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -29304,6 +31089,9 @@ export namespace Prisma {
     roleInProject?: string | null
     plannedMandays?: number
     dailyRate?: number
+    proposedById?: string | null
+    proposedAt?: Date | string | null
+    acceptedAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -29381,8 +31169,11 @@ export namespace Prisma {
     roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     dailyRate?: FloatFieldUpdateOperationsInput | number
+    proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutResourcesNestedInput
+    proposedBy?: UserUpdateOneWithoutProposedResourcesNestedInput
   }
 
   export type ProjectResourceUncheckedUpdateWithoutProjectInput = {
@@ -29391,6 +31182,9 @@ export namespace Prisma {
     roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     dailyRate?: FloatFieldUpdateOperationsInput | number
+    proposedById?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -29400,6 +31194,9 @@ export namespace Prisma {
     roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     dailyRate?: FloatFieldUpdateOperationsInput | number
+    proposedById?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

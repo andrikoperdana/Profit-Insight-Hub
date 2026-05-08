@@ -391,6 +391,63 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/SuccessMessage" }
 
+  /projects/{id}/resources/propose:
+    post:
+      operationId: proposeProjectResource
+      tags: [resources]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AddResourceBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ProjectResource" }
+
+  /resources/{resourceId}/accept:
+    post:
+      operationId: acceptProjectResource
+      tags: [resources]
+      parameters:
+        - { name: resourceId, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /principal/projects-needing-resource:
+    get:
+      operationId: listProjectsNeedingResource
+      tags: [principal]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Project" }
+
+  /users/under-supervision:
+    get:
+      operationId: listUsersUnderSupervision
+      tags: [users]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/User" }
+
   /projects/{id}/expenses:
     get:
       operationId: listProjectExpenses
@@ -764,7 +821,7 @@ components:
 
     UserRole:
       type: string
-      enum: [MANAGEMENT, PROJECT_MANAGER, SALES, KONSULTAN, TECHNICAL_WRITER, ADMIN_PROJECT]
+      enum: [MANAGEMENT, PROJECT_MANAGER, SALES, KONSULTAN, TECHNICAL_WRITER, ADMIN_PROJECT, PRINCIPAL_KONSULTAN, PRINCIPAL_TECHNICAL_WRITER, PRINCIPAL_ADMIN_PROJECT]
 
     ProjectStatus:
       type: string
@@ -856,6 +913,8 @@ components:
         title: { type: string, nullable: true }
         dailyRate: { type: number, nullable: true }
         isActive: { type: boolean }
+        managerId: { type: string, nullable: true }
+        principalId: { type: string, nullable: true }
         createdAt: { type: string }
 
     LoginBody:
@@ -882,6 +941,8 @@ components:
         role: { $ref: "#/components/schemas/UserRole" }
         title: { type: string }
         dailyRate: { type: number }
+        managerId: { type: string, nullable: true }
+        principalId: { type: string, nullable: true }
 
     UpdateUserBody:
       type: object
@@ -892,6 +953,8 @@ components:
         dailyRate: { type: number }
         isActive: { type: boolean }
         password: { type: string }
+        managerId: { type: string, nullable: true }
+        principalId: { type: string, nullable: true }
 
     Client:
       type: object
@@ -1080,6 +1143,10 @@ components:
         plannedMandays: { type: number }
         actualMandays: { type: number }
         dailyRate: { type: number }
+        proposedById: { type: string, nullable: true }
+        proposedByName: { type: string, nullable: true }
+        proposedAt: { type: string, nullable: true }
+        acceptedAt: { type: string, nullable: true }
 
     AddResourceBody:
       type: object

@@ -17,4 +17,8 @@ export interface ProjectResource {
   plannedMandays: number;
   actualMandays: number;
   dailyRate: number;
+  proposedById?: string | null;
+  proposedByName?: string | null;
+  proposedAt?: string | null;
+  acceptedAt?: string | null;
 }

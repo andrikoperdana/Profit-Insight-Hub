@@ -16,6 +16,9 @@ enum UserRole {
   KONSULTAN
   TECHNICAL_WRITER
   ADMIN_PROJECT
+  PRINCIPAL_KONSULTAN
+  PRINCIPAL_TECHNICAL_WRITER
+  PRINCIPAL_ADMIN_PROJECT
 }
 
 enum ProjectStatus {
@@ -62,11 +65,19 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
+  managerId   String?
+  manager     User?   @relation("UserManager", fields: [managerId], references: [id])
+  reports     User[]  @relation("UserManager")
+  principalId String?
+  principal   User?   @relation("UserPrincipal", fields: [principalId], references: [id])
+  supervisees User[]  @relation("UserPrincipal")
+
   projectsAsSales    Project[]         @relation("ProjectSales")
   projectsAsPm       Project[]         @relation("ProjectPm")
   projectsAsTw       Project[]         @relation("ProjectTechWriter")
   projectsAsAdmin    Project[]         @relation("ProjectAdmin")
   resources          ProjectResource[]
+  proposedResources  ProjectResource[] @relation("ResourceProposer")
   timesheets         Timesheet[]
   approvedTimesheets Timesheet[]       @relation("TimesheetApprover")
   documentsUploaded  Document[]
@@ -191,6 +202,10 @@ model ProjectResource {
   roleInProject  String?
   plannedMandays Float    @default(0)
   dailyRate      Float    @default(0)
+  proposedById   String?
+  proposedBy     User?    @relation("ResourceProposer", fields: [proposedById], references: [id])
+  proposedAt     DateTime?
+  acceptedAt     DateTime?
   createdAt      DateTime @default(now())
 
   @@unique([projectId, userId])

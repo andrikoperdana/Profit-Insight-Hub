@@ -15,5 +15,7 @@ export interface User {
   title?: string | null;
   dailyRate?: number | null;
   isActive: boolean;
+  managerId?: string | null;
+  principalId?: string | null;
   createdAt: string;
 }

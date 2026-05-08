@@ -16,6 +16,7 @@ import surveysRouter from "./surveys.js";
 import expensesRouter from "./expenses.js";
 import tasksRouter from "./tasks.js";
 import notificationsRouter from "./notifications.js";
+import principalRouter from "./principal.js";
 
 const router: IRouter = Router();
 
@@ -36,5 +37,6 @@ router.use(biRouter);
 router.use(expensesRouter);
 router.use(tasksRouter);
 router.use(notificationsRouter);
+router.use(principalRouter);
 
 export default router;

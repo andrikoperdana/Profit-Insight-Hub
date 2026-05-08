@@ -5,6 +5,8 @@ import PMDashboard from "./PMDashboard";
 import SalesDashboard from "./SalesDashboard";
 import ConsultantDashboard from "./ConsultantDashboard";
 import AdminProjectDashboard from "./AdminProjectDashboard";
+import PrincipalDashboard from "./PrincipalDashboard";
+import { isPrincipalRole } from "@/lib/roles";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -16,6 +18,7 @@ export default function Dashboard() {
   if (user.role === UserRole.KONSULTAN || user.role === UserRole.TECHNICAL_WRITER) {
     return <ConsultantDashboard />;
   }
+  if (isPrincipalRole(user.role)) return <PrincipalDashboard />;
   // MANAGEMENT (PMO Director)
   return <ManagementDashboard />;
 }

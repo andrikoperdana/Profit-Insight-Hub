@@ -25,6 +25,8 @@ export type AuditAction =
   | "resource.assigned"
   | "resource.updated"
   | "resource.removed"
+  | "resource.proposed"
+  | "resource.accepted"
   | "survey.submitted"
   | "survey.template_updated"
   | "survey.seed_demo"

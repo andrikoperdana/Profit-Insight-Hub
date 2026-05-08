@@ -79,6 +79,40 @@ Allowed categories: `SOFTWARE`, `HARDWARE`, `LICENSE`, `TRAVEL`, `OTHER`. Each c
 
 `/api/projects/:id/financials` aggregates approved timesheets per month and pairs with contract value spread evenly across active months for chart rendering.
 
+## Hierarchy & Principal roles
+
+Three Principal roles supervise delivery teams: **PRINCIPAL_KONSULTAN**, **PRINCIPAL_TECHNICAL_WRITER**, **PRINCIPAL_ADMIN_PROJECT**. Project Managers report to MANAGEMENT (PMO Director). On `User`, `managerId` references the PM's manager (PMO) and `principalId` references the delivery user's Principal supervisor. Mapping in `artifacts/web/src/lib/roles.ts` (`PRINCIPAL_TO_REPORT_ROLE`):
+
+- PRINCIPAL_KONSULTAN → KONSULTAN
+- PRINCIPAL_TECHNICAL_WRITER → TECHNICAL_WRITER
+- PRINCIPAL_ADMIN_PROJECT → ADMIN_PROJECT
+
+### Resource propose workflow (Principal → PM)
+
+Principals can propose a supervisee onto an OBSERVATION/ACTIVE project that lacks an assigned resource of the role they supervise. The PM has final say. Endpoints in `artifacts/api-server/src/routes/resources.ts` and `routes/principal.ts`:
+
+- `POST /api/projects/:id/resources/propose` — Principal-only; the proposed `userId` must be a direct supervisee (`User.principalId === req.user.sub`); creates a `ProjectResource` with `proposedById`/`proposedAt` set and `acceptedAt` null. Konsultan max-2-active enforcement still applies.
+- `POST /api/resources/:resourceId/accept` — MGMT or the project's PM; sets `acceptedAt`.
+- `DELETE /api/resources/:resourceId` — MGMT, project's PM, or the supervising Principal of the row's user.
+- `GET /api/principal/projects-needing-resource` — Principal-only; returns OBSERVATION/ACTIVE projects with no `ProjectResource` of the supervised role.
+- `GET /api/users/under-supervision` — Principal-only; returns the caller's direct reports.
+
+Audit actions: `resource.proposed`, `resource.accepted`. Frontend hooks: `useProposeProjectResource`, `useAcceptProjectResource`, `useListProjectsNeedingResource`, `useListUsersUnderSupervision`. Page: `artifacts/web/src/pages/dashboard/PrincipalDashboard.tsx`.
+
+### Principal visibility constraints
+
+Principals never see commercial figures: `canViewProjectFinancials()` returns false for any role starting with `PRINCIPAL_`, hiding the Financials tab and all contractValue/margin/cost columns. The Estimated Cost field on Overview likewise sits inside the financials gate.
+
+### PM Allocation card
+
+`ManagementDashboard` renders a `<PMAllocationCard />` showing every active PROJECT_MANAGER with their in-flight (ACTIVE+OBSERVATION), active, observation, draft project counts and total in-flight contract value. Color-coded by load (>=6 destructive, >=4 amber).
+
+### Principal seed credentials (password: `password123`, @itsecasia.com)
+
+- `principal.kon.h7q4@itsecasia.com` — Bayu Prasetyo (PRINCIPAL_KONSULTAN)
+- `principal.tw.m9k2@itsecasia.com` — Indah Kusumawardani (PRINCIPAL_TECHNICAL_WRITER)
+- `principal.ap.r3n8@itsecasia.com` — Fajar Nugroho (PRINCIPAL_ADMIN_PROJECT)
+
 ## Role-based access
 
 Enforced server-side via `requireRole` middleware in `artifacts/api-server/src/middlewares/auth.ts`:

@@ -666,6 +666,13 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
   const canEdit =
     user?.role === "MANAGEMENT" ||
     (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id);
+  // Principal can propose/manage rows whose system role matches the role they
+  // supervise; the server further restricts to their direct supervisees.
+  const principalSupervises: string | null =
+    user?.role === "PRINCIPAL_KONSULTAN" ? "KONSULTAN" :
+    user?.role === "PRINCIPAL_TECHNICAL_WRITER" ? "TECHNICAL_WRITER" :
+    user?.role === "PRINCIPAL_ADMIN_PROJECT" ? "ADMIN_PROJECT" : null;
+  const canPrincipalManageRow = (r: any) => principalSupervises != null && r.userRole === principalSupervises;
   const { data: resources, isLoading } = useListProjectResources(projectId);
   const { data: konsultanPool } = useListAvailableUsers(
     { role: "KONSULTAN" },
@@ -889,7 +896,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                         </td>
                         <td className="py-2 pr-3 text-right font-mono">{formatIDR(r.dailyRate ?? 0)}</td>
                         <td className="py-2 pr-3 text-right font-mono">{formatIDR(planned * (r.dailyRate ?? 0))}</td>
-                        {canEdit && (
+                        {(canEdit || canPrincipalManageRow(r)) && (
                           <td className="py-2 pr-3 text-right">
                             <Button
                               variant="ghost"

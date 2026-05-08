@@ -14,4 +14,6 @@ export interface UpdateUserBody {
   dailyRate?: number;
   isActive?: boolean;
   password?: string;
+  managerId?: string | null;
+  principalId?: string | null;
 }

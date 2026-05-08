@@ -14,4 +14,6 @@ export interface CreateUserBody {
   role: UserRole;
   title?: string;
   dailyRate?: number;
+  managerId?: string | null;
+  principalId?: string | null;
 }

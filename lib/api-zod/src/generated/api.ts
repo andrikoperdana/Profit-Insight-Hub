@@ -49,6 +49,9 @@ export const ListAvailableUsersQueryParams = zod.object({
     "KONSULTAN",
     "TECHNICAL_WRITER",
     "ADMIN_PROJECT",
+    "PRINCIPAL_KONSULTAN",
+    "PRINCIPAL_TECHNICAL_WRITER",
+    "PRINCIPAL_ADMIN_PROJECT",
   ]),
 });
 
@@ -63,6 +66,9 @@ export const ListAvailableUsersResponseItem = zod.object({
     "KONSULTAN",
     "TECHNICAL_WRITER",
     "ADMIN_PROJECT",
+    "PRINCIPAL_KONSULTAN",
+    "PRINCIPAL_TECHNICAL_WRITER",
+    "PRINCIPAL_ADMIN_PROJECT",
   ]),
   title: zod.string().nullish(),
   dailyRate: zod.number().nullish(),
@@ -150,10 +156,15 @@ export const LoginResponse = zod.object({
       "KONSULTAN",
       "TECHNICAL_WRITER",
       "ADMIN_PROJECT",
+      "PRINCIPAL_KONSULTAN",
+      "PRINCIPAL_TECHNICAL_WRITER",
+      "PRINCIPAL_ADMIN_PROJECT",
     ]),
     title: zod.string().nullish(),
     dailyRate: zod.number().nullish(),
     isActive: zod.boolean(),
+    managerId: zod.string().nullish(),
+    principalId: zod.string().nullish(),
     createdAt: zod.string(),
   }),
 });
@@ -169,10 +180,15 @@ export const GetMeResponse = zod.object({
     "KONSULTAN",
     "TECHNICAL_WRITER",
     "ADMIN_PROJECT",
+    "PRINCIPAL_KONSULTAN",
+    "PRINCIPAL_TECHNICAL_WRITER",
+    "PRINCIPAL_ADMIN_PROJECT",
   ]),
   title: zod.string().nullish(),
   dailyRate: zod.number().nullish(),
   isActive: zod.boolean(),
+  managerId: zod.string().nullish(),
+  principalId: zod.string().nullish(),
   createdAt: zod.string(),
 });
 
@@ -192,10 +208,15 @@ export const ListUsersResponseItem = zod.object({
     "KONSULTAN",
     "TECHNICAL_WRITER",
     "ADMIN_PROJECT",
+    "PRINCIPAL_KONSULTAN",
+    "PRINCIPAL_TECHNICAL_WRITER",
+    "PRINCIPAL_ADMIN_PROJECT",
   ]),
   title: zod.string().nullish(),
   dailyRate: zod.number().nullish(),
   isActive: zod.boolean(),
+  managerId: zod.string().nullish(),
+  principalId: zod.string().nullish(),
   createdAt: zod.string(),
 });
 export const ListUsersResponse = zod.array(ListUsersResponseItem);
@@ -211,9 +232,14 @@ export const CreateUserBody = zod.object({
     "KONSULTAN",
     "TECHNICAL_WRITER",
     "ADMIN_PROJECT",
+    "PRINCIPAL_KONSULTAN",
+    "PRINCIPAL_TECHNICAL_WRITER",
+    "PRINCIPAL_ADMIN_PROJECT",
   ]),
   title: zod.string().optional(),
   dailyRate: zod.number().optional(),
+  managerId: zod.string().nullish(),
+  principalId: zod.string().nullish(),
 });
 
 export const GetUserParams = zod.object({
@@ -231,10 +257,15 @@ export const GetUserResponse = zod.object({
     "KONSULTAN",
     "TECHNICAL_WRITER",
     "ADMIN_PROJECT",
+    "PRINCIPAL_KONSULTAN",
+    "PRINCIPAL_TECHNICAL_WRITER",
+    "PRINCIPAL_ADMIN_PROJECT",
   ]),
   title: zod.string().nullish(),
   dailyRate: zod.number().nullish(),
   isActive: zod.boolean(),
+  managerId: zod.string().nullish(),
+  principalId: zod.string().nullish(),
   createdAt: zod.string(),
 });
 
@@ -252,12 +283,17 @@ export const UpdateUserBody = zod.object({
       "KONSULTAN",
       "TECHNICAL_WRITER",
       "ADMIN_PROJECT",
+      "PRINCIPAL_KONSULTAN",
+      "PRINCIPAL_TECHNICAL_WRITER",
+      "PRINCIPAL_ADMIN_PROJECT",
     ])
     .optional(),
   title: zod.string().optional(),
   dailyRate: zod.number().optional(),
   isActive: zod.boolean().optional(),
   password: zod.string().optional(),
+  managerId: zod.string().nullish(),
+  principalId: zod.string().nullish(),
 });
 
 export const UpdateUserResponse = zod.object({
@@ -271,10 +307,15 @@ export const UpdateUserResponse = zod.object({
     "KONSULTAN",
     "TECHNICAL_WRITER",
     "ADMIN_PROJECT",
+    "PRINCIPAL_KONSULTAN",
+    "PRINCIPAL_TECHNICAL_WRITER",
+    "PRINCIPAL_ADMIN_PROJECT",
   ]),
   title: zod.string().nullish(),
   dailyRate: zod.number().nullish(),
   isActive: zod.boolean(),
+  managerId: zod.string().nullish(),
+  principalId: zod.string().nullish(),
   createdAt: zod.string(),
 });
 
@@ -495,12 +536,19 @@ export const GetProjectResponse = zod
                 "KONSULTAN",
                 "TECHNICAL_WRITER",
                 "ADMIN_PROJECT",
+                "PRINCIPAL_KONSULTAN",
+                "PRINCIPAL_TECHNICAL_WRITER",
+                "PRINCIPAL_ADMIN_PROJECT",
               ])
               .optional(),
             roleInProject: zod.string().nullish(),
             plannedMandays: zod.number(),
             actualMandays: zod.number(),
             dailyRate: zod.number(),
+            proposedById: zod.string().nullish(),
+            proposedByName: zod.string().nullish(),
+            proposedAt: zod.string().nullish(),
+            acceptedAt: zod.string().nullish(),
           }),
         )
         .optional(),
@@ -661,12 +709,19 @@ export const ListProjectResourcesResponseItem = zod.object({
       "KONSULTAN",
       "TECHNICAL_WRITER",
       "ADMIN_PROJECT",
+      "PRINCIPAL_KONSULTAN",
+      "PRINCIPAL_TECHNICAL_WRITER",
+      "PRINCIPAL_ADMIN_PROJECT",
     ])
     .optional(),
   roleInProject: zod.string().nullish(),
   plannedMandays: zod.number(),
   actualMandays: zod.number(),
   dailyRate: zod.number(),
+  proposedById: zod.string().nullish(),
+  proposedByName: zod.string().nullish(),
+  proposedAt: zod.string().nullish(),
+  acceptedAt: zod.string().nullish(),
 });
 export const ListProjectResourcesResponse = zod.array(
   ListProjectResourcesResponseItem,
@@ -691,6 +746,101 @@ export const RemoveProjectResourceResponse = zod.object({
   success: zod.boolean(),
   message: zod.string().optional(),
 });
+
+export const ProposeProjectResourceParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const ProposeProjectResourceBody = zod.object({
+  userId: zod.string(),
+  roleInProject: zod.string().optional(),
+  plannedMandays: zod.number(),
+  dailyRate: zod.number(),
+});
+
+export const AcceptProjectResourceParams = zod.object({
+  resourceId: zod.coerce.string(),
+});
+
+export const AcceptProjectResourceResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+export const ListProjectsNeedingResourceResponseItem = zod.object({
+  id: zod.string(),
+  code: zod.string(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  status: zod.enum([
+    "DRAFT",
+    "OBSERVATION",
+    "ACTIVE",
+    "NO_NEED_CONSULTANT",
+    "PAUSE",
+    "COMPLETE",
+    "CLOSED",
+  ]),
+  clientId: zod.string().optional(),
+  clientName: zod.string().optional(),
+  salesId: zod.string().nullish(),
+  salesName: zod.string().nullish(),
+  pmId: zod.string().nullish(),
+  pmName: zod.string().nullish(),
+  technicalWriterId: zod.string().nullish(),
+  technicalWriterName: zod.string().nullish(),
+  adminProjectId: zod.string().nullish(),
+  adminProjectName: zod.string().nullish(),
+  startDate: zod.string().nullish(),
+  endDate: zod.string().nullish(),
+  contractValue: zod.number(),
+  estimatedCost: zod.number(),
+  estimatedProfit: zod.number(),
+  plannedMandays: zod.number(),
+  actualMandays: zod.number().optional(),
+  actualCost: zod.number(),
+  resourceCost: zod.number(),
+  additionalCost: zod.number(),
+  actualProfit: zod.number().optional(),
+  marginPct: zod.number().optional(),
+  reportCoverUrl: zod.string().nullish(),
+  reportLink: zod.string().nullish(),
+  reportSubmittedAt: zod.string().nullish(),
+  spkFileUrl: zod.string().nullish(),
+  spkFileName: zod.string().nullish(),
+  contractFileUrl: zod.string().nullish(),
+  contractFileName: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+export const ListProjectsNeedingResourceResponse = zod.array(
+  ListProjectsNeedingResourceResponseItem,
+);
+
+export const ListUsersUnderSupervisionResponseItem = zod.object({
+  id: zod.string(),
+  email: zod.string(),
+  name: zod.string(),
+  role: zod.enum([
+    "MANAGEMENT",
+    "PROJECT_MANAGER",
+    "SALES",
+    "KONSULTAN",
+    "TECHNICAL_WRITER",
+    "ADMIN_PROJECT",
+    "PRINCIPAL_KONSULTAN",
+    "PRINCIPAL_TECHNICAL_WRITER",
+    "PRINCIPAL_ADMIN_PROJECT",
+  ]),
+  title: zod.string().nullish(),
+  dailyRate: zod.number().nullish(),
+  isActive: zod.boolean(),
+  managerId: zod.string().nullish(),
+  principalId: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+export const ListUsersUnderSupervisionResponse = zod.array(
+  ListUsersUnderSupervisionResponseItem,
+);
 
 export const ListProjectExpensesParams = zod.object({
   id: zod.coerce.string(),
@@ -1112,6 +1262,9 @@ export const GetUtilizationResponseItem = zod.object({
     "KONSULTAN",
     "TECHNICAL_WRITER",
     "ADMIN_PROJECT",
+    "PRINCIPAL_KONSULTAN",
+    "PRINCIPAL_TECHNICAL_WRITER",
+    "PRINCIPAL_ADMIN_PROJECT",
   ]),
   plannedMandays: zod.number(),
   actualMandays: zod.number(),

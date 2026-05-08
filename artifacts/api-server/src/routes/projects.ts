@@ -5,6 +5,7 @@ import {
   serializeProject,
   projectInclude,
   computeMetrics,
+  canViewProjectFinancials,
 } from "../lib/serializers.js";
 import { recordAudit } from "../lib/audit.js";
 import { issueSurveyTokenIfMissing } from "../lib/surveyDefaults.js";
@@ -200,7 +201,7 @@ router.get("/projects", async (req, res) => {
     include: projectInclude,
     orderBy: { createdAt: "desc" },
   });
-  res.json(projects.map(serializeProject));
+  res.json(projects.map((p) => serializeProject(p, req.user?.role)));
 });
 
 router.get("/projects/:id", async (req, res) => {
@@ -215,7 +216,8 @@ router.get("/projects/:id", async (req, res) => {
     res.status(404).json({ error: "Not found" });
     return;
   }
-  const base = serializeProject(p);
+  const base = serializeProject(p, req.user?.role);
+  const showFinancials = canViewProjectFinancials(req.user?.role);
   res.json({
     ...base,
     client: {
@@ -243,7 +245,7 @@ router.get("/projects/:id", async (req, res) => {
         roleInProject: r.roleInProject,
         plannedMandays: r.plannedMandays,
         actualMandays,
-        dailyRate: r.dailyRate,
+        dailyRate: showFinancials ? r.dailyRate : 0,
       };
     }),
     documents: p.documents.map((d) => ({
@@ -253,7 +255,7 @@ router.get("/projects/:id", async (req, res) => {
       fileName: d.fileName,
       fileUrl: d.fileUrl,
       invoiceNumber: d.invoiceNumber,
-      invoiceAmount: d.invoiceAmount,
+      invoiceAmount: showFinancials ? d.invoiceAmount : null,
       invoiceStatus: d.invoiceStatus,
       notes: d.notes,
       uploadedById: d.uploadedById,
@@ -340,7 +342,7 @@ router.post("/projects", requireRole(...writeRoles), async (req, res) => {
     description: `Created project ${created.code} — ${created.name}`,
     after: serializeProject(created),
   });
-  res.status(201).json(serializeProject(created));
+  res.status(201).json(serializeProject(created, req.user?.role));
 });
 
 router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
@@ -585,7 +587,7 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
       after: serializeProject(updated),
     });
   }
-  res.json(serializeProject(updated));
+  res.json(serializeProject(updated, req.user?.role));
 });
 
 router.patch("/projects/:id/report", async (req, res) => {
@@ -641,7 +643,7 @@ router.patch("/projects/:id/report", async (req, res) => {
       link: `/projects/${updated.id}`,
     });
   }
-  res.json(serializeProject(updated));
+  res.json(serializeProject(updated, req.user?.role));
 });
 
 router.get("/projects/:id/whatif", async (req, res) => {
@@ -732,6 +734,11 @@ router.delete(
 );
 
 router.get("/projects/:id/financials", async (req, res) => {
+  const role = req.user?.role ?? "";
+  if (role === "KONSULTAN" || role === "TECHNICAL_WRITER" || role.startsWith("PRINCIPAL_")) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
   const p = await prisma.project.findUnique({
     where: { id: req.params.id },
     include: projectInclude,

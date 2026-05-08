@@ -9,6 +9,18 @@ const router: IRouter = Router();
 
 router.use(requireAuth);
 
+const ALL_ROLES: UserRole[] = [
+  "MANAGEMENT", "PROJECT_MANAGER", "SALES",
+  "KONSULTAN", "TECHNICAL_WRITER", "ADMIN_PROJECT",
+  "PRINCIPAL_KONSULTAN", "PRINCIPAL_TECHNICAL_WRITER", "PRINCIPAL_ADMIN_PROJECT",
+];
+
+const PRINCIPAL_TO_REPORT_ROLE: Record<string, UserRole> = {
+  PRINCIPAL_KONSULTAN: "KONSULTAN",
+  PRINCIPAL_TECHNICAL_WRITER: "TECHNICAL_WRITER",
+  PRINCIPAL_ADMIN_PROJECT: "ADMIN_PROJECT",
+};
+
 router.get("/users", async (req, res) => {
   const includeDeleted = req.query.includeDeleted === "true" && req.user!.role === "MANAGEMENT";
   const users = await prisma.user.findMany({
@@ -18,28 +30,49 @@ router.get("/users", async (req, res) => {
   res.json(users.map(serializeUser));
 });
 
-router.get("/users/available", async (req, res) => {
+// Lists users supervised by the calling Principal (principalId === caller.id).
+// Used by Principal dashboards/forms to scope edits + Propose Resource picks.
+router.get("/users/under-supervision", async (req, res) => {
   const callerRole = req.user!.role;
-  if (callerRole !== "MANAGEMENT" && callerRole !== "PROJECT_MANAGER") {
-    res.status(403).json({ error: "Forbidden" });
-    return;
-  }
-  const role = String(req.query.role || "") as UserRole;
-  const validRoles: UserRole[] = [
-    "MANAGEMENT", "PROJECT_MANAGER", "SALES",
-    "KONSULTAN", "TECHNICAL_WRITER", "ADMIN_PROJECT",
-  ];
-  if (!validRoles.includes(role)) {
-    res.status(400).json({ error: "role required" });
+  const callerId = req.user!.sub;
+  if (!callerRole.startsWith("PRINCIPAL_")) {
+    res.status(403).json({ error: "Only Principal roles can list supervisees" });
     return;
   }
   const users = await prisma.user.findMany({
-    where: { role, deletedAt: null, isActive: true },
+    where: { principalId: callerId, deletedAt: null },
     orderBy: { name: "asc" },
   });
-  // Count active project assignments per user.
-  // For KONSULTAN: count ProjectResource where project.status in OBSERVATION/ACTIVE.
-  // For TW/AP: count direct assignments via Project.technicalWriterId / adminProjectId.
+  res.json(users.map(serializeUser));
+});
+
+router.get("/users/available", async (req, res) => {
+  const callerRole = req.user!.role;
+  const callerId = req.user!.sub;
+  const role = String(req.query.role || "") as UserRole;
+  if (!ALL_ROLES.includes(role)) {
+    res.status(400).json({ error: "role required" });
+    return;
+  }
+  // MGMT/PM see all of a role; Principals see only the role they supervise (their own supervisees).
+  let scopeWhere: any = { role, deletedAt: null, isActive: true };
+  if (callerRole === "MANAGEMENT" || callerRole === "PROJECT_MANAGER") {
+    // no extra filter
+  } else if (callerRole.startsWith("PRINCIPAL_")) {
+    const reportRole = PRINCIPAL_TO_REPORT_ROLE[callerRole];
+    if (reportRole !== role) {
+      res.status(403).json({ error: "Principal can only list users they supervise" });
+      return;
+    }
+    scopeWhere.principalId = callerId;
+  } else {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  const users = await prisma.user.findMany({
+    where: scopeWhere,
+    orderBy: { name: "asc" },
+  });
   const result = await Promise.all(
     users.map(async (u) => {
       let activeProjectCount = 0;
@@ -88,7 +121,7 @@ router.post(
   "/users",
   requireRole("MANAGEMENT"),
   async (req, res) => {
-    const { email, password, name, role, title, dailyRate } = req.body || {};
+    const { email, password, name, role, title, dailyRate, managerId, principalId } = req.body || {};
     if (!email || !password || !name || !role) {
       res.status(400).json({ error: "email, password, name, role required" });
       return;
@@ -117,6 +150,8 @@ router.post(
         role: role as UserRole,
         title: title || null,
         dailyRate: dailyRate != null ? Number(dailyRate) : null,
+        managerId: managerId || null,
+        principalId: principalId || null,
       },
     });
     await recordAudit(req, {
@@ -143,7 +178,7 @@ router.patch("/users/:id", async (req, res) => {
     res.status(404).json({ error: "Not found" });
     return;
   }
-  const { name, role, title, dailyRate, isActive, password } = req.body || {};
+  const { name, role, title, dailyRate, isActive, password, managerId, principalId } = req.body || {};
   if (dailyRate != null && (Number(dailyRate) < 0 || !isFinite(Number(dailyRate)))) {
     res.status(400).json({ error: "dailyRate must be a non-negative number" });
     return;
@@ -161,6 +196,8 @@ router.patch("/users/:id", async (req, res) => {
     if (isActive !== undefined) data.isActive = Boolean(isActive);
     if (dailyRate !== undefined)
       data.dailyRate = dailyRate != null ? Number(dailyRate) : null;
+    if (managerId !== undefined) data.managerId = managerId || null;
+    if (principalId !== undefined) data.principalId = principalId || null;
   }
   const u = await prisma.user.update({ where: { id: targetId }, data });
   await recordAudit(req, {
@@ -187,9 +224,6 @@ router.delete(
       res.status(404).json({ error: "Not found" });
       return;
     }
-    // Soft delete: keep the row, set deletedAt + isActive=false so the user
-    // disappears from selects/lists but their historical records (timesheets,
-    // approvals, audit log entries) remain intact.
     const u = await prisma.user.update({
       where: { id: req.params.id },
       data: { isActive: false, deletedAt: new Date() },

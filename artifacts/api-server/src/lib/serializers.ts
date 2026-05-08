@@ -73,12 +73,52 @@ export function serializeUser(u: UserBasic) {
     title: u.title,
     dailyRate: u.dailyRate,
     isActive: u.isActive,
+    managerId: (u as any).managerId ?? null,
+    principalId: (u as any).principalId ?? null,
     createdAt: u.createdAt.toISOString(),
   };
 }
 
-export function serializeProject(project: ProjectWithRelations) {
+/**
+ * Roles that must NOT see commercial figures (contractValue, costs, margin,
+ * profit, estimatedCost). Mirrors `canViewProjectFinancials` on the frontend.
+ */
+const FINANCIALS_BLOCKED_ROLES = new Set<string>([
+  "KONSULTAN",
+  "TECHNICAL_WRITER",
+  "PRINCIPAL_KONSULTAN",
+  "PRINCIPAL_TECHNICAL_WRITER",
+  "PRINCIPAL_ADMIN_PROJECT",
+]);
+
+export function canViewProjectFinancials(role: string | null | undefined): boolean {
+  return !!role && !FINANCIALS_BLOCKED_ROLES.has(role);
+}
+
+export function serializeProject(project: ProjectWithRelations, callerRole?: string | null) {
   const m = computeMetrics(project);
+  const includeFinancials = canViewProjectFinancials(callerRole ?? "MANAGEMENT");
+  const financials = includeFinancials
+    ? {
+        contractValue: project.contractValue,
+        estimatedCost: project.estimatedCost,
+        estimatedProfit: m.estimatedProfit,
+        actualCost: m.actualCost,
+        resourceCost: m.resourceCost,
+        additionalCost: m.additionalCost,
+        actualProfit: m.actualProfit,
+        marginPct: m.marginPct,
+      }
+    : {
+        contractValue: 0,
+        estimatedCost: 0,
+        estimatedProfit: 0,
+        actualCost: 0,
+        resourceCost: 0,
+        additionalCost: 0,
+        actualProfit: 0,
+        marginPct: 0,
+      };
   return {
     id: project.id,
     code: project.code,
@@ -104,16 +144,9 @@ export function serializeProject(project: ProjectWithRelations) {
     contractFileName: project.contractFileName ?? null,
     startDate: project.startDate?.toISOString() ?? null,
     endDate: project.endDate?.toISOString() ?? null,
-    contractValue: project.contractValue,
-    estimatedCost: project.estimatedCost,
-    estimatedProfit: m.estimatedProfit,
     plannedMandays: project.plannedMandays,
     actualMandays: m.actualMandays,
-    actualCost: m.actualCost,
-    resourceCost: m.resourceCost,
-    additionalCost: m.additionalCost,
-    actualProfit: m.actualProfit,
-    marginPct: m.marginPct,
+    ...financials,
     lastStatusReason: project.lastStatusReason ?? null,
     createdAt: project.createdAt.toISOString(),
   };
