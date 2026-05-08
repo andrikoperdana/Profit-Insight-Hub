@@ -865,6 +865,8 @@ export const ListProjectExpensesResponseItem = zod.object({
   description: zod.string(),
   amount: zod.number(),
   spentAt: zod.string(),
+  evidenceUrl: zod.string().nullish(),
+  evidenceFileName: zod.string().nullish(),
   createdById: zod.string().nullish(),
   createdByName: zod.string().nullish(),
   createdAt: zod.string(),
@@ -882,6 +884,11 @@ export const AddProjectExpenseBody = zod.object({
   description: zod.string(),
   amount: zod.number(),
   spentAt: zod.string().optional(),
+  evidenceUrl: zod
+    .string()
+    .nullish()
+    .describe("Base64 data URL of supporting invoice\/receipt PDF or image"),
+  evidenceFileName: zod.string().nullish(),
 });
 
 export const RemoveProjectExpenseParams = zod.object({

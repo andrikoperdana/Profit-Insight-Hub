@@ -242,6 +242,8 @@ export interface ProjectExpense {
   description: string;
   amount: number;
   spentAt: string;
+  evidenceUrl?: string | null;
+  evidenceFileName?: string | null;
   createdById?: string | null;
   createdByName?: string | null;
   createdAt: string;
@@ -263,6 +265,9 @@ export interface AddProjectExpenseBody {
   description: string;
   amount: number;
   spentAt?: string;
+  /** Base64 data URL of supporting invoice/receipt PDF or image */
+  evidenceUrl?: string | null;
+  evidenceFileName?: string | null;
 }
 
 export interface ProjectResource {

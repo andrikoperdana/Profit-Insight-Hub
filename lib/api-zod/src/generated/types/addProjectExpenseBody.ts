@@ -12,4 +12,7 @@ export interface AddProjectExpenseBody {
   description: string;
   amount: number;
   spentAt?: string;
+  /** Base64 data URL of supporting invoice/receipt PDF or image */
+  evidenceUrl?: string | null;
+  evidenceFileName?: string | null;
 }

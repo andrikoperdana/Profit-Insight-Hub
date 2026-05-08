@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
+import { canViewProjectFinancials } from "../lib/serializers.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -23,6 +24,8 @@ function serializeExpense(e: {
   description: string;
   amount: number;
   spentAt: Date;
+  evidenceUrl: string | null;
+  evidenceFileName: string | null;
   createdById: string | null;
   createdBy?: { name: string } | null;
   createdAt: Date;
@@ -34,11 +37,16 @@ function serializeExpense(e: {
     description: e.description,
     amount: e.amount,
     spentAt: e.spentAt.toISOString(),
+    evidenceUrl: e.evidenceUrl,
+    evidenceFileName: e.evidenceFileName,
     createdById: e.createdById,
     createdByName: e.createdBy?.name ?? null,
     createdAt: e.createdAt.toISOString(),
   };
 }
+
+const ALLOWED_EVIDENCE_MIME = /^data:(application\/pdf|image\/(png|jpe?g|webp));base64,/i;
+const MAX_EVIDENCE_BYTES = 8 * 1024 * 1024; // ~8MB raw
 
 router.get("/projects/:id/expenses", async (req, res) => {
   const projectId = req.params.id;
@@ -56,7 +64,20 @@ router.get("/projects/:id/expenses", async (req, res) => {
     include: { createdBy: { select: { name: true } } },
     orderBy: { spentAt: "desc" },
   });
-  res.json(expenses.map(serializeExpense));
+  // Invoice/billing PDFs are commercially sensitive — only roles allowed to see
+  // project financials may download the evidence file. Other roles still see
+  // the row (category/description/amount) so the timeline stays consistent.
+  const showEvidence = canViewProjectFinancials(req.user?.role);
+  res.json(
+    expenses.map((e) => {
+      const s = serializeExpense(e);
+      if (!showEvidence) {
+        s.evidenceUrl = null;
+        s.evidenceFileName = null;
+      }
+      return s;
+    }),
+  );
 });
 
 router.post(
@@ -84,7 +105,7 @@ router.post(
       return;
     }
 
-    const { category, description, amount, spentAt } = req.body || {};
+    const { category, description, amount, spentAt, evidenceUrl, evidenceFileName } = req.body || {};
     if (!category || !ALLOWED_CATEGORIES.has(String(category))) {
       res.status(400).json({
         error: `category required; must be one of ${[...ALLOWED_CATEGORIES].join(", ")}`,
@@ -113,6 +134,24 @@ router.post(
       spentDate = new Date();
     }
 
+    let evidenceUrlClean: string | null = null;
+    let evidenceFileNameClean: string | null = null;
+    if (evidenceUrl != null && evidenceUrl !== "") {
+      if (typeof evidenceUrl !== "string" || !ALLOWED_EVIDENCE_MIME.test(evidenceUrl)) {
+        res.status(400).json({ error: "evidenceUrl must be a base64 data URL of a PDF or image (png/jpeg/webp)" });
+        return;
+      }
+      if (evidenceUrl.length > MAX_EVIDENCE_BYTES * 1.4) {
+        res.status(413).json({ error: "evidence file too large (max ~8MB)" });
+        return;
+      }
+      evidenceUrlClean = evidenceUrl;
+      evidenceFileNameClean =
+        typeof evidenceFileName === "string" && evidenceFileName.trim()
+          ? evidenceFileName.trim().slice(0, 200)
+          : "evidence";
+    }
+
     const expense = await prisma.projectExpense.create({
       data: {
         projectId,
@@ -120,6 +159,8 @@ router.post(
         description: desc,
         amount: amt,
         spentAt: spentDate,
+        evidenceUrl: evidenceUrlClean,
+        evidenceFileName: evidenceFileNameClean,
         createdById: userId,
       },
       include: { createdBy: { select: { name: true } } },

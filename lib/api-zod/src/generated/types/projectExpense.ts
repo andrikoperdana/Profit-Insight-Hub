@@ -14,6 +14,8 @@ export interface ProjectExpense {
   description: string;
   amount: number;
   spentAt: string;
+  evidenceUrl?: string | null;
+  evidenceFileName?: string | null;
   createdById?: string | null;
   createdByName?: string | null;
   createdAt: string;

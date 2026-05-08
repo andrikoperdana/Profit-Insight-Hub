@@ -1028,6 +1028,8 @@ components:
         description: { type: string }
         amount: { type: number }
         spentAt: { type: string }
+        evidenceUrl: { type: string, nullable: true }
+        evidenceFileName: { type: string, nullable: true }
         createdById: { type: string, nullable: true }
         createdByName: { type: string, nullable: true }
         createdAt: { type: string }
@@ -1040,6 +1042,8 @@ components:
         description: { type: string }
         amount: { type: number }
         spentAt: { type: string }
+        evidenceUrl: { type: string, nullable: true, description: "Base64 data URL of supporting invoice/receipt PDF or image" }
+        evidenceFileName: { type: string, nullable: true }
 
     ProjectDetail:
       allOf:

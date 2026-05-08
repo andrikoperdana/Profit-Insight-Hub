@@ -12541,6 +12541,8 @@ export namespace Prisma {
     description: string | null
     amount: number | null
     spentAt: Date | null
+    evidenceUrl: string | null
+    evidenceFileName: string | null
     createdById: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -12553,6 +12555,8 @@ export namespace Prisma {
     description: string | null
     amount: number | null
     spentAt: Date | null
+    evidenceUrl: string | null
+    evidenceFileName: string | null
     createdById: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -12565,6 +12569,8 @@ export namespace Prisma {
     description: number
     amount: number
     spentAt: number
+    evidenceUrl: number
+    evidenceFileName: number
     createdById: number
     createdAt: number
     updatedAt: number
@@ -12587,6 +12593,8 @@ export namespace Prisma {
     description?: true
     amount?: true
     spentAt?: true
+    evidenceUrl?: true
+    evidenceFileName?: true
     createdById?: true
     createdAt?: true
     updatedAt?: true
@@ -12599,6 +12607,8 @@ export namespace Prisma {
     description?: true
     amount?: true
     spentAt?: true
+    evidenceUrl?: true
+    evidenceFileName?: true
     createdById?: true
     createdAt?: true
     updatedAt?: true
@@ -12611,6 +12621,8 @@ export namespace Prisma {
     description?: true
     amount?: true
     spentAt?: true
+    evidenceUrl?: true
+    evidenceFileName?: true
     createdById?: true
     createdAt?: true
     updatedAt?: true
@@ -12710,6 +12722,8 @@ export namespace Prisma {
     description: string
     amount: number
     spentAt: Date
+    evidenceUrl: string | null
+    evidenceFileName: string | null
     createdById: string | null
     createdAt: Date
     updatedAt: Date
@@ -12741,6 +12755,8 @@ export namespace Prisma {
     description?: boolean
     amount?: boolean
     spentAt?: boolean
+    evidenceUrl?: boolean
+    evidenceFileName?: boolean
     createdById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -12755,6 +12771,8 @@ export namespace Prisma {
     description?: boolean
     amount?: boolean
     spentAt?: boolean
+    evidenceUrl?: boolean
+    evidenceFileName?: boolean
     createdById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -12769,6 +12787,8 @@ export namespace Prisma {
     description?: boolean
     amount?: boolean
     spentAt?: boolean
+    evidenceUrl?: boolean
+    evidenceFileName?: boolean
     createdById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -12796,6 +12816,8 @@ export namespace Prisma {
       description: string
       amount: number
       spentAt: Date
+      evidenceUrl: string | null
+      evidenceFileName: string | null
       createdById: string | null
       createdAt: Date
       updatedAt: Date
@@ -13200,6 +13222,8 @@ export namespace Prisma {
     readonly description: FieldRef<"ProjectExpense", 'String'>
     readonly amount: FieldRef<"ProjectExpense", 'Float'>
     readonly spentAt: FieldRef<"ProjectExpense", 'DateTime'>
+    readonly evidenceUrl: FieldRef<"ProjectExpense", 'String'>
+    readonly evidenceFileName: FieldRef<"ProjectExpense", 'String'>
     readonly createdById: FieldRef<"ProjectExpense", 'String'>
     readonly createdAt: FieldRef<"ProjectExpense", 'DateTime'>
     readonly updatedAt: FieldRef<"ProjectExpense", 'DateTime'>
@@ -17754,6 +17778,8 @@ export namespace Prisma {
     description: 'description',
     amount: 'amount',
     spentAt: 'spentAt',
+    evidenceUrl: 'evidenceUrl',
+    evidenceFileName: 'evidenceFileName',
     createdById: 'createdById',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -18954,6 +18980,8 @@ export namespace Prisma {
     description?: StringFilter<"ProjectExpense"> | string
     amount?: FloatFilter<"ProjectExpense"> | number
     spentAt?: DateTimeFilter<"ProjectExpense"> | Date | string
+    evidenceUrl?: StringNullableFilter<"ProjectExpense"> | string | null
+    evidenceFileName?: StringNullableFilter<"ProjectExpense"> | string | null
     createdById?: StringNullableFilter<"ProjectExpense"> | string | null
     createdAt?: DateTimeFilter<"ProjectExpense"> | Date | string
     updatedAt?: DateTimeFilter<"ProjectExpense"> | Date | string
@@ -18968,6 +18996,8 @@ export namespace Prisma {
     description?: SortOrder
     amount?: SortOrder
     spentAt?: SortOrder
+    evidenceUrl?: SortOrderInput | SortOrder
+    evidenceFileName?: SortOrderInput | SortOrder
     createdById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -18985,6 +19015,8 @@ export namespace Prisma {
     description?: StringFilter<"ProjectExpense"> | string
     amount?: FloatFilter<"ProjectExpense"> | number
     spentAt?: DateTimeFilter<"ProjectExpense"> | Date | string
+    evidenceUrl?: StringNullableFilter<"ProjectExpense"> | string | null
+    evidenceFileName?: StringNullableFilter<"ProjectExpense"> | string | null
     createdById?: StringNullableFilter<"ProjectExpense"> | string | null
     createdAt?: DateTimeFilter<"ProjectExpense"> | Date | string
     updatedAt?: DateTimeFilter<"ProjectExpense"> | Date | string
@@ -18999,6 +19031,8 @@ export namespace Prisma {
     description?: SortOrder
     amount?: SortOrder
     spentAt?: SortOrder
+    evidenceUrl?: SortOrderInput | SortOrder
+    evidenceFileName?: SortOrderInput | SortOrder
     createdById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -19019,6 +19053,8 @@ export namespace Prisma {
     description?: StringWithAggregatesFilter<"ProjectExpense"> | string
     amount?: FloatWithAggregatesFilter<"ProjectExpense"> | number
     spentAt?: DateTimeWithAggregatesFilter<"ProjectExpense"> | Date | string
+    evidenceUrl?: StringNullableWithAggregatesFilter<"ProjectExpense"> | string | null
+    evidenceFileName?: StringNullableWithAggregatesFilter<"ProjectExpense"> | string | null
     createdById?: StringNullableWithAggregatesFilter<"ProjectExpense"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"ProjectExpense"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ProjectExpense"> | Date | string
@@ -20366,6 +20402,8 @@ export namespace Prisma {
     description: string
     amount: number
     spentAt?: Date | string
+    evidenceUrl?: string | null
+    evidenceFileName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutExpensesInput
@@ -20379,6 +20417,8 @@ export namespace Prisma {
     description: string
     amount: number
     spentAt?: Date | string
+    evidenceUrl?: string | null
+    evidenceFileName?: string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20390,6 +20430,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
     spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutExpensesNestedInput
@@ -20403,6 +20445,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
     spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20415,6 +20459,8 @@ export namespace Prisma {
     description: string
     amount: number
     spentAt?: Date | string
+    evidenceUrl?: string | null
+    evidenceFileName?: string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20426,6 +20472,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
     spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20437,6 +20485,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
     spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21729,6 +21779,8 @@ export namespace Prisma {
     description?: SortOrder
     amount?: SortOrder
     spentAt?: SortOrder
+    evidenceUrl?: SortOrder
+    evidenceFileName?: SortOrder
     createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -21745,6 +21797,8 @@ export namespace Prisma {
     description?: SortOrder
     amount?: SortOrder
     spentAt?: SortOrder
+    evidenceUrl?: SortOrder
+    evidenceFileName?: SortOrder
     createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -21757,6 +21811,8 @@ export namespace Prisma {
     description?: SortOrder
     amount?: SortOrder
     spentAt?: SortOrder
+    evidenceUrl?: SortOrder
+    evidenceFileName?: SortOrder
     createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -24755,6 +24811,8 @@ export namespace Prisma {
     description: string
     amount: number
     spentAt?: Date | string
+    evidenceUrl?: string | null
+    evidenceFileName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutExpensesInput
@@ -24767,6 +24825,8 @@ export namespace Prisma {
     description: string
     amount: number
     spentAt?: Date | string
+    evidenceUrl?: string | null
+    evidenceFileName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -25435,6 +25495,8 @@ export namespace Prisma {
     description?: StringFilter<"ProjectExpense"> | string
     amount?: FloatFilter<"ProjectExpense"> | number
     spentAt?: DateTimeFilter<"ProjectExpense"> | Date | string
+    evidenceUrl?: StringNullableFilter<"ProjectExpense"> | string | null
+    evidenceFileName?: StringNullableFilter<"ProjectExpense"> | string | null
     createdById?: StringNullableFilter<"ProjectExpense"> | string | null
     createdAt?: DateTimeFilter<"ProjectExpense"> | Date | string
     updatedAt?: DateTimeFilter<"ProjectExpense"> | Date | string
@@ -26127,6 +26189,8 @@ export namespace Prisma {
     description: string
     amount: number
     spentAt?: Date | string
+    evidenceUrl?: string | null
+    evidenceFileName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy?: UserCreateNestedOneWithoutProjectExpensesInput
@@ -26138,6 +26202,8 @@ export namespace Prisma {
     description: string
     amount: number
     spentAt?: Date | string
+    evidenceUrl?: string | null
+    evidenceFileName?: string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -29909,6 +29975,8 @@ export namespace Prisma {
     description: string
     amount: number
     spentAt?: Date | string
+    evidenceUrl?: string | null
+    evidenceFileName?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -30788,6 +30856,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
     spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutExpensesNestedInput
@@ -30800,6 +30870,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
     spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -30811,6 +30883,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
     spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -31147,6 +31221,8 @@ export namespace Prisma {
     description: string
     amount: number
     spentAt?: Date | string
+    evidenceUrl?: string | null
+    evidenceFileName?: string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -31342,6 +31418,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
     spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: UserUpdateOneWithoutProjectExpensesNestedInput
@@ -31353,6 +31431,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
     spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31364,6 +31444,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
     spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

@@ -44,7 +44,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   ArrowLeft, Building2, User, Calendar, DollarSign, TrendingUp, TrendingDown,
   Activity, Flame, Upload, FileText, Trash2, CheckCircle2, AlertCircle, Plus,
-  Pencil, AlertTriangle,
+  Pencil, AlertTriangle, Paperclip, X,
 } from "lucide-react";
 import { formatIDR, formatDate, formatPct } from "@/lib/format";
 import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
@@ -330,6 +330,31 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [spentAt, setSpentAt] = useState<string>(new Date().toISOString().slice(0, 10));
+  const [evidence, setEvidence] = useState<{ name: string; url: string } | null>(null);
+  const evidenceInputRef = useRef<HTMLInputElement | null>(null);
+
+  const ALLOWED_EVIDENCE_TYPES = ["application/pdf", "image/png", "image/jpeg", "image/webp"];
+  const MAX_EVIDENCE_BYTES = 8 * 1024 * 1024;
+
+  function handleEvidenceChange(file: File | null) {
+    if (!file) { setEvidence(null); return; }
+    if (!ALLOWED_EVIDENCE_TYPES.includes(file.type)) {
+      toast({ variant: "destructive", title: "Unsupported file", description: "Use PDF or image (PNG/JPEG/WebP)." });
+      if (evidenceInputRef.current) evidenceInputRef.current.value = "";
+      return;
+    }
+    if (file.size > MAX_EVIDENCE_BYTES) {
+      toast({ variant: "destructive", title: "File too large", description: "Max 8MB." });
+      if (evidenceInputRef.current) evidenceInputRef.current.value = "";
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const url = String(ev.target?.result ?? "");
+      if (url) setEvidence({ name: file.name, url });
+    };
+    reader.readAsDataURL(file);
+  }
 
   const invalidateAll = () => {
     qc.invalidateQueries({ queryKey: getListProjectExpensesQueryKey(projectId) });
@@ -344,6 +369,8 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
         toast({ title: "Expense saved", description: "Project total cost updated." });
         setDescription("");
         setAmount("");
+        setEvidence(null);
+        if (evidenceInputRef.current) evidenceInputRef.current.value = "";
         invalidateAll();
       },
       onError: (e: any) =>
@@ -375,10 +402,12 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
     addMutation.mutate({
       id: projectId,
       data: {
-        category,
+        category: category as any,
         description: description.trim(),
         amount: amt,
         spentAt: spentAt || undefined,
+        evidenceUrl: evidence?.url,
+        evidenceFileName: evidence?.name,
       },
     });
   }
@@ -462,6 +491,49 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
                 />
               </div>
             </div>
+            <div>
+              <Label>Evidence (Invoice / Billing PDF)</Label>
+              <div className="mt-1 flex flex-wrap items-center gap-2">
+                <input
+                  ref={evidenceInputRef}
+                  type="file"
+                  accept="application/pdf,image/png,image/jpeg,image/webp"
+                  className="hidden"
+                  onChange={(e) => handleEvidenceChange(e.target.files?.[0] ?? null)}
+                  data-testid="input-expense-evidence"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => evidenceInputRef.current?.click()}
+                  data-testid="button-pick-evidence"
+                >
+                  <Paperclip className="h-4 w-4 mr-2" />
+                  {evidence ? "Change file" : "Attach PDF / image"}
+                </Button>
+                {evidence ? (
+                  <div className="flex items-center gap-1 rounded border border-border bg-muted/40 px-2 py-1 text-xs">
+                    <FileText className="h-3.5 w-3.5 text-muted-foreground" />
+                    <span className="max-w-[240px] truncate" title={evidence.name}>{evidence.name}</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEvidence(null);
+                        if (evidenceInputRef.current) evidenceInputRef.current.value = "";
+                      }}
+                      className="ml-1 text-muted-foreground hover:text-destructive"
+                      title="Remove attachment"
+                      data-testid="button-clear-evidence"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                ) : (
+                  <span className="text-xs text-muted-foreground">Optional — PDF or image, max 8MB.</span>
+                )}
+              </div>
+            </div>
             <div className="flex justify-end">
               <Button
                 onClick={handleAdd}
@@ -487,6 +559,7 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
                     <th className="py-2 pr-3 font-medium">Category</th>
                     <th className="py-2 pr-3 font-medium">Description</th>
                     <th className="py-2 pr-3 font-medium">Created By</th>
+                    <th className="py-2 pr-3 font-medium">Evidence</th>
                     <th className="py-2 pr-3 font-medium text-right">Amount</th>
                     <th className="py-2 pr-3 font-medium text-right w-12"></th>
                   </tr>
@@ -500,6 +573,23 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
                       </td>
                       <td className="py-2 pr-3">{e.description}</td>
                       <td className="py-2 pr-3 text-muted-foreground">{e.createdByName ?? "—"}</td>
+                      <td className="py-2 pr-3">
+                        {e.evidenceUrl ? (
+                          <a
+                            href={e.evidenceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            download={e.evidenceFileName ?? "evidence"}
+                            className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                            data-testid={`link-evidence-${e.id}`}
+                          >
+                            <FileText className="h-3.5 w-3.5" />
+                            <span className="max-w-[160px] truncate">{e.evidenceFileName ?? "View"}</span>
+                          </a>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">—</span>
+                        )}
+                      </td>
                       <td className="py-2 pr-3 text-right font-mono">{formatIDR(e.amount)}</td>
                       <td className="py-2 pr-3 text-right">
                         <Button
@@ -521,7 +611,7 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
                     </tr>
                   ))}
                   <tr className="bg-muted/30">
-                    <td colSpan={4} className="py-2 pr-3 text-right text-xs uppercase tracking-wide text-muted-foreground">
+                    <td colSpan={5} className="py-2 pr-3 text-right text-xs uppercase tracking-wide text-muted-foreground">
                       Total Additional Cost
                     </td>
                     <td className="py-2 pr-3 text-right font-mono font-semibold">{formatIDR(totalAdditional)}</td>
