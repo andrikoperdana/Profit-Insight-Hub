@@ -2,9 +2,10 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { customFetch, useListUsers } from "@workspace/api-client-react";
 import { useAuth } from "@/lib/auth";
-import { ScrollText, Filter, ChevronLeft, ChevronRight, RefreshCw, Download } from "lucide-react";
+import { ScrollText, Filter, RefreshCw, Download } from "lucide-react";
 import { formatDate } from "@/lib/format";
-import { exportCsv } from "@/lib/exports";
+import { exportCsv, exportSheets } from "@/lib/exports";
+import { useToast } from "@/hooks/use-toast";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -33,6 +34,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Pagination } from "@/components/common/Pagination";
 
 interface AuditLog {
   id: string;
@@ -59,8 +61,6 @@ interface ActionStat {
   action: string;
   count: number;
 }
-
-const PAGE_SIZE = 50;
 
 const ACTION_GROUPS: Record<string, string> = {
   "user.created": "User",
@@ -101,36 +101,49 @@ function actionTone(action: string): string {
   return "bg-warning/10 text-warning border-warning/30";
 }
 
+function buildFilterParams(opts: {
+  from: string;
+  to: string;
+  userId: string;
+  action: string;
+}): URLSearchParams {
+  const qs = new URLSearchParams();
+  if (opts.from) qs.set("from", new Date(opts.from).toISOString());
+  if (opts.to) {
+    const t = new Date(opts.to);
+    t.setHours(23, 59, 59, 999);
+    qs.set("to", t.toISOString());
+  }
+  if (opts.userId && opts.userId !== "all") qs.set("userId", opts.userId);
+  if (opts.action && opts.action !== "all") qs.set("action", opts.action);
+  return qs;
+}
+
 export default function AuditLogPage() {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [userId, setUserId] = useState<string>("all");
   const [action, setAction] = useState<string>("all");
   const [details, setDetails] = useState<AuditLog | null>(null);
+  const [exporting, setExporting] = useState<null | "csv" | "xlsx">(null);
 
   const { data: users } = useListUsers({ includeDeleted: true } as any);
 
   const queryKey = useMemo(
-    () => ["audit-logs", { from, to, userId, action, page }],
-    [from, to, userId, action, page],
+    () => ["audit-logs", { from, to, userId, action, page, pageSize }],
+    [from, to, userId, action, page, pageSize],
   );
 
   const { data, isLoading, isFetching, refetch } = useQuery<AuditResp>({
     queryKey,
     queryFn: () => {
-      const qs = new URLSearchParams();
+      const qs = buildFilterParams({ from, to, userId, action });
       qs.set("page", String(page));
-      qs.set("pageSize", String(PAGE_SIZE));
-      if (from) qs.set("from", new Date(from).toISOString());
-      if (to) {
-        const t = new Date(to);
-        t.setHours(23, 59, 59, 999);
-        qs.set("to", t.toISOString());
-      }
-      if (userId && userId !== "all") qs.set("userId", userId);
-      if (action && action !== "all") qs.set("action", action);
+      qs.set("pageSize", String(pageSize));
       return customFetch<AuditResp>(`/api/audit-logs?${qs.toString()}`);
     },
   });
@@ -152,7 +165,7 @@ export default function AuditLogPage() {
     );
   }
 
-  const totalPages = data ? Math.max(1, Math.ceil(data.total / PAGE_SIZE)) : 1;
+  const totalPages = data ? Math.max(1, Math.ceil(data.total / pageSize)) : 1;
 
   function resetFilters() {
     setFrom("");
@@ -162,17 +175,93 @@ export default function AuditLogPage() {
     setPage(1);
   }
 
+  async function fetchAllForExport(): Promise<AuditLog[]> {
+    const qs = buildFilterParams({ from, to, userId, action });
+    qs.set("page", "1");
+    qs.set("pageSize", "200");
+    const all: AuditLog[] = [];
+    let p = 1;
+    let total = Infinity;
+    while (all.length < total) {
+      qs.set("page", String(p));
+      const resp = await customFetch<AuditResp>(`/api/audit-logs?${qs.toString()}`);
+      all.push(...resp.items);
+      total = resp.total;
+      if (resp.items.length === 0) break;
+      p += 1;
+      if (p > 500) break; // hard safety cap (~100k rows)
+    }
+    return all;
+  }
+
+  function rowsForExport(items: AuditLog[]) {
+    return items.map((log) => ({
+      Time: log.createdAt,
+      User: log.userName,
+      Role: log.userRole,
+      Action: log.action,
+      Entity: ACTION_GROUPS[log.action] ?? log.entityType,
+      EntityId: log.entityId ?? "",
+      Description: log.description,
+    }));
+  }
+
+  async function handleExport(kind: "csv" | "xlsx") {
+    if (!data || data.total === 0) return;
+    try {
+      setExporting(kind);
+      const items = await fetchAllForExport();
+      const rows = rowsForExport(items);
+      if (kind === "csv") {
+        exportCsv("audit-logs", rows);
+      } else {
+        exportSheets("audit-logs", [{ name: "Audit Logs", rows }]);
+      }
+      toast({ title: `Exported ${rows.length} audit log entries.` });
+    } catch (e: any) {
+      toast({
+        title: "Export failed",
+        description: e?.message ?? "Could not download audit log.",
+        variant: "destructive",
+      });
+    } finally {
+      setExporting(null);
+    }
+  }
+
   return (
     <div className="p-6 space-y-6">
-      <div className="flex items-center gap-3">
-        <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-          <ScrollText className="w-5 h-5 text-primary" />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+            <ScrollText className="w-5 h-5 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold">Audit Log</h1>
+            <p className="text-sm text-muted-foreground">
+              Immutable record of every important action across the platform.
+            </p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-2xl font-bold">Audit Log</h1>
-          <p className="text-sm text-muted-foreground">
-            Immutable record of every important action across the platform.
-          </p>
+        <div className="flex gap-2 shrink-0">
+          <Button
+            variant="outline"
+            onClick={() => handleExport("csv")}
+            disabled={!data || data.total === 0 || exporting !== null}
+            data-testid="button-export-audit-csv"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            {exporting === "csv" ? "Exporting…" : "CSV"}
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => handleExport("xlsx")}
+            disabled={!data || data.total === 0 || exporting !== null}
+            data-testid="button-export-audit-xlsx"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            {exporting === "xlsx" ? "Exporting…" : "XLSX"}
+          </Button>
         </div>
       </div>
 
@@ -260,28 +349,6 @@ export default function AuditLogPage() {
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => {
-                  const rows = (data?.items ?? []).map((log) => ({
-                    Time: log.createdAt,
-                    User: log.userName,
-                    Role: log.userRole,
-                    Action: log.action,
-                    Entity: ACTION_GROUPS[log.action] ?? log.entityType,
-                    EntityId: log.entityId ?? "",
-                    Description: log.description,
-                  }));
-                  exportCsv("audit-logs", rows);
-                }}
-                disabled={!data?.items?.length}
-                aria-label="Export CSV"
-                data-testid="button-export-audit-csv"
-                title="Export current page to CSV"
-              >
-                <Download className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
                 onClick={() => refetch()}
                 disabled={isFetching}
                 aria-label="Refresh"
@@ -363,33 +430,18 @@ export default function AuditLogPage() {
           </Table>
 
           {data && data.total > 0 && (
-            <div className="flex items-center justify-between p-3 border-t">
-              <div className="text-xs text-muted-foreground">
-                Showing {(data.page - 1) * data.pageSize + 1}–
-                {Math.min(data.page * data.pageSize, data.total)} of {data.total}
-              </div>
-              <div className="flex items-center gap-2">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  disabled={page <= 1}
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </Button>
-                <span className="text-xs">
-                  Page {page} / {totalPages}
-                </span>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={page >= totalPages}
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
+            <Pagination
+              page={page}
+              pageSize={pageSize}
+              total={data.total}
+              totalPages={totalPages}
+              onPageChange={setPage}
+              onPageSizeChange={(n) => {
+                setPageSize(n);
+                setPage(1);
+              }}
+              testId="audit-logs-pagination"
+            />
           )}
         </CardContent>
       </Card>
