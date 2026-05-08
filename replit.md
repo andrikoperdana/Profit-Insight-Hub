@@ -134,6 +134,7 @@ Server-side data scoping:
 - SALES → `SalesDashboard` (own pipeline, revenue-by-client, status pie, 6-month profitability trend)
 - KONSULTAN / TECHNICAL_WRITER → `ConsultantDashboard` (welcome banner, prominent "Log Today's Time Sheet" CTA with today's hours, 14-day trend, recent submissions)
 - ADMIN_PROJECT → `AdminProjectDashboard` (closing-doc inbox + alert for projects complete >3 days)
+- SITE_ADMIN → `SiteAdminDashboard` (Users + Audit Log management, recent activity feed). User administration and the audit log were moved off the PMO Director sidebar and are now exclusive to SITE_ADMIN.
 
 Shared `WelcomeBanner` (`artifacts/web/src/components/dashboard/WelcomeBanner.tsx`) shows a time-aware greeting + role label.
 
@@ -150,6 +151,7 @@ Shared `WelcomeBanner` (`artifacts/web/src/components/dashboard/WelcomeBanner.ts
 - `konsultan2@secureprofit.id` — Dewi Lestari (KONSULTAN)
 - `writer@secureprofit.id` — Ayu Wulandari (TECHNICAL_WRITER)
 - `admin@secureprofit.id` — Tono Setiawan (ADMIN_PROJECT)
+- `siteadmin@secureprofit.id` — Rina Kartika (SITE_ADMIN)
 
 Seed file: `lib/db/src/seed.ts`. Re-run with `pnpm --filter @workspace/db run seed`.
 

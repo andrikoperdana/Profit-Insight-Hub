@@ -9,6 +9,7 @@ async function ensurePrincipals(passwordDefault: string) {
     { email: "principal.kon.h7q4@itsecasia.com", name: "Bayu Prasetyo",      role: "PRINCIPAL_KONSULTAN",         title: "Principal Consultant" },
     { email: "principal.tw.m9k2@itsecasia.com",  name: "Indah Kusumawardani", role: "PRINCIPAL_TECHNICAL_WRITER",  title: "Principal Technical Writer" },
     { email: "principal.ap.r3n8@itsecasia.com",  name: "Fajar Nugroho",       role: "PRINCIPAL_ADMIN_PROJECT",     title: "Principal Admin Project" },
+    { email: "siteadmin@secureprofit.id",        name: "Rina Kartika",        role: "SITE_ADMIN",                  title: "Site Administrator" },
   ];
   for (const p of newPrincipals) {
     await prisma.user.upsert({
@@ -98,6 +99,9 @@ async function main() {
   });
   const tono = await prisma.user.create({
     data: { email: "admin@secureprofit.id", passwordHash: passwordDefault, name: "Tono Setiawan", role: "ADMIN_PROJECT", title: "Project Administrator", principalId: principalAp.id },
+  });
+  await prisma.user.create({
+    data: { email: "siteadmin@secureprofit.id", passwordHash: passwordDefault, name: "Rina Kartika", role: "SITE_ADMIN", title: "Site Administrator" },
   });
 
   console.log("Seeding clients...");

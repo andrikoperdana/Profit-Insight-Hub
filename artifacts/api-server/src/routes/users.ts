@@ -13,6 +13,7 @@ const ALL_ROLES: UserRole[] = [
   "MANAGEMENT", "PROJECT_MANAGER", "SALES",
   "KONSULTAN", "TECHNICAL_WRITER", "ADMIN_PROJECT",
   "PRINCIPAL_KONSULTAN", "PRINCIPAL_TECHNICAL_WRITER", "PRINCIPAL_ADMIN_PROJECT",
+  "SITE_ADMIN",
 ];
 
 const PRINCIPAL_TO_REPORT_ROLE: Record<string, UserRole> = {
@@ -22,7 +23,7 @@ const PRINCIPAL_TO_REPORT_ROLE: Record<string, UserRole> = {
 };
 
 router.get("/users", async (req, res) => {
-  const includeDeleted = req.query.includeDeleted === "true" && req.user!.role === "MANAGEMENT";
+  const includeDeleted = req.query.includeDeleted === "true" && req.user!.role === "SITE_ADMIN";
   const users = await prisma.user.findMany({
     where: includeDeleted ? {} : { deletedAt: null },
     orderBy: { name: "asc" },
@@ -119,7 +120,7 @@ router.get("/users/:id", async (req, res) => {
 
 router.post(
   "/users",
-  requireRole("MANAGEMENT"),
+  requireRole("SITE_ADMIN"),
   async (req, res) => {
     const { email, password, name, role, title, dailyRate, managerId, principalId } = req.body || {};
     if (!email || !password || !name || !role) {
@@ -168,7 +169,7 @@ router.post(
 router.patch("/users/:id", async (req, res) => {
   const targetId = req.params.id;
   const isSelf = req.user!.sub === targetId;
-  const isAdmin = req.user!.role === "MANAGEMENT";
+  const isAdmin = req.user!.role === "SITE_ADMIN";
   if (!isSelf && !isAdmin) {
     res.status(403).json({ error: "Forbidden" });
     return;
@@ -213,7 +214,7 @@ router.patch("/users/:id", async (req, res) => {
 
 router.delete(
   "/users/:id",
-  requireRole("MANAGEMENT"),
+  requireRole("SITE_ADMIN"),
   async (req, res) => {
     if (req.user!.sub === req.params.id) {
       res.status(400).json({ error: "Cannot delete yourself" });

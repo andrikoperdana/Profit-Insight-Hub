@@ -140,7 +140,7 @@ export default function AuditLogPage() {
     queryFn: () => customFetch<ActionStat[]>("/api/audit-logs/actions"),
   });
 
-  if (user?.role !== "MANAGEMENT") {
+  if (user?.role !== "SITE_ADMIN") {
     return (
       <div className="p-6">
         <Card>

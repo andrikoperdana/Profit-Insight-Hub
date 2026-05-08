@@ -26,6 +26,7 @@ export const UserRole = {
   PRINCIPAL_KONSULTAN: "PRINCIPAL_KONSULTAN",
   PRINCIPAL_TECHNICAL_WRITER: "PRINCIPAL_TECHNICAL_WRITER",
   PRINCIPAL_ADMIN_PROJECT: "PRINCIPAL_ADMIN_PROJECT",
+  SITE_ADMIN: "SITE_ADMIN",
 } as const;
 
 export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus];

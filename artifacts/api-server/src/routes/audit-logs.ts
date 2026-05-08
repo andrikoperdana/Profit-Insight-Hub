@@ -7,7 +7,7 @@ router.use(requireAuth);
 
 router.get(
   "/audit-logs",
-  requireRole("MANAGEMENT"),
+  requireRole("SITE_ADMIN"),
   async (req, res) => {
     const from = req.query.from ? new Date(String(req.query.from)) : null;
     const to = req.query.to ? new Date(String(req.query.to)) : null;
@@ -60,7 +60,7 @@ router.get(
 
 router.get(
   "/audit-logs/actions",
-  requireRole("MANAGEMENT"),
+  requireRole("SITE_ADMIN"),
   async (_req, res) => {
     const grouped = await prisma.auditLog.groupBy({
       by: ["action"],

@@ -74,6 +74,7 @@ export default function Login() {
     { email: "principal.kon.h7q4@itsecasia.com", role: "Principal Consultant" },
     { email: "principal.tw.m9k2@itsecasia.com", role: "Principal Technical Writer" },
     { email: "principal.ap.r3n8@itsecasia.com", role: "Principal Admin Project" },
+    { email: "siteadmin@secureprofit.id", role: "Site Admin" },
   ];
 
   return (

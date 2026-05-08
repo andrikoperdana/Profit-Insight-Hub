@@ -10,6 +10,7 @@ export const RoleLabels: Record<UserRole, string> = {
   [UserRole.PRINCIPAL_KONSULTAN]: "Principal Consultant",
   [UserRole.PRINCIPAL_TECHNICAL_WRITER]: "Principal Technical Writer",
   [UserRole.PRINCIPAL_ADMIN_PROJECT]: "Principal Admin Project",
+  [UserRole.SITE_ADMIN]: "Site Admin",
 };
 
 // Mapping from a Principal role to the delivery role they supervise.
@@ -28,7 +29,11 @@ export function canCreateProject(role?: UserRole): boolean {
 }
 
 export function canManageUsers(role?: UserRole): boolean {
-  return role === UserRole.MANAGEMENT;
+  return role === UserRole.SITE_ADMIN;
+}
+
+export function canViewAuditLogs(role?: UserRole): boolean {
+  return role === UserRole.SITE_ADMIN;
 }
 
 export function canManageClients(role?: UserRole): boolean {

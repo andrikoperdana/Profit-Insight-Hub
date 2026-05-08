@@ -1,6 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/lib/auth";
-import { canManageUsers, canManageClients, canViewResources, RoleLabels } from "@/lib/roles";
+import { canManageUsers, canManageClients, canViewResources, canViewAuditLogs, RoleLabels } from "@/lib/roles";
 import {
   LayoutDashboard,
   Briefcase,
@@ -45,7 +45,7 @@ export default function Sidebar() {
     ...(canManageUsers(user?.role) ? [{ href: "/users", label: "Users", icon: Users }] : []),
     ...(user?.role === "MANAGEMENT" ? [{ href: "/business-intelligence", label: "Business Intelligence", icon: TrendingUp }] : []),
     ...(user?.role === "MANAGEMENT" ? [{ href: "/settings/survey-template", label: "Survey Template", icon: ClipboardList }] : []),
-    ...(user?.role === "MANAGEMENT" ? [{ href: "/audit-logs", label: "Audit Log", icon: ScrollText }] : []),
+    ...(canViewAuditLogs(user?.role) ? [{ href: "/audit-logs", label: "Audit Log", icon: ScrollText }] : []),
   ];
 
   const initials = user?.name
