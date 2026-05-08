@@ -27,13 +27,13 @@ export default function Title() {
             Role &amp; Workflow Overview · v1.1
           </div>
           <h1 className="font-display font-bold text-[6vw] leading-[0.95] tracking-tight text-text text-wrap-balance">
-            Sepuluh peran, satu alur,
-            <span className="block text-primary">dari prospek ke survei kepuasan.</span>
+            Ten roles, one flow,
+            <span className="block text-primary">from prospect to satisfaction survey.</span>
           </h1>
           <p className="mt-[3.5vh] text-[1.6vw] text-muted max-w-[58vw] leading-snug">
-            Bagaimana Sales, PMO, PM, Konsultan, Technical Writer, Admin Project,
-            tiga Principal supervisor, dan Site Admin berkolaborasi pada satu
-            platform — mulai pembuatan proyek sampai CSAT otomatis terkirim.
+            How Sales, PMO, PM, Consultants, Technical Writers, Project Admins,
+            three Principal supervisors, and the Site Admin collaborate on a
+            single platform — from project creation to the automatic CSAT.
           </p>
         </div>
 

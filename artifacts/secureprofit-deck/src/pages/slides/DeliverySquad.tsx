@@ -3,23 +3,23 @@ export default function DeliverySquad() {
     <div className="w-screen h-screen overflow-hidden relative bg-bg text-text font-body px-[8vw] py-[7vh]">
       <div className="absolute top-0 left-[8vw] w-[0.25vw] h-[6vh] bg-primary" />
       <div className="absolute top-[6vh] left-[8vw] font-mono text-[0.95vw] tracking-[0.3em] text-primary uppercase">
-        04 / Tim Eksekusi
+        04 / Delivery Squad
       </div>
 
       <div className="pt-[7vh] max-w-[72vw]">
         <h2 className="font-display font-bold text-[4.2vw] leading-[1] tracking-tight text-wrap-balance">
-          Yang turun langsung
-          <span className="text-primary"> ke proyek klien.</span>
+          The people who go
+          <span className="text-primary"> directly into client projects.</span>
         </h2>
         <p className="mt-[2vh] text-[1.25vw] text-muted max-w-[60vw] leading-relaxed">
-          Tiga peran lapangan bertanggung jawab atas pengerjaan teknis, pelaporan,
-          dan dukungan administratif harian.
+          Three field roles handle the technical work, reporting, and the
+          day-to-day administrative support.
         </p>
       </div>
 
       <div className="mt-[5vh] grid grid-cols-3 gap-[1.6vw]">
         <div className="border border-border bg-bg-elevated/40 px-[1.5vw] py-[2.6vh]">
-          <div className="font-display font-semibold text-[1.6vw]">Konsultan</div>
+          <div className="font-display font-semibold text-[1.6vw]">Consultant</div>
           <div className="font-mono text-[0.8vw] text-primary tracking-widest uppercase mt-[0.4vh]">
             Security Consultant
           </div>
@@ -28,10 +28,10 @@ export default function DeliverySquad() {
           </div>
           <div className="border-t border-border my-[2vh]" />
           <ul className="text-[1vw] text-text leading-relaxed space-y-[0.6vh]">
-            <li>· Eksekusi pentest, audit, atau VA pada proyek yang ditugaskan</li>
-            <li>· Catat timesheet harian (DRAFT → SUBMITTED) untuk diapprove PM</li>
-            <li>· Kerjakan task yang dibuat PM, log jam clock-in</li>
-            <li>· Maks. 2 proyek aktif paralel</li>
+            <li>· Run pentest, audit, or VA on assigned projects</li>
+            <li>· Log daily timesheets (DRAFT → SUBMITTED) for PM approval</li>
+            <li>· Work on PM-created tasks, clock in hours</li>
+            <li>· Max. 2 active projects in parallel</li>
           </ul>
         </div>
 
@@ -45,15 +45,15 @@ export default function DeliverySquad() {
           </div>
           <div className="border-t border-border my-[2vh]" />
           <ul className="text-[1vw] text-text leading-relaxed space-y-[0.6vh]">
-            <li>· Susun laporan teknis dan eksekutif dari temuan konsultan</li>
-            <li>· Catat timesheet penulisan untuk approval PM</li>
-            <li>· Upload draft REPORT &amp; OTHER document ke proyek</li>
-            <li>· Bisa kerja paralel di banyak proyek</li>
+            <li>· Produce technical and executive reports from consultant findings</li>
+            <li>· Log writing timesheets for PM approval</li>
+            <li>· Upload draft REPORT &amp; OTHER documents to the project</li>
+            <li>· Can work in parallel across many projects</li>
           </ul>
         </div>
 
         <div className="border border-border bg-bg-elevated/40 px-[1.5vw] py-[2.6vh]">
-          <div className="font-display font-semibold text-[1.6vw]">Admin Project</div>
+          <div className="font-display font-semibold text-[1.6vw]">Project Admin</div>
           <div className="font-mono text-[0.8vw] text-primary tracking-widest uppercase mt-[0.4vh]">
             Closing &amp; Invoice
           </div>
@@ -62,10 +62,10 @@ export default function DeliverySquad() {
           </div>
           <div className="border-t border-border my-[2vh]" />
           <ul className="text-[1vw] text-text leading-relaxed space-y-[0.6vh]">
-            <li>· Upload kontrak &amp; SPK pada awal proyek</li>
-            <li>· Generate BAST &amp; INVOICE saat proyek selesai</li>
-            <li>· Inbox dokumen-closing dengan alert &gt;3 hari complete</li>
-            <li>· Tidak menulis kode — fokus dokumen &amp; sirkulasi</li>
+            <li>· Upload contracts &amp; SPK at project kickoff</li>
+            <li>· Generate BAST &amp; INVOICE when the project finishes</li>
+            <li>· Closing-doc inbox with alerts for &gt;3 days complete</li>
+            <li>· Does not write code — focuses on documents &amp; circulation</li>
           </ul>
         </div>
       </div>

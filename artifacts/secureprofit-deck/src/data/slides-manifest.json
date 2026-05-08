@@ -4,22 +4,22 @@
     "position": 1,
     "filepath": "src/pages/slides/Title.tsx",
     "title": "SecureProfit Hub",
-    "description": "Role & workflow overview — sepuluh peran, satu alur, sampai CSAT otomatis.",
+    "description": "Role & workflow overview — ten roles, one flow, all the way to automatic CSAT.",
     "speakerNotes": ""
   },
   {
     "id": "2d3a86fe-0e7e-4b45-9b41-0a37cf8d2b02",
     "position": 2,
     "filepath": "src/pages/slides/Roles.tsx",
-    "title": "Sepuluh Peran",
-    "description": "Sekilas semua peran yang aktif di platform.",
+    "title": "Ten Roles",
+    "description": "A snapshot of every role active on the platform.",
     "speakerNotes": ""
   },
   {
     "id": "3d3a86fe-0e7e-4b45-9b41-0a37cf8d2b03",
     "position": 3,
     "filepath": "src/pages/slides/StrategyOps.tsx",
-    "title": "Strategi & Operasi",
+    "title": "Strategy & Operations",
     "description": "PMO Director, Project Manager, Sales, Site Admin.",
     "speakerNotes": ""
   },
@@ -27,56 +27,56 @@
     "id": "4d3a86fe-0e7e-4b45-9b41-0a37cf8d2b04",
     "position": 4,
     "filepath": "src/pages/slides/DeliverySquad.tsx",
-    "title": "Tim Eksekusi",
-    "description": "Konsultan, Technical Writer, Admin Project.",
+    "title": "Delivery Squad",
+    "description": "Consultant, Technical Writer, Project Admin.",
     "speakerNotes": ""
   },
   {
     "id": "5d3a86fe-0e7e-4b45-9b41-0a37cf8d2b05",
     "position": 5,
     "filepath": "src/pages/slides/Principals.tsx",
-    "title": "Principal Supervisor",
-    "description": "Tiga principal yang menjaga kualitas SDM.",
+    "title": "Principal Supervisors",
+    "description": "Three principals safeguarding people quality.",
     "speakerNotes": ""
   },
   {
     "id": "6d3a86fe-0e7e-4b45-9b41-0a37cf8d2b06",
     "position": 6,
     "filepath": "src/pages/slides/Lifecycle.tsx",
-    "title": "Alur End-to-End",
-    "description": "Tujuh tahap dari intake sampai CSAT otomatis.",
+    "title": "End-to-End Flow",
+    "description": "Seven stages from intake to automatic CSAT.",
     "speakerNotes": ""
   },
   {
     "id": "7d3a86fe-0e7e-4b45-9b41-0a37cf8d2b07",
     "position": 7,
     "filepath": "src/pages/slides/StageIntake.tsx",
-    "title": "Tahap A — Intake",
-    "description": "Sales buat draft, PMO assign PM, PM lengkapi detail.",
+    "title": "Stage A — Intake",
+    "description": "Sales drafts, PMO assigns the PM, PM completes details.",
     "speakerNotes": ""
   },
   {
     "id": "8d3a86fe-0e7e-4b45-9b41-0a37cf8d2b08",
     "position": 8,
     "filepath": "src/pages/slides/StageActive.tsx",
-    "title": "Tahap B — Eksekusi",
-    "description": "Resourcing, timesheet, task, dan profit harian.",
+    "title": "Stage B — Execution",
+    "description": "Resourcing, timesheets, tasks, and daily profit visibility.",
     "speakerNotes": ""
   },
   {
     "id": "9d3a86fe-0e7e-4b45-9b41-0a37cf8d2b09",
     "position": 9,
     "filepath": "src/pages/slides/StageClose.tsx",
-    "title": "Tahap C — Closing & CSAT",
-    "description": "BAST, invoice, dan survei kepuasan otomatis.",
+    "title": "Stage C — Closing & CSAT",
+    "description": "BAST, invoice, and the automatic satisfaction survey.",
     "speakerNotes": ""
   },
   {
     "id": "ad3a86fe-0e7e-4b45-9b41-0a37cf8d2b0a",
     "position": 10,
     "filepath": "src/pages/slides/Closing.tsx",
-    "title": "Ringkasan",
-    "description": "Sepuluh peran, satu jalur, profit dan kepuasan terukur.",
+    "title": "Summary",
+    "description": "Ten roles, one path, profit and satisfaction measured.",
     "speakerNotes": ""
   }
 ]

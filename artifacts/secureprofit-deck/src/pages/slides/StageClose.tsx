@@ -3,58 +3,58 @@ export default function StageClose() {
     <div className="w-screen h-screen overflow-hidden relative bg-bg text-text font-body px-[8vw] py-[7vh]">
       <div className="absolute top-0 left-[8vw] w-[0.25vw] h-[6vh] bg-primary" />
       <div className="absolute top-[6vh] left-[8vw] font-mono text-[0.95vw] tracking-[0.3em] text-primary uppercase">
-        09 / Tahap C — Closing &amp; CSAT
+        09 / Stage C — Closing &amp; CSAT
       </div>
 
       <div className="pt-[7vh] max-w-[74vw]">
         <h2 className="font-display font-bold text-[4vw] leading-[1] tracking-tight text-wrap-balance">
-          BAST, invoice, dan
-          <span className="text-primary"> survei kepuasan otomatis.</span>
+          BAST, invoice, and
+          <span className="text-primary"> the automatic satisfaction survey.</span>
         </h2>
         <p className="mt-[2vh] text-[1.2vw] text-muted max-w-[62vw] leading-relaxed">
-          Saat semua deliverable selesai, PM ubah status ke COMPLETE. Admin Project
-          merapikan dokumen. Saat status menjadi CLOSED, sistem mengirim CSAT
-          tanpa perlu klik manual.
+          Once every deliverable is done, the PM moves the status to COMPLETE.
+          The Project Admin tidies up the documents. When the status becomes
+          CLOSED, the system sends the CSAT — no manual click required.
         </p>
       </div>
 
       <div className="mt-[5vh] grid grid-cols-4 gap-[1.4vw]">
         <div className="border border-border bg-bg-elevated/40 px-[1.4vw] py-[2.4vh]">
           <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-primary text-bg flex items-center justify-center font-mono font-bold text-[0.95vw]">01</div>
-          <div className="font-display font-semibold text-[1.4vw] mt-[1.5vh]">PM tutup proyek</div>
+          <div className="font-display font-semibold text-[1.4vw] mt-[1.5vh]">PM closes the project</div>
           <div className="font-mono text-[0.8vw] text-primary tracking-widest uppercase mt-[0.5vh]">Project Manager</div>
           <div className="text-[0.95vw] text-muted mt-[1.2vh] leading-snug">
-            Status diubah ke COMPLETE setelah deliverable disepakati klien.
+            Status is moved to COMPLETE once deliverables are agreed with the client.
           </div>
         </div>
 
         <div className="border border-border bg-bg-elevated/40 px-[1.4vw] py-[2.4vh]">
           <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-primary text-bg flex items-center justify-center font-mono font-bold text-[0.95vw]">02</div>
-          <div className="font-display font-semibold text-[1.4vw] mt-[1.5vh]">Admin upload BAST</div>
-          <div className="font-mono text-[0.8vw] text-primary tracking-widest uppercase mt-[0.5vh]">Admin Project</div>
+          <div className="font-display font-semibold text-[1.4vw] mt-[1.5vh]">Admin uploads BAST</div>
+          <div className="font-mono text-[0.8vw] text-primary tracking-widest uppercase mt-[0.5vh]">Project Admin</div>
           <div className="text-[0.95vw] text-muted mt-[1.2vh] leading-snug">
-            Inbox closing-doc memberi alert &gt;3 hari complete.
-            BAST &amp; INVOICE diunggah ke tab Documents.
+            Closing-doc inbox alerts after &gt;3 days complete. BAST &amp; INVOICE
+            are uploaded to the Documents tab.
           </div>
         </div>
 
         <div className="border border-border bg-bg-elevated/40 px-[1.4vw] py-[2.4vh]">
           <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-primary text-bg flex items-center justify-center font-mono font-bold text-[0.95vw]">03</div>
-          <div className="font-display font-semibold text-[1.4vw] mt-[1.5vh]">PM set CLOSED</div>
+          <div className="font-display font-semibold text-[1.4vw] mt-[1.5vh]">PM sets CLOSED</div>
           <div className="font-mono text-[0.8vw] text-primary tracking-widest uppercase mt-[0.5vh]">Project Manager</div>
           <div className="text-[0.95vw] text-muted mt-[1.2vh] leading-snug">
-            Setelah BAST &amp; invoice tersedia, status pindah ke CLOSED — proyek
-            terkunci dari edit.
+            Once BAST &amp; invoice are in place, status moves to CLOSED — the
+            project is locked for editing.
           </div>
         </div>
 
         <div className="border border-primary/40 bg-primary/10 px-[1.4vw] py-[2.4vh]">
           <div className="w-[2.4vw] h-[2.4vw] rounded-full bg-primary text-bg flex items-center justify-center font-mono font-bold text-[0.95vw]">04</div>
-          <div className="font-display font-semibold text-[1.4vw] mt-[1.5vh]">CSAT terkirim otomatis</div>
-          <div className="font-mono text-[0.8vw] text-primary tracking-widest uppercase mt-[0.5vh]">Sistem</div>
+          <div className="font-display font-semibold text-[1.4vw] mt-[1.5vh]">CSAT sent automatically</div>
+          <div className="font-mono text-[0.8vw] text-primary tracking-widest uppercase mt-[0.5vh]">System</div>
           <div className="text-[0.95vw] text-muted mt-[1.2vh] leading-snug">
-            Trigger pada transisi → CLOSED. Survei kepuasan dikirim ke kontak
-            klien. Hasil masuk ke dashboard Management.
+            Triggered on the transition → CLOSED. The satisfaction survey is sent
+            to the client contact. Results land on the Management dashboard.
           </div>
         </div>
       </div>
@@ -65,17 +65,17 @@ export default function StageClose() {
             Audit log
           </div>
           <div className="text-[1.05vw] text-text leading-snug">
-            Setiap transisi tercatat — siapa mengubah, kapan, nilai sebelum &amp;
-            sesudah. Site Admin punya akses penuh untuk investigasi.
+            Every transition is recorded — who changed it, when, and the values
+            before &amp; after. The Site Admin has full access for investigations.
           </div>
         </div>
         <div className="border-l-[0.25vw] border-primary pl-[1.5vw]">
           <div className="font-mono text-[0.85vw] text-primary tracking-widest uppercase mb-[0.6vh]">
-            Skor CSAT
+            CSAT score
           </div>
           <div className="text-[1.05vw] text-text leading-snug">
-            Hasil survei terhubung ke ID proyek, jadi PMO bisa membandingkan
-            kepuasan klien per PM, per layanan, atau per principal.
+            Survey results are tied to the project ID, so the PMO can compare
+            client satisfaction by PM, by service line, or by principal.
           </div>
         </div>
       </div>

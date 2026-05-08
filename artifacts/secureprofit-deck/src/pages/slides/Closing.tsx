@@ -16,42 +16,42 @@ export default function Closing() {
 
         <div className="max-w-[78vw]">
           <div className="font-mono text-[1vw] tracking-[0.3em] text-primary uppercase mb-[3vh]">
-            Ringkasan
+            Summary
           </div>
           <h1 className="font-display font-bold text-[5.6vw] leading-[0.95] tracking-tight text-wrap-balance">
-            Sepuluh peran, satu jalur,
-            <span className="block text-primary">profit dan kepuasan terukur.</span>
+            Ten roles, one path,
+            <span className="block text-primary">profit and satisfaction measured.</span>
           </h1>
           <p className="mt-[3.5vh] text-[1.4vw] text-muted max-w-[60vw] leading-snug">
-            Sales mulai. PMO mengarahkan. PM mengeksekusi. Principal menjaga SDM.
-            Konsultan, writer, dan admin menyelesaikan. Site Admin mengamankan.
-            Klien menutupnya dengan CSAT — semuanya pada satu platform.
+            Sales starts. PMO directs. PM executes. Principals safeguard the
+            people. Consultants, writers, and admins deliver. Site Admin secures.
+            The client closes it with a CSAT — all on a single platform.
           </p>
         </div>
 
         <div className="grid grid-cols-3 gap-[2vw] border-t border-border pt-[3vh]">
           <div>
             <div className="font-mono text-[0.85vw] text-primary tracking-widest uppercase mb-[0.8vh]">
-              Login demo
+              Demo login
             </div>
             <div className="font-display font-semibold text-[1.3vw]">
-              Semua password: <span className="font-mono">password123</span>
+              All passwords: <span className="font-mono">password123</span>
             </div>
           </div>
           <div>
             <div className="font-mono text-[0.85vw] text-primary tracking-widest uppercase mb-[0.8vh]">
-              Coba langsung
+              Try it now
             </div>
             <div className="font-display font-semibold text-[1.3vw]">
-              Jelajahi tiap dashboard per role
+              Explore each role's dashboard
             </div>
           </div>
           <div>
             <div className="font-mono text-[0.85vw] text-primary tracking-widest uppercase mb-[0.8vh]">
-              Dibangun untuk
+              Built for
             </div>
             <div className="font-display font-semibold text-[1.3vw]">
-              Konsultansi keamanan IT Indonesia
+              Indonesian IT security consulting
             </div>
           </div>
         </div>
