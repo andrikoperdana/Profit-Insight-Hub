@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
-import { canManageUsers, RoleLabels } from "@/lib/roles";
+import { canManageUsers, RoleLabels, isPrincipalRole, PRINCIPAL_TO_REPORT_ROLE } from "@/lib/roles";
 import { useListUsers, useCreateUser, useUpdateUser } from "@workspace/api-client-react";
 import { getListUsersQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -45,6 +45,8 @@ import { TableSkeleton } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
 import { Pagination, usePagination } from "@/components/common/Pagination";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const NONE = "__none__";
 
@@ -140,6 +142,11 @@ export default function UsersList() {
   const queryClient = useQueryClient();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<UserRow | null>(null);
+  // Reverse-link selections for MGMT (their PMs) and Principals (their supervisees).
+  const [reportPmIds, setReportPmIds] = useState<string[]>([]);
+  const [superviseeIds, setSuperviseeIds] = useState<string[]>([]);
+  const [initialReportPmIds, setInitialReportPmIds] = useState<string[]>([]);
+  const [initialSuperviseeIds, setInitialSuperviseeIds] = useState<string[]>([]);
 
   const { data: users, isLoading } = useListUsers({
     query: { queryKey: getListUsersQueryKey() }
@@ -204,8 +211,31 @@ export default function UsersList() {
         managerId: editingUser.managerId ?? NONE,
         principalId: editingUser.principalId ?? NONE,
       });
+      // Seed reverse-link state from current users data.
+      const allUsers = (users ?? []) as any[];
+      if (editingUser.role === UserRole.MANAGEMENT) {
+        const pms = allUsers
+          .filter((u) => u.role === UserRole.PROJECT_MANAGER && u.managerId === editingUser.id)
+          .map((u) => u.id);
+        setReportPmIds(pms);
+        setInitialReportPmIds(pms);
+      } else {
+        setReportPmIds([]);
+        setInitialReportPmIds([]);
+      }
+      const reportRole = PRINCIPAL_TO_REPORT_ROLE[editingUser.role as UserRole];
+      if (reportRole) {
+        const sup = allUsers
+          .filter((u) => u.role === reportRole && u.principalId === editingUser.id)
+          .map((u) => u.id);
+        setSuperviseeIds(sup);
+        setInitialSuperviseeIds(sup);
+      } else {
+        setSuperviseeIds([]);
+        setInitialSuperviseeIds([]);
+      }
     }
-  }, [editingUser, editForm]);
+  }, [editingUser, editForm, users]);
 
   // Pools used to populate Manager / Principal selectors.
   const managers = (users ?? []).filter((u: any) => u.role === UserRole.MANAGEMENT && u.isActive);
@@ -233,7 +263,7 @@ export default function UsersList() {
     createUser.mutate({ data: payload as any });
   };
 
-  const onEditSubmit = (data: EditUserFormValues) => {
+  const onEditSubmit = async (data: EditUserFormValues) => {
     if (!editingUser) return;
     const payload: Record<string, unknown> = {
       name: data.name,
@@ -244,15 +274,43 @@ export default function UsersList() {
     if (data.password && data.password.length > 0) {
       payload.password = data.password;
     }
-    // Always send hierarchy fields so MGMT can also clear them. For non-applicable
-    // roles, force null on the server side.
     payload.managerId = data.role === UserRole.PROJECT_MANAGER && data.managerId && data.managerId !== NONE
       ? data.managerId
       : null;
     payload.principalId = PRINCIPAL_FOR_ROLE[data.role] && data.principalId && data.principalId !== NONE
       ? data.principalId
       : null;
-    editUserMutation.mutate({ id: editingUser.id, data: payload as any });
+    try {
+      await editUserMutation.mutateAsync({ id: editingUser.id, data: payload as any });
+      // Apply reverse-link diffs (MGMT → PMs.managerId; Principal → reports.principalId).
+      const ops: Promise<unknown>[] = [];
+      if (data.role === UserRole.MANAGEMENT) {
+        const added = reportPmIds.filter((id) => !initialReportPmIds.includes(id));
+        const removed = initialReportPmIds.filter((id) => !reportPmIds.includes(id));
+        for (const id of added) {
+          ops.push(updateUser.mutateAsync({ id, data: { managerId: editingUser.id } as any }));
+        }
+        for (const id of removed) {
+          ops.push(updateUser.mutateAsync({ id, data: { managerId: null } as any }));
+        }
+      }
+      if (PRINCIPAL_TO_REPORT_ROLE[data.role]) {
+        const added = superviseeIds.filter((id) => !initialSuperviseeIds.includes(id));
+        const removed = initialSuperviseeIds.filter((id) => !superviseeIds.includes(id));
+        for (const id of added) {
+          ops.push(updateUser.mutateAsync({ id, data: { principalId: editingUser.id } as any }));
+        }
+        for (const id of removed) {
+          ops.push(updateUser.mutateAsync({ id, data: { principalId: null } as any }));
+        }
+      }
+      if (ops.length > 0) {
+        await Promise.all(ops);
+        queryClient.invalidateQueries({ queryKey: getListUsersQueryKey() });
+      }
+    } catch {
+      // Errors surfaced via individual mutation onError toasts.
+    }
   };
 
   const watchedCreateRole = form.watch("role");
@@ -401,6 +459,61 @@ export default function UsersList() {
                       )}
                     />
                   </div>
+
+                  {watchedCreateRole === UserRole.PROJECT_MANAGER && (
+                    <FormField
+                      control={form.control}
+                      name="managerId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>PMO Director</FormLabel>
+                          <Select onValueChange={field.onChange} value={field.value || NONE}>
+                            <FormControl>
+                              <SelectTrigger data-testid="select-create-manager">
+                                <SelectValue placeholder="Select PMO Director" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value={NONE}>— Unassigned —</SelectItem>
+                              {managers.map((m: any) => (
+                                <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+
+                  {PRINCIPAL_FOR_ROLE[watchedCreateRole] && (
+                    <FormField
+                      control={form.control}
+                      name="principalId"
+                      render={({ field }) => {
+                        const pool = principalsByRole(watchedCreateRole);
+                        return (
+                          <FormItem>
+                            <FormLabel>Principal Supervisor</FormLabel>
+                            <Select onValueChange={field.onChange} value={field.value || NONE}>
+                              <FormControl>
+                                <SelectTrigger data-testid="select-create-principal">
+                                  <SelectValue placeholder="Select Principal" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value={NONE}>— Unassigned —</SelectItem>
+                                {pool.map((p: any) => (
+                                  <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        );
+                      }}
+                    />
+                  )}
                   <DialogFooter className="pt-4">
                     <Button type="button" variant="outline" onClick={() => setIsCreateOpen(false)}>Cancel</Button>
                     <Button type="submit" disabled={createUser.isPending}>
@@ -583,6 +696,148 @@ export default function UsersList() {
                   )}
                 />
               </div>
+
+              {watchedEditRole === UserRole.PROJECT_MANAGER && (
+                <FormField
+                  control={editForm.control}
+                  name="managerId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>PMO Director (this PM reports to)</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value || NONE}>
+                        <FormControl>
+                          <SelectTrigger data-testid="select-edit-manager">
+                            <SelectValue placeholder="Select PMO Director" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={NONE}>— Unassigned —</SelectItem>
+                          {managers.map((m: any) => (
+                            <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
+              {PRINCIPAL_FOR_ROLE[watchedEditRole] && (
+                <FormField
+                  control={editForm.control}
+                  name="principalId"
+                  render={({ field }) => {
+                    const pool = principalsByRole(watchedEditRole);
+                    return (
+                      <FormItem>
+                        <FormLabel>Principal Supervisor</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value || NONE}>
+                          <FormControl>
+                            <SelectTrigger data-testid="select-edit-principal">
+                              <SelectValue placeholder="Select Principal" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value={NONE}>— Unassigned —</SelectItem>
+                            {pool.map((p: any) => (
+                              <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
+                />
+              )}
+
+              {watchedEditRole === UserRole.MANAGEMENT && (() => {
+                const allPms = ((users ?? []) as any[]).filter((u) => u.role === UserRole.PROJECT_MANAGER);
+                return (
+                  <FormItem>
+                    <FormLabel>Project Managers under this PMO Director</FormLabel>
+                    {allPms.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">No PMs exist yet.</p>
+                    ) : (
+                      <ScrollArea className="h-40 rounded-md border border-border p-2">
+                        <div className="space-y-2">
+                          {allPms.map((pm) => {
+                            const checked = reportPmIds.includes(pm.id);
+                            const ownedByOther = !!pm.managerId && pm.managerId !== editingUser?.id;
+                            return (
+                              <label key={pm.id} className="flex items-center gap-2 text-sm">
+                                <Checkbox
+                                  checked={checked}
+                                  onCheckedChange={(v) => {
+                                    setReportPmIds((prev) =>
+                                      v ? Array.from(new Set([...prev, pm.id])) : prev.filter((id) => id !== pm.id)
+                                    );
+                                  }}
+                                  data-testid={`check-pm-${pm.id}`}
+                                />
+                                <span className="font-medium text-foreground">{pm.name}</span>
+                                {ownedByOther && !checked && (
+                                  <span className="text-xs text-muted-foreground">
+                                    (currently reports to another PMO)
+                                  </span>
+                                )}
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </ScrollArea>
+                    )}
+                    <p className="text-xs text-muted-foreground">
+                      Toggling a PM here reassigns their PMO Director.
+                    </p>
+                  </FormItem>
+                );
+              })()}
+
+              {isPrincipalRole(watchedEditRole) && (() => {
+                const reportRole = PRINCIPAL_TO_REPORT_ROLE[watchedEditRole as UserRole];
+                const pool = ((users ?? []) as any[]).filter((u) => u.role === reportRole);
+                return (
+                  <FormItem>
+                    <FormLabel>Direct reports ({reportRole ? RoleLabels[reportRole] : ""})</FormLabel>
+                    {pool.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">No users to assign.</p>
+                    ) : (
+                      <ScrollArea className="h-40 rounded-md border border-border p-2">
+                        <div className="space-y-2">
+                          {pool.map((u) => {
+                            const checked = superviseeIds.includes(u.id);
+                            const ownedByOther = !!u.principalId && u.principalId !== editingUser?.id;
+                            return (
+                              <label key={u.id} className="flex items-center gap-2 text-sm">
+                                <Checkbox
+                                  checked={checked}
+                                  onCheckedChange={(v) => {
+                                    setSuperviseeIds((prev) =>
+                                      v ? Array.from(new Set([...prev, u.id])) : prev.filter((id) => id !== u.id)
+                                    );
+                                  }}
+                                  data-testid={`check-supervisee-${u.id}`}
+                                />
+                                <span className="font-medium text-foreground">{u.name}</span>
+                                {ownedByOther && !checked && (
+                                  <span className="text-xs text-muted-foreground">
+                                    (currently reports to another Principal)
+                                  </span>
+                                )}
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </ScrollArea>
+                    )}
+                    <p className="text-xs text-muted-foreground">
+                      Toggling a person here reassigns their Principal supervisor.
+                    </p>
+                  </FormItem>
+                );
+              })()}
 
               <DialogFooter className="pt-4">
                 <Button type="button" variant="outline" onClick={() => setEditingUser(null)}>Cancel</Button>
