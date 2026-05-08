@@ -28,10 +28,12 @@ export default function Sidebar() {
 
   const isPM = user?.role === "PROJECT_MANAGER" || user?.role === "MANAGEMENT";
 
+  const isSiteAdmin = user?.role === "SITE_ADMIN";
+
   const main: NavLink[] = [
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/projects", label: "Projects", icon: Briefcase },
-    { href: "/timesheets", label: "Time Tracking", icon: Clock },
+    ...(isSiteAdmin ? [] : [{ href: "/projects", label: "Projects", icon: Briefcase }]),
+    ...(isSiteAdmin ? [] : [{ href: "/timesheets", label: "Time Tracking", icon: Clock }]),
   ];
 
   const operations: NavLink[] = [
