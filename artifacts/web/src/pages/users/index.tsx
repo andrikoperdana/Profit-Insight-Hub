@@ -46,6 +46,8 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { Pagination, usePagination } from "@/components/common/Pagination";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
+const NONE = "__none__";
+
 const userSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
@@ -53,6 +55,8 @@ const userSchema = z.object({
   role: z.nativeEnum(UserRole),
   title: z.string().optional(),
   dailyRate: z.coerce.number().min(0).optional(),
+  managerId: z.string().optional(),
+  principalId: z.string().optional(),
 });
 
 type UserFormValues = z.infer<typeof userSchema>;
@@ -66,6 +70,8 @@ const editUserSchema = z.object({
     (v) => !v || v.length >= 6,
     { message: "Password must be at least 6 characters" }
   ),
+  managerId: z.string().optional(),
+  principalId: z.string().optional(),
 });
 
 type EditUserFormValues = z.infer<typeof editUserSchema>;
@@ -78,6 +84,15 @@ type UserRow = {
   title?: string | null;
   dailyRate?: number | null;
   isActive: boolean;
+  managerId?: string | null;
+  principalId?: string | null;
+};
+
+// Which Principal role supervises a given delivery role.
+const PRINCIPAL_FOR_ROLE: Partial<Record<UserRole, UserRole>> = {
+  [UserRole.KONSULTAN]: UserRole.PRINCIPAL_KONSULTAN,
+  [UserRole.TECHNICAL_WRITER]: UserRole.PRINCIPAL_TECHNICAL_WRITER,
+  [UserRole.ADMIN_PROJECT]: UserRole.PRINCIPAL_ADMIN_PROJECT,
 };
 
 function csvEscape(value: unknown): string {
@@ -170,12 +185,12 @@ export default function UsersList() {
 
   const form = useForm<UserFormValues>({
     resolver: zodResolver(userSchema),
-    defaultValues: { name: "", email: "", password: "password123", role: UserRole.KONSULTAN, title: "", dailyRate: 0 }
+    defaultValues: { name: "", email: "", password: "password123", role: UserRole.KONSULTAN, title: "", dailyRate: 0, managerId: NONE, principalId: NONE }
   });
 
   const editForm = useForm<EditUserFormValues>({
     resolver: zodResolver(editUserSchema),
-    defaultValues: { name: "", role: UserRole.KONSULTAN, title: "", dailyRate: 0, password: "" }
+    defaultValues: { name: "", role: UserRole.KONSULTAN, title: "", dailyRate: 0, password: "", managerId: NONE, principalId: NONE }
   });
 
   useEffect(() => {
@@ -186,12 +201,36 @@ export default function UsersList() {
         title: editingUser.title ?? "",
         dailyRate: editingUser.dailyRate ?? 0,
         password: "",
+        managerId: editingUser.managerId ?? NONE,
+        principalId: editingUser.principalId ?? NONE,
       });
     }
   }, [editingUser, editForm]);
 
+  // Pools used to populate Manager / Principal selectors.
+  const managers = (users ?? []).filter((u: any) => u.role === UserRole.MANAGEMENT && u.isActive);
+  const principalsByRole = (role: UserRole | undefined) => {
+    const principalRole = role ? PRINCIPAL_FOR_ROLE[role] : undefined;
+    if (!principalRole) return [] as any[];
+    return (users ?? []).filter((u: any) => u.role === principalRole && u.isActive);
+  };
+
   const onSubmit = (data: UserFormValues) => {
-    createUser.mutate({ data });
+    const payload: Record<string, unknown> = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      role: data.role,
+      title: data.title || undefined,
+      dailyRate: data.dailyRate ?? 0,
+    };
+    if (data.role === UserRole.PROJECT_MANAGER) {
+      payload.managerId = data.managerId && data.managerId !== NONE ? data.managerId : null;
+    }
+    if (PRINCIPAL_FOR_ROLE[data.role]) {
+      payload.principalId = data.principalId && data.principalId !== NONE ? data.principalId : null;
+    }
+    createUser.mutate({ data: payload as any });
   };
 
   const onEditSubmit = (data: EditUserFormValues) => {
@@ -205,8 +244,19 @@ export default function UsersList() {
     if (data.password && data.password.length > 0) {
       payload.password = data.password;
     }
+    // Always send hierarchy fields so MGMT can also clear them. For non-applicable
+    // roles, force null on the server side.
+    payload.managerId = data.role === UserRole.PROJECT_MANAGER && data.managerId && data.managerId !== NONE
+      ? data.managerId
+      : null;
+    payload.principalId = PRINCIPAL_FOR_ROLE[data.role] && data.principalId && data.principalId !== NONE
+      ? data.principalId
+      : null;
     editUserMutation.mutate({ id: editingUser.id, data: payload as any });
   };
+
+  const watchedCreateRole = form.watch("role");
+  const watchedEditRole = editForm.watch("role");
 
   const toggleStatus = (id: string, currentStatus: boolean) => {
     updateUser.mutate({ id, data: { isActive: !currentStatus } });
