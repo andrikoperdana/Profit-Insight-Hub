@@ -34,11 +34,14 @@ router.get("/principal/projects-needing-resource", async (req, res) => {
       orderBy: { createdAt: "desc" },
     });
   } else if (reportRole === "TECHNICAL_WRITER") {
+    // Multi-pick: list projects with no TECHNICAL_WRITER ProjectResource
+    // (mirrors the KONSULTAN branch). The legacy single-pick technicalWriterId
+    // field is no longer used to determine staffing gaps.
     projects = await prisma.project.findMany({
       where: {
         deletedAt: null,
         status: { in: ["OBSERVATION", "ACTIVE"] },
-        technicalWriterId: null,
+        NOT: { resources: { some: { user: { role: "TECHNICAL_WRITER" } } } },
       },
       include: projectInclude,
       orderBy: { createdAt: "desc" },

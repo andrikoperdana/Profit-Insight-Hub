@@ -37,11 +37,9 @@ export default function PrincipalDashboard() {
   const [proposeFor, setProposeFor] = useState<{ id: string; name: string; code: string } | null>(null);
   const [form, setForm] = useState({ userId: "", roleInProject: "", plannedMandays: "10", dailyRate: "1500000" });
 
-  // KONSULTAN principals propose via ProjectResource (PM accepts later).
-  // TW / AP are single-pick fields on Project — assign directly; PM may override.
-  const isSinglePickPrincipal =
-    user?.role === "PRINCIPAL_TECHNICAL_WRITER" ||
-    user?.role === "PRINCIPAL_ADMIN_PROJECT";
+  // KONSULTAN and TECHNICAL_WRITER principals propose via ProjectResource (multi-pick;
+  // PM accepts later). ADMIN_PROJECT is the only remaining single-pick on Project.
+  const isSinglePickPrincipal = user?.role === "PRINCIPAL_ADMIN_PROJECT";
 
   const propose = useProposeProjectResource({
     mutation: {
@@ -75,11 +73,9 @@ export default function PrincipalDashboard() {
       return;
     }
     if (isSinglePickPrincipal) {
-      const field =
-        user?.role === "PRINCIPAL_TECHNICAL_WRITER" ? "technicalWriterId" : "adminProjectId";
       updateProject.mutate({
         id: proposeFor.id,
-        data: { [field]: form.userId } as any,
+        data: { adminProjectId: form.userId } as any,
       });
       return;
     }
