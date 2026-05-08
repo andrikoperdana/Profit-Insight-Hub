@@ -1009,15 +1009,15 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
     user?.role === "PRINCIPAL_ADMIN_PROJECT" ? "ADMIN_PROJECT" : null;
   const canPrincipalManageRow = (r: any) => principalSupervises != null && r.userRole === principalSupervises;
   const projectIsAssignable = project.status === "OBSERVATION" || project.status === "ACTIVE";
-  const canPrincipalEditTw =
-    user?.role === "PRINCIPAL_TECHNICAL_WRITER" && projectIsAssignable;
   const canPrincipalEditAp =
     user?.role === "PRINCIPAL_ADMIN_PROJECT" && projectIsAssignable;
   const canPrincipalProposeKonsultan =
     user?.role === "PRINCIPAL_KONSULTAN" && projectIsAssignable;
+  const canPrincipalProposeTw =
+    user?.role === "PRINCIPAL_TECHNICAL_WRITER" && projectIsAssignable;
   const { data: supervisees } = useListUsersUnderSupervision({
     query: {
-      enabled: canPrincipalEditTw || canPrincipalEditAp || canPrincipalProposeKonsultan,
+      enabled: canPrincipalEditAp || canPrincipalProposeKonsultan || canPrincipalProposeTw,
       queryKey: ["users-under-supervision"],
     },
   } as any);
@@ -1028,13 +1028,13 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
   );
   const { data: writerPool } = useListAvailableUsers(
     { role: "TECHNICAL_WRITER" },
-    { query: { enabled: canEdit, queryKey: ["users-available", "TECHNICAL_WRITER"] } }
+    { query: { enabled: canEdit || canPrincipalProposeTw, queryKey: ["users-available", "TECHNICAL_WRITER"] } }
   );
   const { data: adminPool } = useListAvailableUsers(
     { role: "ADMIN_PROJECT" },
     { query: { enabled: canEdit, queryKey: ["users-available", "ADMIN_PROJECT"] } }
   );
-  const [addOpen, setAddOpen] = useState(false);
+  const [addingRole, setAddingRole] = useState<null | "KONSULTAN" | "TECHNICAL_WRITER">(null);
   const [form, setForm] = useState({ userId: "", roleInProject: "", plannedMandays: "10", dailyRate: "1500000" });
 
   const updateProject = useUpdateProject({
@@ -1057,7 +1057,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
     mutation: {
       onSuccess: () => {
         toast({ title: "Resource added", description: "Team member assigned to this project." });
-        setAddOpen(false);
+        setAddingRole(null);
         setForm({ userId: "", roleInProject: "", plannedMandays: "10", dailyRate: "1500000" });
         invalidate();
       },
@@ -1067,12 +1067,12 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
   const proposeMutation = useProposeProjectResource({
     mutation: {
       onSuccess: () => {
-        toast({ title: "Konsultan proposed", description: "PM has been notified to accept." });
-        setAddOpen(false);
+        toast({ title: "Resource proposed", description: "PM has been notified to accept." });
+        setAddingRole(null);
         setForm({ userId: "", roleInProject: "", plannedMandays: "10", dailyRate: "1500000" });
         invalidate();
       },
-      onError: (e: any) => toast({ title: "Failed", description: e?.message ?? "Could not propose Konsultan", variant: "destructive" }),
+      onError: (e: any) => toast({ title: "Failed", description: e?.message ?? "Could not propose resource", variant: "destructive" }),
     },
   });
   const removeMutation = useRemoveProjectResource({
@@ -1087,7 +1087,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
 
   if (isLoading) return <LoadingPage />;
   const allList = resources ?? [];
-  // Konsultan-only main team list. TW is shown in its own dropdown card below.
+  // Konsultan team
   const list = allList.filter((r: any) => r.userRole === "KONSULTAN");
   const totalPlanned = list.reduce((s: number, r: any) => s + (r.plannedMandays ?? 0), 0);
   const totalActual = list.reduce((s: number, r: any) => s + (r.actualMandays ?? 0), 0);
@@ -1101,8 +1101,27 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
   );
   const konsultanOptions = canEdit ? availableKonsultan : principalKonsultanPool;
 
+  // Technical Writer team (multi-pick, mirrors Konsultan)
+  const twList = allList.filter((r: any) => r.userRole === "TECHNICAL_WRITER");
+  const twTotalPlanned = twList.reduce((s: number, r: any) => s + (r.plannedMandays ?? 0), 0);
+  const twTotalActual = twList.reduce((s: number, r: any) => s + (r.actualMandays ?? 0), 0);
+  const twEstCost = twList.reduce((s: number, r: any) => s + (r.plannedMandays ?? 0) * (r.dailyRate ?? 0), 0);
+  const assignedTwIds = new Set(twList.map((r: any) => r.userId));
+  const availableWriters = (writerPool ?? []).filter((u: any) => !assignedTwIds.has(u.id));
+  const principalWriterPool = (supervisees ?? []).filter(
+    (u: any) => u.role === "TECHNICAL_WRITER" && !assignedTwIds.has(u.id),
+  );
+  const writerOptions = canEdit ? availableWriters : principalWriterPool;
+
+  const dialogPool =
+    addingRole === "TECHNICAL_WRITER"
+      ? (canEdit ? (writerPool ?? []) : principalWriterPool)
+      : (canEdit ? (konsultanPool ?? []) : principalKonsultanPool);
+  const dialogOptions = addingRole === "TECHNICAL_WRITER" ? writerOptions : konsultanOptions;
+  const dialogRoleLabel = addingRole === "TECHNICAL_WRITER" ? "Technical Writer" : "Konsultan";
+
   const handleAdd = () => {
-    if (!form.userId) {
+    if (!form.userId || !addingRole) {
       toast({ title: "Please select a team member", variant: "destructive" });
       return;
     }
@@ -1117,15 +1136,14 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
     };
     if (canEdit) {
       addMutation.mutate(payload);
-    } else if (canPrincipalProposeKonsultan) {
+    } else if (
+      (addingRole === "KONSULTAN" && canPrincipalProposeKonsultan) ||
+      (addingRole === "TECHNICAL_WRITER" && canPrincipalProposeTw)
+    ) {
       proposeMutation.mutate(payload);
     }
   };
 
-  const writerName =
-    project.technicalWriterName ??
-    (writerPool ?? []).find((u: any) => u.id === project.technicalWriterId)?.name ??
-    null;
   const adminName =
     project.adminProjectName ??
     (adminPool ?? []).find((u: any) => u.id === project.adminProjectId)?.name ??
@@ -1133,68 +1151,8 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
 
   return (
     <div className="space-y-6">
-      {/* Single-pick assignment cards */}
+      {/* Admin Project: still single-pick on Project */}
       <div className="grid gap-4 md:grid-cols-2">
-        <Card className="border-border shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-base">Technical Writer</CardTitle>
-            <CardDescription>One Technical Writer is assigned per project to deliver the report.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {canEdit ? (
-              <Select
-                value={project.technicalWriterId ?? "_none"}
-                onValueChange={(v) =>
-                  updateProject.mutate({ id: projectId, data: { technicalWriterId: v === "_none" ? null : v } as any })
-                }
-              >
-                <SelectTrigger data-testid="select-tw">
-                  <SelectValue placeholder="Select Technical Writer" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="_none">— Unassigned —</SelectItem>
-                  {(writerPool ?? []).map((u: any) => (
-                    <SelectItem key={u.id} value={u.id}>
-                      {u.name}{" "}
-                      <span className="text-xs text-muted-foreground">
-                        ({u.activeProjectCount} active)
-                      </span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            ) : canPrincipalEditTw ? (
-              <>
-                <Select
-                  value={project.technicalWriterId ?? "_none"}
-                  onValueChange={(v) =>
-                    updateProject.mutate({ id: projectId, data: { technicalWriterId: v === "_none" ? null : v } as any })
-                  }
-                >
-                  <SelectTrigger data-testid="select-tw-principal">
-                    <SelectValue placeholder="Assign one of your writers" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="_none">— Unassigned —</SelectItem>
-                    {(supervisees ?? [])
-                      .filter((u: any) => u.role === "TECHNICAL_WRITER")
-                      .map((u: any) => (
-                        <SelectItem key={u.id} value={u.id}>
-                          {u.name}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
-                <p className="text-xs text-muted-foreground">
-                  As Principal Technical Writer you may assign one of your direct supervisees. PM may override later.
-                </p>
-              </>
-            ) : (
-              <p className="text-sm">{writerName ?? <span className="text-muted-foreground italic">Unassigned</span>}</p>
-            )}
-          </CardContent>
-        </Card>
-
         <Card className="border-border shadow-sm">
           <CardHeader>
             <CardTitle className="text-base">Admin Project</CardTitle>
@@ -1265,11 +1223,11 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
             </CardDescription>
           </div>
           {canEdit ? (
-            <Button size="sm" onClick={() => setAddOpen(true)} className="shrink-0" data-testid="button-add-konsultan">
+            <Button size="sm" onClick={() => setAddingRole("KONSULTAN")} className="shrink-0" data-testid="button-add-konsultan">
               + Add Konsultan
             </Button>
           ) : canPrincipalProposeKonsultan ? (
-            <Button size="sm" onClick={() => setAddOpen(true)} className="shrink-0" data-testid="button-propose-konsultan">
+            <Button size="sm" onClick={() => setAddingRole("KONSULTAN")} className="shrink-0" data-testid="button-propose-konsultan">
               + Propose Konsultan
             </Button>
           ) : null}
@@ -1277,11 +1235,11 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
         <CardContent>
           {list.length === 0 ? (
             <div className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-              No resources assigned to this project yet.
+              No Konsultan assigned to this project yet.
               {(canEdit || canPrincipalProposeKonsultan) && (
                 <div className="mt-3">
-                  <Button size="sm" onClick={() => setAddOpen(true)}>
-                    {canEdit ? "+ Add First Resource" : "+ Propose Konsultan"}
+                  <Button size="sm" onClick={() => setAddingRole("KONSULTAN")}>
+                    {canEdit ? "+ Add First Konsultan" : "+ Propose Konsultan"}
                   </Button>
                 </div>
               )}
@@ -1360,36 +1318,147 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
         </CardContent>
       </Card>
 
-      <Dialog open={addOpen} onOpenChange={setAddOpen}>
+      {/* Technical Writer Team — multi-pick, mirrors Konsultan */}
+      <Card className="border-border shadow-sm">
+        <CardHeader className="flex flex-row items-start justify-between gap-4">
+          <div>
+            <CardTitle className="text-base">Technical Writer Team</CardTitle>
+            <CardDescription>
+              Technical Writers assigned to {project?.code ?? "this project"} to deliver the report.
+            </CardDescription>
+          </div>
+          {canEdit ? (
+            <Button size="sm" onClick={() => setAddingRole("TECHNICAL_WRITER")} className="shrink-0" data-testid="button-add-tw">
+              + Add Technical Writer
+            </Button>
+          ) : canPrincipalProposeTw ? (
+            <Button size="sm" onClick={() => setAddingRole("TECHNICAL_WRITER")} className="shrink-0" data-testid="button-propose-tw">
+              + Propose Technical Writer
+            </Button>
+          ) : null}
+        </CardHeader>
+        <CardContent>
+          {twList.length === 0 ? (
+            <div className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+              No Technical Writer assigned to this project yet.
+              {(canEdit || canPrincipalProposeTw) && (
+                <div className="mt-3">
+                  <Button size="sm" onClick={() => setAddingRole("TECHNICAL_WRITER")}>
+                    {canEdit ? "+ Add First Technical Writer" : "+ Propose Technical Writer"}
+                  </Button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-left text-xs text-muted-foreground border-b border-border">
+                    <th className="py-2 pr-3 font-medium">Name</th>
+                    <th className="py-2 pr-3 font-medium">Project Role</th>
+                    <th className="py-2 pr-3 font-medium">System Role</th>
+                    <th className="py-2 pr-3 font-medium text-right">Planned (md)</th>
+                    <th className="py-2 pr-3 font-medium text-right">Actual (md)</th>
+                    <th className="py-2 pr-3 font-medium text-right">Daily Rate</th>
+                    <th className="py-2 pr-3 font-medium text-right">Est. Cost</th>
+                    {(canEdit || canPrincipalProposeTw) && <th className="py-2 pr-3 font-medium text-right w-12"></th>}
+                  </tr>
+                </thead>
+                <tbody>
+                  {twList.map((r: any) => {
+                    const planned = r.plannedMandays ?? 0;
+                    const actual = r.actualMandays ?? 0;
+                    const pct = planned > 0 ? (actual / planned) * 100 : 0;
+                    return (
+                      <tr key={r.id ?? r.userId} className="border-b border-border/40 hover:bg-muted/30">
+                        <td className="py-2 pr-3 font-medium">{r.userName ?? "—"}</td>
+                        <td className="py-2 pr-3">{r.roleInProject ?? <span className="text-muted-foreground italic">not set</span>}</td>
+                        <td className="py-2 pr-3"><Badge variant="outline" className="text-[10px]">{RoleLabels[r.userRole as keyof typeof RoleLabels] ?? r.userRole}</Badge></td>
+                        <td className="py-2 pr-3 text-right font-mono">{planned.toFixed(1)}</td>
+                        <td className="py-2 pr-3 text-right font-mono">
+                          {actual.toFixed(1)}
+                          {planned > 0 && (
+                            <span className={`ml-2 text-[10px] ${pct > 100 ? "text-destructive" : pct >= 80 ? "text-amber-500" : "text-muted-foreground"}`}>
+                              ({pct.toFixed(0)}%)
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-2 pr-3 text-right font-mono">{formatIDR(r.dailyRate ?? 0)}</td>
+                        <td className="py-2 pr-3 text-right font-mono">{formatIDR(planned * (r.dailyRate ?? 0))}</td>
+                        {(canEdit || canPrincipalManageRow(r)) && (
+                          <td className="py-2 pr-3 text-right">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
+                              disabled={removeMutation.isPending}
+                              onClick={() => {
+                                if (confirm(`Remove ${r.userName} from this project?`)) {
+                                  removeMutation.mutate({ resourceId: r.id });
+                                }
+                              }}
+                              title="Remove from project"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                          </td>
+                        )}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+                <tfoot>
+                  <tr className="text-xs font-medium">
+                    <td colSpan={3} className="py-2 pr-3 text-muted-foreground">Total ({twList.length} {twList.length === 1 ? "person" : "people"})</td>
+                    <td className="py-2 pr-3 text-right font-mono">{twTotalPlanned.toFixed(1)}</td>
+                    <td className="py-2 pr-3 text-right font-mono">{twTotalActual.toFixed(1)}</td>
+                    <td className="py-2 pr-3"></td>
+                    <td className="py-2 pr-3 text-right font-mono text-primary">{formatIDR(twEstCost)}</td>
+                    {(canEdit || canPrincipalProposeTw) && <td></td>}
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <Dialog open={!!addingRole} onOpenChange={(o) => !o && setAddingRole(null)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {canEdit ? "Add" : "Propose"} Konsultan to {project?.code ?? "Project"}
+              {canEdit ? "Add" : "Propose"} {dialogRoleLabel} to {project?.code ?? "Project"}
             </DialogTitle>
             <DialogDescription>
               {canEdit
-                ? "Each Konsultan can be active on a maximum of 2 projects. Konsultans already at capacity are hidden from the list."
+                ? (addingRole === "KONSULTAN"
+                    ? "Each Konsultan can be active on a maximum of 2 projects. Konsultans already at capacity are hidden from the list."
+                    : "Assign a Technical Writer to this project. Multiple Technical Writers can be assigned per project.")
                 : "Pick one of your supervisees to propose. The PM will be notified and may accept or replace your proposal."}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 pt-2">
             <div className="space-y-1.5">
-              <Label>Konsultan</Label>
+              <Label>{dialogRoleLabel}</Label>
               <Select value={form.userId} onValueChange={(v) => {
-                const pool = canEdit ? (konsultanPool ?? []) : principalKonsultanPool;
-                const picked = pool.find((u: any) => u.id === v);
+                const picked = dialogPool.find((u: any) => u.id === v);
                 setForm({ ...form, userId: v, dailyRate: picked?.dailyRate ? String(picked.dailyRate) : form.dailyRate });
               }}>
                 <SelectTrigger>
-                  <SelectValue placeholder={konsultanOptions.length === 0 ? "No Konsultan available" : "Select a Konsultan"} />
+                  <SelectValue placeholder={dialogOptions.length === 0 ? `No ${dialogRoleLabel} available` : `Select a ${dialogRoleLabel}`} />
                 </SelectTrigger>
                 <SelectContent>
-                  {konsultanOptions.map((u: any) => (
+                  {dialogOptions.map((u: any) => (
                     <SelectItem key={u.id} value={u.id}>
                       {u.name}
-                      {canEdit && (
+                      {canEdit && addingRole === "KONSULTAN" && (
                         <span className="text-muted-foreground text-xs">
                           {" "}— {u.activeProjectCount}/2 active
+                        </span>
+                      )}
+                      {canEdit && addingRole === "TECHNICAL_WRITER" && typeof u.activeProjectCount === "number" && (
+                        <span className="text-muted-foreground text-xs">
+                          {" "}— {u.activeProjectCount} active
                         </span>
                       )}
                     </SelectItem>
@@ -1432,7 +1501,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
             </p>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setAddOpen(false)} disabled={addMutation.isPending || proposeMutation.isPending}>Cancel</Button>
+            <Button variant="outline" onClick={() => setAddingRole(null)} disabled={addMutation.isPending || proposeMutation.isPending}>Cancel</Button>
             <Button onClick={handleAdd} disabled={addMutation.isPending || proposeMutation.isPending || !form.userId}>
               {addMutation.isPending || proposeMutation.isPending
                 ? (canEdit ? "Saving..." : "Proposing...")
