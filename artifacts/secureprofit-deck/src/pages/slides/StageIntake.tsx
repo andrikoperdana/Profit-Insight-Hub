@@ -73,6 +73,15 @@ export default function StageIntake() {
         </div>
       </div>
 
+      <div className="mt-[3vh] border-t border-border pt-[1.6vh] flex items-start gap-[1vw] max-w-[80vw]">
+        <span className="font-mono text-primary text-[1vw] leading-none mt-[0.4vh]">i</span>
+        <span className="text-[0.95vw] text-muted leading-snug">
+          Tip — a new project may not have an SPK / PO Number yet at intake.
+          Sales can save the draft with the SPK field empty and fill it in
+          later once the client has issued the document.
+        </span>
+      </div>
+
       <div className="absolute bottom-[4vh] right-[8vw] font-mono text-[0.95vw] text-muted tracking-widest">
         07 / 10
       </div>

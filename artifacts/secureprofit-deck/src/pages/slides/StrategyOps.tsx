@@ -60,8 +60,8 @@ export default function StrategyOps() {
           </div>
           <ul className="text-[1vw] text-text leading-relaxed space-y-[0.6vh]">
             <li>· Onboard new clients &amp; intake projects (4-field form)</li>
+            <li>· Upload contract &amp; SPK file at project kickoff</li>
             <li>· Track personal pipeline and revenue per client</li>
-            <li>· Edit contract / SPK value while the project is still open</li>
             <li>· Cannot see margin / cost — focused on revenue</li>
           </ul>
         </div>

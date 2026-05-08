@@ -62,7 +62,7 @@ export default function DeliverySquad() {
           </div>
           <div className="border-t border-border my-[2vh]" />
           <ul className="text-[1vw] text-text leading-relaxed space-y-[0.6vh]">
-            <li>· Upload contracts &amp; SPK at project kickoff</li>
+            <li>· Organize closing docs once a project completes</li>
             <li>· Generate BAST &amp; INVOICE when the project finishes</li>
             <li>· Closing-doc inbox with alerts for &gt;3 days complete</li>
             <li>· Does not write code — focuses on documents &amp; circulation</li>
