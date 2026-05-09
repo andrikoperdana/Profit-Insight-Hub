@@ -19,51 +19,30 @@ export default function StandardsCheck() {
       <div className="mt-[3.5vh] grid grid-cols-2 gap-[1.5vw]">
         <div className="border border-primary/40 bg-primary/5 px-[1.6vw] py-[2vh]">
           <div className="font-mono text-[0.78vw] text-primary tracking-widest uppercase">Aligned with standard</div>
-          <ul className="text-[0.92vw] text-text leading-snug space-y-[0.7vh] mt-[1.4vh]">
+          <ul className="text-[0.88vw] text-text leading-snug space-y-[0.55vh] mt-[1.4vh]">
             <li>· <span className="font-mono text-accent">Revenue = contractValue</span> — matches Total Contract Price</li>
             <li>· <span className="font-mono text-accent">Mandays × dailyRate</span> — Time-and-Materials costing</li>
-            <li>· <span className="font-mono text-accent">Margin %</span> — standard Gross Margin formula</li>
             <li>· <span className="font-mono text-accent">Burn Rate</span> — proxy for PMI Schedule Performance</li>
             <li>· <span className="font-mono text-accent">Forecast linear</span> — EAC formula 1 (PMBOK)</li>
+            <li>· <span className="font-mono text-accent">Recognised Revenue</span> = burn% × revenueNet — PSAK 72 §B18</li>
+            <li>· <span className="font-mono text-accent">Accrued Cost</span> from SUBMITTED + APPROVED — accrual basis</li>
+            <li>· <span className="font-mono text-accent">Net Margin</span> with overhead loader 1.8× — loaded rate</li>
+            <li>· <span className="font-mono text-accent">Weighted Margin</span> = Σprofit / Σrevenue — true blended</li>
+            <li>· <span className="font-mono text-accent">DPP / PPN</span> separated at intake — net basis throughout</li>
           </ul>
         </div>
 
         <div className="border border-amber-500/40 bg-amber-500/5 px-[1.6vw] py-[2vh]">
-          <div className="font-mono text-[0.78vw] text-amber-400 tracking-widest uppercase">Simplified vs standard</div>
-          <ul className="text-[0.92vw] text-text leading-snug space-y-[0.7vh] mt-[1.4vh]">
-            <li>· Revenue recognised <span className="text-amber-300">in full on day-1</span>, not over-time</li>
-            <li>· Cost <span className="text-amber-300">excludes SUBMITTED</span> timesheets (no accrual)</li>
-            <li>· <span className="text-amber-300">Gross margin only</span> — no overhead / loaded rate</li>
-            <li>· No PPN / DPP separation in <span className="font-mono text-accent">contractValue</span></li>
-            <li>· Average Margin = simple avg, <span className="text-amber-300">not weighted</span></li>
+          <div className="font-mono text-[0.78vw] text-amber-400 tracking-widest uppercase">Still simplified</div>
+          <ul className="text-[0.88vw] text-text leading-snug space-y-[0.55vh] mt-[1.4vh]">
             <li>· One-off licenses fully expensed, <span className="text-amber-300">no amortisation</span></li>
+            <li>· Forecast EAC <span className="text-amber-300">linear only</span> — no SPI/CPI composite</li>
+            <li>· Cash collection <span className="text-amber-300">not tracked</span> — Invoice → AR aging absent</li>
+            <li>· No <span className="text-amber-300">multi-currency</span> — IDR only</li>
+            <li>· Overhead multiplier is <span className="text-amber-300">flat 1.8×</span>, not per-cost-centre</li>
           </ul>
-        </div>
-      </div>
-
-      <div className="mt-[3vh] border border-border bg-bg-elevated/40 px-[1.8vw] py-[2vh]">
-        <div className="font-mono text-[0.78vw] text-primary tracking-widest uppercase">Roadmap to closer compliance</div>
-        <div className="grid grid-cols-3 gap-[1.4vw] mt-[1.4vh]">
-          <div>
-            <div className="font-mono text-[0.78vw] text-primary">High priority</div>
-            <ul className="text-[0.85vw] text-text leading-snug space-y-[0.4vh] mt-[0.6vh]">
-              <li>· Weighted average margin KPI</li>
-              <li>· Net margin via overhead loader</li>
-            </ul>
-          </div>
-          <div>
-            <div className="font-mono text-[0.78vw] text-accent">Medium priority</div>
-            <ul className="text-[0.85vw] text-text leading-snug space-y-[0.4vh] mt-[0.6vh]">
-              <li>· Recognised revenue = burn% × CV</li>
-              <li>· Accrued cost from SUBMITTED</li>
-            </ul>
-          </div>
-          <div>
-            <div className="font-mono text-[0.78vw] text-muted">Low priority</div>
-            <ul className="text-[0.85vw] text-text leading-snug space-y-[0.4vh] mt-[0.6vh]">
-              <li>· DPP / PPN field on intake</li>
-              <li>· EAC composite forecast option</li>
-            </ul>
+          <div className="mt-[1.4vh] pt-[1vh] border-t border-amber-500/20 font-mono text-[0.74vw] text-amber-400/80 tracking-widest uppercase">
+            Reconcile against Accurate / SAP / Xero for statutory filings
           </div>
         </div>
       </div>
