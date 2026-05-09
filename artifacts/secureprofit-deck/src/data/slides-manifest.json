@@ -80,8 +80,16 @@
     "speakerNotes": ""
   },
   {
-    "id": "9d3a86fe-0e7e-4b45-9b41-0a37cf8d2b09",
+    "id": "dd3a86fe-0e7e-4b45-9b41-0a37cf8d2b0d",
     "position": 11,
+    "filepath": "src/pages/slides/StandardsCheck.tsx",
+    "title": "Standards Check",
+    "description": "How the math compares to ASC 606 / PSAK 72 / PMBOK — what's aligned, what's simplified.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "9d3a86fe-0e7e-4b45-9b41-0a37cf8d2b09",
+    "position": 12,
     "filepath": "src/pages/slides/StageClose.tsx",
     "title": "Stage C — Closing & CSAT",
     "description": "BAST, invoice, and the automatic satisfaction survey.",
@@ -89,7 +97,7 @@
   },
   {
     "id": "ad3a86fe-0e7e-4b45-9b41-0a37cf8d2b0a",
-    "position": 12,
+    "position": 13,
     "filepath": "src/pages/slides/Closing.tsx",
     "title": "Summary",
     "description": "Ten roles, one path, profit and satisfaction measured.",
