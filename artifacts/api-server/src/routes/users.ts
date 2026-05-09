@@ -220,13 +220,13 @@ router.delete(
       res.status(400).json({ error: "Cannot delete yourself" });
       return;
     }
-    const before = await prisma.user.findUnique({ where: { id: req.params.id } });
+    const before = await prisma.user.findUnique({ where: { id: String(req.params.id) } });
     if (!before) {
       res.status(404).json({ error: "Not found" });
       return;
     }
     const u = await prisma.user.update({
-      where: { id: req.params.id },
+      where: { id: String(req.params.id) },
       data: { isActive: false, deletedAt: new Date() },
     });
     await recordAudit(req, {

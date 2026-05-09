@@ -367,7 +367,7 @@ router.post("/projects", requireRole(...writeRoles), async (req, res) => {
 router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
   const b = req.body || {};
   const beforeProj = await prisma.project.findUnique({
-    where: { id: req.params.id },
+    where: { id: String(req.params.id) },
     include: projectInclude,
   });
   if (!beforeProj) {
@@ -582,7 +582,7 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
   }
   if (b.contractFileName !== undefined) data.contractFileName = sanitizeFileName(b.contractFileName) ?? null;
   let updated = await prisma.project.update({
-    where: { id: req.params.id },
+    where: { id: String(req.params.id) },
     data,
     include: projectInclude,
   });
@@ -780,7 +780,7 @@ router.delete(
   requireRole("MANAGEMENT"),
   async (req, res) => {
     const before = await prisma.project.findUnique({
-      where: { id: req.params.id },
+      where: { id: String(req.params.id) },
       include: projectInclude,
     });
     if (!before) {
@@ -789,7 +789,7 @@ router.delete(
     }
     // Soft delete — keep historical timesheets, documents, financials intact.
     const updated = await prisma.project.update({
-      where: { id: req.params.id },
+      where: { id: String(req.params.id) },
       data: { deletedAt: new Date() },
     });
     await recordAudit(req, {

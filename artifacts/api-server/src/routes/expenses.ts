@@ -84,7 +84,7 @@ router.post(
   "/projects/:id/expenses",
   requireRole(...writeRoles),
   async (req, res) => {
-    const projectId = req.params.id;
+    const projectId = String(req.params.id);
     const userId = req.user!.sub;
     const role = req.user!.role;
 
@@ -190,7 +190,7 @@ router.delete(
     const userId = req.user!.sub;
     const role = req.user!.role;
     const before = await prisma.projectExpense.findUnique({
-      where: { id: req.params.expenseId },
+      where: { id: String(req.params.expenseId) },
       include: {
         createdBy: { select: { name: true } },
         project: { select: { pmId: true } },

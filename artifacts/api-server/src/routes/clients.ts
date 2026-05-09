@@ -53,7 +53,7 @@ router.post("/clients", requireRole(...writeRoles), async (req, res) => {
 router.patch("/clients/:id", requireRole(...writeRoles), async (req, res) => {
   const { name, contactPerson, email, phone, industry } = req.body || {};
   const c = await prisma.client.update({
-    where: { id: req.params.id },
+    where: { id: String(req.params.id) },
     data: {
       ...(name !== undefined ? { name: String(name) } : {}),
       ...(contactPerson !== undefined ? { contactPerson: contactPerson || null } : {}),
@@ -66,7 +66,7 @@ router.patch("/clients/:id", requireRole(...writeRoles), async (req, res) => {
 });
 
 router.delete("/clients/:id", requireRole("MANAGEMENT"), async (req, res) => {
-  await prisma.client.delete({ where: { id: req.params.id } });
+  await prisma.client.delete({ where: { id: String(req.params.id) } });
   res.json({ success: true });
 });
 

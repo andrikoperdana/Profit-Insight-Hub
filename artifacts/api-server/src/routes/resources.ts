@@ -222,7 +222,7 @@ router.post(
 router.post("/projects/:id/resources/propose", requireRole("PRINCIPAL_KONSULTAN", "PRINCIPAL_TECHNICAL_WRITER"), async (req, res) => {
   // Status guard: proposals only allowed on assignable projects.
   const project = await prisma.project.findUnique({
-    where: { id: req.params.id },
+    where: { id: String(req.params.id) },
     select: { status: true },
   });
   if (!project) {

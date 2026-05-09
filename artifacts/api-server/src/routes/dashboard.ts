@@ -129,7 +129,7 @@ router.get("/dashboard/status-breakdown", async (_req, res) => {
 
 router.get("/dashboard/top-projects", async (_req, res) => {
   const projects = await prisma.project.findMany({ where: { deletedAt: null }, include: projectInclude });
-  const serialized = projects.map(serializeProject);
+  const serialized = projects.map((p) => serializeProject(p));
   serialized.sort((a, b) => b.contractValue - a.contractValue);
   res.json(serialized.slice(0, 5));
 });

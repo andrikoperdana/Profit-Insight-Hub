@@ -39,7 +39,7 @@ export default function ProjectsList() {
     if (!confirm("Add 9 sample projects (3 OBSERVATION + 3 ACTIVE + 3 PAUSE)?")) return;
     setSeeding(true);
     try {
-      const r = await customFetch("/api/projects/seed-demo", { method: "POST" });
+      const r = await customFetch("/api/projects/seed-demo", { method: "POST" }) as { created?: unknown[]; skipped?: unknown[] };
       alert(`Success. Created: ${r.created?.length ?? 0}, skipped: ${r.skipped?.length ?? 0}.`);
       queryClient.invalidateQueries();
     } catch (e: unknown) {

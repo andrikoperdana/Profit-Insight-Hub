@@ -355,7 +355,7 @@ router.put("/survey/template", requireAuth, requireRole("MANAGEMENT"), async (re
 // Per-project survey view — PM owners + MANAGEMENT
 router.get("/projects/:id/survey", requireAuth, async (req, res) => {
   const project = await prisma.project.findUnique({
-    where: { id: req.params.id },
+    where: { id: String(req.params.id) },
     select: { id: true, code: true, name: true, status: true, pmId: true, deletedAt: true, surveyToken: true },
   });
   if (!project || project.deletedAt) {
@@ -485,7 +485,7 @@ router.get(
   "/projects/:id/survey/export.xlsx",
   requireAuth,
   async (req, res) => {
-    const data = await loadProjectSurvey(req.params.id);
+    const data = await loadProjectSurvey(String(req.params.id));
     if (!data) {
       res.status(404).json({ error: "Project not found" });
       return;
@@ -597,7 +597,7 @@ router.get(
   "/projects/:id/survey/export.pdf",
   requireAuth,
   async (req, res) => {
-    const data = await loadProjectSurvey(req.params.id);
+    const data = await loadProjectSurvey(String(req.params.id));
     if (!data) {
       res.status(404).json({ error: "Project not found" });
       return;

@@ -1023,6 +1023,7 @@ components:
         reportCoverUrl: { type: string, nullable: true }
         reportLink: { type: string, nullable: true }
         reportSubmittedAt: { type: string, nullable: true }
+        lastStatusReason: { type: string, nullable: true }
         spkFileUrl: { type: string, nullable: true }
         spkFileName: { type: string, nullable: true }
         contractFileUrl: { type: string, nullable: true }

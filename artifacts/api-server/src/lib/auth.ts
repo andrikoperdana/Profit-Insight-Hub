@@ -1,12 +1,13 @@
-import jwt from "jsonwebtoken";
+import jwt, { type Secret, type SignOptions } from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import type { UserRole } from "@workspace/db";
 
-const SECRET = process.env["SESSION_SECRET"];
-if (!SECRET) {
+const SECRET_RAW = process.env["SESSION_SECRET"];
+if (!SECRET_RAW) {
   throw new Error("SESSION_SECRET must be set");
 }
-const EXPIRES_IN = "7d";
+const SECRET: Secret = SECRET_RAW;
+const EXPIRES_IN: SignOptions["expiresIn"] = "7d";
 
 export interface JwtPayload {
   sub: string;
@@ -20,7 +21,7 @@ export function signToken(payload: JwtPayload): string {
 
 export function verifyToken(token: string): JwtPayload | null {
   try {
-    return jwt.verify(token, SECRET) as JwtPayload;
+    return jwt.verify(token, SECRET) as unknown as JwtPayload;
   } catch {
     return null;
   }

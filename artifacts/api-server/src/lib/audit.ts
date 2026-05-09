@@ -1,4 +1,4 @@
-import { prisma } from "@workspace/db";
+import { prisma, type Prisma } from "@workspace/db";
 import type { Request } from "express";
 import { logger } from "./logger.js";
 
@@ -45,6 +45,7 @@ export type EntityType =
   | "Timesheet"
   | "Document"
   | "ProjectResource"
+  | "Survey"
   | "SurveyResponse"
   | "SurveyTemplate"
   | "ProjectExpense"
@@ -107,8 +108,8 @@ export async function recordAudit(req: Request, input: AuditInput): Promise<void
         entityType: input.entityType,
         entityId: input.entityId ?? null,
         description: input.description,
-        dataBefore: input.before === undefined ? undefined : (sanitize(input.before) as object | null),
-        dataAfter: input.after === undefined ? undefined : (sanitize(input.after) as object | null),
+        dataBefore: input.before === undefined ? undefined : (sanitize(input.before) as Prisma.InputJsonValue),
+        dataAfter: input.after === undefined ? undefined : (sanitize(input.after) as Prisma.InputJsonValue),
       },
     });
   } catch (err) {
@@ -141,8 +142,8 @@ export async function recordAuditAnon(input: {
         entityType: input.entityType,
         entityId: input.entityId ?? null,
         description: input.description,
-        dataBefore: input.before === undefined ? undefined : (sanitize(input.before) as object | null),
-        dataAfter: input.after === undefined ? undefined : (sanitize(input.after) as object | null),
+        dataBefore: input.before === undefined ? undefined : (sanitize(input.before) as Prisma.InputJsonValue),
+        dataAfter: input.after === undefined ? undefined : (sanitize(input.after) as Prisma.InputJsonValue),
       },
     });
   } catch (err) {

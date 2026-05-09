@@ -28,7 +28,7 @@ function serialize(
 
 router.get("/projects/:id/documents", async (req, res) => {
   const docs = await prisma.document.findMany({
-    where: { projectId: req.params.id },
+    where: { projectId: String(req.params.id) },
     include: { uploadedBy: true },
     orderBy: { uploadedAt: "desc" },
   });
@@ -47,7 +47,7 @@ router.post(
     }
     const d = await prisma.document.create({
       data: {
-        projectId: req.params.id,
+        projectId: String(req.params.id),
         type: type as DocumentType,
         fileName: String(fileName),
         fileUrl: String(fileUrl),
@@ -64,7 +64,7 @@ router.post(
         type: "document.uploaded",
         message: `${type} uploaded for project`,
         userId: req.user!.sub,
-        projectId: req.params.id,
+        projectId: String(req.params.id),
       },
     });
     await recordAudit(req, {
@@ -77,7 +77,7 @@ router.post(
 
     // Auto-close: when both BAST and INVOICE exist on a COMPLETE project, set CLOSED
     const project = await prisma.project.findUnique({
-      where: { id: req.params.id },
+      where: { id: String(req.params.id) },
       include: { documents: true },
     });
     if (project && project.status === "COMPLETE") {
@@ -117,14 +117,14 @@ router.delete(
   requireRole("ADMIN_PROJECT", "MANAGEMENT", "PROJECT_MANAGER"),
   async (req, res) => {
     const before = await prisma.document.findUnique({
-      where: { id: req.params.id },
+      where: { id: String(req.params.id) },
       include: { uploadedBy: true },
     });
     if (!before) {
       res.status(404).json({ error: "Not found" });
       return;
     }
-    await prisma.document.delete({ where: { id: req.params.id } });
+    await prisma.document.delete({ where: { id: String(req.params.id) } });
     await recordAudit(req, {
       action: "document.deleted",
       entityType: "Document",

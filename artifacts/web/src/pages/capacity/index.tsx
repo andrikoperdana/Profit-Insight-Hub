@@ -121,6 +121,7 @@ export default function CapacityPlanning() {
         Projects: c.projects.join("; "),
       })),
     );
+    if (!data) return;
     const summary = data.summary.map((s) => ({
       Date: s.date,
       Workday: s.isWorkday ? "Yes" : "No",

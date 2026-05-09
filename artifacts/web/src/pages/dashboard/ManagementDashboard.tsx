@@ -591,7 +591,7 @@ function SatisfactionWidget() {
     if (!confirm("Load CSAT demo data? This will close a few projects and create ~11 survey responses. Run once only.")) return;
     setSeeding(true);
     try {
-      const r = await customFetch("/api/survey/seed-demo", { method: "POST" });
+      const r = await customFetch("/api/survey/seed-demo", { method: "POST" }) as { responses: number; projectsClosed?: string[] };
       alert(`Success. ${r.responses} responses created, ${r.projectsClosed?.length ?? 0} projects closed.`);
       queryClient.invalidateQueries();
     } catch (e: unknown) {
