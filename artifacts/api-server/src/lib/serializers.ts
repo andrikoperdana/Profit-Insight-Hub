@@ -1,4 +1,5 @@
 import type { Prisma } from "@workspace/db";
+import { getOverheadMultiplier } from "./overhead.js";
 
 type ProjectWithRelations = Prisma.ProjectGetPayload<{
   include: {
@@ -23,6 +24,22 @@ export interface ProjectMetrics {
   actualProfit: number;
   marginPct: number;
   estimatedProfit: number;
+  // PSAK 72 / ASC 606 — recognized revenue based on burn rate (POC method)
+  burnRatePct: number;
+  recognizedRevenue: number;
+  // Accrual accounting — costs from SUBMITTED + APPROVED timesheets
+  accruedCost: number;
+  // Net (fully-loaded) cost & margin via OVERHEAD_MULTIPLIER env
+  overheadMultiplier: number;
+  loadedResourceCost: number;
+  netActualCost: number;
+  netActualProfit: number;
+  netMarginPct: number;
+  // DPP/PPN — net revenue (DPP) excluding VAT
+  vatPercent: number;
+  contractValueIncludesVat: boolean;
+  revenueNet: number;
+  vatAmount: number;
 }
 
 export function computeMetrics(project: ProjectWithRelations): ProjectMetrics {
@@ -34,12 +51,18 @@ export function computeMetrics(project: ProjectWithRelations): ProjectMetrics {
 
   let actualMandays = 0;
   let resourceCost = 0;
+  let accruedResourceCost = 0;
   for (const ts of project.timesheets) {
-    if (ts.status !== "APPROVED") continue;
     const days = ts.hours / 8;
-    actualMandays += days;
     const rate = rateMap.get(ts.userId) ?? ts.user?.dailyRate ?? 0;
-    resourceCost += days * rate;
+    if (ts.status === "APPROVED") {
+      actualMandays += days;
+      resourceCost += days * rate;
+      accruedResourceCost += days * rate;
+    } else if (ts.status === "SUBMITTED") {
+      // Accrual: include submitted-but-not-yet-approved labor as accrued cost
+      accruedResourceCost += days * rate;
+    }
   }
   const additionalCost = (project.expenses ?? []).reduce(
     (sum, e) => sum + (e.amount ?? 0),
@@ -53,6 +76,34 @@ export function computeMetrics(project: ProjectWithRelations): ProjectMetrics {
       : 0;
   const estimatedProfit = project.contractValue - project.estimatedCost;
 
+  // DPP (net revenue) vs gross including PPN
+  const vatPercent = (project as any).vatPercent ?? 11;
+  const contractValueIncludesVat = (project as any).contractValueIncludesVat ?? true;
+  const revenueNet = contractValueIncludesVat
+    ? project.contractValue / (1 + vatPercent / 100)
+    : project.contractValue;
+  const vatAmount = contractValueIncludesVat
+    ? project.contractValue - revenueNet
+    : project.contractValue * (vatPercent / 100);
+
+  // Recognized revenue (PSAK 72 / ASC 606) — % completion via mandays burn
+  const burnRatePct =
+    project.plannedMandays > 0
+      ? Math.min((actualMandays / project.plannedMandays) * 100, 100)
+      : 0;
+  const recognizedRevenue = (burnRatePct / 100) * revenueNet;
+
+  // Accrued cost: include submitted-pending-approval labor + all expenses
+  const accruedCost = accruedResourceCost + additionalCost;
+
+  // Net (fully-loaded) cost via overhead loader
+  const overheadMultiplier = getOverheadMultiplier();
+  const loadedResourceCost = resourceCost * overheadMultiplier;
+  const netActualCost = loadedResourceCost + additionalCost;
+  const netActualProfit = revenueNet - netActualCost;
+  const netMarginPct =
+    revenueNet > 0 ? (netActualProfit / revenueNet) * 100 : 0;
+
   return {
     actualMandays,
     resourceCost,
@@ -61,6 +112,18 @@ export function computeMetrics(project: ProjectWithRelations): ProjectMetrics {
     actualProfit,
     marginPct,
     estimatedProfit,
+    burnRatePct,
+    recognizedRevenue,
+    accruedCost,
+    overheadMultiplier,
+    loadedResourceCost,
+    netActualCost,
+    netActualProfit,
+    netMarginPct,
+    vatPercent,
+    contractValueIncludesVat,
+    revenueNet,
+    vatAmount,
   };
 }
 
@@ -108,6 +171,17 @@ export function serializeProject(project: ProjectWithRelations, callerRole?: str
         additionalCost: m.additionalCost,
         actualProfit: m.actualProfit,
         marginPct: m.marginPct,
+        vatPercent: m.vatPercent,
+        contractValueIncludesVat: m.contractValueIncludesVat,
+        revenueNet: m.revenueNet,
+        vatAmount: m.vatAmount,
+        recognizedRevenue: m.recognizedRevenue,
+        accruedCost: m.accruedCost,
+        loadedResourceCost: m.loadedResourceCost,
+        netActualCost: m.netActualCost,
+        netActualProfit: m.netActualProfit,
+        netMarginPct: m.netMarginPct,
+        overheadMultiplier: m.overheadMultiplier,
       }
     : {
         contractValue: 0,
@@ -118,6 +192,17 @@ export function serializeProject(project: ProjectWithRelations, callerRole?: str
         additionalCost: 0,
         actualProfit: 0,
         marginPct: 0,
+        vatPercent: 0,
+        contractValueIncludesVat: true,
+        revenueNet: 0,
+        vatAmount: 0,
+        recognizedRevenue: 0,
+        accruedCost: 0,
+        loadedResourceCost: 0,
+        netActualCost: 0,
+        netActualProfit: 0,
+        netMarginPct: 0,
+        overheadMultiplier: 1,
       };
   return {
     id: project.id,

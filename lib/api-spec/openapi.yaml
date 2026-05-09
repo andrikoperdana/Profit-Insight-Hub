@@ -1000,6 +1000,17 @@ components:
         startDate: { type: string, nullable: true }
         endDate: { type: string, nullable: true }
         contractValue: { type: number }
+        vatPercent: { type: number }
+        contractValueIncludesVat: { type: boolean }
+        revenueNet: { type: number }
+        vatAmount: { type: number }
+        recognizedRevenue: { type: number }
+        accruedCost: { type: number }
+        loadedResourceCost: { type: number }
+        netActualCost: { type: number }
+        netActualProfit: { type: number }
+        netMarginPct: { type: number }
+        overheadMultiplier: { type: number }
         estimatedCost: { type: number }
         estimatedProfit: { type: number }
         plannedMandays: { type: number }
@@ -1072,6 +1083,8 @@ components:
         startDate: { type: string }
         endDate: { type: string }
         contractValue: { type: number }
+        vatPercent: { type: number, description: "PPN percent (default 11)" }
+        contractValueIncludesVat: { type: boolean, description: "If true, contractValue is gross including PPN; otherwise net (DPP)" }
         estimatedCost: { type: number }
         plannedMandays: { type: number }
         spkFileUrl: { type: string, nullable: true }
@@ -1095,6 +1108,8 @@ components:
         startDate: { type: string }
         endDate: { type: string }
         contractValue: { type: number }
+        vatPercent: { type: number }
+        contractValueIncludesVat: { type: boolean }
         estimatedCost: { type: number }
         plannedMandays: { type: number }
         spkFileUrl: { type: string, nullable: true }
@@ -1240,6 +1255,17 @@ components:
         plannedMandays: { type: number }
         actualMandays: { type: number }
         burnRatePct: { type: number }
+        vatPercent: { type: number }
+        contractValueIncludesVat: { type: boolean }
+        revenueNet: { type: number }
+        vatAmount: { type: number }
+        recognizedRevenue: { type: number }
+        accruedCost: { type: number }
+        loadedResourceCost: { type: number }
+        netActualCost: { type: number }
+        netActualProfit: { type: number }
+        netMarginPct: { type: number }
+        overheadMultiplier: { type: number }
         monthly:
           type: array
           items: { $ref: "#/components/schemas/MonthlyFinancialPoint" }
@@ -1259,9 +1285,16 @@ components:
         totalProjects: { type: number }
         activeProjects: { type: number }
         totalContractValue: { type: number }
+        totalRevenueNet: { type: number }
         totalActualCost: { type: number }
         totalActualProfit: { type: number }
-        avgMarginPct: { type: number }
+        totalNetActualCost: { type: number }
+        totalNetActualProfit: { type: number }
+        totalRecognizedRevenue: { type: number }
+        totalAccruedCost: { type: number }
+        avgMarginPct: { type: number, description: "Simple unweighted average of project margins (legacy)" }
+        weightedMarginPct: { type: number, description: "Σ profit / Σ revenue × 100 (portfolio-weighted)" }
+        weightedNetMarginPct: { type: number, description: "Weighted margin using net revenue (DPP) and overhead-loaded cost" }
         pendingTimesheets: { type: number }
         totalMandays: { type: number }
 

@@ -70,6 +70,8 @@ const salesIntakeSchema = z.object({
   name: z.string().min(3, "Project name is required"),
   clientId: z.string().min(1, "Select a client"),
   contractValue: z.coerce.number().min(0, "Project value cannot be negative"),
+  vatPercent: z.coerce.number().min(0).max(100),
+  contractValueIncludesVat: z.boolean(),
 });
 type SalesIntake = z.infer<typeof salesIntakeSchema>;
 
@@ -99,7 +101,7 @@ function SalesIntakeForm() {
 
   const form = useForm<SalesIntake>({
     resolver: zodResolver(salesIntakeSchema),
-    defaultValues: { code: "", name: "", clientId: "", contractValue: 0 },
+    defaultValues: { code: "", name: "", clientId: "", contractValue: 0, vatPercent: 11, contractValueIncludesVat: true },
   });
 
   const [spkFile, setSpkFile] = useState<{ url: string; name: string } | null>(null);
@@ -112,6 +114,8 @@ function SalesIntakeForm() {
         name: data.name,
         clientId: data.clientId,
         contractValue: data.contractValue,
+        vatPercent: data.vatPercent,
+        contractValueIncludesVat: data.contractValueIncludesVat,
         status: ProjectStatus.DRAFT,
         spkFileUrl: spkFile?.url ?? null,
         spkFileName: spkFile?.name ?? null,
@@ -120,6 +124,12 @@ function SalesIntakeForm() {
       },
     });
   };
+
+  const watchedCv = Number(form.watch("contractValue") || 0);
+  const watchedVat = Number(form.watch("vatPercent") || 0);
+  const watchedIncludes = form.watch("contractValueIncludesVat");
+  const dppPreview = watchedIncludes ? watchedCv / (1 + watchedVat / 100) : watchedCv;
+  const ppnPreview = watchedIncludes ? watchedCv - dppPreview : watchedCv * (watchedVat / 100);
 
   if (loadingClients) return <LoadingPage />;
 
@@ -209,6 +219,48 @@ function SalesIntakeForm() {
                   </FormItem>
                 )}
               />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <FormField
+                  control={form.control}
+                  name="vatPercent"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>PPN / VAT (%)</FormLabel>
+                      <FormControl>
+                        <Input type="number" min={0} max={100} step={0.5} className="font-mono" data-testid="input-intake-vat-percent" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="contractValueIncludesVat"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Project Value type</FormLabel>
+                      <Select
+                        onValueChange={(v) => field.onChange(v === "incl")}
+                        value={field.value ? "incl" : "excl"}
+                      >
+                        <FormControl>
+                          <SelectTrigger data-testid="select-intake-vat-type"><SelectValue /></SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="incl">Includes PPN (gross)</SelectItem>
+                          <SelectItem value="excl">Excludes PPN (DPP / net)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="rounded-md border border-border bg-muted/30 p-3 text-xs space-y-1">
+                  <p className="text-muted-foreground uppercase tracking-wide">Breakdown</p>
+                  <p className="font-mono">DPP: {formatIDR(dppPreview)}</p>
+                  <p className="font-mono text-muted-foreground">PPN: {formatIDR(ppnPreview)}</p>
+                </div>
+              </div>
               <PdfUploadField
                 label="SPK / PO File (PDF)"
                 fileName={spkFile?.name ?? null}
@@ -261,6 +313,8 @@ const createProjectSchema = z.object({
   startDate: z.string().optional(),
   endDate: z.string().optional(),
   contractValue: z.coerce.number().min(0, "Revenue must be >= 0"),
+  vatPercent: z.coerce.number().min(0).max(100),
+  contractValueIncludesVat: z.boolean(),
   resources: z.array(resourceRowSchema).min(1, "Add at least one resource requirement"),
 });
 
@@ -297,6 +351,8 @@ function FullProjectForm() {
       startDate: "",
       endDate: "",
       contractValue: 0,
+      vatPercent: 11,
+      contractValueIncludesVat: true,
       resources: [{ role: "KONSULTAN", headcount: 1, mandaysPerPerson: 10, dailyRate: ROLE_RATES.KONSULTAN.rate }],
     },
   });
@@ -338,6 +394,8 @@ function FullProjectForm() {
         startDate: data.startDate || undefined,
         endDate: data.endDate || undefined,
         contractValue: data.contractValue,
+        vatPercent: data.vatPercent,
+        contractValueIncludesVat: data.contractValueIncludesVat,
         estimatedCost: totals.cost,
         plannedMandays: totals.mandays,
         spkFileUrl: spkFile?.url ?? null,
@@ -423,6 +481,34 @@ function FullProjectForm() {
                   <FormItem>
                     <FormLabel>Selling Price to Client / Revenue (IDR) *</FormLabel>
                     <FormControl><Input type="number" placeholder="0" {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="vatPercent"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>PPN / VAT (%)</FormLabel>
+                    <FormControl><Input type="number" min={0} max={100} step={0.5} {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="contractValueIncludesVat"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Revenue type</FormLabel>
+                    <Select onValueChange={(v) => field.onChange(v === "incl")} value={field.value ? "incl" : "excl"}>
+                      <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                      <SelectContent>
+                        <SelectItem value="incl">Includes PPN (gross)</SelectItem>
+                        <SelectItem value="excl">Excludes PPN (DPP)</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}

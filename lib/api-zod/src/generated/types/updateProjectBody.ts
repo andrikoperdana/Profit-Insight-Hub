@@ -21,6 +21,8 @@ export interface UpdateProjectBody {
   startDate?: string;
   endDate?: string;
   contractValue?: number;
+  vatPercent?: number;
+  contractValueIncludesVat?: boolean;
   estimatedCost?: number;
   plannedMandays?: number;
   spkFileUrl?: string | null;

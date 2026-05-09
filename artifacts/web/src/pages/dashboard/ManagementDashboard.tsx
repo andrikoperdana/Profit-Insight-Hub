@@ -116,6 +116,13 @@ export default function Dashboard() {
           TotalActualCost: summary.totalActualCost,
           TotalActualProfit: summary.totalActualProfit,
           AvgMarginPct: Number((summary.avgMarginPct ?? 0).toFixed(2)),
+          WeightedMarginPct: Number(((summary as any).weightedMarginPct ?? 0).toFixed(2)),
+          WeightedNetMarginPct: Number(((summary as any).weightedNetMarginPct ?? 0).toFixed(2)),
+          TotalRevenueNet: (summary as any).totalRevenueNet ?? 0,
+          TotalRecognizedRevenue: (summary as any).totalRecognizedRevenue ?? 0,
+          TotalAccruedCost: (summary as any).totalAccruedCost ?? 0,
+          TotalNetActualCost: (summary as any).totalNetActualCost ?? 0,
+          TotalNetActualProfit: (summary as any).totalNetActualProfit ?? 0,
           PendingTimesheets: summary.pendingTimesheets,
           TotalMandays: Number((summary.totalMandays ?? 0).toFixed(2)),
         }]
@@ -199,12 +206,14 @@ export default function Dashboard() {
             </Card>
             <Card className="border-border shadow-sm">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Average Margin</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">Weighted Margin</CardTitle>
                 <TrendingUp className="h-4 w-4 text-primary" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-foreground">{formatPct(summary.avgMarginPct)}</div>
-                <p className="text-xs text-muted-foreground mt-1">Across all active</p>
+                <div className="text-2xl font-bold text-foreground">{formatPct((summary as any).weightedMarginPct ?? summary.avgMarginPct)}</div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Σ profit ÷ Σ revenue · Net {formatPct((summary as any).weightedNetMarginPct ?? 0)}
+                </p>
               </CardContent>
             </Card>
             <Card className="border-border shadow-sm">

@@ -105,37 +105,39 @@ model Client {
 }
 
 model Project {
-  id                String        @id @default(cuid())
-  code              String        @unique
-  name              String
-  description       String?
-  status            ProjectStatus @default(OBSERVATION)
-  clientId          String
-  client            Client        @relation(fields: [clientId], references: [id])
-  salesId           String?
-  sales             User?         @relation("ProjectSales", fields: [salesId], references: [id])
-  pmId              String?
-  pm                User?         @relation("ProjectPm", fields: [pmId], references: [id])
-  technicalWriterId String?
-  technicalWriter   User?         @relation("ProjectTechWriter", fields: [technicalWriterId], references: [id])
-  adminProjectId    String?
-  adminProject      User?         @relation("ProjectAdmin", fields: [adminProjectId], references: [id])
-  startDate         DateTime?
-  endDate           DateTime?
-  contractValue     Float         @default(0)
-  estimatedCost     Float         @default(0)
-  plannedMandays    Float         @default(0)
-  lastStatusReason  String?
-  reportCoverUrl    String?       @db.Text
-  reportLink        String?       @db.Text
-  reportSubmittedAt DateTime?
-  spkFileUrl        String?       @db.Text
-  spkFileName       String?
-  contractFileUrl   String?       @db.Text
-  contractFileName  String?
-  deletedAt         DateTime?
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
+  id                       String        @id @default(cuid())
+  code                     String        @unique
+  name                     String
+  description              String?
+  status                   ProjectStatus @default(OBSERVATION)
+  clientId                 String
+  client                   Client        @relation(fields: [clientId], references: [id])
+  salesId                  String?
+  sales                    User?         @relation("ProjectSales", fields: [salesId], references: [id])
+  pmId                     String?
+  pm                       User?         @relation("ProjectPm", fields: [pmId], references: [id])
+  technicalWriterId        String?
+  technicalWriter          User?         @relation("ProjectTechWriter", fields: [technicalWriterId], references: [id])
+  adminProjectId           String?
+  adminProject             User?         @relation("ProjectAdmin", fields: [adminProjectId], references: [id])
+  startDate                DateTime?
+  endDate                  DateTime?
+  contractValue            Float         @default(0)
+  vatPercent               Float         @default(11)
+  contractValueIncludesVat Boolean       @default(true)
+  estimatedCost            Float         @default(0)
+  plannedMandays           Float         @default(0)
+  lastStatusReason         String?
+  reportCoverUrl           String?       @db.Text
+  reportLink               String?       @db.Text
+  reportSubmittedAt        DateTime?
+  spkFileUrl               String?       @db.Text
+  spkFileName              String?
+  contractFileUrl          String?       @db.Text
+  contractFileName         String?
+  deletedAt                DateTime?
+  createdAt                DateTime      @default(now())
+  updatedAt                DateTime      @updatedAt
 
   surveyToken     String?           @unique
   resources       ProjectResource[]

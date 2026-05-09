@@ -10,9 +10,19 @@ export interface DashboardSummary {
   totalProjects: number;
   activeProjects: number;
   totalContractValue: number;
+  totalRevenueNet?: number;
   totalActualCost: number;
   totalActualProfit: number;
+  totalNetActualCost?: number;
+  totalNetActualProfit?: number;
+  totalRecognizedRevenue?: number;
+  totalAccruedCost?: number;
+  /** Simple unweighted average of project margins (legacy) */
   avgMarginPct: number;
+  /** Σ profit / Σ revenue × 100 (portfolio-weighted) */
+  weightedMarginPct?: number;
+  /** Weighted margin using net revenue (DPP) and overhead-loaded cost */
+  weightedNetMarginPct?: number;
   pendingTimesheets: number;
   totalMandays: number;
 }

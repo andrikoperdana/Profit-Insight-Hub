@@ -886,6 +886,8 @@ function DraftCompletionCard({ project }: { project: any }) {
   const [startDate, setStartDate] = useState<string>(project.startDate ? project.startDate.slice(0, 10) : "");
   const [endDate, setEndDate] = useState<string>(project.endDate ? project.endDate.slice(0, 10) : "");
   const [contractValue, setContractValue] = useState<string>(String(project.contractValue ?? 0));
+  const [vatPercent, setVatPercent] = useState<string>(String(project.vatPercent ?? 11));
+  const [contractValueIncludesVat, setContractValueIncludesVat] = useState<boolean>(project.contractValueIncludesVat ?? true);
   const [plannedMandays, setPlannedMandays] = useState<string>(String(project.plannedMandays ?? 0));
   const [estimatedCost, setEstimatedCost] = useState<string>(String(project.estimatedCost ?? 0));
 
@@ -916,6 +918,11 @@ function DraftCompletionCard({ project }: { project: any }) {
       });
       return;
     }
+    const vp = Number(vatPercent);
+    if (!isFinite(vp) || vp < 0 || vp > 100) {
+      toast({ variant: "destructive", title: "Invalid VAT", description: "VAT (PPN) percent must be between 0 and 100." });
+      return;
+    }
     update.mutate({
       id: project.id,
       data: {
@@ -923,6 +930,8 @@ function DraftCompletionCard({ project }: { project: any }) {
         startDate: startDate || undefined,
         endDate: endDate || undefined,
         contractValue: cv,
+        vatPercent: vp,
+        contractValueIncludesVat,
         estimatedCost: ec,
         plannedMandays: pm,
         ...(promoteToObservation ? { status: ProjectStatus.OBSERVATION } : {}),
@@ -962,6 +971,20 @@ function DraftCompletionCard({ project }: { project: any }) {
           <div>
             <Label htmlFor="draft-revenue">Revenue / Selling Price (IDR) *</Label>
             <Input id="draft-revenue" type="number" min={0} value={contractValue} onChange={(e) => setContractValue(e.target.value)} className="mt-1 font-mono" data-testid="input-draft-revenue" />
+          </div>
+          <div>
+            <Label htmlFor="draft-vat">PPN / VAT (%)</Label>
+            <Input id="draft-vat" type="number" min={0} max={100} step="0.5" value={vatPercent} onChange={(e) => setVatPercent(e.target.value)} className="mt-1 font-mono" data-testid="input-draft-vat" />
+          </div>
+          <div>
+            <Label htmlFor="draft-vat-type">Revenue type</Label>
+            <Select value={contractValueIncludesVat ? "incl" : "excl"} onValueChange={(v) => setContractValueIncludesVat(v === "incl")}>
+              <SelectTrigger id="draft-vat-type" className="mt-1" data-testid="select-draft-vat-type"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="incl">Includes PPN (gross)</SelectItem>
+                <SelectItem value="excl">Excludes PPN (DPP)</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div>
             <Label htmlFor="draft-mandays">Planned Mandays *</Label>
@@ -1759,6 +1782,8 @@ function OverviewTab({ project }: { project: any }) {
     startDate: project.startDate ? String(project.startDate).slice(0, 10) : "",
     endDate: project.endDate ? String(project.endDate).slice(0, 10) : "",
     contractValue: String(project.contractValue ?? 0),
+    vatPercent: String(project.vatPercent ?? 11),
+    contractValueIncludesVat: project.contractValueIncludesVat ?? true,
     estimatedCost: String(project.estimatedCost ?? 0),
     plannedMandays: String(project.plannedMandays ?? 0),
   });
@@ -1799,6 +1824,8 @@ function OverviewTab({ project }: { project: any }) {
       startDate: project.startDate ? String(project.startDate).slice(0, 10) : "",
       endDate: project.endDate ? String(project.endDate).slice(0, 10) : "",
       contractValue: String(project.contractValue ?? 0),
+      vatPercent: String(project.vatPercent ?? 11),
+      contractValueIncludesVat: project.contractValueIncludesVat ?? true,
       estimatedCost: String(project.estimatedCost ?? 0),
       plannedMandays: String(project.plannedMandays ?? 0),
     });
@@ -1846,16 +1873,29 @@ function OverviewTab({ project }: { project: any }) {
   }
 
   function confirmAndSave() {
+    const vp = Number(form.vatPercent);
+    if (!isFinite(vp) || vp < 0 || vp > 100) {
+      toast({
+        variant: "destructive",
+        title: "Invalid VAT",
+        description: "VAT (PPN) percent must be a number between 0 and 100.",
+      });
+      return;
+    }
     const data: Record<string, unknown> = isSalesDraftEdit
       ? {
           description: form.description.trim() || null,
           contractValue: Number(form.contractValue),
+          vatPercent: vp,
+          contractValueIncludesVat: form.contractValueIncludesVat,
         }
       : {
           description: form.description.trim() || null,
           startDate: form.startDate || undefined,
           endDate: form.endDate || undefined,
           contractValue: Number(form.contractValue),
+          vatPercent: vp,
+          contractValueIncludesVat: form.contractValueIncludesVat,
           estimatedCost: Number(form.estimatedCost),
           plannedMandays: Number(form.plannedMandays),
         };
@@ -2101,6 +2141,35 @@ function OverviewTab({ project }: { project: any }) {
                     data-testid="input-overview-revenue"
                   />
                 </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <Label htmlFor="ov-vat">PPN / VAT (%)</Label>
+                    <Input
+                      id="ov-vat"
+                      type="number"
+                      min={0}
+                      max={100}
+                      step="0.5"
+                      value={form.vatPercent}
+                      onChange={(e) => setForm({ ...form, vatPercent: e.target.value })}
+                      className="mt-1 font-mono"
+                      data-testid="input-overview-vat"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="ov-vat-type">Revenue type</Label>
+                    <Select
+                      value={form.contractValueIncludesVat ? "incl" : "excl"}
+                      onValueChange={(v) => setForm({ ...form, contractValueIncludesVat: v === "incl" })}
+                    >
+                      <SelectTrigger id="ov-vat-type" className="mt-1" data-testid="select-overview-vat-type"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="incl">Includes PPN (gross)</SelectItem>
+                        <SelectItem value="excl">Excludes PPN (DPP)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
                 {!isSalesDraftEdit && (
                   <>
                     <div>
@@ -2197,6 +2266,10 @@ function OverviewTab({ project }: { project: any }) {
                       : "Not set"
                   } />
                   <ConfirmRow label="Revenue" value={formatIDR(Number(form.contractValue) || 0)} />
+                  <ConfirmRow
+                    label="PPN"
+                    value={`${Number(form.vatPercent || 0)}% · ${form.contractValueIncludesVat ? "Includes PPN (gross)" : "Excludes PPN (DPP)"}`}
+                  />
                   <ConfirmRow label="Estimated Cost" value={formatIDR(Number(form.estimatedCost) || 0)} />
                   <ConfirmRow label="Planned Mandays" value={(Number(form.plannedMandays) || 0).toFixed(1)} />
                   <ConfirmRow label="Description" value={form.description.trim() || "—"} multiline />
@@ -2254,9 +2327,25 @@ function FinancialsTab({ projectId }: { projectId: string }) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <FinancialCard
           icon={<DollarSign className="h-4 w-4 text-primary" />}
-          label="Revenue"
+          label="Revenue (Gross)"
           value={formatIDR(f.contractValue)}
-          subtitle="Contract value (Selling Price)"
+          subtitle={
+            f.contractValueIncludesVat
+              ? `Includes PPN ${(f.vatPercent ?? 0)}%`
+              : `Excludes PPN ${(f.vatPercent ?? 0)}%`
+          }
+        />
+        <FinancialCard
+          icon={<DollarSign className="h-4 w-4 text-primary" />}
+          label="Revenue Net (DPP)"
+          value={formatIDR(f.revenueNet ?? f.contractValue)}
+          subtitle={`PPN: ${formatIDR(f.vatAmount ?? 0)} (PSAK 72 base)`}
+        />
+        <FinancialCard
+          icon={<Activity className="h-4 w-4 text-primary" />}
+          label="Recognized Revenue"
+          value={formatIDR(f.recognizedRevenue ?? 0)}
+          subtitle={`PoC ${(f.burnRatePct ?? 0).toFixed(1)}% × Net Revenue (PSAK 72 / ASC 606)`}
         />
         <FinancialCard
           icon={<Activity className="h-4 w-4 text-muted-foreground" />}
@@ -2268,14 +2357,34 @@ function FinancialsTab({ projectId }: { projectId: string }) {
           icon={<Activity className="h-4 w-4 text-amber-500" />}
           label="Actual Cost"
           value={formatIDR(f.actualCost ?? 0)}
-          subtitle="From approved timesheets × rate"
+          subtitle="From approved timesheets × rate + expenses"
+        />
+        <FinancialCard
+          icon={<Activity className="h-4 w-4 text-amber-500" />}
+          label="Accrued Cost"
+          value={formatIDR(f.accruedCost ?? 0)}
+          subtitle="Includes SUBMITTED + APPROVED timesheets"
         />
         <FinancialCard
           icon={profitPositive ? <TrendingUp className="h-4 w-4 text-primary" /> : <TrendingDown className="h-4 w-4 text-destructive" />}
           label="Actual Profit / Loss"
           value={formatIDR(f.actualProfit ?? 0)}
-          subtitle={`${formatPct(f.marginPct ?? 0)} margin`}
+          subtitle={`${formatPct(f.marginPct ?? 0)} gross margin`}
           tone={profitPositive ? "good" : "bad"}
+        />
+        <FinancialCard
+          icon={(f.netActualProfit ?? 0) >= 0 ? <TrendingUp className="h-4 w-4 text-primary" /> : <TrendingDown className="h-4 w-4 text-destructive" />}
+          label="Net Profit (after overhead)"
+          value={formatIDR(f.netActualProfit ?? 0)}
+          subtitle={`Loaded cost: ${formatIDR(f.netActualCost ?? 0)} (overhead ×${(f.overheadMultiplier ?? 1).toFixed(2)})`}
+          tone={(f.netActualProfit ?? 0) >= 0 ? "good" : "bad"}
+        />
+        <FinancialCard
+          icon={(f.netMarginPct ?? 0) >= 0 ? <TrendingUp className="h-4 w-4 text-primary" /> : <TrendingDown className="h-4 w-4 text-destructive" />}
+          label="Net Margin"
+          value={formatPct(f.netMarginPct ?? 0)}
+          subtitle={`Net profit ÷ DPP · overhead ×${(f.overheadMultiplier ?? 1).toFixed(2)}`}
+          tone={(f.netMarginPct ?? 0) >= 0 ? "good" : "bad"}
         />
         <FinancialCard
           icon={forecastPositive ? <TrendingUp className="h-4 w-4 text-primary" /> : <TrendingDown className="h-4 w-4 text-destructive" />}
@@ -2293,9 +2402,9 @@ function FinancialsTab({ projectId }: { projectId: string }) {
         />
         <FinancialCard
           icon={(f.marginPct ?? 0) >= 0 ? <TrendingUp className="h-4 w-4 text-primary" /> : <TrendingDown className="h-4 w-4 text-destructive" />}
-          label="Profit Margin"
+          label="Gross Margin"
           value={formatPct(f.marginPct ?? 0)}
-          subtitle="Actual profit ÷ revenue"
+          subtitle="Actual profit ÷ gross revenue"
           tone={(f.marginPct ?? 0) >= 0 ? "good" : "bad"}
         />
       </div>

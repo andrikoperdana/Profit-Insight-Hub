@@ -284,6 +284,17 @@ router.post("/projects", requireRole(...writeRoles), async (req, res) => {
     res.status(400).json({ error: "contractValue, estimatedCost, plannedMandays must be non-negative" });
     return;
   }
+  let vatPercent = 11;
+  if (b.vatPercent !== undefined && b.vatPercent !== null && b.vatPercent !== "") {
+    const v = Number(b.vatPercent);
+    if (!Number.isFinite(v) || v < 0 || v > 100) {
+      res.status(400).json({ error: "vatPercent must be a number between 0 and 100" });
+      return;
+    }
+    vatPercent = v;
+  }
+  const contractValueIncludesVat =
+    b.contractValueIncludesVat === undefined ? true : Boolean(b.contractValueIncludesVat);
   // Sales-role submissions are always DRAFT, owned by the submitting Sales,
   // and cannot pre-assign a PM. PMO Director assigns the PM later.
   const isSales = req.user!.role === "SALES";
@@ -324,6 +335,8 @@ router.post("/projects", requireRole(...writeRoles), async (req, res) => {
       startDate,
       endDate,
       contractValue: Number(b.contractValue || 0),
+      vatPercent,
+      contractValueIncludesVat,
       estimatedCost: Number(b.estimatedCost || 0),
       plannedMandays: Number(b.plannedMandays || 0),
       spkFileUrl,
@@ -372,6 +385,7 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
   // Sales intake form (DRAFT only) — limited to the intake fields.
   const SALES_DRAFT_ALLOWED = new Set([
     "code", "name", "description", "clientId", "contractValue",
+    "vatPercent", "contractValueIncludesVat",
     "spkFileUrl", "spkFileName", "contractFileUrl", "contractFileName",
   ]);
   // Sales editing the Overview of an in-flight project (own project, any status):
@@ -526,6 +540,17 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
     data.endDate = d;
   }
   if (b.contractValue !== undefined) data.contractValue = Number(b.contractValue);
+  if (b.vatPercent !== undefined && b.vatPercent !== null && b.vatPercent !== "") {
+    const v = Number(b.vatPercent);
+    if (!Number.isFinite(v) || v < 0 || v > 100) {
+      res.status(400).json({ error: "vatPercent must be a number between 0 and 100" });
+      return;
+    }
+    data.vatPercent = v;
+  }
+  if (b.contractValueIncludesVat !== undefined) {
+    data.contractValueIncludesVat = Boolean(b.contractValueIncludesVat);
+  }
   if (b.estimatedCost !== undefined) data.estimatedCost = Number(b.estimatedCost);
   if (b.plannedMandays !== undefined)
     data.plannedMandays = Number(b.plannedMandays);
@@ -794,8 +819,7 @@ router.get("/projects/:id/financials", async (req, res) => {
   }
   const m = computeMetrics(p);
 
-  const burnRatePct =
-    p.plannedMandays > 0 ? (m.actualMandays / p.plannedMandays) * 100 : 0;
+  const burnRatePct = m.burnRatePct;
 
   // Forecast: linear projection — if you've burned X% of mandays,
   // assume cost scales to fully consume planned mandays at current rate.
@@ -829,8 +853,12 @@ router.get("/projects/:id/financials", async (req, res) => {
   }
   // Spread revenue evenly across project months for chart purposes
   const months = Array.from(monthlyMap.keys()).sort();
-  const perMonthRev =
-    months.length > 0 ? p.contractValue / months.length : 0;
+  const vatPct = (p as any).vatPercent ?? 11;
+  const includesVat = (p as any).contractValueIncludesVat ?? true;
+  const revenueNet = includesVat
+    ? p.contractValue / (1 + vatPct / 100)
+    : p.contractValue;
+  const perMonthRev = months.length > 0 ? revenueNet / months.length : 0;
   const monthly = months.map((month) => ({
     month,
     cost: monthlyMap.get(month)!.cost,
@@ -850,6 +878,17 @@ router.get("/projects/:id/financials", async (req, res) => {
     plannedMandays: p.plannedMandays,
     actualMandays: m.actualMandays,
     burnRatePct,
+    vatPercent: m.vatPercent,
+    contractValueIncludesVat: m.contractValueIncludesVat,
+    revenueNet: m.revenueNet,
+    vatAmount: m.vatAmount,
+    recognizedRevenue: m.recognizedRevenue,
+    accruedCost: m.accruedCost,
+    loadedResourceCost: m.loadedResourceCost,
+    netActualCost: m.netActualCost,
+    netActualProfit: m.netActualProfit,
+    netMarginPct: m.netMarginPct,
+    overheadMultiplier: m.overheadMultiplier,
     monthly,
   });
 });

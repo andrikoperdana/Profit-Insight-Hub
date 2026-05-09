@@ -18,6 +18,10 @@ export interface CreateProjectBody {
   startDate?: string;
   endDate?: string;
   contractValue?: number;
+  /** PPN percent (default 11) */
+  vatPercent?: number;
+  /** If true, contractValue is gross including PPN; otherwise net (DPP) */
+  contractValueIncludesVat?: boolean;
   estimatedCost?: number;
   plannedMandays?: number;
   spkFileUrl?: string | null;

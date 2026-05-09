@@ -4906,12 +4906,14 @@ export namespace Prisma {
 
   export type ProjectAvgAggregateOutputType = {
     contractValue: number | null
+    vatPercent: number | null
     estimatedCost: number | null
     plannedMandays: number | null
   }
 
   export type ProjectSumAggregateOutputType = {
     contractValue: number | null
+    vatPercent: number | null
     estimatedCost: number | null
     plannedMandays: number | null
   }
@@ -4930,6 +4932,8 @@ export namespace Prisma {
     startDate: Date | null
     endDate: Date | null
     contractValue: number | null
+    vatPercent: number | null
+    contractValueIncludesVat: boolean | null
     estimatedCost: number | null
     plannedMandays: number | null
     lastStatusReason: string | null
@@ -4960,6 +4964,8 @@ export namespace Prisma {
     startDate: Date | null
     endDate: Date | null
     contractValue: number | null
+    vatPercent: number | null
+    contractValueIncludesVat: boolean | null
     estimatedCost: number | null
     plannedMandays: number | null
     lastStatusReason: string | null
@@ -4990,6 +4996,8 @@ export namespace Prisma {
     startDate: number
     endDate: number
     contractValue: number
+    vatPercent: number
+    contractValueIncludesVat: number
     estimatedCost: number
     plannedMandays: number
     lastStatusReason: number
@@ -5010,12 +5018,14 @@ export namespace Prisma {
 
   export type ProjectAvgAggregateInputType = {
     contractValue?: true
+    vatPercent?: true
     estimatedCost?: true
     plannedMandays?: true
   }
 
   export type ProjectSumAggregateInputType = {
     contractValue?: true
+    vatPercent?: true
     estimatedCost?: true
     plannedMandays?: true
   }
@@ -5034,6 +5044,8 @@ export namespace Prisma {
     startDate?: true
     endDate?: true
     contractValue?: true
+    vatPercent?: true
+    contractValueIncludesVat?: true
     estimatedCost?: true
     plannedMandays?: true
     lastStatusReason?: true
@@ -5064,6 +5076,8 @@ export namespace Prisma {
     startDate?: true
     endDate?: true
     contractValue?: true
+    vatPercent?: true
+    contractValueIncludesVat?: true
     estimatedCost?: true
     plannedMandays?: true
     lastStatusReason?: true
@@ -5094,6 +5108,8 @@ export namespace Prisma {
     startDate?: true
     endDate?: true
     contractValue?: true
+    vatPercent?: true
+    contractValueIncludesVat?: true
     estimatedCost?: true
     plannedMandays?: true
     lastStatusReason?: true
@@ -5211,6 +5227,8 @@ export namespace Prisma {
     startDate: Date | null
     endDate: Date | null
     contractValue: number
+    vatPercent: number
+    contractValueIncludesVat: boolean
     estimatedCost: number
     plannedMandays: number
     lastStatusReason: string | null
@@ -5260,6 +5278,8 @@ export namespace Prisma {
     startDate?: boolean
     endDate?: boolean
     contractValue?: boolean
+    vatPercent?: boolean
+    contractValueIncludesVat?: boolean
     estimatedCost?: boolean
     plannedMandays?: boolean
     lastStatusReason?: boolean
@@ -5303,6 +5323,8 @@ export namespace Prisma {
     startDate?: boolean
     endDate?: boolean
     contractValue?: boolean
+    vatPercent?: boolean
+    contractValueIncludesVat?: boolean
     estimatedCost?: boolean
     plannedMandays?: boolean
     lastStatusReason?: boolean
@@ -5338,6 +5360,8 @@ export namespace Prisma {
     startDate?: boolean
     endDate?: boolean
     contractValue?: boolean
+    vatPercent?: boolean
+    contractValueIncludesVat?: boolean
     estimatedCost?: boolean
     plannedMandays?: boolean
     lastStatusReason?: boolean
@@ -5407,6 +5431,8 @@ export namespace Prisma {
       startDate: Date | null
       endDate: Date | null
       contractValue: number
+      vatPercent: number
+      contractValueIncludesVat: boolean
       estimatedCost: number
       plannedMandays: number
       lastStatusReason: string | null
@@ -5839,6 +5865,8 @@ export namespace Prisma {
     readonly startDate: FieldRef<"Project", 'DateTime'>
     readonly endDate: FieldRef<"Project", 'DateTime'>
     readonly contractValue: FieldRef<"Project", 'Float'>
+    readonly vatPercent: FieldRef<"Project", 'Float'>
+    readonly contractValueIncludesVat: FieldRef<"Project", 'Boolean'>
     readonly estimatedCost: FieldRef<"Project", 'Float'>
     readonly plannedMandays: FieldRef<"Project", 'Float'>
     readonly lastStatusReason: FieldRef<"Project", 'String'>
@@ -17655,6 +17683,8 @@ export namespace Prisma {
     startDate: 'startDate',
     endDate: 'endDate',
     contractValue: 'contractValue',
+    vatPercent: 'vatPercent',
+    contractValueIncludesVat: 'contractValueIncludesVat',
     estimatedCost: 'estimatedCost',
     plannedMandays: 'plannedMandays',
     lastStatusReason: 'lastStatusReason',
@@ -18281,6 +18311,8 @@ export namespace Prisma {
     startDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     endDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     contractValue?: FloatFilter<"Project"> | number
+    vatPercent?: FloatFilter<"Project"> | number
+    contractValueIncludesVat?: BoolFilter<"Project"> | boolean
     estimatedCost?: FloatFilter<"Project"> | number
     plannedMandays?: FloatFilter<"Project"> | number
     lastStatusReason?: StringNullableFilter<"Project"> | string | null
@@ -18323,6 +18355,8 @@ export namespace Prisma {
     startDate?: SortOrderInput | SortOrder
     endDate?: SortOrderInput | SortOrder
     contractValue?: SortOrder
+    vatPercent?: SortOrder
+    contractValueIncludesVat?: SortOrder
     estimatedCost?: SortOrder
     plannedMandays?: SortOrder
     lastStatusReason?: SortOrderInput | SortOrder
@@ -18369,6 +18403,8 @@ export namespace Prisma {
     startDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     endDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     contractValue?: FloatFilter<"Project"> | number
+    vatPercent?: FloatFilter<"Project"> | number
+    contractValueIncludesVat?: BoolFilter<"Project"> | boolean
     estimatedCost?: FloatFilter<"Project"> | number
     plannedMandays?: FloatFilter<"Project"> | number
     lastStatusReason?: StringNullableFilter<"Project"> | string | null
@@ -18410,6 +18446,8 @@ export namespace Prisma {
     startDate?: SortOrderInput | SortOrder
     endDate?: SortOrderInput | SortOrder
     contractValue?: SortOrder
+    vatPercent?: SortOrder
+    contractValueIncludesVat?: SortOrder
     estimatedCost?: SortOrder
     plannedMandays?: SortOrder
     lastStatusReason?: SortOrderInput | SortOrder
@@ -18448,6 +18486,8 @@ export namespace Prisma {
     startDate?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     endDate?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     contractValue?: FloatWithAggregatesFilter<"Project"> | number
+    vatPercent?: FloatWithAggregatesFilter<"Project"> | number
+    contractValueIncludesVat?: BoolWithAggregatesFilter<"Project"> | boolean
     estimatedCost?: FloatWithAggregatesFilter<"Project"> | number
     plannedMandays?: FloatWithAggregatesFilter<"Project"> | number
     lastStatusReason?: StringNullableWithAggregatesFilter<"Project"> | string | null
@@ -19629,6 +19669,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -19671,6 +19713,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -19703,6 +19747,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19745,6 +19791,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19782,6 +19830,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -19807,6 +19857,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19837,6 +19889,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21225,6 +21279,8 @@ export namespace Prisma {
     startDate?: SortOrder
     endDate?: SortOrder
     contractValue?: SortOrder
+    vatPercent?: SortOrder
+    contractValueIncludesVat?: SortOrder
     estimatedCost?: SortOrder
     plannedMandays?: SortOrder
     lastStatusReason?: SortOrder
@@ -21243,6 +21299,7 @@ export namespace Prisma {
 
   export type ProjectAvgOrderByAggregateInput = {
     contractValue?: SortOrder
+    vatPercent?: SortOrder
     estimatedCost?: SortOrder
     plannedMandays?: SortOrder
   }
@@ -21261,6 +21318,8 @@ export namespace Prisma {
     startDate?: SortOrder
     endDate?: SortOrder
     contractValue?: SortOrder
+    vatPercent?: SortOrder
+    contractValueIncludesVat?: SortOrder
     estimatedCost?: SortOrder
     plannedMandays?: SortOrder
     lastStatusReason?: SortOrder
@@ -21291,6 +21350,8 @@ export namespace Prisma {
     startDate?: SortOrder
     endDate?: SortOrder
     contractValue?: SortOrder
+    vatPercent?: SortOrder
+    contractValueIncludesVat?: SortOrder
     estimatedCost?: SortOrder
     plannedMandays?: SortOrder
     lastStatusReason?: SortOrder
@@ -21309,6 +21370,7 @@ export namespace Prisma {
 
   export type ProjectSumOrderByAggregateInput = {
     contractValue?: SortOrder
+    vatPercent?: SortOrder
     estimatedCost?: SortOrder
     plannedMandays?: SortOrder
   }
@@ -24244,6 +24306,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -24284,6 +24348,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -24326,6 +24392,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -24366,6 +24434,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -24408,6 +24478,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -24448,6 +24520,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -24490,6 +24564,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -24530,6 +24606,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -25213,6 +25291,8 @@ export namespace Prisma {
     startDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     endDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     contractValue?: FloatFilter<"Project"> | number
+    vatPercent?: FloatFilter<"Project"> | number
+    contractValueIncludesVat?: BoolFilter<"Project"> | boolean
     estimatedCost?: FloatFilter<"Project"> | number
     plannedMandays?: FloatFilter<"Project"> | number
     lastStatusReason?: StringNullableFilter<"Project"> | string | null
@@ -25619,6 +25699,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -25659,6 +25741,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -26733,6 +26817,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -26774,6 +26860,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -26821,6 +26909,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26862,6 +26952,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27041,6 +27133,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -27082,6 +27176,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -27271,6 +27367,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27312,6 +27410,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27497,6 +27597,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -27538,6 +27640,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -27727,6 +27831,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27768,6 +27874,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27953,6 +28061,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -27994,6 +28104,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -28112,6 +28224,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28153,6 +28267,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28261,6 +28377,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -28302,6 +28420,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -28420,6 +28540,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28461,6 +28583,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28640,6 +28764,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -28681,6 +28807,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -28805,6 +28933,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28846,6 +28976,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28877,6 +29009,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -28918,6 +29052,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -29135,6 +29271,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29176,6 +29314,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29779,6 +29919,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -29808,6 +29950,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -29837,6 +29981,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -29866,6 +30012,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -30197,6 +30345,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30237,6 +30387,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30273,6 +30425,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30298,6 +30452,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30338,6 +30494,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30374,6 +30532,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30399,6 +30559,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30439,6 +30601,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30475,6 +30639,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30500,6 +30666,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30540,6 +30708,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30576,6 +30746,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31041,6 +31213,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
     estimatedCost?: number
     plannedMandays?: number
     lastStatusReason?: string | null
@@ -31066,6 +31240,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31106,6 +31282,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31142,6 +31320,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
     estimatedCost?: FloatFieldUpdateOperationsInput | number
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null

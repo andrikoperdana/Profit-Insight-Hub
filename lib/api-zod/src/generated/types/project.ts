@@ -26,6 +26,17 @@ export interface Project {
   startDate?: string | null;
   endDate?: string | null;
   contractValue: number;
+  vatPercent?: number;
+  contractValueIncludesVat?: boolean;
+  revenueNet?: number;
+  vatAmount?: number;
+  recognizedRevenue?: number;
+  accruedCost?: number;
+  loadedResourceCost?: number;
+  netActualCost?: number;
+  netActualProfit?: number;
+  netMarginPct?: number;
+  overheadMultiplier?: number;
   estimatedCost: number;
   estimatedProfit: number;
   plannedMandays: number;

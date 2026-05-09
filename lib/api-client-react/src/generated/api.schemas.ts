@@ -205,6 +205,17 @@ export interface Project {
   startDate?: string | null;
   endDate?: string | null;
   contractValue: number;
+  vatPercent?: number;
+  contractValueIncludesVat?: boolean;
+  revenueNet?: number;
+  vatAmount?: number;
+  recognizedRevenue?: number;
+  accruedCost?: number;
+  loadedResourceCost?: number;
+  netActualCost?: number;
+  netActualProfit?: number;
+  netMarginPct?: number;
+  overheadMultiplier?: number;
   estimatedCost: number;
   estimatedProfit: number;
   plannedMandays: number;
@@ -318,6 +329,10 @@ export interface CreateProjectBody {
   startDate?: string;
   endDate?: string;
   contractValue?: number;
+  /** PPN percent (default 11) */
+  vatPercent?: number;
+  /** If true, contractValue is gross including PPN; otherwise net (DPP) */
+  contractValueIncludesVat?: boolean;
   estimatedCost?: number;
   plannedMandays?: number;
   spkFileUrl?: string | null;
@@ -340,6 +355,8 @@ export interface UpdateProjectBody {
   startDate?: string;
   endDate?: string;
   contractValue?: number;
+  vatPercent?: number;
+  contractValueIncludesVat?: boolean;
   estimatedCost?: number;
   plannedMandays?: number;
   spkFileUrl?: string | null;
@@ -439,6 +456,17 @@ export interface ProjectFinancials {
   plannedMandays: number;
   actualMandays: number;
   burnRatePct: number;
+  vatPercent?: number;
+  contractValueIncludesVat?: boolean;
+  revenueNet?: number;
+  vatAmount?: number;
+  recognizedRevenue?: number;
+  accruedCost?: number;
+  loadedResourceCost?: number;
+  netActualCost?: number;
+  netActualProfit?: number;
+  netMarginPct?: number;
+  overheadMultiplier?: number;
   monthly?: MonthlyFinancialPoint[];
 }
 
@@ -446,9 +474,19 @@ export interface DashboardSummary {
   totalProjects: number;
   activeProjects: number;
   totalContractValue: number;
+  totalRevenueNet?: number;
   totalActualCost: number;
   totalActualProfit: number;
+  totalNetActualCost?: number;
+  totalNetActualProfit?: number;
+  totalRecognizedRevenue?: number;
+  totalAccruedCost?: number;
+  /** Simple unweighted average of project margins (legacy) */
   avgMarginPct: number;
+  /** Σ profit / Σ revenue × 100 (portfolio-weighted) */
+  weightedMarginPct?: number;
+  /** Weighted margin using net revenue (DPP) and overhead-loaded cost */
+  weightedNetMarginPct?: number;
   pendingTimesheets: number;
   totalMandays: number;
 }

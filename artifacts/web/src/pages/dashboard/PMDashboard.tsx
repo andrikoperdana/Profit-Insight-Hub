@@ -145,9 +145,8 @@ export default function PMDashboard() {
     (s, p) => s + (p.actualProfit ?? 0),
     0,
   );
-  const avgMargin = myProjects.length
-    ? myProjects.reduce((s, p) => s + (p.marginPct ?? 0), 0) /
-      myProjects.length
+  const weightedMargin = myProjectsRevenue > 0
+    ? (myProfit / myProjectsRevenue) * 100
     : 0;
 
   const myTeam = useMemo(() => {
@@ -352,9 +351,9 @@ export default function PMDashboard() {
         />
         <Kpi
           icon={<TrendingUp className="h-4 w-4 text-primary" />}
-          label="Avg Margin"
-          value={formatPct(avgMargin)}
-          sub={`Profit so far: ${formatIDR(myProfit)}`}
+          label="Weighted Margin"
+          value={formatPct(weightedMargin)}
+          sub={`Σ profit ÷ Σ revenue · ${formatIDR(myProfit)}`}
         />
         <Kpi
           icon={<ClipboardCheck className="h-4 w-4 text-primary" />}

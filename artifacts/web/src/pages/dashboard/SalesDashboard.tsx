@@ -64,10 +64,8 @@ export default function SalesDashboard() {
     const pipelineValue = myProjects
       .filter((p) => p.status === ProjectStatus.OBSERVATION || p.status === ProjectStatus.ACTIVE)
       .reduce((s, p) => s + p.contractValue, 0);
-    const avgMargin = myProjects.length
-      ? myProjects.reduce((s, p) => s + (p.marginPct ?? 0), 0) / myProjects.length
-      : 0;
-    return { totalRevenue, totalProfit, active, observation, pipelineValue, avgMargin };
+    const weightedMargin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0;
+    return { totalRevenue, totalProfit, active, observation, pipelineValue, weightedMargin };
   }, [myProjects]);
 
   const statusChart = useMemo(() => {
@@ -170,7 +168,7 @@ export default function SalesDashboard() {
             <KpiCard icon={<Briefcase className="h-4 w-4 text-primary" />} label="My Projects" value={String(myProjects.length)} sub={`${stats.active} active · ${stats.observation} in observation`} />
             <KpiCard icon={<Wallet className="h-4 w-4 text-primary" />} label="Total Revenue" value={formatIDR(stats.totalRevenue)} sub="Sum of contract value" mono />
             <KpiCard icon={<Target className="h-4 w-4 text-primary" />} label="Pipeline Value" value={formatIDR(stats.pipelineValue)} sub="Active + Observation" mono />
-            <KpiCard icon={<TrendingUp className="h-4 w-4 text-primary" />} label="Average Margin" value={formatPct(stats.avgMargin)} sub={`Profit so far: ${formatIDR(stats.totalProfit)}`} />
+            <KpiCard icon={<TrendingUp className="h-4 w-4 text-primary" />} label="Weighted Margin" value={formatPct(stats.weightedMargin)} sub={`Σ profit ÷ Σ revenue · ${formatIDR(stats.totalProfit)}`} />
           </>
         )}
       </div>

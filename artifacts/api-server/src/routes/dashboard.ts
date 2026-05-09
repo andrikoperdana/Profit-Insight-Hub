@@ -15,16 +15,26 @@ router.get("/dashboard/summary", async (_req, res) => {
   const totalProjects = projects.length;
   const activeProjects = projects.filter((p) => p.status === "ACTIVE").length;
   let totalContractValue = 0;
+  let totalRevenueNet = 0;
   let totalActualCost = 0;
   let totalActualProfit = 0;
+  let totalNetActualCost = 0;
+  let totalNetActualProfit = 0;
+  let totalRecognizedRevenue = 0;
+  let totalAccruedCost = 0;
   let totalMandays = 0;
   let marginSum = 0;
   let marginCount = 0;
   for (const p of projects) {
     const m = computeMetrics(p);
     totalContractValue += p.contractValue;
+    totalRevenueNet += m.revenueNet;
     totalActualCost += m.actualCost;
     totalActualProfit += m.actualProfit;
+    totalNetActualCost += m.netActualCost;
+    totalNetActualProfit += m.netActualProfit;
+    totalRecognizedRevenue += m.recognizedRevenue;
+    totalAccruedCost += m.accruedCost;
     totalMandays += m.actualMandays;
     if (p.contractValue > 0) {
       marginSum += m.marginPct;
@@ -34,13 +44,27 @@ router.get("/dashboard/summary", async (_req, res) => {
   const pendingTimesheets = await prisma.timesheet.count({
     where: { status: "SUBMITTED" },
   });
+  // Weighted (portfolio) margin = Σ profit / Σ revenue × 100. This avoids
+  // small-revenue projects skewing the simple average and aligns with how
+  // finance teams report blended portfolio margin.
+  const weightedMarginPct =
+    totalContractValue > 0 ? (totalActualProfit / totalContractValue) * 100 : 0;
+  const weightedNetMarginPct =
+    totalRevenueNet > 0 ? (totalNetActualProfit / totalRevenueNet) * 100 : 0;
   res.json({
     totalProjects,
     activeProjects,
     totalContractValue,
+    totalRevenueNet,
     totalActualCost,
     totalActualProfit,
+    totalNetActualCost,
+    totalNetActualProfit,
+    totalRecognizedRevenue,
+    totalAccruedCost,
     avgMarginPct: marginCount > 0 ? marginSum / marginCount : 0,
+    weightedMarginPct,
+    weightedNetMarginPct,
     pendingTimesheets,
     totalMandays,
   });
@@ -66,7 +90,12 @@ router.get("/dashboard/profit-trend", async (_req, res) => {
       monthly.set(key, cur);
     }
     if (months.size > 0) {
-      const rev = p.contractValue / months.size;
+      const vatPct = (p as any).vatPercent ?? 11;
+      const includesVat = (p as any).contractValueIncludesVat ?? true;
+      const revenueNet = includesVat
+        ? p.contractValue / (1 + vatPct / 100)
+        : p.contractValue;
+      const rev = revenueNet / months.size;
       for (const m of months) {
         const cur = monthly.get(m)!;
         cur.revenue += rev;

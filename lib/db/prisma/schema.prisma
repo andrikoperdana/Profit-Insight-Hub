@@ -123,6 +123,8 @@ model Project {
   startDate      DateTime?
   endDate        DateTime?
   contractValue  Float         @default(0)
+  vatPercent     Float         @default(11)
+  contractValueIncludesVat Boolean @default(true)
   estimatedCost  Float         @default(0)
   plannedMandays Float         @default(0)
   lastStatusReason String?
