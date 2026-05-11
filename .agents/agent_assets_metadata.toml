@@ -161,3 +161,9 @@ id = "S43pix-99LM840yjyNh6h"
 uri = "file://.local/outputs/Profit-Insight-Hub.pdf"
 type = "pdf"
 title = "Profit Insight Hub.pdf"
+
+[[outputs]]
+id = "p49TlcyyF9iotK7iRWt_S"
+uri = "file://DEPLOY-LOKAL.md"
+type = "text"
+title = "Panduan Deploy SecureProfit Hub di Server Lokal"
