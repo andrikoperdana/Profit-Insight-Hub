@@ -198,35 +198,97 @@ Masukkan password yang Anda buat. Kalau berhasil masuk, ketik `\q` untuk keluar.
 
 ---
 
-## 5. Download Kode Aplikasi
+## 5. Download Kode Aplikasi (Metode ZIP)
 
-Pastikan Anda punya akses ke repository kode (misalnya di GitHub atau Replit). Ada 2 cara:
+Bagian ini cocok untuk yang **tidak terbiasa dengan Git**. Kita akan: download ZIP dari Replit → upload ke server → ekstrak.
 
-### Cara 1: Clone dari Git (paling umum)
+### A. Download ZIP dari Replit
+
+1. Buka project Anda di Replit lewat browser (di komputer Anda, bukan di server).
+2. Di pojok kiri atas, klik nama project Anda untuk membuka menu.
+3. Pilih **"Download as zip"** (atau ikon tiga titik `⋮` → **Download as zip**).
+4. File berformat `<nama-project>.zip` akan tersimpan di folder Downloads komputer Anda. Ukurannya biasanya 5–50 MB.
+
+> **Catatan:** ZIP ini sudah berisi semua kode tapi **tidak berisi folder `node_modules`** (paket-paket yang nanti diinstal otomatis oleh `pnpm install`). Itu wajar dan benar — jangan kaget kalau ZIP-nya kecil.
+
+### B. Pasang software upload (di komputer Anda)
+
+Anda butuh aplikasi untuk transfer file ke server. Pilih sesuai sistem operasi komputer Anda:
+
+- **Windows**: Download **WinSCP** dari https://winscp.net (gratis).
+- **Mac**: Download **Cyberduck** dari https://cyberduck.io (gratis), atau **FileZilla**.
+- **Linux**: **FileZilla** dari Software Center, atau pakai perintah `scp` di terminal.
+
+### C. Upload ZIP ke server
+
+#### Pakai WinSCP (Windows):
+
+1. Buka WinSCP.
+2. Klik **New Site**, isi:
+   - **File protocol**: SFTP
+   - **Host name**: IP server Anda (misal `103.123.45.67`)
+   - **Port number**: 22
+   - **User name**: `secureprofit`
+   - **Password**: password user `secureprofit` (yang Anda buat di langkah 2.C)
+3. Klik **Login**. Kalau muncul peringatan host key, klik **Yes**.
+4. Panel kiri = komputer Anda, panel kanan = server. Di panel kanan, navigasi ke `/home/secureprofit/`.
+5. Drag file ZIP dari panel kiri ke kanan. Tunggu sampai upload selesai (1–10 menit tergantung kecepatan internet).
+
+#### Pakai Cyberduck (Mac):
+
+1. Klik **Open Connection**.
+2. Pilih **SFTP (SSH File Transfer Protocol)**.
+3. Isi: Server = IP server, Username = `secureprofit`, Password = password user.
+4. Klik **Connect**.
+5. Navigasi ke `/home/secureprofit/`, lalu drag file ZIP ke jendela Cyberduck.
+
+#### Pakai perintah `scp` (Mac/Linux, paling cepat):
+
+Buka Terminal di komputer Anda, lalu:
+
+```bash
+scp ~/Downloads/nama-project.zip secureprofit@IP-SERVER-ANDA:/home/secureprofit/
+```
+
+Ganti `nama-project.zip` dengan nama file ZIP yang sebenarnya, dan `IP-SERVER-ANDA` dengan IP server. Masukkan password ketika diminta.
+
+### D. Ekstrak ZIP di server
+
+Kembali ke terminal SSH ke server (sebagai user `secureprofit`):
 
 ```bash
 cd ~
-git clone <URL-REPOSITORY-ANDA> secureprofit
+ls -lh                        # cek file ZIP sudah ada
+sudo apt install -y unzip     # pasang tool unzip kalau belum ada
+unzip nama-project.zip -d secureprofit
 cd secureprofit
+ls                            # harus muncul folder artifacts, lib, dll
 ```
 
-### Cara 2: Upload ZIP (kalau tidak pakai Git)
+> **Kalau hasil ekstrak masuk ke folder bertingkat** (misal `secureprofit/nama-project/artifacts/...`), pindahkan isinya ke atas:
+> ```bash
+> cd ~/secureprofit
+> mv nama-project/* nama-project/.* . 2>/dev/null
+> rmdir nama-project
+> ```
 
-Dari komputer Anda, download kode sebagai ZIP, lalu upload ke server pakai aplikasi seperti **FileZilla** atau **WinSCP** ke folder `/home/secureprofit/`. Kemudian:
+Lalu hapus file ZIP supaya tidak makan tempat:
 
 ```bash
-cd ~
-unzip secureprofit.zip
-cd secureprofit
+rm ~/nama-project.zip
 ```
 
-### Instal semua paket yang dibutuhkan
+### E. Instal semua paket yang dibutuhkan
+
+Dari folder `~/secureprofit`:
 
 ```bash
 pnpm install
 ```
 
-Tunggu 3–10 menit (tergantung koneksi internet).
+Tunggu 3–10 menit (tergantung koneksi internet). Akan muncul progress bar dan banyak pesan — itu normal. Kalau selesai tanpa error merah, lanjut ke langkah berikutnya.
+
+> **Kalau ada error saat `pnpm install`**: cek apakah Node.js dan pnpm sudah terpasang dengan benar (langkah 3.A dan 3.B). Jalankan `node --version` dan `pnpm --version` untuk memastikan.
 
 ---
 
