@@ -91,6 +91,62 @@ export interface TaskAssignee {
   name: string;
 }
 
+export type BillingMilestoneStatus =
+  (typeof BillingMilestoneStatus)[keyof typeof BillingMilestoneStatus];
+
+export const BillingMilestoneStatus = {
+  PLANNED: "PLANNED",
+  INVOICED: "INVOICED",
+  PAID: "PAID",
+  CANCELLED: "CANCELLED",
+} as const;
+
+export interface BillingMilestone {
+  id: string;
+  projectId: string;
+  name: string;
+  description?: string | null;
+  percentage: number;
+  amount?: number | null;
+  dueDate?: string | null;
+  status: BillingMilestoneStatus;
+  invoiceNumber?: string | null;
+  invoicedAt?: string | null;
+  paidAt?: string | null;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateBillingMilestoneBody {
+  name: string;
+  description?: string | null;
+  percentage: number;
+  amount?: number | null;
+  dueDate?: string | null;
+  invoiceNumber?: string | null;
+  sortOrder?: number;
+}
+
+export interface UpdateBillingMilestoneBody {
+  name?: string;
+  description?: string | null;
+  percentage?: number;
+  amount?: number | null;
+  dueDate?: string | null;
+  status?: BillingMilestoneStatus;
+  invoiceNumber?: string | null;
+  invoicedAt?: string | null;
+  paidAt?: string | null;
+  sortOrder?: number;
+}
+
+export interface TaskDependencyRef {
+  id: string;
+  dependsOnTaskId: string;
+  dependsOnTitle?: string | null;
+}
+
 export interface Task {
   id: string;
   projectId: string;
@@ -110,6 +166,9 @@ export interface Task {
   assigneeId?: string | null;
   assigneeName?: string | null;
   assignees: TaskAssignee[];
+  parentTaskId?: string | null;
+  subtaskCount?: number;
+  dependencies?: TaskDependencyRef[];
   createdById?: string | null;
   createdByName?: string | null;
   loggedHours: number;
@@ -131,6 +190,8 @@ export interface CreateTaskBody {
   endDate?: string | null;
   assigneeId?: string | null;
   assigneeIds?: string[];
+  parentTaskId?: string | null;
+  dependencyTaskIds?: string[];
 }
 
 export interface UpdateTaskBody {
@@ -147,6 +208,8 @@ export interface UpdateTaskBody {
   endDate?: string | null;
   assigneeId?: string | null;
   assigneeIds?: string[];
+  parentTaskId?: string | null;
+  dependencyTaskIds?: string[];
 }
 
 export interface TaskTimeLog {

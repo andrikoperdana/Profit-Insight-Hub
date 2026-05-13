@@ -60,6 +60,13 @@ enum Seniority {
   PRINCIPAL
 }
 
+enum BillingMilestoneStatus {
+  PLANNED
+  INVOICED
+  PAID
+  CANCELLED
+}
+
 enum ExpenseStatus {
   PENDING
   APPROVED
@@ -160,14 +167,15 @@ model Project {
   createdAt                DateTime      @default(now())
   updatedAt                DateTime      @updatedAt
 
-  surveyToken     String?           @unique
-  resources       ProjectResource[]
-  timesheets      Timesheet[]
-  documents       Document[]
-  activities      Activity[]
-  surveyResponses SurveyResponse[]
-  expenses        ProjectExpense[]
-  tasks           Task[]
+  surveyToken       String?            @unique
+  resources         ProjectResource[]
+  timesheets        Timesheet[]
+  documents         Document[]
+  activities        Activity[]
+  surveyResponses   SurveyResponse[]
+  expenses          ProjectExpense[]
+  tasks             Task[]
+  billingMilestones BillingMilestone[]
 }
 
 model SurveyQuestion {
@@ -363,12 +371,53 @@ model Task {
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
 
+  parentTaskId String?
+  parentTask   Task?   @relation("TaskSubtasks", fields: [parentTaskId], references: [id], onDelete: Cascade)
+  subtasks     Task[]  @relation("TaskSubtasks")
+
   timeLogs   TaskTimeLog[]
   assignees  TaskAssignee[]
   timesheets Timesheet[]
 
+  dependencies TaskDependency[] @relation("TaskDependencies")
+  dependents   TaskDependency[] @relation("TaskDependents")
+
   @@index([projectId])
   @@index([assigneeId])
+  @@index([status])
+  @@index([parentTaskId])
+}
+
+model TaskDependency {
+  id              String   @id @default(cuid())
+  taskId          String
+  task            Task     @relation("TaskDependencies", fields: [taskId], references: [id], onDelete: Cascade)
+  dependsOnTaskId String
+  dependsOnTask   Task     @relation("TaskDependents", fields: [dependsOnTaskId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+
+  @@unique([taskId, dependsOnTaskId])
+  @@index([dependsOnTaskId])
+}
+
+model BillingMilestone {
+  id            String                 @id @default(cuid())
+  projectId     String
+  project       Project                @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name          String
+  description   String?
+  percentage    Float                  @default(0)
+  amount        Float?
+  dueDate       DateTime?
+  status        BillingMilestoneStatus @default(PLANNED)
+  invoiceNumber String?
+  invoicedAt    DateTime?
+  paidAt        DateTime?
+  sortOrder     Int                    @default(0)
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+
+  @@index([projectId])
   @@index([status])
 }
 

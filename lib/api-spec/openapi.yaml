@@ -926,6 +926,66 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/TaskTimeLog" }
 
+  /projects/{id}/billing-milestones:
+    get:
+      operationId: listBillingMilestones
+      tags: [billing]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/BillingMilestone" }
+    post:
+      operationId: createBillingMilestone
+      tags: [billing]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateBillingMilestoneBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BillingMilestone" }
+
+  /billing-milestones/{milestoneId}:
+    patch:
+      operationId: updateBillingMilestone
+      tags: [billing]
+      parameters:
+        - { name: milestoneId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpdateBillingMilestoneBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BillingMilestone" }
+    delete:
+      operationId: deleteBillingMilestone
+      tags: [billing]
+      parameters:
+        - { name: milestoneId, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
   /dashboard/summary:
     get:
       operationId: getDashboardSummary
@@ -1052,6 +1112,63 @@ components:
         userId: { type: string }
         name: { type: string }
 
+    BillingMilestoneStatus:
+      type: string
+      enum: [PLANNED, INVOICED, PAID, CANCELLED]
+
+    BillingMilestone:
+      type: object
+      required: [id, projectId, name, percentage, status, sortOrder, createdAt, updatedAt]
+      properties:
+        id: { type: string }
+        projectId: { type: string }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        percentage: { type: number }
+        amount: { type: number, nullable: true }
+        dueDate: { type: string, nullable: true }
+        status: { $ref: "#/components/schemas/BillingMilestoneStatus" }
+        invoiceNumber: { type: string, nullable: true }
+        invoicedAt: { type: string, nullable: true }
+        paidAt: { type: string, nullable: true }
+        sortOrder: { type: integer }
+        createdAt: { type: string }
+        updatedAt: { type: string }
+
+    CreateBillingMilestoneBody:
+      type: object
+      required: [name, percentage]
+      properties:
+        name: { type: string }
+        description: { type: string, nullable: true }
+        percentage: { type: number }
+        amount: { type: number, nullable: true }
+        dueDate: { type: string, nullable: true }
+        invoiceNumber: { type: string, nullable: true }
+        sortOrder: { type: integer }
+
+    UpdateBillingMilestoneBody:
+      type: object
+      properties:
+        name: { type: string }
+        description: { type: string, nullable: true }
+        percentage: { type: number }
+        amount: { type: number, nullable: true }
+        dueDate: { type: string, nullable: true }
+        status: { $ref: "#/components/schemas/BillingMilestoneStatus" }
+        invoiceNumber: { type: string, nullable: true }
+        invoicedAt: { type: string, nullable: true }
+        paidAt: { type: string, nullable: true }
+        sortOrder: { type: integer }
+
+    TaskDependencyRef:
+      type: object
+      required: [id, dependsOnTaskId]
+      properties:
+        id: { type: string }
+        dependsOnTaskId: { type: string }
+        dependsOnTitle: { type: string, nullable: true }
+
     Task:
       type: object
       required: [id, projectId, title, status, progressPercent, billable, loggedHours, assignees, createdAt, updatedAt]
@@ -1072,6 +1189,11 @@ components:
         assignees:
           type: array
           items: { $ref: "#/components/schemas/TaskAssignee" }
+        parentTaskId: { type: string, nullable: true }
+        subtaskCount: { type: integer }
+        dependencies:
+          type: array
+          items: { $ref: "#/components/schemas/TaskDependencyRef" }
         createdById: { type: string, nullable: true }
         createdByName: { type: string, nullable: true }
         loggedHours: { type: number }
@@ -1093,6 +1215,10 @@ components:
         assigneeIds:
           type: array
           items: { type: string }
+        parentTaskId: { type: string, nullable: true }
+        dependencyTaskIds:
+          type: array
+          items: { type: string }
 
     UpdateTaskBody:
       type: object
@@ -1106,6 +1232,10 @@ components:
         endDate: { type: string, nullable: true }
         assigneeId: { type: string, nullable: true }
         assigneeIds:
+          type: array
+          items: { type: string }
+        parentTaskId: { type: string, nullable: true }
+        dependencyTaskIds:
           type: array
           items: { type: string }
 

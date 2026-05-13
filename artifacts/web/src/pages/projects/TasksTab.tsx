@@ -113,7 +113,36 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
     return { total, done, inProgress, totalHours };
   }, [tasks]);
 
-  const pager = usePagination(tasks ?? [], { resetKey: projectId });
+  // Build a tree-ordered list (DFS) so children render directly under parents.
+  // Root tasks come from items whose parentTaskId is null OR points to a task
+  // that doesn't exist in the current list (orphans treated as roots).
+  const orderedTasks = useMemo(() => {
+    const list = (tasks ?? []) as Array<Task & { parentTaskId?: string | null }>;
+    if (list.length === 0) return list;
+    const ids = new Set(list.map((t) => t.id));
+    const childrenByParent = new Map<string, typeof list>();
+    const roots: typeof list = [];
+    for (const t of list) {
+      const pid = (t as any).parentTaskId as string | null | undefined;
+      if (pid && ids.has(pid)) {
+        const arr = childrenByParent.get(pid) ?? [];
+        arr.push(t);
+        childrenByParent.set(pid, arr);
+      } else {
+        roots.push(t);
+      }
+    }
+    const out: Array<typeof list[number] & { __depth: number }> = [];
+    function walk(node: typeof list[number], depth: number) {
+      out.push(Object.assign(node, { __depth: depth }));
+      const kids = childrenByParent.get(node.id) ?? [];
+      for (const k of kids) walk(k, depth + 1);
+    }
+    for (const r of roots) walk(r, 0);
+    return out;
+  }, [tasks]);
+
+  const pager = usePagination(orderedTasks, { resetKey: projectId });
 
   function handleExportCsv() {
     const rows = (tasks ?? []).map((t) => {
@@ -195,6 +224,7 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
               </TableHeader>
               <TableBody>
                 {pager.pageItems.map((t) => {
+                  const depth = ((t as any).__depth as number | undefined) ?? 0;
                   const allAssignees =
                     ((t as any).assignees as { userId: string; name: string }[] | undefined) ??
                     (t.assigneeId && t.assigneeName
@@ -207,7 +237,12 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
                   return (
                     <TableRow key={t.id} className="hover:bg-muted/30 align-top">
                       <TableCell className="max-w-[280px]">
-                        <div className="font-medium flex items-center gap-2">
+                        <div className="font-medium flex items-center gap-2" style={{ paddingLeft: depth * 18 }}>
+                          {depth > 0 && (
+                            <span className="text-muted-foreground/60 select-none" aria-hidden>
+                              └
+                            </span>
+                          )}
                           <span>{t.title}</span>
                           {(t as any).billable === false && (
                             <Badge
@@ -323,6 +358,7 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
         <TaskFormDialog
           projectId={projectId}
           resources={resources ?? []}
+          allTasks={tasks ?? []}
           onClose={() => setCreateOpen(false)}
           onSaved={invalidate}
         />
@@ -331,6 +367,7 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
         <TaskFormDialog
           projectId={projectId}
           resources={resources ?? []}
+          allTasks={tasks ?? []}
           task={editTask}
           onClose={() => setEditTask(null)}
           onSaved={invalidate}
@@ -432,12 +469,14 @@ function TaskFormDialog({
   projectId,
   resources,
   task,
+  allTasks,
   onClose,
   onSaved,
 }: {
   projectId: string;
   resources: { userId: string; userName: string }[];
   task?: Task;
+  allTasks?: Task[];
   onClose: () => void;
   onSaved: () => void;
 }) {
@@ -457,6 +496,46 @@ function TaskFormDialog({
   })();
   const [assigneeIds, setAssigneeIds] = useState<string[]>(initialAssigneeIds);
   const [billable, setBillable] = useState<boolean>(((task as any)?.billable ?? true) as boolean);
+  const [parentTaskId, setParentTaskId] = useState<string>(((task as any)?.parentTaskId as string | null) ?? "");
+  const initialDependencyIds: string[] = (() => {
+    const list = (task as any)?.dependencies as { dependsOnTaskId: string }[] | undefined;
+    return Array.isArray(list) ? list.map((d) => d.dependsOnTaskId) : [];
+  })();
+  const [dependencyTaskIds, setDependencyTaskIds] = useState<string[]>(initialDependencyIds);
+  function toggleDependency(taskId: string) {
+    setDependencyTaskIds((prev) =>
+      prev.includes(taskId) ? prev.filter((x) => x !== taskId) : [...prev, taskId],
+    );
+  }
+
+  // Compute the set of descendants of the editing task so we can exclude
+  // them from the Parent and Depends-On pickers (the server would 400 on
+  // such cycles anyway).
+  const forbiddenIds = useMemo(() => {
+    const forbidden = new Set<string>();
+    if (!task || !allTasks?.length) return forbidden;
+    const childrenByParent = new Map<string, string[]>();
+    for (const t of allTasks) {
+      const pid = (t as any).parentTaskId as string | null | undefined;
+      if (pid) {
+        const arr = childrenByParent.get(pid) ?? [];
+        arr.push(t.id);
+        childrenByParent.set(pid, arr);
+      }
+    }
+    const stack: string[] = [task.id];
+    while (stack.length) {
+      const cur = stack.pop()!;
+      for (const child of childrenByParent.get(cur) ?? []) {
+        if (!forbidden.has(child)) {
+          forbidden.add(child);
+          stack.push(child);
+        }
+      }
+    }
+    return forbidden;
+  }, [task, allTasks]);
+
   function toggleAssignee(uid: string) {
     setAssigneeIds((prev) =>
       prev.includes(uid) ? prev.filter((x) => x !== uid) : [...prev, uid],
@@ -525,6 +604,8 @@ function TaskFormDialog({
       endDate: endDate || undefined,
       assigneeIds,
       billable,
+      parentTaskId: parentTaskId || undefined,
+      dependencyTaskIds,
     };
     if (editing && task) {
       // PATCH allows nulls to clear
@@ -539,6 +620,8 @@ function TaskFormDialog({
           endDate: endDate || null,
           assigneeIds,
           billable,
+          parentTaskId: parentTaskId || null,
+          dependencyTaskIds,
         } as any,
       });
     } else {
@@ -640,6 +723,69 @@ function TaskFormDialog({
             )}
             <p className="text-[11px] text-muted-foreground mt-1">
               Pilih lebih dari satu untuk task yang dikerjakan beberapa orang sekaligus.
+            </p>
+          </div>
+          <div>
+            <Label>Parent Task (WBS)</Label>
+            <Select
+              value={parentTaskId || "__none"}
+              onValueChange={(v) => setParentTaskId(v === "__none" ? "" : v)}
+            >
+              <SelectTrigger data-testid="select-parent-task">
+                <SelectValue placeholder="None (top-level)" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__none">None (top-level)</SelectItem>
+                {(allTasks ?? [])
+                  .filter((t) => (!task || t.id !== task.id) && !forbiddenIds.has(t.id))
+                  .map((t) => (
+                    <SelectItem key={t.id} value={t.id}>
+                      {t.title}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+            <p className="text-[11px] text-muted-foreground mt-1">
+              Pilih task induk untuk membuat sub-task (Work Breakdown Structure).
+            </p>
+          </div>
+          <div>
+            <Label>Depends On (predecessors)</Label>
+            {(() => {
+              const candidates = (allTasks ?? []).filter(
+                (t) => (!task || t.id !== task.id) && !forbiddenIds.has(t.id),
+              );
+              if (candidates.length === 0) {
+                return (
+                  <p className="text-xs text-muted-foreground italic px-2 py-3 border rounded-md">
+                    Belum ada task lain di project ini untuk dijadikan dependency.
+                  </p>
+                );
+              }
+              return (
+                <div className="border rounded-md divide-y max-h-40 overflow-y-auto">
+                  {candidates.map((t) => {
+                    const checked = dependencyTaskIds.includes(t.id);
+                    return (
+                      <label
+                        key={t.id}
+                        className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-muted/30 cursor-pointer"
+                        data-testid={`checkbox-dependency-${t.id}`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() => toggleDependency(t.id)}
+                        />
+                        <span>{t.title}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              );
+            })()}
+            <p className="text-[11px] text-muted-foreground mt-1">
+              Task ini hanya boleh mulai setelah semua predecessor selesai. Garis panah otomatis muncul di Gantt.
             </p>
           </div>
           <div className="flex items-center gap-2 rounded-md border border-border px-3 py-2">

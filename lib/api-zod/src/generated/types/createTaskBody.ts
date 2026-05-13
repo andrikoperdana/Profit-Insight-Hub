@@ -21,4 +21,6 @@ export interface CreateTaskBody {
   endDate?: string | null;
   assigneeId?: string | null;
   assigneeIds?: string[];
+  parentTaskId?: string | null;
+  dependencyTaskIds?: string[];
 }

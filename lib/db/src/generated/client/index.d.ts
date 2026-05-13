@@ -89,6 +89,16 @@ export type Activity = $Result.DefaultSelection<Prisma.$ActivityPayload>
  */
 export type Task = $Result.DefaultSelection<Prisma.$TaskPayload>
 /**
+ * Model TaskDependency
+ * 
+ */
+export type TaskDependency = $Result.DefaultSelection<Prisma.$TaskDependencyPayload>
+/**
+ * Model BillingMilestone
+ * 
+ */
+export type BillingMilestone = $Result.DefaultSelection<Prisma.$BillingMilestonePayload>
+/**
  * Model TaskAssignee
  * 
  */
@@ -185,6 +195,16 @@ export const TaskStatus: {
 
 export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus]
 
+
+export const BillingMilestoneStatus: {
+  PLANNED: 'PLANNED',
+  INVOICED: 'INVOICED',
+  PAID: 'PAID',
+  CANCELLED: 'CANCELLED'
+};
+
+export type BillingMilestoneStatus = (typeof BillingMilestoneStatus)[keyof typeof BillingMilestoneStatus]
+
 }
 
 export type UserRole = $Enums.UserRole
@@ -214,6 +234,10 @@ export const ExpenseStatus: typeof $Enums.ExpenseStatus
 export type TaskStatus = $Enums.TaskStatus
 
 export const TaskStatus: typeof $Enums.TaskStatus
+
+export type BillingMilestoneStatus = $Enums.BillingMilestoneStatus
+
+export const BillingMilestoneStatus: typeof $Enums.BillingMilestoneStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -487,6 +511,26 @@ export class PrismaClient<
     * ```
     */
   get task(): Prisma.TaskDelegate<ExtArgs>;
+
+  /**
+   * `prisma.taskDependency`: Exposes CRUD operations for the **TaskDependency** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TaskDependencies
+    * const taskDependencies = await prisma.taskDependency.findMany()
+    * ```
+    */
+  get taskDependency(): Prisma.TaskDependencyDelegate<ExtArgs>;
+
+  /**
+   * `prisma.billingMilestone`: Exposes CRUD operations for the **BillingMilestone** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more BillingMilestones
+    * const billingMilestones = await prisma.billingMilestone.findMany()
+    * ```
+    */
+  get billingMilestone(): Prisma.BillingMilestoneDelegate<ExtArgs>;
 
   /**
    * `prisma.taskAssignee`: Exposes CRUD operations for the **TaskAssignee** model.
@@ -973,6 +1017,8 @@ export namespace Prisma {
     UserSkill: 'UserSkill',
     Activity: 'Activity',
     Task: 'Task',
+    TaskDependency: 'TaskDependency',
+    BillingMilestone: 'BillingMilestone',
     TaskAssignee: 'TaskAssignee',
     TaskTimeLog: 'TaskTimeLog',
     Notification: 'Notification'
@@ -991,7 +1037,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "client" | "project" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "activity" | "task" | "taskAssignee" | "taskTimeLog" | "notification"
+      modelProps: "user" | "client" | "project" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "notification"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2045,6 +2091,146 @@ export namespace Prisma {
           }
         }
       }
+      TaskDependency: {
+        payload: Prisma.$TaskDependencyPayload<ExtArgs>
+        fields: Prisma.TaskDependencyFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TaskDependencyFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskDependencyPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TaskDependencyFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskDependencyPayload>
+          }
+          findFirst: {
+            args: Prisma.TaskDependencyFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskDependencyPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TaskDependencyFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskDependencyPayload>
+          }
+          findMany: {
+            args: Prisma.TaskDependencyFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskDependencyPayload>[]
+          }
+          create: {
+            args: Prisma.TaskDependencyCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskDependencyPayload>
+          }
+          createMany: {
+            args: Prisma.TaskDependencyCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TaskDependencyCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskDependencyPayload>[]
+          }
+          delete: {
+            args: Prisma.TaskDependencyDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskDependencyPayload>
+          }
+          update: {
+            args: Prisma.TaskDependencyUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskDependencyPayload>
+          }
+          deleteMany: {
+            args: Prisma.TaskDependencyDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TaskDependencyUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.TaskDependencyUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskDependencyPayload>
+          }
+          aggregate: {
+            args: Prisma.TaskDependencyAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTaskDependency>
+          }
+          groupBy: {
+            args: Prisma.TaskDependencyGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TaskDependencyGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TaskDependencyCountArgs<ExtArgs>
+            result: $Utils.Optional<TaskDependencyCountAggregateOutputType> | number
+          }
+        }
+      }
+      BillingMilestone: {
+        payload: Prisma.$BillingMilestonePayload<ExtArgs>
+        fields: Prisma.BillingMilestoneFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BillingMilestoneFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BillingMilestonePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BillingMilestoneFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BillingMilestonePayload>
+          }
+          findFirst: {
+            args: Prisma.BillingMilestoneFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BillingMilestonePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BillingMilestoneFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BillingMilestonePayload>
+          }
+          findMany: {
+            args: Prisma.BillingMilestoneFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BillingMilestonePayload>[]
+          }
+          create: {
+            args: Prisma.BillingMilestoneCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BillingMilestonePayload>
+          }
+          createMany: {
+            args: Prisma.BillingMilestoneCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.BillingMilestoneCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BillingMilestonePayload>[]
+          }
+          delete: {
+            args: Prisma.BillingMilestoneDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BillingMilestonePayload>
+          }
+          update: {
+            args: Prisma.BillingMilestoneUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BillingMilestonePayload>
+          }
+          deleteMany: {
+            args: Prisma.BillingMilestoneDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BillingMilestoneUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.BillingMilestoneUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BillingMilestonePayload>
+          }
+          aggregate: {
+            args: Prisma.BillingMilestoneAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBillingMilestone>
+          }
+          groupBy: {
+            args: Prisma.BillingMilestoneGroupByArgs<ExtArgs>
+            result: $Utils.Optional<BillingMilestoneGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BillingMilestoneCountArgs<ExtArgs>
+            result: $Utils.Optional<BillingMilestoneCountAggregateOutputType> | number
+          }
+        }
+      }
       TaskAssignee: {
         payload: Prisma.$TaskAssigneePayload<ExtArgs>
         fields: Prisma.TaskAssigneeFieldRefs
@@ -2665,6 +2851,7 @@ export namespace Prisma {
     surveyResponses: number
     expenses: number
     tasks: number
+    billingMilestones: number
   }
 
   export type ProjectCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2675,6 +2862,7 @@ export namespace Prisma {
     surveyResponses?: boolean | ProjectCountOutputTypeCountSurveyResponsesArgs
     expenses?: boolean | ProjectCountOutputTypeCountExpensesArgs
     tasks?: boolean | ProjectCountOutputTypeCountTasksArgs
+    billingMilestones?: boolean | ProjectCountOutputTypeCountBillingMilestonesArgs
   }
 
   // Custom InputTypes
@@ -2735,6 +2923,13 @@ export namespace Prisma {
    */
   export type ProjectCountOutputTypeCountTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TaskWhereInput
+  }
+
+  /**
+   * ProjectCountOutputType without action
+   */
+  export type ProjectCountOutputTypeCountBillingMilestonesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BillingMilestoneWhereInput
   }
 
 
@@ -2805,15 +3000,21 @@ export namespace Prisma {
    */
 
   export type TaskCountOutputType = {
+    subtasks: number
     timeLogs: number
     assignees: number
     timesheets: number
+    dependencies: number
+    dependents: number
   }
 
   export type TaskCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    subtasks?: boolean | TaskCountOutputTypeCountSubtasksArgs
     timeLogs?: boolean | TaskCountOutputTypeCountTimeLogsArgs
     assignees?: boolean | TaskCountOutputTypeCountAssigneesArgs
     timesheets?: boolean | TaskCountOutputTypeCountTimesheetsArgs
+    dependencies?: boolean | TaskCountOutputTypeCountDependenciesArgs
+    dependents?: boolean | TaskCountOutputTypeCountDependentsArgs
   }
 
   // Custom InputTypes
@@ -2825,6 +3026,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the TaskCountOutputType
      */
     select?: TaskCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TaskCountOutputType without action
+   */
+  export type TaskCountOutputTypeCountSubtasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaskWhereInput
   }
 
   /**
@@ -2846,6 +3054,20 @@ export namespace Prisma {
    */
   export type TaskCountOutputTypeCountTimesheetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TimesheetWhereInput
+  }
+
+  /**
+   * TaskCountOutputType without action
+   */
+  export type TaskCountOutputTypeCountDependenciesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaskDependencyWhereInput
+  }
+
+  /**
+   * TaskCountOutputType without action
+   */
+  export type TaskCountOutputTypeCountDependentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaskDependencyWhereInput
   }
 
 
@@ -5901,6 +6123,7 @@ export namespace Prisma {
     surveyResponses?: boolean | Project$surveyResponsesArgs<ExtArgs>
     expenses?: boolean | Project$expensesArgs<ExtArgs>
     tasks?: boolean | Project$tasksArgs<ExtArgs>
+    billingMilestones?: boolean | Project$billingMilestonesArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
 
@@ -5986,6 +6209,7 @@ export namespace Prisma {
     surveyResponses?: boolean | Project$surveyResponsesArgs<ExtArgs>
     expenses?: boolean | Project$expensesArgs<ExtArgs>
     tasks?: boolean | Project$tasksArgs<ExtArgs>
+    billingMilestones?: boolean | Project$billingMilestonesArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6011,6 +6235,7 @@ export namespace Prisma {
       surveyResponses: Prisma.$SurveyResponsePayload<ExtArgs>[]
       expenses: Prisma.$ProjectExpensePayload<ExtArgs>[]
       tasks: Prisma.$TaskPayload<ExtArgs>[]
+      billingMilestones: Prisma.$BillingMilestonePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6418,6 +6643,7 @@ export namespace Prisma {
     surveyResponses<T extends Project$surveyResponsesArgs<ExtArgs> = {}>(args?: Subset<T, Project$surveyResponsesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SurveyResponsePayload<ExtArgs>, T, "findMany"> | Null>
     expenses<T extends Project$expensesArgs<ExtArgs> = {}>(args?: Subset<T, Project$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectExpensePayload<ExtArgs>, T, "findMany"> | Null>
     tasks<T extends Project$tasksArgs<ExtArgs> = {}>(args?: Subset<T, Project$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany"> | Null>
+    billingMilestones<T extends Project$billingMilestonesArgs<ExtArgs> = {}>(args?: Subset<T, Project$billingMilestonesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BillingMilestonePayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6991,6 +7217,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TaskScalarFieldEnum | TaskScalarFieldEnum[]
+  }
+
+  /**
+   * Project.billingMilestones
+   */
+  export type Project$billingMilestonesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BillingMilestone
+     */
+    select?: BillingMilestoneSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BillingMilestoneInclude<ExtArgs> | null
+    where?: BillingMilestoneWhereInput
+    orderBy?: BillingMilestoneOrderByWithRelationInput | BillingMilestoneOrderByWithRelationInput[]
+    cursor?: BillingMilestoneWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BillingMilestoneScalarFieldEnum | BillingMilestoneScalarFieldEnum[]
   }
 
   /**
@@ -18207,6 +18453,7 @@ export namespace Prisma {
     createdById: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    parentTaskId: string | null
   }
 
   export type TaskMaxAggregateOutputType = {
@@ -18223,6 +18470,7 @@ export namespace Prisma {
     createdById: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    parentTaskId: string | null
   }
 
   export type TaskCountAggregateOutputType = {
@@ -18239,6 +18487,7 @@ export namespace Prisma {
     createdById: number
     createdAt: number
     updatedAt: number
+    parentTaskId: number
     _all: number
   }
 
@@ -18265,6 +18514,7 @@ export namespace Prisma {
     createdById?: true
     createdAt?: true
     updatedAt?: true
+    parentTaskId?: true
   }
 
   export type TaskMaxAggregateInputType = {
@@ -18281,6 +18531,7 @@ export namespace Prisma {
     createdById?: true
     createdAt?: true
     updatedAt?: true
+    parentTaskId?: true
   }
 
   export type TaskCountAggregateInputType = {
@@ -18297,6 +18548,7 @@ export namespace Prisma {
     createdById?: true
     createdAt?: true
     updatedAt?: true
+    parentTaskId?: true
     _all?: true
   }
 
@@ -18400,6 +18652,7 @@ export namespace Prisma {
     createdById: string | null
     createdAt: Date
     updatedAt: Date
+    parentTaskId: string | null
     _count: TaskCountAggregateOutputType | null
     _avg: TaskAvgAggregateOutputType | null
     _sum: TaskSumAggregateOutputType | null
@@ -18435,12 +18688,17 @@ export namespace Prisma {
     createdById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    parentTaskId?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     assignee?: boolean | Task$assigneeArgs<ExtArgs>
     createdBy?: boolean | Task$createdByArgs<ExtArgs>
+    parentTask?: boolean | Task$parentTaskArgs<ExtArgs>
+    subtasks?: boolean | Task$subtasksArgs<ExtArgs>
     timeLogs?: boolean | Task$timeLogsArgs<ExtArgs>
     assignees?: boolean | Task$assigneesArgs<ExtArgs>
     timesheets?: boolean | Task$timesheetsArgs<ExtArgs>
+    dependencies?: boolean | Task$dependenciesArgs<ExtArgs>
+    dependents?: boolean | Task$dependentsArgs<ExtArgs>
     _count?: boolean | TaskCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["task"]>
 
@@ -18458,9 +18716,11 @@ export namespace Prisma {
     createdById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    parentTaskId?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     assignee?: boolean | Task$assigneeArgs<ExtArgs>
     createdBy?: boolean | Task$createdByArgs<ExtArgs>
+    parentTask?: boolean | Task$parentTaskArgs<ExtArgs>
   }, ExtArgs["result"]["task"]>
 
   export type TaskSelectScalar = {
@@ -18477,21 +18737,27 @@ export namespace Prisma {
     createdById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    parentTaskId?: boolean
   }
 
   export type TaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     assignee?: boolean | Task$assigneeArgs<ExtArgs>
     createdBy?: boolean | Task$createdByArgs<ExtArgs>
+    parentTask?: boolean | Task$parentTaskArgs<ExtArgs>
+    subtasks?: boolean | Task$subtasksArgs<ExtArgs>
     timeLogs?: boolean | Task$timeLogsArgs<ExtArgs>
     assignees?: boolean | Task$assigneesArgs<ExtArgs>
     timesheets?: boolean | Task$timesheetsArgs<ExtArgs>
+    dependencies?: boolean | Task$dependenciesArgs<ExtArgs>
+    dependents?: boolean | Task$dependentsArgs<ExtArgs>
     _count?: boolean | TaskCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TaskIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     assignee?: boolean | Task$assigneeArgs<ExtArgs>
     createdBy?: boolean | Task$createdByArgs<ExtArgs>
+    parentTask?: boolean | Task$parentTaskArgs<ExtArgs>
   }
 
   export type $TaskPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -18500,9 +18766,13 @@ export namespace Prisma {
       project: Prisma.$ProjectPayload<ExtArgs>
       assignee: Prisma.$UserPayload<ExtArgs> | null
       createdBy: Prisma.$UserPayload<ExtArgs> | null
+      parentTask: Prisma.$TaskPayload<ExtArgs> | null
+      subtasks: Prisma.$TaskPayload<ExtArgs>[]
       timeLogs: Prisma.$TaskTimeLogPayload<ExtArgs>[]
       assignees: Prisma.$TaskAssigneePayload<ExtArgs>[]
       timesheets: Prisma.$TimesheetPayload<ExtArgs>[]
+      dependencies: Prisma.$TaskDependencyPayload<ExtArgs>[]
+      dependents: Prisma.$TaskDependencyPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -18518,6 +18788,7 @@ export namespace Prisma {
       createdById: string | null
       createdAt: Date
       updatedAt: Date
+      parentTaskId: string | null
     }, ExtArgs["result"]["task"]>
     composites: {}
   }
@@ -18885,9 +19156,13 @@ export namespace Prisma {
     project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     assignee<T extends Task$assigneeArgs<ExtArgs> = {}>(args?: Subset<T, Task$assigneeArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     createdBy<T extends Task$createdByArgs<ExtArgs> = {}>(args?: Subset<T, Task$createdByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    parentTask<T extends Task$parentTaskArgs<ExtArgs> = {}>(args?: Subset<T, Task$parentTaskArgs<ExtArgs>>): Prisma__TaskClient<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    subtasks<T extends Task$subtasksArgs<ExtArgs> = {}>(args?: Subset<T, Task$subtasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany"> | Null>
     timeLogs<T extends Task$timeLogsArgs<ExtArgs> = {}>(args?: Subset<T, Task$timeLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskTimeLogPayload<ExtArgs>, T, "findMany"> | Null>
     assignees<T extends Task$assigneesArgs<ExtArgs> = {}>(args?: Subset<T, Task$assigneesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskAssigneePayload<ExtArgs>, T, "findMany"> | Null>
     timesheets<T extends Task$timesheetsArgs<ExtArgs> = {}>(args?: Subset<T, Task$timesheetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimesheetPayload<ExtArgs>, T, "findMany"> | Null>
+    dependencies<T extends Task$dependenciesArgs<ExtArgs> = {}>(args?: Subset<T, Task$dependenciesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskDependencyPayload<ExtArgs>, T, "findMany"> | Null>
+    dependents<T extends Task$dependentsArgs<ExtArgs> = {}>(args?: Subset<T, Task$dependentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskDependencyPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -18930,6 +19205,7 @@ export namespace Prisma {
     readonly createdById: FieldRef<"Task", 'String'>
     readonly createdAt: FieldRef<"Task", 'DateTime'>
     readonly updatedAt: FieldRef<"Task", 'DateTime'>
+    readonly parentTaskId: FieldRef<"Task", 'String'>
   }
     
 
@@ -19278,6 +19554,41 @@ export namespace Prisma {
   }
 
   /**
+   * Task.parentTask
+   */
+  export type Task$parentTaskArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: TaskSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskInclude<ExtArgs> | null
+    where?: TaskWhereInput
+  }
+
+  /**
+   * Task.subtasks
+   */
+  export type Task$subtasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: TaskSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskInclude<ExtArgs> | null
+    where?: TaskWhereInput
+    orderBy?: TaskOrderByWithRelationInput | TaskOrderByWithRelationInput[]
+    cursor?: TaskWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TaskScalarFieldEnum | TaskScalarFieldEnum[]
+  }
+
+  /**
    * Task.timeLogs
    */
   export type Task$timeLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -19338,6 +19649,46 @@ export namespace Prisma {
   }
 
   /**
+   * Task.dependencies
+   */
+  export type Task$dependenciesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskDependency
+     */
+    select?: TaskDependencySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskDependencyInclude<ExtArgs> | null
+    where?: TaskDependencyWhereInput
+    orderBy?: TaskDependencyOrderByWithRelationInput | TaskDependencyOrderByWithRelationInput[]
+    cursor?: TaskDependencyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TaskDependencyScalarFieldEnum | TaskDependencyScalarFieldEnum[]
+  }
+
+  /**
+   * Task.dependents
+   */
+  export type Task$dependentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskDependency
+     */
+    select?: TaskDependencySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskDependencyInclude<ExtArgs> | null
+    where?: TaskDependencyWhereInput
+    orderBy?: TaskDependencyOrderByWithRelationInput | TaskDependencyOrderByWithRelationInput[]
+    cursor?: TaskDependencyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TaskDependencyScalarFieldEnum | TaskDependencyScalarFieldEnum[]
+  }
+
+  /**
    * Task without action
    */
   export type TaskDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -19349,6 +19700,2016 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: TaskInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TaskDependency
+   */
+
+  export type AggregateTaskDependency = {
+    _count: TaskDependencyCountAggregateOutputType | null
+    _min: TaskDependencyMinAggregateOutputType | null
+    _max: TaskDependencyMaxAggregateOutputType | null
+  }
+
+  export type TaskDependencyMinAggregateOutputType = {
+    id: string | null
+    taskId: string | null
+    dependsOnTaskId: string | null
+    createdAt: Date | null
+  }
+
+  export type TaskDependencyMaxAggregateOutputType = {
+    id: string | null
+    taskId: string | null
+    dependsOnTaskId: string | null
+    createdAt: Date | null
+  }
+
+  export type TaskDependencyCountAggregateOutputType = {
+    id: number
+    taskId: number
+    dependsOnTaskId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type TaskDependencyMinAggregateInputType = {
+    id?: true
+    taskId?: true
+    dependsOnTaskId?: true
+    createdAt?: true
+  }
+
+  export type TaskDependencyMaxAggregateInputType = {
+    id?: true
+    taskId?: true
+    dependsOnTaskId?: true
+    createdAt?: true
+  }
+
+  export type TaskDependencyCountAggregateInputType = {
+    id?: true
+    taskId?: true
+    dependsOnTaskId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type TaskDependencyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TaskDependency to aggregate.
+     */
+    where?: TaskDependencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TaskDependencies to fetch.
+     */
+    orderBy?: TaskDependencyOrderByWithRelationInput | TaskDependencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TaskDependencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TaskDependencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TaskDependencies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TaskDependencies
+    **/
+    _count?: true | TaskDependencyCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TaskDependencyMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TaskDependencyMaxAggregateInputType
+  }
+
+  export type GetTaskDependencyAggregateType<T extends TaskDependencyAggregateArgs> = {
+        [P in keyof T & keyof AggregateTaskDependency]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTaskDependency[P]>
+      : GetScalarType<T[P], AggregateTaskDependency[P]>
+  }
+
+
+
+
+  export type TaskDependencyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaskDependencyWhereInput
+    orderBy?: TaskDependencyOrderByWithAggregationInput | TaskDependencyOrderByWithAggregationInput[]
+    by: TaskDependencyScalarFieldEnum[] | TaskDependencyScalarFieldEnum
+    having?: TaskDependencyScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TaskDependencyCountAggregateInputType | true
+    _min?: TaskDependencyMinAggregateInputType
+    _max?: TaskDependencyMaxAggregateInputType
+  }
+
+  export type TaskDependencyGroupByOutputType = {
+    id: string
+    taskId: string
+    dependsOnTaskId: string
+    createdAt: Date
+    _count: TaskDependencyCountAggregateOutputType | null
+    _min: TaskDependencyMinAggregateOutputType | null
+    _max: TaskDependencyMaxAggregateOutputType | null
+  }
+
+  type GetTaskDependencyGroupByPayload<T extends TaskDependencyGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TaskDependencyGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TaskDependencyGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TaskDependencyGroupByOutputType[P]>
+            : GetScalarType<T[P], TaskDependencyGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TaskDependencySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    taskId?: boolean
+    dependsOnTaskId?: boolean
+    createdAt?: boolean
+    task?: boolean | TaskDefaultArgs<ExtArgs>
+    dependsOnTask?: boolean | TaskDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["taskDependency"]>
+
+  export type TaskDependencySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    taskId?: boolean
+    dependsOnTaskId?: boolean
+    createdAt?: boolean
+    task?: boolean | TaskDefaultArgs<ExtArgs>
+    dependsOnTask?: boolean | TaskDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["taskDependency"]>
+
+  export type TaskDependencySelectScalar = {
+    id?: boolean
+    taskId?: boolean
+    dependsOnTaskId?: boolean
+    createdAt?: boolean
+  }
+
+  export type TaskDependencyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    task?: boolean | TaskDefaultArgs<ExtArgs>
+    dependsOnTask?: boolean | TaskDefaultArgs<ExtArgs>
+  }
+  export type TaskDependencyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    task?: boolean | TaskDefaultArgs<ExtArgs>
+    dependsOnTask?: boolean | TaskDefaultArgs<ExtArgs>
+  }
+
+  export type $TaskDependencyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TaskDependency"
+    objects: {
+      task: Prisma.$TaskPayload<ExtArgs>
+      dependsOnTask: Prisma.$TaskPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      taskId: string
+      dependsOnTaskId: string
+      createdAt: Date
+    }, ExtArgs["result"]["taskDependency"]>
+    composites: {}
+  }
+
+  type TaskDependencyGetPayload<S extends boolean | null | undefined | TaskDependencyDefaultArgs> = $Result.GetResult<Prisma.$TaskDependencyPayload, S>
+
+  type TaskDependencyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<TaskDependencyFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: TaskDependencyCountAggregateInputType | true
+    }
+
+  export interface TaskDependencyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TaskDependency'], meta: { name: 'TaskDependency' } }
+    /**
+     * Find zero or one TaskDependency that matches the filter.
+     * @param {TaskDependencyFindUniqueArgs} args - Arguments to find a TaskDependency
+     * @example
+     * // Get one TaskDependency
+     * const taskDependency = await prisma.taskDependency.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TaskDependencyFindUniqueArgs>(args: SelectSubset<T, TaskDependencyFindUniqueArgs<ExtArgs>>): Prisma__TaskDependencyClient<$Result.GetResult<Prisma.$TaskDependencyPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one TaskDependency that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {TaskDependencyFindUniqueOrThrowArgs} args - Arguments to find a TaskDependency
+     * @example
+     * // Get one TaskDependency
+     * const taskDependency = await prisma.taskDependency.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TaskDependencyFindUniqueOrThrowArgs>(args: SelectSubset<T, TaskDependencyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TaskDependencyClient<$Result.GetResult<Prisma.$TaskDependencyPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first TaskDependency that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskDependencyFindFirstArgs} args - Arguments to find a TaskDependency
+     * @example
+     * // Get one TaskDependency
+     * const taskDependency = await prisma.taskDependency.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TaskDependencyFindFirstArgs>(args?: SelectSubset<T, TaskDependencyFindFirstArgs<ExtArgs>>): Prisma__TaskDependencyClient<$Result.GetResult<Prisma.$TaskDependencyPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first TaskDependency that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskDependencyFindFirstOrThrowArgs} args - Arguments to find a TaskDependency
+     * @example
+     * // Get one TaskDependency
+     * const taskDependency = await prisma.taskDependency.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TaskDependencyFindFirstOrThrowArgs>(args?: SelectSubset<T, TaskDependencyFindFirstOrThrowArgs<ExtArgs>>): Prisma__TaskDependencyClient<$Result.GetResult<Prisma.$TaskDependencyPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more TaskDependencies that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskDependencyFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TaskDependencies
+     * const taskDependencies = await prisma.taskDependency.findMany()
+     * 
+     * // Get first 10 TaskDependencies
+     * const taskDependencies = await prisma.taskDependency.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const taskDependencyWithIdOnly = await prisma.taskDependency.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TaskDependencyFindManyArgs>(args?: SelectSubset<T, TaskDependencyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskDependencyPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a TaskDependency.
+     * @param {TaskDependencyCreateArgs} args - Arguments to create a TaskDependency.
+     * @example
+     * // Create one TaskDependency
+     * const TaskDependency = await prisma.taskDependency.create({
+     *   data: {
+     *     // ... data to create a TaskDependency
+     *   }
+     * })
+     * 
+     */
+    create<T extends TaskDependencyCreateArgs>(args: SelectSubset<T, TaskDependencyCreateArgs<ExtArgs>>): Prisma__TaskDependencyClient<$Result.GetResult<Prisma.$TaskDependencyPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many TaskDependencies.
+     * @param {TaskDependencyCreateManyArgs} args - Arguments to create many TaskDependencies.
+     * @example
+     * // Create many TaskDependencies
+     * const taskDependency = await prisma.taskDependency.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TaskDependencyCreateManyArgs>(args?: SelectSubset<T, TaskDependencyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TaskDependencies and returns the data saved in the database.
+     * @param {TaskDependencyCreateManyAndReturnArgs} args - Arguments to create many TaskDependencies.
+     * @example
+     * // Create many TaskDependencies
+     * const taskDependency = await prisma.taskDependency.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TaskDependencies and only return the `id`
+     * const taskDependencyWithIdOnly = await prisma.taskDependency.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TaskDependencyCreateManyAndReturnArgs>(args?: SelectSubset<T, TaskDependencyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskDependencyPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a TaskDependency.
+     * @param {TaskDependencyDeleteArgs} args - Arguments to delete one TaskDependency.
+     * @example
+     * // Delete one TaskDependency
+     * const TaskDependency = await prisma.taskDependency.delete({
+     *   where: {
+     *     // ... filter to delete one TaskDependency
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TaskDependencyDeleteArgs>(args: SelectSubset<T, TaskDependencyDeleteArgs<ExtArgs>>): Prisma__TaskDependencyClient<$Result.GetResult<Prisma.$TaskDependencyPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one TaskDependency.
+     * @param {TaskDependencyUpdateArgs} args - Arguments to update one TaskDependency.
+     * @example
+     * // Update one TaskDependency
+     * const taskDependency = await prisma.taskDependency.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TaskDependencyUpdateArgs>(args: SelectSubset<T, TaskDependencyUpdateArgs<ExtArgs>>): Prisma__TaskDependencyClient<$Result.GetResult<Prisma.$TaskDependencyPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more TaskDependencies.
+     * @param {TaskDependencyDeleteManyArgs} args - Arguments to filter TaskDependencies to delete.
+     * @example
+     * // Delete a few TaskDependencies
+     * const { count } = await prisma.taskDependency.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TaskDependencyDeleteManyArgs>(args?: SelectSubset<T, TaskDependencyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TaskDependencies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskDependencyUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TaskDependencies
+     * const taskDependency = await prisma.taskDependency.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TaskDependencyUpdateManyArgs>(args: SelectSubset<T, TaskDependencyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one TaskDependency.
+     * @param {TaskDependencyUpsertArgs} args - Arguments to update or create a TaskDependency.
+     * @example
+     * // Update or create a TaskDependency
+     * const taskDependency = await prisma.taskDependency.upsert({
+     *   create: {
+     *     // ... data to create a TaskDependency
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TaskDependency we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TaskDependencyUpsertArgs>(args: SelectSubset<T, TaskDependencyUpsertArgs<ExtArgs>>): Prisma__TaskDependencyClient<$Result.GetResult<Prisma.$TaskDependencyPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of TaskDependencies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskDependencyCountArgs} args - Arguments to filter TaskDependencies to count.
+     * @example
+     * // Count the number of TaskDependencies
+     * const count = await prisma.taskDependency.count({
+     *   where: {
+     *     // ... the filter for the TaskDependencies we want to count
+     *   }
+     * })
+    **/
+    count<T extends TaskDependencyCountArgs>(
+      args?: Subset<T, TaskDependencyCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TaskDependencyCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TaskDependency.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskDependencyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TaskDependencyAggregateArgs>(args: Subset<T, TaskDependencyAggregateArgs>): Prisma.PrismaPromise<GetTaskDependencyAggregateType<T>>
+
+    /**
+     * Group by TaskDependency.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskDependencyGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TaskDependencyGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TaskDependencyGroupByArgs['orderBy'] }
+        : { orderBy?: TaskDependencyGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TaskDependencyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTaskDependencyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TaskDependency model
+   */
+  readonly fields: TaskDependencyFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TaskDependency.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TaskDependencyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    task<T extends TaskDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TaskDefaultArgs<ExtArgs>>): Prisma__TaskClient<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    dependsOnTask<T extends TaskDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TaskDefaultArgs<ExtArgs>>): Prisma__TaskClient<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TaskDependency model
+   */ 
+  interface TaskDependencyFieldRefs {
+    readonly id: FieldRef<"TaskDependency", 'String'>
+    readonly taskId: FieldRef<"TaskDependency", 'String'>
+    readonly dependsOnTaskId: FieldRef<"TaskDependency", 'String'>
+    readonly createdAt: FieldRef<"TaskDependency", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TaskDependency findUnique
+   */
+  export type TaskDependencyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskDependency
+     */
+    select?: TaskDependencySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskDependencyInclude<ExtArgs> | null
+    /**
+     * Filter, which TaskDependency to fetch.
+     */
+    where: TaskDependencyWhereUniqueInput
+  }
+
+  /**
+   * TaskDependency findUniqueOrThrow
+   */
+  export type TaskDependencyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskDependency
+     */
+    select?: TaskDependencySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskDependencyInclude<ExtArgs> | null
+    /**
+     * Filter, which TaskDependency to fetch.
+     */
+    where: TaskDependencyWhereUniqueInput
+  }
+
+  /**
+   * TaskDependency findFirst
+   */
+  export type TaskDependencyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskDependency
+     */
+    select?: TaskDependencySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskDependencyInclude<ExtArgs> | null
+    /**
+     * Filter, which TaskDependency to fetch.
+     */
+    where?: TaskDependencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TaskDependencies to fetch.
+     */
+    orderBy?: TaskDependencyOrderByWithRelationInput | TaskDependencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TaskDependencies.
+     */
+    cursor?: TaskDependencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TaskDependencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TaskDependencies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TaskDependencies.
+     */
+    distinct?: TaskDependencyScalarFieldEnum | TaskDependencyScalarFieldEnum[]
+  }
+
+  /**
+   * TaskDependency findFirstOrThrow
+   */
+  export type TaskDependencyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskDependency
+     */
+    select?: TaskDependencySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskDependencyInclude<ExtArgs> | null
+    /**
+     * Filter, which TaskDependency to fetch.
+     */
+    where?: TaskDependencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TaskDependencies to fetch.
+     */
+    orderBy?: TaskDependencyOrderByWithRelationInput | TaskDependencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TaskDependencies.
+     */
+    cursor?: TaskDependencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TaskDependencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TaskDependencies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TaskDependencies.
+     */
+    distinct?: TaskDependencyScalarFieldEnum | TaskDependencyScalarFieldEnum[]
+  }
+
+  /**
+   * TaskDependency findMany
+   */
+  export type TaskDependencyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskDependency
+     */
+    select?: TaskDependencySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskDependencyInclude<ExtArgs> | null
+    /**
+     * Filter, which TaskDependencies to fetch.
+     */
+    where?: TaskDependencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TaskDependencies to fetch.
+     */
+    orderBy?: TaskDependencyOrderByWithRelationInput | TaskDependencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TaskDependencies.
+     */
+    cursor?: TaskDependencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TaskDependencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TaskDependencies.
+     */
+    skip?: number
+    distinct?: TaskDependencyScalarFieldEnum | TaskDependencyScalarFieldEnum[]
+  }
+
+  /**
+   * TaskDependency create
+   */
+  export type TaskDependencyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskDependency
+     */
+    select?: TaskDependencySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskDependencyInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TaskDependency.
+     */
+    data: XOR<TaskDependencyCreateInput, TaskDependencyUncheckedCreateInput>
+  }
+
+  /**
+   * TaskDependency createMany
+   */
+  export type TaskDependencyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TaskDependencies.
+     */
+    data: TaskDependencyCreateManyInput | TaskDependencyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TaskDependency createManyAndReturn
+   */
+  export type TaskDependencyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskDependency
+     */
+    select?: TaskDependencySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many TaskDependencies.
+     */
+    data: TaskDependencyCreateManyInput | TaskDependencyCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskDependencyIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TaskDependency update
+   */
+  export type TaskDependencyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskDependency
+     */
+    select?: TaskDependencySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskDependencyInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TaskDependency.
+     */
+    data: XOR<TaskDependencyUpdateInput, TaskDependencyUncheckedUpdateInput>
+    /**
+     * Choose, which TaskDependency to update.
+     */
+    where: TaskDependencyWhereUniqueInput
+  }
+
+  /**
+   * TaskDependency updateMany
+   */
+  export type TaskDependencyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TaskDependencies.
+     */
+    data: XOR<TaskDependencyUpdateManyMutationInput, TaskDependencyUncheckedUpdateManyInput>
+    /**
+     * Filter which TaskDependencies to update
+     */
+    where?: TaskDependencyWhereInput
+  }
+
+  /**
+   * TaskDependency upsert
+   */
+  export type TaskDependencyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskDependency
+     */
+    select?: TaskDependencySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskDependencyInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TaskDependency to update in case it exists.
+     */
+    where: TaskDependencyWhereUniqueInput
+    /**
+     * In case the TaskDependency found by the `where` argument doesn't exist, create a new TaskDependency with this data.
+     */
+    create: XOR<TaskDependencyCreateInput, TaskDependencyUncheckedCreateInput>
+    /**
+     * In case the TaskDependency was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TaskDependencyUpdateInput, TaskDependencyUncheckedUpdateInput>
+  }
+
+  /**
+   * TaskDependency delete
+   */
+  export type TaskDependencyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskDependency
+     */
+    select?: TaskDependencySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskDependencyInclude<ExtArgs> | null
+    /**
+     * Filter which TaskDependency to delete.
+     */
+    where: TaskDependencyWhereUniqueInput
+  }
+
+  /**
+   * TaskDependency deleteMany
+   */
+  export type TaskDependencyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TaskDependencies to delete
+     */
+    where?: TaskDependencyWhereInput
+  }
+
+  /**
+   * TaskDependency without action
+   */
+  export type TaskDependencyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskDependency
+     */
+    select?: TaskDependencySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskDependencyInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model BillingMilestone
+   */
+
+  export type AggregateBillingMilestone = {
+    _count: BillingMilestoneCountAggregateOutputType | null
+    _avg: BillingMilestoneAvgAggregateOutputType | null
+    _sum: BillingMilestoneSumAggregateOutputType | null
+    _min: BillingMilestoneMinAggregateOutputType | null
+    _max: BillingMilestoneMaxAggregateOutputType | null
+  }
+
+  export type BillingMilestoneAvgAggregateOutputType = {
+    percentage: number | null
+    amount: number | null
+    sortOrder: number | null
+  }
+
+  export type BillingMilestoneSumAggregateOutputType = {
+    percentage: number | null
+    amount: number | null
+    sortOrder: number | null
+  }
+
+  export type BillingMilestoneMinAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    name: string | null
+    description: string | null
+    percentage: number | null
+    amount: number | null
+    dueDate: Date | null
+    status: $Enums.BillingMilestoneStatus | null
+    invoiceNumber: string | null
+    invoicedAt: Date | null
+    paidAt: Date | null
+    sortOrder: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BillingMilestoneMaxAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    name: string | null
+    description: string | null
+    percentage: number | null
+    amount: number | null
+    dueDate: Date | null
+    status: $Enums.BillingMilestoneStatus | null
+    invoiceNumber: string | null
+    invoicedAt: Date | null
+    paidAt: Date | null
+    sortOrder: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BillingMilestoneCountAggregateOutputType = {
+    id: number
+    projectId: number
+    name: number
+    description: number
+    percentage: number
+    amount: number
+    dueDate: number
+    status: number
+    invoiceNumber: number
+    invoicedAt: number
+    paidAt: number
+    sortOrder: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type BillingMilestoneAvgAggregateInputType = {
+    percentage?: true
+    amount?: true
+    sortOrder?: true
+  }
+
+  export type BillingMilestoneSumAggregateInputType = {
+    percentage?: true
+    amount?: true
+    sortOrder?: true
+  }
+
+  export type BillingMilestoneMinAggregateInputType = {
+    id?: true
+    projectId?: true
+    name?: true
+    description?: true
+    percentage?: true
+    amount?: true
+    dueDate?: true
+    status?: true
+    invoiceNumber?: true
+    invoicedAt?: true
+    paidAt?: true
+    sortOrder?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BillingMilestoneMaxAggregateInputType = {
+    id?: true
+    projectId?: true
+    name?: true
+    description?: true
+    percentage?: true
+    amount?: true
+    dueDate?: true
+    status?: true
+    invoiceNumber?: true
+    invoicedAt?: true
+    paidAt?: true
+    sortOrder?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BillingMilestoneCountAggregateInputType = {
+    id?: true
+    projectId?: true
+    name?: true
+    description?: true
+    percentage?: true
+    amount?: true
+    dueDate?: true
+    status?: true
+    invoiceNumber?: true
+    invoicedAt?: true
+    paidAt?: true
+    sortOrder?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type BillingMilestoneAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BillingMilestone to aggregate.
+     */
+    where?: BillingMilestoneWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BillingMilestones to fetch.
+     */
+    orderBy?: BillingMilestoneOrderByWithRelationInput | BillingMilestoneOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BillingMilestoneWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BillingMilestones from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BillingMilestones.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned BillingMilestones
+    **/
+    _count?: true | BillingMilestoneCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: BillingMilestoneAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: BillingMilestoneSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BillingMilestoneMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BillingMilestoneMaxAggregateInputType
+  }
+
+  export type GetBillingMilestoneAggregateType<T extends BillingMilestoneAggregateArgs> = {
+        [P in keyof T & keyof AggregateBillingMilestone]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBillingMilestone[P]>
+      : GetScalarType<T[P], AggregateBillingMilestone[P]>
+  }
+
+
+
+
+  export type BillingMilestoneGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BillingMilestoneWhereInput
+    orderBy?: BillingMilestoneOrderByWithAggregationInput | BillingMilestoneOrderByWithAggregationInput[]
+    by: BillingMilestoneScalarFieldEnum[] | BillingMilestoneScalarFieldEnum
+    having?: BillingMilestoneScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BillingMilestoneCountAggregateInputType | true
+    _avg?: BillingMilestoneAvgAggregateInputType
+    _sum?: BillingMilestoneSumAggregateInputType
+    _min?: BillingMilestoneMinAggregateInputType
+    _max?: BillingMilestoneMaxAggregateInputType
+  }
+
+  export type BillingMilestoneGroupByOutputType = {
+    id: string
+    projectId: string
+    name: string
+    description: string | null
+    percentage: number
+    amount: number | null
+    dueDate: Date | null
+    status: $Enums.BillingMilestoneStatus
+    invoiceNumber: string | null
+    invoicedAt: Date | null
+    paidAt: Date | null
+    sortOrder: number
+    createdAt: Date
+    updatedAt: Date
+    _count: BillingMilestoneCountAggregateOutputType | null
+    _avg: BillingMilestoneAvgAggregateOutputType | null
+    _sum: BillingMilestoneSumAggregateOutputType | null
+    _min: BillingMilestoneMinAggregateOutputType | null
+    _max: BillingMilestoneMaxAggregateOutputType | null
+  }
+
+  type GetBillingMilestoneGroupByPayload<T extends BillingMilestoneGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BillingMilestoneGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BillingMilestoneGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BillingMilestoneGroupByOutputType[P]>
+            : GetScalarType<T[P], BillingMilestoneGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BillingMilestoneSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    name?: boolean
+    description?: boolean
+    percentage?: boolean
+    amount?: boolean
+    dueDate?: boolean
+    status?: boolean
+    invoiceNumber?: boolean
+    invoicedAt?: boolean
+    paidAt?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["billingMilestone"]>
+
+  export type BillingMilestoneSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    name?: boolean
+    description?: boolean
+    percentage?: boolean
+    amount?: boolean
+    dueDate?: boolean
+    status?: boolean
+    invoiceNumber?: boolean
+    invoicedAt?: boolean
+    paidAt?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["billingMilestone"]>
+
+  export type BillingMilestoneSelectScalar = {
+    id?: boolean
+    projectId?: boolean
+    name?: boolean
+    description?: boolean
+    percentage?: boolean
+    amount?: boolean
+    dueDate?: boolean
+    status?: boolean
+    invoiceNumber?: boolean
+    invoicedAt?: boolean
+    paidAt?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type BillingMilestoneInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }
+  export type BillingMilestoneIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }
+
+  export type $BillingMilestonePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "BillingMilestone"
+    objects: {
+      project: Prisma.$ProjectPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      projectId: string
+      name: string
+      description: string | null
+      percentage: number
+      amount: number | null
+      dueDate: Date | null
+      status: $Enums.BillingMilestoneStatus
+      invoiceNumber: string | null
+      invoicedAt: Date | null
+      paidAt: Date | null
+      sortOrder: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["billingMilestone"]>
+    composites: {}
+  }
+
+  type BillingMilestoneGetPayload<S extends boolean | null | undefined | BillingMilestoneDefaultArgs> = $Result.GetResult<Prisma.$BillingMilestonePayload, S>
+
+  type BillingMilestoneCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<BillingMilestoneFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: BillingMilestoneCountAggregateInputType | true
+    }
+
+  export interface BillingMilestoneDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['BillingMilestone'], meta: { name: 'BillingMilestone' } }
+    /**
+     * Find zero or one BillingMilestone that matches the filter.
+     * @param {BillingMilestoneFindUniqueArgs} args - Arguments to find a BillingMilestone
+     * @example
+     * // Get one BillingMilestone
+     * const billingMilestone = await prisma.billingMilestone.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends BillingMilestoneFindUniqueArgs>(args: SelectSubset<T, BillingMilestoneFindUniqueArgs<ExtArgs>>): Prisma__BillingMilestoneClient<$Result.GetResult<Prisma.$BillingMilestonePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one BillingMilestone that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {BillingMilestoneFindUniqueOrThrowArgs} args - Arguments to find a BillingMilestone
+     * @example
+     * // Get one BillingMilestone
+     * const billingMilestone = await prisma.billingMilestone.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends BillingMilestoneFindUniqueOrThrowArgs>(args: SelectSubset<T, BillingMilestoneFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BillingMilestoneClient<$Result.GetResult<Prisma.$BillingMilestonePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first BillingMilestone that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BillingMilestoneFindFirstArgs} args - Arguments to find a BillingMilestone
+     * @example
+     * // Get one BillingMilestone
+     * const billingMilestone = await prisma.billingMilestone.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends BillingMilestoneFindFirstArgs>(args?: SelectSubset<T, BillingMilestoneFindFirstArgs<ExtArgs>>): Prisma__BillingMilestoneClient<$Result.GetResult<Prisma.$BillingMilestonePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first BillingMilestone that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BillingMilestoneFindFirstOrThrowArgs} args - Arguments to find a BillingMilestone
+     * @example
+     * // Get one BillingMilestone
+     * const billingMilestone = await prisma.billingMilestone.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends BillingMilestoneFindFirstOrThrowArgs>(args?: SelectSubset<T, BillingMilestoneFindFirstOrThrowArgs<ExtArgs>>): Prisma__BillingMilestoneClient<$Result.GetResult<Prisma.$BillingMilestonePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more BillingMilestones that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BillingMilestoneFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all BillingMilestones
+     * const billingMilestones = await prisma.billingMilestone.findMany()
+     * 
+     * // Get first 10 BillingMilestones
+     * const billingMilestones = await prisma.billingMilestone.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const billingMilestoneWithIdOnly = await prisma.billingMilestone.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends BillingMilestoneFindManyArgs>(args?: SelectSubset<T, BillingMilestoneFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BillingMilestonePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a BillingMilestone.
+     * @param {BillingMilestoneCreateArgs} args - Arguments to create a BillingMilestone.
+     * @example
+     * // Create one BillingMilestone
+     * const BillingMilestone = await prisma.billingMilestone.create({
+     *   data: {
+     *     // ... data to create a BillingMilestone
+     *   }
+     * })
+     * 
+     */
+    create<T extends BillingMilestoneCreateArgs>(args: SelectSubset<T, BillingMilestoneCreateArgs<ExtArgs>>): Prisma__BillingMilestoneClient<$Result.GetResult<Prisma.$BillingMilestonePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many BillingMilestones.
+     * @param {BillingMilestoneCreateManyArgs} args - Arguments to create many BillingMilestones.
+     * @example
+     * // Create many BillingMilestones
+     * const billingMilestone = await prisma.billingMilestone.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends BillingMilestoneCreateManyArgs>(args?: SelectSubset<T, BillingMilestoneCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many BillingMilestones and returns the data saved in the database.
+     * @param {BillingMilestoneCreateManyAndReturnArgs} args - Arguments to create many BillingMilestones.
+     * @example
+     * // Create many BillingMilestones
+     * const billingMilestone = await prisma.billingMilestone.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many BillingMilestones and only return the `id`
+     * const billingMilestoneWithIdOnly = await prisma.billingMilestone.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends BillingMilestoneCreateManyAndReturnArgs>(args?: SelectSubset<T, BillingMilestoneCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BillingMilestonePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a BillingMilestone.
+     * @param {BillingMilestoneDeleteArgs} args - Arguments to delete one BillingMilestone.
+     * @example
+     * // Delete one BillingMilestone
+     * const BillingMilestone = await prisma.billingMilestone.delete({
+     *   where: {
+     *     // ... filter to delete one BillingMilestone
+     *   }
+     * })
+     * 
+     */
+    delete<T extends BillingMilestoneDeleteArgs>(args: SelectSubset<T, BillingMilestoneDeleteArgs<ExtArgs>>): Prisma__BillingMilestoneClient<$Result.GetResult<Prisma.$BillingMilestonePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one BillingMilestone.
+     * @param {BillingMilestoneUpdateArgs} args - Arguments to update one BillingMilestone.
+     * @example
+     * // Update one BillingMilestone
+     * const billingMilestone = await prisma.billingMilestone.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends BillingMilestoneUpdateArgs>(args: SelectSubset<T, BillingMilestoneUpdateArgs<ExtArgs>>): Prisma__BillingMilestoneClient<$Result.GetResult<Prisma.$BillingMilestonePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more BillingMilestones.
+     * @param {BillingMilestoneDeleteManyArgs} args - Arguments to filter BillingMilestones to delete.
+     * @example
+     * // Delete a few BillingMilestones
+     * const { count } = await prisma.billingMilestone.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends BillingMilestoneDeleteManyArgs>(args?: SelectSubset<T, BillingMilestoneDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BillingMilestones.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BillingMilestoneUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many BillingMilestones
+     * const billingMilestone = await prisma.billingMilestone.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends BillingMilestoneUpdateManyArgs>(args: SelectSubset<T, BillingMilestoneUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one BillingMilestone.
+     * @param {BillingMilestoneUpsertArgs} args - Arguments to update or create a BillingMilestone.
+     * @example
+     * // Update or create a BillingMilestone
+     * const billingMilestone = await prisma.billingMilestone.upsert({
+     *   create: {
+     *     // ... data to create a BillingMilestone
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the BillingMilestone we want to update
+     *   }
+     * })
+     */
+    upsert<T extends BillingMilestoneUpsertArgs>(args: SelectSubset<T, BillingMilestoneUpsertArgs<ExtArgs>>): Prisma__BillingMilestoneClient<$Result.GetResult<Prisma.$BillingMilestonePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of BillingMilestones.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BillingMilestoneCountArgs} args - Arguments to filter BillingMilestones to count.
+     * @example
+     * // Count the number of BillingMilestones
+     * const count = await prisma.billingMilestone.count({
+     *   where: {
+     *     // ... the filter for the BillingMilestones we want to count
+     *   }
+     * })
+    **/
+    count<T extends BillingMilestoneCountArgs>(
+      args?: Subset<T, BillingMilestoneCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BillingMilestoneCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a BillingMilestone.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BillingMilestoneAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BillingMilestoneAggregateArgs>(args: Subset<T, BillingMilestoneAggregateArgs>): Prisma.PrismaPromise<GetBillingMilestoneAggregateType<T>>
+
+    /**
+     * Group by BillingMilestone.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BillingMilestoneGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BillingMilestoneGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BillingMilestoneGroupByArgs['orderBy'] }
+        : { orderBy?: BillingMilestoneGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BillingMilestoneGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBillingMilestoneGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the BillingMilestone model
+   */
+  readonly fields: BillingMilestoneFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for BillingMilestone.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BillingMilestoneClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the BillingMilestone model
+   */ 
+  interface BillingMilestoneFieldRefs {
+    readonly id: FieldRef<"BillingMilestone", 'String'>
+    readonly projectId: FieldRef<"BillingMilestone", 'String'>
+    readonly name: FieldRef<"BillingMilestone", 'String'>
+    readonly description: FieldRef<"BillingMilestone", 'String'>
+    readonly percentage: FieldRef<"BillingMilestone", 'Float'>
+    readonly amount: FieldRef<"BillingMilestone", 'Float'>
+    readonly dueDate: FieldRef<"BillingMilestone", 'DateTime'>
+    readonly status: FieldRef<"BillingMilestone", 'BillingMilestoneStatus'>
+    readonly invoiceNumber: FieldRef<"BillingMilestone", 'String'>
+    readonly invoicedAt: FieldRef<"BillingMilestone", 'DateTime'>
+    readonly paidAt: FieldRef<"BillingMilestone", 'DateTime'>
+    readonly sortOrder: FieldRef<"BillingMilestone", 'Int'>
+    readonly createdAt: FieldRef<"BillingMilestone", 'DateTime'>
+    readonly updatedAt: FieldRef<"BillingMilestone", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * BillingMilestone findUnique
+   */
+  export type BillingMilestoneFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BillingMilestone
+     */
+    select?: BillingMilestoneSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BillingMilestoneInclude<ExtArgs> | null
+    /**
+     * Filter, which BillingMilestone to fetch.
+     */
+    where: BillingMilestoneWhereUniqueInput
+  }
+
+  /**
+   * BillingMilestone findUniqueOrThrow
+   */
+  export type BillingMilestoneFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BillingMilestone
+     */
+    select?: BillingMilestoneSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BillingMilestoneInclude<ExtArgs> | null
+    /**
+     * Filter, which BillingMilestone to fetch.
+     */
+    where: BillingMilestoneWhereUniqueInput
+  }
+
+  /**
+   * BillingMilestone findFirst
+   */
+  export type BillingMilestoneFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BillingMilestone
+     */
+    select?: BillingMilestoneSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BillingMilestoneInclude<ExtArgs> | null
+    /**
+     * Filter, which BillingMilestone to fetch.
+     */
+    where?: BillingMilestoneWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BillingMilestones to fetch.
+     */
+    orderBy?: BillingMilestoneOrderByWithRelationInput | BillingMilestoneOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BillingMilestones.
+     */
+    cursor?: BillingMilestoneWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BillingMilestones from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BillingMilestones.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BillingMilestones.
+     */
+    distinct?: BillingMilestoneScalarFieldEnum | BillingMilestoneScalarFieldEnum[]
+  }
+
+  /**
+   * BillingMilestone findFirstOrThrow
+   */
+  export type BillingMilestoneFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BillingMilestone
+     */
+    select?: BillingMilestoneSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BillingMilestoneInclude<ExtArgs> | null
+    /**
+     * Filter, which BillingMilestone to fetch.
+     */
+    where?: BillingMilestoneWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BillingMilestones to fetch.
+     */
+    orderBy?: BillingMilestoneOrderByWithRelationInput | BillingMilestoneOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BillingMilestones.
+     */
+    cursor?: BillingMilestoneWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BillingMilestones from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BillingMilestones.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BillingMilestones.
+     */
+    distinct?: BillingMilestoneScalarFieldEnum | BillingMilestoneScalarFieldEnum[]
+  }
+
+  /**
+   * BillingMilestone findMany
+   */
+  export type BillingMilestoneFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BillingMilestone
+     */
+    select?: BillingMilestoneSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BillingMilestoneInclude<ExtArgs> | null
+    /**
+     * Filter, which BillingMilestones to fetch.
+     */
+    where?: BillingMilestoneWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BillingMilestones to fetch.
+     */
+    orderBy?: BillingMilestoneOrderByWithRelationInput | BillingMilestoneOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing BillingMilestones.
+     */
+    cursor?: BillingMilestoneWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BillingMilestones from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BillingMilestones.
+     */
+    skip?: number
+    distinct?: BillingMilestoneScalarFieldEnum | BillingMilestoneScalarFieldEnum[]
+  }
+
+  /**
+   * BillingMilestone create
+   */
+  export type BillingMilestoneCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BillingMilestone
+     */
+    select?: BillingMilestoneSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BillingMilestoneInclude<ExtArgs> | null
+    /**
+     * The data needed to create a BillingMilestone.
+     */
+    data: XOR<BillingMilestoneCreateInput, BillingMilestoneUncheckedCreateInput>
+  }
+
+  /**
+   * BillingMilestone createMany
+   */
+  export type BillingMilestoneCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many BillingMilestones.
+     */
+    data: BillingMilestoneCreateManyInput | BillingMilestoneCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * BillingMilestone createManyAndReturn
+   */
+  export type BillingMilestoneCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BillingMilestone
+     */
+    select?: BillingMilestoneSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many BillingMilestones.
+     */
+    data: BillingMilestoneCreateManyInput | BillingMilestoneCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BillingMilestoneIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * BillingMilestone update
+   */
+  export type BillingMilestoneUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BillingMilestone
+     */
+    select?: BillingMilestoneSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BillingMilestoneInclude<ExtArgs> | null
+    /**
+     * The data needed to update a BillingMilestone.
+     */
+    data: XOR<BillingMilestoneUpdateInput, BillingMilestoneUncheckedUpdateInput>
+    /**
+     * Choose, which BillingMilestone to update.
+     */
+    where: BillingMilestoneWhereUniqueInput
+  }
+
+  /**
+   * BillingMilestone updateMany
+   */
+  export type BillingMilestoneUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update BillingMilestones.
+     */
+    data: XOR<BillingMilestoneUpdateManyMutationInput, BillingMilestoneUncheckedUpdateManyInput>
+    /**
+     * Filter which BillingMilestones to update
+     */
+    where?: BillingMilestoneWhereInput
+  }
+
+  /**
+   * BillingMilestone upsert
+   */
+  export type BillingMilestoneUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BillingMilestone
+     */
+    select?: BillingMilestoneSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BillingMilestoneInclude<ExtArgs> | null
+    /**
+     * The filter to search for the BillingMilestone to update in case it exists.
+     */
+    where: BillingMilestoneWhereUniqueInput
+    /**
+     * In case the BillingMilestone found by the `where` argument doesn't exist, create a new BillingMilestone with this data.
+     */
+    create: XOR<BillingMilestoneCreateInput, BillingMilestoneUncheckedCreateInput>
+    /**
+     * In case the BillingMilestone was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BillingMilestoneUpdateInput, BillingMilestoneUncheckedUpdateInput>
+  }
+
+  /**
+   * BillingMilestone delete
+   */
+  export type BillingMilestoneDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BillingMilestone
+     */
+    select?: BillingMilestoneSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BillingMilestoneInclude<ExtArgs> | null
+    /**
+     * Filter which BillingMilestone to delete.
+     */
+    where: BillingMilestoneWhereUniqueInput
+  }
+
+  /**
+   * BillingMilestone deleteMany
+   */
+  export type BillingMilestoneDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BillingMilestones to delete
+     */
+    where?: BillingMilestoneWhereInput
+  }
+
+  /**
+   * BillingMilestone without action
+   */
+  export type BillingMilestoneDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BillingMilestone
+     */
+    select?: BillingMilestoneSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BillingMilestoneInclude<ExtArgs> | null
   }
 
 
@@ -22508,10 +24869,41 @@ export namespace Prisma {
     assigneeId: 'assigneeId',
     createdById: 'createdById',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    parentTaskId: 'parentTaskId'
   };
 
   export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
+
+
+  export const TaskDependencyScalarFieldEnum: {
+    id: 'id',
+    taskId: 'taskId',
+    dependsOnTaskId: 'dependsOnTaskId',
+    createdAt: 'createdAt'
+  };
+
+  export type TaskDependencyScalarFieldEnum = (typeof TaskDependencyScalarFieldEnum)[keyof typeof TaskDependencyScalarFieldEnum]
+
+
+  export const BillingMilestoneScalarFieldEnum: {
+    id: 'id',
+    projectId: 'projectId',
+    name: 'name',
+    description: 'description',
+    percentage: 'percentage',
+    amount: 'amount',
+    dueDate: 'dueDate',
+    status: 'status',
+    invoiceNumber: 'invoiceNumber',
+    invoicedAt: 'invoicedAt',
+    paidAt: 'paidAt',
+    sortOrder: 'sortOrder',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type BillingMilestoneScalarFieldEnum = (typeof BillingMilestoneScalarFieldEnum)[keyof typeof BillingMilestoneScalarFieldEnum]
 
 
   export const TaskAssigneeScalarFieldEnum: {
@@ -22769,6 +25161,20 @@ export namespace Prisma {
    * Reference to a field of type 'TaskStatus[]'
    */
   export type ListEnumTaskStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'BillingMilestoneStatus'
+   */
+  export type EnumBillingMilestoneStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BillingMilestoneStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'BillingMilestoneStatus[]'
+   */
+  export type ListEnumBillingMilestoneStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BillingMilestoneStatus[]'>
     
   /**
    * Deep Input Types
@@ -23066,6 +25472,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseListRelationFilter
     expenses?: ProjectExpenseListRelationFilter
     tasks?: TaskListRelationFilter
+    billingMilestones?: BillingMilestoneListRelationFilter
   }
 
   export type ProjectOrderByWithRelationInput = {
@@ -23110,6 +25517,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseOrderByRelationAggregateInput
     expenses?: ProjectExpenseOrderByRelationAggregateInput
     tasks?: TaskOrderByRelationAggregateInput
+    billingMilestones?: BillingMilestoneOrderByRelationAggregateInput
   }
 
   export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -23157,6 +25565,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseListRelationFilter
     expenses?: ProjectExpenseListRelationFilter
     tasks?: TaskListRelationFilter
+    billingMilestones?: BillingMilestoneListRelationFilter
   }, "id" | "code" | "surveyToken">
 
   export type ProjectOrderByWithAggregationInput = {
@@ -24119,12 +26528,17 @@ export namespace Prisma {
     createdById?: StringNullableFilter<"Task"> | string | null
     createdAt?: DateTimeFilter<"Task"> | Date | string
     updatedAt?: DateTimeFilter<"Task"> | Date | string
+    parentTaskId?: StringNullableFilter<"Task"> | string | null
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
     assignee?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    parentTask?: XOR<TaskNullableRelationFilter, TaskWhereInput> | null
+    subtasks?: TaskListRelationFilter
     timeLogs?: TaskTimeLogListRelationFilter
     assignees?: TaskAssigneeListRelationFilter
     timesheets?: TimesheetListRelationFilter
+    dependencies?: TaskDependencyListRelationFilter
+    dependents?: TaskDependencyListRelationFilter
   }
 
   export type TaskOrderByWithRelationInput = {
@@ -24141,12 +26555,17 @@ export namespace Prisma {
     createdById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    parentTaskId?: SortOrderInput | SortOrder
     project?: ProjectOrderByWithRelationInput
     assignee?: UserOrderByWithRelationInput
     createdBy?: UserOrderByWithRelationInput
+    parentTask?: TaskOrderByWithRelationInput
+    subtasks?: TaskOrderByRelationAggregateInput
     timeLogs?: TaskTimeLogOrderByRelationAggregateInput
     assignees?: TaskAssigneeOrderByRelationAggregateInput
     timesheets?: TimesheetOrderByRelationAggregateInput
+    dependencies?: TaskDependencyOrderByRelationAggregateInput
+    dependents?: TaskDependencyOrderByRelationAggregateInput
   }
 
   export type TaskWhereUniqueInput = Prisma.AtLeast<{
@@ -24166,12 +26585,17 @@ export namespace Prisma {
     createdById?: StringNullableFilter<"Task"> | string | null
     createdAt?: DateTimeFilter<"Task"> | Date | string
     updatedAt?: DateTimeFilter<"Task"> | Date | string
+    parentTaskId?: StringNullableFilter<"Task"> | string | null
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
     assignee?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    parentTask?: XOR<TaskNullableRelationFilter, TaskWhereInput> | null
+    subtasks?: TaskListRelationFilter
     timeLogs?: TaskTimeLogListRelationFilter
     assignees?: TaskAssigneeListRelationFilter
     timesheets?: TimesheetListRelationFilter
+    dependencies?: TaskDependencyListRelationFilter
+    dependents?: TaskDependencyListRelationFilter
   }, "id">
 
   export type TaskOrderByWithAggregationInput = {
@@ -24188,6 +26612,7 @@ export namespace Prisma {
     createdById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    parentTaskId?: SortOrderInput | SortOrder
     _count?: TaskCountOrderByAggregateInput
     _avg?: TaskAvgOrderByAggregateInput
     _max?: TaskMaxOrderByAggregateInput
@@ -24212,6 +26637,163 @@ export namespace Prisma {
     createdById?: StringNullableWithAggregatesFilter<"Task"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
+    parentTaskId?: StringNullableWithAggregatesFilter<"Task"> | string | null
+  }
+
+  export type TaskDependencyWhereInput = {
+    AND?: TaskDependencyWhereInput | TaskDependencyWhereInput[]
+    OR?: TaskDependencyWhereInput[]
+    NOT?: TaskDependencyWhereInput | TaskDependencyWhereInput[]
+    id?: StringFilter<"TaskDependency"> | string
+    taskId?: StringFilter<"TaskDependency"> | string
+    dependsOnTaskId?: StringFilter<"TaskDependency"> | string
+    createdAt?: DateTimeFilter<"TaskDependency"> | Date | string
+    task?: XOR<TaskRelationFilter, TaskWhereInput>
+    dependsOnTask?: XOR<TaskRelationFilter, TaskWhereInput>
+  }
+
+  export type TaskDependencyOrderByWithRelationInput = {
+    id?: SortOrder
+    taskId?: SortOrder
+    dependsOnTaskId?: SortOrder
+    createdAt?: SortOrder
+    task?: TaskOrderByWithRelationInput
+    dependsOnTask?: TaskOrderByWithRelationInput
+  }
+
+  export type TaskDependencyWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    taskId_dependsOnTaskId?: TaskDependencyTaskIdDependsOnTaskIdCompoundUniqueInput
+    AND?: TaskDependencyWhereInput | TaskDependencyWhereInput[]
+    OR?: TaskDependencyWhereInput[]
+    NOT?: TaskDependencyWhereInput | TaskDependencyWhereInput[]
+    taskId?: StringFilter<"TaskDependency"> | string
+    dependsOnTaskId?: StringFilter<"TaskDependency"> | string
+    createdAt?: DateTimeFilter<"TaskDependency"> | Date | string
+    task?: XOR<TaskRelationFilter, TaskWhereInput>
+    dependsOnTask?: XOR<TaskRelationFilter, TaskWhereInput>
+  }, "id" | "taskId_dependsOnTaskId">
+
+  export type TaskDependencyOrderByWithAggregationInput = {
+    id?: SortOrder
+    taskId?: SortOrder
+    dependsOnTaskId?: SortOrder
+    createdAt?: SortOrder
+    _count?: TaskDependencyCountOrderByAggregateInput
+    _max?: TaskDependencyMaxOrderByAggregateInput
+    _min?: TaskDependencyMinOrderByAggregateInput
+  }
+
+  export type TaskDependencyScalarWhereWithAggregatesInput = {
+    AND?: TaskDependencyScalarWhereWithAggregatesInput | TaskDependencyScalarWhereWithAggregatesInput[]
+    OR?: TaskDependencyScalarWhereWithAggregatesInput[]
+    NOT?: TaskDependencyScalarWhereWithAggregatesInput | TaskDependencyScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TaskDependency"> | string
+    taskId?: StringWithAggregatesFilter<"TaskDependency"> | string
+    dependsOnTaskId?: StringWithAggregatesFilter<"TaskDependency"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"TaskDependency"> | Date | string
+  }
+
+  export type BillingMilestoneWhereInput = {
+    AND?: BillingMilestoneWhereInput | BillingMilestoneWhereInput[]
+    OR?: BillingMilestoneWhereInput[]
+    NOT?: BillingMilestoneWhereInput | BillingMilestoneWhereInput[]
+    id?: StringFilter<"BillingMilestone"> | string
+    projectId?: StringFilter<"BillingMilestone"> | string
+    name?: StringFilter<"BillingMilestone"> | string
+    description?: StringNullableFilter<"BillingMilestone"> | string | null
+    percentage?: FloatFilter<"BillingMilestone"> | number
+    amount?: FloatNullableFilter<"BillingMilestone"> | number | null
+    dueDate?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
+    status?: EnumBillingMilestoneStatusFilter<"BillingMilestone"> | $Enums.BillingMilestoneStatus
+    invoiceNumber?: StringNullableFilter<"BillingMilestone"> | string | null
+    invoicedAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
+    paidAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
+    sortOrder?: IntFilter<"BillingMilestone"> | number
+    createdAt?: DateTimeFilter<"BillingMilestone"> | Date | string
+    updatedAt?: DateTimeFilter<"BillingMilestone"> | Date | string
+    project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+  }
+
+  export type BillingMilestoneOrderByWithRelationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    percentage?: SortOrder
+    amount?: SortOrderInput | SortOrder
+    dueDate?: SortOrderInput | SortOrder
+    status?: SortOrder
+    invoiceNumber?: SortOrderInput | SortOrder
+    invoicedAt?: SortOrderInput | SortOrder
+    paidAt?: SortOrderInput | SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    project?: ProjectOrderByWithRelationInput
+  }
+
+  export type BillingMilestoneWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: BillingMilestoneWhereInput | BillingMilestoneWhereInput[]
+    OR?: BillingMilestoneWhereInput[]
+    NOT?: BillingMilestoneWhereInput | BillingMilestoneWhereInput[]
+    projectId?: StringFilter<"BillingMilestone"> | string
+    name?: StringFilter<"BillingMilestone"> | string
+    description?: StringNullableFilter<"BillingMilestone"> | string | null
+    percentage?: FloatFilter<"BillingMilestone"> | number
+    amount?: FloatNullableFilter<"BillingMilestone"> | number | null
+    dueDate?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
+    status?: EnumBillingMilestoneStatusFilter<"BillingMilestone"> | $Enums.BillingMilestoneStatus
+    invoiceNumber?: StringNullableFilter<"BillingMilestone"> | string | null
+    invoicedAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
+    paidAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
+    sortOrder?: IntFilter<"BillingMilestone"> | number
+    createdAt?: DateTimeFilter<"BillingMilestone"> | Date | string
+    updatedAt?: DateTimeFilter<"BillingMilestone"> | Date | string
+    project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+  }, "id">
+
+  export type BillingMilestoneOrderByWithAggregationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    percentage?: SortOrder
+    amount?: SortOrderInput | SortOrder
+    dueDate?: SortOrderInput | SortOrder
+    status?: SortOrder
+    invoiceNumber?: SortOrderInput | SortOrder
+    invoicedAt?: SortOrderInput | SortOrder
+    paidAt?: SortOrderInput | SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: BillingMilestoneCountOrderByAggregateInput
+    _avg?: BillingMilestoneAvgOrderByAggregateInput
+    _max?: BillingMilestoneMaxOrderByAggregateInput
+    _min?: BillingMilestoneMinOrderByAggregateInput
+    _sum?: BillingMilestoneSumOrderByAggregateInput
+  }
+
+  export type BillingMilestoneScalarWhereWithAggregatesInput = {
+    AND?: BillingMilestoneScalarWhereWithAggregatesInput | BillingMilestoneScalarWhereWithAggregatesInput[]
+    OR?: BillingMilestoneScalarWhereWithAggregatesInput[]
+    NOT?: BillingMilestoneScalarWhereWithAggregatesInput | BillingMilestoneScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"BillingMilestone"> | string
+    projectId?: StringWithAggregatesFilter<"BillingMilestone"> | string
+    name?: StringWithAggregatesFilter<"BillingMilestone"> | string
+    description?: StringNullableWithAggregatesFilter<"BillingMilestone"> | string | null
+    percentage?: FloatWithAggregatesFilter<"BillingMilestone"> | number
+    amount?: FloatNullableWithAggregatesFilter<"BillingMilestone"> | number | null
+    dueDate?: DateTimeNullableWithAggregatesFilter<"BillingMilestone"> | Date | string | null
+    status?: EnumBillingMilestoneStatusWithAggregatesFilter<"BillingMilestone"> | $Enums.BillingMilestoneStatus
+    invoiceNumber?: StringNullableWithAggregatesFilter<"BillingMilestone"> | string | null
+    invoicedAt?: DateTimeNullableWithAggregatesFilter<"BillingMilestone"> | Date | string | null
+    paidAt?: DateTimeNullableWithAggregatesFilter<"BillingMilestone"> | Date | string | null
+    sortOrder?: IntWithAggregatesFilter<"BillingMilestone"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"BillingMilestone"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"BillingMilestone"> | Date | string
   }
 
   export type TaskAssigneeWhereInput = {
@@ -24733,6 +27315,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateInput = {
@@ -24772,6 +27355,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUpdateInput = {
@@ -24811,6 +27395,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateInput = {
@@ -24850,6 +27435,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectCreateManyInput = {
@@ -25878,9 +28464,13 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutTasksInput
     assignee?: UserCreateNestedOneWithoutTasksAssignedInput
     createdBy?: UserCreateNestedOneWithoutTasksCreatedInput
+    parentTask?: TaskCreateNestedOneWithoutSubtasksInput
+    subtasks?: TaskCreateNestedManyWithoutParentTaskInput
     timeLogs?: TaskTimeLogCreateNestedManyWithoutTaskInput
     assignees?: TaskAssigneeCreateNestedManyWithoutTaskInput
     timesheets?: TimesheetCreateNestedManyWithoutTaskInput
+    dependencies?: TaskDependencyCreateNestedManyWithoutTaskInput
+    dependents?: TaskDependencyCreateNestedManyWithoutDependsOnTaskInput
   }
 
   export type TaskUncheckedCreateInput = {
@@ -25897,9 +28487,13 @@ export namespace Prisma {
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentTaskId?: string | null
+    subtasks?: TaskUncheckedCreateNestedManyWithoutParentTaskInput
     timeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutTaskInput
     assignees?: TaskAssigneeUncheckedCreateNestedManyWithoutTaskInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutTaskInput
+    dependencies?: TaskDependencyUncheckedCreateNestedManyWithoutTaskInput
+    dependents?: TaskDependencyUncheckedCreateNestedManyWithoutDependsOnTaskInput
   }
 
   export type TaskUpdateInput = {
@@ -25916,9 +28510,13 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     assignee?: UserUpdateOneWithoutTasksAssignedNestedInput
     createdBy?: UserUpdateOneWithoutTasksCreatedNestedInput
+    parentTask?: TaskUpdateOneWithoutSubtasksNestedInput
+    subtasks?: TaskUpdateManyWithoutParentTaskNestedInput
     timeLogs?: TaskTimeLogUpdateManyWithoutTaskNestedInput
     assignees?: TaskAssigneeUpdateManyWithoutTaskNestedInput
     timesheets?: TimesheetUpdateManyWithoutTaskNestedInput
+    dependencies?: TaskDependencyUpdateManyWithoutTaskNestedInput
+    dependents?: TaskDependencyUpdateManyWithoutDependsOnTaskNestedInput
   }
 
   export type TaskUncheckedUpdateInput = {
@@ -25935,9 +28533,13 @@ export namespace Prisma {
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentTaskId?: NullableStringFieldUpdateOperationsInput | string | null
+    subtasks?: TaskUncheckedUpdateManyWithoutParentTaskNestedInput
     timeLogs?: TaskTimeLogUncheckedUpdateManyWithoutTaskNestedInput
     assignees?: TaskAssigneeUncheckedUpdateManyWithoutTaskNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutTaskNestedInput
+    dependencies?: TaskDependencyUncheckedUpdateManyWithoutTaskNestedInput
+    dependents?: TaskDependencyUncheckedUpdateManyWithoutDependsOnTaskNestedInput
   }
 
   export type TaskCreateManyInput = {
@@ -25954,6 +28556,7 @@ export namespace Prisma {
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentTaskId?: string | null
   }
 
   export type TaskUpdateManyMutationInput = {
@@ -25981,6 +28584,172 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentTaskId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type TaskDependencyCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    task: TaskCreateNestedOneWithoutDependenciesInput
+    dependsOnTask: TaskCreateNestedOneWithoutDependentsInput
+  }
+
+  export type TaskDependencyUncheckedCreateInput = {
+    id?: string
+    taskId: string
+    dependsOnTaskId: string
+    createdAt?: Date | string
+  }
+
+  export type TaskDependencyUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    task?: TaskUpdateOneRequiredWithoutDependenciesNestedInput
+    dependsOnTask?: TaskUpdateOneRequiredWithoutDependentsNestedInput
+  }
+
+  export type TaskDependencyUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    taskId?: StringFieldUpdateOperationsInput | string
+    dependsOnTaskId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskDependencyCreateManyInput = {
+    id?: string
+    taskId: string
+    dependsOnTaskId: string
+    createdAt?: Date | string
+  }
+
+  export type TaskDependencyUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskDependencyUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    taskId?: StringFieldUpdateOperationsInput | string
+    dependsOnTaskId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BillingMilestoneCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    percentage?: number
+    amount?: number | null
+    dueDate?: Date | string | null
+    status?: $Enums.BillingMilestoneStatus
+    invoiceNumber?: string | null
+    invoicedAt?: Date | string | null
+    paidAt?: Date | string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutBillingMilestonesInput
+  }
+
+  export type BillingMilestoneUncheckedCreateInput = {
+    id?: string
+    projectId: string
+    name: string
+    description?: string | null
+    percentage?: number
+    amount?: number | null
+    dueDate?: Date | string | null
+    status?: $Enums.BillingMilestoneStatus
+    invoiceNumber?: string | null
+    invoicedAt?: Date | string | null
+    paidAt?: Date | string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BillingMilestoneUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    percentage?: FloatFieldUpdateOperationsInput | number
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutBillingMilestonesNestedInput
+  }
+
+  export type BillingMilestoneUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    percentage?: FloatFieldUpdateOperationsInput | number
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BillingMilestoneCreateManyInput = {
+    id?: string
+    projectId: string
+    name: string
+    description?: string | null
+    percentage?: number
+    amount?: number | null
+    dueDate?: Date | string | null
+    status?: $Enums.BillingMilestoneStatus
+    invoiceNumber?: string | null
+    invoicedAt?: Date | string | null
+    paidAt?: Date | string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BillingMilestoneUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    percentage?: FloatFieldUpdateOperationsInput | number
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BillingMilestoneUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    percentage?: FloatFieldUpdateOperationsInput | number
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26635,7 +29404,17 @@ export namespace Prisma {
     none?: SurveyResponseWhereInput
   }
 
+  export type BillingMilestoneListRelationFilter = {
+    every?: BillingMilestoneWhereInput
+    some?: BillingMilestoneWhereInput
+    none?: BillingMilestoneWhereInput
+  }
+
   export type SurveyResponseOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type BillingMilestoneOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -27430,6 +30209,16 @@ export namespace Prisma {
     not?: NestedEnumTaskStatusFilter<$PrismaModel> | $Enums.TaskStatus
   }
 
+  export type TaskDependencyListRelationFilter = {
+    every?: TaskDependencyWhereInput
+    some?: TaskDependencyWhereInput
+    none?: TaskDependencyWhereInput
+  }
+
+  export type TaskDependencyOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type TaskCountOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
@@ -27444,6 +30233,7 @@ export namespace Prisma {
     createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    parentTaskId?: SortOrder
   }
 
   export type TaskAvgOrderByAggregateInput = {
@@ -27464,6 +30254,7 @@ export namespace Prisma {
     createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    parentTaskId?: SortOrder
   }
 
   export type TaskMinOrderByAggregateInput = {
@@ -27480,6 +30271,7 @@ export namespace Prisma {
     createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    parentTaskId?: SortOrder
   }
 
   export type TaskSumOrderByAggregateInput = {
@@ -27499,6 +30291,112 @@ export namespace Prisma {
   export type TaskRelationFilter = {
     is?: TaskWhereInput
     isNot?: TaskWhereInput
+  }
+
+  export type TaskDependencyTaskIdDependsOnTaskIdCompoundUniqueInput = {
+    taskId: string
+    dependsOnTaskId: string
+  }
+
+  export type TaskDependencyCountOrderByAggregateInput = {
+    id?: SortOrder
+    taskId?: SortOrder
+    dependsOnTaskId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TaskDependencyMaxOrderByAggregateInput = {
+    id?: SortOrder
+    taskId?: SortOrder
+    dependsOnTaskId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TaskDependencyMinOrderByAggregateInput = {
+    id?: SortOrder
+    taskId?: SortOrder
+    dependsOnTaskId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumBillingMilestoneStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.BillingMilestoneStatus | EnumBillingMilestoneStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.BillingMilestoneStatus[] | ListEnumBillingMilestoneStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BillingMilestoneStatus[] | ListEnumBillingMilestoneStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumBillingMilestoneStatusFilter<$PrismaModel> | $Enums.BillingMilestoneStatus
+  }
+
+  export type BillingMilestoneCountOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    percentage?: SortOrder
+    amount?: SortOrder
+    dueDate?: SortOrder
+    status?: SortOrder
+    invoiceNumber?: SortOrder
+    invoicedAt?: SortOrder
+    paidAt?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BillingMilestoneAvgOrderByAggregateInput = {
+    percentage?: SortOrder
+    amount?: SortOrder
+    sortOrder?: SortOrder
+  }
+
+  export type BillingMilestoneMaxOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    percentage?: SortOrder
+    amount?: SortOrder
+    dueDate?: SortOrder
+    status?: SortOrder
+    invoiceNumber?: SortOrder
+    invoicedAt?: SortOrder
+    paidAt?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BillingMilestoneMinOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    percentage?: SortOrder
+    amount?: SortOrder
+    dueDate?: SortOrder
+    status?: SortOrder
+    invoiceNumber?: SortOrder
+    invoicedAt?: SortOrder
+    paidAt?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BillingMilestoneSumOrderByAggregateInput = {
+    percentage?: SortOrder
+    amount?: SortOrder
+    sortOrder?: SortOrder
+  }
+
+  export type EnumBillingMilestoneStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.BillingMilestoneStatus | EnumBillingMilestoneStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.BillingMilestoneStatus[] | ListEnumBillingMilestoneStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BillingMilestoneStatus[] | ListEnumBillingMilestoneStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumBillingMilestoneStatusWithAggregatesFilter<$PrismaModel> | $Enums.BillingMilestoneStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumBillingMilestoneStatusFilter<$PrismaModel>
+    _max?: NestedEnumBillingMilestoneStatusFilter<$PrismaModel>
   }
 
   export type TaskAssigneeTaskIdUserIdCompoundUniqueInput = {
@@ -28685,6 +31583,13 @@ export namespace Prisma {
     connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
   }
 
+  export type BillingMilestoneCreateNestedManyWithoutProjectInput = {
+    create?: XOR<BillingMilestoneCreateWithoutProjectInput, BillingMilestoneUncheckedCreateWithoutProjectInput> | BillingMilestoneCreateWithoutProjectInput[] | BillingMilestoneUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: BillingMilestoneCreateOrConnectWithoutProjectInput | BillingMilestoneCreateOrConnectWithoutProjectInput[]
+    createMany?: BillingMilestoneCreateManyProjectInputEnvelope
+    connect?: BillingMilestoneWhereUniqueInput | BillingMilestoneWhereUniqueInput[]
+  }
+
   export type ProjectResourceUncheckedCreateNestedManyWithoutProjectInput = {
     create?: XOR<ProjectResourceCreateWithoutProjectInput, ProjectResourceUncheckedCreateWithoutProjectInput> | ProjectResourceCreateWithoutProjectInput[] | ProjectResourceUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: ProjectResourceCreateOrConnectWithoutProjectInput | ProjectResourceCreateOrConnectWithoutProjectInput[]
@@ -28732,6 +31637,13 @@ export namespace Prisma {
     connectOrCreate?: TaskCreateOrConnectWithoutProjectInput | TaskCreateOrConnectWithoutProjectInput[]
     createMany?: TaskCreateManyProjectInputEnvelope
     connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+  }
+
+  export type BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput = {
+    create?: XOR<BillingMilestoneCreateWithoutProjectInput, BillingMilestoneUncheckedCreateWithoutProjectInput> | BillingMilestoneCreateWithoutProjectInput[] | BillingMilestoneUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: BillingMilestoneCreateOrConnectWithoutProjectInput | BillingMilestoneCreateOrConnectWithoutProjectInput[]
+    createMany?: BillingMilestoneCreateManyProjectInputEnvelope
+    connect?: BillingMilestoneWhereUniqueInput | BillingMilestoneWhereUniqueInput[]
   }
 
   export type EnumProjectStatusFieldUpdateOperationsInput = {
@@ -28892,6 +31804,20 @@ export namespace Prisma {
     deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
   }
 
+  export type BillingMilestoneUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<BillingMilestoneCreateWithoutProjectInput, BillingMilestoneUncheckedCreateWithoutProjectInput> | BillingMilestoneCreateWithoutProjectInput[] | BillingMilestoneUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: BillingMilestoneCreateOrConnectWithoutProjectInput | BillingMilestoneCreateOrConnectWithoutProjectInput[]
+    upsert?: BillingMilestoneUpsertWithWhereUniqueWithoutProjectInput | BillingMilestoneUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: BillingMilestoneCreateManyProjectInputEnvelope
+    set?: BillingMilestoneWhereUniqueInput | BillingMilestoneWhereUniqueInput[]
+    disconnect?: BillingMilestoneWhereUniqueInput | BillingMilestoneWhereUniqueInput[]
+    delete?: BillingMilestoneWhereUniqueInput | BillingMilestoneWhereUniqueInput[]
+    connect?: BillingMilestoneWhereUniqueInput | BillingMilestoneWhereUniqueInput[]
+    update?: BillingMilestoneUpdateWithWhereUniqueWithoutProjectInput | BillingMilestoneUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: BillingMilestoneUpdateManyWithWhereWithoutProjectInput | BillingMilestoneUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: BillingMilestoneScalarWhereInput | BillingMilestoneScalarWhereInput[]
+  }
+
   export type ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput = {
     create?: XOR<ProjectResourceCreateWithoutProjectInput, ProjectResourceUncheckedCreateWithoutProjectInput> | ProjectResourceCreateWithoutProjectInput[] | ProjectResourceUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: ProjectResourceCreateOrConnectWithoutProjectInput | ProjectResourceCreateOrConnectWithoutProjectInput[]
@@ -28988,6 +31914,20 @@ export namespace Prisma {
     update?: TaskUpdateWithWhereUniqueWithoutProjectInput | TaskUpdateWithWhereUniqueWithoutProjectInput[]
     updateMany?: TaskUpdateManyWithWhereWithoutProjectInput | TaskUpdateManyWithWhereWithoutProjectInput[]
     deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
+  }
+
+  export type BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<BillingMilestoneCreateWithoutProjectInput, BillingMilestoneUncheckedCreateWithoutProjectInput> | BillingMilestoneCreateWithoutProjectInput[] | BillingMilestoneUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: BillingMilestoneCreateOrConnectWithoutProjectInput | BillingMilestoneCreateOrConnectWithoutProjectInput[]
+    upsert?: BillingMilestoneUpsertWithWhereUniqueWithoutProjectInput | BillingMilestoneUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: BillingMilestoneCreateManyProjectInputEnvelope
+    set?: BillingMilestoneWhereUniqueInput | BillingMilestoneWhereUniqueInput[]
+    disconnect?: BillingMilestoneWhereUniqueInput | BillingMilestoneWhereUniqueInput[]
+    delete?: BillingMilestoneWhereUniqueInput | BillingMilestoneWhereUniqueInput[]
+    connect?: BillingMilestoneWhereUniqueInput | BillingMilestoneWhereUniqueInput[]
+    update?: BillingMilestoneUpdateWithWhereUniqueWithoutProjectInput | BillingMilestoneUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: BillingMilestoneUpdateManyWithWhereWithoutProjectInput | BillingMilestoneUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: BillingMilestoneScalarWhereInput | BillingMilestoneScalarWhereInput[]
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -29382,6 +32322,19 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type TaskCreateNestedOneWithoutSubtasksInput = {
+    create?: XOR<TaskCreateWithoutSubtasksInput, TaskUncheckedCreateWithoutSubtasksInput>
+    connectOrCreate?: TaskCreateOrConnectWithoutSubtasksInput
+    connect?: TaskWhereUniqueInput
+  }
+
+  export type TaskCreateNestedManyWithoutParentTaskInput = {
+    create?: XOR<TaskCreateWithoutParentTaskInput, TaskUncheckedCreateWithoutParentTaskInput> | TaskCreateWithoutParentTaskInput[] | TaskUncheckedCreateWithoutParentTaskInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutParentTaskInput | TaskCreateOrConnectWithoutParentTaskInput[]
+    createMany?: TaskCreateManyParentTaskInputEnvelope
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+  }
+
   export type TaskTimeLogCreateNestedManyWithoutTaskInput = {
     create?: XOR<TaskTimeLogCreateWithoutTaskInput, TaskTimeLogUncheckedCreateWithoutTaskInput> | TaskTimeLogCreateWithoutTaskInput[] | TaskTimeLogUncheckedCreateWithoutTaskInput[]
     connectOrCreate?: TaskTimeLogCreateOrConnectWithoutTaskInput | TaskTimeLogCreateOrConnectWithoutTaskInput[]
@@ -29403,6 +32356,27 @@ export namespace Prisma {
     connect?: TimesheetWhereUniqueInput | TimesheetWhereUniqueInput[]
   }
 
+  export type TaskDependencyCreateNestedManyWithoutTaskInput = {
+    create?: XOR<TaskDependencyCreateWithoutTaskInput, TaskDependencyUncheckedCreateWithoutTaskInput> | TaskDependencyCreateWithoutTaskInput[] | TaskDependencyUncheckedCreateWithoutTaskInput[]
+    connectOrCreate?: TaskDependencyCreateOrConnectWithoutTaskInput | TaskDependencyCreateOrConnectWithoutTaskInput[]
+    createMany?: TaskDependencyCreateManyTaskInputEnvelope
+    connect?: TaskDependencyWhereUniqueInput | TaskDependencyWhereUniqueInput[]
+  }
+
+  export type TaskDependencyCreateNestedManyWithoutDependsOnTaskInput = {
+    create?: XOR<TaskDependencyCreateWithoutDependsOnTaskInput, TaskDependencyUncheckedCreateWithoutDependsOnTaskInput> | TaskDependencyCreateWithoutDependsOnTaskInput[] | TaskDependencyUncheckedCreateWithoutDependsOnTaskInput[]
+    connectOrCreate?: TaskDependencyCreateOrConnectWithoutDependsOnTaskInput | TaskDependencyCreateOrConnectWithoutDependsOnTaskInput[]
+    createMany?: TaskDependencyCreateManyDependsOnTaskInputEnvelope
+    connect?: TaskDependencyWhereUniqueInput | TaskDependencyWhereUniqueInput[]
+  }
+
+  export type TaskUncheckedCreateNestedManyWithoutParentTaskInput = {
+    create?: XOR<TaskCreateWithoutParentTaskInput, TaskUncheckedCreateWithoutParentTaskInput> | TaskCreateWithoutParentTaskInput[] | TaskUncheckedCreateWithoutParentTaskInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutParentTaskInput | TaskCreateOrConnectWithoutParentTaskInput[]
+    createMany?: TaskCreateManyParentTaskInputEnvelope
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+  }
+
   export type TaskTimeLogUncheckedCreateNestedManyWithoutTaskInput = {
     create?: XOR<TaskTimeLogCreateWithoutTaskInput, TaskTimeLogUncheckedCreateWithoutTaskInput> | TaskTimeLogCreateWithoutTaskInput[] | TaskTimeLogUncheckedCreateWithoutTaskInput[]
     connectOrCreate?: TaskTimeLogCreateOrConnectWithoutTaskInput | TaskTimeLogCreateOrConnectWithoutTaskInput[]
@@ -29422,6 +32396,20 @@ export namespace Prisma {
     connectOrCreate?: TimesheetCreateOrConnectWithoutTaskInput | TimesheetCreateOrConnectWithoutTaskInput[]
     createMany?: TimesheetCreateManyTaskInputEnvelope
     connect?: TimesheetWhereUniqueInput | TimesheetWhereUniqueInput[]
+  }
+
+  export type TaskDependencyUncheckedCreateNestedManyWithoutTaskInput = {
+    create?: XOR<TaskDependencyCreateWithoutTaskInput, TaskDependencyUncheckedCreateWithoutTaskInput> | TaskDependencyCreateWithoutTaskInput[] | TaskDependencyUncheckedCreateWithoutTaskInput[]
+    connectOrCreate?: TaskDependencyCreateOrConnectWithoutTaskInput | TaskDependencyCreateOrConnectWithoutTaskInput[]
+    createMany?: TaskDependencyCreateManyTaskInputEnvelope
+    connect?: TaskDependencyWhereUniqueInput | TaskDependencyWhereUniqueInput[]
+  }
+
+  export type TaskDependencyUncheckedCreateNestedManyWithoutDependsOnTaskInput = {
+    create?: XOR<TaskDependencyCreateWithoutDependsOnTaskInput, TaskDependencyUncheckedCreateWithoutDependsOnTaskInput> | TaskDependencyCreateWithoutDependsOnTaskInput[] | TaskDependencyUncheckedCreateWithoutDependsOnTaskInput[]
+    connectOrCreate?: TaskDependencyCreateOrConnectWithoutDependsOnTaskInput | TaskDependencyCreateOrConnectWithoutDependsOnTaskInput[]
+    createMany?: TaskDependencyCreateManyDependsOnTaskInputEnvelope
+    connect?: TaskDependencyWhereUniqueInput | TaskDependencyWhereUniqueInput[]
   }
 
   export type EnumTaskStatusFieldUpdateOperationsInput = {
@@ -29454,6 +32442,30 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTasksCreatedInput, UserUpdateWithoutTasksCreatedInput>, UserUncheckedUpdateWithoutTasksCreatedInput>
+  }
+
+  export type TaskUpdateOneWithoutSubtasksNestedInput = {
+    create?: XOR<TaskCreateWithoutSubtasksInput, TaskUncheckedCreateWithoutSubtasksInput>
+    connectOrCreate?: TaskCreateOrConnectWithoutSubtasksInput
+    upsert?: TaskUpsertWithoutSubtasksInput
+    disconnect?: TaskWhereInput | boolean
+    delete?: TaskWhereInput | boolean
+    connect?: TaskWhereUniqueInput
+    update?: XOR<XOR<TaskUpdateToOneWithWhereWithoutSubtasksInput, TaskUpdateWithoutSubtasksInput>, TaskUncheckedUpdateWithoutSubtasksInput>
+  }
+
+  export type TaskUpdateManyWithoutParentTaskNestedInput = {
+    create?: XOR<TaskCreateWithoutParentTaskInput, TaskUncheckedCreateWithoutParentTaskInput> | TaskCreateWithoutParentTaskInput[] | TaskUncheckedCreateWithoutParentTaskInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutParentTaskInput | TaskCreateOrConnectWithoutParentTaskInput[]
+    upsert?: TaskUpsertWithWhereUniqueWithoutParentTaskInput | TaskUpsertWithWhereUniqueWithoutParentTaskInput[]
+    createMany?: TaskCreateManyParentTaskInputEnvelope
+    set?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    disconnect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    delete?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    update?: TaskUpdateWithWhereUniqueWithoutParentTaskInput | TaskUpdateWithWhereUniqueWithoutParentTaskInput[]
+    updateMany?: TaskUpdateManyWithWhereWithoutParentTaskInput | TaskUpdateManyWithWhereWithoutParentTaskInput[]
+    deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
   }
 
   export type TaskTimeLogUpdateManyWithoutTaskNestedInput = {
@@ -29498,6 +32510,48 @@ export namespace Prisma {
     deleteMany?: TimesheetScalarWhereInput | TimesheetScalarWhereInput[]
   }
 
+  export type TaskDependencyUpdateManyWithoutTaskNestedInput = {
+    create?: XOR<TaskDependencyCreateWithoutTaskInput, TaskDependencyUncheckedCreateWithoutTaskInput> | TaskDependencyCreateWithoutTaskInput[] | TaskDependencyUncheckedCreateWithoutTaskInput[]
+    connectOrCreate?: TaskDependencyCreateOrConnectWithoutTaskInput | TaskDependencyCreateOrConnectWithoutTaskInput[]
+    upsert?: TaskDependencyUpsertWithWhereUniqueWithoutTaskInput | TaskDependencyUpsertWithWhereUniqueWithoutTaskInput[]
+    createMany?: TaskDependencyCreateManyTaskInputEnvelope
+    set?: TaskDependencyWhereUniqueInput | TaskDependencyWhereUniqueInput[]
+    disconnect?: TaskDependencyWhereUniqueInput | TaskDependencyWhereUniqueInput[]
+    delete?: TaskDependencyWhereUniqueInput | TaskDependencyWhereUniqueInput[]
+    connect?: TaskDependencyWhereUniqueInput | TaskDependencyWhereUniqueInput[]
+    update?: TaskDependencyUpdateWithWhereUniqueWithoutTaskInput | TaskDependencyUpdateWithWhereUniqueWithoutTaskInput[]
+    updateMany?: TaskDependencyUpdateManyWithWhereWithoutTaskInput | TaskDependencyUpdateManyWithWhereWithoutTaskInput[]
+    deleteMany?: TaskDependencyScalarWhereInput | TaskDependencyScalarWhereInput[]
+  }
+
+  export type TaskDependencyUpdateManyWithoutDependsOnTaskNestedInput = {
+    create?: XOR<TaskDependencyCreateWithoutDependsOnTaskInput, TaskDependencyUncheckedCreateWithoutDependsOnTaskInput> | TaskDependencyCreateWithoutDependsOnTaskInput[] | TaskDependencyUncheckedCreateWithoutDependsOnTaskInput[]
+    connectOrCreate?: TaskDependencyCreateOrConnectWithoutDependsOnTaskInput | TaskDependencyCreateOrConnectWithoutDependsOnTaskInput[]
+    upsert?: TaskDependencyUpsertWithWhereUniqueWithoutDependsOnTaskInput | TaskDependencyUpsertWithWhereUniqueWithoutDependsOnTaskInput[]
+    createMany?: TaskDependencyCreateManyDependsOnTaskInputEnvelope
+    set?: TaskDependencyWhereUniqueInput | TaskDependencyWhereUniqueInput[]
+    disconnect?: TaskDependencyWhereUniqueInput | TaskDependencyWhereUniqueInput[]
+    delete?: TaskDependencyWhereUniqueInput | TaskDependencyWhereUniqueInput[]
+    connect?: TaskDependencyWhereUniqueInput | TaskDependencyWhereUniqueInput[]
+    update?: TaskDependencyUpdateWithWhereUniqueWithoutDependsOnTaskInput | TaskDependencyUpdateWithWhereUniqueWithoutDependsOnTaskInput[]
+    updateMany?: TaskDependencyUpdateManyWithWhereWithoutDependsOnTaskInput | TaskDependencyUpdateManyWithWhereWithoutDependsOnTaskInput[]
+    deleteMany?: TaskDependencyScalarWhereInput | TaskDependencyScalarWhereInput[]
+  }
+
+  export type TaskUncheckedUpdateManyWithoutParentTaskNestedInput = {
+    create?: XOR<TaskCreateWithoutParentTaskInput, TaskUncheckedCreateWithoutParentTaskInput> | TaskCreateWithoutParentTaskInput[] | TaskUncheckedCreateWithoutParentTaskInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutParentTaskInput | TaskCreateOrConnectWithoutParentTaskInput[]
+    upsert?: TaskUpsertWithWhereUniqueWithoutParentTaskInput | TaskUpsertWithWhereUniqueWithoutParentTaskInput[]
+    createMany?: TaskCreateManyParentTaskInputEnvelope
+    set?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    disconnect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    delete?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    update?: TaskUpdateWithWhereUniqueWithoutParentTaskInput | TaskUpdateWithWhereUniqueWithoutParentTaskInput[]
+    updateMany?: TaskUpdateManyWithWhereWithoutParentTaskInput | TaskUpdateManyWithWhereWithoutParentTaskInput[]
+    deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
+  }
+
   export type TaskTimeLogUncheckedUpdateManyWithoutTaskNestedInput = {
     create?: XOR<TaskTimeLogCreateWithoutTaskInput, TaskTimeLogUncheckedCreateWithoutTaskInput> | TaskTimeLogCreateWithoutTaskInput[] | TaskTimeLogUncheckedCreateWithoutTaskInput[]
     connectOrCreate?: TaskTimeLogCreateOrConnectWithoutTaskInput | TaskTimeLogCreateOrConnectWithoutTaskInput[]
@@ -29538,6 +32592,80 @@ export namespace Prisma {
     update?: TimesheetUpdateWithWhereUniqueWithoutTaskInput | TimesheetUpdateWithWhereUniqueWithoutTaskInput[]
     updateMany?: TimesheetUpdateManyWithWhereWithoutTaskInput | TimesheetUpdateManyWithWhereWithoutTaskInput[]
     deleteMany?: TimesheetScalarWhereInput | TimesheetScalarWhereInput[]
+  }
+
+  export type TaskDependencyUncheckedUpdateManyWithoutTaskNestedInput = {
+    create?: XOR<TaskDependencyCreateWithoutTaskInput, TaskDependencyUncheckedCreateWithoutTaskInput> | TaskDependencyCreateWithoutTaskInput[] | TaskDependencyUncheckedCreateWithoutTaskInput[]
+    connectOrCreate?: TaskDependencyCreateOrConnectWithoutTaskInput | TaskDependencyCreateOrConnectWithoutTaskInput[]
+    upsert?: TaskDependencyUpsertWithWhereUniqueWithoutTaskInput | TaskDependencyUpsertWithWhereUniqueWithoutTaskInput[]
+    createMany?: TaskDependencyCreateManyTaskInputEnvelope
+    set?: TaskDependencyWhereUniqueInput | TaskDependencyWhereUniqueInput[]
+    disconnect?: TaskDependencyWhereUniqueInput | TaskDependencyWhereUniqueInput[]
+    delete?: TaskDependencyWhereUniqueInput | TaskDependencyWhereUniqueInput[]
+    connect?: TaskDependencyWhereUniqueInput | TaskDependencyWhereUniqueInput[]
+    update?: TaskDependencyUpdateWithWhereUniqueWithoutTaskInput | TaskDependencyUpdateWithWhereUniqueWithoutTaskInput[]
+    updateMany?: TaskDependencyUpdateManyWithWhereWithoutTaskInput | TaskDependencyUpdateManyWithWhereWithoutTaskInput[]
+    deleteMany?: TaskDependencyScalarWhereInput | TaskDependencyScalarWhereInput[]
+  }
+
+  export type TaskDependencyUncheckedUpdateManyWithoutDependsOnTaskNestedInput = {
+    create?: XOR<TaskDependencyCreateWithoutDependsOnTaskInput, TaskDependencyUncheckedCreateWithoutDependsOnTaskInput> | TaskDependencyCreateWithoutDependsOnTaskInput[] | TaskDependencyUncheckedCreateWithoutDependsOnTaskInput[]
+    connectOrCreate?: TaskDependencyCreateOrConnectWithoutDependsOnTaskInput | TaskDependencyCreateOrConnectWithoutDependsOnTaskInput[]
+    upsert?: TaskDependencyUpsertWithWhereUniqueWithoutDependsOnTaskInput | TaskDependencyUpsertWithWhereUniqueWithoutDependsOnTaskInput[]
+    createMany?: TaskDependencyCreateManyDependsOnTaskInputEnvelope
+    set?: TaskDependencyWhereUniqueInput | TaskDependencyWhereUniqueInput[]
+    disconnect?: TaskDependencyWhereUniqueInput | TaskDependencyWhereUniqueInput[]
+    delete?: TaskDependencyWhereUniqueInput | TaskDependencyWhereUniqueInput[]
+    connect?: TaskDependencyWhereUniqueInput | TaskDependencyWhereUniqueInput[]
+    update?: TaskDependencyUpdateWithWhereUniqueWithoutDependsOnTaskInput | TaskDependencyUpdateWithWhereUniqueWithoutDependsOnTaskInput[]
+    updateMany?: TaskDependencyUpdateManyWithWhereWithoutDependsOnTaskInput | TaskDependencyUpdateManyWithWhereWithoutDependsOnTaskInput[]
+    deleteMany?: TaskDependencyScalarWhereInput | TaskDependencyScalarWhereInput[]
+  }
+
+  export type TaskCreateNestedOneWithoutDependenciesInput = {
+    create?: XOR<TaskCreateWithoutDependenciesInput, TaskUncheckedCreateWithoutDependenciesInput>
+    connectOrCreate?: TaskCreateOrConnectWithoutDependenciesInput
+    connect?: TaskWhereUniqueInput
+  }
+
+  export type TaskCreateNestedOneWithoutDependentsInput = {
+    create?: XOR<TaskCreateWithoutDependentsInput, TaskUncheckedCreateWithoutDependentsInput>
+    connectOrCreate?: TaskCreateOrConnectWithoutDependentsInput
+    connect?: TaskWhereUniqueInput
+  }
+
+  export type TaskUpdateOneRequiredWithoutDependenciesNestedInput = {
+    create?: XOR<TaskCreateWithoutDependenciesInput, TaskUncheckedCreateWithoutDependenciesInput>
+    connectOrCreate?: TaskCreateOrConnectWithoutDependenciesInput
+    upsert?: TaskUpsertWithoutDependenciesInput
+    connect?: TaskWhereUniqueInput
+    update?: XOR<XOR<TaskUpdateToOneWithWhereWithoutDependenciesInput, TaskUpdateWithoutDependenciesInput>, TaskUncheckedUpdateWithoutDependenciesInput>
+  }
+
+  export type TaskUpdateOneRequiredWithoutDependentsNestedInput = {
+    create?: XOR<TaskCreateWithoutDependentsInput, TaskUncheckedCreateWithoutDependentsInput>
+    connectOrCreate?: TaskCreateOrConnectWithoutDependentsInput
+    upsert?: TaskUpsertWithoutDependentsInput
+    connect?: TaskWhereUniqueInput
+    update?: XOR<XOR<TaskUpdateToOneWithWhereWithoutDependentsInput, TaskUpdateWithoutDependentsInput>, TaskUncheckedUpdateWithoutDependentsInput>
+  }
+
+  export type ProjectCreateNestedOneWithoutBillingMilestonesInput = {
+    create?: XOR<ProjectCreateWithoutBillingMilestonesInput, ProjectUncheckedCreateWithoutBillingMilestonesInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutBillingMilestonesInput
+    connect?: ProjectWhereUniqueInput
+  }
+
+  export type EnumBillingMilestoneStatusFieldUpdateOperationsInput = {
+    set?: $Enums.BillingMilestoneStatus
+  }
+
+  export type ProjectUpdateOneRequiredWithoutBillingMilestonesNestedInput = {
+    create?: XOR<ProjectCreateWithoutBillingMilestonesInput, ProjectUncheckedCreateWithoutBillingMilestonesInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutBillingMilestonesInput
+    upsert?: ProjectUpsertWithoutBillingMilestonesInput
+    connect?: ProjectWhereUniqueInput
+    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutBillingMilestonesInput, ProjectUpdateWithoutBillingMilestonesInput>, ProjectUncheckedUpdateWithoutBillingMilestonesInput>
   }
 
   export type TaskCreateNestedOneWithoutAssigneesInput = {
@@ -29988,6 +33116,23 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumTaskStatusFilter<$PrismaModel>
     _max?: NestedEnumTaskStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumBillingMilestoneStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.BillingMilestoneStatus | EnumBillingMilestoneStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.BillingMilestoneStatus[] | ListEnumBillingMilestoneStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BillingMilestoneStatus[] | ListEnumBillingMilestoneStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumBillingMilestoneStatusFilter<$PrismaModel> | $Enums.BillingMilestoneStatus
+  }
+
+  export type NestedEnumBillingMilestoneStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.BillingMilestoneStatus | EnumBillingMilestoneStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.BillingMilestoneStatus[] | ListEnumBillingMilestoneStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BillingMilestoneStatus[] | ListEnumBillingMilestoneStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumBillingMilestoneStatusWithAggregatesFilter<$PrismaModel> | $Enums.BillingMilestoneStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumBillingMilestoneStatusFilter<$PrismaModel>
+    _max?: NestedEnumBillingMilestoneStatusFilter<$PrismaModel>
   }
 
   export type BusinessUnitCreateWithoutUsersInput = {
@@ -30451,6 +33596,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutSalesInput = {
@@ -30489,6 +33635,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutSalesInput = {
@@ -30537,6 +33684,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutPmInput = {
@@ -30575,6 +33723,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutPmInput = {
@@ -30623,6 +33772,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutTechnicalWriterInput = {
@@ -30661,6 +33811,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutTechnicalWriterInput = {
@@ -30709,6 +33860,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutAdminProjectInput = {
@@ -30747,6 +33899,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutAdminProjectInput = {
@@ -31062,9 +34215,13 @@ export namespace Prisma {
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutTasksInput
     createdBy?: UserCreateNestedOneWithoutTasksCreatedInput
+    parentTask?: TaskCreateNestedOneWithoutSubtasksInput
+    subtasks?: TaskCreateNestedManyWithoutParentTaskInput
     timeLogs?: TaskTimeLogCreateNestedManyWithoutTaskInput
     assignees?: TaskAssigneeCreateNestedManyWithoutTaskInput
     timesheets?: TimesheetCreateNestedManyWithoutTaskInput
+    dependencies?: TaskDependencyCreateNestedManyWithoutTaskInput
+    dependents?: TaskDependencyCreateNestedManyWithoutDependsOnTaskInput
   }
 
   export type TaskUncheckedCreateWithoutAssigneeInput = {
@@ -31080,9 +34237,13 @@ export namespace Prisma {
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentTaskId?: string | null
+    subtasks?: TaskUncheckedCreateNestedManyWithoutParentTaskInput
     timeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutTaskInput
     assignees?: TaskAssigneeUncheckedCreateNestedManyWithoutTaskInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutTaskInput
+    dependencies?: TaskDependencyUncheckedCreateNestedManyWithoutTaskInput
+    dependents?: TaskDependencyUncheckedCreateNestedManyWithoutDependsOnTaskInput
   }
 
   export type TaskCreateOrConnectWithoutAssigneeInput = {
@@ -31108,9 +34269,13 @@ export namespace Prisma {
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutTasksInput
     assignee?: UserCreateNestedOneWithoutTasksAssignedInput
+    parentTask?: TaskCreateNestedOneWithoutSubtasksInput
+    subtasks?: TaskCreateNestedManyWithoutParentTaskInput
     timeLogs?: TaskTimeLogCreateNestedManyWithoutTaskInput
     assignees?: TaskAssigneeCreateNestedManyWithoutTaskInput
     timesheets?: TimesheetCreateNestedManyWithoutTaskInput
+    dependencies?: TaskDependencyCreateNestedManyWithoutTaskInput
+    dependents?: TaskDependencyCreateNestedManyWithoutDependsOnTaskInput
   }
 
   export type TaskUncheckedCreateWithoutCreatedByInput = {
@@ -31126,9 +34291,13 @@ export namespace Prisma {
     assigneeId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentTaskId?: string | null
+    subtasks?: TaskUncheckedCreateNestedManyWithoutParentTaskInput
     timeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutTaskInput
     assignees?: TaskAssigneeUncheckedCreateNestedManyWithoutTaskInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutTaskInput
+    dependencies?: TaskDependencyUncheckedCreateNestedManyWithoutTaskInput
+    dependents?: TaskDependencyUncheckedCreateNestedManyWithoutDependsOnTaskInput
   }
 
   export type TaskCreateOrConnectWithoutCreatedByInput = {
@@ -31882,6 +35051,7 @@ export namespace Prisma {
     createdById?: StringNullableFilter<"Task"> | string | null
     createdAt?: DateTimeFilter<"Task"> | Date | string
     updatedAt?: DateTimeFilter<"Task"> | Date | string
+    parentTaskId?: StringNullableFilter<"Task"> | string | null
   }
 
   export type TaskUpsertWithWhereUniqueWithoutCreatedByInput = {
@@ -32021,6 +35191,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutClientInput = {
@@ -32059,6 +35230,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutClientInput = {
@@ -32661,9 +35833,13 @@ export namespace Prisma {
     updatedAt?: Date | string
     assignee?: UserCreateNestedOneWithoutTasksAssignedInput
     createdBy?: UserCreateNestedOneWithoutTasksCreatedInput
+    parentTask?: TaskCreateNestedOneWithoutSubtasksInput
+    subtasks?: TaskCreateNestedManyWithoutParentTaskInput
     timeLogs?: TaskTimeLogCreateNestedManyWithoutTaskInput
     assignees?: TaskAssigneeCreateNestedManyWithoutTaskInput
     timesheets?: TimesheetCreateNestedManyWithoutTaskInput
+    dependencies?: TaskDependencyCreateNestedManyWithoutTaskInput
+    dependents?: TaskDependencyCreateNestedManyWithoutDependsOnTaskInput
   }
 
   export type TaskUncheckedCreateWithoutProjectInput = {
@@ -32679,9 +35855,13 @@ export namespace Prisma {
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentTaskId?: string | null
+    subtasks?: TaskUncheckedCreateNestedManyWithoutParentTaskInput
     timeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutTaskInput
     assignees?: TaskAssigneeUncheckedCreateNestedManyWithoutTaskInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutTaskInput
+    dependencies?: TaskDependencyUncheckedCreateNestedManyWithoutTaskInput
+    dependents?: TaskDependencyUncheckedCreateNestedManyWithoutDependsOnTaskInput
   }
 
   export type TaskCreateOrConnectWithoutProjectInput = {
@@ -32691,6 +35871,48 @@ export namespace Prisma {
 
   export type TaskCreateManyProjectInputEnvelope = {
     data: TaskCreateManyProjectInput | TaskCreateManyProjectInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type BillingMilestoneCreateWithoutProjectInput = {
+    id?: string
+    name: string
+    description?: string | null
+    percentage?: number
+    amount?: number | null
+    dueDate?: Date | string | null
+    status?: $Enums.BillingMilestoneStatus
+    invoiceNumber?: string | null
+    invoicedAt?: Date | string | null
+    paidAt?: Date | string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BillingMilestoneUncheckedCreateWithoutProjectInput = {
+    id?: string
+    name: string
+    description?: string | null
+    percentage?: number
+    amount?: number | null
+    dueDate?: Date | string | null
+    status?: $Enums.BillingMilestoneStatus
+    invoiceNumber?: string | null
+    invoicedAt?: Date | string | null
+    paidAt?: Date | string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BillingMilestoneCreateOrConnectWithoutProjectInput = {
+    where: BillingMilestoneWhereUniqueInput
+    create: XOR<BillingMilestoneCreateWithoutProjectInput, BillingMilestoneUncheckedCreateWithoutProjectInput>
+  }
+
+  export type BillingMilestoneCreateManyProjectInputEnvelope = {
+    data: BillingMilestoneCreateManyProjectInput | BillingMilestoneCreateManyProjectInput[]
     skipDuplicates?: boolean
   }
 
@@ -33201,6 +36423,42 @@ export namespace Prisma {
     data: XOR<TaskUpdateManyMutationInput, TaskUncheckedUpdateManyWithoutProjectInput>
   }
 
+  export type BillingMilestoneUpsertWithWhereUniqueWithoutProjectInput = {
+    where: BillingMilestoneWhereUniqueInput
+    update: XOR<BillingMilestoneUpdateWithoutProjectInput, BillingMilestoneUncheckedUpdateWithoutProjectInput>
+    create: XOR<BillingMilestoneCreateWithoutProjectInput, BillingMilestoneUncheckedCreateWithoutProjectInput>
+  }
+
+  export type BillingMilestoneUpdateWithWhereUniqueWithoutProjectInput = {
+    where: BillingMilestoneWhereUniqueInput
+    data: XOR<BillingMilestoneUpdateWithoutProjectInput, BillingMilestoneUncheckedUpdateWithoutProjectInput>
+  }
+
+  export type BillingMilestoneUpdateManyWithWhereWithoutProjectInput = {
+    where: BillingMilestoneScalarWhereInput
+    data: XOR<BillingMilestoneUpdateManyMutationInput, BillingMilestoneUncheckedUpdateManyWithoutProjectInput>
+  }
+
+  export type BillingMilestoneScalarWhereInput = {
+    AND?: BillingMilestoneScalarWhereInput | BillingMilestoneScalarWhereInput[]
+    OR?: BillingMilestoneScalarWhereInput[]
+    NOT?: BillingMilestoneScalarWhereInput | BillingMilestoneScalarWhereInput[]
+    id?: StringFilter<"BillingMilestone"> | string
+    projectId?: StringFilter<"BillingMilestone"> | string
+    name?: StringFilter<"BillingMilestone"> | string
+    description?: StringNullableFilter<"BillingMilestone"> | string | null
+    percentage?: FloatFilter<"BillingMilestone"> | number
+    amount?: FloatNullableFilter<"BillingMilestone"> | number | null
+    dueDate?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
+    status?: EnumBillingMilestoneStatusFilter<"BillingMilestone"> | $Enums.BillingMilestoneStatus
+    invoiceNumber?: StringNullableFilter<"BillingMilestone"> | string | null
+    invoicedAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
+    paidAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
+    sortOrder?: IntFilter<"BillingMilestone"> | number
+    createdAt?: DateTimeFilter<"BillingMilestone"> | Date | string
+    updatedAt?: DateTimeFilter<"BillingMilestone"> | Date | string
+  }
+
   export type ProjectCreateWithoutSurveyResponsesInput = {
     id?: string
     code: string
@@ -33237,6 +36495,7 @@ export namespace Prisma {
     activities?: ActivityCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutSurveyResponsesInput = {
@@ -33275,6 +36534,7 @@ export namespace Prisma {
     activities?: ActivityUncheckedCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutSurveyResponsesInput = {
@@ -33329,6 +36589,7 @@ export namespace Prisma {
     activities?: ActivityUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutSurveyResponsesInput = {
@@ -33367,6 +36628,7 @@ export namespace Prisma {
     activities?: ActivityUncheckedUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserCreateWithoutAuditLogsInput = {
@@ -33573,6 +36835,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutResourcesInput = {
@@ -33611,6 +36874,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutResourcesInput = {
@@ -33827,6 +37091,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutResourcesInput = {
@@ -33865,6 +37130,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutResourcesInput = {
@@ -34077,6 +37343,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutTimesheetsInput = {
@@ -34115,6 +37382,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutTimesheetsInput = {
@@ -34217,8 +37485,12 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutTasksInput
     assignee?: UserCreateNestedOneWithoutTasksAssignedInput
     createdBy?: UserCreateNestedOneWithoutTasksCreatedInput
+    parentTask?: TaskCreateNestedOneWithoutSubtasksInput
+    subtasks?: TaskCreateNestedManyWithoutParentTaskInput
     timeLogs?: TaskTimeLogCreateNestedManyWithoutTaskInput
     assignees?: TaskAssigneeCreateNestedManyWithoutTaskInput
+    dependencies?: TaskDependencyCreateNestedManyWithoutTaskInput
+    dependents?: TaskDependencyCreateNestedManyWithoutDependsOnTaskInput
   }
 
   export type TaskUncheckedCreateWithoutTimesheetsInput = {
@@ -34235,8 +37507,12 @@ export namespace Prisma {
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentTaskId?: string | null
+    subtasks?: TaskUncheckedCreateNestedManyWithoutParentTaskInput
     timeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutTaskInput
     assignees?: TaskAssigneeUncheckedCreateNestedManyWithoutTaskInput
+    dependencies?: TaskDependencyUncheckedCreateNestedManyWithoutTaskInput
+    dependents?: TaskDependencyUncheckedCreateNestedManyWithoutDependsOnTaskInput
   }
 
   export type TaskCreateOrConnectWithoutTimesheetsInput = {
@@ -34372,6 +37648,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutTimesheetsInput = {
@@ -34410,6 +37687,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutTimesheetsInput = {
@@ -34524,8 +37802,12 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     assignee?: UserUpdateOneWithoutTasksAssignedNestedInput
     createdBy?: UserUpdateOneWithoutTasksCreatedNestedInput
+    parentTask?: TaskUpdateOneWithoutSubtasksNestedInput
+    subtasks?: TaskUpdateManyWithoutParentTaskNestedInput
     timeLogs?: TaskTimeLogUpdateManyWithoutTaskNestedInput
     assignees?: TaskAssigneeUpdateManyWithoutTaskNestedInput
+    dependencies?: TaskDependencyUpdateManyWithoutTaskNestedInput
+    dependents?: TaskDependencyUpdateManyWithoutDependsOnTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutTimesheetsInput = {
@@ -34542,8 +37824,12 @@ export namespace Prisma {
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentTaskId?: NullableStringFieldUpdateOperationsInput | string | null
+    subtasks?: TaskUncheckedUpdateManyWithoutParentTaskNestedInput
     timeLogs?: TaskTimeLogUncheckedUpdateManyWithoutTaskNestedInput
     assignees?: TaskAssigneeUncheckedUpdateManyWithoutTaskNestedInput
+    dependencies?: TaskDependencyUncheckedUpdateManyWithoutTaskNestedInput
+    dependents?: TaskDependencyUncheckedUpdateManyWithoutDependsOnTaskNestedInput
   }
 
   export type UserUpsertWithoutApprovedTimesheetsInput = {
@@ -34669,6 +37955,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutDocumentsInput = {
@@ -34707,6 +37994,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutDocumentsInput = {
@@ -34842,6 +38130,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutDocumentsInput = {
@@ -34880,6 +38169,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutDocumentsUploadedInput = {
@@ -35005,6 +38295,7 @@ export namespace Prisma {
     activities?: ActivityCreateNestedManyWithoutProjectInput
     surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutExpensesInput = {
@@ -35043,6 +38334,7 @@ export namespace Prisma {
     activities?: ActivityUncheckedCreateNestedManyWithoutProjectInput
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutExpensesInput = {
@@ -35259,6 +38551,7 @@ export namespace Prisma {
     activities?: ActivityUpdateManyWithoutProjectNestedInput
     surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutExpensesInput = {
@@ -35297,6 +38590,7 @@ export namespace Prisma {
     activities?: ActivityUncheckedUpdateManyWithoutProjectNestedInput
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutApprovedExpensesInput = {
@@ -35952,6 +39246,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutActivitiesInput = {
@@ -35990,6 +39285,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutActivitiesInput = {
@@ -36131,6 +39427,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutActivitiesInput = {
@@ -36169,6 +39466,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectCreateWithoutTasksInput = {
@@ -36207,6 +39505,7 @@ export namespace Prisma {
     activities?: ActivityCreateNestedManyWithoutProjectInput
     surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutTasksInput = {
@@ -36245,6 +39544,7 @@ export namespace Prisma {
     activities?: ActivityUncheckedCreateNestedManyWithoutProjectInput
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutTasksInput = {
@@ -36414,6 +39714,109 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutTasksCreatedInput, UserUncheckedCreateWithoutTasksCreatedInput>
   }
 
+  export type TaskCreateWithoutSubtasksInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status?: $Enums.TaskStatus
+    progressPercent?: number
+    billable?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutTasksInput
+    assignee?: UserCreateNestedOneWithoutTasksAssignedInput
+    createdBy?: UserCreateNestedOneWithoutTasksCreatedInput
+    parentTask?: TaskCreateNestedOneWithoutSubtasksInput
+    timeLogs?: TaskTimeLogCreateNestedManyWithoutTaskInput
+    assignees?: TaskAssigneeCreateNestedManyWithoutTaskInput
+    timesheets?: TimesheetCreateNestedManyWithoutTaskInput
+    dependencies?: TaskDependencyCreateNestedManyWithoutTaskInput
+    dependents?: TaskDependencyCreateNestedManyWithoutDependsOnTaskInput
+  }
+
+  export type TaskUncheckedCreateWithoutSubtasksInput = {
+    id?: string
+    projectId: string
+    title: string
+    description?: string | null
+    status?: $Enums.TaskStatus
+    progressPercent?: number
+    billable?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    assigneeId?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parentTaskId?: string | null
+    timeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutTaskInput
+    assignees?: TaskAssigneeUncheckedCreateNestedManyWithoutTaskInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutTaskInput
+    dependencies?: TaskDependencyUncheckedCreateNestedManyWithoutTaskInput
+    dependents?: TaskDependencyUncheckedCreateNestedManyWithoutDependsOnTaskInput
+  }
+
+  export type TaskCreateOrConnectWithoutSubtasksInput = {
+    where: TaskWhereUniqueInput
+    create: XOR<TaskCreateWithoutSubtasksInput, TaskUncheckedCreateWithoutSubtasksInput>
+  }
+
+  export type TaskCreateWithoutParentTaskInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status?: $Enums.TaskStatus
+    progressPercent?: number
+    billable?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutTasksInput
+    assignee?: UserCreateNestedOneWithoutTasksAssignedInput
+    createdBy?: UserCreateNestedOneWithoutTasksCreatedInput
+    subtasks?: TaskCreateNestedManyWithoutParentTaskInput
+    timeLogs?: TaskTimeLogCreateNestedManyWithoutTaskInput
+    assignees?: TaskAssigneeCreateNestedManyWithoutTaskInput
+    timesheets?: TimesheetCreateNestedManyWithoutTaskInput
+    dependencies?: TaskDependencyCreateNestedManyWithoutTaskInput
+    dependents?: TaskDependencyCreateNestedManyWithoutDependsOnTaskInput
+  }
+
+  export type TaskUncheckedCreateWithoutParentTaskInput = {
+    id?: string
+    projectId: string
+    title: string
+    description?: string | null
+    status?: $Enums.TaskStatus
+    progressPercent?: number
+    billable?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    assigneeId?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subtasks?: TaskUncheckedCreateNestedManyWithoutParentTaskInput
+    timeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutTaskInput
+    assignees?: TaskAssigneeUncheckedCreateNestedManyWithoutTaskInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutTaskInput
+    dependencies?: TaskDependencyUncheckedCreateNestedManyWithoutTaskInput
+    dependents?: TaskDependencyUncheckedCreateNestedManyWithoutDependsOnTaskInput
+  }
+
+  export type TaskCreateOrConnectWithoutParentTaskInput = {
+    where: TaskWhereUniqueInput
+    create: XOR<TaskCreateWithoutParentTaskInput, TaskUncheckedCreateWithoutParentTaskInput>
+  }
+
+  export type TaskCreateManyParentTaskInputEnvelope = {
+    data: TaskCreateManyParentTaskInput | TaskCreateManyParentTaskInput[]
+    skipDuplicates?: boolean
+  }
+
   export type TaskTimeLogCreateWithoutTaskInput = {
     id?: string
     hours: number
@@ -36504,6 +39907,50 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type TaskDependencyCreateWithoutTaskInput = {
+    id?: string
+    createdAt?: Date | string
+    dependsOnTask: TaskCreateNestedOneWithoutDependentsInput
+  }
+
+  export type TaskDependencyUncheckedCreateWithoutTaskInput = {
+    id?: string
+    dependsOnTaskId: string
+    createdAt?: Date | string
+  }
+
+  export type TaskDependencyCreateOrConnectWithoutTaskInput = {
+    where: TaskDependencyWhereUniqueInput
+    create: XOR<TaskDependencyCreateWithoutTaskInput, TaskDependencyUncheckedCreateWithoutTaskInput>
+  }
+
+  export type TaskDependencyCreateManyTaskInputEnvelope = {
+    data: TaskDependencyCreateManyTaskInput | TaskDependencyCreateManyTaskInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TaskDependencyCreateWithoutDependsOnTaskInput = {
+    id?: string
+    createdAt?: Date | string
+    task: TaskCreateNestedOneWithoutDependenciesInput
+  }
+
+  export type TaskDependencyUncheckedCreateWithoutDependsOnTaskInput = {
+    id?: string
+    taskId: string
+    createdAt?: Date | string
+  }
+
+  export type TaskDependencyCreateOrConnectWithoutDependsOnTaskInput = {
+    where: TaskDependencyWhereUniqueInput
+    create: XOR<TaskDependencyCreateWithoutDependsOnTaskInput, TaskDependencyUncheckedCreateWithoutDependsOnTaskInput>
+  }
+
+  export type TaskDependencyCreateManyDependsOnTaskInputEnvelope = {
+    data: TaskDependencyCreateManyDependsOnTaskInput | TaskDependencyCreateManyDependsOnTaskInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ProjectUpsertWithoutTasksInput = {
     update: XOR<ProjectUpdateWithoutTasksInput, ProjectUncheckedUpdateWithoutTasksInput>
     create: XOR<ProjectCreateWithoutTasksInput, ProjectUncheckedCreateWithoutTasksInput>
@@ -36551,6 +39998,7 @@ export namespace Prisma {
     activities?: ActivityUpdateManyWithoutProjectNestedInput
     surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutTasksInput = {
@@ -36589,6 +40037,7 @@ export namespace Prisma {
     activities?: ActivityUncheckedUpdateManyWithoutProjectNestedInput
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutTasksAssignedInput = {
@@ -36765,6 +40214,77 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
+  export type TaskUpsertWithoutSubtasksInput = {
+    update: XOR<TaskUpdateWithoutSubtasksInput, TaskUncheckedUpdateWithoutSubtasksInput>
+    create: XOR<TaskCreateWithoutSubtasksInput, TaskUncheckedCreateWithoutSubtasksInput>
+    where?: TaskWhereInput
+  }
+
+  export type TaskUpdateToOneWithWhereWithoutSubtasksInput = {
+    where?: TaskWhereInput
+    data: XOR<TaskUpdateWithoutSubtasksInput, TaskUncheckedUpdateWithoutSubtasksInput>
+  }
+
+  export type TaskUpdateWithoutSubtasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
+    assignee?: UserUpdateOneWithoutTasksAssignedNestedInput
+    createdBy?: UserUpdateOneWithoutTasksCreatedNestedInput
+    parentTask?: TaskUpdateOneWithoutSubtasksNestedInput
+    timeLogs?: TaskTimeLogUpdateManyWithoutTaskNestedInput
+    assignees?: TaskAssigneeUpdateManyWithoutTaskNestedInput
+    timesheets?: TimesheetUpdateManyWithoutTaskNestedInput
+    dependencies?: TaskDependencyUpdateManyWithoutTaskNestedInput
+    dependents?: TaskDependencyUpdateManyWithoutDependsOnTaskNestedInput
+  }
+
+  export type TaskUncheckedUpdateWithoutSubtasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentTaskId?: NullableStringFieldUpdateOperationsInput | string | null
+    timeLogs?: TaskTimeLogUncheckedUpdateManyWithoutTaskNestedInput
+    assignees?: TaskAssigneeUncheckedUpdateManyWithoutTaskNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutTaskNestedInput
+    dependencies?: TaskDependencyUncheckedUpdateManyWithoutTaskNestedInput
+    dependents?: TaskDependencyUncheckedUpdateManyWithoutDependsOnTaskNestedInput
+  }
+
+  export type TaskUpsertWithWhereUniqueWithoutParentTaskInput = {
+    where: TaskWhereUniqueInput
+    update: XOR<TaskUpdateWithoutParentTaskInput, TaskUncheckedUpdateWithoutParentTaskInput>
+    create: XOR<TaskCreateWithoutParentTaskInput, TaskUncheckedCreateWithoutParentTaskInput>
+  }
+
+  export type TaskUpdateWithWhereUniqueWithoutParentTaskInput = {
+    where: TaskWhereUniqueInput
+    data: XOR<TaskUpdateWithoutParentTaskInput, TaskUncheckedUpdateWithoutParentTaskInput>
+  }
+
+  export type TaskUpdateManyWithWhereWithoutParentTaskInput = {
+    where: TaskScalarWhereInput
+    data: XOR<TaskUpdateManyMutationInput, TaskUncheckedUpdateManyWithoutParentTaskInput>
+  }
+
   export type TaskTimeLogUpsertWithWhereUniqueWithoutTaskInput = {
     where: TaskTimeLogWhereUniqueInput
     update: XOR<TaskTimeLogUpdateWithoutTaskInput, TaskTimeLogUncheckedUpdateWithoutTaskInput>
@@ -36813,6 +40333,428 @@ export namespace Prisma {
     data: XOR<TimesheetUpdateManyMutationInput, TimesheetUncheckedUpdateManyWithoutTaskInput>
   }
 
+  export type TaskDependencyUpsertWithWhereUniqueWithoutTaskInput = {
+    where: TaskDependencyWhereUniqueInput
+    update: XOR<TaskDependencyUpdateWithoutTaskInput, TaskDependencyUncheckedUpdateWithoutTaskInput>
+    create: XOR<TaskDependencyCreateWithoutTaskInput, TaskDependencyUncheckedCreateWithoutTaskInput>
+  }
+
+  export type TaskDependencyUpdateWithWhereUniqueWithoutTaskInput = {
+    where: TaskDependencyWhereUniqueInput
+    data: XOR<TaskDependencyUpdateWithoutTaskInput, TaskDependencyUncheckedUpdateWithoutTaskInput>
+  }
+
+  export type TaskDependencyUpdateManyWithWhereWithoutTaskInput = {
+    where: TaskDependencyScalarWhereInput
+    data: XOR<TaskDependencyUpdateManyMutationInput, TaskDependencyUncheckedUpdateManyWithoutTaskInput>
+  }
+
+  export type TaskDependencyScalarWhereInput = {
+    AND?: TaskDependencyScalarWhereInput | TaskDependencyScalarWhereInput[]
+    OR?: TaskDependencyScalarWhereInput[]
+    NOT?: TaskDependencyScalarWhereInput | TaskDependencyScalarWhereInput[]
+    id?: StringFilter<"TaskDependency"> | string
+    taskId?: StringFilter<"TaskDependency"> | string
+    dependsOnTaskId?: StringFilter<"TaskDependency"> | string
+    createdAt?: DateTimeFilter<"TaskDependency"> | Date | string
+  }
+
+  export type TaskDependencyUpsertWithWhereUniqueWithoutDependsOnTaskInput = {
+    where: TaskDependencyWhereUniqueInput
+    update: XOR<TaskDependencyUpdateWithoutDependsOnTaskInput, TaskDependencyUncheckedUpdateWithoutDependsOnTaskInput>
+    create: XOR<TaskDependencyCreateWithoutDependsOnTaskInput, TaskDependencyUncheckedCreateWithoutDependsOnTaskInput>
+  }
+
+  export type TaskDependencyUpdateWithWhereUniqueWithoutDependsOnTaskInput = {
+    where: TaskDependencyWhereUniqueInput
+    data: XOR<TaskDependencyUpdateWithoutDependsOnTaskInput, TaskDependencyUncheckedUpdateWithoutDependsOnTaskInput>
+  }
+
+  export type TaskDependencyUpdateManyWithWhereWithoutDependsOnTaskInput = {
+    where: TaskDependencyScalarWhereInput
+    data: XOR<TaskDependencyUpdateManyMutationInput, TaskDependencyUncheckedUpdateManyWithoutDependsOnTaskInput>
+  }
+
+  export type TaskCreateWithoutDependenciesInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status?: $Enums.TaskStatus
+    progressPercent?: number
+    billable?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutTasksInput
+    assignee?: UserCreateNestedOneWithoutTasksAssignedInput
+    createdBy?: UserCreateNestedOneWithoutTasksCreatedInput
+    parentTask?: TaskCreateNestedOneWithoutSubtasksInput
+    subtasks?: TaskCreateNestedManyWithoutParentTaskInput
+    timeLogs?: TaskTimeLogCreateNestedManyWithoutTaskInput
+    assignees?: TaskAssigneeCreateNestedManyWithoutTaskInput
+    timesheets?: TimesheetCreateNestedManyWithoutTaskInput
+    dependents?: TaskDependencyCreateNestedManyWithoutDependsOnTaskInput
+  }
+
+  export type TaskUncheckedCreateWithoutDependenciesInput = {
+    id?: string
+    projectId: string
+    title: string
+    description?: string | null
+    status?: $Enums.TaskStatus
+    progressPercent?: number
+    billable?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    assigneeId?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parentTaskId?: string | null
+    subtasks?: TaskUncheckedCreateNestedManyWithoutParentTaskInput
+    timeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutTaskInput
+    assignees?: TaskAssigneeUncheckedCreateNestedManyWithoutTaskInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutTaskInput
+    dependents?: TaskDependencyUncheckedCreateNestedManyWithoutDependsOnTaskInput
+  }
+
+  export type TaskCreateOrConnectWithoutDependenciesInput = {
+    where: TaskWhereUniqueInput
+    create: XOR<TaskCreateWithoutDependenciesInput, TaskUncheckedCreateWithoutDependenciesInput>
+  }
+
+  export type TaskCreateWithoutDependentsInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status?: $Enums.TaskStatus
+    progressPercent?: number
+    billable?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutTasksInput
+    assignee?: UserCreateNestedOneWithoutTasksAssignedInput
+    createdBy?: UserCreateNestedOneWithoutTasksCreatedInput
+    parentTask?: TaskCreateNestedOneWithoutSubtasksInput
+    subtasks?: TaskCreateNestedManyWithoutParentTaskInput
+    timeLogs?: TaskTimeLogCreateNestedManyWithoutTaskInput
+    assignees?: TaskAssigneeCreateNestedManyWithoutTaskInput
+    timesheets?: TimesheetCreateNestedManyWithoutTaskInput
+    dependencies?: TaskDependencyCreateNestedManyWithoutTaskInput
+  }
+
+  export type TaskUncheckedCreateWithoutDependentsInput = {
+    id?: string
+    projectId: string
+    title: string
+    description?: string | null
+    status?: $Enums.TaskStatus
+    progressPercent?: number
+    billable?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    assigneeId?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parentTaskId?: string | null
+    subtasks?: TaskUncheckedCreateNestedManyWithoutParentTaskInput
+    timeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutTaskInput
+    assignees?: TaskAssigneeUncheckedCreateNestedManyWithoutTaskInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutTaskInput
+    dependencies?: TaskDependencyUncheckedCreateNestedManyWithoutTaskInput
+  }
+
+  export type TaskCreateOrConnectWithoutDependentsInput = {
+    where: TaskWhereUniqueInput
+    create: XOR<TaskCreateWithoutDependentsInput, TaskUncheckedCreateWithoutDependentsInput>
+  }
+
+  export type TaskUpsertWithoutDependenciesInput = {
+    update: XOR<TaskUpdateWithoutDependenciesInput, TaskUncheckedUpdateWithoutDependenciesInput>
+    create: XOR<TaskCreateWithoutDependenciesInput, TaskUncheckedCreateWithoutDependenciesInput>
+    where?: TaskWhereInput
+  }
+
+  export type TaskUpdateToOneWithWhereWithoutDependenciesInput = {
+    where?: TaskWhereInput
+    data: XOR<TaskUpdateWithoutDependenciesInput, TaskUncheckedUpdateWithoutDependenciesInput>
+  }
+
+  export type TaskUpdateWithoutDependenciesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
+    assignee?: UserUpdateOneWithoutTasksAssignedNestedInput
+    createdBy?: UserUpdateOneWithoutTasksCreatedNestedInput
+    parentTask?: TaskUpdateOneWithoutSubtasksNestedInput
+    subtasks?: TaskUpdateManyWithoutParentTaskNestedInput
+    timeLogs?: TaskTimeLogUpdateManyWithoutTaskNestedInput
+    assignees?: TaskAssigneeUpdateManyWithoutTaskNestedInput
+    timesheets?: TimesheetUpdateManyWithoutTaskNestedInput
+    dependents?: TaskDependencyUpdateManyWithoutDependsOnTaskNestedInput
+  }
+
+  export type TaskUncheckedUpdateWithoutDependenciesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentTaskId?: NullableStringFieldUpdateOperationsInput | string | null
+    subtasks?: TaskUncheckedUpdateManyWithoutParentTaskNestedInput
+    timeLogs?: TaskTimeLogUncheckedUpdateManyWithoutTaskNestedInput
+    assignees?: TaskAssigneeUncheckedUpdateManyWithoutTaskNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutTaskNestedInput
+    dependents?: TaskDependencyUncheckedUpdateManyWithoutDependsOnTaskNestedInput
+  }
+
+  export type TaskUpsertWithoutDependentsInput = {
+    update: XOR<TaskUpdateWithoutDependentsInput, TaskUncheckedUpdateWithoutDependentsInput>
+    create: XOR<TaskCreateWithoutDependentsInput, TaskUncheckedCreateWithoutDependentsInput>
+    where?: TaskWhereInput
+  }
+
+  export type TaskUpdateToOneWithWhereWithoutDependentsInput = {
+    where?: TaskWhereInput
+    data: XOR<TaskUpdateWithoutDependentsInput, TaskUncheckedUpdateWithoutDependentsInput>
+  }
+
+  export type TaskUpdateWithoutDependentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
+    assignee?: UserUpdateOneWithoutTasksAssignedNestedInput
+    createdBy?: UserUpdateOneWithoutTasksCreatedNestedInput
+    parentTask?: TaskUpdateOneWithoutSubtasksNestedInput
+    subtasks?: TaskUpdateManyWithoutParentTaskNestedInput
+    timeLogs?: TaskTimeLogUpdateManyWithoutTaskNestedInput
+    assignees?: TaskAssigneeUpdateManyWithoutTaskNestedInput
+    timesheets?: TimesheetUpdateManyWithoutTaskNestedInput
+    dependencies?: TaskDependencyUpdateManyWithoutTaskNestedInput
+  }
+
+  export type TaskUncheckedUpdateWithoutDependentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentTaskId?: NullableStringFieldUpdateOperationsInput | string | null
+    subtasks?: TaskUncheckedUpdateManyWithoutParentTaskNestedInput
+    timeLogs?: TaskTimeLogUncheckedUpdateManyWithoutTaskNestedInput
+    assignees?: TaskAssigneeUncheckedUpdateManyWithoutTaskNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutTaskNestedInput
+    dependencies?: TaskDependencyUncheckedUpdateManyWithoutTaskNestedInput
+  }
+
+  export type ProjectCreateWithoutBillingMilestonesInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    surveyToken?: string | null
+    client: ClientCreateNestedOneWithoutProjectsInput
+    sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
+    pm?: UserCreateNestedOneWithoutProjectsAsPmInput
+    technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
+    adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    resources?: ProjectResourceCreateNestedManyWithoutProjectInput
+    timesheets?: TimesheetCreateNestedManyWithoutProjectInput
+    documents?: DocumentCreateNestedManyWithoutProjectInput
+    activities?: ActivityCreateNestedManyWithoutProjectInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
+    expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
+    tasks?: TaskCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectUncheckedCreateWithoutBillingMilestonesInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    clientId: string
+    salesId?: string | null
+    pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    surveyToken?: string | null
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutProjectInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
+    expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutBillingMilestonesInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutBillingMilestonesInput, ProjectUncheckedCreateWithoutBillingMilestonesInput>
+  }
+
+  export type ProjectUpsertWithoutBillingMilestonesInput = {
+    update: XOR<ProjectUpdateWithoutBillingMilestonesInput, ProjectUncheckedUpdateWithoutBillingMilestonesInput>
+    create: XOR<ProjectCreateWithoutBillingMilestonesInput, ProjectUncheckedCreateWithoutBillingMilestonesInput>
+    where?: ProjectWhereInput
+  }
+
+  export type ProjectUpdateToOneWithWhereWithoutBillingMilestonesInput = {
+    where?: ProjectWhereInput
+    data: XOR<ProjectUpdateWithoutBillingMilestonesInput, ProjectUncheckedUpdateWithoutBillingMilestonesInput>
+  }
+
+  export type ProjectUpdateWithoutBillingMilestonesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
+    sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
+    pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
+    technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
+    adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
+    timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUpdateManyWithoutProjectNestedInput
+    activities?: ActivityUpdateManyWithoutProjectNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
+    expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutBillingMilestonesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    clientId?: StringFieldUpdateOperationsInput | string
+    salesId?: NullableStringFieldUpdateOperationsInput | string | null
+    pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutProjectNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
+    expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
   export type TaskCreateWithoutAssigneesInput = {
     id?: string
     title: string
@@ -36827,8 +40769,12 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutTasksInput
     assignee?: UserCreateNestedOneWithoutTasksAssignedInput
     createdBy?: UserCreateNestedOneWithoutTasksCreatedInput
+    parentTask?: TaskCreateNestedOneWithoutSubtasksInput
+    subtasks?: TaskCreateNestedManyWithoutParentTaskInput
     timeLogs?: TaskTimeLogCreateNestedManyWithoutTaskInput
     timesheets?: TimesheetCreateNestedManyWithoutTaskInput
+    dependencies?: TaskDependencyCreateNestedManyWithoutTaskInput
+    dependents?: TaskDependencyCreateNestedManyWithoutDependsOnTaskInput
   }
 
   export type TaskUncheckedCreateWithoutAssigneesInput = {
@@ -36845,8 +40791,12 @@ export namespace Prisma {
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentTaskId?: string | null
+    subtasks?: TaskUncheckedCreateNestedManyWithoutParentTaskInput
     timeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutTaskInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutTaskInput
+    dependencies?: TaskDependencyUncheckedCreateNestedManyWithoutTaskInput
+    dependents?: TaskDependencyUncheckedCreateNestedManyWithoutDependsOnTaskInput
   }
 
   export type TaskCreateOrConnectWithoutAssigneesInput = {
@@ -36960,8 +40910,12 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     assignee?: UserUpdateOneWithoutTasksAssignedNestedInput
     createdBy?: UserUpdateOneWithoutTasksCreatedNestedInput
+    parentTask?: TaskUpdateOneWithoutSubtasksNestedInput
+    subtasks?: TaskUpdateManyWithoutParentTaskNestedInput
     timeLogs?: TaskTimeLogUpdateManyWithoutTaskNestedInput
     timesheets?: TimesheetUpdateManyWithoutTaskNestedInput
+    dependencies?: TaskDependencyUpdateManyWithoutTaskNestedInput
+    dependents?: TaskDependencyUpdateManyWithoutDependsOnTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutAssigneesInput = {
@@ -36978,8 +40932,12 @@ export namespace Prisma {
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentTaskId?: NullableStringFieldUpdateOperationsInput | string | null
+    subtasks?: TaskUncheckedUpdateManyWithoutParentTaskNestedInput
     timeLogs?: TaskTimeLogUncheckedUpdateManyWithoutTaskNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutTaskNestedInput
+    dependencies?: TaskDependencyUncheckedUpdateManyWithoutTaskNestedInput
+    dependents?: TaskDependencyUncheckedUpdateManyWithoutDependsOnTaskNestedInput
   }
 
   export type UserUpsertWithoutTaskAssignmentsInput = {
@@ -37083,8 +41041,12 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutTasksInput
     assignee?: UserCreateNestedOneWithoutTasksAssignedInput
     createdBy?: UserCreateNestedOneWithoutTasksCreatedInput
+    parentTask?: TaskCreateNestedOneWithoutSubtasksInput
+    subtasks?: TaskCreateNestedManyWithoutParentTaskInput
     assignees?: TaskAssigneeCreateNestedManyWithoutTaskInput
     timesheets?: TimesheetCreateNestedManyWithoutTaskInput
+    dependencies?: TaskDependencyCreateNestedManyWithoutTaskInput
+    dependents?: TaskDependencyCreateNestedManyWithoutDependsOnTaskInput
   }
 
   export type TaskUncheckedCreateWithoutTimeLogsInput = {
@@ -37101,8 +41063,12 @@ export namespace Prisma {
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentTaskId?: string | null
+    subtasks?: TaskUncheckedCreateNestedManyWithoutParentTaskInput
     assignees?: TaskAssigneeUncheckedCreateNestedManyWithoutTaskInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutTaskInput
+    dependencies?: TaskDependencyUncheckedCreateNestedManyWithoutTaskInput
+    dependents?: TaskDependencyUncheckedCreateNestedManyWithoutDependsOnTaskInput
   }
 
   export type TaskCreateOrConnectWithoutTimeLogsInput = {
@@ -37216,8 +41182,12 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     assignee?: UserUpdateOneWithoutTasksAssignedNestedInput
     createdBy?: UserUpdateOneWithoutTasksCreatedNestedInput
+    parentTask?: TaskUpdateOneWithoutSubtasksNestedInput
+    subtasks?: TaskUpdateManyWithoutParentTaskNestedInput
     assignees?: TaskAssigneeUpdateManyWithoutTaskNestedInput
     timesheets?: TimesheetUpdateManyWithoutTaskNestedInput
+    dependencies?: TaskDependencyUpdateManyWithoutTaskNestedInput
+    dependents?: TaskDependencyUpdateManyWithoutDependsOnTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutTimeLogsInput = {
@@ -37234,8 +41204,12 @@ export namespace Prisma {
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentTaskId?: NullableStringFieldUpdateOperationsInput | string | null
+    subtasks?: TaskUncheckedUpdateManyWithoutParentTaskNestedInput
     assignees?: TaskAssigneeUncheckedUpdateManyWithoutTaskNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutTaskNestedInput
+    dependencies?: TaskDependencyUncheckedUpdateManyWithoutTaskNestedInput
+    dependents?: TaskDependencyUncheckedUpdateManyWithoutDependsOnTaskNestedInput
   }
 
   export type UserUpsertWithoutTaskTimeLogsInput = {
@@ -37793,6 +41767,7 @@ export namespace Prisma {
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentTaskId?: string | null
   }
 
   export type TaskCreateManyCreatedByInput = {
@@ -37808,6 +41783,7 @@ export namespace Prisma {
     assigneeId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentTaskId?: string | null
   }
 
   export type TaskAssigneeCreateManyUserInput = {
@@ -38129,6 +42105,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutSalesInput = {
@@ -38167,6 +42144,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutSalesInput = {
@@ -38236,6 +42214,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutPmInput = {
@@ -38274,6 +42253,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutPmInput = {
@@ -38343,6 +42323,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutTechnicalWriterInput = {
@@ -38381,6 +42362,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutTechnicalWriterInput = {
@@ -38450,6 +42432,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutAdminProjectInput = {
@@ -38488,6 +42471,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutAdminProjectInput = {
@@ -38849,9 +42833,13 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     createdBy?: UserUpdateOneWithoutTasksCreatedNestedInput
+    parentTask?: TaskUpdateOneWithoutSubtasksNestedInput
+    subtasks?: TaskUpdateManyWithoutParentTaskNestedInput
     timeLogs?: TaskTimeLogUpdateManyWithoutTaskNestedInput
     assignees?: TaskAssigneeUpdateManyWithoutTaskNestedInput
     timesheets?: TimesheetUpdateManyWithoutTaskNestedInput
+    dependencies?: TaskDependencyUpdateManyWithoutTaskNestedInput
+    dependents?: TaskDependencyUpdateManyWithoutDependsOnTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutAssigneeInput = {
@@ -38867,9 +42855,13 @@ export namespace Prisma {
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentTaskId?: NullableStringFieldUpdateOperationsInput | string | null
+    subtasks?: TaskUncheckedUpdateManyWithoutParentTaskNestedInput
     timeLogs?: TaskTimeLogUncheckedUpdateManyWithoutTaskNestedInput
     assignees?: TaskAssigneeUncheckedUpdateManyWithoutTaskNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutTaskNestedInput
+    dependencies?: TaskDependencyUncheckedUpdateManyWithoutTaskNestedInput
+    dependents?: TaskDependencyUncheckedUpdateManyWithoutDependsOnTaskNestedInput
   }
 
   export type TaskUncheckedUpdateManyWithoutAssigneeInput = {
@@ -38885,6 +42877,7 @@ export namespace Prisma {
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentTaskId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TaskUpdateWithoutCreatedByInput = {
@@ -38900,9 +42893,13 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
     assignee?: UserUpdateOneWithoutTasksAssignedNestedInput
+    parentTask?: TaskUpdateOneWithoutSubtasksNestedInput
+    subtasks?: TaskUpdateManyWithoutParentTaskNestedInput
     timeLogs?: TaskTimeLogUpdateManyWithoutTaskNestedInput
     assignees?: TaskAssigneeUpdateManyWithoutTaskNestedInput
     timesheets?: TimesheetUpdateManyWithoutTaskNestedInput
+    dependencies?: TaskDependencyUpdateManyWithoutTaskNestedInput
+    dependents?: TaskDependencyUpdateManyWithoutDependsOnTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutCreatedByInput = {
@@ -38918,9 +42915,13 @@ export namespace Prisma {
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentTaskId?: NullableStringFieldUpdateOperationsInput | string | null
+    subtasks?: TaskUncheckedUpdateManyWithoutParentTaskNestedInput
     timeLogs?: TaskTimeLogUncheckedUpdateManyWithoutTaskNestedInput
     assignees?: TaskAssigneeUncheckedUpdateManyWithoutTaskNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutTaskNestedInput
+    dependencies?: TaskDependencyUncheckedUpdateManyWithoutTaskNestedInput
+    dependents?: TaskDependencyUncheckedUpdateManyWithoutDependsOnTaskNestedInput
   }
 
   export type TaskUncheckedUpdateManyWithoutCreatedByInput = {
@@ -38936,6 +42937,7 @@ export namespace Prisma {
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentTaskId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TaskAssigneeUpdateWithoutUserInput = {
@@ -39080,6 +43082,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutClientInput = {
@@ -39118,6 +43121,7 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutClientInput = {
@@ -39237,6 +43241,23 @@ export namespace Prisma {
     endDate?: Date | string | null
     assigneeId?: string | null
     createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parentTaskId?: string | null
+  }
+
+  export type BillingMilestoneCreateManyProjectInput = {
+    id?: string
+    name: string
+    description?: string | null
+    percentage?: number
+    amount?: number | null
+    dueDate?: Date | string | null
+    status?: $Enums.BillingMilestoneStatus
+    invoiceNumber?: string | null
+    invoicedAt?: Date | string | null
+    paidAt?: Date | string | null
+    sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -39479,9 +43500,13 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignee?: UserUpdateOneWithoutTasksAssignedNestedInput
     createdBy?: UserUpdateOneWithoutTasksCreatedNestedInput
+    parentTask?: TaskUpdateOneWithoutSubtasksNestedInput
+    subtasks?: TaskUpdateManyWithoutParentTaskNestedInput
     timeLogs?: TaskTimeLogUpdateManyWithoutTaskNestedInput
     assignees?: TaskAssigneeUpdateManyWithoutTaskNestedInput
     timesheets?: TimesheetUpdateManyWithoutTaskNestedInput
+    dependencies?: TaskDependencyUpdateManyWithoutTaskNestedInput
+    dependents?: TaskDependencyUpdateManyWithoutDependsOnTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutProjectInput = {
@@ -39497,9 +43522,13 @@ export namespace Prisma {
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentTaskId?: NullableStringFieldUpdateOperationsInput | string | null
+    subtasks?: TaskUncheckedUpdateManyWithoutParentTaskNestedInput
     timeLogs?: TaskTimeLogUncheckedUpdateManyWithoutTaskNestedInput
     assignees?: TaskAssigneeUncheckedUpdateManyWithoutTaskNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutTaskNestedInput
+    dependencies?: TaskDependencyUncheckedUpdateManyWithoutTaskNestedInput
+    dependents?: TaskDependencyUncheckedUpdateManyWithoutDependsOnTaskNestedInput
   }
 
   export type TaskUncheckedUpdateManyWithoutProjectInput = {
@@ -39513,6 +43542,55 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentTaskId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type BillingMilestoneUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    percentage?: FloatFieldUpdateOperationsInput | number
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BillingMilestoneUncheckedUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    percentage?: FloatFieldUpdateOperationsInput | number
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BillingMilestoneUncheckedUpdateManyWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    percentage?: FloatFieldUpdateOperationsInput | number
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -39655,6 +43733,22 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type TaskCreateManyParentTaskInput = {
+    id?: string
+    projectId: string
+    title: string
+    description?: string | null
+    status?: $Enums.TaskStatus
+    progressPercent?: number
+    billable?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    assigneeId?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type TaskTimeLogCreateManyTaskInput = {
     id?: string
     userId: string
@@ -39683,6 +43777,78 @@ export namespace Prisma {
     rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type TaskDependencyCreateManyTaskInput = {
+    id?: string
+    dependsOnTaskId: string
+    createdAt?: Date | string
+  }
+
+  export type TaskDependencyCreateManyDependsOnTaskInput = {
+    id?: string
+    taskId: string
+    createdAt?: Date | string
+  }
+
+  export type TaskUpdateWithoutParentTaskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
+    assignee?: UserUpdateOneWithoutTasksAssignedNestedInput
+    createdBy?: UserUpdateOneWithoutTasksCreatedNestedInput
+    subtasks?: TaskUpdateManyWithoutParentTaskNestedInput
+    timeLogs?: TaskTimeLogUpdateManyWithoutTaskNestedInput
+    assignees?: TaskAssigneeUpdateManyWithoutTaskNestedInput
+    timesheets?: TimesheetUpdateManyWithoutTaskNestedInput
+    dependencies?: TaskDependencyUpdateManyWithoutTaskNestedInput
+    dependents?: TaskDependencyUpdateManyWithoutDependsOnTaskNestedInput
+  }
+
+  export type TaskUncheckedUpdateWithoutParentTaskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subtasks?: TaskUncheckedUpdateManyWithoutParentTaskNestedInput
+    timeLogs?: TaskTimeLogUncheckedUpdateManyWithoutTaskNestedInput
+    assignees?: TaskAssigneeUncheckedUpdateManyWithoutTaskNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutTaskNestedInput
+    dependencies?: TaskDependencyUncheckedUpdateManyWithoutTaskNestedInput
+    dependents?: TaskDependencyUncheckedUpdateManyWithoutDependsOnTaskNestedInput
+  }
+
+  export type TaskUncheckedUpdateManyWithoutParentTaskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TaskTimeLogUpdateWithoutTaskInput = {
@@ -39775,6 +43941,42 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type TaskDependencyUpdateWithoutTaskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dependsOnTask?: TaskUpdateOneRequiredWithoutDependentsNestedInput
+  }
+
+  export type TaskDependencyUncheckedUpdateWithoutTaskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dependsOnTaskId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskDependencyUncheckedUpdateManyWithoutTaskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dependsOnTaskId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskDependencyUpdateWithoutDependsOnTaskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    task?: TaskUpdateOneRequiredWithoutDependenciesNestedInput
+  }
+
+  export type TaskDependencyUncheckedUpdateWithoutDependsOnTaskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    taskId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskDependencyUncheckedUpdateManyWithoutDependsOnTaskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    taskId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
 
 
   /**
@@ -39864,6 +44066,14 @@ export namespace Prisma {
      * @deprecated Use TaskDefaultArgs instead
      */
     export type TaskArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = TaskDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use TaskDependencyDefaultArgs instead
+     */
+    export type TaskDependencyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = TaskDependencyDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use BillingMilestoneDefaultArgs instead
+     */
+    export type BillingMilestoneArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BillingMilestoneDefaultArgs<ExtArgs>
     /**
      * @deprecated Use TaskAssigneeDefaultArgs instead
      */

@@ -23,8 +23,10 @@ import type {
   AddResourceBody,
   AuthResponse,
   AvailableUser,
+  BillingMilestone,
   BusinessUnit,
   Client,
+  CreateBillingMilestoneBody,
   CreateBusinessUnitBody,
   CreateClientBody,
   CreateDocumentBody,
@@ -58,6 +60,7 @@ import type {
   Task,
   TaskTimeLog,
   Timesheet,
+  UpdateBillingMilestoneBody,
   UpdateBusinessUnitBody,
   UpdateProjectBody,
   UpdateProjectReportBody,
@@ -4977,6 +4980,335 @@ export const useLogTaskTime = <
   TContext
 > => {
   return useMutation(getLogTaskTimeMutationOptions(options));
+};
+
+export const getListBillingMilestonesUrl = (id: string) => {
+  return `/api/projects/${id}/billing-milestones`;
+};
+
+export const listBillingMilestones = async (
+  id: string,
+  options?: RequestInit,
+): Promise<BillingMilestone[]> => {
+  return customFetch<BillingMilestone[]>(getListBillingMilestonesUrl(id), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListBillingMilestonesQueryKey = (id: string) => {
+  return [`/api/projects/${id}/billing-milestones`] as const;
+};
+
+export const getListBillingMilestonesQueryOptions = <
+  TData = Awaited<ReturnType<typeof listBillingMilestones>>,
+  TError = ErrorType<unknown>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listBillingMilestones>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getListBillingMilestonesQueryKey(id);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listBillingMilestones>>
+  > = ({ signal }) => listBillingMilestones(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof listBillingMilestones>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListBillingMilestonesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listBillingMilestones>>
+>;
+export type ListBillingMilestonesQueryError = ErrorType<unknown>;
+
+export function useListBillingMilestones<
+  TData = Awaited<ReturnType<typeof listBillingMilestones>>,
+  TError = ErrorType<unknown>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listBillingMilestones>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListBillingMilestonesQueryOptions(id, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getCreateBillingMilestoneUrl = (id: string) => {
+  return `/api/projects/${id}/billing-milestones`;
+};
+
+export const createBillingMilestone = async (
+  id: string,
+  createBillingMilestoneBody: CreateBillingMilestoneBody,
+  options?: RequestInit,
+): Promise<BillingMilestone> => {
+  return customFetch<BillingMilestone>(getCreateBillingMilestoneUrl(id), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createBillingMilestoneBody),
+  });
+};
+
+export const getCreateBillingMilestoneMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createBillingMilestone>>,
+    TError,
+    { id: string; data: BodyType<CreateBillingMilestoneBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createBillingMilestone>>,
+  TError,
+  { id: string; data: BodyType<CreateBillingMilestoneBody> },
+  TContext
+> => {
+  const mutationKey = ["createBillingMilestone"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createBillingMilestone>>,
+    { id: string; data: BodyType<CreateBillingMilestoneBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return createBillingMilestone(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateBillingMilestoneMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createBillingMilestone>>
+>;
+export type CreateBillingMilestoneMutationBody =
+  BodyType<CreateBillingMilestoneBody>;
+export type CreateBillingMilestoneMutationError = ErrorType<unknown>;
+
+export const useCreateBillingMilestone = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createBillingMilestone>>,
+    TError,
+    { id: string; data: BodyType<CreateBillingMilestoneBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createBillingMilestone>>,
+  TError,
+  { id: string; data: BodyType<CreateBillingMilestoneBody> },
+  TContext
+> => {
+  return useMutation(getCreateBillingMilestoneMutationOptions(options));
+};
+
+export const getUpdateBillingMilestoneUrl = (milestoneId: string) => {
+  return `/api/billing-milestones/${milestoneId}`;
+};
+
+export const updateBillingMilestone = async (
+  milestoneId: string,
+  updateBillingMilestoneBody: UpdateBillingMilestoneBody,
+  options?: RequestInit,
+): Promise<BillingMilestone> => {
+  return customFetch<BillingMilestone>(
+    getUpdateBillingMilestoneUrl(milestoneId),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(updateBillingMilestoneBody),
+    },
+  );
+};
+
+export const getUpdateBillingMilestoneMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateBillingMilestone>>,
+    TError,
+    { milestoneId: string; data: BodyType<UpdateBillingMilestoneBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateBillingMilestone>>,
+  TError,
+  { milestoneId: string; data: BodyType<UpdateBillingMilestoneBody> },
+  TContext
+> => {
+  const mutationKey = ["updateBillingMilestone"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateBillingMilestone>>,
+    { milestoneId: string; data: BodyType<UpdateBillingMilestoneBody> }
+  > = (props) => {
+    const { milestoneId, data } = props ?? {};
+
+    return updateBillingMilestone(milestoneId, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateBillingMilestoneMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateBillingMilestone>>
+>;
+export type UpdateBillingMilestoneMutationBody =
+  BodyType<UpdateBillingMilestoneBody>;
+export type UpdateBillingMilestoneMutationError = ErrorType<unknown>;
+
+export const useUpdateBillingMilestone = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateBillingMilestone>>,
+    TError,
+    { milestoneId: string; data: BodyType<UpdateBillingMilestoneBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateBillingMilestone>>,
+  TError,
+  { milestoneId: string; data: BodyType<UpdateBillingMilestoneBody> },
+  TContext
+> => {
+  return useMutation(getUpdateBillingMilestoneMutationOptions(options));
+};
+
+export const getDeleteBillingMilestoneUrl = (milestoneId: string) => {
+  return `/api/billing-milestones/${milestoneId}`;
+};
+
+export const deleteBillingMilestone = async (
+  milestoneId: string,
+  options?: RequestInit,
+): Promise<SuccessMessage> => {
+  return customFetch<SuccessMessage>(
+    getDeleteBillingMilestoneUrl(milestoneId),
+    {
+      ...options,
+      method: "DELETE",
+    },
+  );
+};
+
+export const getDeleteBillingMilestoneMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteBillingMilestone>>,
+    TError,
+    { milestoneId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteBillingMilestone>>,
+  TError,
+  { milestoneId: string },
+  TContext
+> => {
+  const mutationKey = ["deleteBillingMilestone"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteBillingMilestone>>,
+    { milestoneId: string }
+  > = (props) => {
+    const { milestoneId } = props ?? {};
+
+    return deleteBillingMilestone(milestoneId, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteBillingMilestoneMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteBillingMilestone>>
+>;
+
+export type DeleteBillingMilestoneMutationError = ErrorType<unknown>;
+
+export const useDeleteBillingMilestone = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteBillingMilestone>>,
+    TError,
+    { milestoneId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteBillingMilestone>>,
+  TError,
+  { milestoneId: string },
+  TContext
+> => {
+  return useMutation(getDeleteBillingMilestoneMutationOptions(options));
 };
 
 export const getGetDashboardSummaryUrl = () => {

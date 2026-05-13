@@ -1609,6 +1609,17 @@ export const ListProjectTasksResponseItem = zod.object({
       name: zod.string(),
     }),
   ),
+  parentTaskId: zod.string().nullish(),
+  subtaskCount: zod.number().optional(),
+  dependencies: zod
+    .array(
+      zod.object({
+        id: zod.string(),
+        dependsOnTaskId: zod.string(),
+        dependsOnTitle: zod.string().nullish(),
+      }),
+    )
+    .optional(),
   createdById: zod.string().nullish(),
   createdByName: zod.string().nullish(),
   loggedHours: zod.number(),
@@ -1638,6 +1649,8 @@ export const CreateProjectTaskBody = zod.object({
   endDate: zod.string().nullish(),
   assigneeId: zod.string().nullish(),
   assigneeIds: zod.array(zod.string()).optional(),
+  parentTaskId: zod.string().nullish(),
+  dependencyTaskIds: zod.array(zod.string()).optional(),
 });
 
 export const listMyTasksResponseProgressPercentMin = 0;
@@ -1666,6 +1679,17 @@ export const ListMyTasksResponseItem = zod.object({
       name: zod.string(),
     }),
   ),
+  parentTaskId: zod.string().nullish(),
+  subtaskCount: zod.number().optional(),
+  dependencies: zod
+    .array(
+      zod.object({
+        id: zod.string(),
+        dependsOnTaskId: zod.string(),
+        dependsOnTitle: zod.string().nullish(),
+      }),
+    )
+    .optional(),
   createdById: zod.string().nullish(),
   createdByName: zod.string().nullish(),
   loggedHours: zod.number(),
@@ -1695,6 +1719,8 @@ export const UpdateTaskBody = zod.object({
   endDate: zod.string().nullish(),
   assigneeId: zod.string().nullish(),
   assigneeIds: zod.array(zod.string()).optional(),
+  parentTaskId: zod.string().nullish(),
+  dependencyTaskIds: zod.array(zod.string()).optional(),
 });
 
 export const updateTaskResponseProgressPercentMin = 0;
@@ -1723,6 +1749,17 @@ export const UpdateTaskResponse = zod.object({
       name: zod.string(),
     }),
   ),
+  parentTaskId: zod.string().nullish(),
+  subtaskCount: zod.number().optional(),
+  dependencies: zod
+    .array(
+      zod.object({
+        id: zod.string(),
+        dependsOnTaskId: zod.string(),
+        dependsOnTitle: zod.string().nullish(),
+      }),
+    )
+    .optional(),
   createdById: zod.string().nullish(),
   createdByName: zod.string().nullish(),
   loggedHours: zod.number(),
@@ -1763,6 +1800,87 @@ export const LogTaskTimeBody = zod.object({
   hours: zod.number(),
   note: zod.string().optional(),
   loggedAt: zod.string().optional(),
+});
+
+export const ListBillingMilestonesParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const ListBillingMilestonesResponseItem = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  percentage: zod.number(),
+  amount: zod.number().nullish(),
+  dueDate: zod.string().nullish(),
+  status: zod.enum(["PLANNED", "INVOICED", "PAID", "CANCELLED"]),
+  invoiceNumber: zod.string().nullish(),
+  invoicedAt: zod.string().nullish(),
+  paidAt: zod.string().nullish(),
+  sortOrder: zod.number(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+export const ListBillingMilestonesResponse = zod.array(
+  ListBillingMilestonesResponseItem,
+);
+
+export const CreateBillingMilestoneParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const CreateBillingMilestoneBody = zod.object({
+  name: zod.string(),
+  description: zod.string().nullish(),
+  percentage: zod.number(),
+  amount: zod.number().nullish(),
+  dueDate: zod.string().nullish(),
+  invoiceNumber: zod.string().nullish(),
+  sortOrder: zod.number().optional(),
+});
+
+export const UpdateBillingMilestoneParams = zod.object({
+  milestoneId: zod.coerce.string(),
+});
+
+export const UpdateBillingMilestoneBody = zod.object({
+  name: zod.string().optional(),
+  description: zod.string().nullish(),
+  percentage: zod.number().optional(),
+  amount: zod.number().nullish(),
+  dueDate: zod.string().nullish(),
+  status: zod.enum(["PLANNED", "INVOICED", "PAID", "CANCELLED"]).optional(),
+  invoiceNumber: zod.string().nullish(),
+  invoicedAt: zod.string().nullish(),
+  paidAt: zod.string().nullish(),
+  sortOrder: zod.number().optional(),
+});
+
+export const UpdateBillingMilestoneResponse = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  percentage: zod.number(),
+  amount: zod.number().nullish(),
+  dueDate: zod.string().nullish(),
+  status: zod.enum(["PLANNED", "INVOICED", "PAID", "CANCELLED"]),
+  invoiceNumber: zod.string().nullish(),
+  invoicedAt: zod.string().nullish(),
+  paidAt: zod.string().nullish(),
+  sortOrder: zod.number(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+export const DeleteBillingMilestoneParams = zod.object({
+  milestoneId: zod.coerce.string(),
+});
+
+export const DeleteBillingMilestoneResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
 });
 
 export const GetDashboardSummaryResponse = zod.object({

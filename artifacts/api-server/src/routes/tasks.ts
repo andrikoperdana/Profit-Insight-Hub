@@ -20,6 +20,7 @@ type TaskWithRelations = {
   startDate: Date | null;
   endDate: Date | null;
   assigneeId: string | null;
+  parentTaskId?: string | null;
   createdById: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -28,6 +29,8 @@ type TaskWithRelations = {
   project?: { code: string; name: string; pmId: string | null } | null;
   timeLogs?: { hours: number }[];
   assignees?: { userId: string; user?: { id: string; name: string } | null }[];
+  dependencies?: { id: string; dependsOnTaskId: string; dependsOnTask?: { title: string } | null }[];
+  _count?: { subtasks?: number };
 };
 
 function serializeTask(t: TaskWithRelations) {
@@ -46,6 +49,11 @@ function serializeTask(t: TaskWithRelations) {
         : [];
   // Backward-compat single-assignee fields = first entry of canonical list.
   const primary = assignees[0] ?? null;
+  const dependencies = (t.dependencies ?? []).map((d) => ({
+    id: d.id,
+    dependsOnTaskId: d.dependsOnTaskId,
+    dependsOnTitle: d.dependsOnTask?.title ?? null,
+  }));
   return {
     id: t.id,
     projectId: t.projectId,
@@ -61,6 +69,9 @@ function serializeTask(t: TaskWithRelations) {
     assigneeId: primary?.userId ?? null,
     assigneeName: primary?.name ?? null,
     assignees,
+    parentTaskId: t.parentTaskId ?? null,
+    subtaskCount: t._count?.subtasks ?? 0,
+    dependencies,
     createdById: t.createdById,
     createdByName: t.createdBy?.name ?? null,
     loggedHours,
@@ -78,7 +89,93 @@ const taskInclude = {
     include: { user: { select: { id: true, name: true } } },
     orderBy: { createdAt: "asc" },
   },
+  dependencies: {
+    include: { dependsOnTask: { select: { title: true } } },
+  },
+  _count: { select: { subtasks: true } },
 } as const;
+
+// Validate parentTaskId: must belong to the same project, must not equal the
+// task's own id, and must not introduce a cycle. Returns an error message or
+// null if valid. `selfId` may be undefined for create.
+async function validateParentTaskId(
+  projectId: string,
+  parentId: string,
+  selfId: string | undefined,
+): Promise<string | null> {
+  if (selfId && parentId === selfId) return "parentTaskId cannot equal the task itself";
+  const parent = await prisma.task.findUnique({
+    where: { id: parentId },
+    select: { id: true, projectId: true, parentTaskId: true },
+  });
+  if (!parent || parent.projectId !== projectId) {
+    return "parentTaskId must reference a task on the same project";
+  }
+  if (selfId) {
+    let cursor = parent.parentTaskId;
+    const visited = new Set<string>([parentId]);
+    while (cursor) {
+      if (cursor === selfId) return "parentTaskId would create a cycle";
+      if (visited.has(cursor)) break;
+      visited.add(cursor);
+      const next: { parentTaskId: string | null } | null = await prisma.task.findUnique({
+        where: { id: cursor },
+        select: { parentTaskId: true },
+      });
+      cursor = next?.parentTaskId ?? null;
+    }
+  }
+  return null;
+}
+
+// Validate dependencyTaskIds: each must belong to the same project, none may
+// equal selfId, and none may transitively depend on selfId (cycle prevention).
+async function validateDependencyIds(
+  projectId: string,
+  depIds: string[],
+  selfId: string | undefined,
+): Promise<string | null> {
+  if (depIds.length === 0) return null;
+  if (selfId && depIds.includes(selfId)) return "task cannot depend on itself";
+  const rows = await prisma.task.findMany({
+    where: { id: { in: depIds }, projectId },
+    select: { id: true },
+  });
+  if (rows.length !== depIds.length) {
+    return "all dependencyTaskIds must reference tasks on the same project";
+  }
+  if (!selfId) return null;
+  // BFS forward through dependencies of each candidate to ensure none reach selfId
+  const visited = new Set<string>();
+  const queue = [...depIds];
+  while (queue.length > 0) {
+    const cur = queue.shift()!;
+    if (visited.has(cur)) continue;
+    visited.add(cur);
+    if (cur === selfId) return "dependency would create a cycle";
+    const next = await prisma.taskDependency.findMany({
+      where: { taskId: cur },
+      select: { dependsOnTaskId: true },
+    });
+    for (const n of next) if (!visited.has(n.dependsOnTaskId)) queue.push(n.dependsOnTaskId);
+  }
+  return null;
+}
+
+function normalizeStringIdArray(input: unknown): string[] | null | "INVALID" {
+  if (input === undefined) return null;
+  if (input === null) return [];
+  if (!Array.isArray(input)) return "INVALID";
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const v of input) {
+    if (typeof v !== "string" || !v) return "INVALID";
+    if (seen.has(v)) continue;
+    seen.add(v);
+    out.push(v);
+  }
+  return out;
+}
 
 // Helper: returns true if userId is an assignee of the task (via join table OR
 // legacy single assigneeId). Used for permission checks.
@@ -211,8 +308,19 @@ router.post("/projects/:id/tasks", async (req, res) => {
       .json({ error: "Only Management or the assigned PM can create tasks" });
     return;
   }
-  const { title, description, status, startDate, endDate, assigneeId, assigneeIds: rawAssigneeIds, progressPercent, billable } =
-    req.body || {};
+  const {
+    title,
+    description,
+    status,
+    startDate,
+    endDate,
+    assigneeId,
+    assigneeIds: rawAssigneeIds,
+    progressPercent,
+    billable,
+    parentTaskId,
+    dependencyTaskIds: rawDependencyIds,
+  } = req.body || {};
   const trimmedTitle = typeof title === "string" ? title.trim() : "";
   if (!trimmedTitle) {
     res.status(400).json({ error: "title required" });
@@ -292,6 +400,32 @@ router.post("/projects/:id/tasks", async (req, res) => {
   // Primary assigneeId mirrors the first assignee for backward compat.
   const primaryId = finalAssigneeIds[0] ?? null;
 
+  // Validate parentTaskId (WBS) — must belong to same project.
+  let parentId: string | null = null;
+  if (parentTaskId !== undefined && parentTaskId !== null && parentTaskId !== "") {
+    const err = await validateParentTaskId(projectId, String(parentTaskId), undefined);
+    if (err) {
+      res.status(400).json({ error: err });
+      return;
+    }
+    parentId = String(parentTaskId);
+  }
+
+  // Validate dependencyTaskIds — same project, no self-cycle (no self yet on create).
+  const depNorm = normalizeStringIdArray(rawDependencyIds);
+  if (depNorm === "INVALID") {
+    res.status(400).json({ error: "dependencyTaskIds must be an array of taskId strings" });
+    return;
+  }
+  const depIds = depNorm ?? [];
+  if (depIds.length > 0) {
+    const err = await validateDependencyIds(projectId, depIds, undefined);
+    if (err) {
+      res.status(400).json({ error: err });
+      return;
+    }
+  }
+
   const task = await prisma.task.create({
     data: {
       projectId,
@@ -303,10 +437,15 @@ router.post("/projects/:id/tasks", async (req, res) => {
       startDate: start ?? null,
       endDate: end ?? null,
       assigneeId: primaryId,
+      parentTaskId: parentId,
       createdById: userId,
       assignees:
         finalAssigneeIds.length > 0
           ? { create: finalAssigneeIds.map((uid) => ({ userId: uid })) }
+          : undefined,
+      dependencies:
+        depIds.length > 0
+          ? { create: depIds.map((dId) => ({ dependsOnTaskId: dId })) }
           : undefined,
     },
     include: taskInclude,
@@ -364,10 +503,39 @@ router.patch("/tasks/:taskId", async (req, res) => {
     return;
   }
 
-  const { title, description, status, startDate, endDate, assigneeId, assigneeIds: rawAssigneeIds, progressPercent, billable } =
-    req.body || {};
+  const {
+    title,
+    description,
+    status,
+    startDate,
+    endDate,
+    assigneeId,
+    assigneeIds: rawAssigneeIds,
+    progressPercent,
+    billable,
+    parentTaskId,
+    dependencyTaskIds: rawDependencyIds,
+  } = req.body || {};
 
   const data: Record<string, unknown> = {};
+
+  // parentTaskId (WBS) — manager-only.
+  if (parentTaskId !== undefined) {
+    if (!isManager) {
+      res.status(403).json({ error: "Only Management/PM can change task parent" });
+      return;
+    }
+    if (parentTaskId === null || parentTaskId === "") {
+      data.parentTaskId = null;
+    } else {
+      const err = await validateParentTaskId(before.projectId, String(parentTaskId), before.id);
+      if (err) {
+        res.status(400).json({ error: err });
+        return;
+      }
+      data.parentTaskId = String(parentTaskId);
+    }
+  }
 
   if (billable !== undefined) {
     if (!isManager) {
@@ -502,7 +670,33 @@ router.patch("/tasks/:taskId", async (req, res) => {
     assigneeReplacement = legacy ? [legacy] : [];
   }
 
-  if (Object.keys(data).length === 0 && assigneeReplacement === null) {
+  // dependencyTaskIds — manager-only, replacement semantics.
+  const depNorm = normalizeStringIdArray(rawDependencyIds);
+  if (depNorm === "INVALID") {
+    res.status(400).json({ error: "dependencyTaskIds must be an array of taskId strings" });
+    return;
+  }
+  let depReplacement: string[] | null = null;
+  if (depNorm !== null) {
+    if (!isManager) {
+      res.status(403).json({ error: "Only Management/PM can change dependencies" });
+      return;
+    }
+    if (depNorm.length > 0) {
+      const err = await validateDependencyIds(before.projectId, depNorm, before.id);
+      if (err) {
+        res.status(400).json({ error: err });
+        return;
+      }
+    }
+    depReplacement = depNorm;
+  }
+
+  if (
+    Object.keys(data).length === 0 &&
+    assigneeReplacement === null &&
+    depReplacement === null
+  ) {
     res.json(serializeTask(before));
     return;
   }
@@ -513,6 +707,15 @@ router.patch("/tasks/:taskId", async (req, res) => {
       if (assigneeReplacement.length > 0) {
         await tx.taskAssignee.createMany({
           data: assigneeReplacement.map((uid) => ({ taskId: before.id, userId: uid })),
+          skipDuplicates: true,
+        });
+      }
+    }
+    if (depReplacement !== null) {
+      await tx.taskDependency.deleteMany({ where: { taskId: before.id } });
+      if (depReplacement.length > 0) {
+        await tx.taskDependency.createMany({
+          data: depReplacement.map((dId) => ({ taskId: before.id, dependsOnTaskId: dId })),
           skipDuplicates: true,
         });
       }

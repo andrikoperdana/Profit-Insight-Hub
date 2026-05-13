@@ -21,4 +21,6 @@ export interface UpdateTaskBody {
   endDate?: string | null;
   assigneeId?: string | null;
   assigneeIds?: string[];
+  parentTaskId?: string | null;
+  dependencyTaskIds?: string[];
 }
