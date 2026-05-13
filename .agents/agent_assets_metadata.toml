@@ -173,3 +173,9 @@ id = "drUBxbAh1GVtXUrbJ2GSA"
 uri = "file://exports/Review-9-Pertanyaan-User.docx"
 type = "word_document"
 title = "Review 9 Pertanyaan User (DOCX)"
+
+[[outputs]]
+id = "sGZw6AQuYLdCR0yhTQo5u"
+uri = "file://docs/GAP_ANALYSIS_PSOHUB.md"
+type = "text"
+title = "Gap Analysis: SecureProfit Hub vs PSOHUB"
