@@ -19,4 +19,5 @@ export interface UpdateTaskBody {
   startDate?: string | null;
   endDate?: string | null;
   assigneeId?: string | null;
+  assigneeIds?: string[];
 }

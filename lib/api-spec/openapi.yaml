@@ -855,9 +855,16 @@ components:
       type: string
       enum: [TODO, IN_PROGRESS, BLOCKED, DONE]
 
+    TaskAssignee:
+      type: object
+      required: [userId, name]
+      properties:
+        userId: { type: string }
+        name: { type: string }
+
     Task:
       type: object
-      required: [id, projectId, title, status, progressPercent, loggedHours, createdAt, updatedAt]
+      required: [id, projectId, title, status, progressPercent, loggedHours, assignees, createdAt, updatedAt]
       properties:
         id: { type: string }
         projectId: { type: string }
@@ -871,6 +878,9 @@ components:
         endDate: { type: string, nullable: true }
         assigneeId: { type: string, nullable: true }
         assigneeName: { type: string, nullable: true }
+        assignees:
+          type: array
+          items: { $ref: "#/components/schemas/TaskAssignee" }
         createdById: { type: string, nullable: true }
         createdByName: { type: string, nullable: true }
         loggedHours: { type: number }
@@ -888,6 +898,9 @@ components:
         startDate: { type: string, nullable: true }
         endDate: { type: string, nullable: true }
         assigneeId: { type: string, nullable: true }
+        assigneeIds:
+          type: array
+          items: { type: string }
 
     UpdateTaskBody:
       type: object
@@ -899,6 +912,9 @@ components:
         startDate: { type: string, nullable: true }
         endDate: { type: string, nullable: true }
         assigneeId: { type: string, nullable: true }
+        assigneeIds:
+          type: array
+          items: { type: string }
 
     TaskTimeLog:
       type: object
@@ -1208,6 +1224,8 @@ components:
         projectName: { type: string }
         userId: { type: string }
         userName: { type: string }
+        taskId: { type: string, nullable: true }
+        taskTitle: { type: string, nullable: true }
         workDate: { type: string }
         hours: { type: number }
         description: { type: string, nullable: true }
@@ -1223,6 +1241,7 @@ components:
       required: [projectId, workDate, hours]
       properties:
         projectId: { type: string }
+        taskId: { type: string, nullable: true }
         workDate: { type: string }
         hours: { type: number }
         description: { type: string }

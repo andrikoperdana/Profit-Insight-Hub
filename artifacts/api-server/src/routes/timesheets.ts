@@ -10,7 +10,7 @@ router.use(requireAuth);
 
 function serialize(
   ts: Prisma.TimesheetGetPayload<{
-    include: { user: true; project: true; approvedBy: true };
+    include: { user: true; project: true; approvedBy: true; task: true };
   }>,
 ) {
   return {
@@ -19,6 +19,8 @@ function serialize(
     projectName: ts.project.name,
     userId: ts.userId,
     userName: ts.user.name,
+    taskId: ts.taskId,
+    taskTitle: ts.task?.title ?? null,
     workDate: ts.workDate.toISOString(),
     hours: ts.hours,
     description: ts.description,
@@ -30,6 +32,8 @@ function serialize(
     createdAt: ts.createdAt.toISOString(),
   };
 }
+
+const tsInclude = { user: true, project: true, approvedBy: true, task: true } as const;
 
 router.get("/timesheets", async (req, res) => {
   const status = req.query.status as TimesheetStatus | undefined;
@@ -66,7 +70,7 @@ router.get("/timesheets", async (req, res) => {
 
   const list = await prisma.timesheet.findMany({
     where,
-    include: { user: true, project: true, approvedBy: true },
+    include: tsInclude,
     orderBy: [{ workDate: "desc" }, { createdAt: "desc" }],
     take: 500,
   });
@@ -91,7 +95,7 @@ function earliestAllowedWorkDate(today: Date, businessDays: number): Date {
 }
 
 router.post("/timesheets", async (req, res) => {
-  const { projectId, workDate, hours, description } = req.body || {};
+  const { projectId, workDate, hours, description, taskId } = req.body || {};
   if (!projectId || !workDate || hours == null) {
     res.status(400).json({ error: "projectId, workDate, hours required" });
     return;
@@ -127,10 +131,39 @@ router.post("/timesheets", async (req, res) => {
   const isAutoApprove = role === "PROJECT_MANAGER" || role === "MANAGEMENT";
   const status = isAutoApprove ? "APPROVED" : "SUBMITTED";
 
+  // Optional task linkage: validate the task belongs to this project AND the
+  // current user is one of its assignees (legacy or join-table). Reject early
+  // so we never attach an unrelated/unauthorized task.
+  let resolvedTaskId: string | null = null;
+  if (taskId) {
+    const t = await prisma.task.findUnique({
+      where: { id: String(taskId) },
+      select: {
+        id: true,
+        projectId: true,
+        assigneeId: true,
+        assignees: { select: { userId: true } },
+      },
+    });
+    if (!t || t.projectId !== String(projectId)) {
+      res.status(400).json({ error: "task does not belong to this project" });
+      return;
+    }
+    const userId = req.user!.sub;
+    const isAssignee =
+      t.assigneeId === userId || t.assignees.some((a) => a.userId === userId);
+    if (!isAssignee) {
+      res.status(403).json({ error: "you are not an assignee of this task" });
+      return;
+    }
+    resolvedTaskId = t.id;
+  }
+
   const ts = await prisma.timesheet.create({
     data: {
       projectId: String(projectId),
       userId: req.user!.sub,
+      taskId: resolvedTaskId,
       workDate: new Date(workDate),
       hours: hoursNum,
       description: description || null,
@@ -138,7 +171,7 @@ router.post("/timesheets", async (req, res) => {
       approvedById: isAutoApprove ? req.user!.sub : null,
       approvedAt: isAutoApprove ? new Date() : null,
     },
-    include: { user: true, project: true, approvedBy: true },
+    include: tsInclude,
   });
 
   await prisma.activity.create({
@@ -179,7 +212,7 @@ router.post("/timesheets/:id/submit", async (req, res) => {
   const ts = await prisma.timesheet.update({
     where: { id: req.params.id },
     data: { status: "SUBMITTED", rejectionReason: null },
-    include: { user: true, project: true, approvedBy: true },
+    include: tsInclude,
   });
   res.json(serialize(ts));
 });
@@ -260,7 +293,7 @@ router.post("/timesheets/:id/approve", async (req, res) => {
       approvedById: req.user!.sub,
       approvedAt: new Date(),
     },
-    include: { user: true, project: true, approvedBy: true },
+    include: tsInclude,
   });
   await prisma.activity.create({
     data: {
@@ -312,7 +345,7 @@ router.post("/timesheets/:id/reject", async (req, res) => {
       approvedAt: new Date(),
       rejectionReason: reason,
     },
-    include: { user: true, project: true, approvedBy: true },
+    include: tsInclude,
   });
   await recordAudit(req, {
     action: "timesheet.rejected",

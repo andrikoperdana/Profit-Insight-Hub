@@ -87,6 +87,7 @@ model User {
   projectExpenses    ProjectExpense[]
   tasksAssigned      Task[]            @relation("TaskAssignee")
   tasksCreated       Task[]            @relation("TaskCreator")
+  taskAssignments    TaskAssignee[]
   taskTimeLogs       TaskTimeLog[]
   notifications      Notification[]
 }
@@ -220,6 +221,8 @@ model Timesheet {
   project         Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
   userId          String
   user            User            @relation(fields: [userId], references: [id])
+  taskId          String?
+  task            Task?           @relation(fields: [taskId], references: [id])
   workDate        DateTime
   hours           Float
   description     String?
@@ -230,6 +233,8 @@ model Timesheet {
   rejectionReason String?
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
+
+  @@index([taskId])
 }
 
 model Document {
@@ -296,10 +301,24 @@ model Task {
   updatedAt    DateTime      @updatedAt
 
   timeLogs     TaskTimeLog[]
+  assignees    TaskAssignee[]
+  timesheets   Timesheet[]
 
   @@index([projectId])
   @@index([assigneeId])
   @@index([status])
+}
+
+model TaskAssignee {
+  id        String   @id @default(cuid())
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([taskId, userId])
+  @@index([userId])
 }
 
 model TaskTimeLog {

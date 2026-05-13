@@ -13,7 +13,19 @@ Full-stack web application for an Indonesian IT security consulting firm. Tracks
 
 ## Domain entities (Prisma)
 
-User, Client, Project, ProjectResource (per-project staffing with planned mandays + daily rate), Timesheet (DRAFT → SUBMITTED → APPROVED/REJECTED), Document (BAST/INVOICE/CONTRACT/REPORT/OTHER, base64 data URL in DB), Activity (audit trail), ProjectExpense (additional non-resource project costs: SOFTWARE/HARDWARE/LICENSE/TRAVEL/OTHER), **Task** (per-project work items with TODO/IN_PROGRESS/BLOCKED/DONE status, assignee, optional start/end dates), **TaskTimeLog** (clock-in entries by the assignee against a Task; cascades on task delete).
+User, Client, Project, ProjectResource (per-project staffing with planned mandays + daily rate), Timesheet (DRAFT → SUBMITTED → APPROVED/REJECTED, optional `taskId` linking the entry to a Task), Document (BAST/INVOICE/CONTRACT/REPORT/OTHER, base64 data URL in DB), Activity (audit trail), ProjectExpense (additional non-resource project costs: SOFTWARE/HARDWARE/LICENSE/TRAVEL/OTHER), **Task** (per-project work items with TODO/IN_PROGRESS/BLOCKED/DONE status, **multi-assignee via `TaskAssignee` join table** plus a legacy single `assigneeId` mirror for backward compat, optional start/end dates), **TaskAssignee** (M:N join between Task and User, replaces the single-assignee model — backfilled from the legacy column), **TaskTimeLog** (clock-in entries by any assignee against a Task; cascades on task delete).
+
+### Multi-assignee tasks
+
+Endpoints in `routes/tasks.ts` accept `assigneeIds: string[]` (canonical) on `POST /api/projects/:id/tasks` and `PATCH /api/tasks/:taskId`. The legacy `assigneeId` is still honored for older clients. The PATCH semantics:
+- `assigneeIds` omitted → existing assignees preserved.
+- `assigneeIds: []` or `null` → unassign all.
+- `assigneeIds` not an array of strings → 400 (`assigneeIds must be an array of userId strings`); never silently coerce to "unassign all".
+Replacement runs in a Prisma transaction (deleteMany → createMany → task.update). Visibility/permission checks (`/tasks/mine`, time-log read/write, status changes by assignee) all OR the legacy `assigneeId` with the new join. Serializer returns both `assignees: [{userId,name}]` and the legacy `assigneeId/assigneeName` (first assignee) so existing screens (Gantt, etc.) keep rendering.
+
+### Timesheet ↔ Task linkage
+
+`Timesheet.taskId` is optional. `POST /api/timesheets` validates that the task belongs to the chosen project AND the caller is one of its assignees (legacy or join). The list serializer returns `taskId` + `taskTitle`, surfaced as a "Task" column on both My Timesheets and Team Timesheets and in their CSV exports. The Log Time dialog shows a Task select that filters `useListMyTasks()` by the chosen project (resets when project changes).
 
 ## Project lifecycle statuses
 
@@ -168,3 +180,4 @@ Seed file: `lib/db/src/seed.ts`. Re-run with `pnpm --filter @workspace/db run se
 - Frontend imports hooks from `@workspace/api-client-react` (not subpaths)
 - API server uses ESM with `.js` import extensions in TypeScript source
 - No emojis in UI
+- Frontend route splitting: `App.tsx` lazy-loads every page except `/login` and `/` (Dashboard) via `React.lazy()` + a single `<Suspense>` boundary, and the global QueryClient sets `staleTime: 30_000` + `gcTime: 5min` to cut redundant refetches on tab/back-nav.

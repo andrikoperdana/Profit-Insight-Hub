@@ -5,6 +5,7 @@
  * SecureProfit Hub API
  * OpenAPI spec version: 0.1.0
  */
+import type { TaskAssignee } from "./taskAssignee";
 import type { TaskStatus } from "./taskStatus";
 
 export interface Task {
@@ -24,6 +25,7 @@ export interface Task {
   endDate?: string | null;
   assigneeId?: string | null;
   assigneeName?: string | null;
+  assignees: TaskAssignee[];
   createdById?: string | null;
   createdByName?: string | null;
   loggedHours: number;

@@ -26,10 +26,25 @@ type TaskWithRelations = {
   createdBy?: { name: string } | null;
   project?: { code: string; name: string; pmId: string | null } | null;
   timeLogs?: { hours: number }[];
+  assignees?: { userId: string; user?: { id: string; name: string } | null }[];
 };
 
 function serializeTask(t: TaskWithRelations) {
   const loggedHours = (t.timeLogs ?? []).reduce((s, l) => s + l.hours, 0);
+  // Build the canonical assignees list: prefer the join table; if it's empty
+  // (legacy task created before multi-assignee), fall back to the legacy
+  // single assigneeId field so existing data still renders.
+  const joinAssignees = (t.assignees ?? [])
+    .filter((a) => a.user)
+    .map((a) => ({ userId: a.userId, name: a.user!.name }));
+  const assignees =
+    joinAssignees.length > 0
+      ? joinAssignees
+      : t.assigneeId && t.assignee
+        ? [{ userId: t.assigneeId, name: t.assignee.name }]
+        : [];
+  // Backward-compat single-assignee fields = first entry of canonical list.
+  const primary = assignees[0] ?? null;
   return {
     id: t.id,
     projectId: t.projectId,
@@ -41,8 +56,9 @@ function serializeTask(t: TaskWithRelations) {
     progressPercent: t.progressPercent ?? 0,
     startDate: t.startDate ? t.startDate.toISOString() : null,
     endDate: t.endDate ? t.endDate.toISOString() : null,
-    assigneeId: t.assigneeId,
-    assigneeName: t.assignee?.name ?? null,
+    assigneeId: primary?.userId ?? null,
+    assigneeName: primary?.name ?? null,
+    assignees,
     createdById: t.createdById,
     createdByName: t.createdBy?.name ?? null,
     loggedHours,
@@ -56,7 +72,60 @@ const taskInclude = {
   createdBy: { select: { name: true } },
   project: { select: { code: true, name: true, pmId: true } },
   timeLogs: { select: { hours: true } },
+  assignees: {
+    include: { user: { select: { id: true, name: true } } },
+    orderBy: { createdAt: "asc" },
+  },
 } as const;
+
+// Helper: returns true if userId is an assignee of the task (via join table OR
+// legacy single assigneeId). Used for permission checks.
+async function isTaskAssignee(taskId: string, userId: string): Promise<boolean> {
+  const found = await prisma.taskAssignee.findUnique({
+    where: { taskId_userId: { taskId, userId } },
+    select: { id: true },
+  });
+  if (found) return true;
+  const legacy = await prisma.task.findFirst({
+    where: { id: taskId, assigneeId: userId },
+    select: { id: true },
+  });
+  return !!legacy;
+}
+
+// Validate every userId is a ProjectResource of the project. Returns
+// the list of bad userIds (empty if all valid).
+async function validateAssigneeIds(projectId: string, userIds: string[]): Promise<string[]> {
+  if (userIds.length === 0) return [];
+  const rows = await prisma.projectResource.findMany({
+    where: { projectId, userId: { in: userIds } },
+    select: { userId: true },
+  });
+  const validSet = new Set(rows.map((r) => r.userId));
+  return userIds.filter((id) => !validSet.has(id));
+}
+
+// Sentinel returned when the caller sent `assigneeIds` but it was not a valid
+// array of non-empty strings. We surface this as a 400 instead of silently
+// coercing to "unassign all", which would be destructive on PATCH.
+const ASSIGNEE_IDS_INVALID = Symbol("ASSIGNEE_IDS_INVALID");
+type NormalizedAssignees = string[] | null | typeof ASSIGNEE_IDS_INVALID;
+
+function normalizeAssigneeIds(input: unknown): NormalizedAssignees {
+  if (input === undefined) return null;
+  // Explicit null clears all assignees (legitimate caller intent).
+  if (input === null) return [];
+  if (!Array.isArray(input)) return ASSIGNEE_IDS_INVALID;
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const v of input) {
+    if (typeof v !== "string" || !v) return ASSIGNEE_IDS_INVALID;
+    if (seen.has(v)) continue;
+    seen.add(v);
+    out.push(v);
+  }
+  return out;
+}
 
 function parseDateOrNull(value: unknown): Date | null | undefined {
   if (value === undefined) return undefined;
@@ -140,7 +209,7 @@ router.post("/projects/:id/tasks", async (req, res) => {
       .json({ error: "Only Management or the assigned PM can create tasks" });
     return;
   }
-  const { title, description, status, startDate, endDate, assigneeId, progressPercent } =
+  const { title, description, status, startDate, endDate, assigneeId, assigneeIds: rawAssigneeIds, progressPercent } =
     req.body || {};
   const trimmedTitle = typeof title === "string" ? title.trim() : "";
   if (!trimmedTitle) {
@@ -193,6 +262,34 @@ router.post("/projects/:id/tasks", async (req, res) => {
   if (st === "DONE") pct = 100;
   else if (st === "TODO") pct = 0;
 
+  // Resolve the canonical assignees list. Prefer the new assigneeIds[] array,
+  // fall back to the legacy single assigneeId so existing clients still work.
+  const normalizedIds = normalizeAssigneeIds(rawAssigneeIds);
+  if (normalizedIds === ASSIGNEE_IDS_INVALID) {
+    res.status(400).json({ error: "assigneeIds must be an array of userId strings" });
+    return;
+  }
+  let finalAssigneeIds: string[];
+  if (normalizedIds !== null) {
+    finalAssigneeIds = normalizedIds;
+  } else if (assigneeId) {
+    finalAssigneeIds = [String(assigneeId)];
+  } else {
+    finalAssigneeIds = [];
+  }
+  if (finalAssigneeIds.length > 0) {
+    const bad = await validateAssigneeIds(projectId, finalAssigneeIds);
+    if (bad.length > 0) {
+      res.status(400).json({
+        error: "all assignees must be resources on this project",
+        invalidUserIds: bad,
+      });
+      return;
+    }
+  }
+  // Primary assigneeId mirrors the first assignee for backward compat.
+  const primaryId = finalAssigneeIds[0] ?? null;
+
   const task = await prisma.task.create({
     data: {
       projectId,
@@ -202,8 +299,12 @@ router.post("/projects/:id/tasks", async (req, res) => {
       progressPercent: pct,
       startDate: start ?? null,
       endDate: end ?? null,
-      assigneeId: assigneeId ? String(assigneeId) : null,
+      assigneeId: primaryId,
       createdById: userId,
+      assignees:
+        finalAssigneeIds.length > 0
+          ? { create: finalAssigneeIds.map((uid) => ({ userId: uid })) }
+          : undefined,
     },
     include: taskInclude,
   });
@@ -228,7 +329,12 @@ router.post("/projects/:id/tasks", async (req, res) => {
 router.get("/tasks/mine", async (req, res) => {
   const userId = req.user!.sub;
   const tasks = await prisma.task.findMany({
-    where: { assigneeId: userId },
+    where: {
+      OR: [
+        { assigneeId: userId },
+        { assignees: { some: { userId } } },
+      ],
+    },
     include: taskInclude,
     orderBy: [{ status: "asc" }, { endDate: "asc" }, { createdAt: "desc" }],
   });
@@ -248,13 +354,14 @@ router.patch("/tasks/:taskId", async (req, res) => {
   }
 
   const isManager = canManageProjectTasks(role, { pmId: before.project?.pmId ?? null }, userId);
-  const isAssignee = before.assigneeId === userId;
+  const joinedAssignee = (before as any).assignees?.some((a: any) => a.userId === userId) ?? false;
+  const isAssignee = before.assigneeId === userId || joinedAssignee;
   if (!isManager && !isAssignee) {
     res.status(403).json({ error: "Not allowed to update this task" });
     return;
   }
 
-  const { title, description, status, startDate, endDate, assigneeId, progressPercent } =
+  const { title, description, status, startDate, endDate, assigneeId, assigneeIds: rawAssigneeIds, progressPercent } =
     req.body || {};
 
   const data: Record<string, unknown> = {};
@@ -351,15 +458,59 @@ router.patch("/tasks/:taskId", async (req, res) => {
     }
   }
 
-  if (Object.keys(data).length === 0) {
+  // Multi-assignee replacement: caller may provide assigneeIds[] (canonical)
+  // or rely on the legacy single assigneeId already handled above. Manager
+  // gate already enforced for assigneeId; we apply the same gate here.
+  const normalizedIds = normalizeAssigneeIds(rawAssigneeIds);
+  if (normalizedIds === ASSIGNEE_IDS_INVALID) {
+    res.status(400).json({ error: "assigneeIds must be an array of userId strings" });
+    return;
+  }
+  let assigneeReplacement: string[] | null = null;
+  if (normalizedIds !== null) {
+    if (!isManager) {
+      res.status(403).json({ error: "Only Management/PM can change assignees" });
+      return;
+    }
+    if (normalizedIds.length > 0) {
+      const bad = await validateAssigneeIds(before.projectId, normalizedIds);
+      if (bad.length > 0) {
+        res.status(400).json({
+          error: "all assignees must be resources on this project",
+          invalidUserIds: bad,
+        });
+        return;
+      }
+    }
+    assigneeReplacement = normalizedIds;
+    data.assigneeId = normalizedIds[0] ?? null;
+  } else if (data.assigneeId !== undefined) {
+    // Legacy single-assignee path: also mirror into the join table so the new
+    // model stays consistent even when callers haven't migrated yet.
+    const legacy = data.assigneeId as string | null;
+    assigneeReplacement = legacy ? [legacy] : [];
+  }
+
+  if (Object.keys(data).length === 0 && assigneeReplacement === null) {
     res.json(serializeTask(before));
     return;
   }
 
-  const updated = await prisma.task.update({
-    where: { id: before.id },
-    data,
-    include: taskInclude,
+  const updated = await prisma.$transaction(async (tx) => {
+    if (assigneeReplacement !== null) {
+      await tx.taskAssignee.deleteMany({ where: { taskId: before.id } });
+      if (assigneeReplacement.length > 0) {
+        await tx.taskAssignee.createMany({
+          data: assigneeReplacement.map((uid) => ({ taskId: before.id, userId: uid })),
+          skipDuplicates: true,
+        });
+      }
+    }
+    return tx.task.update({
+      where: { id: before.id },
+      data,
+      include: taskInclude,
+    });
   });
   await recordAudit(req, {
     action: "task.updated",
@@ -422,14 +573,20 @@ router.get("/tasks/:taskId/time-logs", async (req, res) => {
   const role = req.user!.role;
   const task = await prisma.task.findUnique({
     where: { id: req.params.taskId },
-    select: { id: true, assigneeId: true, project: { select: { pmId: true } } },
+    select: {
+      id: true,
+      assigneeId: true,
+      project: { select: { pmId: true } },
+      assignees: { select: { userId: true } },
+    },
   });
   if (!task) {
     res.status(404).json({ error: "Task not found" });
     return;
   }
   const isManager = canManageProjectTasks(role, { pmId: task.project?.pmId ?? null }, userId);
-  const isAssignee = task.assigneeId === userId;
+  const isAssignee =
+    task.assigneeId === userId || task.assignees.some((a) => a.userId === userId);
   if (!isManager && !isAssignee) {
     res.status(403).json({ error: "Not allowed to view time logs" });
     return;
@@ -457,16 +614,23 @@ router.post("/tasks/:taskId/time-logs", async (req, res) => {
   const userId = req.user!.sub;
   const task = await prisma.task.findUnique({
     where: { id: req.params.taskId },
-    select: { id: true, title: true, assigneeId: true },
+    select: {
+      id: true,
+      title: true,
+      assigneeId: true,
+      assignees: { select: { userId: true } },
+    },
   });
   if (!task) {
     res.status(404).json({ error: "Task not found" });
     return;
   }
-  if (task.assigneeId !== userId) {
+  const isAssignee =
+    task.assigneeId === userId || task.assignees.some((a) => a.userId === userId);
+  if (!isAssignee) {
     res
       .status(403)
-      .json({ error: "Only the task assignee can log hours on this task" });
+      .json({ error: "Only an assignee can log hours on this task" });
     return;
   }
   const { hours, note, loggedAt } = req.body || {};

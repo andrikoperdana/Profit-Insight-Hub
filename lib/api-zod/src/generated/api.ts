@@ -1018,6 +1018,8 @@ export const ListTimesheetsResponseItem = zod.object({
   projectName: zod.string(),
   userId: zod.string(),
   userName: zod.string(),
+  taskId: zod.string().nullish(),
+  taskTitle: zod.string().nullish(),
   workDate: zod.string(),
   hours: zod.number(),
   description: zod.string().nullish(),
@@ -1032,6 +1034,7 @@ export const ListTimesheetsResponse = zod.array(ListTimesheetsResponseItem);
 
 export const CreateTimesheetBody = zod.object({
   projectId: zod.string(),
+  taskId: zod.string().nullish(),
   workDate: zod.string(),
   hours: zod.number(),
   description: zod.string().optional(),
@@ -1047,6 +1050,8 @@ export const SubmitTimesheetResponse = zod.object({
   projectName: zod.string(),
   userId: zod.string(),
   userName: zod.string(),
+  taskId: zod.string().nullish(),
+  taskTitle: zod.string().nullish(),
   workDate: zod.string(),
   hours: zod.number(),
   description: zod.string().nullish(),
@@ -1068,6 +1073,8 @@ export const ApproveTimesheetResponse = zod.object({
   projectName: zod.string(),
   userId: zod.string(),
   userName: zod.string(),
+  taskId: zod.string().nullish(),
+  taskTitle: zod.string().nullish(),
   workDate: zod.string(),
   hours: zod.number(),
   description: zod.string().nullish(),
@@ -1093,6 +1100,8 @@ export const RejectTimesheetResponse = zod.object({
   projectName: zod.string(),
   userId: zod.string(),
   userName: zod.string(),
+  taskId: zod.string().nullish(),
+  taskTitle: zod.string().nullish(),
   workDate: zod.string(),
   hours: zod.number(),
   description: zod.string().nullish(),
@@ -1181,6 +1190,12 @@ export const ListProjectTasksResponseItem = zod.object({
   endDate: zod.string().nullish(),
   assigneeId: zod.string().nullish(),
   assigneeName: zod.string().nullish(),
+  assignees: zod.array(
+    zod.object({
+      userId: zod.string(),
+      name: zod.string(),
+    }),
+  ),
   createdById: zod.string().nullish(),
   createdByName: zod.string().nullish(),
   loggedHours: zod.number(),
@@ -1208,6 +1223,7 @@ export const CreateProjectTaskBody = zod.object({
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   assigneeId: zod.string().nullish(),
+  assigneeIds: zod.array(zod.string()).optional(),
 });
 
 export const listMyTasksResponseProgressPercentMin = 0;
@@ -1229,6 +1245,12 @@ export const ListMyTasksResponseItem = zod.object({
   endDate: zod.string().nullish(),
   assigneeId: zod.string().nullish(),
   assigneeName: zod.string().nullish(),
+  assignees: zod.array(
+    zod.object({
+      userId: zod.string(),
+      name: zod.string(),
+    }),
+  ),
   createdById: zod.string().nullish(),
   createdByName: zod.string().nullish(),
   loggedHours: zod.number(),
@@ -1256,6 +1278,7 @@ export const UpdateTaskBody = zod.object({
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   assigneeId: zod.string().nullish(),
+  assigneeIds: zod.array(zod.string()).optional(),
 });
 
 export const updateTaskResponseProgressPercentMin = 0;
@@ -1277,6 +1300,12 @@ export const UpdateTaskResponse = zod.object({
   endDate: zod.string().nullish(),
   assigneeId: zod.string().nullish(),
   assigneeName: zod.string().nullish(),
+  assignees: zod.array(
+    zod.object({
+      userId: zod.string(),
+      name: zod.string(),
+    }),
+  ),
   createdById: zod.string().nullish(),
   createdByName: zod.string().nullish(),
   loggedHours: zod.number(),

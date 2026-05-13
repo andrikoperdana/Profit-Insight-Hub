@@ -5,6 +5,7 @@ import {
   useCreateTimesheet,
   useDeleteTimesheet,
   useListProjects,
+  useListMyTasks,
 } from "@workspace/api-client-react";
 import { getListTimesheetsQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -56,6 +57,7 @@ const maxDate = today.toISOString().slice(0, 10);
 
 const logTimeSchema = z.object({
   projectId: z.string().min(1, "Project is required"),
+  taskId: z.string().optional(),
   workDate: z.string().min(1, "Date is required"),
   hours: z.coerce.number().min(0.5, "Minimum 0.5 hours").max(24, "Maximum 24 hours"),
   description: z.string().min(5, "Description must be at least 5 characters"),
@@ -143,11 +145,19 @@ function LogTimeDialog({ isAutoApprove }: { isAutoApprove: boolean }) {
   const [open, setOpen] = useState(false);
 
   const { data: projects } = useListProjects({ status: "ACTIVE" });
+  // The user's own assigned tasks across all projects, fetched once and
+  // filtered client-side per chosen project so the dropdown updates instantly.
+  const { data: myTasks } = useListMyTasks();
 
   const form = useForm({
     resolver: zodResolver(logTimeSchema),
-    defaultValues: { projectId: "", workDate: maxDate, hours: 8, description: "" },
+    defaultValues: { projectId: "", taskId: "", workDate: maxDate, hours: 8, description: "" },
   });
+
+  const selectedProjectId = form.watch("projectId");
+  const tasksForProject = (myTasks ?? []).filter(
+    (t) => t.projectId === selectedProjectId && t.status !== "DONE",
+  );
 
   const createTs = useCreateTimesheet({
     mutation: {
@@ -158,7 +168,7 @@ function LogTimeDialog({ isAutoApprove }: { isAutoApprove: boolean }) {
         queryClient.invalidateQueries({ queryKey: getListTimesheetsQueryKey({ scope: "mine" }) });
         queryClient.invalidateQueries({ queryKey: getListTimesheetsQueryKey({ scope: "approval" }) });
         setOpen(false);
-        form.reset({ projectId: "", workDate: maxDate, hours: 8, description: "" });
+        form.reset({ projectId: "", taskId: "", workDate: maxDate, hours: 8, description: "" });
       },
       onError: (err: any) => {
         toast({ variant: "destructive", title: "Failed to save", description: err?.message ?? "Unknown error" });
@@ -179,16 +189,56 @@ function LogTimeDialog({ isAutoApprove }: { isAutoApprove: boolean }) {
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit((d) => createTs.mutate({ data: d }))} className="space-y-4 pt-4">
+          <form
+            onSubmit={form.handleSubmit((d) =>
+              createTs.mutate({
+                data: {
+                  ...d,
+                  // Empty taskId means "no task linkage". Strip it before sending
+                  // so the server keeps the column NULL.
+                  ...(d.taskId ? { taskId: d.taskId } : { taskId: undefined }),
+                } as any,
+              }),
+            )}
+            className="space-y-4 pt-4"
+          >
             <FormField control={form.control} name="projectId" render={({ field }) => (
               <FormItem>
                 <FormLabel>Project *</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
+                <Select onValueChange={(v) => { field.onChange(v); form.setValue("taskId", ""); }} value={field.value}>
                   <FormControl><SelectTrigger><SelectValue placeholder="Select project" /></SelectTrigger></FormControl>
                   <SelectContent>
                     {projects?.map(p => <SelectItem key={p.id} value={p.id}>{p.code} — {p.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
+                <FormMessage />
+              </FormItem>
+            )} />
+            <FormField control={form.control} name="taskId" render={({ field }) => (
+              <FormItem>
+                <FormLabel>Task (opsional)</FormLabel>
+                <Select
+                  onValueChange={(v) => field.onChange(v === "__none" ? "" : v)}
+                  value={field.value || "__none"}
+                  disabled={!selectedProjectId}
+                >
+                  <FormControl>
+                    <SelectTrigger data-testid="select-timesheet-task">
+                      <SelectValue placeholder={selectedProjectId ? "Pilih task (opsional)" : "Pilih project dulu"} />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="__none">Tidak terkait task</SelectItem>
+                    {tasksForProject.map((t) => (
+                      <SelectItem key={t.id} value={t.id}>{t.title}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormDescription className="text-xs">
+                  {selectedProjectId && tasksForProject.length === 0
+                    ? "Anda belum di-assign ke task aktif pada project ini."
+                    : "Pilih task untuk menghubungkan jam kerja ini ke pekerjaan tertentu."}
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )} />
@@ -256,6 +306,7 @@ function MyTimesheetsTable() {
     const rows = (timesheets ?? []).map((ts) => ({
       Date: ts.workDate ?? "",
       Project: ts.projectName ?? "",
+      Task: (ts as any).taskTitle ?? "",
       Hours: ts.hours ?? 0,
       Description: ts.description ?? "",
       Status: ts.status,
@@ -294,6 +345,7 @@ function MyTimesheetsTable() {
         <TableRow>
           <TableHead>Date</TableHead>
           <TableHead>Project</TableHead>
+          <TableHead>Task</TableHead>
           <TableHead className="text-right">Hours</TableHead>
           <TableHead>Description</TableHead>
           <TableHead>Status</TableHead>
@@ -313,6 +365,9 @@ function MyTimesheetsTable() {
               <Link href={`/projects/${ts.projectId}`} className="text-primary hover:underline">
                 {ts.projectName}
               </Link>
+            </TableCell>
+            <TableCell className="text-sm text-muted-foreground max-w-[180px] truncate" title={(ts as any).taskTitle ?? ""}>
+              {(ts as any).taskTitle ?? <span className="italic">—</span>}
             </TableCell>
             <TableCell className="text-right font-mono">{ts.hours}</TableCell>
             <TableCell className="max-w-md">
@@ -381,6 +436,7 @@ function TeamTimesheetsTable() {
       Date: ts.workDate ?? "",
       Consultant: (ts as any).userName ?? "",
       Project: ts.projectName ?? "",
+      Task: (ts as any).taskTitle ?? "",
       Hours: ts.hours ?? 0,
       Description: ts.description ?? "",
       Status: ts.status,
@@ -462,6 +518,7 @@ function TeamTimesheetsTable() {
               <TableHead>Date</TableHead>
               <TableHead>Consultant</TableHead>
               <TableHead>Project</TableHead>
+              <TableHead>Task</TableHead>
               <TableHead className="text-right">Hours</TableHead>
               <TableHead>Description</TableHead>
               <TableHead>Status</TableHead>
@@ -481,6 +538,9 @@ function TeamTimesheetsTable() {
                   <Link href={`/projects/${ts.projectId}`} className="text-primary hover:underline text-sm">
                     {ts.projectName}
                   </Link>
+                </TableCell>
+                <TableCell className="text-sm text-muted-foreground max-w-[180px] truncate" title={ts.taskTitle ?? ""}>
+                  {ts.taskTitle ?? <span className="italic">—</span>}
                 </TableCell>
                 <TableCell className="text-right font-mono">{ts.hours}</TableCell>
                 <TableCell className="max-w-md">

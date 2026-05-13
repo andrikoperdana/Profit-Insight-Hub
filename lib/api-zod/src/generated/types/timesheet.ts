@@ -13,6 +13,8 @@ export interface Timesheet {
   projectName: string;
   userId: string;
   userName: string;
+  taskId?: string | null;
+  taskTitle?: string | null;
   workDate: string;
   hours: number;
   description?: string | null;

@@ -116,16 +116,21 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
   const pager = usePagination(tasks ?? [], { resetKey: projectId });
 
   function handleExportCsv() {
-    const rows = (tasks ?? []).map((t) => ({
-      Title: t.title,
-      Description: t.description ?? "",
-      Status: STATUS_LABELS[t.status],
-      Progress: `${(t as any).progressPercent ?? 0}%`,
-      Assignee: t.assigneeName ?? "",
-      StartDate: t.startDate ?? "",
-      EndDate: t.endDate ?? "",
-      LoggedHours: Number((t.loggedHours ?? 0).toFixed(2)),
-    }));
+    const rows = (tasks ?? []).map((t) => {
+      const names =
+        ((t as any).assignees as { name: string }[] | undefined)?.map((a) => a.name) ??
+        (t.assigneeName ? [t.assigneeName] : []);
+      return {
+        Title: t.title,
+        Description: t.description ?? "",
+        Status: STATUS_LABELS[t.status],
+        Progress: `${(t as any).progressPercent ?? 0}%`,
+        Assignees: names.join(", "),
+        StartDate: t.startDate ?? "",
+        EndDate: t.endDate ?? "",
+        LoggedHours: Number((t.loggedHours ?? 0).toFixed(2)),
+      };
+    });
     exportCsv(`tasks-${projectId}`, rows);
   }
 
@@ -180,7 +185,7 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
               <TableHeader className="bg-muted/40">
                 <TableRow>
                   <TableHead>Task</TableHead>
-                  <TableHead>Assignee</TableHead>
+                  <TableHead>Assignees</TableHead>
                   <TableHead>Schedule</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="w-[140px]">Progress</TableHead>
@@ -190,7 +195,12 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
               </TableHeader>
               <TableBody>
                 {pager.pageItems.map((t) => {
-                  const isAssignee = t.assigneeId === user?.id;
+                  const allAssignees =
+                    ((t as any).assignees as { userId: string; name: string }[] | undefined) ??
+                    (t.assigneeId && t.assigneeName
+                      ? [{ userId: t.assigneeId, name: t.assigneeName }]
+                      : []);
+                  const isAssignee = allAssignees.some((a) => a.userId === user?.id);
                   const canEdit = isManager;
                   const canChangeStatus = isManager || isAssignee;
                   const canLog = isAssignee;
@@ -205,7 +215,21 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
                         )}
                       </TableCell>
                       <TableCell className="text-sm">
-                        {t.assigneeName ?? <span className="text-muted-foreground italic">Unassigned</span>}
+                        {allAssignees.length === 0 ? (
+                          <span className="text-muted-foreground italic">Unassigned</span>
+                        ) : (
+                          <div className="flex flex-wrap gap-1">
+                            {allAssignees.map((a) => (
+                              <Badge
+                                key={a.userId}
+                                variant="outline"
+                                className="bg-muted/40 font-normal"
+                              >
+                                {a.name}
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
                       </TableCell>
                       <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
                         {t.startDate ? formatDate(t.startDate) : "—"}
@@ -414,7 +438,18 @@ function TaskFormDialog({
   const [progressPercent, setProgressPercent] = useState<number>(((task as any)?.progressPercent ?? 0));
   const [startDate, setStartDate] = useState(task?.startDate ? task.startDate.slice(0, 10) : "");
   const [endDate, setEndDate] = useState(task?.endDate ? task.endDate.slice(0, 10) : "");
-  const [assigneeId, setAssigneeId] = useState<string>(task?.assigneeId ?? "");
+  const initialAssigneeIds: string[] = (() => {
+    const list = (task as any)?.assignees as { userId: string }[] | undefined;
+    if (list && list.length > 0) return list.map((a) => a.userId);
+    if (task?.assigneeId) return [task.assigneeId];
+    return [];
+  })();
+  const [assigneeIds, setAssigneeIds] = useState<string[]>(initialAssigneeIds);
+  function toggleAssignee(uid: string) {
+    setAssigneeIds((prev) =>
+      prev.includes(uid) ? prev.filter((x) => x !== uid) : [...prev, uid],
+    );
+  }
 
   const create = useCreateProjectTask({
     mutation: {
@@ -476,7 +511,7 @@ function TaskFormDialog({
       progressPercent: effectivePct,
       startDate: startDate || undefined,
       endDate: endDate || undefined,
-      assigneeId: assigneeId || undefined,
+      assigneeIds,
     };
     if (editing && task) {
       // PATCH allows nulls to clear
@@ -489,7 +524,7 @@ function TaskFormDialog({
           progressPercent: effectivePct,
           startDate: startDate || null,
           endDate: endDate || null,
-          assigneeId: assigneeId || null,
+          assigneeIds,
         } as any,
       });
     } else {
@@ -557,34 +592,54 @@ function TaskFormDialog({
               )}
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <Label>Assignee</Label>
-              <Select value={assigneeId || "__none"} onValueChange={(v) => setAssigneeId(v === "__none" ? "" : v)}>
-                <SelectTrigger data-testid="select-task-assignee">
-                  <SelectValue placeholder="Unassigned" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="__none">Unassigned</SelectItem>
-                  {resources.map((r) => (
-                    <SelectItem key={r.userId} value={r.userId}>{r.userName}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <Label>Assignees</Label>
+              <span className="text-xs text-muted-foreground">
+                {assigneeIds.length === 0 ? "Unassigned" : `${assigneeIds.length} selected`}
+              </span>
             </div>
-            <div>
-              <Label>Status</Label>
-              <Select value={status} onValueChange={(v) => setStatus(v as TaskStatus)}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {(Object.keys(STATUS_LABELS) as TaskStatus[]).map((s) => (
-                    <SelectItem key={s} value={s}>{STATUS_LABELS[s]}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            {resources.length === 0 ? (
+              <p className="text-xs text-muted-foreground italic px-1">
+                Belum ada resource pada proyek ini. Tambahkan resource dulu di tab Resources.
+              </p>
+            ) : (
+              <div className="border rounded-md divide-y max-h-40 overflow-y-auto">
+                {resources.map((r) => {
+                  const checked = assigneeIds.includes(r.userId);
+                  return (
+                    <label
+                      key={r.userId}
+                      className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-muted/30 cursor-pointer"
+                      data-testid={`checkbox-assignee-${r.userId}`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => toggleAssignee(r.userId)}
+                      />
+                      <span>{r.userName}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            )}
+            <p className="text-[11px] text-muted-foreground mt-1">
+              Pilih lebih dari satu untuk task yang dikerjakan beberapa orang sekaligus.
+            </p>
+          </div>
+          <div>
+            <Label>Status</Label>
+            <Select value={status} onValueChange={(v) => setStatus(v as TaskStatus)}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {(Object.keys(STATUS_LABELS) as TaskStatus[]).map((s) => (
+                  <SelectItem key={s} value={s}>{STATUS_LABELS[s]}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div>
             <div className="flex items-center justify-between">

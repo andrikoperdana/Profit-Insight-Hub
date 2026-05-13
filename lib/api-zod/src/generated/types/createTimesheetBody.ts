@@ -8,6 +8,7 @@
 
 export interface CreateTimesheetBody {
   projectId: string;
+  taskId?: string | null;
   workDate: string;
   hours: number;
   description?: string;

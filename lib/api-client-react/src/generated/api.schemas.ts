@@ -69,6 +69,11 @@ export const TaskStatus = {
   DONE: "DONE",
 } as const;
 
+export interface TaskAssignee {
+  userId: string;
+  name: string;
+}
+
 export interface Task {
   id: string;
   projectId: string;
@@ -86,6 +91,7 @@ export interface Task {
   endDate?: string | null;
   assigneeId?: string | null;
   assigneeName?: string | null;
+  assignees: TaskAssignee[];
   createdById?: string | null;
   createdByName?: string | null;
   loggedHours: number;
@@ -105,6 +111,7 @@ export interface CreateTaskBody {
   startDate?: string | null;
   endDate?: string | null;
   assigneeId?: string | null;
+  assigneeIds?: string[];
 }
 
 export interface UpdateTaskBody {
@@ -119,6 +126,7 @@ export interface UpdateTaskBody {
   startDate?: string | null;
   endDate?: string | null;
   assigneeId?: string | null;
+  assigneeIds?: string[];
 }
 
 export interface TaskTimeLog {
@@ -424,6 +432,8 @@ export interface Timesheet {
   projectName: string;
   userId: string;
   userName: string;
+  taskId?: string | null;
+  taskTitle?: string | null;
   workDate: string;
   hours: number;
   description?: string | null;
@@ -437,6 +447,7 @@ export interface Timesheet {
 
 export interface CreateTimesheetBody {
   projectId: string;
+  taskId?: string | null;
   workDate: string;
   hours: number;
   description?: string;
