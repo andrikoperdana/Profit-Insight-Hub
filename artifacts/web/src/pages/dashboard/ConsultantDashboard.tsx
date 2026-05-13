@@ -21,7 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Clock, CheckCircle2, AlertCircle, Calendar, Zap, Loader2, ListChecks, ChevronRight, FileText, Upload } from "lucide-react";
+import { Clock, CheckCircle2, AlertCircle, Calendar, Zap, Loader2, ListChecks, FileText, Upload } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {

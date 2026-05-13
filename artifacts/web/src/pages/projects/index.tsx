@@ -1,9 +1,8 @@
 import { useListProjects, customFetch } from "@workspace/api-client-react";
-import { getListProjectsQueryKey } from "@workspace/api-client-react";
 import { Link } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Plus, Search, Filter, Download } from "lucide-react";
+import { Plus, Search, Download } from "lucide-react";
 import { formatIDR } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
 import { canCreateProject, canViewProjectFinancials } from "@/lib/roles";

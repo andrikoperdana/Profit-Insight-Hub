@@ -4,7 +4,7 @@ import { canManageClients } from "@/lib/roles";
 import { useListClients, useCreateClient } from "@workspace/api-client-react";
 import { getListClientsQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Building2, Plus, Mail, Phone, MapPin, Download } from "lucide-react";
+import { Building2, Plus, Mail, Phone, Download } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,7 +31,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { TableSkeleton } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
 import { Pagination, usePagination } from "@/components/common/Pagination";

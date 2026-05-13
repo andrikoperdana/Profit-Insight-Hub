@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { formatIDR, formatPct } from "@/lib/format";
-import { Briefcase, Wallet, TrendingUp, Clock, AlertCircle, Activity, AlarmClock, Download, UserPlus } from "lucide-react";
+import { Briefcase, Wallet, TrendingUp, Clock, Activity, AlarmClock, Download, UserPlus } from "lucide-react";
 import { exportSheets, downloadAuthed } from "@/lib/exports";
 import { classifyProject, type ProjectType } from "@/lib/projectType";
 import { Badge } from "@/components/ui/badge";
@@ -13,9 +13,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { SkeletonCard, TableSkeleton } from "@/components/common/Loading";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
+import { MarginBadge } from "@/components/common/Badges";
 import ResourceUtilizationSection from "@/components/dashboard/ResourceUtilizationSection";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { formatDistanceToNow } from "date-fns";
 import { Link } from "wouter";
 import { ProjectStatus, useListProjects } from "@workspace/api-client-react";
@@ -44,7 +43,7 @@ export default function Dashboard() {
   const { data: statusBreakdown, isLoading: loadingStatus } = useGetStatusBreakdown();
   const { data: topProjects, isLoading: loadingTop } = useGetTopProjects();
   const { data: recentActivity, isLoading: loadingActivity } = useGetRecentActivity();
-  const { data: utilization, isLoading: loadingUtil } = useGetUtilization();
+  const { data: utilization } = useGetUtilization();
   const { data: allProjects } = useListProjects();
   const losingProjects = (allProjects ?? [])
     .filter(
@@ -99,48 +98,6 @@ export default function Dashboard() {
       .map((r) => ({ ...r, marginPct: r.revenue > 0 ? (r.profit / r.revenue) * 100 : 0 }))
       .sort((a, b) => b.profit - a.profit);
   })();
-
-  function handleExportUtilization() {
-    const utilRows = (utilization ?? []).map((u: any) => ({
-      Resource: u.userName,
-      Role: u.role,
-      PlannedMandays: Number((u.plannedMandays ?? 0).toFixed(2)),
-      ActualMandays: Number((u.actualMandays ?? 0).toFixed(2)),
-      UtilizationPct: Number((u.utilizationPct ?? 0).toFixed(1)),
-    }));
-    const summaryRows = summary
-      ? [{
-          ActiveProjects: summary.activeProjects,
-          TotalProjects: summary.totalProjects,
-          TotalContractValue: summary.totalContractValue,
-          TotalActualCost: summary.totalActualCost,
-          TotalActualProfit: summary.totalActualProfit,
-          AvgMarginPct: Number((summary.avgMarginPct ?? 0).toFixed(2)),
-          WeightedMarginPct: Number(((summary as any).weightedMarginPct ?? 0).toFixed(2)),
-          WeightedNetMarginPct: Number(((summary as any).weightedNetMarginPct ?? 0).toFixed(2)),
-          TotalRevenueNet: (summary as any).totalRevenueNet ?? 0,
-          TotalRecognizedRevenue: (summary as any).totalRecognizedRevenue ?? 0,
-          TotalAccruedCost: (summary as any).totalAccruedCost ?? 0,
-          TotalNetActualCost: (summary as any).totalNetActualCost ?? 0,
-          TotalNetActualProfit: (summary as any).totalNetActualProfit ?? 0,
-          PendingTimesheets: summary.pendingTimesheets,
-          TotalMandays: Number((summary.totalMandays ?? 0).toFixed(2)),
-        }]
-      : [];
-    const projTypeRows = projectTypeStats.map((t) => ({
-      Type: t.type,
-      Count: t.count,
-      Revenue: t.revenue,
-      ActualCost: t.cost,
-      Profit: t.profit,
-      MarginPct: Number(t.marginPct.toFixed(2)),
-    }));
-    exportSheets("dashboard-overview", [
-      { name: "Summary", rows: summaryRows },
-      { name: "Utilization", rows: utilRows },
-      { name: "By Project Type", rows: projTypeRows },
-    ]);
-  }
 
   return (
     <div className="space-y-6">

@@ -106,8 +106,6 @@ export default function CapacityPlanning() {
     setAnchor(startOfWeek(next));
   };
 
-  const summaryByDate = new Map(data.summary.map((s) => [s.date, s]));
-
   function handleExport() {
     const rows = filteredRows.flatMap((r) =>
       r.cells.map((c) => ({
