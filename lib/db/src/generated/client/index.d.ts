@@ -64,6 +64,21 @@ export type Document = $Result.DefaultSelection<Prisma.$DocumentPayload>
  */
 export type ProjectExpense = $Result.DefaultSelection<Prisma.$ProjectExpensePayload>
 /**
+ * Model BusinessUnit
+ * 
+ */
+export type BusinessUnit = $Result.DefaultSelection<Prisma.$BusinessUnitPayload>
+/**
+ * Model Skill
+ * 
+ */
+export type Skill = $Result.DefaultSelection<Prisma.$SkillPayload>
+/**
+ * Model UserSkill
+ * 
+ */
+export type UserSkill = $Result.DefaultSelection<Prisma.$UserSkillPayload>
+/**
  * Model Activity
  * 
  */
@@ -109,6 +124,16 @@ export namespace $Enums {
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
 
+export const Seniority: {
+  JUNIOR: 'JUNIOR',
+  MID: 'MID',
+  SENIOR: 'SENIOR',
+  PRINCIPAL: 'PRINCIPAL'
+};
+
+export type Seniority = (typeof Seniority)[keyof typeof Seniority]
+
+
 export const ProjectStatus: {
   DRAFT: 'DRAFT',
   OBSERVATION: 'OBSERVATION',
@@ -142,6 +167,15 @@ export const DocumentType: {
 export type DocumentType = (typeof DocumentType)[keyof typeof DocumentType]
 
 
+export const ExpenseStatus: {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+};
+
+export type ExpenseStatus = (typeof ExpenseStatus)[keyof typeof ExpenseStatus]
+
+
 export const TaskStatus: {
   TODO: 'TODO',
   IN_PROGRESS: 'IN_PROGRESS',
@@ -157,6 +191,10 @@ export type UserRole = $Enums.UserRole
 
 export const UserRole: typeof $Enums.UserRole
 
+export type Seniority = $Enums.Seniority
+
+export const Seniority: typeof $Enums.Seniority
+
 export type ProjectStatus = $Enums.ProjectStatus
 
 export const ProjectStatus: typeof $Enums.ProjectStatus
@@ -168,6 +206,10 @@ export const TimesheetStatus: typeof $Enums.TimesheetStatus
 export type DocumentType = $Enums.DocumentType
 
 export const DocumentType: typeof $Enums.DocumentType
+
+export type ExpenseStatus = $Enums.ExpenseStatus
+
+export const ExpenseStatus: typeof $Enums.ExpenseStatus
 
 export type TaskStatus = $Enums.TaskStatus
 
@@ -395,6 +437,36 @@ export class PrismaClient<
     * ```
     */
   get projectExpense(): Prisma.ProjectExpenseDelegate<ExtArgs>;
+
+  /**
+   * `prisma.businessUnit`: Exposes CRUD operations for the **BusinessUnit** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more BusinessUnits
+    * const businessUnits = await prisma.businessUnit.findMany()
+    * ```
+    */
+  get businessUnit(): Prisma.BusinessUnitDelegate<ExtArgs>;
+
+  /**
+   * `prisma.skill`: Exposes CRUD operations for the **Skill** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Skills
+    * const skills = await prisma.skill.findMany()
+    * ```
+    */
+  get skill(): Prisma.SkillDelegate<ExtArgs>;
+
+  /**
+   * `prisma.userSkill`: Exposes CRUD operations for the **UserSkill** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserSkills
+    * const userSkills = await prisma.userSkill.findMany()
+    * ```
+    */
+  get userSkill(): Prisma.UserSkillDelegate<ExtArgs>;
 
   /**
    * `prisma.activity`: Exposes CRUD operations for the **Activity** model.
@@ -896,6 +968,9 @@ export namespace Prisma {
     Timesheet: 'Timesheet',
     Document: 'Document',
     ProjectExpense: 'ProjectExpense',
+    BusinessUnit: 'BusinessUnit',
+    Skill: 'Skill',
+    UserSkill: 'UserSkill',
     Activity: 'Activity',
     Task: 'Task',
     TaskAssignee: 'TaskAssignee',
@@ -916,7 +991,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "client" | "project" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectExpense" | "activity" | "task" | "taskAssignee" | "taskTimeLog" | "notification"
+      modelProps: "user" | "client" | "project" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "activity" | "task" | "taskAssignee" | "taskTimeLog" | "notification"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1620,6 +1695,216 @@ export namespace Prisma {
           }
         }
       }
+      BusinessUnit: {
+        payload: Prisma.$BusinessUnitPayload<ExtArgs>
+        fields: Prisma.BusinessUnitFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BusinessUnitFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessUnitPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BusinessUnitFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessUnitPayload>
+          }
+          findFirst: {
+            args: Prisma.BusinessUnitFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessUnitPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BusinessUnitFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessUnitPayload>
+          }
+          findMany: {
+            args: Prisma.BusinessUnitFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessUnitPayload>[]
+          }
+          create: {
+            args: Prisma.BusinessUnitCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessUnitPayload>
+          }
+          createMany: {
+            args: Prisma.BusinessUnitCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.BusinessUnitCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessUnitPayload>[]
+          }
+          delete: {
+            args: Prisma.BusinessUnitDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessUnitPayload>
+          }
+          update: {
+            args: Prisma.BusinessUnitUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessUnitPayload>
+          }
+          deleteMany: {
+            args: Prisma.BusinessUnitDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BusinessUnitUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.BusinessUnitUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessUnitPayload>
+          }
+          aggregate: {
+            args: Prisma.BusinessUnitAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBusinessUnit>
+          }
+          groupBy: {
+            args: Prisma.BusinessUnitGroupByArgs<ExtArgs>
+            result: $Utils.Optional<BusinessUnitGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BusinessUnitCountArgs<ExtArgs>
+            result: $Utils.Optional<BusinessUnitCountAggregateOutputType> | number
+          }
+        }
+      }
+      Skill: {
+        payload: Prisma.$SkillPayload<ExtArgs>
+        fields: Prisma.SkillFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SkillFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SkillPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SkillFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SkillPayload>
+          }
+          findFirst: {
+            args: Prisma.SkillFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SkillPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SkillFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SkillPayload>
+          }
+          findMany: {
+            args: Prisma.SkillFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SkillPayload>[]
+          }
+          create: {
+            args: Prisma.SkillCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SkillPayload>
+          }
+          createMany: {
+            args: Prisma.SkillCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SkillCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SkillPayload>[]
+          }
+          delete: {
+            args: Prisma.SkillDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SkillPayload>
+          }
+          update: {
+            args: Prisma.SkillUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SkillPayload>
+          }
+          deleteMany: {
+            args: Prisma.SkillDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SkillUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SkillUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SkillPayload>
+          }
+          aggregate: {
+            args: Prisma.SkillAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSkill>
+          }
+          groupBy: {
+            args: Prisma.SkillGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SkillGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SkillCountArgs<ExtArgs>
+            result: $Utils.Optional<SkillCountAggregateOutputType> | number
+          }
+        }
+      }
+      UserSkill: {
+        payload: Prisma.$UserSkillPayload<ExtArgs>
+        fields: Prisma.UserSkillFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserSkillFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSkillPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserSkillFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSkillPayload>
+          }
+          findFirst: {
+            args: Prisma.UserSkillFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSkillPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserSkillFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSkillPayload>
+          }
+          findMany: {
+            args: Prisma.UserSkillFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSkillPayload>[]
+          }
+          create: {
+            args: Prisma.UserSkillCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSkillPayload>
+          }
+          createMany: {
+            args: Prisma.UserSkillCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserSkillCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSkillPayload>[]
+          }
+          delete: {
+            args: Prisma.UserSkillDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSkillPayload>
+          }
+          update: {
+            args: Prisma.UserSkillUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSkillPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserSkillDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserSkillUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.UserSkillUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserSkillPayload>
+          }
+          aggregate: {
+            args: Prisma.UserSkillAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserSkill>
+          }
+          groupBy: {
+            args: Prisma.UserSkillGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserSkillGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserSkillCountArgs<ExtArgs>
+            result: $Utils.Optional<UserSkillCountAggregateOutputType> | number
+          }
+        }
+      }
       Activity: {
         payload: Prisma.$ActivityPayload<ExtArgs>
         fields: Prisma.ActivityFieldRefs
@@ -2133,6 +2418,8 @@ export namespace Prisma {
   export type UserCountOutputType = {
     reports: number
     supervisees: number
+    skills: number
+    approvedExpenses: number
     projectsAsSales: number
     projectsAsPm: number
     projectsAsTw: number
@@ -2155,6 +2442,8 @@ export namespace Prisma {
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     reports?: boolean | UserCountOutputTypeCountReportsArgs
     supervisees?: boolean | UserCountOutputTypeCountSuperviseesArgs
+    skills?: boolean | UserCountOutputTypeCountSkillsArgs
+    approvedExpenses?: boolean | UserCountOutputTypeCountApprovedExpensesArgs
     projectsAsSales?: boolean | UserCountOutputTypeCountProjectsAsSalesArgs
     projectsAsPm?: boolean | UserCountOutputTypeCountProjectsAsPmArgs
     projectsAsTw?: boolean | UserCountOutputTypeCountProjectsAsTwArgs
@@ -2197,6 +2486,20 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountSuperviseesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSkillsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserSkillWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountApprovedExpensesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectExpenseWhereInput
   }
 
   /**
@@ -2436,6 +2739,68 @@ export namespace Prisma {
 
 
   /**
+   * Count Type BusinessUnitCountOutputType
+   */
+
+  export type BusinessUnitCountOutputType = {
+    users: number
+  }
+
+  export type BusinessUnitCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    users?: boolean | BusinessUnitCountOutputTypeCountUsersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * BusinessUnitCountOutputType without action
+   */
+  export type BusinessUnitCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessUnitCountOutputType
+     */
+    select?: BusinessUnitCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * BusinessUnitCountOutputType without action
+   */
+  export type BusinessUnitCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
+  }
+
+
+  /**
+   * Count Type SkillCountOutputType
+   */
+
+  export type SkillCountOutputType = {
+    users: number
+  }
+
+  export type SkillCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    users?: boolean | SkillCountOutputTypeCountUsersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * SkillCountOutputType without action
+   */
+  export type SkillCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SkillCountOutputType
+     */
+    select?: SkillCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * SkillCountOutputType without action
+   */
+  export type SkillCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserSkillWhereInput
+  }
+
+
+  /**
    * Count Type TaskCountOutputType
    */
 
@@ -2516,10 +2881,12 @@ export namespace Prisma {
     role: $Enums.UserRole | null
     title: string | null
     dailyRate: number | null
+    seniority: $Enums.Seniority | null
     isActive: boolean | null
     deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    businessUnitId: string | null
     managerId: string | null
     principalId: string | null
   }
@@ -2532,10 +2899,12 @@ export namespace Prisma {
     role: $Enums.UserRole | null
     title: string | null
     dailyRate: number | null
+    seniority: $Enums.Seniority | null
     isActive: boolean | null
     deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    businessUnitId: string | null
     managerId: string | null
     principalId: string | null
   }
@@ -2548,10 +2917,12 @@ export namespace Prisma {
     role: number
     title: number
     dailyRate: number
+    seniority: number
     isActive: number
     deletedAt: number
     createdAt: number
     updatedAt: number
+    businessUnitId: number
     managerId: number
     principalId: number
     _all: number
@@ -2574,10 +2945,12 @@ export namespace Prisma {
     role?: true
     title?: true
     dailyRate?: true
+    seniority?: true
     isActive?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
+    businessUnitId?: true
     managerId?: true
     principalId?: true
   }
@@ -2590,10 +2963,12 @@ export namespace Prisma {
     role?: true
     title?: true
     dailyRate?: true
+    seniority?: true
     isActive?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
+    businessUnitId?: true
     managerId?: true
     principalId?: true
   }
@@ -2606,10 +2981,12 @@ export namespace Prisma {
     role?: true
     title?: true
     dailyRate?: true
+    seniority?: true
     isActive?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
+    businessUnitId?: true
     managerId?: true
     principalId?: true
     _all?: true
@@ -2709,10 +3086,12 @@ export namespace Prisma {
     role: $Enums.UserRole
     title: string | null
     dailyRate: number | null
+    seniority: $Enums.Seniority | null
     isActive: boolean
     deletedAt: Date | null
     createdAt: Date
     updatedAt: Date
+    businessUnitId: string | null
     managerId: string | null
     principalId: string | null
     _count: UserCountAggregateOutputType | null
@@ -2744,16 +3123,21 @@ export namespace Prisma {
     role?: boolean
     title?: boolean
     dailyRate?: boolean
+    seniority?: boolean
     isActive?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    businessUnitId?: boolean
     managerId?: boolean
     principalId?: boolean
+    businessUnit?: boolean | User$businessUnitArgs<ExtArgs>
     manager?: boolean | User$managerArgs<ExtArgs>
     reports?: boolean | User$reportsArgs<ExtArgs>
     principal?: boolean | User$principalArgs<ExtArgs>
     supervisees?: boolean | User$superviseesArgs<ExtArgs>
+    skills?: boolean | User$skillsArgs<ExtArgs>
+    approvedExpenses?: boolean | User$approvedExpensesArgs<ExtArgs>
     projectsAsSales?: boolean | User$projectsAsSalesArgs<ExtArgs>
     projectsAsPm?: boolean | User$projectsAsPmArgs<ExtArgs>
     projectsAsTw?: boolean | User$projectsAsTwArgs<ExtArgs>
@@ -2782,12 +3166,15 @@ export namespace Prisma {
     role?: boolean
     title?: boolean
     dailyRate?: boolean
+    seniority?: boolean
     isActive?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    businessUnitId?: boolean
     managerId?: boolean
     principalId?: boolean
+    businessUnit?: boolean | User$businessUnitArgs<ExtArgs>
     manager?: boolean | User$managerArgs<ExtArgs>
     principal?: boolean | User$principalArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -2800,19 +3187,24 @@ export namespace Prisma {
     role?: boolean
     title?: boolean
     dailyRate?: boolean
+    seniority?: boolean
     isActive?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    businessUnitId?: boolean
     managerId?: boolean
     principalId?: boolean
   }
 
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    businessUnit?: boolean | User$businessUnitArgs<ExtArgs>
     manager?: boolean | User$managerArgs<ExtArgs>
     reports?: boolean | User$reportsArgs<ExtArgs>
     principal?: boolean | User$principalArgs<ExtArgs>
     supervisees?: boolean | User$superviseesArgs<ExtArgs>
+    skills?: boolean | User$skillsArgs<ExtArgs>
+    approvedExpenses?: boolean | User$approvedExpensesArgs<ExtArgs>
     projectsAsSales?: boolean | User$projectsAsSalesArgs<ExtArgs>
     projectsAsPm?: boolean | User$projectsAsPmArgs<ExtArgs>
     projectsAsTw?: boolean | User$projectsAsTwArgs<ExtArgs>
@@ -2833,6 +3225,7 @@ export namespace Prisma {
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    businessUnit?: boolean | User$businessUnitArgs<ExtArgs>
     manager?: boolean | User$managerArgs<ExtArgs>
     principal?: boolean | User$principalArgs<ExtArgs>
   }
@@ -2840,10 +3233,13 @@ export namespace Prisma {
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
+      businessUnit: Prisma.$BusinessUnitPayload<ExtArgs> | null
       manager: Prisma.$UserPayload<ExtArgs> | null
       reports: Prisma.$UserPayload<ExtArgs>[]
       principal: Prisma.$UserPayload<ExtArgs> | null
       supervisees: Prisma.$UserPayload<ExtArgs>[]
+      skills: Prisma.$UserSkillPayload<ExtArgs>[]
+      approvedExpenses: Prisma.$ProjectExpensePayload<ExtArgs>[]
       projectsAsSales: Prisma.$ProjectPayload<ExtArgs>[]
       projectsAsPm: Prisma.$ProjectPayload<ExtArgs>[]
       projectsAsTw: Prisma.$ProjectPayload<ExtArgs>[]
@@ -2870,10 +3266,12 @@ export namespace Prisma {
       role: $Enums.UserRole
       title: string | null
       dailyRate: number | null
+      seniority: $Enums.Seniority | null
       isActive: boolean
       deletedAt: Date | null
       createdAt: Date
       updatedAt: Date
+      businessUnitId: string | null
       managerId: string | null
       principalId: string | null
     }, ExtArgs["result"]["user"]>
@@ -3240,10 +3638,13 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    businessUnit<T extends User$businessUnitArgs<ExtArgs> = {}>(args?: Subset<T, User$businessUnitArgs<ExtArgs>>): Prisma__BusinessUnitClient<$Result.GetResult<Prisma.$BusinessUnitPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     manager<T extends User$managerArgs<ExtArgs> = {}>(args?: Subset<T, User$managerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     reports<T extends User$reportsArgs<ExtArgs> = {}>(args?: Subset<T, User$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany"> | Null>
     principal<T extends User$principalArgs<ExtArgs> = {}>(args?: Subset<T, User$principalArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     supervisees<T extends User$superviseesArgs<ExtArgs> = {}>(args?: Subset<T, User$superviseesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany"> | Null>
+    skills<T extends User$skillsArgs<ExtArgs> = {}>(args?: Subset<T, User$skillsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserSkillPayload<ExtArgs>, T, "findMany"> | Null>
+    approvedExpenses<T extends User$approvedExpensesArgs<ExtArgs> = {}>(args?: Subset<T, User$approvedExpensesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectExpensePayload<ExtArgs>, T, "findMany"> | Null>
     projectsAsSales<T extends User$projectsAsSalesArgs<ExtArgs> = {}>(args?: Subset<T, User$projectsAsSalesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany"> | Null>
     projectsAsPm<T extends User$projectsAsPmArgs<ExtArgs> = {}>(args?: Subset<T, User$projectsAsPmArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany"> | Null>
     projectsAsTw<T extends User$projectsAsTwArgs<ExtArgs> = {}>(args?: Subset<T, User$projectsAsTwArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany"> | Null>
@@ -3297,10 +3698,12 @@ export namespace Prisma {
     readonly role: FieldRef<"User", 'UserRole'>
     readonly title: FieldRef<"User", 'String'>
     readonly dailyRate: FieldRef<"User", 'Float'>
+    readonly seniority: FieldRef<"User", 'Seniority'>
     readonly isActive: FieldRef<"User", 'Boolean'>
     readonly deletedAt: FieldRef<"User", 'DateTime'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
+    readonly businessUnitId: FieldRef<"User", 'String'>
     readonly managerId: FieldRef<"User", 'String'>
     readonly principalId: FieldRef<"User", 'String'>
   }
@@ -3621,6 +4024,21 @@ export namespace Prisma {
   }
 
   /**
+   * User.businessUnit
+   */
+  export type User$businessUnitArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessUnit
+     */
+    select?: BusinessUnitSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessUnitInclude<ExtArgs> | null
+    where?: BusinessUnitWhereInput
+  }
+
+  /**
    * User.manager
    */
   export type User$managerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3688,6 +4106,46 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * User.skills
+   */
+  export type User$skillsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSkill
+     */
+    select?: UserSkillSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSkillInclude<ExtArgs> | null
+    where?: UserSkillWhereInput
+    orderBy?: UserSkillOrderByWithRelationInput | UserSkillOrderByWithRelationInput[]
+    cursor?: UserSkillWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserSkillScalarFieldEnum | UserSkillScalarFieldEnum[]
+  }
+
+  /**
+   * User.approvedExpenses
+   */
+  export type User$approvedExpensesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectExpense
+     */
+    select?: ProjectExpenseSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectExpenseInclude<ExtArgs> | null
+    where?: ProjectExpenseWhereInput
+    orderBy?: ProjectExpenseOrderByWithRelationInput | ProjectExpenseOrderByWithRelationInput[]
+    cursor?: ProjectExpenseWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectExpenseScalarFieldEnum | ProjectExpenseScalarFieldEnum[]
   }
 
   /**
@@ -12741,6 +13199,10 @@ export namespace Prisma {
     spentAt: Date | null
     evidenceUrl: string | null
     evidenceFileName: string | null
+    status: $Enums.ExpenseStatus | null
+    approvedById: string | null
+    approvedAt: Date | null
+    rejectionReason: string | null
     createdById: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -12755,6 +13217,10 @@ export namespace Prisma {
     spentAt: Date | null
     evidenceUrl: string | null
     evidenceFileName: string | null
+    status: $Enums.ExpenseStatus | null
+    approvedById: string | null
+    approvedAt: Date | null
+    rejectionReason: string | null
     createdById: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -12769,6 +13235,10 @@ export namespace Prisma {
     spentAt: number
     evidenceUrl: number
     evidenceFileName: number
+    status: number
+    approvedById: number
+    approvedAt: number
+    rejectionReason: number
     createdById: number
     createdAt: number
     updatedAt: number
@@ -12793,6 +13263,10 @@ export namespace Prisma {
     spentAt?: true
     evidenceUrl?: true
     evidenceFileName?: true
+    status?: true
+    approvedById?: true
+    approvedAt?: true
+    rejectionReason?: true
     createdById?: true
     createdAt?: true
     updatedAt?: true
@@ -12807,6 +13281,10 @@ export namespace Prisma {
     spentAt?: true
     evidenceUrl?: true
     evidenceFileName?: true
+    status?: true
+    approvedById?: true
+    approvedAt?: true
+    rejectionReason?: true
     createdById?: true
     createdAt?: true
     updatedAt?: true
@@ -12821,6 +13299,10 @@ export namespace Prisma {
     spentAt?: true
     evidenceUrl?: true
     evidenceFileName?: true
+    status?: true
+    approvedById?: true
+    approvedAt?: true
+    rejectionReason?: true
     createdById?: true
     createdAt?: true
     updatedAt?: true
@@ -12922,6 +13404,10 @@ export namespace Prisma {
     spentAt: Date
     evidenceUrl: string | null
     evidenceFileName: string | null
+    status: $Enums.ExpenseStatus
+    approvedById: string | null
+    approvedAt: Date | null
+    rejectionReason: string | null
     createdById: string | null
     createdAt: Date
     updatedAt: Date
@@ -12955,10 +13441,15 @@ export namespace Prisma {
     spentAt?: boolean
     evidenceUrl?: boolean
     evidenceFileName?: boolean
+    status?: boolean
+    approvedById?: boolean
+    approvedAt?: boolean
+    rejectionReason?: boolean
     createdById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    approvedBy?: boolean | ProjectExpense$approvedByArgs<ExtArgs>
     createdBy?: boolean | ProjectExpense$createdByArgs<ExtArgs>
   }, ExtArgs["result"]["projectExpense"]>
 
@@ -12971,10 +13462,15 @@ export namespace Prisma {
     spentAt?: boolean
     evidenceUrl?: boolean
     evidenceFileName?: boolean
+    status?: boolean
+    approvedById?: boolean
+    approvedAt?: boolean
+    rejectionReason?: boolean
     createdById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    approvedBy?: boolean | ProjectExpense$approvedByArgs<ExtArgs>
     createdBy?: boolean | ProjectExpense$createdByArgs<ExtArgs>
   }, ExtArgs["result"]["projectExpense"]>
 
@@ -12987,6 +13483,10 @@ export namespace Prisma {
     spentAt?: boolean
     evidenceUrl?: boolean
     evidenceFileName?: boolean
+    status?: boolean
+    approvedById?: boolean
+    approvedAt?: boolean
+    rejectionReason?: boolean
     createdById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -12994,10 +13494,12 @@ export namespace Prisma {
 
   export type ProjectExpenseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    approvedBy?: boolean | ProjectExpense$approvedByArgs<ExtArgs>
     createdBy?: boolean | ProjectExpense$createdByArgs<ExtArgs>
   }
   export type ProjectExpenseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    approvedBy?: boolean | ProjectExpense$approvedByArgs<ExtArgs>
     createdBy?: boolean | ProjectExpense$createdByArgs<ExtArgs>
   }
 
@@ -13005,6 +13507,7 @@ export namespace Prisma {
     name: "ProjectExpense"
     objects: {
       project: Prisma.$ProjectPayload<ExtArgs>
+      approvedBy: Prisma.$UserPayload<ExtArgs> | null
       createdBy: Prisma.$UserPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -13016,6 +13519,10 @@ export namespace Prisma {
       spentAt: Date
       evidenceUrl: string | null
       evidenceFileName: string | null
+      status: $Enums.ExpenseStatus
+      approvedById: string | null
+      approvedAt: Date | null
+      rejectionReason: string | null
       createdById: string | null
       createdAt: Date
       updatedAt: Date
@@ -13384,6 +13891,7 @@ export namespace Prisma {
   export interface Prisma__ProjectExpenseClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    approvedBy<T extends ProjectExpense$approvedByArgs<ExtArgs> = {}>(args?: Subset<T, ProjectExpense$approvedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     createdBy<T extends ProjectExpense$createdByArgs<ExtArgs> = {}>(args?: Subset<T, ProjectExpense$createdByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -13422,6 +13930,10 @@ export namespace Prisma {
     readonly spentAt: FieldRef<"ProjectExpense", 'DateTime'>
     readonly evidenceUrl: FieldRef<"ProjectExpense", 'String'>
     readonly evidenceFileName: FieldRef<"ProjectExpense", 'String'>
+    readonly status: FieldRef<"ProjectExpense", 'ExpenseStatus'>
+    readonly approvedById: FieldRef<"ProjectExpense", 'String'>
+    readonly approvedAt: FieldRef<"ProjectExpense", 'DateTime'>
+    readonly rejectionReason: FieldRef<"ProjectExpense", 'String'>
     readonly createdById: FieldRef<"ProjectExpense", 'String'>
     readonly createdAt: FieldRef<"ProjectExpense", 'DateTime'>
     readonly updatedAt: FieldRef<"ProjectExpense", 'DateTime'>
@@ -13743,6 +14255,21 @@ export namespace Prisma {
   }
 
   /**
+   * ProjectExpense.approvedBy
+   */
+  export type ProjectExpense$approvedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
    * ProjectExpense.createdBy
    */
   export type ProjectExpense$createdByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13769,6 +14296,2899 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ProjectExpenseInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model BusinessUnit
+   */
+
+  export type AggregateBusinessUnit = {
+    _count: BusinessUnitCountAggregateOutputType | null
+    _min: BusinessUnitMinAggregateOutputType | null
+    _max: BusinessUnitMaxAggregateOutputType | null
+  }
+
+  export type BusinessUnitMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BusinessUnitMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BusinessUnitCountAggregateOutputType = {
+    id: number
+    name: number
+    description: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type BusinessUnitMinAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BusinessUnitMaxAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BusinessUnitCountAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type BusinessUnitAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BusinessUnit to aggregate.
+     */
+    where?: BusinessUnitWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BusinessUnits to fetch.
+     */
+    orderBy?: BusinessUnitOrderByWithRelationInput | BusinessUnitOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BusinessUnitWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BusinessUnits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BusinessUnits.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned BusinessUnits
+    **/
+    _count?: true | BusinessUnitCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BusinessUnitMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BusinessUnitMaxAggregateInputType
+  }
+
+  export type GetBusinessUnitAggregateType<T extends BusinessUnitAggregateArgs> = {
+        [P in keyof T & keyof AggregateBusinessUnit]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBusinessUnit[P]>
+      : GetScalarType<T[P], AggregateBusinessUnit[P]>
+  }
+
+
+
+
+  export type BusinessUnitGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BusinessUnitWhereInput
+    orderBy?: BusinessUnitOrderByWithAggregationInput | BusinessUnitOrderByWithAggregationInput[]
+    by: BusinessUnitScalarFieldEnum[] | BusinessUnitScalarFieldEnum
+    having?: BusinessUnitScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BusinessUnitCountAggregateInputType | true
+    _min?: BusinessUnitMinAggregateInputType
+    _max?: BusinessUnitMaxAggregateInputType
+  }
+
+  export type BusinessUnitGroupByOutputType = {
+    id: string
+    name: string
+    description: string | null
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: BusinessUnitCountAggregateOutputType | null
+    _min: BusinessUnitMinAggregateOutputType | null
+    _max: BusinessUnitMaxAggregateOutputType | null
+  }
+
+  type GetBusinessUnitGroupByPayload<T extends BusinessUnitGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BusinessUnitGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BusinessUnitGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BusinessUnitGroupByOutputType[P]>
+            : GetScalarType<T[P], BusinessUnitGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BusinessUnitSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    users?: boolean | BusinessUnit$usersArgs<ExtArgs>
+    _count?: boolean | BusinessUnitCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["businessUnit"]>
+
+  export type BusinessUnitSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["businessUnit"]>
+
+  export type BusinessUnitSelectScalar = {
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type BusinessUnitInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    users?: boolean | BusinessUnit$usersArgs<ExtArgs>
+    _count?: boolean | BusinessUnitCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type BusinessUnitIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $BusinessUnitPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "BusinessUnit"
+    objects: {
+      users: Prisma.$UserPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      description: string | null
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["businessUnit"]>
+    composites: {}
+  }
+
+  type BusinessUnitGetPayload<S extends boolean | null | undefined | BusinessUnitDefaultArgs> = $Result.GetResult<Prisma.$BusinessUnitPayload, S>
+
+  type BusinessUnitCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<BusinessUnitFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: BusinessUnitCountAggregateInputType | true
+    }
+
+  export interface BusinessUnitDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['BusinessUnit'], meta: { name: 'BusinessUnit' } }
+    /**
+     * Find zero or one BusinessUnit that matches the filter.
+     * @param {BusinessUnitFindUniqueArgs} args - Arguments to find a BusinessUnit
+     * @example
+     * // Get one BusinessUnit
+     * const businessUnit = await prisma.businessUnit.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends BusinessUnitFindUniqueArgs>(args: SelectSubset<T, BusinessUnitFindUniqueArgs<ExtArgs>>): Prisma__BusinessUnitClient<$Result.GetResult<Prisma.$BusinessUnitPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one BusinessUnit that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {BusinessUnitFindUniqueOrThrowArgs} args - Arguments to find a BusinessUnit
+     * @example
+     * // Get one BusinessUnit
+     * const businessUnit = await prisma.businessUnit.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends BusinessUnitFindUniqueOrThrowArgs>(args: SelectSubset<T, BusinessUnitFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BusinessUnitClient<$Result.GetResult<Prisma.$BusinessUnitPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first BusinessUnit that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BusinessUnitFindFirstArgs} args - Arguments to find a BusinessUnit
+     * @example
+     * // Get one BusinessUnit
+     * const businessUnit = await prisma.businessUnit.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends BusinessUnitFindFirstArgs>(args?: SelectSubset<T, BusinessUnitFindFirstArgs<ExtArgs>>): Prisma__BusinessUnitClient<$Result.GetResult<Prisma.$BusinessUnitPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first BusinessUnit that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BusinessUnitFindFirstOrThrowArgs} args - Arguments to find a BusinessUnit
+     * @example
+     * // Get one BusinessUnit
+     * const businessUnit = await prisma.businessUnit.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends BusinessUnitFindFirstOrThrowArgs>(args?: SelectSubset<T, BusinessUnitFindFirstOrThrowArgs<ExtArgs>>): Prisma__BusinessUnitClient<$Result.GetResult<Prisma.$BusinessUnitPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more BusinessUnits that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BusinessUnitFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all BusinessUnits
+     * const businessUnits = await prisma.businessUnit.findMany()
+     * 
+     * // Get first 10 BusinessUnits
+     * const businessUnits = await prisma.businessUnit.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const businessUnitWithIdOnly = await prisma.businessUnit.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends BusinessUnitFindManyArgs>(args?: SelectSubset<T, BusinessUnitFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BusinessUnitPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a BusinessUnit.
+     * @param {BusinessUnitCreateArgs} args - Arguments to create a BusinessUnit.
+     * @example
+     * // Create one BusinessUnit
+     * const BusinessUnit = await prisma.businessUnit.create({
+     *   data: {
+     *     // ... data to create a BusinessUnit
+     *   }
+     * })
+     * 
+     */
+    create<T extends BusinessUnitCreateArgs>(args: SelectSubset<T, BusinessUnitCreateArgs<ExtArgs>>): Prisma__BusinessUnitClient<$Result.GetResult<Prisma.$BusinessUnitPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many BusinessUnits.
+     * @param {BusinessUnitCreateManyArgs} args - Arguments to create many BusinessUnits.
+     * @example
+     * // Create many BusinessUnits
+     * const businessUnit = await prisma.businessUnit.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends BusinessUnitCreateManyArgs>(args?: SelectSubset<T, BusinessUnitCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many BusinessUnits and returns the data saved in the database.
+     * @param {BusinessUnitCreateManyAndReturnArgs} args - Arguments to create many BusinessUnits.
+     * @example
+     * // Create many BusinessUnits
+     * const businessUnit = await prisma.businessUnit.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many BusinessUnits and only return the `id`
+     * const businessUnitWithIdOnly = await prisma.businessUnit.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends BusinessUnitCreateManyAndReturnArgs>(args?: SelectSubset<T, BusinessUnitCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BusinessUnitPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a BusinessUnit.
+     * @param {BusinessUnitDeleteArgs} args - Arguments to delete one BusinessUnit.
+     * @example
+     * // Delete one BusinessUnit
+     * const BusinessUnit = await prisma.businessUnit.delete({
+     *   where: {
+     *     // ... filter to delete one BusinessUnit
+     *   }
+     * })
+     * 
+     */
+    delete<T extends BusinessUnitDeleteArgs>(args: SelectSubset<T, BusinessUnitDeleteArgs<ExtArgs>>): Prisma__BusinessUnitClient<$Result.GetResult<Prisma.$BusinessUnitPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one BusinessUnit.
+     * @param {BusinessUnitUpdateArgs} args - Arguments to update one BusinessUnit.
+     * @example
+     * // Update one BusinessUnit
+     * const businessUnit = await prisma.businessUnit.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends BusinessUnitUpdateArgs>(args: SelectSubset<T, BusinessUnitUpdateArgs<ExtArgs>>): Prisma__BusinessUnitClient<$Result.GetResult<Prisma.$BusinessUnitPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more BusinessUnits.
+     * @param {BusinessUnitDeleteManyArgs} args - Arguments to filter BusinessUnits to delete.
+     * @example
+     * // Delete a few BusinessUnits
+     * const { count } = await prisma.businessUnit.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends BusinessUnitDeleteManyArgs>(args?: SelectSubset<T, BusinessUnitDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BusinessUnits.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BusinessUnitUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many BusinessUnits
+     * const businessUnit = await prisma.businessUnit.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends BusinessUnitUpdateManyArgs>(args: SelectSubset<T, BusinessUnitUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one BusinessUnit.
+     * @param {BusinessUnitUpsertArgs} args - Arguments to update or create a BusinessUnit.
+     * @example
+     * // Update or create a BusinessUnit
+     * const businessUnit = await prisma.businessUnit.upsert({
+     *   create: {
+     *     // ... data to create a BusinessUnit
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the BusinessUnit we want to update
+     *   }
+     * })
+     */
+    upsert<T extends BusinessUnitUpsertArgs>(args: SelectSubset<T, BusinessUnitUpsertArgs<ExtArgs>>): Prisma__BusinessUnitClient<$Result.GetResult<Prisma.$BusinessUnitPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of BusinessUnits.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BusinessUnitCountArgs} args - Arguments to filter BusinessUnits to count.
+     * @example
+     * // Count the number of BusinessUnits
+     * const count = await prisma.businessUnit.count({
+     *   where: {
+     *     // ... the filter for the BusinessUnits we want to count
+     *   }
+     * })
+    **/
+    count<T extends BusinessUnitCountArgs>(
+      args?: Subset<T, BusinessUnitCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BusinessUnitCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a BusinessUnit.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BusinessUnitAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BusinessUnitAggregateArgs>(args: Subset<T, BusinessUnitAggregateArgs>): Prisma.PrismaPromise<GetBusinessUnitAggregateType<T>>
+
+    /**
+     * Group by BusinessUnit.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BusinessUnitGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BusinessUnitGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BusinessUnitGroupByArgs['orderBy'] }
+        : { orderBy?: BusinessUnitGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BusinessUnitGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBusinessUnitGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the BusinessUnit model
+   */
+  readonly fields: BusinessUnitFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for BusinessUnit.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BusinessUnitClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    users<T extends BusinessUnit$usersArgs<ExtArgs> = {}>(args?: Subset<T, BusinessUnit$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the BusinessUnit model
+   */ 
+  interface BusinessUnitFieldRefs {
+    readonly id: FieldRef<"BusinessUnit", 'String'>
+    readonly name: FieldRef<"BusinessUnit", 'String'>
+    readonly description: FieldRef<"BusinessUnit", 'String'>
+    readonly isActive: FieldRef<"BusinessUnit", 'Boolean'>
+    readonly createdAt: FieldRef<"BusinessUnit", 'DateTime'>
+    readonly updatedAt: FieldRef<"BusinessUnit", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * BusinessUnit findUnique
+   */
+  export type BusinessUnitFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessUnit
+     */
+    select?: BusinessUnitSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessUnitInclude<ExtArgs> | null
+    /**
+     * Filter, which BusinessUnit to fetch.
+     */
+    where: BusinessUnitWhereUniqueInput
+  }
+
+  /**
+   * BusinessUnit findUniqueOrThrow
+   */
+  export type BusinessUnitFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessUnit
+     */
+    select?: BusinessUnitSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessUnitInclude<ExtArgs> | null
+    /**
+     * Filter, which BusinessUnit to fetch.
+     */
+    where: BusinessUnitWhereUniqueInput
+  }
+
+  /**
+   * BusinessUnit findFirst
+   */
+  export type BusinessUnitFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessUnit
+     */
+    select?: BusinessUnitSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessUnitInclude<ExtArgs> | null
+    /**
+     * Filter, which BusinessUnit to fetch.
+     */
+    where?: BusinessUnitWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BusinessUnits to fetch.
+     */
+    orderBy?: BusinessUnitOrderByWithRelationInput | BusinessUnitOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BusinessUnits.
+     */
+    cursor?: BusinessUnitWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BusinessUnits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BusinessUnits.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BusinessUnits.
+     */
+    distinct?: BusinessUnitScalarFieldEnum | BusinessUnitScalarFieldEnum[]
+  }
+
+  /**
+   * BusinessUnit findFirstOrThrow
+   */
+  export type BusinessUnitFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessUnit
+     */
+    select?: BusinessUnitSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessUnitInclude<ExtArgs> | null
+    /**
+     * Filter, which BusinessUnit to fetch.
+     */
+    where?: BusinessUnitWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BusinessUnits to fetch.
+     */
+    orderBy?: BusinessUnitOrderByWithRelationInput | BusinessUnitOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BusinessUnits.
+     */
+    cursor?: BusinessUnitWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BusinessUnits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BusinessUnits.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BusinessUnits.
+     */
+    distinct?: BusinessUnitScalarFieldEnum | BusinessUnitScalarFieldEnum[]
+  }
+
+  /**
+   * BusinessUnit findMany
+   */
+  export type BusinessUnitFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessUnit
+     */
+    select?: BusinessUnitSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessUnitInclude<ExtArgs> | null
+    /**
+     * Filter, which BusinessUnits to fetch.
+     */
+    where?: BusinessUnitWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BusinessUnits to fetch.
+     */
+    orderBy?: BusinessUnitOrderByWithRelationInput | BusinessUnitOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing BusinessUnits.
+     */
+    cursor?: BusinessUnitWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BusinessUnits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BusinessUnits.
+     */
+    skip?: number
+    distinct?: BusinessUnitScalarFieldEnum | BusinessUnitScalarFieldEnum[]
+  }
+
+  /**
+   * BusinessUnit create
+   */
+  export type BusinessUnitCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessUnit
+     */
+    select?: BusinessUnitSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessUnitInclude<ExtArgs> | null
+    /**
+     * The data needed to create a BusinessUnit.
+     */
+    data: XOR<BusinessUnitCreateInput, BusinessUnitUncheckedCreateInput>
+  }
+
+  /**
+   * BusinessUnit createMany
+   */
+  export type BusinessUnitCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many BusinessUnits.
+     */
+    data: BusinessUnitCreateManyInput | BusinessUnitCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * BusinessUnit createManyAndReturn
+   */
+  export type BusinessUnitCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessUnit
+     */
+    select?: BusinessUnitSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many BusinessUnits.
+     */
+    data: BusinessUnitCreateManyInput | BusinessUnitCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * BusinessUnit update
+   */
+  export type BusinessUnitUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessUnit
+     */
+    select?: BusinessUnitSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessUnitInclude<ExtArgs> | null
+    /**
+     * The data needed to update a BusinessUnit.
+     */
+    data: XOR<BusinessUnitUpdateInput, BusinessUnitUncheckedUpdateInput>
+    /**
+     * Choose, which BusinessUnit to update.
+     */
+    where: BusinessUnitWhereUniqueInput
+  }
+
+  /**
+   * BusinessUnit updateMany
+   */
+  export type BusinessUnitUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update BusinessUnits.
+     */
+    data: XOR<BusinessUnitUpdateManyMutationInput, BusinessUnitUncheckedUpdateManyInput>
+    /**
+     * Filter which BusinessUnits to update
+     */
+    where?: BusinessUnitWhereInput
+  }
+
+  /**
+   * BusinessUnit upsert
+   */
+  export type BusinessUnitUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessUnit
+     */
+    select?: BusinessUnitSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessUnitInclude<ExtArgs> | null
+    /**
+     * The filter to search for the BusinessUnit to update in case it exists.
+     */
+    where: BusinessUnitWhereUniqueInput
+    /**
+     * In case the BusinessUnit found by the `where` argument doesn't exist, create a new BusinessUnit with this data.
+     */
+    create: XOR<BusinessUnitCreateInput, BusinessUnitUncheckedCreateInput>
+    /**
+     * In case the BusinessUnit was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BusinessUnitUpdateInput, BusinessUnitUncheckedUpdateInput>
+  }
+
+  /**
+   * BusinessUnit delete
+   */
+  export type BusinessUnitDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessUnit
+     */
+    select?: BusinessUnitSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessUnitInclude<ExtArgs> | null
+    /**
+     * Filter which BusinessUnit to delete.
+     */
+    where: BusinessUnitWhereUniqueInput
+  }
+
+  /**
+   * BusinessUnit deleteMany
+   */
+  export type BusinessUnitDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BusinessUnits to delete
+     */
+    where?: BusinessUnitWhereInput
+  }
+
+  /**
+   * BusinessUnit.users
+   */
+  export type BusinessUnit$usersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    cursor?: UserWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * BusinessUnit without action
+   */
+  export type BusinessUnitDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessUnit
+     */
+    select?: BusinessUnitSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessUnitInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Skill
+   */
+
+  export type AggregateSkill = {
+    _count: SkillCountAggregateOutputType | null
+    _min: SkillMinAggregateOutputType | null
+    _max: SkillMaxAggregateOutputType | null
+  }
+
+  export type SkillMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    category: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SkillMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    category: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SkillCountAggregateOutputType = {
+    id: number
+    name: number
+    category: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SkillMinAggregateInputType = {
+    id?: true
+    name?: true
+    category?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SkillMaxAggregateInputType = {
+    id?: true
+    name?: true
+    category?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SkillCountAggregateInputType = {
+    id?: true
+    name?: true
+    category?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SkillAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Skill to aggregate.
+     */
+    where?: SkillWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Skills to fetch.
+     */
+    orderBy?: SkillOrderByWithRelationInput | SkillOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SkillWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Skills from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Skills.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Skills
+    **/
+    _count?: true | SkillCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SkillMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SkillMaxAggregateInputType
+  }
+
+  export type GetSkillAggregateType<T extends SkillAggregateArgs> = {
+        [P in keyof T & keyof AggregateSkill]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSkill[P]>
+      : GetScalarType<T[P], AggregateSkill[P]>
+  }
+
+
+
+
+  export type SkillGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SkillWhereInput
+    orderBy?: SkillOrderByWithAggregationInput | SkillOrderByWithAggregationInput[]
+    by: SkillScalarFieldEnum[] | SkillScalarFieldEnum
+    having?: SkillScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SkillCountAggregateInputType | true
+    _min?: SkillMinAggregateInputType
+    _max?: SkillMaxAggregateInputType
+  }
+
+  export type SkillGroupByOutputType = {
+    id: string
+    name: string
+    category: string | null
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: SkillCountAggregateOutputType | null
+    _min: SkillMinAggregateOutputType | null
+    _max: SkillMaxAggregateOutputType | null
+  }
+
+  type GetSkillGroupByPayload<T extends SkillGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SkillGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SkillGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SkillGroupByOutputType[P]>
+            : GetScalarType<T[P], SkillGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SkillSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    category?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    users?: boolean | Skill$usersArgs<ExtArgs>
+    _count?: boolean | SkillCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["skill"]>
+
+  export type SkillSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    category?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["skill"]>
+
+  export type SkillSelectScalar = {
+    id?: boolean
+    name?: boolean
+    category?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SkillInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    users?: boolean | Skill$usersArgs<ExtArgs>
+    _count?: boolean | SkillCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type SkillIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $SkillPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Skill"
+    objects: {
+      users: Prisma.$UserSkillPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      category: string | null
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["skill"]>
+    composites: {}
+  }
+
+  type SkillGetPayload<S extends boolean | null | undefined | SkillDefaultArgs> = $Result.GetResult<Prisma.$SkillPayload, S>
+
+  type SkillCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<SkillFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: SkillCountAggregateInputType | true
+    }
+
+  export interface SkillDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Skill'], meta: { name: 'Skill' } }
+    /**
+     * Find zero or one Skill that matches the filter.
+     * @param {SkillFindUniqueArgs} args - Arguments to find a Skill
+     * @example
+     * // Get one Skill
+     * const skill = await prisma.skill.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SkillFindUniqueArgs>(args: SelectSubset<T, SkillFindUniqueArgs<ExtArgs>>): Prisma__SkillClient<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Skill that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {SkillFindUniqueOrThrowArgs} args - Arguments to find a Skill
+     * @example
+     * // Get one Skill
+     * const skill = await prisma.skill.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SkillFindUniqueOrThrowArgs>(args: SelectSubset<T, SkillFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SkillClient<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Skill that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SkillFindFirstArgs} args - Arguments to find a Skill
+     * @example
+     * // Get one Skill
+     * const skill = await prisma.skill.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SkillFindFirstArgs>(args?: SelectSubset<T, SkillFindFirstArgs<ExtArgs>>): Prisma__SkillClient<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Skill that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SkillFindFirstOrThrowArgs} args - Arguments to find a Skill
+     * @example
+     * // Get one Skill
+     * const skill = await prisma.skill.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SkillFindFirstOrThrowArgs>(args?: SelectSubset<T, SkillFindFirstOrThrowArgs<ExtArgs>>): Prisma__SkillClient<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Skills that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SkillFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Skills
+     * const skills = await prisma.skill.findMany()
+     * 
+     * // Get first 10 Skills
+     * const skills = await prisma.skill.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const skillWithIdOnly = await prisma.skill.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SkillFindManyArgs>(args?: SelectSubset<T, SkillFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Skill.
+     * @param {SkillCreateArgs} args - Arguments to create a Skill.
+     * @example
+     * // Create one Skill
+     * const Skill = await prisma.skill.create({
+     *   data: {
+     *     // ... data to create a Skill
+     *   }
+     * })
+     * 
+     */
+    create<T extends SkillCreateArgs>(args: SelectSubset<T, SkillCreateArgs<ExtArgs>>): Prisma__SkillClient<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Skills.
+     * @param {SkillCreateManyArgs} args - Arguments to create many Skills.
+     * @example
+     * // Create many Skills
+     * const skill = await prisma.skill.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SkillCreateManyArgs>(args?: SelectSubset<T, SkillCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Skills and returns the data saved in the database.
+     * @param {SkillCreateManyAndReturnArgs} args - Arguments to create many Skills.
+     * @example
+     * // Create many Skills
+     * const skill = await prisma.skill.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Skills and only return the `id`
+     * const skillWithIdOnly = await prisma.skill.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SkillCreateManyAndReturnArgs>(args?: SelectSubset<T, SkillCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a Skill.
+     * @param {SkillDeleteArgs} args - Arguments to delete one Skill.
+     * @example
+     * // Delete one Skill
+     * const Skill = await prisma.skill.delete({
+     *   where: {
+     *     // ... filter to delete one Skill
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SkillDeleteArgs>(args: SelectSubset<T, SkillDeleteArgs<ExtArgs>>): Prisma__SkillClient<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Skill.
+     * @param {SkillUpdateArgs} args - Arguments to update one Skill.
+     * @example
+     * // Update one Skill
+     * const skill = await prisma.skill.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SkillUpdateArgs>(args: SelectSubset<T, SkillUpdateArgs<ExtArgs>>): Prisma__SkillClient<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Skills.
+     * @param {SkillDeleteManyArgs} args - Arguments to filter Skills to delete.
+     * @example
+     * // Delete a few Skills
+     * const { count } = await prisma.skill.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SkillDeleteManyArgs>(args?: SelectSubset<T, SkillDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Skills.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SkillUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Skills
+     * const skill = await prisma.skill.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SkillUpdateManyArgs>(args: SelectSubset<T, SkillUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Skill.
+     * @param {SkillUpsertArgs} args - Arguments to update or create a Skill.
+     * @example
+     * // Update or create a Skill
+     * const skill = await prisma.skill.upsert({
+     *   create: {
+     *     // ... data to create a Skill
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Skill we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SkillUpsertArgs>(args: SelectSubset<T, SkillUpsertArgs<ExtArgs>>): Prisma__SkillClient<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Skills.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SkillCountArgs} args - Arguments to filter Skills to count.
+     * @example
+     * // Count the number of Skills
+     * const count = await prisma.skill.count({
+     *   where: {
+     *     // ... the filter for the Skills we want to count
+     *   }
+     * })
+    **/
+    count<T extends SkillCountArgs>(
+      args?: Subset<T, SkillCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SkillCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Skill.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SkillAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SkillAggregateArgs>(args: Subset<T, SkillAggregateArgs>): Prisma.PrismaPromise<GetSkillAggregateType<T>>
+
+    /**
+     * Group by Skill.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SkillGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SkillGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SkillGroupByArgs['orderBy'] }
+        : { orderBy?: SkillGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SkillGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSkillGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Skill model
+   */
+  readonly fields: SkillFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Skill.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SkillClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    users<T extends Skill$usersArgs<ExtArgs> = {}>(args?: Subset<T, Skill$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserSkillPayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Skill model
+   */ 
+  interface SkillFieldRefs {
+    readonly id: FieldRef<"Skill", 'String'>
+    readonly name: FieldRef<"Skill", 'String'>
+    readonly category: FieldRef<"Skill", 'String'>
+    readonly isActive: FieldRef<"Skill", 'Boolean'>
+    readonly createdAt: FieldRef<"Skill", 'DateTime'>
+    readonly updatedAt: FieldRef<"Skill", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Skill findUnique
+   */
+  export type SkillFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Skill
+     */
+    select?: SkillSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SkillInclude<ExtArgs> | null
+    /**
+     * Filter, which Skill to fetch.
+     */
+    where: SkillWhereUniqueInput
+  }
+
+  /**
+   * Skill findUniqueOrThrow
+   */
+  export type SkillFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Skill
+     */
+    select?: SkillSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SkillInclude<ExtArgs> | null
+    /**
+     * Filter, which Skill to fetch.
+     */
+    where: SkillWhereUniqueInput
+  }
+
+  /**
+   * Skill findFirst
+   */
+  export type SkillFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Skill
+     */
+    select?: SkillSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SkillInclude<ExtArgs> | null
+    /**
+     * Filter, which Skill to fetch.
+     */
+    where?: SkillWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Skills to fetch.
+     */
+    orderBy?: SkillOrderByWithRelationInput | SkillOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Skills.
+     */
+    cursor?: SkillWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Skills from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Skills.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Skills.
+     */
+    distinct?: SkillScalarFieldEnum | SkillScalarFieldEnum[]
+  }
+
+  /**
+   * Skill findFirstOrThrow
+   */
+  export type SkillFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Skill
+     */
+    select?: SkillSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SkillInclude<ExtArgs> | null
+    /**
+     * Filter, which Skill to fetch.
+     */
+    where?: SkillWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Skills to fetch.
+     */
+    orderBy?: SkillOrderByWithRelationInput | SkillOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Skills.
+     */
+    cursor?: SkillWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Skills from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Skills.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Skills.
+     */
+    distinct?: SkillScalarFieldEnum | SkillScalarFieldEnum[]
+  }
+
+  /**
+   * Skill findMany
+   */
+  export type SkillFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Skill
+     */
+    select?: SkillSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SkillInclude<ExtArgs> | null
+    /**
+     * Filter, which Skills to fetch.
+     */
+    where?: SkillWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Skills to fetch.
+     */
+    orderBy?: SkillOrderByWithRelationInput | SkillOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Skills.
+     */
+    cursor?: SkillWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Skills from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Skills.
+     */
+    skip?: number
+    distinct?: SkillScalarFieldEnum | SkillScalarFieldEnum[]
+  }
+
+  /**
+   * Skill create
+   */
+  export type SkillCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Skill
+     */
+    select?: SkillSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SkillInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Skill.
+     */
+    data: XOR<SkillCreateInput, SkillUncheckedCreateInput>
+  }
+
+  /**
+   * Skill createMany
+   */
+  export type SkillCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Skills.
+     */
+    data: SkillCreateManyInput | SkillCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Skill createManyAndReturn
+   */
+  export type SkillCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Skill
+     */
+    select?: SkillSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Skills.
+     */
+    data: SkillCreateManyInput | SkillCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Skill update
+   */
+  export type SkillUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Skill
+     */
+    select?: SkillSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SkillInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Skill.
+     */
+    data: XOR<SkillUpdateInput, SkillUncheckedUpdateInput>
+    /**
+     * Choose, which Skill to update.
+     */
+    where: SkillWhereUniqueInput
+  }
+
+  /**
+   * Skill updateMany
+   */
+  export type SkillUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Skills.
+     */
+    data: XOR<SkillUpdateManyMutationInput, SkillUncheckedUpdateManyInput>
+    /**
+     * Filter which Skills to update
+     */
+    where?: SkillWhereInput
+  }
+
+  /**
+   * Skill upsert
+   */
+  export type SkillUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Skill
+     */
+    select?: SkillSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SkillInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Skill to update in case it exists.
+     */
+    where: SkillWhereUniqueInput
+    /**
+     * In case the Skill found by the `where` argument doesn't exist, create a new Skill with this data.
+     */
+    create: XOR<SkillCreateInput, SkillUncheckedCreateInput>
+    /**
+     * In case the Skill was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SkillUpdateInput, SkillUncheckedUpdateInput>
+  }
+
+  /**
+   * Skill delete
+   */
+  export type SkillDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Skill
+     */
+    select?: SkillSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SkillInclude<ExtArgs> | null
+    /**
+     * Filter which Skill to delete.
+     */
+    where: SkillWhereUniqueInput
+  }
+
+  /**
+   * Skill deleteMany
+   */
+  export type SkillDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Skills to delete
+     */
+    where?: SkillWhereInput
+  }
+
+  /**
+   * Skill.users
+   */
+  export type Skill$usersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSkill
+     */
+    select?: UserSkillSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSkillInclude<ExtArgs> | null
+    where?: UserSkillWhereInput
+    orderBy?: UserSkillOrderByWithRelationInput | UserSkillOrderByWithRelationInput[]
+    cursor?: UserSkillWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserSkillScalarFieldEnum | UserSkillScalarFieldEnum[]
+  }
+
+  /**
+   * Skill without action
+   */
+  export type SkillDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Skill
+     */
+    select?: SkillSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SkillInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UserSkill
+   */
+
+  export type AggregateUserSkill = {
+    _count: UserSkillCountAggregateOutputType | null
+    _avg: UserSkillAvgAggregateOutputType | null
+    _sum: UserSkillSumAggregateOutputType | null
+    _min: UserSkillMinAggregateOutputType | null
+    _max: UserSkillMaxAggregateOutputType | null
+  }
+
+  export type UserSkillAvgAggregateOutputType = {
+    proficiency: number | null
+  }
+
+  export type UserSkillSumAggregateOutputType = {
+    proficiency: number | null
+  }
+
+  export type UserSkillMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    skillId: string | null
+    proficiency: number | null
+    createdAt: Date | null
+  }
+
+  export type UserSkillMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    skillId: string | null
+    proficiency: number | null
+    createdAt: Date | null
+  }
+
+  export type UserSkillCountAggregateOutputType = {
+    id: number
+    userId: number
+    skillId: number
+    proficiency: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type UserSkillAvgAggregateInputType = {
+    proficiency?: true
+  }
+
+  export type UserSkillSumAggregateInputType = {
+    proficiency?: true
+  }
+
+  export type UserSkillMinAggregateInputType = {
+    id?: true
+    userId?: true
+    skillId?: true
+    proficiency?: true
+    createdAt?: true
+  }
+
+  export type UserSkillMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    skillId?: true
+    proficiency?: true
+    createdAt?: true
+  }
+
+  export type UserSkillCountAggregateInputType = {
+    id?: true
+    userId?: true
+    skillId?: true
+    proficiency?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type UserSkillAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserSkill to aggregate.
+     */
+    where?: UserSkillWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserSkills to fetch.
+     */
+    orderBy?: UserSkillOrderByWithRelationInput | UserSkillOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserSkillWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserSkills from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserSkills.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserSkills
+    **/
+    _count?: true | UserSkillCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UserSkillAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserSkillSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserSkillMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserSkillMaxAggregateInputType
+  }
+
+  export type GetUserSkillAggregateType<T extends UserSkillAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserSkill]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserSkill[P]>
+      : GetScalarType<T[P], AggregateUserSkill[P]>
+  }
+
+
+
+
+  export type UserSkillGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserSkillWhereInput
+    orderBy?: UserSkillOrderByWithAggregationInput | UserSkillOrderByWithAggregationInput[]
+    by: UserSkillScalarFieldEnum[] | UserSkillScalarFieldEnum
+    having?: UserSkillScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserSkillCountAggregateInputType | true
+    _avg?: UserSkillAvgAggregateInputType
+    _sum?: UserSkillSumAggregateInputType
+    _min?: UserSkillMinAggregateInputType
+    _max?: UserSkillMaxAggregateInputType
+  }
+
+  export type UserSkillGroupByOutputType = {
+    id: string
+    userId: string
+    skillId: string
+    proficiency: number
+    createdAt: Date
+    _count: UserSkillCountAggregateOutputType | null
+    _avg: UserSkillAvgAggregateOutputType | null
+    _sum: UserSkillSumAggregateOutputType | null
+    _min: UserSkillMinAggregateOutputType | null
+    _max: UserSkillMaxAggregateOutputType | null
+  }
+
+  type GetUserSkillGroupByPayload<T extends UserSkillGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserSkillGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserSkillGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserSkillGroupByOutputType[P]>
+            : GetScalarType<T[P], UserSkillGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserSkillSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    skillId?: boolean
+    proficiency?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    skill?: boolean | SkillDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userSkill"]>
+
+  export type UserSkillSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    skillId?: boolean
+    proficiency?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    skill?: boolean | SkillDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userSkill"]>
+
+  export type UserSkillSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    skillId?: boolean
+    proficiency?: boolean
+    createdAt?: boolean
+  }
+
+  export type UserSkillInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    skill?: boolean | SkillDefaultArgs<ExtArgs>
+  }
+  export type UserSkillIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    skill?: boolean | SkillDefaultArgs<ExtArgs>
+  }
+
+  export type $UserSkillPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserSkill"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      skill: Prisma.$SkillPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      skillId: string
+      proficiency: number
+      createdAt: Date
+    }, ExtArgs["result"]["userSkill"]>
+    composites: {}
+  }
+
+  type UserSkillGetPayload<S extends boolean | null | undefined | UserSkillDefaultArgs> = $Result.GetResult<Prisma.$UserSkillPayload, S>
+
+  type UserSkillCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<UserSkillFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: UserSkillCountAggregateInputType | true
+    }
+
+  export interface UserSkillDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserSkill'], meta: { name: 'UserSkill' } }
+    /**
+     * Find zero or one UserSkill that matches the filter.
+     * @param {UserSkillFindUniqueArgs} args - Arguments to find a UserSkill
+     * @example
+     * // Get one UserSkill
+     * const userSkill = await prisma.userSkill.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserSkillFindUniqueArgs>(args: SelectSubset<T, UserSkillFindUniqueArgs<ExtArgs>>): Prisma__UserSkillClient<$Result.GetResult<Prisma.$UserSkillPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one UserSkill that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {UserSkillFindUniqueOrThrowArgs} args - Arguments to find a UserSkill
+     * @example
+     * // Get one UserSkill
+     * const userSkill = await prisma.userSkill.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserSkillFindUniqueOrThrowArgs>(args: SelectSubset<T, UserSkillFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserSkillClient<$Result.GetResult<Prisma.$UserSkillPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first UserSkill that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserSkillFindFirstArgs} args - Arguments to find a UserSkill
+     * @example
+     * // Get one UserSkill
+     * const userSkill = await prisma.userSkill.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserSkillFindFirstArgs>(args?: SelectSubset<T, UserSkillFindFirstArgs<ExtArgs>>): Prisma__UserSkillClient<$Result.GetResult<Prisma.$UserSkillPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first UserSkill that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserSkillFindFirstOrThrowArgs} args - Arguments to find a UserSkill
+     * @example
+     * // Get one UserSkill
+     * const userSkill = await prisma.userSkill.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserSkillFindFirstOrThrowArgs>(args?: SelectSubset<T, UserSkillFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserSkillClient<$Result.GetResult<Prisma.$UserSkillPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more UserSkills that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserSkillFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserSkills
+     * const userSkills = await prisma.userSkill.findMany()
+     * 
+     * // Get first 10 UserSkills
+     * const userSkills = await prisma.userSkill.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userSkillWithIdOnly = await prisma.userSkill.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserSkillFindManyArgs>(args?: SelectSubset<T, UserSkillFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserSkillPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a UserSkill.
+     * @param {UserSkillCreateArgs} args - Arguments to create a UserSkill.
+     * @example
+     * // Create one UserSkill
+     * const UserSkill = await prisma.userSkill.create({
+     *   data: {
+     *     // ... data to create a UserSkill
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserSkillCreateArgs>(args: SelectSubset<T, UserSkillCreateArgs<ExtArgs>>): Prisma__UserSkillClient<$Result.GetResult<Prisma.$UserSkillPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many UserSkills.
+     * @param {UserSkillCreateManyArgs} args - Arguments to create many UserSkills.
+     * @example
+     * // Create many UserSkills
+     * const userSkill = await prisma.userSkill.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserSkillCreateManyArgs>(args?: SelectSubset<T, UserSkillCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserSkills and returns the data saved in the database.
+     * @param {UserSkillCreateManyAndReturnArgs} args - Arguments to create many UserSkills.
+     * @example
+     * // Create many UserSkills
+     * const userSkill = await prisma.userSkill.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserSkills and only return the `id`
+     * const userSkillWithIdOnly = await prisma.userSkill.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserSkillCreateManyAndReturnArgs>(args?: SelectSubset<T, UserSkillCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserSkillPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a UserSkill.
+     * @param {UserSkillDeleteArgs} args - Arguments to delete one UserSkill.
+     * @example
+     * // Delete one UserSkill
+     * const UserSkill = await prisma.userSkill.delete({
+     *   where: {
+     *     // ... filter to delete one UserSkill
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserSkillDeleteArgs>(args: SelectSubset<T, UserSkillDeleteArgs<ExtArgs>>): Prisma__UserSkillClient<$Result.GetResult<Prisma.$UserSkillPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one UserSkill.
+     * @param {UserSkillUpdateArgs} args - Arguments to update one UserSkill.
+     * @example
+     * // Update one UserSkill
+     * const userSkill = await prisma.userSkill.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserSkillUpdateArgs>(args: SelectSubset<T, UserSkillUpdateArgs<ExtArgs>>): Prisma__UserSkillClient<$Result.GetResult<Prisma.$UserSkillPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more UserSkills.
+     * @param {UserSkillDeleteManyArgs} args - Arguments to filter UserSkills to delete.
+     * @example
+     * // Delete a few UserSkills
+     * const { count } = await prisma.userSkill.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserSkillDeleteManyArgs>(args?: SelectSubset<T, UserSkillDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserSkills.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserSkillUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserSkills
+     * const userSkill = await prisma.userSkill.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserSkillUpdateManyArgs>(args: SelectSubset<T, UserSkillUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one UserSkill.
+     * @param {UserSkillUpsertArgs} args - Arguments to update or create a UserSkill.
+     * @example
+     * // Update or create a UserSkill
+     * const userSkill = await prisma.userSkill.upsert({
+     *   create: {
+     *     // ... data to create a UserSkill
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserSkill we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserSkillUpsertArgs>(args: SelectSubset<T, UserSkillUpsertArgs<ExtArgs>>): Prisma__UserSkillClient<$Result.GetResult<Prisma.$UserSkillPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of UserSkills.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserSkillCountArgs} args - Arguments to filter UserSkills to count.
+     * @example
+     * // Count the number of UserSkills
+     * const count = await prisma.userSkill.count({
+     *   where: {
+     *     // ... the filter for the UserSkills we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserSkillCountArgs>(
+      args?: Subset<T, UserSkillCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserSkillCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserSkill.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserSkillAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserSkillAggregateArgs>(args: Subset<T, UserSkillAggregateArgs>): Prisma.PrismaPromise<GetUserSkillAggregateType<T>>
+
+    /**
+     * Group by UserSkill.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserSkillGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserSkillGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserSkillGroupByArgs['orderBy'] }
+        : { orderBy?: UserSkillGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserSkillGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserSkillGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserSkill model
+   */
+  readonly fields: UserSkillFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserSkill.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserSkillClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    skill<T extends SkillDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SkillDefaultArgs<ExtArgs>>): Prisma__SkillClient<$Result.GetResult<Prisma.$SkillPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserSkill model
+   */ 
+  interface UserSkillFieldRefs {
+    readonly id: FieldRef<"UserSkill", 'String'>
+    readonly userId: FieldRef<"UserSkill", 'String'>
+    readonly skillId: FieldRef<"UserSkill", 'String'>
+    readonly proficiency: FieldRef<"UserSkill", 'Int'>
+    readonly createdAt: FieldRef<"UserSkill", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserSkill findUnique
+   */
+  export type UserSkillFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSkill
+     */
+    select?: UserSkillSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSkillInclude<ExtArgs> | null
+    /**
+     * Filter, which UserSkill to fetch.
+     */
+    where: UserSkillWhereUniqueInput
+  }
+
+  /**
+   * UserSkill findUniqueOrThrow
+   */
+  export type UserSkillFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSkill
+     */
+    select?: UserSkillSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSkillInclude<ExtArgs> | null
+    /**
+     * Filter, which UserSkill to fetch.
+     */
+    where: UserSkillWhereUniqueInput
+  }
+
+  /**
+   * UserSkill findFirst
+   */
+  export type UserSkillFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSkill
+     */
+    select?: UserSkillSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSkillInclude<ExtArgs> | null
+    /**
+     * Filter, which UserSkill to fetch.
+     */
+    where?: UserSkillWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserSkills to fetch.
+     */
+    orderBy?: UserSkillOrderByWithRelationInput | UserSkillOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserSkills.
+     */
+    cursor?: UserSkillWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserSkills from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserSkills.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserSkills.
+     */
+    distinct?: UserSkillScalarFieldEnum | UserSkillScalarFieldEnum[]
+  }
+
+  /**
+   * UserSkill findFirstOrThrow
+   */
+  export type UserSkillFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSkill
+     */
+    select?: UserSkillSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSkillInclude<ExtArgs> | null
+    /**
+     * Filter, which UserSkill to fetch.
+     */
+    where?: UserSkillWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserSkills to fetch.
+     */
+    orderBy?: UserSkillOrderByWithRelationInput | UserSkillOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserSkills.
+     */
+    cursor?: UserSkillWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserSkills from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserSkills.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserSkills.
+     */
+    distinct?: UserSkillScalarFieldEnum | UserSkillScalarFieldEnum[]
+  }
+
+  /**
+   * UserSkill findMany
+   */
+  export type UserSkillFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSkill
+     */
+    select?: UserSkillSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSkillInclude<ExtArgs> | null
+    /**
+     * Filter, which UserSkills to fetch.
+     */
+    where?: UserSkillWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserSkills to fetch.
+     */
+    orderBy?: UserSkillOrderByWithRelationInput | UserSkillOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserSkills.
+     */
+    cursor?: UserSkillWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserSkills from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserSkills.
+     */
+    skip?: number
+    distinct?: UserSkillScalarFieldEnum | UserSkillScalarFieldEnum[]
+  }
+
+  /**
+   * UserSkill create
+   */
+  export type UserSkillCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSkill
+     */
+    select?: UserSkillSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSkillInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserSkill.
+     */
+    data: XOR<UserSkillCreateInput, UserSkillUncheckedCreateInput>
+  }
+
+  /**
+   * UserSkill createMany
+   */
+  export type UserSkillCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserSkills.
+     */
+    data: UserSkillCreateManyInput | UserSkillCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserSkill createManyAndReturn
+   */
+  export type UserSkillCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSkill
+     */
+    select?: UserSkillSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many UserSkills.
+     */
+    data: UserSkillCreateManyInput | UserSkillCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSkillIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserSkill update
+   */
+  export type UserSkillUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSkill
+     */
+    select?: UserSkillSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSkillInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserSkill.
+     */
+    data: XOR<UserSkillUpdateInput, UserSkillUncheckedUpdateInput>
+    /**
+     * Choose, which UserSkill to update.
+     */
+    where: UserSkillWhereUniqueInput
+  }
+
+  /**
+   * UserSkill updateMany
+   */
+  export type UserSkillUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserSkills.
+     */
+    data: XOR<UserSkillUpdateManyMutationInput, UserSkillUncheckedUpdateManyInput>
+    /**
+     * Filter which UserSkills to update
+     */
+    where?: UserSkillWhereInput
+  }
+
+  /**
+   * UserSkill upsert
+   */
+  export type UserSkillUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSkill
+     */
+    select?: UserSkillSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSkillInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserSkill to update in case it exists.
+     */
+    where: UserSkillWhereUniqueInput
+    /**
+     * In case the UserSkill found by the `where` argument doesn't exist, create a new UserSkill with this data.
+     */
+    create: XOR<UserSkillCreateInput, UserSkillUncheckedCreateInput>
+    /**
+     * In case the UserSkill was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserSkillUpdateInput, UserSkillUncheckedUpdateInput>
+  }
+
+  /**
+   * UserSkill delete
+   */
+  export type UserSkillDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSkill
+     */
+    select?: UserSkillSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSkillInclude<ExtArgs> | null
+    /**
+     * Filter which UserSkill to delete.
+     */
+    where: UserSkillWhereUniqueInput
+  }
+
+  /**
+   * UserSkill deleteMany
+   */
+  export type UserSkillDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserSkills to delete
+     */
+    where?: UserSkillWhereInput
+  }
+
+  /**
+   * UserSkill without action
+   */
+  export type UserSkillDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserSkill
+     */
+    select?: UserSkillSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserSkillInclude<ExtArgs> | null
   }
 
 
@@ -14780,6 +18200,7 @@ export namespace Prisma {
     description: string | null
     status: $Enums.TaskStatus | null
     progressPercent: number | null
+    billable: boolean | null
     startDate: Date | null
     endDate: Date | null
     assigneeId: string | null
@@ -14795,6 +18216,7 @@ export namespace Prisma {
     description: string | null
     status: $Enums.TaskStatus | null
     progressPercent: number | null
+    billable: boolean | null
     startDate: Date | null
     endDate: Date | null
     assigneeId: string | null
@@ -14810,6 +18232,7 @@ export namespace Prisma {
     description: number
     status: number
     progressPercent: number
+    billable: number
     startDate: number
     endDate: number
     assigneeId: number
@@ -14835,6 +18258,7 @@ export namespace Prisma {
     description?: true
     status?: true
     progressPercent?: true
+    billable?: true
     startDate?: true
     endDate?: true
     assigneeId?: true
@@ -14850,6 +18274,7 @@ export namespace Prisma {
     description?: true
     status?: true
     progressPercent?: true
+    billable?: true
     startDate?: true
     endDate?: true
     assigneeId?: true
@@ -14865,6 +18290,7 @@ export namespace Prisma {
     description?: true
     status?: true
     progressPercent?: true
+    billable?: true
     startDate?: true
     endDate?: true
     assigneeId?: true
@@ -14967,6 +18393,7 @@ export namespace Prisma {
     description: string | null
     status: $Enums.TaskStatus
     progressPercent: number
+    billable: boolean
     startDate: Date | null
     endDate: Date | null
     assigneeId: string | null
@@ -15001,6 +18428,7 @@ export namespace Prisma {
     description?: boolean
     status?: boolean
     progressPercent?: boolean
+    billable?: boolean
     startDate?: boolean
     endDate?: boolean
     assigneeId?: boolean
@@ -15023,6 +18451,7 @@ export namespace Prisma {
     description?: boolean
     status?: boolean
     progressPercent?: boolean
+    billable?: boolean
     startDate?: boolean
     endDate?: boolean
     assigneeId?: boolean
@@ -15041,6 +18470,7 @@ export namespace Prisma {
     description?: boolean
     status?: boolean
     progressPercent?: boolean
+    billable?: boolean
     startDate?: boolean
     endDate?: boolean
     assigneeId?: boolean
@@ -15081,6 +18511,7 @@ export namespace Prisma {
       description: string | null
       status: $Enums.TaskStatus
       progressPercent: number
+      billable: boolean
       startDate: Date | null
       endDate: Date | null
       assigneeId: string | null
@@ -15492,6 +18923,7 @@ export namespace Prisma {
     readonly description: FieldRef<"Task", 'String'>
     readonly status: FieldRef<"Task", 'TaskStatus'>
     readonly progressPercent: FieldRef<"Task", 'Int'>
+    readonly billable: FieldRef<"Task", 'Boolean'>
     readonly startDate: FieldRef<"Task", 'DateTime'>
     readonly endDate: FieldRef<"Task", 'DateTime'>
     readonly assigneeId: FieldRef<"Task", 'String'>
@@ -18835,10 +22267,12 @@ export namespace Prisma {
     role: 'role',
     title: 'title',
     dailyRate: 'dailyRate',
+    seniority: 'seniority',
     isActive: 'isActive',
     deletedAt: 'deletedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
+    businessUnitId: 'businessUnitId',
     managerId: 'managerId',
     principalId: 'principalId'
   };
@@ -19002,12 +22436,51 @@ export namespace Prisma {
     spentAt: 'spentAt',
     evidenceUrl: 'evidenceUrl',
     evidenceFileName: 'evidenceFileName',
+    status: 'status',
+    approvedById: 'approvedById',
+    approvedAt: 'approvedAt',
+    rejectionReason: 'rejectionReason',
     createdById: 'createdById',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
   export type ProjectExpenseScalarFieldEnum = (typeof ProjectExpenseScalarFieldEnum)[keyof typeof ProjectExpenseScalarFieldEnum]
+
+
+  export const BusinessUnitScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type BusinessUnitScalarFieldEnum = (typeof BusinessUnitScalarFieldEnum)[keyof typeof BusinessUnitScalarFieldEnum]
+
+
+  export const SkillScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    category: 'category',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SkillScalarFieldEnum = (typeof SkillScalarFieldEnum)[keyof typeof SkillScalarFieldEnum]
+
+
+  export const UserSkillScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    skillId: 'skillId',
+    proficiency: 'proficiency',
+    createdAt: 'createdAt'
+  };
+
+  export type UserSkillScalarFieldEnum = (typeof UserSkillScalarFieldEnum)[keyof typeof UserSkillScalarFieldEnum]
 
 
   export const ActivityScalarFieldEnum: {
@@ -19029,6 +22502,7 @@ export namespace Prisma {
     description: 'description',
     status: 'status',
     progressPercent: 'progressPercent',
+    billable: 'billable',
     startDate: 'startDate',
     endDate: 'endDate',
     assigneeId: 'assigneeId',
@@ -19173,6 +22647,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Seniority'
+   */
+  export type EnumSeniorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Seniority'>
+    
+
+
+  /**
+   * Reference to a field of type 'Seniority[]'
+   */
+  export type ListEnumSeniorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Seniority[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
@@ -19257,6 +22745,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'ExpenseStatus'
+   */
+  export type EnumExpenseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExpenseStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'ExpenseStatus[]'
+   */
+  export type ListEnumExpenseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExpenseStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'TaskStatus'
    */
   export type EnumTaskStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskStatus'>
@@ -19284,16 +22786,21 @@ export namespace Prisma {
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
     title?: StringNullableFilter<"User"> | string | null
     dailyRate?: FloatNullableFilter<"User"> | number | null
+    seniority?: EnumSeniorityNullableFilter<"User"> | $Enums.Seniority | null
     isActive?: BoolFilter<"User"> | boolean
     deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    businessUnitId?: StringNullableFilter<"User"> | string | null
     managerId?: StringNullableFilter<"User"> | string | null
     principalId?: StringNullableFilter<"User"> | string | null
+    businessUnit?: XOR<BusinessUnitNullableRelationFilter, BusinessUnitWhereInput> | null
     manager?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     reports?: UserListRelationFilter
     principal?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     supervisees?: UserListRelationFilter
+    skills?: UserSkillListRelationFilter
+    approvedExpenses?: ProjectExpenseListRelationFilter
     projectsAsSales?: ProjectListRelationFilter
     projectsAsPm?: ProjectListRelationFilter
     projectsAsTw?: ProjectListRelationFilter
@@ -19321,16 +22828,21 @@ export namespace Prisma {
     role?: SortOrder
     title?: SortOrderInput | SortOrder
     dailyRate?: SortOrderInput | SortOrder
+    seniority?: SortOrderInput | SortOrder
     isActive?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    businessUnitId?: SortOrderInput | SortOrder
     managerId?: SortOrderInput | SortOrder
     principalId?: SortOrderInput | SortOrder
+    businessUnit?: BusinessUnitOrderByWithRelationInput
     manager?: UserOrderByWithRelationInput
     reports?: UserOrderByRelationAggregateInput
     principal?: UserOrderByWithRelationInput
     supervisees?: UserOrderByRelationAggregateInput
+    skills?: UserSkillOrderByRelationAggregateInput
+    approvedExpenses?: ProjectExpenseOrderByRelationAggregateInput
     projectsAsSales?: ProjectOrderByRelationAggregateInput
     projectsAsPm?: ProjectOrderByRelationAggregateInput
     projectsAsTw?: ProjectOrderByRelationAggregateInput
@@ -19361,16 +22873,21 @@ export namespace Prisma {
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
     title?: StringNullableFilter<"User"> | string | null
     dailyRate?: FloatNullableFilter<"User"> | number | null
+    seniority?: EnumSeniorityNullableFilter<"User"> | $Enums.Seniority | null
     isActive?: BoolFilter<"User"> | boolean
     deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    businessUnitId?: StringNullableFilter<"User"> | string | null
     managerId?: StringNullableFilter<"User"> | string | null
     principalId?: StringNullableFilter<"User"> | string | null
+    businessUnit?: XOR<BusinessUnitNullableRelationFilter, BusinessUnitWhereInput> | null
     manager?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     reports?: UserListRelationFilter
     principal?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     supervisees?: UserListRelationFilter
+    skills?: UserSkillListRelationFilter
+    approvedExpenses?: ProjectExpenseListRelationFilter
     projectsAsSales?: ProjectListRelationFilter
     projectsAsPm?: ProjectListRelationFilter
     projectsAsTw?: ProjectListRelationFilter
@@ -19398,10 +22915,12 @@ export namespace Prisma {
     role?: SortOrder
     title?: SortOrderInput | SortOrder
     dailyRate?: SortOrderInput | SortOrder
+    seniority?: SortOrderInput | SortOrder
     isActive?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    businessUnitId?: SortOrderInput | SortOrder
     managerId?: SortOrderInput | SortOrder
     principalId?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -19422,10 +22941,12 @@ export namespace Prisma {
     role?: EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
     title?: StringNullableWithAggregatesFilter<"User"> | string | null
     dailyRate?: FloatNullableWithAggregatesFilter<"User"> | number | null
+    seniority?: EnumSeniorityNullableWithAggregatesFilter<"User"> | $Enums.Seniority | null
     isActive?: BoolWithAggregatesFilter<"User"> | boolean
     deletedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    businessUnitId?: StringNullableWithAggregatesFilter<"User"> | string | null
     managerId?: StringNullableWithAggregatesFilter<"User"> | string | null
     principalId?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
@@ -20236,10 +23757,15 @@ export namespace Prisma {
     spentAt?: DateTimeFilter<"ProjectExpense"> | Date | string
     evidenceUrl?: StringNullableFilter<"ProjectExpense"> | string | null
     evidenceFileName?: StringNullableFilter<"ProjectExpense"> | string | null
+    status?: EnumExpenseStatusFilter<"ProjectExpense"> | $Enums.ExpenseStatus
+    approvedById?: StringNullableFilter<"ProjectExpense"> | string | null
+    approvedAt?: DateTimeNullableFilter<"ProjectExpense"> | Date | string | null
+    rejectionReason?: StringNullableFilter<"ProjectExpense"> | string | null
     createdById?: StringNullableFilter<"ProjectExpense"> | string | null
     createdAt?: DateTimeFilter<"ProjectExpense"> | Date | string
     updatedAt?: DateTimeFilter<"ProjectExpense"> | Date | string
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    approvedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
   }
 
@@ -20252,10 +23778,15 @@ export namespace Prisma {
     spentAt?: SortOrder
     evidenceUrl?: SortOrderInput | SortOrder
     evidenceFileName?: SortOrderInput | SortOrder
+    status?: SortOrder
+    approvedById?: SortOrderInput | SortOrder
+    approvedAt?: SortOrderInput | SortOrder
+    rejectionReason?: SortOrderInput | SortOrder
     createdById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     project?: ProjectOrderByWithRelationInput
+    approvedBy?: UserOrderByWithRelationInput
     createdBy?: UserOrderByWithRelationInput
   }
 
@@ -20271,10 +23802,15 @@ export namespace Prisma {
     spentAt?: DateTimeFilter<"ProjectExpense"> | Date | string
     evidenceUrl?: StringNullableFilter<"ProjectExpense"> | string | null
     evidenceFileName?: StringNullableFilter<"ProjectExpense"> | string | null
+    status?: EnumExpenseStatusFilter<"ProjectExpense"> | $Enums.ExpenseStatus
+    approvedById?: StringNullableFilter<"ProjectExpense"> | string | null
+    approvedAt?: DateTimeNullableFilter<"ProjectExpense"> | Date | string | null
+    rejectionReason?: StringNullableFilter<"ProjectExpense"> | string | null
     createdById?: StringNullableFilter<"ProjectExpense"> | string | null
     createdAt?: DateTimeFilter<"ProjectExpense"> | Date | string
     updatedAt?: DateTimeFilter<"ProjectExpense"> | Date | string
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    approvedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
   }, "id">
 
@@ -20287,6 +23823,10 @@ export namespace Prisma {
     spentAt?: SortOrder
     evidenceUrl?: SortOrderInput | SortOrder
     evidenceFileName?: SortOrderInput | SortOrder
+    status?: SortOrder
+    approvedById?: SortOrderInput | SortOrder
+    approvedAt?: SortOrderInput | SortOrder
+    rejectionReason?: SortOrderInput | SortOrder
     createdById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -20309,9 +23849,194 @@ export namespace Prisma {
     spentAt?: DateTimeWithAggregatesFilter<"ProjectExpense"> | Date | string
     evidenceUrl?: StringNullableWithAggregatesFilter<"ProjectExpense"> | string | null
     evidenceFileName?: StringNullableWithAggregatesFilter<"ProjectExpense"> | string | null
+    status?: EnumExpenseStatusWithAggregatesFilter<"ProjectExpense"> | $Enums.ExpenseStatus
+    approvedById?: StringNullableWithAggregatesFilter<"ProjectExpense"> | string | null
+    approvedAt?: DateTimeNullableWithAggregatesFilter<"ProjectExpense"> | Date | string | null
+    rejectionReason?: StringNullableWithAggregatesFilter<"ProjectExpense"> | string | null
     createdById?: StringNullableWithAggregatesFilter<"ProjectExpense"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"ProjectExpense"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ProjectExpense"> | Date | string
+  }
+
+  export type BusinessUnitWhereInput = {
+    AND?: BusinessUnitWhereInput | BusinessUnitWhereInput[]
+    OR?: BusinessUnitWhereInput[]
+    NOT?: BusinessUnitWhereInput | BusinessUnitWhereInput[]
+    id?: StringFilter<"BusinessUnit"> | string
+    name?: StringFilter<"BusinessUnit"> | string
+    description?: StringNullableFilter<"BusinessUnit"> | string | null
+    isActive?: BoolFilter<"BusinessUnit"> | boolean
+    createdAt?: DateTimeFilter<"BusinessUnit"> | Date | string
+    updatedAt?: DateTimeFilter<"BusinessUnit"> | Date | string
+    users?: UserListRelationFilter
+  }
+
+  export type BusinessUnitOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    users?: UserOrderByRelationAggregateInput
+  }
+
+  export type BusinessUnitWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    name?: string
+    AND?: BusinessUnitWhereInput | BusinessUnitWhereInput[]
+    OR?: BusinessUnitWhereInput[]
+    NOT?: BusinessUnitWhereInput | BusinessUnitWhereInput[]
+    description?: StringNullableFilter<"BusinessUnit"> | string | null
+    isActive?: BoolFilter<"BusinessUnit"> | boolean
+    createdAt?: DateTimeFilter<"BusinessUnit"> | Date | string
+    updatedAt?: DateTimeFilter<"BusinessUnit"> | Date | string
+    users?: UserListRelationFilter
+  }, "id" | "name">
+
+  export type BusinessUnitOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: BusinessUnitCountOrderByAggregateInput
+    _max?: BusinessUnitMaxOrderByAggregateInput
+    _min?: BusinessUnitMinOrderByAggregateInput
+  }
+
+  export type BusinessUnitScalarWhereWithAggregatesInput = {
+    AND?: BusinessUnitScalarWhereWithAggregatesInput | BusinessUnitScalarWhereWithAggregatesInput[]
+    OR?: BusinessUnitScalarWhereWithAggregatesInput[]
+    NOT?: BusinessUnitScalarWhereWithAggregatesInput | BusinessUnitScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"BusinessUnit"> | string
+    name?: StringWithAggregatesFilter<"BusinessUnit"> | string
+    description?: StringNullableWithAggregatesFilter<"BusinessUnit"> | string | null
+    isActive?: BoolWithAggregatesFilter<"BusinessUnit"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"BusinessUnit"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"BusinessUnit"> | Date | string
+  }
+
+  export type SkillWhereInput = {
+    AND?: SkillWhereInput | SkillWhereInput[]
+    OR?: SkillWhereInput[]
+    NOT?: SkillWhereInput | SkillWhereInput[]
+    id?: StringFilter<"Skill"> | string
+    name?: StringFilter<"Skill"> | string
+    category?: StringNullableFilter<"Skill"> | string | null
+    isActive?: BoolFilter<"Skill"> | boolean
+    createdAt?: DateTimeFilter<"Skill"> | Date | string
+    updatedAt?: DateTimeFilter<"Skill"> | Date | string
+    users?: UserSkillListRelationFilter
+  }
+
+  export type SkillOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    category?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    users?: UserSkillOrderByRelationAggregateInput
+  }
+
+  export type SkillWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    name?: string
+    AND?: SkillWhereInput | SkillWhereInput[]
+    OR?: SkillWhereInput[]
+    NOT?: SkillWhereInput | SkillWhereInput[]
+    category?: StringNullableFilter<"Skill"> | string | null
+    isActive?: BoolFilter<"Skill"> | boolean
+    createdAt?: DateTimeFilter<"Skill"> | Date | string
+    updatedAt?: DateTimeFilter<"Skill"> | Date | string
+    users?: UserSkillListRelationFilter
+  }, "id" | "name">
+
+  export type SkillOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    category?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SkillCountOrderByAggregateInput
+    _max?: SkillMaxOrderByAggregateInput
+    _min?: SkillMinOrderByAggregateInput
+  }
+
+  export type SkillScalarWhereWithAggregatesInput = {
+    AND?: SkillScalarWhereWithAggregatesInput | SkillScalarWhereWithAggregatesInput[]
+    OR?: SkillScalarWhereWithAggregatesInput[]
+    NOT?: SkillScalarWhereWithAggregatesInput | SkillScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Skill"> | string
+    name?: StringWithAggregatesFilter<"Skill"> | string
+    category?: StringNullableWithAggregatesFilter<"Skill"> | string | null
+    isActive?: BoolWithAggregatesFilter<"Skill"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"Skill"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Skill"> | Date | string
+  }
+
+  export type UserSkillWhereInput = {
+    AND?: UserSkillWhereInput | UserSkillWhereInput[]
+    OR?: UserSkillWhereInput[]
+    NOT?: UserSkillWhereInput | UserSkillWhereInput[]
+    id?: StringFilter<"UserSkill"> | string
+    userId?: StringFilter<"UserSkill"> | string
+    skillId?: StringFilter<"UserSkill"> | string
+    proficiency?: IntFilter<"UserSkill"> | number
+    createdAt?: DateTimeFilter<"UserSkill"> | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
+    skill?: XOR<SkillRelationFilter, SkillWhereInput>
+  }
+
+  export type UserSkillOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    skillId?: SortOrder
+    proficiency?: SortOrder
+    createdAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    skill?: SkillOrderByWithRelationInput
+  }
+
+  export type UserSkillWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_skillId?: UserSkillUserIdSkillIdCompoundUniqueInput
+    AND?: UserSkillWhereInput | UserSkillWhereInput[]
+    OR?: UserSkillWhereInput[]
+    NOT?: UserSkillWhereInput | UserSkillWhereInput[]
+    userId?: StringFilter<"UserSkill"> | string
+    skillId?: StringFilter<"UserSkill"> | string
+    proficiency?: IntFilter<"UserSkill"> | number
+    createdAt?: DateTimeFilter<"UserSkill"> | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
+    skill?: XOR<SkillRelationFilter, SkillWhereInput>
+  }, "id" | "userId_skillId">
+
+  export type UserSkillOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    skillId?: SortOrder
+    proficiency?: SortOrder
+    createdAt?: SortOrder
+    _count?: UserSkillCountOrderByAggregateInput
+    _avg?: UserSkillAvgOrderByAggregateInput
+    _max?: UserSkillMaxOrderByAggregateInput
+    _min?: UserSkillMinOrderByAggregateInput
+    _sum?: UserSkillSumOrderByAggregateInput
+  }
+
+  export type UserSkillScalarWhereWithAggregatesInput = {
+    AND?: UserSkillScalarWhereWithAggregatesInput | UserSkillScalarWhereWithAggregatesInput[]
+    OR?: UserSkillScalarWhereWithAggregatesInput[]
+    NOT?: UserSkillScalarWhereWithAggregatesInput | UserSkillScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UserSkill"> | string
+    userId?: StringWithAggregatesFilter<"UserSkill"> | string
+    skillId?: StringWithAggregatesFilter<"UserSkill"> | string
+    proficiency?: IntWithAggregatesFilter<"UserSkill"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"UserSkill"> | Date | string
   }
 
   export type ActivityWhereInput = {
@@ -20387,6 +24112,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"Task"> | string | null
     status?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
     progressPercent?: IntFilter<"Task"> | number
+    billable?: BoolFilter<"Task"> | boolean
     startDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     endDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     assigneeId?: StringNullableFilter<"Task"> | string | null
@@ -20408,6 +24134,7 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     status?: SortOrder
     progressPercent?: SortOrder
+    billable?: SortOrder
     startDate?: SortOrderInput | SortOrder
     endDate?: SortOrderInput | SortOrder
     assigneeId?: SortOrderInput | SortOrder
@@ -20432,6 +24159,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"Task"> | string | null
     status?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
     progressPercent?: IntFilter<"Task"> | number
+    billable?: BoolFilter<"Task"> | boolean
     startDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     endDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     assigneeId?: StringNullableFilter<"Task"> | string | null
@@ -20453,6 +24181,7 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     status?: SortOrder
     progressPercent?: SortOrder
+    billable?: SortOrder
     startDate?: SortOrderInput | SortOrder
     endDate?: SortOrderInput | SortOrder
     assigneeId?: SortOrderInput | SortOrder
@@ -20476,6 +24205,7 @@ export namespace Prisma {
     description?: StringNullableWithAggregatesFilter<"Task"> | string | null
     status?: EnumTaskStatusWithAggregatesFilter<"Task"> | $Enums.TaskStatus
     progressPercent?: IntWithAggregatesFilter<"Task"> | number
+    billable?: BoolWithAggregatesFilter<"Task"> | boolean
     startDate?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
     endDate?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
     assigneeId?: StringNullableWithAggregatesFilter<"Task"> | string | null
@@ -20686,14 +24416,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
@@ -20721,14 +24455,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
@@ -20756,14 +24494,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
@@ -20791,14 +24533,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
@@ -20826,10 +24572,12 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
   }
@@ -20842,6 +24590,7 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20856,10 +24605,12 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -21749,9 +25500,13 @@ export namespace Prisma {
     spentAt?: Date | string
     evidenceUrl?: string | null
     evidenceFileName?: string | null
+    status?: $Enums.ExpenseStatus
+    approvedAt?: Date | string | null
+    rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutExpensesInput
+    approvedBy?: UserCreateNestedOneWithoutApprovedExpensesInput
     createdBy?: UserCreateNestedOneWithoutProjectExpensesInput
   }
 
@@ -21764,6 +25519,10 @@ export namespace Prisma {
     spentAt?: Date | string
     evidenceUrl?: string | null
     evidenceFileName?: string | null
+    status?: $Enums.ExpenseStatus
+    approvedById?: string | null
+    approvedAt?: Date | string | null
+    rejectionReason?: string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -21777,9 +25536,13 @@ export namespace Prisma {
     spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
     evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutExpensesNestedInput
+    approvedBy?: UserUpdateOneWithoutApprovedExpensesNestedInput
     createdBy?: UserUpdateOneWithoutProjectExpensesNestedInput
   }
 
@@ -21792,6 +25555,10 @@ export namespace Prisma {
     spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
     evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
+    approvedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21806,6 +25573,10 @@ export namespace Prisma {
     spentAt?: Date | string
     evidenceUrl?: string | null
     evidenceFileName?: string | null
+    status?: $Enums.ExpenseStatus
+    approvedById?: string | null
+    approvedAt?: Date | string | null
+    rejectionReason?: string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -21819,6 +25590,9 @@ export namespace Prisma {
     spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
     evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21832,9 +25606,201 @@ export namespace Prisma {
     spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
     evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
+    approvedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BusinessUnitCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserCreateNestedManyWithoutBusinessUnitInput
+  }
+
+  export type BusinessUnitUncheckedCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutBusinessUnitInput
+  }
+
+  export type BusinessUnitUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutBusinessUnitNestedInput
+  }
+
+  export type BusinessUnitUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutBusinessUnitNestedInput
+  }
+
+  export type BusinessUnitCreateManyInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BusinessUnitUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BusinessUnitUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SkillCreateInput = {
+    id?: string
+    name: string
+    category?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserSkillCreateNestedManyWithoutSkillInput
+  }
+
+  export type SkillUncheckedCreateInput = {
+    id?: string
+    name: string
+    category?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserSkillUncheckedCreateNestedManyWithoutSkillInput
+  }
+
+  export type SkillUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserSkillUpdateManyWithoutSkillNestedInput
+  }
+
+  export type SkillUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserSkillUncheckedUpdateManyWithoutSkillNestedInput
+  }
+
+  export type SkillCreateManyInput = {
+    id?: string
+    name: string
+    category?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SkillUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SkillUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserSkillCreateInput = {
+    id?: string
+    proficiency?: number
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutSkillsInput
+    skill: SkillCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserSkillUncheckedCreateInput = {
+    id?: string
+    userId: string
+    skillId: string
+    proficiency?: number
+    createdAt?: Date | string
+  }
+
+  export type UserSkillUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    proficiency?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutSkillsNestedInput
+    skill?: SkillUpdateOneRequiredWithoutUsersNestedInput
+  }
+
+  export type UserSkillUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    skillId?: StringFieldUpdateOperationsInput | string
+    proficiency?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserSkillCreateManyInput = {
+    id?: string
+    userId: string
+    skillId: string
+    proficiency?: number
+    createdAt?: Date | string
+  }
+
+  export type UserSkillUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    proficiency?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserSkillUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    skillId?: StringFieldUpdateOperationsInput | string
+    proficiency?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ActivityCreateInput = {
@@ -21904,6 +25870,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.TaskStatus
     progressPercent?: number
+    billable?: boolean
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -21923,6 +25890,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.TaskStatus
     progressPercent?: number
+    billable?: boolean
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -21940,6 +25908,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21959,6 +25928,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21977,6 +25947,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.TaskStatus
     progressPercent?: number
+    billable?: boolean
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -21991,6 +25962,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22004,6 +25976,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22251,6 +26224,13 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
+  export type EnumSeniorityNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.Seniority | EnumSeniorityFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Seniority[] | ListEnumSeniorityFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Seniority[] | ListEnumSeniorityFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSeniorityNullableFilter<$PrismaModel> | $Enums.Seniority | null
+  }
+
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -22278,6 +26258,11 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type BusinessUnitNullableRelationFilter = {
+    is?: BusinessUnitWhereInput | null
+    isNot?: BusinessUnitWhereInput | null
+  }
+
   export type UserNullableRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
@@ -22287,6 +26272,18 @@ export namespace Prisma {
     every?: UserWhereInput
     some?: UserWhereInput
     none?: UserWhereInput
+  }
+
+  export type UserSkillListRelationFilter = {
+    every?: UserSkillWhereInput
+    some?: UserSkillWhereInput
+    none?: UserSkillWhereInput
+  }
+
+  export type ProjectExpenseListRelationFilter = {
+    every?: ProjectExpenseWhereInput
+    some?: ProjectExpenseWhereInput
+    none?: ProjectExpenseWhereInput
   }
 
   export type ProjectListRelationFilter = {
@@ -22325,12 +26322,6 @@ export namespace Prisma {
     none?: AuditLogWhereInput
   }
 
-  export type ProjectExpenseListRelationFilter = {
-    every?: ProjectExpenseWhereInput
-    some?: ProjectExpenseWhereInput
-    none?: ProjectExpenseWhereInput
-  }
-
   export type TaskListRelationFilter = {
     every?: TaskWhereInput
     some?: TaskWhereInput
@@ -22364,6 +26355,14 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type UserSkillOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProjectExpenseOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type ProjectOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -22385,10 +26384,6 @@ export namespace Prisma {
   }
 
   export type AuditLogOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type ProjectExpenseOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -22416,10 +26411,12 @@ export namespace Prisma {
     role?: SortOrder
     title?: SortOrder
     dailyRate?: SortOrder
+    seniority?: SortOrder
     isActive?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    businessUnitId?: SortOrder
     managerId?: SortOrder
     principalId?: SortOrder
   }
@@ -22436,10 +26433,12 @@ export namespace Prisma {
     role?: SortOrder
     title?: SortOrder
     dailyRate?: SortOrder
+    seniority?: SortOrder
     isActive?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    businessUnitId?: SortOrder
     managerId?: SortOrder
     principalId?: SortOrder
   }
@@ -22452,10 +26451,12 @@ export namespace Prisma {
     role?: SortOrder
     title?: SortOrder
     dailyRate?: SortOrder
+    seniority?: SortOrder
     isActive?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    businessUnitId?: SortOrder
     managerId?: SortOrder
     principalId?: SortOrder
   }
@@ -22524,6 +26525,16 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter<$PrismaModel>
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type EnumSeniorityNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Seniority | EnumSeniorityFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Seniority[] | ListEnumSeniorityFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Seniority[] | ListEnumSeniorityFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSeniorityNullableWithAggregatesFilter<$PrismaModel> | $Enums.Seniority | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumSeniorityNullableFilter<$PrismaModel>
+    _max?: NestedEnumSeniorityNullableFilter<$PrismaModel>
   }
 
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -23205,6 +27216,13 @@ export namespace Prisma {
     _max?: NestedEnumDocumentTypeFilter<$PrismaModel>
   }
 
+  export type EnumExpenseStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExpenseStatus | EnumExpenseStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ExpenseStatus[] | ListEnumExpenseStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ExpenseStatus[] | ListEnumExpenseStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumExpenseStatusFilter<$PrismaModel> | $Enums.ExpenseStatus
+  }
+
   export type ProjectExpenseCountOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
@@ -23214,6 +27232,10 @@ export namespace Prisma {
     spentAt?: SortOrder
     evidenceUrl?: SortOrder
     evidenceFileName?: SortOrder
+    status?: SortOrder
+    approvedById?: SortOrder
+    approvedAt?: SortOrder
+    rejectionReason?: SortOrder
     createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -23232,6 +27254,10 @@ export namespace Prisma {
     spentAt?: SortOrder
     evidenceUrl?: SortOrder
     evidenceFileName?: SortOrder
+    status?: SortOrder
+    approvedById?: SortOrder
+    approvedAt?: SortOrder
+    rejectionReason?: SortOrder
     createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -23246,6 +27272,10 @@ export namespace Prisma {
     spentAt?: SortOrder
     evidenceUrl?: SortOrder
     evidenceFileName?: SortOrder
+    status?: SortOrder
+    approvedById?: SortOrder
+    approvedAt?: SortOrder
+    rejectionReason?: SortOrder
     createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -23253,6 +27283,112 @@ export namespace Prisma {
 
   export type ProjectExpenseSumOrderByAggregateInput = {
     amount?: SortOrder
+  }
+
+  export type EnumExpenseStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExpenseStatus | EnumExpenseStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ExpenseStatus[] | ListEnumExpenseStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ExpenseStatus[] | ListEnumExpenseStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumExpenseStatusWithAggregatesFilter<$PrismaModel> | $Enums.ExpenseStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumExpenseStatusFilter<$PrismaModel>
+    _max?: NestedEnumExpenseStatusFilter<$PrismaModel>
+  }
+
+  export type BusinessUnitCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BusinessUnitMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BusinessUnitMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SkillCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    category?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SkillMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    category?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SkillMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    category?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SkillRelationFilter = {
+    is?: SkillWhereInput
+    isNot?: SkillWhereInput
+  }
+
+  export type UserSkillUserIdSkillIdCompoundUniqueInput = {
+    userId: string
+    skillId: string
+  }
+
+  export type UserSkillCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    skillId?: SortOrder
+    proficiency?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type UserSkillAvgOrderByAggregateInput = {
+    proficiency?: SortOrder
+  }
+
+  export type UserSkillMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    skillId?: SortOrder
+    proficiency?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type UserSkillMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    skillId?: SortOrder
+    proficiency?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type UserSkillSumOrderByAggregateInput = {
+    proficiency?: SortOrder
   }
 
   export type ProjectNullableRelationFilter = {
@@ -23301,6 +27437,7 @@ export namespace Prisma {
     description?: SortOrder
     status?: SortOrder
     progressPercent?: SortOrder
+    billable?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
     assigneeId?: SortOrder
@@ -23320,6 +27457,7 @@ export namespace Prisma {
     description?: SortOrder
     status?: SortOrder
     progressPercent?: SortOrder
+    billable?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
     assigneeId?: SortOrder
@@ -23335,6 +27473,7 @@ export namespace Prisma {
     description?: SortOrder
     status?: SortOrder
     progressPercent?: SortOrder
+    billable?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
     assigneeId?: SortOrder
@@ -23459,6 +27598,12 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type BusinessUnitCreateNestedOneWithoutUsersInput = {
+    create?: XOR<BusinessUnitCreateWithoutUsersInput, BusinessUnitUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: BusinessUnitCreateOrConnectWithoutUsersInput
+    connect?: BusinessUnitWhereUniqueInput
+  }
+
   export type UserCreateNestedOneWithoutReportsInput = {
     create?: XOR<UserCreateWithoutReportsInput, UserUncheckedCreateWithoutReportsInput>
     connectOrCreate?: UserCreateOrConnectWithoutReportsInput
@@ -23483,6 +27628,20 @@ export namespace Prisma {
     connectOrCreate?: UserCreateOrConnectWithoutPrincipalInput | UserCreateOrConnectWithoutPrincipalInput[]
     createMany?: UserCreateManyPrincipalInputEnvelope
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type UserSkillCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserSkillCreateWithoutUserInput, UserSkillUncheckedCreateWithoutUserInput> | UserSkillCreateWithoutUserInput[] | UserSkillUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserSkillCreateOrConnectWithoutUserInput | UserSkillCreateOrConnectWithoutUserInput[]
+    createMany?: UserSkillCreateManyUserInputEnvelope
+    connect?: UserSkillWhereUniqueInput | UserSkillWhereUniqueInput[]
+  }
+
+  export type ProjectExpenseCreateNestedManyWithoutApprovedByInput = {
+    create?: XOR<ProjectExpenseCreateWithoutApprovedByInput, ProjectExpenseUncheckedCreateWithoutApprovedByInput> | ProjectExpenseCreateWithoutApprovedByInput[] | ProjectExpenseUncheckedCreateWithoutApprovedByInput[]
+    connectOrCreate?: ProjectExpenseCreateOrConnectWithoutApprovedByInput | ProjectExpenseCreateOrConnectWithoutApprovedByInput[]
+    createMany?: ProjectExpenseCreateManyApprovedByInputEnvelope
+    connect?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
   }
 
   export type ProjectCreateNestedManyWithoutSalesInput = {
@@ -23616,6 +27775,20 @@ export namespace Prisma {
     connectOrCreate?: UserCreateOrConnectWithoutPrincipalInput | UserCreateOrConnectWithoutPrincipalInput[]
     createMany?: UserCreateManyPrincipalInputEnvelope
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type UserSkillUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserSkillCreateWithoutUserInput, UserSkillUncheckedCreateWithoutUserInput> | UserSkillCreateWithoutUserInput[] | UserSkillUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserSkillCreateOrConnectWithoutUserInput | UserSkillCreateOrConnectWithoutUserInput[]
+    createMany?: UserSkillCreateManyUserInputEnvelope
+    connect?: UserSkillWhereUniqueInput | UserSkillWhereUniqueInput[]
+  }
+
+  export type ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput = {
+    create?: XOR<ProjectExpenseCreateWithoutApprovedByInput, ProjectExpenseUncheckedCreateWithoutApprovedByInput> | ProjectExpenseCreateWithoutApprovedByInput[] | ProjectExpenseUncheckedCreateWithoutApprovedByInput[]
+    connectOrCreate?: ProjectExpenseCreateOrConnectWithoutApprovedByInput | ProjectExpenseCreateOrConnectWithoutApprovedByInput[]
+    createMany?: ProjectExpenseCreateManyApprovedByInputEnvelope
+    connect?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
   }
 
   export type ProjectUncheckedCreateNestedManyWithoutSalesInput = {
@@ -23757,6 +27930,10 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type NullableEnumSeniorityFieldUpdateOperationsInput = {
+    set?: $Enums.Seniority | null
+  }
+
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
   }
@@ -23767,6 +27944,16 @@ export namespace Prisma {
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type BusinessUnitUpdateOneWithoutUsersNestedInput = {
+    create?: XOR<BusinessUnitCreateWithoutUsersInput, BusinessUnitUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: BusinessUnitCreateOrConnectWithoutUsersInput
+    upsert?: BusinessUnitUpsertWithoutUsersInput
+    disconnect?: BusinessUnitWhereInput | boolean
+    delete?: BusinessUnitWhereInput | boolean
+    connect?: BusinessUnitWhereUniqueInput
+    update?: XOR<XOR<BusinessUnitUpdateToOneWithWhereWithoutUsersInput, BusinessUnitUpdateWithoutUsersInput>, BusinessUnitUncheckedUpdateWithoutUsersInput>
   }
 
   export type UserUpdateOneWithoutReportsNestedInput = {
@@ -23815,6 +28002,34 @@ export namespace Prisma {
     update?: UserUpdateWithWhereUniqueWithoutPrincipalInput | UserUpdateWithWhereUniqueWithoutPrincipalInput[]
     updateMany?: UserUpdateManyWithWhereWithoutPrincipalInput | UserUpdateManyWithWhereWithoutPrincipalInput[]
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type UserSkillUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserSkillCreateWithoutUserInput, UserSkillUncheckedCreateWithoutUserInput> | UserSkillCreateWithoutUserInput[] | UserSkillUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserSkillCreateOrConnectWithoutUserInput | UserSkillCreateOrConnectWithoutUserInput[]
+    upsert?: UserSkillUpsertWithWhereUniqueWithoutUserInput | UserSkillUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserSkillCreateManyUserInputEnvelope
+    set?: UserSkillWhereUniqueInput | UserSkillWhereUniqueInput[]
+    disconnect?: UserSkillWhereUniqueInput | UserSkillWhereUniqueInput[]
+    delete?: UserSkillWhereUniqueInput | UserSkillWhereUniqueInput[]
+    connect?: UserSkillWhereUniqueInput | UserSkillWhereUniqueInput[]
+    update?: UserSkillUpdateWithWhereUniqueWithoutUserInput | UserSkillUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserSkillUpdateManyWithWhereWithoutUserInput | UserSkillUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserSkillScalarWhereInput | UserSkillScalarWhereInput[]
+  }
+
+  export type ProjectExpenseUpdateManyWithoutApprovedByNestedInput = {
+    create?: XOR<ProjectExpenseCreateWithoutApprovedByInput, ProjectExpenseUncheckedCreateWithoutApprovedByInput> | ProjectExpenseCreateWithoutApprovedByInput[] | ProjectExpenseUncheckedCreateWithoutApprovedByInput[]
+    connectOrCreate?: ProjectExpenseCreateOrConnectWithoutApprovedByInput | ProjectExpenseCreateOrConnectWithoutApprovedByInput[]
+    upsert?: ProjectExpenseUpsertWithWhereUniqueWithoutApprovedByInput | ProjectExpenseUpsertWithWhereUniqueWithoutApprovedByInput[]
+    createMany?: ProjectExpenseCreateManyApprovedByInputEnvelope
+    set?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    disconnect?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    delete?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    connect?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    update?: ProjectExpenseUpdateWithWhereUniqueWithoutApprovedByInput | ProjectExpenseUpdateWithWhereUniqueWithoutApprovedByInput[]
+    updateMany?: ProjectExpenseUpdateManyWithWhereWithoutApprovedByInput | ProjectExpenseUpdateManyWithWhereWithoutApprovedByInput[]
+    deleteMany?: ProjectExpenseScalarWhereInput | ProjectExpenseScalarWhereInput[]
   }
 
   export type ProjectUpdateManyWithoutSalesNestedInput = {
@@ -24081,6 +28296,34 @@ export namespace Prisma {
     update?: UserUpdateWithWhereUniqueWithoutPrincipalInput | UserUpdateWithWhereUniqueWithoutPrincipalInput[]
     updateMany?: UserUpdateManyWithWhereWithoutPrincipalInput | UserUpdateManyWithWhereWithoutPrincipalInput[]
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type UserSkillUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserSkillCreateWithoutUserInput, UserSkillUncheckedCreateWithoutUserInput> | UserSkillCreateWithoutUserInput[] | UserSkillUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserSkillCreateOrConnectWithoutUserInput | UserSkillCreateOrConnectWithoutUserInput[]
+    upsert?: UserSkillUpsertWithWhereUniqueWithoutUserInput | UserSkillUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserSkillCreateManyUserInputEnvelope
+    set?: UserSkillWhereUniqueInput | UserSkillWhereUniqueInput[]
+    disconnect?: UserSkillWhereUniqueInput | UserSkillWhereUniqueInput[]
+    delete?: UserSkillWhereUniqueInput | UserSkillWhereUniqueInput[]
+    connect?: UserSkillWhereUniqueInput | UserSkillWhereUniqueInput[]
+    update?: UserSkillUpdateWithWhereUniqueWithoutUserInput | UserSkillUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserSkillUpdateManyWithWhereWithoutUserInput | UserSkillUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserSkillScalarWhereInput | UserSkillScalarWhereInput[]
+  }
+
+  export type ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput = {
+    create?: XOR<ProjectExpenseCreateWithoutApprovedByInput, ProjectExpenseUncheckedCreateWithoutApprovedByInput> | ProjectExpenseCreateWithoutApprovedByInput[] | ProjectExpenseUncheckedCreateWithoutApprovedByInput[]
+    connectOrCreate?: ProjectExpenseCreateOrConnectWithoutApprovedByInput | ProjectExpenseCreateOrConnectWithoutApprovedByInput[]
+    upsert?: ProjectExpenseUpsertWithWhereUniqueWithoutApprovedByInput | ProjectExpenseUpsertWithWhereUniqueWithoutApprovedByInput[]
+    createMany?: ProjectExpenseCreateManyApprovedByInputEnvelope
+    set?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    disconnect?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    delete?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    connect?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    update?: ProjectExpenseUpdateWithWhereUniqueWithoutApprovedByInput | ProjectExpenseUpdateWithWhereUniqueWithoutApprovedByInput[]
+    updateMany?: ProjectExpenseUpdateManyWithWhereWithoutApprovedByInput | ProjectExpenseUpdateManyWithWhereWithoutApprovedByInput[]
+    deleteMany?: ProjectExpenseScalarWhereInput | ProjectExpenseScalarWhereInput[]
   }
 
   export type ProjectUncheckedUpdateManyWithoutSalesNestedInput = {
@@ -24933,10 +29176,20 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput
   }
 
+  export type UserCreateNestedOneWithoutApprovedExpensesInput = {
+    create?: XOR<UserCreateWithoutApprovedExpensesInput, UserUncheckedCreateWithoutApprovedExpensesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutApprovedExpensesInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type UserCreateNestedOneWithoutProjectExpensesInput = {
     create?: XOR<UserCreateWithoutProjectExpensesInput, UserUncheckedCreateWithoutProjectExpensesInput>
     connectOrCreate?: UserCreateOrConnectWithoutProjectExpensesInput
     connect?: UserWhereUniqueInput
+  }
+
+  export type EnumExpenseStatusFieldUpdateOperationsInput = {
+    set?: $Enums.ExpenseStatus
   }
 
   export type ProjectUpdateOneRequiredWithoutExpensesNestedInput = {
@@ -24947,6 +29200,16 @@ export namespace Prisma {
     update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutExpensesInput, ProjectUpdateWithoutExpensesInput>, ProjectUncheckedUpdateWithoutExpensesInput>
   }
 
+  export type UserUpdateOneWithoutApprovedExpensesNestedInput = {
+    create?: XOR<UserCreateWithoutApprovedExpensesInput, UserUncheckedCreateWithoutApprovedExpensesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutApprovedExpensesInput
+    upsert?: UserUpsertWithoutApprovedExpensesInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutApprovedExpensesInput, UserUpdateWithoutApprovedExpensesInput>, UserUncheckedUpdateWithoutApprovedExpensesInput>
+  }
+
   export type UserUpdateOneWithoutProjectExpensesNestedInput = {
     create?: XOR<UserCreateWithoutProjectExpensesInput, UserUncheckedCreateWithoutProjectExpensesInput>
     connectOrCreate?: UserCreateOrConnectWithoutProjectExpensesInput
@@ -24955,6 +29218,118 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProjectExpensesInput, UserUpdateWithoutProjectExpensesInput>, UserUncheckedUpdateWithoutProjectExpensesInput>
+  }
+
+  export type UserCreateNestedManyWithoutBusinessUnitInput = {
+    create?: XOR<UserCreateWithoutBusinessUnitInput, UserUncheckedCreateWithoutBusinessUnitInput> | UserCreateWithoutBusinessUnitInput[] | UserUncheckedCreateWithoutBusinessUnitInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutBusinessUnitInput | UserCreateOrConnectWithoutBusinessUnitInput[]
+    createMany?: UserCreateManyBusinessUnitInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type UserUncheckedCreateNestedManyWithoutBusinessUnitInput = {
+    create?: XOR<UserCreateWithoutBusinessUnitInput, UserUncheckedCreateWithoutBusinessUnitInput> | UserCreateWithoutBusinessUnitInput[] | UserUncheckedCreateWithoutBusinessUnitInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutBusinessUnitInput | UserCreateOrConnectWithoutBusinessUnitInput[]
+    createMany?: UserCreateManyBusinessUnitInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type UserUpdateManyWithoutBusinessUnitNestedInput = {
+    create?: XOR<UserCreateWithoutBusinessUnitInput, UserUncheckedCreateWithoutBusinessUnitInput> | UserCreateWithoutBusinessUnitInput[] | UserUncheckedCreateWithoutBusinessUnitInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutBusinessUnitInput | UserCreateOrConnectWithoutBusinessUnitInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutBusinessUnitInput | UserUpsertWithWhereUniqueWithoutBusinessUnitInput[]
+    createMany?: UserCreateManyBusinessUnitInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutBusinessUnitInput | UserUpdateWithWhereUniqueWithoutBusinessUnitInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutBusinessUnitInput | UserUpdateManyWithWhereWithoutBusinessUnitInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type UserUncheckedUpdateManyWithoutBusinessUnitNestedInput = {
+    create?: XOR<UserCreateWithoutBusinessUnitInput, UserUncheckedCreateWithoutBusinessUnitInput> | UserCreateWithoutBusinessUnitInput[] | UserUncheckedCreateWithoutBusinessUnitInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutBusinessUnitInput | UserCreateOrConnectWithoutBusinessUnitInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutBusinessUnitInput | UserUpsertWithWhereUniqueWithoutBusinessUnitInput[]
+    createMany?: UserCreateManyBusinessUnitInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutBusinessUnitInput | UserUpdateWithWhereUniqueWithoutBusinessUnitInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutBusinessUnitInput | UserUpdateManyWithWhereWithoutBusinessUnitInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type UserSkillCreateNestedManyWithoutSkillInput = {
+    create?: XOR<UserSkillCreateWithoutSkillInput, UserSkillUncheckedCreateWithoutSkillInput> | UserSkillCreateWithoutSkillInput[] | UserSkillUncheckedCreateWithoutSkillInput[]
+    connectOrCreate?: UserSkillCreateOrConnectWithoutSkillInput | UserSkillCreateOrConnectWithoutSkillInput[]
+    createMany?: UserSkillCreateManySkillInputEnvelope
+    connect?: UserSkillWhereUniqueInput | UserSkillWhereUniqueInput[]
+  }
+
+  export type UserSkillUncheckedCreateNestedManyWithoutSkillInput = {
+    create?: XOR<UserSkillCreateWithoutSkillInput, UserSkillUncheckedCreateWithoutSkillInput> | UserSkillCreateWithoutSkillInput[] | UserSkillUncheckedCreateWithoutSkillInput[]
+    connectOrCreate?: UserSkillCreateOrConnectWithoutSkillInput | UserSkillCreateOrConnectWithoutSkillInput[]
+    createMany?: UserSkillCreateManySkillInputEnvelope
+    connect?: UserSkillWhereUniqueInput | UserSkillWhereUniqueInput[]
+  }
+
+  export type UserSkillUpdateManyWithoutSkillNestedInput = {
+    create?: XOR<UserSkillCreateWithoutSkillInput, UserSkillUncheckedCreateWithoutSkillInput> | UserSkillCreateWithoutSkillInput[] | UserSkillUncheckedCreateWithoutSkillInput[]
+    connectOrCreate?: UserSkillCreateOrConnectWithoutSkillInput | UserSkillCreateOrConnectWithoutSkillInput[]
+    upsert?: UserSkillUpsertWithWhereUniqueWithoutSkillInput | UserSkillUpsertWithWhereUniqueWithoutSkillInput[]
+    createMany?: UserSkillCreateManySkillInputEnvelope
+    set?: UserSkillWhereUniqueInput | UserSkillWhereUniqueInput[]
+    disconnect?: UserSkillWhereUniqueInput | UserSkillWhereUniqueInput[]
+    delete?: UserSkillWhereUniqueInput | UserSkillWhereUniqueInput[]
+    connect?: UserSkillWhereUniqueInput | UserSkillWhereUniqueInput[]
+    update?: UserSkillUpdateWithWhereUniqueWithoutSkillInput | UserSkillUpdateWithWhereUniqueWithoutSkillInput[]
+    updateMany?: UserSkillUpdateManyWithWhereWithoutSkillInput | UserSkillUpdateManyWithWhereWithoutSkillInput[]
+    deleteMany?: UserSkillScalarWhereInput | UserSkillScalarWhereInput[]
+  }
+
+  export type UserSkillUncheckedUpdateManyWithoutSkillNestedInput = {
+    create?: XOR<UserSkillCreateWithoutSkillInput, UserSkillUncheckedCreateWithoutSkillInput> | UserSkillCreateWithoutSkillInput[] | UserSkillUncheckedCreateWithoutSkillInput[]
+    connectOrCreate?: UserSkillCreateOrConnectWithoutSkillInput | UserSkillCreateOrConnectWithoutSkillInput[]
+    upsert?: UserSkillUpsertWithWhereUniqueWithoutSkillInput | UserSkillUpsertWithWhereUniqueWithoutSkillInput[]
+    createMany?: UserSkillCreateManySkillInputEnvelope
+    set?: UserSkillWhereUniqueInput | UserSkillWhereUniqueInput[]
+    disconnect?: UserSkillWhereUniqueInput | UserSkillWhereUniqueInput[]
+    delete?: UserSkillWhereUniqueInput | UserSkillWhereUniqueInput[]
+    connect?: UserSkillWhereUniqueInput | UserSkillWhereUniqueInput[]
+    update?: UserSkillUpdateWithWhereUniqueWithoutSkillInput | UserSkillUpdateWithWhereUniqueWithoutSkillInput[]
+    updateMany?: UserSkillUpdateManyWithWhereWithoutSkillInput | UserSkillUpdateManyWithWhereWithoutSkillInput[]
+    deleteMany?: UserSkillScalarWhereInput | UserSkillScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutSkillsInput = {
+    create?: XOR<UserCreateWithoutSkillsInput, UserUncheckedCreateWithoutSkillsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSkillsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type SkillCreateNestedOneWithoutUsersInput = {
+    create?: XOR<SkillCreateWithoutUsersInput, SkillUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: SkillCreateOrConnectWithoutUsersInput
+    connect?: SkillWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutSkillsNestedInput = {
+    create?: XOR<UserCreateWithoutSkillsInput, UserUncheckedCreateWithoutSkillsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSkillsInput
+    upsert?: UserUpsertWithoutSkillsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSkillsInput, UserUpdateWithoutSkillsInput>, UserUncheckedUpdateWithoutSkillsInput>
+  }
+
+  export type SkillUpdateOneRequiredWithoutUsersNestedInput = {
+    create?: XOR<SkillCreateWithoutUsersInput, SkillUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: SkillCreateOrConnectWithoutUsersInput
+    upsert?: SkillUpsertWithoutUsersInput
+    connect?: SkillWhereUniqueInput
+    update?: XOR<XOR<SkillUpdateToOneWithWhereWithoutUsersInput, SkillUpdateWithoutUsersInput>, SkillUncheckedUpdateWithoutUsersInput>
   }
 
   export type UserCreateNestedOneWithoutActivitiesInput = {
@@ -25281,6 +29656,13 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedEnumSeniorityNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.Seniority | EnumSeniorityFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Seniority[] | ListEnumSeniorityFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Seniority[] | ListEnumSeniorityFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSeniorityNullableFilter<$PrismaModel> | $Enums.Seniority | null
+  }
+
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -25388,6 +29770,16 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter<$PrismaModel>
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSeniorityNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Seniority | EnumSeniorityFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Seniority[] | ListEnumSeniorityFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.Seniority[] | ListEnumSeniorityFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSeniorityNullableWithAggregatesFilter<$PrismaModel> | $Enums.Seniority | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumSeniorityNullableFilter<$PrismaModel>
+    _max?: NestedEnumSeniorityNullableFilter<$PrismaModel>
   }
 
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -25564,6 +29956,23 @@ export namespace Prisma {
     _max?: NestedEnumDocumentTypeFilter<$PrismaModel>
   }
 
+  export type NestedEnumExpenseStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExpenseStatus | EnumExpenseStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ExpenseStatus[] | ListEnumExpenseStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ExpenseStatus[] | ListEnumExpenseStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumExpenseStatusFilter<$PrismaModel> | $Enums.ExpenseStatus
+  }
+
+  export type NestedEnumExpenseStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ExpenseStatus | EnumExpenseStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ExpenseStatus[] | ListEnumExpenseStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ExpenseStatus[] | ListEnumExpenseStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumExpenseStatusWithAggregatesFilter<$PrismaModel> | $Enums.ExpenseStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumExpenseStatusFilter<$PrismaModel>
+    _max?: NestedEnumExpenseStatusFilter<$PrismaModel>
+  }
+
   export type NestedEnumTaskStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.TaskStatus | EnumTaskStatusFieldRefInput<$PrismaModel>
     in?: $Enums.TaskStatus[] | ListEnumTaskStatusFieldRefInput<$PrismaModel>
@@ -25581,6 +29990,29 @@ export namespace Prisma {
     _max?: NestedEnumTaskStatusFilter<$PrismaModel>
   }
 
+  export type BusinessUnitCreateWithoutUsersInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BusinessUnitUncheckedCreateWithoutUsersInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BusinessUnitCreateOrConnectWithoutUsersInput = {
+    where: BusinessUnitWhereUniqueInput
+    create: XOR<BusinessUnitCreateWithoutUsersInput, BusinessUnitUncheckedCreateWithoutUsersInput>
+  }
+
   export type UserCreateWithoutReportsInput = {
     id?: string
     email: string
@@ -25589,13 +30021,17 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
@@ -25623,13 +30059,17 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
@@ -25662,13 +30102,17 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     reports?: UserCreateNestedManyWithoutManagerInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
@@ -25696,13 +30140,17 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     principalId?: string | null
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
@@ -25740,13 +30188,17 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
@@ -25774,13 +30226,17 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
@@ -25813,13 +30269,17 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
@@ -25847,13 +30307,17 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
@@ -25880,6 +30344,74 @@ export namespace Prisma {
 
   export type UserCreateManyPrincipalInputEnvelope = {
     data: UserCreateManyPrincipalInput | UserCreateManyPrincipalInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserSkillCreateWithoutUserInput = {
+    id?: string
+    proficiency?: number
+    createdAt?: Date | string
+    skill: SkillCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserSkillUncheckedCreateWithoutUserInput = {
+    id?: string
+    skillId: string
+    proficiency?: number
+    createdAt?: Date | string
+  }
+
+  export type UserSkillCreateOrConnectWithoutUserInput = {
+    where: UserSkillWhereUniqueInput
+    create: XOR<UserSkillCreateWithoutUserInput, UserSkillUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserSkillCreateManyUserInputEnvelope = {
+    data: UserSkillCreateManyUserInput | UserSkillCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProjectExpenseCreateWithoutApprovedByInput = {
+    id?: string
+    category: string
+    description: string
+    amount: number
+    spentAt?: Date | string
+    evidenceUrl?: string | null
+    evidenceFileName?: string | null
+    status?: $Enums.ExpenseStatus
+    approvedAt?: Date | string | null
+    rejectionReason?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutExpensesInput
+    createdBy?: UserCreateNestedOneWithoutProjectExpensesInput
+  }
+
+  export type ProjectExpenseUncheckedCreateWithoutApprovedByInput = {
+    id?: string
+    projectId: string
+    category: string
+    description: string
+    amount: number
+    spentAt?: Date | string
+    evidenceUrl?: string | null
+    evidenceFileName?: string | null
+    status?: $Enums.ExpenseStatus
+    approvedAt?: Date | string | null
+    rejectionReason?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectExpenseCreateOrConnectWithoutApprovedByInput = {
+    where: ProjectExpenseWhereUniqueInput
+    create: XOR<ProjectExpenseCreateWithoutApprovedByInput, ProjectExpenseUncheckedCreateWithoutApprovedByInput>
+  }
+
+  export type ProjectExpenseCreateManyApprovedByInputEnvelope = {
+    data: ProjectExpenseCreateManyApprovedByInput | ProjectExpenseCreateManyApprovedByInput[]
     skipDuplicates?: boolean
   }
 
@@ -26481,9 +31013,13 @@ export namespace Prisma {
     spentAt?: Date | string
     evidenceUrl?: string | null
     evidenceFileName?: string | null
+    status?: $Enums.ExpenseStatus
+    approvedAt?: Date | string | null
+    rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutExpensesInput
+    approvedBy?: UserCreateNestedOneWithoutApprovedExpensesInput
   }
 
   export type ProjectExpenseUncheckedCreateWithoutCreatedByInput = {
@@ -26495,6 +31031,10 @@ export namespace Prisma {
     spentAt?: Date | string
     evidenceUrl?: string | null
     evidenceFileName?: string | null
+    status?: $Enums.ExpenseStatus
+    approvedById?: string | null
+    approvedAt?: Date | string | null
+    rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -26515,6 +31055,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.TaskStatus
     progressPercent?: number
+    billable?: boolean
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -26533,6 +31074,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.TaskStatus
     progressPercent?: number
+    billable?: boolean
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdById?: string | null
@@ -26559,6 +31101,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.TaskStatus
     progressPercent?: number
+    billable?: boolean
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -26577,6 +31120,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.TaskStatus
     progressPercent?: number
+    billable?: boolean
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -26677,6 +31221,35 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type BusinessUnitUpsertWithoutUsersInput = {
+    update: XOR<BusinessUnitUpdateWithoutUsersInput, BusinessUnitUncheckedUpdateWithoutUsersInput>
+    create: XOR<BusinessUnitCreateWithoutUsersInput, BusinessUnitUncheckedCreateWithoutUsersInput>
+    where?: BusinessUnitWhereInput
+  }
+
+  export type BusinessUnitUpdateToOneWithWhereWithoutUsersInput = {
+    where?: BusinessUnitWhereInput
+    data: XOR<BusinessUnitUpdateWithoutUsersInput, BusinessUnitUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type BusinessUnitUpdateWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BusinessUnitUncheckedUpdateWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserUpsertWithoutReportsInput = {
     update: XOR<UserUpdateWithoutReportsInput, UserUncheckedUpdateWithoutReportsInput>
     create: XOR<UserCreateWithoutReportsInput, UserUncheckedCreateWithoutReportsInput>
@@ -26696,13 +31269,17 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
@@ -26730,13 +31307,17 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
@@ -26783,10 +31364,12 @@ export namespace Prisma {
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
     title?: StringNullableFilter<"User"> | string | null
     dailyRate?: FloatNullableFilter<"User"> | number | null
+    seniority?: EnumSeniorityNullableFilter<"User"> | $Enums.Seniority | null
     isActive?: BoolFilter<"User"> | boolean
     deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    businessUnitId?: StringNullableFilter<"User"> | string | null
     managerId?: StringNullableFilter<"User"> | string | null
     principalId?: StringNullableFilter<"User"> | string | null
   }
@@ -26810,13 +31393,17 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
@@ -26844,13 +31431,17 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
@@ -26884,6 +31475,70 @@ export namespace Prisma {
   export type UserUpdateManyWithWhereWithoutPrincipalInput = {
     where: UserScalarWhereInput
     data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutPrincipalInput>
+  }
+
+  export type UserSkillUpsertWithWhereUniqueWithoutUserInput = {
+    where: UserSkillWhereUniqueInput
+    update: XOR<UserSkillUpdateWithoutUserInput, UserSkillUncheckedUpdateWithoutUserInput>
+    create: XOR<UserSkillCreateWithoutUserInput, UserSkillUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserSkillUpdateWithWhereUniqueWithoutUserInput = {
+    where: UserSkillWhereUniqueInput
+    data: XOR<UserSkillUpdateWithoutUserInput, UserSkillUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserSkillUpdateManyWithWhereWithoutUserInput = {
+    where: UserSkillScalarWhereInput
+    data: XOR<UserSkillUpdateManyMutationInput, UserSkillUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type UserSkillScalarWhereInput = {
+    AND?: UserSkillScalarWhereInput | UserSkillScalarWhereInput[]
+    OR?: UserSkillScalarWhereInput[]
+    NOT?: UserSkillScalarWhereInput | UserSkillScalarWhereInput[]
+    id?: StringFilter<"UserSkill"> | string
+    userId?: StringFilter<"UserSkill"> | string
+    skillId?: StringFilter<"UserSkill"> | string
+    proficiency?: IntFilter<"UserSkill"> | number
+    createdAt?: DateTimeFilter<"UserSkill"> | Date | string
+  }
+
+  export type ProjectExpenseUpsertWithWhereUniqueWithoutApprovedByInput = {
+    where: ProjectExpenseWhereUniqueInput
+    update: XOR<ProjectExpenseUpdateWithoutApprovedByInput, ProjectExpenseUncheckedUpdateWithoutApprovedByInput>
+    create: XOR<ProjectExpenseCreateWithoutApprovedByInput, ProjectExpenseUncheckedCreateWithoutApprovedByInput>
+  }
+
+  export type ProjectExpenseUpdateWithWhereUniqueWithoutApprovedByInput = {
+    where: ProjectExpenseWhereUniqueInput
+    data: XOR<ProjectExpenseUpdateWithoutApprovedByInput, ProjectExpenseUncheckedUpdateWithoutApprovedByInput>
+  }
+
+  export type ProjectExpenseUpdateManyWithWhereWithoutApprovedByInput = {
+    where: ProjectExpenseScalarWhereInput
+    data: XOR<ProjectExpenseUpdateManyMutationInput, ProjectExpenseUncheckedUpdateManyWithoutApprovedByInput>
+  }
+
+  export type ProjectExpenseScalarWhereInput = {
+    AND?: ProjectExpenseScalarWhereInput | ProjectExpenseScalarWhereInput[]
+    OR?: ProjectExpenseScalarWhereInput[]
+    NOT?: ProjectExpenseScalarWhereInput | ProjectExpenseScalarWhereInput[]
+    id?: StringFilter<"ProjectExpense"> | string
+    projectId?: StringFilter<"ProjectExpense"> | string
+    category?: StringFilter<"ProjectExpense"> | string
+    description?: StringFilter<"ProjectExpense"> | string
+    amount?: FloatFilter<"ProjectExpense"> | number
+    spentAt?: DateTimeFilter<"ProjectExpense"> | Date | string
+    evidenceUrl?: StringNullableFilter<"ProjectExpense"> | string | null
+    evidenceFileName?: StringNullableFilter<"ProjectExpense"> | string | null
+    status?: EnumExpenseStatusFilter<"ProjectExpense"> | $Enums.ExpenseStatus
+    approvedById?: StringNullableFilter<"ProjectExpense"> | string | null
+    approvedAt?: DateTimeNullableFilter<"ProjectExpense"> | Date | string | null
+    rejectionReason?: StringNullableFilter<"ProjectExpense"> | string | null
+    createdById?: StringNullableFilter<"ProjectExpense"> | string | null
+    createdAt?: DateTimeFilter<"ProjectExpense"> | Date | string
+    updatedAt?: DateTimeFilter<"ProjectExpense"> | Date | string
   }
 
   export type ProjectUpsertWithWhereUniqueWithoutSalesInput = {
@@ -27194,23 +31849,6 @@ export namespace Prisma {
     data: XOR<ProjectExpenseUpdateManyMutationInput, ProjectExpenseUncheckedUpdateManyWithoutCreatedByInput>
   }
 
-  export type ProjectExpenseScalarWhereInput = {
-    AND?: ProjectExpenseScalarWhereInput | ProjectExpenseScalarWhereInput[]
-    OR?: ProjectExpenseScalarWhereInput[]
-    NOT?: ProjectExpenseScalarWhereInput | ProjectExpenseScalarWhereInput[]
-    id?: StringFilter<"ProjectExpense"> | string
-    projectId?: StringFilter<"ProjectExpense"> | string
-    category?: StringFilter<"ProjectExpense"> | string
-    description?: StringFilter<"ProjectExpense"> | string
-    amount?: FloatFilter<"ProjectExpense"> | number
-    spentAt?: DateTimeFilter<"ProjectExpense"> | Date | string
-    evidenceUrl?: StringNullableFilter<"ProjectExpense"> | string | null
-    evidenceFileName?: StringNullableFilter<"ProjectExpense"> | string | null
-    createdById?: StringNullableFilter<"ProjectExpense"> | string | null
-    createdAt?: DateTimeFilter<"ProjectExpense"> | Date | string
-    updatedAt?: DateTimeFilter<"ProjectExpense"> | Date | string
-  }
-
   export type TaskUpsertWithWhereUniqueWithoutAssigneeInput = {
     where: TaskWhereUniqueInput
     update: XOR<TaskUpdateWithoutAssigneeInput, TaskUncheckedUpdateWithoutAssigneeInput>
@@ -27237,6 +31875,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"Task"> | string | null
     status?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
     progressPercent?: IntFilter<"Task"> | number
+    billable?: BoolFilter<"Task"> | boolean
     startDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     endDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     assigneeId?: StringNullableFilter<"Task"> | string | null
@@ -27483,14 +32122,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
@@ -27517,14 +32160,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
@@ -27556,14 +32203,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
@@ -27590,14 +32241,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
@@ -27629,14 +32284,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
@@ -27663,14 +32322,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
@@ -27702,14 +32365,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
@@ -27736,14 +32403,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
@@ -27941,8 +32612,12 @@ export namespace Prisma {
     spentAt?: Date | string
     evidenceUrl?: string | null
     evidenceFileName?: string | null
+    status?: $Enums.ExpenseStatus
+    approvedAt?: Date | string | null
+    rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    approvedBy?: UserCreateNestedOneWithoutApprovedExpensesInput
     createdBy?: UserCreateNestedOneWithoutProjectExpensesInput
   }
 
@@ -27954,6 +32629,10 @@ export namespace Prisma {
     spentAt?: Date | string
     evidenceUrl?: string | null
     evidenceFileName?: string | null
+    status?: $Enums.ExpenseStatus
+    approvedById?: string | null
+    approvedAt?: Date | string | null
+    rejectionReason?: string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -27975,6 +32654,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.TaskStatus
     progressPercent?: number
+    billable?: boolean
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -27992,6 +32672,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.TaskStatus
     progressPercent?: number
+    billable?: boolean
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -28065,14 +32746,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
@@ -28099,14 +32784,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
@@ -28144,14 +32833,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
@@ -28178,14 +32871,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
@@ -28223,14 +32920,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
@@ -28257,14 +32958,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
@@ -28302,14 +33007,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
@@ -28336,14 +33045,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
@@ -28664,14 +33377,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
@@ -28698,14 +33415,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
@@ -28748,14 +33469,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
@@ -28782,14 +33507,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
@@ -28897,14 +33626,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
@@ -28931,14 +33664,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
@@ -28970,14 +33707,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
@@ -29004,14 +33745,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
@@ -29141,14 +33886,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
@@ -29175,14 +33924,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
@@ -29220,14 +33973,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
@@ -29254,14 +34011,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
@@ -29369,14 +34130,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
@@ -29403,14 +34168,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
@@ -29440,6 +34209,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.TaskStatus
     progressPercent?: number
+    billable?: boolean
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -29458,6 +34228,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.TaskStatus
     progressPercent?: number
+    billable?: boolean
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -29481,14 +34252,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
@@ -29515,14 +34290,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
@@ -29652,14 +34431,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
@@ -29686,14 +34469,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
@@ -29729,6 +34516,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29747,6 +34535,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29776,14 +34565,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
@@ -29810,14 +34603,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
@@ -29925,14 +34722,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
@@ -29959,14 +34760,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
@@ -30096,14 +34901,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
@@ -30130,14 +34939,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
@@ -30237,6 +35050,87 @@ export namespace Prisma {
     create: XOR<ProjectCreateWithoutExpensesInput, ProjectUncheckedCreateWithoutExpensesInput>
   }
 
+  export type UserCreateWithoutApprovedExpensesInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutApprovedExpensesInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnitId?: string | null
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutApprovedExpensesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutApprovedExpensesInput, UserUncheckedCreateWithoutApprovedExpensesInput>
+  }
+
   export type UserCreateWithoutProjectExpensesInput = {
     id?: string
     email: string
@@ -30245,14 +35139,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
@@ -30279,14 +35177,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
@@ -30397,6 +35299,93 @@ export namespace Prisma {
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
   }
 
+  export type UserUpsertWithoutApprovedExpensesInput = {
+    update: XOR<UserUpdateWithoutApprovedExpensesInput, UserUncheckedUpdateWithoutApprovedExpensesInput>
+    create: XOR<UserCreateWithoutApprovedExpensesInput, UserUncheckedCreateWithoutApprovedExpensesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutApprovedExpensesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutApprovedExpensesInput, UserUncheckedUpdateWithoutApprovedExpensesInput>
+  }
+
+  export type UserUpdateWithoutApprovedExpensesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutApprovedExpensesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type UserUpsertWithoutProjectExpensesInput = {
     update: XOR<UserUpdateWithoutProjectExpensesInput, UserUncheckedUpdateWithoutProjectExpensesInput>
     create: XOR<UserCreateWithoutProjectExpensesInput, UserUncheckedCreateWithoutProjectExpensesInput>
@@ -30416,14 +35405,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
@@ -30450,14 +35443,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
@@ -30476,7 +35473,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
-  export type UserCreateWithoutActivitiesInput = {
+  export type UserCreateWithoutBusinessUnitInput = {
     id?: string
     email: string
     passwordHash: string
@@ -30484,6 +35481,7 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -30492,6 +35490,371 @@ export namespace Prisma {
     reports?: UserCreateNestedManyWithoutManagerInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutBusinessUnitInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutBusinessUnitInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutBusinessUnitInput, UserUncheckedCreateWithoutBusinessUnitInput>
+  }
+
+  export type UserCreateManyBusinessUnitInputEnvelope = {
+    data: UserCreateManyBusinessUnitInput | UserCreateManyBusinessUnitInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithWhereUniqueWithoutBusinessUnitInput = {
+    where: UserWhereUniqueInput
+    update: XOR<UserUpdateWithoutBusinessUnitInput, UserUncheckedUpdateWithoutBusinessUnitInput>
+    create: XOR<UserCreateWithoutBusinessUnitInput, UserUncheckedCreateWithoutBusinessUnitInput>
+  }
+
+  export type UserUpdateWithWhereUniqueWithoutBusinessUnitInput = {
+    where: UserWhereUniqueInput
+    data: XOR<UserUpdateWithoutBusinessUnitInput, UserUncheckedUpdateWithoutBusinessUnitInput>
+  }
+
+  export type UserUpdateManyWithWhereWithoutBusinessUnitInput = {
+    where: UserScalarWhereInput
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutBusinessUnitInput>
+  }
+
+  export type UserSkillCreateWithoutSkillInput = {
+    id?: string
+    proficiency?: number
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutSkillsInput
+  }
+
+  export type UserSkillUncheckedCreateWithoutSkillInput = {
+    id?: string
+    userId: string
+    proficiency?: number
+    createdAt?: Date | string
+  }
+
+  export type UserSkillCreateOrConnectWithoutSkillInput = {
+    where: UserSkillWhereUniqueInput
+    create: XOR<UserSkillCreateWithoutSkillInput, UserSkillUncheckedCreateWithoutSkillInput>
+  }
+
+  export type UserSkillCreateManySkillInputEnvelope = {
+    data: UserSkillCreateManySkillInput | UserSkillCreateManySkillInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserSkillUpsertWithWhereUniqueWithoutSkillInput = {
+    where: UserSkillWhereUniqueInput
+    update: XOR<UserSkillUpdateWithoutSkillInput, UserSkillUncheckedUpdateWithoutSkillInput>
+    create: XOR<UserSkillCreateWithoutSkillInput, UserSkillUncheckedCreateWithoutSkillInput>
+  }
+
+  export type UserSkillUpdateWithWhereUniqueWithoutSkillInput = {
+    where: UserSkillWhereUniqueInput
+    data: XOR<UserSkillUpdateWithoutSkillInput, UserSkillUncheckedUpdateWithoutSkillInput>
+  }
+
+  export type UserSkillUpdateManyWithWhereWithoutSkillInput = {
+    where: UserSkillScalarWhereInput
+    data: XOR<UserSkillUpdateManyMutationInput, UserSkillUncheckedUpdateManyWithoutSkillInput>
+  }
+
+  export type UserCreateWithoutSkillsInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutSkillsInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnitId?: string | null
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutSkillsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSkillsInput, UserUncheckedCreateWithoutSkillsInput>
+  }
+
+  export type SkillCreateWithoutUsersInput = {
+    id?: string
+    name: string
+    category?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SkillUncheckedCreateWithoutUsersInput = {
+    id?: string
+    name: string
+    category?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SkillCreateOrConnectWithoutUsersInput = {
+    where: SkillWhereUniqueInput
+    create: XOR<SkillCreateWithoutUsersInput, SkillUncheckedCreateWithoutUsersInput>
+  }
+
+  export type UserUpsertWithoutSkillsInput = {
+    update: XOR<UserUpdateWithoutSkillsInput, UserUncheckedUpdateWithoutSkillsInput>
+    create: XOR<UserCreateWithoutSkillsInput, UserUncheckedCreateWithoutSkillsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSkillsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSkillsInput, UserUncheckedUpdateWithoutSkillsInput>
+  }
+
+  export type UserUpdateWithoutSkillsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSkillsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type SkillUpsertWithoutUsersInput = {
+    update: XOR<SkillUpdateWithoutUsersInput, SkillUncheckedUpdateWithoutUsersInput>
+    create: XOR<SkillCreateWithoutUsersInput, SkillUncheckedCreateWithoutUsersInput>
+    where?: SkillWhereInput
+  }
+
+  export type SkillUpdateToOneWithWhereWithoutUsersInput = {
+    where?: SkillWhereInput
+    data: XOR<SkillUpdateWithoutUsersInput, SkillUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type SkillUpdateWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SkillUncheckedUpdateWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserCreateWithoutActivitiesInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
@@ -30518,14 +35881,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
@@ -30649,14 +36016,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
@@ -30683,14 +36054,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
@@ -30885,14 +36260,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
@@ -30919,14 +36298,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
@@ -30958,14 +36341,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
@@ -30992,14 +36379,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
@@ -31219,14 +36610,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
@@ -31253,14 +36648,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
@@ -31298,14 +36697,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
@@ -31332,14 +36735,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
@@ -31412,6 +36819,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.TaskStatus
     progressPercent?: number
+    billable?: boolean
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -31430,6 +36838,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.TaskStatus
     progressPercent?: number
+    billable?: boolean
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -31453,14 +36862,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
@@ -31487,14 +36900,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
@@ -31535,6 +36952,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31553,6 +36971,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31582,14 +37001,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
@@ -31616,14 +37039,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
@@ -31648,6 +37075,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.TaskStatus
     progressPercent?: number
+    billable?: boolean
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -31666,6 +37094,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.TaskStatus
     progressPercent?: number
+    billable?: boolean
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -31689,14 +37118,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
@@ -31723,14 +37156,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
@@ -31771,6 +37208,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31789,6 +37227,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31818,14 +37257,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
@@ -31852,14 +37295,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
@@ -31886,14 +37333,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
@@ -31920,14 +37371,18 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
@@ -31970,14 +37425,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
@@ -32004,14 +37463,18 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
@@ -32038,10 +37501,12 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     principalId?: string | null
   }
 
@@ -32053,11 +37518,37 @@ export namespace Prisma {
     role: $Enums.UserRole
     title?: string | null
     dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
     isActive?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    businessUnitId?: string | null
     managerId?: string | null
+  }
+
+  export type UserSkillCreateManyUserInput = {
+    id?: string
+    skillId: string
+    proficiency?: number
+    createdAt?: Date | string
+  }
+
+  export type ProjectExpenseCreateManyApprovedByInput = {
+    id?: string
+    projectId: string
+    category: string
+    description: string
+    amount: number
+    spentAt?: Date | string
+    evidenceUrl?: string | null
+    evidenceFileName?: string | null
+    status?: $Enums.ExpenseStatus
+    approvedAt?: Date | string | null
+    rejectionReason?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ProjectCreateManySalesInput = {
@@ -32281,6 +37772,10 @@ export namespace Prisma {
     spentAt?: Date | string
     evidenceUrl?: string | null
     evidenceFileName?: string | null
+    status?: $Enums.ExpenseStatus
+    approvedById?: string | null
+    approvedAt?: Date | string | null
+    rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -32292,6 +37787,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.TaskStatus
     progressPercent?: number
+    billable?: boolean
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdById?: string | null
@@ -32306,6 +37802,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.TaskStatus
     progressPercent?: number
+    billable?: boolean
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -32346,13 +37843,17 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
@@ -32380,13 +37881,17 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
@@ -32414,10 +37919,12 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -32429,13 +37936,17 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
@@ -32463,13 +37974,17 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
@@ -32497,11 +38012,85 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     title?: NullableStringFieldUpdateOperationsInput | string | null
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type UserSkillUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    proficiency?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    skill?: SkillUpdateOneRequiredWithoutUsersNestedInput
+  }
+
+  export type UserSkillUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    skillId?: StringFieldUpdateOperationsInput | string
+    proficiency?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserSkillUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    skillId?: StringFieldUpdateOperationsInput | string
+    proficiency?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectExpenseUpdateWithoutApprovedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutExpensesNestedInput
+    createdBy?: UserUpdateOneWithoutProjectExpensesNestedInput
+  }
+
+  export type ProjectExpenseUncheckedUpdateWithoutApprovedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectExpenseUncheckedUpdateManyWithoutApprovedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProjectUpdateWithoutSalesInput = {
@@ -33204,9 +38793,13 @@ export namespace Prisma {
     spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
     evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutExpensesNestedInput
+    approvedBy?: UserUpdateOneWithoutApprovedExpensesNestedInput
   }
 
   export type ProjectExpenseUncheckedUpdateWithoutCreatedByInput = {
@@ -33218,6 +38811,10 @@ export namespace Prisma {
     spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
     evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
+    approvedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33231,6 +38828,10 @@ export namespace Prisma {
     spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
     evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
+    approvedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33241,6 +38842,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33259,6 +38861,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33276,6 +38879,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33289,6 +38893,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33307,6 +38912,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33324,6 +38930,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33610,6 +39217,10 @@ export namespace Prisma {
     spentAt?: Date | string
     evidenceUrl?: string | null
     evidenceFileName?: string | null
+    status?: $Enums.ExpenseStatus
+    approvedById?: string | null
+    approvedAt?: Date | string | null
+    rejectionReason?: string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33621,6 +39232,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.TaskStatus
     progressPercent?: number
+    billable?: boolean
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -33811,8 +39423,12 @@ export namespace Prisma {
     spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
     evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    approvedBy?: UserUpdateOneWithoutApprovedExpensesNestedInput
     createdBy?: UserUpdateOneWithoutProjectExpensesNestedInput
   }
 
@@ -33824,6 +39440,10 @@ export namespace Prisma {
     spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
     evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
+    approvedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33837,6 +39457,10 @@ export namespace Prisma {
     spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
     evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
+    approvedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33848,6 +39472,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33865,6 +39490,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33882,12 +39508,151 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserCreateManyBusinessUnitInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    managerId?: string | null
+    principalId?: string | null
+  }
+
+  export type UserUpdateWithoutBusinessUnitInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutBusinessUnitInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateManyWithoutBusinessUnitInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type UserSkillCreateManySkillInput = {
+    id?: string
+    userId: string
+    proficiency?: number
+    createdAt?: Date | string
+  }
+
+  export type UserSkillUpdateWithoutSkillInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    proficiency?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutSkillsNestedInput
+  }
+
+  export type UserSkillUncheckedUpdateWithoutSkillInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    proficiency?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserSkillUncheckedUpdateManyWithoutSkillInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    proficiency?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TaskTimeLogCreateManyTaskInput = {
@@ -34028,6 +39793,14 @@ export namespace Prisma {
      */
     export type ProjectCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProjectCountOutputTypeDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use BusinessUnitCountOutputTypeDefaultArgs instead
+     */
+    export type BusinessUnitCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BusinessUnitCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use SkillCountOutputTypeDefaultArgs instead
+     */
+    export type SkillCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SkillCountOutputTypeDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use TaskCountOutputTypeDefaultArgs instead
      */
     export type TaskCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = TaskCountOutputTypeDefaultArgs<ExtArgs>
@@ -34071,6 +39844,18 @@ export namespace Prisma {
      * @deprecated Use ProjectExpenseDefaultArgs instead
      */
     export type ProjectExpenseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProjectExpenseDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use BusinessUnitDefaultArgs instead
+     */
+    export type BusinessUnitArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BusinessUnitDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use SkillDefaultArgs instead
+     */
+    export type SkillArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SkillDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use UserSkillDefaultArgs instead
+     */
+    export type UserSkillArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserSkillDefaultArgs<ExtArgs>
     /**
      * @deprecated Use ActivityDefaultArgs instead
      */

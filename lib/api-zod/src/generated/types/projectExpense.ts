@@ -5,6 +5,7 @@
  * SecureProfit Hub API
  * OpenAPI spec version: 0.1.0
  */
+import type { ExpenseStatus } from "./expenseStatus";
 import type { ProjectExpenseCategory } from "./projectExpenseCategory";
 
 export interface ProjectExpense {
@@ -19,6 +20,11 @@ export interface ProjectExpense {
   spentAt: string;
   evidenceUrl?: string | null;
   evidenceFileName?: string | null;
+  status: ExpenseStatus;
+  approvedById?: string | null;
+  approvedByName?: string | null;
+  approvedAt?: string | null;
+  rejectionReason?: string | null;
   createdById?: string | null;
   createdByName?: string | null;
   createdAt: string;

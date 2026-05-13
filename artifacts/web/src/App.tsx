@@ -25,6 +25,9 @@ const CapacityPlanning = lazy(() => import("@/pages/capacity"));
 const AuditLogPage = lazy(() => import("@/pages/audit-logs"));
 const BusinessIntelligence = lazy(() => import("@/pages/business-intelligence"));
 const ExpensesPage = lazy(() => import("@/pages/expenses"));
+const SkillsPage = lazy(() => import("@/pages/skills"));
+const BusinessUnitsPage = lazy(() => import("@/pages/business-units"));
+const ResourcePlanningPage = lazy(() => import("@/pages/resource-planning"));
 const SurveyTemplateEditor = lazy(() => import("@/pages/settings/SurveyTemplate"));
 const PublicSurveyPage = lazy(() => import("@/pages/survey/[token]"));
 import { ThemeProvider } from "@/lib/theme";
@@ -88,6 +91,9 @@ function Router() {
         <Route path="/audit-logs" component={() => <ProtectedRoute component={AuditLogPage} />} />
         <Route path="/business-intelligence" component={() => <ProtectedRoute component={BusinessIntelligence} />} />
         <Route path="/expenses" component={() => <ProtectedRoute component={ExpensesPage} />} />
+        <Route path="/skills" component={() => <ProtectedRoute component={SkillsPage} />} />
+        <Route path="/business-units" component={() => <ProtectedRoute component={BusinessUnitsPage} />} />
+        <Route path="/resource-planning" component={() => <ProtectedRoute component={ResourcePlanningPage} />} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>

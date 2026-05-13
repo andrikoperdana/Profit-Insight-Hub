@@ -207,7 +207,18 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
                   return (
                     <TableRow key={t.id} className="hover:bg-muted/30 align-top">
                       <TableCell className="max-w-[280px]">
-                        <div className="font-medium">{t.title}</div>
+                        <div className="font-medium flex items-center gap-2">
+                          <span>{t.title}</span>
+                          {(t as any).billable === false && (
+                            <Badge
+                              variant="outline"
+                              className="bg-amber-500/15 text-amber-400 border-amber-500/30 text-[10px]"
+                              title="Non-billable: jam tidak masuk revenue/margin"
+                            >
+                              Non-billable
+                            </Badge>
+                          )}
+                        </div>
                         {t.description && (
                           <div className="text-xs text-muted-foreground mt-1 line-clamp-2">
                             {t.description}
@@ -445,6 +456,7 @@ function TaskFormDialog({
     return [];
   })();
   const [assigneeIds, setAssigneeIds] = useState<string[]>(initialAssigneeIds);
+  const [billable, setBillable] = useState<boolean>(((task as any)?.billable ?? true) as boolean);
   function toggleAssignee(uid: string) {
     setAssigneeIds((prev) =>
       prev.includes(uid) ? prev.filter((x) => x !== uid) : [...prev, uid],
@@ -512,6 +524,7 @@ function TaskFormDialog({
       startDate: startDate || undefined,
       endDate: endDate || undefined,
       assigneeIds,
+      billable,
     };
     if (editing && task) {
       // PATCH allows nulls to clear
@@ -525,6 +538,7 @@ function TaskFormDialog({
           startDate: startDate || null,
           endDate: endDate || null,
           assigneeIds,
+          billable,
         } as any,
       });
     } else {
@@ -627,6 +641,21 @@ function TaskFormDialog({
             <p className="text-[11px] text-muted-foreground mt-1">
               Pilih lebih dari satu untuk task yang dikerjakan beberapa orang sekaligus.
             </p>
+          </div>
+          <div className="flex items-center gap-2 rounded-md border border-border px-3 py-2">
+            <input
+              id="task-billable"
+              type="checkbox"
+              checked={billable}
+              onChange={(e) => setBillable(e.target.checked)}
+              data-testid="checkbox-task-billable"
+            />
+            <Label htmlFor="task-billable" className="cursor-pointer text-sm font-medium">
+              Billable (jam masuk perhitungan revenue/margin)
+            </Label>
+            <span className="ml-auto text-[11px] text-muted-foreground">
+              Default: aktif. Matikan jika task internal/training/non-billable — jam tetap dicatat tapi tidak dihitung sebagai revenue.
+            </span>
           </div>
           <div>
             <Label>Status</Label>

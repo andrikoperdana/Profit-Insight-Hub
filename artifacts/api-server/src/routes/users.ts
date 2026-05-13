@@ -16,6 +16,42 @@ const ALL_ROLES: UserRole[] = [
   "SITE_ADMIN",
 ];
 
+const ALLOWED_SENIORITY = new Set(["JUNIOR", "MID", "SENIOR", "PRINCIPAL"]);
+
+// Standard include for serializing a User with its BU + skills.
+const userInclude = {
+  businessUnit: { select: { id: true, name: true } },
+  skills: {
+    include: { skill: { select: { id: true, name: true, category: true } } },
+    orderBy: { createdAt: "asc" as const },
+  },
+} as const;
+
+async function setUserSkills(userId: string, skillIds: string[]) {
+  await prisma.userSkill.deleteMany({ where: { userId } });
+  if (skillIds.length > 0) {
+    await prisma.userSkill.createMany({
+      data: skillIds.map((sid) => ({ userId, skillId: sid })),
+      skipDuplicates: true,
+    });
+  }
+}
+
+function normalizeSkillIds(input: unknown): string[] | null | "INVALID" {
+  if (input === undefined) return null;
+  if (input === null) return [];
+  if (!Array.isArray(input)) return "INVALID";
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const v of input) {
+    if (typeof v !== "string" || !v) return "INVALID";
+    if (seen.has(v)) continue;
+    seen.add(v);
+    out.push(v);
+  }
+  return out;
+}
+
 const PRINCIPAL_TO_REPORT_ROLE: Record<string, UserRole> = {
   PRINCIPAL_KONSULTAN: "KONSULTAN",
   PRINCIPAL_TECHNICAL_WRITER: "TECHNICAL_WRITER",
@@ -23,10 +59,22 @@ const PRINCIPAL_TO_REPORT_ROLE: Record<string, UserRole> = {
 };
 
 router.get("/users", async (req, res) => {
-  const includeDeleted = req.query.includeDeleted === "true" && req.user!.role === "SITE_ADMIN";
+  const role = req.user!.role;
+  // Full directory exposes HR data (email, dailyRate, seniority, BU, skills).
+  // Only roles that legitimately need it: SITE_ADMIN, MANAGEMENT, PROJECT_MANAGER, SALES (project intake).
+  // Other roles should use /users/active-all, /users/under-supervision, or /users/available.
+  const allowed =
+    role === "SITE_ADMIN" || role === "MANAGEMENT" ||
+    role === "PROJECT_MANAGER" || role === "SALES";
+  if (!allowed) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  const includeDeleted = req.query.includeDeleted === "true" && role === "SITE_ADMIN";
   const users = await prisma.user.findMany({
     where: includeDeleted ? {} : { deletedAt: null },
     orderBy: { name: "asc" },
+    include: userInclude,
   });
   res.json(users.map(serializeUser));
 });
@@ -43,6 +91,7 @@ router.get("/users/under-supervision", async (req, res) => {
   const users = await prisma.user.findMany({
     where: { principalId: callerId, deletedAt: null },
     orderBy: { name: "asc" },
+    include: userInclude,
   });
   res.json(users.map(serializeUser));
 });
@@ -132,7 +181,10 @@ router.get("/users/available", async (req, res) => {
 });
 
 router.get("/users/:id", async (req, res) => {
-  const u = await prisma.user.findUnique({ where: { id: req.params.id } });
+  const u = await prisma.user.findUnique({
+    where: { id: req.params.id },
+    include: userInclude,
+  });
   if (!u) {
     res.status(404).json({ error: "Not found" });
     return;
@@ -144,7 +196,10 @@ router.post(
   "/users",
   requireRole("SITE_ADMIN"),
   async (req, res) => {
-    const { email, password, name, role, title, dailyRate, managerId, principalId } = req.body || {};
+    const {
+      email, password, name, role, title, dailyRate, managerId, principalId,
+      seniority, businessUnitId, skillIds,
+    } = req.body || {};
     if (!email || !password || !name || !role) {
       res.status(400).json({ error: "email, password, name, role required" });
       return;
@@ -171,6 +226,22 @@ router.post(
       res.status(400).json({ error: "dailyRate must be a non-negative number" });
       return;
     }
+    if (seniority != null && seniority !== "" && !ALLOWED_SENIORITY.has(String(seniority))) {
+      res.status(400).json({ error: `seniority must be one of ${[...ALLOWED_SENIORITY].join(", ")}` });
+      return;
+    }
+    if (businessUnitId != null && businessUnitId !== "") {
+      const bu = await prisma.businessUnit.findUnique({ where: { id: String(businessUnitId) }, select: { id: true } });
+      if (!bu) {
+        res.status(400).json({ error: "businessUnitId not found" });
+        return;
+      }
+    }
+    const skills = normalizeSkillIds(skillIds);
+    if (skills === "INVALID") {
+      res.status(400).json({ error: "skillIds must be an array of skill IDs" });
+      return;
+    }
     const exists = await prisma.user.findUnique({
       where: { email: emailClean },
     });
@@ -179,7 +250,7 @@ router.post(
       return;
     }
     const passwordHash = await hashPassword(String(password));
-    const u = await prisma.user.create({
+    const created = await prisma.user.create({
       data: {
         email: emailClean,
         passwordHash,
@@ -187,18 +258,24 @@ router.post(
         role: role as UserRole,
         title: title || null,
         dailyRate: dailyRate != null ? Number(dailyRate) : null,
+        seniority: seniority ? (String(seniority) as any) : null,
+        businessUnitId: businessUnitId || null,
         managerId: managerId || null,
         principalId: principalId || null,
       },
     });
+    if (skills && skills.length > 0) {
+      await setUserSkills(created.id, skills);
+    }
+    const u = await prisma.user.findUnique({ where: { id: created.id }, include: userInclude });
     await recordAudit(req, {
       action: "user.created",
       entityType: "User",
-      entityId: u.id,
-      description: `Created user ${u.name} (${u.email}) as ${u.role}`,
-      after: serializeUser(u),
+      entityId: created.id,
+      description: `Created user ${created.name} (${created.email}) as ${created.role}`,
+      after: serializeUser(u!),
     });
-    res.status(201).json(serializeUser(u));
+    res.status(201).json(serializeUser(u!));
   },
 );
 
@@ -210,12 +287,15 @@ router.patch("/users/:id", async (req, res) => {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
-  const before = await prisma.user.findUnique({ where: { id: targetId } });
+  const before = await prisma.user.findUnique({ where: { id: targetId }, include: userInclude });
   if (!before) {
     res.status(404).json({ error: "Not found" });
     return;
   }
-  const { name, role, title, dailyRate, isActive, password, managerId, principalId } = req.body || {};
+  const {
+    name, role, title, dailyRate, isActive, password, managerId, principalId,
+    seniority, businessUnitId, skillIds,
+  } = req.body || {};
   if (dailyRate != null && (Number(dailyRate) < 0 || !isFinite(Number(dailyRate)))) {
     res.status(400).json({ error: "dailyRate must be a non-negative number" });
     return;
@@ -235,6 +315,22 @@ router.patch("/users/:id", async (req, res) => {
     res.status(400).json({ error: `role must be one of ${ALL_ROLES.join(", ")}` });
     return;
   }
+  if (seniority !== undefined && seniority !== null && seniority !== "" && !ALLOWED_SENIORITY.has(String(seniority))) {
+    res.status(400).json({ error: `seniority must be one of ${[...ALLOWED_SENIORITY].join(", ")}` });
+    return;
+  }
+  if (businessUnitId !== undefined && businessUnitId !== null && businessUnitId !== "") {
+    const bu = await prisma.businessUnit.findUnique({ where: { id: String(businessUnitId) }, select: { id: true } });
+    if (!bu) {
+      res.status(400).json({ error: "businessUnitId not found" });
+      return;
+    }
+  }
+  const skillsParsed = normalizeSkillIds(skillIds);
+  if (skillsParsed === "INVALID") {
+    res.status(400).json({ error: "skillIds must be an array of skill IDs" });
+    return;
+  }
   const data: Record<string, unknown> = {};
   if (name !== undefined) data.name = String(name).trim();
   if (title !== undefined) data.title = title || null;
@@ -246,8 +342,18 @@ router.patch("/users/:id", async (req, res) => {
       data.dailyRate = dailyRate != null ? Number(dailyRate) : null;
     if (managerId !== undefined) data.managerId = managerId || null;
     if (principalId !== undefined) data.principalId = principalId || null;
+    if (seniority !== undefined) data.seniority = seniority ? (String(seniority) as any) : null;
+    if (businessUnitId !== undefined) data.businessUnitId = businessUnitId || null;
   }
-  const u = await prisma.user.update({ where: { id: targetId }, data });
+  await prisma.user.update({ where: { id: targetId }, data });
+  if (isAdmin && skillsParsed !== null) {
+    await setUserSkills(targetId, skillsParsed);
+  }
+  const u = await prisma.user.findUnique({ where: { id: targetId }, include: userInclude });
+  if (!u) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
   await recordAudit(req, {
     action: "user.updated",
     entityType: "User",

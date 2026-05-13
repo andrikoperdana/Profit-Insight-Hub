@@ -16,6 +16,7 @@ export interface CreateTaskBody {
    * @maximum 100
    */
   progressPercent?: number;
+  billable?: boolean;
   startDate?: string | null;
   endDate?: string | null;
   assigneeId?: string | null;

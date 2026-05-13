@@ -6,6 +6,8 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { UserRole } from "./userRole";
+import type { UserSeniority } from "./userSeniority";
+import type { UserSkillInfo } from "./userSkillInfo";
 
 export interface User {
   id: string;
@@ -14,6 +16,10 @@ export interface User {
   role: UserRole;
   title?: string | null;
   dailyRate?: number | null;
+  seniority?: UserSeniority;
+  businessUnitId?: string | null;
+  businessUnitName?: string | null;
+  skills?: UserSkillInfo[];
   isActive: boolean;
   managerId?: string | null;
   principalId?: string | null;

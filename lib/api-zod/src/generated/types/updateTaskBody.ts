@@ -16,6 +16,7 @@ export interface UpdateTaskBody {
    * @maximum 100
    */
   progressPercent?: number;
+  billable?: boolean;
   startDate?: string | null;
   endDate?: string | null;
   assigneeId?: string | null;

@@ -7,7 +7,20 @@ import { canViewProjectFinancials } from "../lib/serializers.js";
 const router: IRouter = Router();
 router.use(requireAuth);
 
-const writeRoles = ["MANAGEMENT", "PROJECT_MANAGER"] as const;
+// Roles allowed to create/delete an expense submission.
+// MGMT/PM keep full management; SALES/KONSULTAN/TECHNICAL_WRITER/ADMIN_PROJECT
+// can submit (status=PENDING) so the field team can request reimbursement and
+// the PM-of-project (or MGMT) makes the call to approve/reject.
+const submitRoles = [
+  "MANAGEMENT",
+  "PROJECT_MANAGER",
+  "SALES",
+  "KONSULTAN",
+  "TECHNICAL_WRITER",
+  "ADMIN_PROJECT",
+] as const;
+// Only MGMT and PM-of-project can approve/reject expenses.
+const approverRoles = ["MANAGEMENT", "PROJECT_MANAGER"] as const;
 
 const ALLOWED_CATEGORIES = new Set([
   "SOFTWARE",
@@ -26,6 +39,11 @@ function serializeExpense(e: {
   spentAt: Date;
   evidenceUrl: string | null;
   evidenceFileName: string | null;
+  status?: string;
+  approvedById?: string | null;
+  approvedAt?: Date | null;
+  rejectionReason?: string | null;
+  approvedBy?: { name: string } | null;
   createdById: string | null;
   createdBy?: { name: string } | null;
   createdAt: Date;
@@ -43,29 +61,65 @@ function serializeExpense(e: {
     spentAt: e.spentAt.toISOString(),
     evidenceUrl: e.evidenceUrl,
     evidenceFileName: e.evidenceFileName,
+    status: (e.status ?? "PENDING") as "PENDING" | "APPROVED" | "REJECTED",
+    approvedById: e.approvedById ?? null,
+    approvedByName: e.approvedBy?.name ?? null,
+    approvedAt: e.approvedAt ? e.approvedAt.toISOString() : null,
+    rejectionReason: e.rejectionReason ?? null,
     createdById: e.createdById,
     createdByName: e.createdBy?.name ?? null,
     createdAt: e.createdAt.toISOString(),
   };
 }
 
+const expenseInclude = {
+  createdBy: { select: { name: true } },
+  approvedBy: { select: { name: true } },
+} as const;
+
 const ALLOWED_EVIDENCE_MIME = /^data:(application\/pdf|image\/(png|jpe?g|webp));base64,/i;
 const MAX_EVIDENCE_BYTES = 8 * 1024 * 1024; // ~8MB raw
 
 router.get("/projects/:id/expenses", async (req, res) => {
   const projectId = req.params.id;
-  // Read access mirrors GET /projects/:id, which is open to any authenticated user.
+  const role = req.user!.role;
+  const userId = req.user!.sub;
+  // Mirror GET /projects/:id visibility: MGMT/ADMIN_PROJECT/SITE_ADMIN see all;
+  // PM only own; SALES only own; KONSULTAN/TW/Principals only if they're a
+  // resource on the project (or assigned via project-level slot).
   const project = await prisma.project.findUnique({
     where: { id: projectId },
-    select: { id: true },
+    select: {
+      id: true, pmId: true, salesId: true,
+      adminProjectId: true, technicalWriterId: true,
+    },
   });
   if (!project) {
     res.status(404).json({ error: "Project not found" });
     return;
   }
+  const isGlobal = role === "MANAGEMENT" || role === "ADMIN_PROJECT" || role === "SITE_ADMIN";
+  if (!isGlobal) {
+    let allowed =
+      (role === "PROJECT_MANAGER" && project.pmId === userId) ||
+      (role === "SALES" && project.salesId === userId) ||
+      project.adminProjectId === userId ||
+      project.technicalWriterId === userId;
+    if (!allowed) {
+      const isResource = await prisma.projectResource.findFirst({
+        where: { projectId, userId },
+        select: { id: true },
+      });
+      allowed = !!isResource;
+    }
+    if (!allowed) {
+      res.status(403).json({ error: "You do not have access to this project" });
+      return;
+    }
+  }
   const expenses = await prisma.projectExpense.findMany({
     where: { projectId },
-    include: { createdBy: { select: { name: true } } },
+    include: expenseInclude,
     orderBy: { spentAt: "desc" },
   });
   // Invoice/billing PDFs are commercially sensitive — only roles allowed to see
@@ -86,7 +140,7 @@ router.get("/projects/:id/expenses", async (req, res) => {
 
 router.post(
   "/projects/:id/expenses",
-  requireRole(...writeRoles),
+  requireRole(...submitRoles),
   async (req, res) => {
     const projectId = String(req.params.id);
     const userId = req.user!.sub;
@@ -94,19 +148,38 @@ router.post(
 
     const project = await prisma.project.findUnique({
       where: { id: projectId },
-      select: { id: true, pmId: true, status: true },
+      select: {
+        id: true,
+        pmId: true,
+        salesId: true,
+        status: true,
+      },
     });
     if (!project) {
       res.status(404).json({ error: "Project not found" });
       return;
     }
 
-    // PM can only add expenses to projects assigned to them; Management is global.
+    // PM submits only on assigned projects; SALES only on owned projects;
+    // KONSULTAN/TECHNICAL_WRITER/ADMIN_PROJECT only when assigned as a
+    // ProjectResource of that project. MGMT is global.
     if (role === "PROJECT_MANAGER" && project.pmId !== userId) {
-      res
-        .status(403)
-        .json({ error: "Project Manager can only manage expenses on assigned projects" });
+      res.status(403).json({ error: "Project Manager can only submit expenses on assigned projects" });
       return;
+    }
+    if (role === "SALES" && project.salesId !== userId) {
+      res.status(403).json({ error: "Sales can only submit expenses on own projects" });
+      return;
+    }
+    if (role === "KONSULTAN" || role === "TECHNICAL_WRITER" || role === "ADMIN_PROJECT") {
+      const isResource = await prisma.projectResource.findFirst({
+        where: { projectId, userId },
+        select: { id: true },
+      });
+      if (!isResource && project.pmId !== userId && project.salesId !== userId) {
+        res.status(403).json({ error: "You can only submit expenses on projects you're assigned to" });
+        return;
+      }
     }
 
     const { category, description, amount, spentAt, evidenceUrl, evidenceFileName } = req.body || {};
@@ -156,6 +229,10 @@ router.post(
           : "evidence";
     }
 
+    // MGMT auto-approves on submit (they have approval power anyway and a
+    // self-approval round-trip would just be busywork). All other roles enter
+    // PENDING and require a PM/MGMT to approve before it counts as cost.
+    const isAutoApproved = role === "MANAGEMENT";
     const expense = await prisma.projectExpense.create({
       data: {
         projectId,
@@ -166,8 +243,11 @@ router.post(
         evidenceUrl: evidenceUrlClean,
         evidenceFileName: evidenceFileNameClean,
         createdById: userId,
+        status: isAutoApproved ? "APPROVED" : "PENDING",
+        approvedById: isAutoApproved ? userId : null,
+        approvedAt: isAutoApproved ? new Date() : null,
       },
-      include: { createdBy: { select: { name: true } } },
+      include: expenseInclude,
     });
     await recordAudit(req, {
       action: "expense.created",
@@ -189,7 +269,7 @@ router.post(
 
 router.delete(
   "/expenses/:expenseId",
-  requireRole(...writeRoles),
+  requireRole(...submitRoles),
   async (req, res) => {
     const userId = req.user!.sub;
     const role = req.user!.role;
@@ -204,11 +284,21 @@ router.delete(
       res.status(404).json({ error: "Expense not found" });
       return;
     }
-    if (role === "PROJECT_MANAGER" && before.project.pmId !== userId) {
-      res
-        .status(403)
-        .json({ error: "Project Manager can only manage expenses on assigned projects" });
-      return;
+    // MGMT and the project's PM can always delete. Other roles can only
+    // delete an entry they themselves submitted, and only while it is still
+    // PENDING (once approved or rejected the audit trail must be preserved).
+    const isManager =
+      role === "MANAGEMENT" ||
+      (role === "PROJECT_MANAGER" && before.project.pmId === userId);
+    if (!isManager) {
+      if (before.createdById !== userId) {
+        res.status(403).json({ error: "You can only delete your own expense submissions" });
+        return;
+      }
+      if (before.status !== "PENDING") {
+        res.status(400).json({ error: "Cannot delete an expense that has already been approved or rejected" });
+        return;
+      }
     }
     await prisma.projectExpense.delete({ where: { id: before.id } });
     await recordAudit(req, {
@@ -252,6 +342,7 @@ router.get("/expenses", async (req, res) => {
     where,
     include: {
       createdBy: { select: { name: true } },
+      approvedBy: { select: { name: true } },
       project: {
         select: {
           code: true,
@@ -265,5 +356,120 @@ router.get("/expenses", async (req, res) => {
   });
   res.json(expenses.map((e) => serializeExpense(e)));
 });
+
+// Approve a PENDING expense — MGMT or the project's PM only.
+router.post(
+  "/expenses/:expenseId/approve",
+  requireRole(...approverRoles),
+  async (req, res) => {
+    const userId = req.user!.sub;
+    const role = req.user!.role;
+    const before = await prisma.projectExpense.findUnique({
+      where: { id: String(req.params.expenseId) },
+      include: {
+        ...expenseInclude,
+        project: { select: { pmId: true, code: true, name: true, client: { select: { name: true } } } },
+      },
+    });
+    if (!before) {
+      res.status(404).json({ error: "Expense not found" });
+      return;
+    }
+    if (role === "PROJECT_MANAGER" && before.project.pmId !== userId) {
+      res.status(403).json({ error: "Project Manager can only approve expenses on assigned projects" });
+      return;
+    }
+    if (before.status === "APPROVED") {
+      res.json(serializeExpense(before as any));
+      return;
+    }
+    if (before.status !== "PENDING") {
+      res.status(409).json({ error: `Cannot approve an expense in ${before.status} state` });
+      return;
+    }
+    const updated = await prisma.projectExpense.update({
+      where: { id: before.id },
+      data: {
+        status: "APPROVED",
+        approvedById: userId,
+        approvedAt: new Date(),
+        rejectionReason: null,
+      },
+      include: {
+        ...expenseInclude,
+        project: { select: { pmId: true, code: true, name: true, client: { select: { name: true } } } },
+      },
+    });
+    await recordAudit(req, {
+      action: "expense.approved",
+      entityType: "ProjectExpense",
+      entityId: updated.id,
+      description: `Approved expense (${updated.category}) ${updated.description} = ${updated.amount}`,
+      before: { status: before.status },
+      after: { status: updated.status, approvedById: updated.approvedById, amount: updated.amount },
+    });
+    res.json(serializeExpense(updated as any));
+  },
+);
+
+// Reject a PENDING expense with a written reason — MGMT or the project's PM only.
+router.post(
+  "/expenses/:expenseId/reject",
+  requireRole(...approverRoles),
+  async (req, res) => {
+    const userId = req.user!.sub;
+    const role = req.user!.role;
+    const reason = typeof req.body?.reason === "string" ? req.body.reason.trim() : "";
+    if (!reason) {
+      res.status(400).json({ error: "reason required" });
+      return;
+    }
+    if (reason.length > 500) {
+      res.status(400).json({ error: "reason too long (max 500 chars)" });
+      return;
+    }
+    const before = await prisma.projectExpense.findUnique({
+      where: { id: String(req.params.expenseId) },
+      include: {
+        ...expenseInclude,
+        project: { select: { pmId: true, code: true, name: true, client: { select: { name: true } } } },
+      },
+    });
+    if (!before) {
+      res.status(404).json({ error: "Expense not found" });
+      return;
+    }
+    if (role === "PROJECT_MANAGER" && before.project.pmId !== userId) {
+      res.status(403).json({ error: "Project Manager can only reject expenses on assigned projects" });
+      return;
+    }
+    if (before.status !== "PENDING") {
+      res.status(409).json({ error: `Cannot reject an expense in ${before.status} state` });
+      return;
+    }
+    const updated = await prisma.projectExpense.update({
+      where: { id: before.id },
+      data: {
+        status: "REJECTED",
+        approvedById: userId,
+        approvedAt: new Date(),
+        rejectionReason: reason,
+      },
+      include: {
+        ...expenseInclude,
+        project: { select: { pmId: true, code: true, name: true, client: { select: { name: true } } } },
+      },
+    });
+    await recordAudit(req, {
+      action: "expense.rejected",
+      entityType: "ProjectExpense",
+      entityId: updated.id,
+      description: `Rejected expense (${updated.category}) ${updated.description}: ${reason}`,
+      before: { status: before.status },
+      after: { status: updated.status, rejectionReason: updated.rejectionReason },
+    });
+    res.json(serializeExpense(updated as any));
+  },
+);
 
 export default router;

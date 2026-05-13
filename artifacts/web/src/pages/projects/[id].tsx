@@ -22,6 +22,8 @@ import {
   useListProjectExpenses,
   useAddProjectExpense,
   useRemoveProjectExpense,
+  useApproveProjectExpense,
+  useRejectProjectExpense,
   getListProjectExpensesQueryKey,
   getListClientsQueryKey,
   getGetProjectQueryKey,
@@ -293,11 +295,9 @@ export default function ProjectDetail() {
         <TabsContent value="resources" className="pt-4 m-0">
           <ResourcesTab projectId={id} project={project} />
         </TabsContent>
-        {(user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER") && (
-          <TabsContent value="expenses" className="pt-4 m-0">
-            <ExpensesTab projectId={id} project={project} />
-          </TabsContent>
-        )}
+        <TabsContent value="expenses" className="pt-4 m-0">
+          <ExpensesTab projectId={id} project={project} />
+        </TabsContent>
         <TabsContent value="report" className="pt-4 m-0">
           <ReportTab projectId={id} project={project} />
         </TabsContent>
@@ -327,7 +327,11 @@ function expenseCategoryLabel(value: string): string {
 function ExpensesTab({ projectId, project }: { projectId: string; project: any }) {
   const { toast } = useToast();
   const qc = useQueryClient();
+  const { user } = useAuth();
   const { data: expenses, isLoading } = useListProjectExpenses(projectId);
+  const isApprover =
+    user?.role === "MANAGEMENT" ||
+    (user?.role === "PROJECT_MANAGER" && project?.pmId === user.id);
 
   const [category, setCategory] = useState<string>("SOFTWARE");
   const [description, setDescription] = useState("");
@@ -381,6 +385,28 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
     },
   });
 
+  const approveMutation = useApproveProjectExpense({
+    mutation: {
+      onSuccess: () => {
+        toast({ title: "Expense disetujui", description: "Total cost project diperbarui." });
+        invalidateAll();
+      },
+      onError: (e: any) =>
+        toast({ variant: "destructive", title: "Gagal approve", description: e?.message ?? "Unknown error" }),
+    },
+  });
+
+  const rejectMutation = useRejectProjectExpense({
+    mutation: {
+      onSuccess: () => {
+        toast({ title: "Expense ditolak" });
+        invalidateAll();
+      },
+      onError: (e: any) =>
+        toast({ variant: "destructive", title: "Gagal reject", description: e?.message ?? "Unknown error" }),
+    },
+  });
+
   const removeMutation = useRemoveProjectExpense({
     mutation: {
       onSuccess: () => {
@@ -418,7 +444,15 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
   if (isLoading) return <LoadingPage />;
 
   const list = expenses ?? [];
-  const totalAdditional = list.reduce((s: number, e: any) => s + (e.amount ?? 0), 0);
+  const totalApproved = list.reduce(
+    (s: number, e: any) => s + ((e.status === "APPROVED" ? e.amount : 0) ?? 0),
+    0,
+  );
+  const totalPending = list.reduce(
+    (s: number, e: any) => s + ((e.status === "PENDING" ? e.amount : 0) ?? 0),
+    0,
+  );
+  const totalAdditional = totalApproved;
   const resourceCost = project?.resourceCost ?? 0;
   const totalCost = resourceCost + totalAdditional;
 
@@ -428,13 +462,14 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
         <CardHeader>
           <CardTitle className="text-base">Additional Project Expenses</CardTitle>
           <CardDescription>
-            Record purchases or costs outside of resource time (e.g. software, hardware, licenses). These values automatically add to the <span className="font-medium text-foreground">project total cost</span> and affect profit/margin in the Financials tab.
+            Catat biaya non-resource (software, hardware, lisensi, perjalanan). Siapa saja yang ada di project boleh submit; PM/Management menyetujui. Hanya expense ber-status <span className="font-medium text-foreground">APPROVED</span> yang dihitung ke total cost &amp; margin.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 text-sm">
             <SummaryStatInline label="Resource Cost" value={formatIDR(resourceCost)} />
-            <SummaryStatInline label="Additional Cost" value={formatIDR(totalAdditional)} highlight />
+            <SummaryStatInline label="Additional Cost (Approved)" value={formatIDR(totalApproved)} highlight />
+            <SummaryStatInline label="Pending Approval" value={formatIDR(totalPending)} />
             <SummaryStatInline label="Total Cost" value={formatIDR(totalCost)} />
             <SummaryStatInline
               label="Remaining vs Revenue"
@@ -563,8 +598,9 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
                     <th className="py-2 pr-3 font-medium">Description</th>
                     <th className="py-2 pr-3 font-medium">Created By</th>
                     <th className="py-2 pr-3 font-medium">Evidence</th>
+                    <th className="py-2 pr-3 font-medium">Status</th>
                     <th className="py-2 pr-3 font-medium text-right">Amount</th>
-                    <th className="py-2 pr-3 font-medium text-right w-12"></th>
+                    <th className="py-2 pr-3 font-medium text-right w-[180px]">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -593,31 +629,67 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
                           <span className="text-xs text-muted-foreground">—</span>
                         )}
                       </td>
+                      <td className="py-2 pr-3">
+                        <ExpenseStatusBadge status={e.status ?? "PENDING"} reason={e.rejectionReason} />
+                      </td>
                       <td className="py-2 pr-3 text-right font-mono">{formatIDR(e.amount)}</td>
                       <td className="py-2 pr-3 text-right">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
-                          disabled={removeMutation.isPending}
-                          data-testid={`button-remove-expense-${e.id}`}
-                          onClick={() => {
-                            if (confirm(`Remove expense "${e.description}"?`)) {
-                              removeMutation.mutate({ expenseId: e.id });
-                            }
-                          }}
-                          title="Remove"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <div className="flex items-center justify-end gap-1">
+                          {isApprover && e.status === "PENDING" && (
+                            <>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-7 px-2 text-xs border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10"
+                                disabled={approveMutation.isPending}
+                                data-testid={`button-approve-expense-${e.id}`}
+                                onClick={() => approveMutation.mutate({ expenseId: e.id })}
+                              >
+                                Approve
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-7 px-2 text-xs border-destructive/40 text-destructive hover:bg-destructive/10"
+                                disabled={rejectMutation.isPending}
+                                data-testid={`button-reject-expense-${e.id}`}
+                                onClick={() => {
+                                  const reason = prompt(`Alasan menolak "${e.description}"?`, "");
+                                  if (reason && reason.trim()) {
+                                    rejectMutation.mutate({ expenseId: e.id, data: { reason: reason.trim() } });
+                                  }
+                                }}
+                              >
+                                Reject
+                              </Button>
+                            </>
+                          )}
+                          {(e.status === "PENDING" || isApprover) && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
+                              disabled={removeMutation.isPending}
+                              data-testid={`button-remove-expense-${e.id}`}
+                              onClick={() => {
+                                if (confirm(`Remove expense "${e.description}"?`)) {
+                                  removeMutation.mutate({ expenseId: e.id });
+                                }
+                              }}
+                              title="Remove"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
                   <tr className="bg-muted/30">
-                    <td colSpan={5} className="py-2 pr-3 text-right text-xs uppercase tracking-wide text-muted-foreground">
-                      Total Additional Cost
+                    <td colSpan={6} className="py-2 pr-3 text-right text-xs uppercase tracking-wide text-muted-foreground">
+                      Total Additional Cost (APPROVED only)
                     </td>
-                    <td className="py-2 pr-3 text-right font-mono font-semibold">{formatIDR(totalAdditional)}</td>
+                    <td className="py-2 pr-3 text-right font-mono font-semibold">{formatIDR(totalApproved)}</td>
                     <td></td>
                   </tr>
                 </tbody>
@@ -627,6 +699,19 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+function ExpenseStatusBadge({ status, reason }: { status: string; reason?: string | null }) {
+  const map: Record<string, string> = {
+    PENDING: "bg-amber-500/15 text-amber-400 border-amber-500/30",
+    APPROVED: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
+    REJECTED: "bg-destructive/15 text-destructive border-destructive/30",
+  };
+  return (
+    <Badge variant="outline" className={`${map[status] ?? "bg-muted"} text-[10px]`} title={reason ?? ""}>
+      {status}
+    </Badge>
   );
 }
 

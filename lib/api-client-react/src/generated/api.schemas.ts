@@ -69,6 +69,23 @@ export const TaskStatus = {
   DONE: "DONE",
 } as const;
 
+export type Seniority = (typeof Seniority)[keyof typeof Seniority];
+
+export const Seniority = {
+  JUNIOR: "JUNIOR",
+  MID: "MID",
+  SENIOR: "SENIOR",
+  PRINCIPAL: "PRINCIPAL",
+} as const;
+
+export type ExpenseStatus = (typeof ExpenseStatus)[keyof typeof ExpenseStatus];
+
+export const ExpenseStatus = {
+  PENDING: "PENDING",
+  APPROVED: "APPROVED",
+  REJECTED: "REJECTED",
+} as const;
+
 export interface TaskAssignee {
   userId: string;
   name: string;
@@ -87,6 +104,7 @@ export interface Task {
    * @maximum 100
    */
   progressPercent: number;
+  billable: boolean;
   startDate?: string | null;
   endDate?: string | null;
   assigneeId?: string | null;
@@ -108,6 +126,7 @@ export interface CreateTaskBody {
    * @maximum 100
    */
   progressPercent?: number;
+  billable?: boolean;
   startDate?: string | null;
   endDate?: string | null;
   assigneeId?: string | null;
@@ -123,6 +142,7 @@ export interface UpdateTaskBody {
    * @maximum 100
    */
   progressPercent?: number;
+  billable?: boolean;
   startDate?: string | null;
   endDate?: string | null;
   assigneeId?: string | null;
@@ -146,6 +166,24 @@ export interface LogTaskTimeBody {
   loggedAt?: string;
 }
 
+export type UserSeniority =
+  | (typeof UserSeniority)[keyof typeof UserSeniority]
+  | null;
+
+export const UserSeniority = {
+  JUNIOR: "JUNIOR",
+  MID: "MID",
+  SENIOR: "SENIOR",
+  PRINCIPAL: "PRINCIPAL",
+} as const;
+
+export interface UserSkillInfo {
+  skillId: string;
+  name: string;
+  category?: string | null;
+  proficiency?: number;
+}
+
 export interface User {
   id: string;
   email: string;
@@ -153,6 +191,10 @@ export interface User {
   role: UserRole;
   title?: string | null;
   dailyRate?: number | null;
+  seniority?: UserSeniority;
+  businessUnitId?: string | null;
+  businessUnitName?: string | null;
+  skills?: UserSkillInfo[];
   isActive: boolean;
   managerId?: string | null;
   principalId?: string | null;
@@ -169,6 +211,17 @@ export interface AuthResponse {
   user: User;
 }
 
+export type CreateUserBodySeniority =
+  | (typeof CreateUserBodySeniority)[keyof typeof CreateUserBodySeniority]
+  | null;
+
+export const CreateUserBodySeniority = {
+  JUNIOR: "JUNIOR",
+  MID: "MID",
+  SENIOR: "SENIOR",
+  PRINCIPAL: "PRINCIPAL",
+} as const;
+
 export interface CreateUserBody {
   email: string;
   password: string;
@@ -176,15 +229,32 @@ export interface CreateUserBody {
   role: UserRole;
   title?: string;
   dailyRate?: number;
+  seniority?: CreateUserBodySeniority;
+  businessUnitId?: string | null;
+  skillIds?: string[];
   managerId?: string | null;
   principalId?: string | null;
 }
+
+export type UpdateUserBodySeniority =
+  | (typeof UpdateUserBodySeniority)[keyof typeof UpdateUserBodySeniority]
+  | null;
+
+export const UpdateUserBodySeniority = {
+  JUNIOR: "JUNIOR",
+  MID: "MID",
+  SENIOR: "SENIOR",
+  PRINCIPAL: "PRINCIPAL",
+} as const;
 
 export interface UpdateUserBody {
   name?: string;
   role?: UserRole;
   title?: string;
   dailyRate?: number;
+  seniority?: UpdateUserBodySeniority;
+  businessUnitId?: string | null;
+  skillIds?: string[];
   isActive?: boolean;
   password?: string;
   managerId?: string | null;
@@ -282,6 +352,11 @@ export interface ProjectExpense {
   spentAt: string;
   evidenceUrl?: string | null;
   evidenceFileName?: string | null;
+  status: ExpenseStatus;
+  approvedById?: string | null;
+  approvedByName?: string | null;
+  approvedAt?: string | null;
+  rejectionReason?: string | null;
   createdById?: string | null;
   createdByName?: string | null;
   createdAt: string;
@@ -561,12 +636,117 @@ export interface UtilizationRow {
   utilizationPct: number;
 }
 
+export interface BusinessUnit {
+  id: string;
+  name: string;
+  description?: string | null;
+  isActive: boolean;
+  memberCount?: number;
+  createdAt: string;
+}
+
+export interface CreateBusinessUnitBody {
+  name: string;
+  description?: string | null;
+}
+
+export interface UpdateBusinessUnitBody {
+  name?: string;
+  description?: string | null;
+  isActive?: boolean;
+}
+
+export interface Skill {
+  id: string;
+  name: string;
+  category?: string | null;
+  isActive: boolean;
+  userCount?: number;
+  createdAt: string;
+}
+
+export interface CreateSkillBody {
+  name: string;
+  category?: string | null;
+}
+
+export interface UpdateSkillBody {
+  name?: string;
+  category?: string | null;
+  isActive?: boolean;
+}
+
+export type ResourcePlanningCellAllocationsItem = {
+  projectId: string;
+  projectName: string;
+  projectCode?: string | null;
+  mandays: number;
+};
+
+export interface ResourcePlanningCell {
+  weekStart: string;
+  plannedMandays: number;
+  allocations: ResourcePlanningCellAllocationsItem[];
+}
+
+export type ResourcePlanningRowSeniority =
+  | (typeof ResourcePlanningRowSeniority)[keyof typeof ResourcePlanningRowSeniority]
+  | null;
+
+export const ResourcePlanningRowSeniority = {
+  JUNIOR: "JUNIOR",
+  MID: "MID",
+  SENIOR: "SENIOR",
+  PRINCIPAL: "PRINCIPAL",
+} as const;
+
+export interface ResourcePlanningRow {
+  userId: string;
+  userName: string;
+  role: UserRole;
+  seniority?: ResourcePlanningRowSeniority;
+  businessUnitId?: string | null;
+  businessUnitName?: string | null;
+  skills?: string[];
+  cells: ResourcePlanningCell[];
+}
+
+export interface ResourcePlanningGroup {
+  businessUnitId: string | null;
+  businessUnitName: string;
+  rows: ResourcePlanningRow[];
+}
+
+export interface ResourcePlanningMatrix {
+  startDate: string;
+  weeks: number;
+  weekStarts: string[];
+  groups: ResourcePlanningGroup[];
+}
+
 export type ListAvailableUsersParams = {
   role: UserRole;
 };
 
 export type ListProjectsParams = {
   status?: string;
+};
+
+export type RejectProjectExpenseBody = {
+  reason: string;
+};
+
+export type GetResourcePlanningParams = {
+  /**
+   * ISO date YYYY-MM-DD; defaults to start of current week
+   */
+  startDate?: string;
+  /**
+   * Number of weeks (default 8)
+   * @minimum 1
+   * @maximum 26
+   */
+  weeks?: number;
 };
 
 export type ListTimesheetsParams = {

@@ -5,6 +5,7 @@
  * SecureProfit Hub API
  * OpenAPI spec version: 0.1.0
  */
+import type { CreateUserBodySeniority } from "./createUserBodySeniority";
 import type { UserRole } from "./userRole";
 
 export interface CreateUserBody {
@@ -14,6 +15,9 @@ export interface CreateUserBody {
   role: UserRole;
   title?: string;
   dailyRate?: number;
+  seniority?: CreateUserBodySeniority;
+  businessUnitId?: string | null;
+  skillIds?: string[];
   managerId?: string | null;
   principalId?: string | null;
 }

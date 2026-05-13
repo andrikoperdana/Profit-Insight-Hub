@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   useListProjects,
+  useListExpenses,
   useListTimesheets,
   ProjectStatus,
   customFetch,
@@ -98,6 +99,12 @@ export default function PMDashboard() {
   const { toast } = useToast();
 
   const { data: allProjects, isLoading: loadingProjects } = useListProjects();
+  const { data: allExpenses } = useListExpenses();
+  const pendingExpenses = useMemo(
+    () => (allExpenses ?? []).filter((e: any) => e.status === "PENDING"),
+    [allExpenses],
+  );
+  const pendingExpenseTotal = pendingExpenses.reduce((s: number, e: any) => s + (e.amount ?? 0), 0);
   const tsParams = { scope: "approval" as const };
   const { data: pendingTimesheets } = useListTimesheets(tsParams, {
     query: { queryKey: getListTimesheetsQueryKey(tsParams) },
@@ -205,6 +212,26 @@ export default function PMDashboard() {
   return (
     <div className="space-y-6">
       <WelcomeBanner subtitle="Snapshot of your active projects, approval queue, and team status." />
+
+      {pendingExpenses.length > 0 && (
+        <Card className="border-amber-500/40 bg-amber-500/5" data-testid="card-pending-expenses">
+          <CardContent className="flex items-center justify-between gap-3 py-4">
+            <div>
+              <div className="text-sm font-medium text-amber-400">
+                Expense Menunggu Persetujuan ({pendingExpenses.length})
+              </div>
+              <div className="text-xs text-muted-foreground">
+                Total nilai pending: <span className="font-mono font-medium text-foreground">{formatIDR(pendingExpenseTotal)}</span>. Review &amp; approve di tab Expenses tiap project; hanya APPROVED yang masuk ke perhitungan margin.
+              </div>
+            </div>
+            <Link href="/expenses">
+              <Button size="sm" variant="outline" className="border-amber-500/50 text-amber-400 hover:bg-amber-500/10">
+                <Inbox className="h-4 w-4 mr-1" /> Lihat
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      )}
 
       {myDrafts.length > 0 && (
         <Card className="border-purple-500/40 bg-purple-500/5">

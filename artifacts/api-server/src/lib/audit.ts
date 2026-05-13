@@ -33,6 +33,14 @@ export type AuditAction =
   | "project.seed_demo"
   | "expense.created"
   | "expense.deleted"
+  | "expense.approved"
+  | "expense.rejected"
+  | "skill.created"
+  | "skill.updated"
+  | "skill.deleted"
+  | "business_unit.created"
+  | "business_unit.updated"
+  | "business_unit.deleted"
   | "task.created"
   | "task.updated"
   | "task.deleted"
@@ -50,7 +58,9 @@ export type EntityType =
   | "SurveyTemplate"
   | "ProjectExpense"
   | "Task"
-  | "TaskTimeLog";
+  | "TaskTimeLog"
+  | "Skill"
+  | "BusinessUnit";
 
 interface AuditInput {
   action: AuditAction;

@@ -17,6 +17,9 @@ import expensesRouter from "./expenses.js";
 import tasksRouter from "./tasks.js";
 import notificationsRouter from "./notifications.js";
 import principalRouter from "./principal.js";
+import skillsRouter from "./skills.js";
+import businessUnitsRouter from "./business-units.js";
+import resourcePlanningRouter from "./resource-planning.js";
 
 const router: IRouter = Router();
 
@@ -38,5 +41,8 @@ router.use(expensesRouter);
 router.use(tasksRouter);
 router.use(notificationsRouter);
 router.use(principalRouter);
+router.use(skillsRouter);
+router.use(businessUnitsRouter);
+router.use(resourcePlanningRouter);
 
 export default router;

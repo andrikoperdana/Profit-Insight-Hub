@@ -526,6 +526,170 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/SuccessMessage" }
 
+  /expenses/{expenseId}/approve:
+    post:
+      operationId: approveProjectExpense
+      tags: [expenses]
+      description: PM-of-project or MANAGEMENT approves a PENDING expense. APPROVED expenses count toward project actualCost.
+      parameters:
+        - { name: expenseId, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ProjectExpense" }
+
+  /expenses/{expenseId}/reject:
+    post:
+      operationId: rejectProjectExpense
+      tags: [expenses]
+      description: PM-of-project or MANAGEMENT rejects a PENDING expense with a reason.
+      parameters:
+        - { name: expenseId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reason]
+              properties:
+                reason: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ProjectExpense" }
+
+  /business-units:
+    get:
+      operationId: listBusinessUnits
+      tags: [business-units]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/BusinessUnit" }
+    post:
+      operationId: createBusinessUnit
+      tags: [business-units]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateBusinessUnitBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BusinessUnit" }
+
+  /business-units/{id}:
+    patch:
+      operationId: updateBusinessUnit
+      tags: [business-units]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpdateBusinessUnitBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BusinessUnit" }
+    delete:
+      operationId: deleteBusinessUnit
+      tags: [business-units]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /skills:
+    get:
+      operationId: listSkills
+      tags: [skills]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Skill" }
+    post:
+      operationId: createSkill
+      tags: [skills]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateSkillBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Skill" }
+
+  /skills/{id}:
+    patch:
+      operationId: updateSkill
+      tags: [skills]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpdateSkillBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Skill" }
+    delete:
+      operationId: deleteSkill
+      tags: [skills]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /resource-planning:
+    get:
+      operationId: getResourcePlanning
+      tags: [resource-planning]
+      description: Returns matrix of users grouped by Business Unit with allocations across a date window.
+      parameters:
+        - { name: startDate, in: query, required: false, schema: { type: string }, description: "ISO date YYYY-MM-DD; defaults to start of current week" }
+        - { name: weeks,     in: query, required: false, schema: { type: integer, minimum: 1, maximum: 26 }, description: "Number of weeks (default 8)" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ResourcePlanningMatrix" }
+
   /timesheets:
     get:
       operationId: listTimesheets
@@ -873,6 +1037,14 @@ components:
       type: string
       enum: [TODO, IN_PROGRESS, BLOCKED, DONE]
 
+    Seniority:
+      type: string
+      enum: [JUNIOR, MID, SENIOR, PRINCIPAL]
+
+    ExpenseStatus:
+      type: string
+      enum: [PENDING, APPROVED, REJECTED]
+
     TaskAssignee:
       type: object
       required: [userId, name]
@@ -882,7 +1054,7 @@ components:
 
     Task:
       type: object
-      required: [id, projectId, title, status, progressPercent, loggedHours, assignees, createdAt, updatedAt]
+      required: [id, projectId, title, status, progressPercent, billable, loggedHours, assignees, createdAt, updatedAt]
       properties:
         id: { type: string }
         projectId: { type: string }
@@ -892,6 +1064,7 @@ components:
         description: { type: string, nullable: true }
         status: { $ref: "#/components/schemas/TaskStatus" }
         progressPercent: { type: integer, minimum: 0, maximum: 100 }
+        billable: { type: boolean }
         startDate: { type: string, nullable: true }
         endDate: { type: string, nullable: true }
         assigneeId: { type: string, nullable: true }
@@ -913,6 +1086,7 @@ components:
         description: { type: string, nullable: true }
         status: { $ref: "#/components/schemas/TaskStatus" }
         progressPercent: { type: integer, minimum: 0, maximum: 100 }
+        billable: { type: boolean }
         startDate: { type: string, nullable: true }
         endDate: { type: string, nullable: true }
         assigneeId: { type: string, nullable: true }
@@ -927,6 +1101,7 @@ components:
         description: { type: string, nullable: true }
         status: { $ref: "#/components/schemas/TaskStatus" }
         progressPercent: { type: integer, minimum: 0, maximum: 100 }
+        billable: { type: boolean }
         startDate: { type: string, nullable: true }
         endDate: { type: string, nullable: true }
         assigneeId: { type: string, nullable: true }
@@ -965,6 +1140,12 @@ components:
         role: { $ref: "#/components/schemas/UserRole" }
         title: { type: string, nullable: true }
         dailyRate: { type: number, nullable: true }
+        seniority: { type: string, nullable: true, enum: [JUNIOR, MID, SENIOR, PRINCIPAL, null] }
+        businessUnitId: { type: string, nullable: true }
+        businessUnitName: { type: string, nullable: true }
+        skills:
+          type: array
+          items: { $ref: "#/components/schemas/UserSkillInfo" }
         isActive: { type: boolean }
         managerId: { type: string, nullable: true }
         principalId: { type: string, nullable: true }
@@ -994,6 +1175,11 @@ components:
         role: { $ref: "#/components/schemas/UserRole" }
         title: { type: string }
         dailyRate: { type: number }
+        seniority: { type: string, nullable: true, enum: [JUNIOR, MID, SENIOR, PRINCIPAL, null] }
+        businessUnitId: { type: string, nullable: true }
+        skillIds:
+          type: array
+          items: { type: string }
         managerId: { type: string, nullable: true }
         principalId: { type: string, nullable: true }
 
@@ -1004,6 +1190,11 @@ components:
         role: { $ref: "#/components/schemas/UserRole" }
         title: { type: string }
         dailyRate: { type: number }
+        seniority: { type: string, nullable: true, enum: [JUNIOR, MID, SENIOR, PRINCIPAL, null] }
+        businessUnitId: { type: string, nullable: true }
+        skillIds:
+          type: array
+          items: { type: string }
         isActive: { type: boolean }
         password: { type: string }
         managerId: { type: string, nullable: true }
@@ -1085,7 +1276,7 @@ components:
 
     ProjectExpense:
       type: object
-      required: [id, projectId, category, description, amount, spentAt, createdAt]
+      required: [id, projectId, category, description, amount, spentAt, status, createdAt]
       properties:
         id: { type: string }
         projectId: { type: string }
@@ -1098,6 +1289,11 @@ components:
         spentAt: { type: string }
         evidenceUrl: { type: string, nullable: true }
         evidenceFileName: { type: string, nullable: true }
+        status: { $ref: "#/components/schemas/ExpenseStatus" }
+        approvedById: { type: string, nullable: true }
+        approvedByName: { type: string, nullable: true }
+        approvedAt: { type: string, nullable: true }
+        rejectionReason: { type: string, nullable: true }
         createdById: { type: string, nullable: true }
         createdByName: { type: string, nullable: true }
         createdAt: { type: string }
@@ -1407,3 +1603,119 @@ components:
         plannedMandays: { type: number }
         actualMandays: { type: number }
         utilizationPct: { type: number }
+
+    BusinessUnit:
+      type: object
+      required: [id, name, isActive, createdAt]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        isActive: { type: boolean }
+        memberCount: { type: integer }
+        createdAt: { type: string }
+
+    CreateBusinessUnitBody:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string }
+        description: { type: string, nullable: true }
+
+    UpdateBusinessUnitBody:
+      type: object
+      properties:
+        name: { type: string }
+        description: { type: string, nullable: true }
+        isActive: { type: boolean }
+
+    Skill:
+      type: object
+      required: [id, name, isActive, createdAt]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        category: { type: string, nullable: true }
+        isActive: { type: boolean }
+        userCount: { type: integer }
+        createdAt: { type: string }
+
+    CreateSkillBody:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string }
+        category: { type: string, nullable: true }
+
+    UpdateSkillBody:
+      type: object
+      properties:
+        name: { type: string }
+        category: { type: string, nullable: true }
+        isActive: { type: boolean }
+
+    UserSkillInfo:
+      type: object
+      required: [skillId, name]
+      properties:
+        skillId: { type: string }
+        name: { type: string }
+        category: { type: string, nullable: true }
+        proficiency: { type: integer }
+
+    ResourcePlanningCell:
+      type: object
+      required: [weekStart, plannedMandays, allocations]
+      properties:
+        weekStart: { type: string }
+        plannedMandays: { type: number }
+        allocations:
+          type: array
+          items:
+            type: object
+            required: [projectId, projectName, mandays]
+            properties:
+              projectId: { type: string }
+              projectName: { type: string }
+              projectCode: { type: string, nullable: true }
+              mandays: { type: number }
+
+    ResourcePlanningRow:
+      type: object
+      required: [userId, userName, role, cells]
+      properties:
+        userId: { type: string }
+        userName: { type: string }
+        role: { $ref: "#/components/schemas/UserRole" }
+        seniority: { type: string, nullable: true, enum: [JUNIOR, MID, SENIOR, PRINCIPAL, null] }
+        businessUnitId: { type: string, nullable: true }
+        businessUnitName: { type: string, nullable: true }
+        skills:
+          type: array
+          items: { type: string }
+        cells:
+          type: array
+          items: { $ref: "#/components/schemas/ResourcePlanningCell" }
+
+    ResourcePlanningGroup:
+      type: object
+      required: [businessUnitId, businessUnitName, rows]
+      properties:
+        businessUnitId: { type: string, nullable: true }
+        businessUnitName: { type: string }
+        rows:
+          type: array
+          items: { $ref: "#/components/schemas/ResourcePlanningRow" }
+
+    ResourcePlanningMatrix:
+      type: object
+      required: [startDate, weeks, weekStarts, groups]
+      properties:
+        startDate: { type: string }
+        weeks: { type: integer }
+        weekStarts:
+          type: array
+          items: { type: string }
+        groups:
+          type: array
+          items: { $ref: "#/components/schemas/ResourcePlanningGroup" }

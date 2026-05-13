@@ -47,6 +47,81 @@ async function ensurePrincipals(passwordDefault: string) {
   }
 }
 
+async function ensureBusinessUnitsAndSkills() {
+  const buSeed = [
+    { name: "Pentest", description: "Offensive security testing — web, mobile, infrastructure, red team." },
+    { name: "GRC", description: "Governance, Risk &amp; Compliance — ISO 27001, SOC 2, PCI DSS, SWIFT, audit." },
+    { name: "Threat Hunting", description: "Threat hunting, DFIR, SOC operations, incident response." },
+  ];
+  for (const b of buSeed) {
+    await (prisma as any).businessUnit.upsert({
+      where: { name: b.name },
+      update: {},
+      create: { name: b.name, description: b.description },
+    });
+  }
+  const skillSeed = [
+    { name: "Web Pentest",      category: "Pentest" },
+    { name: "Mobile Pentest",   category: "Pentest" },
+    { name: "Infra Pentest",    category: "Pentest" },
+    { name: "Red Team",         category: "Pentest" },
+    { name: "SWIFT Audit",      category: "Compliance" },
+    { name: "ISO 27001 Audit",  category: "Compliance" },
+    { name: "SOC 2 Readiness",  category: "Compliance" },
+    { name: "PCI DSS Audit",    category: "Compliance" },
+    { name: "DFIR",             category: "Forensics" },
+    { name: "Threat Hunting",   category: "Forensics" },
+    { name: "Technical Writing",category: "Reporting" },
+  ];
+  for (const s of skillSeed) {
+    await (prisma as any).skill.upsert({
+      where: { name: s.name },
+      update: {},
+      create: { name: s.name, category: s.category },
+    });
+  }
+
+  const bus = await (prisma as any).businessUnit.findMany();
+  const skills = await (prisma as any).skill.findMany();
+  const buByName = new Map<string, any>(bus.map((b: any) => [b.name, b]));
+  const skillByName = new Map<string, any>(skills.map((s: any) => [s.name, s]));
+
+  type UserAssign = { email: string; seniority?: string; bu?: string; skills?: string[] };
+  const assigns: UserAssign[] = [
+    { email: "pm@secureprofit.id",                    seniority: "SENIOR",    bu: "GRC" },
+    { email: "konsultan@secureprofit.id",             seniority: "SENIOR",    bu: "Pentest",        skills: ["Web Pentest", "Infra Pentest", "Red Team"] },
+    { email: "konsultan2@secureprofit.id",            seniority: "MID",       bu: "Pentest",        skills: ["Web Pentest", "Mobile Pentest"] },
+    { email: "writer@secureprofit.id",                seniority: "MID",       bu: "GRC",            skills: ["Technical Writing", "ISO 27001 Audit"] },
+    { email: "admin@secureprofit.id",                 seniority: "JUNIOR",    bu: "GRC" },
+    { email: "principal.kon.h7q4@itsecasia.com",      seniority: "PRINCIPAL", bu: "Pentest",        skills: ["Web Pentest", "Red Team", "Threat Hunting"] },
+    { email: "principal.tw.m9k2@itsecasia.com",       seniority: "PRINCIPAL", bu: "GRC",            skills: ["Technical Writing", "ISO 27001 Audit", "SOC 2 Readiness"] },
+    { email: "principal.ap.r3n8@itsecasia.com",       seniority: "PRINCIPAL", bu: "GRC" },
+  ];
+  for (const a of assigns) {
+    const bu = a.bu ? buByName.get(a.bu) : undefined;
+    const u = await prisma.user.findUnique({ where: { email: a.email } });
+    if (!u) continue;
+    await prisma.user.update({
+      where: { id: u.id },
+      data: {
+        ...(a.seniority ? { seniority: a.seniority as any } : {}),
+        ...(bu ? { businessUnitId: bu.id } : {}),
+      },
+    });
+    if (a.skills?.length) {
+      for (const sname of a.skills) {
+        const sk = skillByName.get(sname);
+        if (!sk) continue;
+        await (prisma as any).userSkill.upsert({
+          where: { userId_skillId: { userId: u.id, skillId: sk.id } },
+          update: {},
+          create: { userId: u.id, skillId: sk.id },
+        });
+      }
+    }
+  }
+}
+
 async function main() {
   const hash = (p: string) => bcrypt.hash(p, 10);
   const passwordDefault = await hash("password123");
@@ -55,7 +130,8 @@ async function main() {
   if (existingUsers > 0) {
     console.log(`Existing data — running idempotent Principal hierarchy patch only.`);
     await ensurePrincipals(passwordDefault);
-    console.log("Principals + hierarchy ensured.");
+    await ensureBusinessUnitsAndSkills();
+    console.log("Principals + hierarchy + BU/Skills ensured.");
     return;
   }
 
@@ -184,6 +260,8 @@ async function main() {
       { type: "project.created", message: `Project ${p3.code} created (Observation)`, userId: budi.id, projectId: p3.id },
     ],
   });
+
+  await ensureBusinessUnitsAndSkills();
 
   console.log("Seed complete.");
 }

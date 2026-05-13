@@ -53,18 +53,35 @@ enum TaskStatus {
   DONE
 }
 
+enum Seniority {
+  JUNIOR
+  MID
+  SENIOR
+  PRINCIPAL
+}
+
+enum ExpenseStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model User {
-  id           String    @id @default(cuid())
-  email        String    @unique
+  id           String     @id @default(cuid())
+  email        String     @unique
   passwordHash String
   name         String
   role         UserRole
   title        String?
   dailyRate    Float?
-  isActive     Boolean   @default(true)
+  seniority    Seniority?
+  isActive     Boolean    @default(true)
   deletedAt    DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  businessUnitId String?
+  businessUnit   BusinessUnit? @relation(fields: [businessUnitId], references: [id])
 
   managerId   String?
   manager     User?   @relation("UserManager", fields: [managerId], references: [id])
@@ -72,6 +89,9 @@ model User {
   principalId String?
   principal   User?   @relation("UserPrincipal", fields: [principalId], references: [id])
   supervisees User[]  @relation("UserPrincipal")
+
+  skills           UserSkill[]
+  approvedExpenses ProjectExpense[] @relation("ExpenseApprover")
 
   projectsAsSales    Project[]         @relation("ProjectSales")
   projectsAsPm       Project[]         @relation("ProjectPm")
@@ -254,22 +274,64 @@ model Document {
 }
 
 model ProjectExpense {
-  id               String   @id @default(cuid())
+  id               String        @id @default(cuid())
   projectId        String
-  project          Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project          Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
   category         String
   description      String
   amount           Float
-  spentAt          DateTime @default(now())
-  evidenceUrl      String?  @db.Text
+  spentAt          DateTime      @default(now())
+  evidenceUrl      String?       @db.Text
   evidenceFileName String?
+  status           ExpenseStatus @default(PENDING)
+  approvedById     String?
+  approvedBy       User?         @relation("ExpenseApprover", fields: [approvedById], references: [id])
+  approvedAt       DateTime?
+  rejectionReason  String?
   createdById      String?
-  createdBy        User?    @relation(fields: [createdById], references: [id])
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  createdBy        User?         @relation(fields: [createdById], references: [id])
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 
   @@index([projectId])
   @@index([spentAt])
+  @@index([status])
+}
+
+model BusinessUnit {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users User[]
+}
+
+model Skill {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  category  String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users UserSkill[]
+}
+
+model UserSkill {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skillId     String
+  skill       Skill    @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  proficiency Int      @default(3)
+  createdAt   DateTime @default(now())
+
+  @@unique([userId, skillId])
+  @@index([userId])
+  @@index([skillId])
 }
 
 model Activity {
@@ -291,6 +353,7 @@ model Task {
   description     String?
   status          TaskStatus @default(TODO)
   progressPercent Int        @default(0)
+  billable        Boolean    @default(true)
   startDate       DateTime?
   endDate         DateTime?
   assigneeId      String?

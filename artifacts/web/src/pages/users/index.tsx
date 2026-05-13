@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import { canManageUsers, RoleLabels, isPrincipalRole, PRINCIPAL_TO_REPORT_ROLE } from "@/lib/roles";
-import { useListUsers, useCreateUser, useUpdateUser } from "@workspace/api-client-react";
+import {
+  useListUsers,
+  useCreateUser,
+  useUpdateUser,
+  useListBusinessUnits,
+  useListSkills,
+} from "@workspace/api-client-react";
 import { getListUsersQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plus, ShieldAlert, Pencil, Download } from "lucide-react";
@@ -59,6 +65,8 @@ const userSchema = z.object({
   dailyRate: z.coerce.number().min(0).optional(),
   managerId: z.string().optional(),
   principalId: z.string().optional(),
+  seniority: z.string().optional(),
+  businessUnitId: z.string().optional(),
 });
 
 type UserFormValues = z.infer<typeof userSchema>;
@@ -74,9 +82,18 @@ const editUserSchema = z.object({
   ),
   managerId: z.string().optional(),
   principalId: z.string().optional(),
+  seniority: z.string().optional(),
+  businessUnitId: z.string().optional(),
 });
 
 type EditUserFormValues = z.infer<typeof editUserSchema>;
+
+const SENIORITY_OPTIONS: { value: string; label: string }[] = [
+  { value: "JUNIOR", label: "Junior" },
+  { value: "MID", label: "Mid" },
+  { value: "SENIOR", label: "Senior" },
+  { value: "PRINCIPAL", label: "Principal" },
+];
 
 type UserRow = {
   id: string;
@@ -147,6 +164,10 @@ export default function UsersList() {
   const [superviseeIds, setSuperviseeIds] = useState<string[]>([]);
   const [initialReportPmIds, setInitialReportPmIds] = useState<string[]>([]);
   const [initialSuperviseeIds, setInitialSuperviseeIds] = useState<string[]>([]);
+  const [createSkillIds, setCreateSkillIds] = useState<string[]>([]);
+  const [editSkillIds, setEditSkillIds] = useState<string[]>([]);
+  const { data: businessUnits } = useListBusinessUnits();
+  const { data: skillsCatalog } = useListSkills();
 
   const { data: users, isLoading } = useListUsers({
     query: { queryKey: getListUsersQueryKey() }
@@ -192,12 +213,12 @@ export default function UsersList() {
 
   const form = useForm<UserFormValues>({
     resolver: zodResolver(userSchema),
-    defaultValues: { name: "", email: "", password: "password123", role: UserRole.KONSULTAN, title: "", dailyRate: 0, managerId: NONE, principalId: NONE }
+    defaultValues: { name: "", email: "", password: "password123", role: UserRole.KONSULTAN, title: "", dailyRate: 0, managerId: NONE, principalId: NONE, seniority: NONE, businessUnitId: NONE }
   });
 
   const editForm = useForm<EditUserFormValues>({
     resolver: zodResolver(editUserSchema),
-    defaultValues: { name: "", role: UserRole.KONSULTAN, title: "", dailyRate: 0, password: "", managerId: NONE, principalId: NONE }
+    defaultValues: { name: "", role: UserRole.KONSULTAN, title: "", dailyRate: 0, password: "", managerId: NONE, principalId: NONE, seniority: NONE, businessUnitId: NONE }
   });
 
   useEffect(() => {
@@ -210,7 +231,11 @@ export default function UsersList() {
         password: "",
         managerId: editingUser.managerId ?? NONE,
         principalId: editingUser.principalId ?? NONE,
+        seniority: ((editingUser as any).seniority as string | null | undefined) ?? NONE,
+        businessUnitId: ((editingUser as any).businessUnitId as string | null | undefined) ?? NONE,
       });
+      const existingSkills = ((editingUser as any).skills as Array<{ skillId: string }> | undefined) ?? [];
+      setEditSkillIds(existingSkills.map((s) => s.skillId));
       // Seed reverse-link state from current users data.
       const allUsers = (users ?? []) as any[];
       if (editingUser.role === UserRole.MANAGEMENT) {
@@ -260,7 +285,12 @@ export default function UsersList() {
     if (PRINCIPAL_FOR_ROLE[data.role]) {
       payload.principalId = data.principalId && data.principalId !== NONE ? data.principalId : null;
     }
-    createUser.mutate({ data: payload as any });
+    payload.seniority = data.seniority && data.seniority !== NONE ? data.seniority : null;
+    payload.businessUnitId = data.businessUnitId && data.businessUnitId !== NONE ? data.businessUnitId : null;
+    payload.skillIds = createSkillIds;
+    createUser.mutate({ data: payload as any }, {
+      onSuccess: () => setCreateSkillIds([]),
+    });
   };
 
   const onEditSubmit = async (data: EditUserFormValues) => {
@@ -280,6 +310,9 @@ export default function UsersList() {
     payload.principalId = PRINCIPAL_FOR_ROLE[data.role] && data.principalId && data.principalId !== NONE
       ? data.principalId
       : null;
+    payload.seniority = data.seniority && data.seniority !== NONE ? data.seniority : null;
+    payload.businessUnitId = data.businessUnitId && data.businessUnitId !== NONE ? data.businessUnitId : null;
+    payload.skillIds = editSkillIds;
     try {
       await editUserMutation.mutateAsync({ id: editingUser.id, data: payload as any });
       // Apply reverse-link diffs (MGMT → PMs.managerId; Principal → reports.principalId).
@@ -485,6 +518,84 @@ export default function UsersList() {
                       )}
                     />
                   )}
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="seniority"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Seniority</FormLabel>
+                          <Select onValueChange={field.onChange} value={field.value || NONE}>
+                            <FormControl>
+                              <SelectTrigger data-testid="select-create-seniority">
+                                <SelectValue placeholder="—" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value={NONE}>— None —</SelectItem>
+                              {SENIORITY_OPTIONS.map((s) => (
+                                <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="businessUnitId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Business Unit</FormLabel>
+                          <Select onValueChange={field.onChange} value={field.value || NONE}>
+                            <FormControl>
+                              <SelectTrigger data-testid="select-create-bu">
+                                <SelectValue placeholder="—" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value={NONE}>— None —</SelectItem>
+                              {(businessUnits ?? []).filter((b: any) => b.isActive).map((b: any) => (
+                                <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="text-sm font-medium text-foreground">Skills</div>
+                    {!skillsCatalog?.length ? (
+                      <p className="text-xs text-muted-foreground">Belum ada skill di katalog.</p>
+                    ) : (
+                      <ScrollArea className="h-32 rounded-md border border-border p-2">
+                        <div className="grid grid-cols-2 gap-1">
+                          {(skillsCatalog ?? []).filter((s: any) => s.isActive).map((s: any) => {
+                            const checked = createSkillIds.includes(s.id);
+                            return (
+                              <label key={s.id} className="flex items-center gap-2 text-xs">
+                                <Checkbox
+                                  checked={checked}
+                                  onCheckedChange={(v) => {
+                                    setCreateSkillIds((prev) =>
+                                      v ? Array.from(new Set([...prev, s.id])) : prev.filter((id) => id !== s.id)
+                                    );
+                                  }}
+                                  data-testid={`check-create-skill-${s.id}`}
+                                />
+                                <span>{s.name}</span>
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </ScrollArea>
+                    )}
+                  </div>
 
                   {PRINCIPAL_FOR_ROLE[watchedCreateRole] && (
                     <FormField
@@ -695,6 +806,84 @@ export default function UsersList() {
                     </FormItem>
                   )}
                 />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={editForm.control}
+                  name="seniority"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Seniority</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value || NONE}>
+                        <FormControl>
+                          <SelectTrigger data-testid="select-edit-seniority">
+                            <SelectValue placeholder="—" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={NONE}>— None —</SelectItem>
+                          {SENIORITY_OPTIONS.map((s) => (
+                            <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={editForm.control}
+                  name="businessUnitId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Business Unit</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value || NONE}>
+                        <FormControl>
+                          <SelectTrigger data-testid="select-edit-bu">
+                            <SelectValue placeholder="—" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={NONE}>— None —</SelectItem>
+                          {(businessUnits ?? []).filter((b: any) => b.isActive).map((b: any) => (
+                            <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <div className="text-sm font-medium text-foreground">Skills</div>
+                {!skillsCatalog?.length ? (
+                  <p className="text-xs text-muted-foreground">Belum ada skill di katalog.</p>
+                ) : (
+                  <ScrollArea className="h-32 rounded-md border border-border p-2">
+                    <div className="grid grid-cols-2 gap-1">
+                      {(skillsCatalog ?? []).filter((s: any) => s.isActive).map((s: any) => {
+                        const checked = editSkillIds.includes(s.id);
+                        return (
+                          <label key={s.id} className="flex items-center gap-2 text-xs">
+                            <Checkbox
+                              checked={checked}
+                              onCheckedChange={(v) => {
+                                setEditSkillIds((prev) =>
+                                  v ? Array.from(new Set([...prev, s.id])) : prev.filter((id) => id !== s.id)
+                                );
+                              }}
+                              data-testid={`check-edit-skill-${s.id}`}
+                            />
+                            <span>{s.name}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  </ScrollArea>
+                )}
               </div>
 
               {watchedEditRole === UserRole.PROJECT_MANAGER && (

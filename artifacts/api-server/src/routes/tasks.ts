@@ -16,6 +16,7 @@ type TaskWithRelations = {
   description: string | null;
   status: string;
   progressPercent: number;
+  billable?: boolean;
   startDate: Date | null;
   endDate: Date | null;
   assigneeId: string | null;
@@ -54,6 +55,7 @@ function serializeTask(t: TaskWithRelations) {
     description: t.description,
     status: t.status,
     progressPercent: t.progressPercent ?? 0,
+    billable: t.billable ?? true,
     startDate: t.startDate ? t.startDate.toISOString() : null,
     endDate: t.endDate ? t.endDate.toISOString() : null,
     assigneeId: primary?.userId ?? null,
@@ -209,7 +211,7 @@ router.post("/projects/:id/tasks", async (req, res) => {
       .json({ error: "Only Management or the assigned PM can create tasks" });
     return;
   }
-  const { title, description, status, startDate, endDate, assigneeId, assigneeIds: rawAssigneeIds, progressPercent } =
+  const { title, description, status, startDate, endDate, assigneeId, assigneeIds: rawAssigneeIds, progressPercent, billable } =
     req.body || {};
   const trimmedTitle = typeof title === "string" ? title.trim() : "";
   if (!trimmedTitle) {
@@ -297,6 +299,7 @@ router.post("/projects/:id/tasks", async (req, res) => {
       description: desc,
       status: st as "TODO" | "IN_PROGRESS" | "BLOCKED" | "DONE",
       progressPercent: pct,
+      billable: billable === false ? false : true,
       startDate: start ?? null,
       endDate: end ?? null,
       assigneeId: primaryId,
@@ -361,10 +364,18 @@ router.patch("/tasks/:taskId", async (req, res) => {
     return;
   }
 
-  const { title, description, status, startDate, endDate, assigneeId, assigneeIds: rawAssigneeIds, progressPercent } =
+  const { title, description, status, startDate, endDate, assigneeId, assigneeIds: rawAssigneeIds, progressPercent, billable } =
     req.body || {};
 
   const data: Record<string, unknown> = {};
+
+  if (billable !== undefined) {
+    if (!isManager) {
+      res.status(403).json({ error: "Only Management/PM can change billable flag" });
+      return;
+    }
+    data.billable = billable === false ? false : true;
+  }
 
   if (title !== undefined) {
     if (!isManager) {

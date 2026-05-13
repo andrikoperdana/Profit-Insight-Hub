@@ -64,8 +64,11 @@ export function computeMetrics(project: ProjectWithRelations): ProjectMetrics {
       accruedResourceCost += days * rate;
     }
   }
+  // Only APPROVED expenses count toward actualCost. PENDING/REJECTED expenses
+  // are visible in the Expenses tab for transparency but never inflate the
+  // project's reported cost or shrink margin until a PM/MGMT approves them.
   const additionalCost = (project.expenses ?? []).reduce(
-    (sum, e) => sum + (e.amount ?? 0),
+    (sum, e) => sum + ((e as any).status === "APPROVED" ? (e.amount ?? 0) : 0),
     0,
   );
   const actualCost = resourceCost + additionalCost;
@@ -127,7 +130,13 @@ export function computeMetrics(project: ProjectWithRelations): ProjectMetrics {
   };
 }
 
+type UserWithRels = UserBasic & {
+  businessUnit?: { id: string; name: string } | null;
+  skills?: { skill: { id: string; name: string; category: string | null }; proficiency: number }[];
+};
+
 export function serializeUser(u: UserBasic) {
+  const ux = u as UserWithRels;
   return {
     id: u.id,
     email: u.email,
@@ -135,6 +144,16 @@ export function serializeUser(u: UserBasic) {
     role: u.role,
     title: u.title,
     dailyRate: u.dailyRate,
+    seniority: (u as any).seniority ?? null,
+    businessUnitId: (u as any).businessUnitId ?? null,
+    businessUnitName: ux.businessUnit?.name ?? null,
+    skills:
+      ux.skills?.map((s) => ({
+        skillId: s.skill.id,
+        name: s.skill.name,
+        category: s.skill.category,
+        proficiency: s.proficiency,
+      })) ?? [],
     isActive: u.isActive,
     managerId: (u as any).managerId ?? null,
     principalId: (u as any).principalId ?? null,

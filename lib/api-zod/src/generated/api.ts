@@ -207,6 +207,27 @@ export const LoginResponse = zod.object({
     ]),
     title: zod.string().nullish(),
     dailyRate: zod.number().nullish(),
+    seniority: zod
+      .union([
+        zod.literal("JUNIOR"),
+        zod.literal("MID"),
+        zod.literal("SENIOR"),
+        zod.literal("PRINCIPAL"),
+        zod.literal(null),
+      ])
+      .nullish(),
+    businessUnitId: zod.string().nullish(),
+    businessUnitName: zod.string().nullish(),
+    skills: zod
+      .array(
+        zod.object({
+          skillId: zod.string(),
+          name: zod.string(),
+          category: zod.string().nullish(),
+          proficiency: zod.number().optional(),
+        }),
+      )
+      .optional(),
     isActive: zod.boolean(),
     managerId: zod.string().nullish(),
     principalId: zod.string().nullish(),
@@ -232,6 +253,27 @@ export const GetMeResponse = zod.object({
   ]),
   title: zod.string().nullish(),
   dailyRate: zod.number().nullish(),
+  seniority: zod
+    .union([
+      zod.literal("JUNIOR"),
+      zod.literal("MID"),
+      zod.literal("SENIOR"),
+      zod.literal("PRINCIPAL"),
+      zod.literal(null),
+    ])
+    .nullish(),
+  businessUnitId: zod.string().nullish(),
+  businessUnitName: zod.string().nullish(),
+  skills: zod
+    .array(
+      zod.object({
+        skillId: zod.string(),
+        name: zod.string(),
+        category: zod.string().nullish(),
+        proficiency: zod.number().optional(),
+      }),
+    )
+    .optional(),
   isActive: zod.boolean(),
   managerId: zod.string().nullish(),
   principalId: zod.string().nullish(),
@@ -261,6 +303,27 @@ export const ListUsersResponseItem = zod.object({
   ]),
   title: zod.string().nullish(),
   dailyRate: zod.number().nullish(),
+  seniority: zod
+    .union([
+      zod.literal("JUNIOR"),
+      zod.literal("MID"),
+      zod.literal("SENIOR"),
+      zod.literal("PRINCIPAL"),
+      zod.literal(null),
+    ])
+    .nullish(),
+  businessUnitId: zod.string().nullish(),
+  businessUnitName: zod.string().nullish(),
+  skills: zod
+    .array(
+      zod.object({
+        skillId: zod.string(),
+        name: zod.string(),
+        category: zod.string().nullish(),
+        proficiency: zod.number().optional(),
+      }),
+    )
+    .optional(),
   isActive: zod.boolean(),
   managerId: zod.string().nullish(),
   principalId: zod.string().nullish(),
@@ -286,6 +349,17 @@ export const CreateUserBody = zod.object({
   ]),
   title: zod.string().optional(),
   dailyRate: zod.number().optional(),
+  seniority: zod
+    .union([
+      zod.literal("JUNIOR"),
+      zod.literal("MID"),
+      zod.literal("SENIOR"),
+      zod.literal("PRINCIPAL"),
+      zod.literal(null),
+    ])
+    .nullish(),
+  businessUnitId: zod.string().nullish(),
+  skillIds: zod.array(zod.string()).optional(),
   managerId: zod.string().nullish(),
   principalId: zod.string().nullish(),
 });
@@ -312,6 +386,27 @@ export const GetUserResponse = zod.object({
   ]),
   title: zod.string().nullish(),
   dailyRate: zod.number().nullish(),
+  seniority: zod
+    .union([
+      zod.literal("JUNIOR"),
+      zod.literal("MID"),
+      zod.literal("SENIOR"),
+      zod.literal("PRINCIPAL"),
+      zod.literal(null),
+    ])
+    .nullish(),
+  businessUnitId: zod.string().nullish(),
+  businessUnitName: zod.string().nullish(),
+  skills: zod
+    .array(
+      zod.object({
+        skillId: zod.string(),
+        name: zod.string(),
+        category: zod.string().nullish(),
+        proficiency: zod.number().optional(),
+      }),
+    )
+    .optional(),
   isActive: zod.boolean(),
   managerId: zod.string().nullish(),
   principalId: zod.string().nullish(),
@@ -340,6 +435,17 @@ export const UpdateUserBody = zod.object({
     .optional(),
   title: zod.string().optional(),
   dailyRate: zod.number().optional(),
+  seniority: zod
+    .union([
+      zod.literal("JUNIOR"),
+      zod.literal("MID"),
+      zod.literal("SENIOR"),
+      zod.literal("PRINCIPAL"),
+      zod.literal(null),
+    ])
+    .nullish(),
+  businessUnitId: zod.string().nullish(),
+  skillIds: zod.array(zod.string()).optional(),
   isActive: zod.boolean().optional(),
   password: zod.string().optional(),
   managerId: zod.string().nullish(),
@@ -364,6 +470,27 @@ export const UpdateUserResponse = zod.object({
   ]),
   title: zod.string().nullish(),
   dailyRate: zod.number().nullish(),
+  seniority: zod
+    .union([
+      zod.literal("JUNIOR"),
+      zod.literal("MID"),
+      zod.literal("SENIOR"),
+      zod.literal("PRINCIPAL"),
+      zod.literal(null),
+    ])
+    .nullish(),
+  businessUnitId: zod.string().nullish(),
+  businessUnitName: zod.string().nullish(),
+  skills: zod
+    .array(
+      zod.object({
+        skillId: zod.string(),
+        name: zod.string(),
+        category: zod.string().nullish(),
+        proficiency: zod.number().optional(),
+      }),
+    )
+    .optional(),
   isActive: zod.boolean(),
   managerId: zod.string().nullish(),
   principalId: zod.string().nullish(),
@@ -955,6 +1082,27 @@ export const ListUsersUnderSupervisionResponseItem = zod.object({
   ]),
   title: zod.string().nullish(),
   dailyRate: zod.number().nullish(),
+  seniority: zod
+    .union([
+      zod.literal("JUNIOR"),
+      zod.literal("MID"),
+      zod.literal("SENIOR"),
+      zod.literal("PRINCIPAL"),
+      zod.literal(null),
+    ])
+    .nullish(),
+  businessUnitId: zod.string().nullish(),
+  businessUnitName: zod.string().nullish(),
+  skills: zod
+    .array(
+      zod.object({
+        skillId: zod.string(),
+        name: zod.string(),
+        category: zod.string().nullish(),
+        proficiency: zod.number().optional(),
+      }),
+    )
+    .optional(),
   isActive: zod.boolean(),
   managerId: zod.string().nullish(),
   principalId: zod.string().nullish(),
@@ -980,6 +1128,11 @@ export const ListProjectExpensesResponseItem = zod.object({
   spentAt: zod.string(),
   evidenceUrl: zod.string().nullish(),
   evidenceFileName: zod.string().nullish(),
+  status: zod.enum(["PENDING", "APPROVED", "REJECTED"]),
+  approvedById: zod.string().nullish(),
+  approvedByName: zod.string().nullish(),
+  approvedAt: zod.string().nullish(),
+  rejectionReason: zod.string().nullish(),
   createdById: zod.string().nullish(),
   createdByName: zod.string().nullish(),
   createdAt: zod.string(),
@@ -1021,6 +1174,11 @@ export const ListExpensesResponseItem = zod.object({
   spentAt: zod.string(),
   evidenceUrl: zod.string().nullish(),
   evidenceFileName: zod.string().nullish(),
+  status: zod.enum(["PENDING", "APPROVED", "REJECTED"]),
+  approvedById: zod.string().nullish(),
+  approvedByName: zod.string().nullish(),
+  approvedAt: zod.string().nullish(),
+  rejectionReason: zod.string().nullish(),
   createdById: zod.string().nullish(),
   createdByName: zod.string().nullish(),
   createdAt: zod.string(),
@@ -1034,6 +1192,230 @@ export const RemoveProjectExpenseParams = zod.object({
 export const RemoveProjectExpenseResponse = zod.object({
   success: zod.boolean(),
   message: zod.string().optional(),
+});
+
+/**
+ * PM-of-project or MANAGEMENT approves a PENDING expense. APPROVED expenses count toward project actualCost.
+ */
+export const ApproveProjectExpenseParams = zod.object({
+  expenseId: zod.coerce.string(),
+});
+
+export const ApproveProjectExpenseResponse = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  projectCode: zod.string().nullish(),
+  projectName: zod.string().nullish(),
+  clientName: zod.string().nullish(),
+  category: zod.enum(["SOFTWARE", "HARDWARE", "LICENSE", "TRAVEL", "OTHER"]),
+  description: zod.string(),
+  amount: zod.number(),
+  spentAt: zod.string(),
+  evidenceUrl: zod.string().nullish(),
+  evidenceFileName: zod.string().nullish(),
+  status: zod.enum(["PENDING", "APPROVED", "REJECTED"]),
+  approvedById: zod.string().nullish(),
+  approvedByName: zod.string().nullish(),
+  approvedAt: zod.string().nullish(),
+  rejectionReason: zod.string().nullish(),
+  createdById: zod.string().nullish(),
+  createdByName: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+
+/**
+ * PM-of-project or MANAGEMENT rejects a PENDING expense with a reason.
+ */
+export const RejectProjectExpenseParams = zod.object({
+  expenseId: zod.coerce.string(),
+});
+
+export const RejectProjectExpenseBody = zod.object({
+  reason: zod.string(),
+});
+
+export const RejectProjectExpenseResponse = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  projectCode: zod.string().nullish(),
+  projectName: zod.string().nullish(),
+  clientName: zod.string().nullish(),
+  category: zod.enum(["SOFTWARE", "HARDWARE", "LICENSE", "TRAVEL", "OTHER"]),
+  description: zod.string(),
+  amount: zod.number(),
+  spentAt: zod.string(),
+  evidenceUrl: zod.string().nullish(),
+  evidenceFileName: zod.string().nullish(),
+  status: zod.enum(["PENDING", "APPROVED", "REJECTED"]),
+  approvedById: zod.string().nullish(),
+  approvedByName: zod.string().nullish(),
+  approvedAt: zod.string().nullish(),
+  rejectionReason: zod.string().nullish(),
+  createdById: zod.string().nullish(),
+  createdByName: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+
+export const ListBusinessUnitsResponseItem = zod.object({
+  id: zod.string(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  isActive: zod.boolean(),
+  memberCount: zod.number().optional(),
+  createdAt: zod.string(),
+});
+export const ListBusinessUnitsResponse = zod.array(
+  ListBusinessUnitsResponseItem,
+);
+
+export const CreateBusinessUnitBody = zod.object({
+  name: zod.string(),
+  description: zod.string().nullish(),
+});
+
+export const UpdateBusinessUnitParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const UpdateBusinessUnitBody = zod.object({
+  name: zod.string().optional(),
+  description: zod.string().nullish(),
+  isActive: zod.boolean().optional(),
+});
+
+export const UpdateBusinessUnitResponse = zod.object({
+  id: zod.string(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  isActive: zod.boolean(),
+  memberCount: zod.number().optional(),
+  createdAt: zod.string(),
+});
+
+export const DeleteBusinessUnitParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const DeleteBusinessUnitResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+export const ListSkillsResponseItem = zod.object({
+  id: zod.string(),
+  name: zod.string(),
+  category: zod.string().nullish(),
+  isActive: zod.boolean(),
+  userCount: zod.number().optional(),
+  createdAt: zod.string(),
+});
+export const ListSkillsResponse = zod.array(ListSkillsResponseItem);
+
+export const CreateSkillBody = zod.object({
+  name: zod.string(),
+  category: zod.string().nullish(),
+});
+
+export const UpdateSkillParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const UpdateSkillBody = zod.object({
+  name: zod.string().optional(),
+  category: zod.string().nullish(),
+  isActive: zod.boolean().optional(),
+});
+
+export const UpdateSkillResponse = zod.object({
+  id: zod.string(),
+  name: zod.string(),
+  category: zod.string().nullish(),
+  isActive: zod.boolean(),
+  userCount: zod.number().optional(),
+  createdAt: zod.string(),
+});
+
+export const DeleteSkillParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const DeleteSkillResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+/**
+ * Returns matrix of users grouped by Business Unit with allocations across a date window.
+ */
+export const getResourcePlanningQueryWeeksMax = 26;
+
+export const GetResourcePlanningQueryParams = zod.object({
+  startDate: zod.coerce
+    .string()
+    .optional()
+    .describe("ISO date YYYY-MM-DD; defaults to start of current week"),
+  weeks: zod.coerce
+    .number()
+    .min(1)
+    .max(getResourcePlanningQueryWeeksMax)
+    .optional()
+    .describe("Number of weeks (default 8)"),
+});
+
+export const GetResourcePlanningResponse = zod.object({
+  startDate: zod.string(),
+  weeks: zod.number(),
+  weekStarts: zod.array(zod.string()),
+  groups: zod.array(
+    zod.object({
+      businessUnitId: zod.string().nullable(),
+      businessUnitName: zod.string(),
+      rows: zod.array(
+        zod.object({
+          userId: zod.string(),
+          userName: zod.string(),
+          role: zod.enum([
+            "MANAGEMENT",
+            "PROJECT_MANAGER",
+            "SALES",
+            "KONSULTAN",
+            "TECHNICAL_WRITER",
+            "ADMIN_PROJECT",
+            "PRINCIPAL_KONSULTAN",
+            "PRINCIPAL_TECHNICAL_WRITER",
+            "PRINCIPAL_ADMIN_PROJECT",
+            "SITE_ADMIN",
+          ]),
+          seniority: zod
+            .union([
+              zod.literal("JUNIOR"),
+              zod.literal("MID"),
+              zod.literal("SENIOR"),
+              zod.literal("PRINCIPAL"),
+              zod.literal(null),
+            ])
+            .nullish(),
+          businessUnitId: zod.string().nullish(),
+          businessUnitName: zod.string().nullish(),
+          skills: zod.array(zod.string()).optional(),
+          cells: zod.array(
+            zod.object({
+              weekStart: zod.string(),
+              plannedMandays: zod.number(),
+              allocations: zod.array(
+                zod.object({
+                  projectId: zod.string(),
+                  projectName: zod.string(),
+                  projectCode: zod.string().nullish(),
+                  mandays: zod.number(),
+                }),
+              ),
+            }),
+          ),
+        }),
+      ),
+    }),
+  ),
 });
 
 export const ListTimesheetsQueryParams = zod.object({
@@ -1216,6 +1598,7 @@ export const ListProjectTasksResponseItem = zod.object({
     .number()
     .min(listProjectTasksResponseProgressPercentMin)
     .max(listProjectTasksResponseProgressPercentMax),
+  billable: zod.boolean(),
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   assigneeId: zod.string().nullish(),
@@ -1250,6 +1633,7 @@ export const CreateProjectTaskBody = zod.object({
     .min(createProjectTaskBodyProgressPercentMin)
     .max(createProjectTaskBodyProgressPercentMax)
     .optional(),
+  billable: zod.boolean().optional(),
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   assigneeId: zod.string().nullish(),
@@ -1271,6 +1655,7 @@ export const ListMyTasksResponseItem = zod.object({
     .number()
     .min(listMyTasksResponseProgressPercentMin)
     .max(listMyTasksResponseProgressPercentMax),
+  billable: zod.boolean(),
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   assigneeId: zod.string().nullish(),
@@ -1305,6 +1690,7 @@ export const UpdateTaskBody = zod.object({
     .min(updateTaskBodyProgressPercentMin)
     .max(updateTaskBodyProgressPercentMax)
     .optional(),
+  billable: zod.boolean().optional(),
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   assigneeId: zod.string().nullish(),
@@ -1326,6 +1712,7 @@ export const UpdateTaskResponse = zod.object({
     .number()
     .min(updateTaskResponseProgressPercentMin)
     .max(updateTaskResponseProgressPercentMax),
+  billable: zod.boolean(),
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   assigneeId: zod.string().nullish(),

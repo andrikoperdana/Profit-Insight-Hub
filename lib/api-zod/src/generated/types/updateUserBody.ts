@@ -5,6 +5,7 @@
  * SecureProfit Hub API
  * OpenAPI spec version: 0.1.0
  */
+import type { UpdateUserBodySeniority } from "./updateUserBodySeniority";
 import type { UserRole } from "./userRole";
 
 export interface UpdateUserBody {
@@ -12,6 +13,9 @@ export interface UpdateUserBody {
   role?: UserRole;
   title?: string;
   dailyRate?: number;
+  seniority?: UpdateUserBodySeniority;
+  businessUnitId?: string | null;
+  skillIds?: string[];
   isActive?: boolean;
   password?: string;
   managerId?: string | null;
