@@ -185,3 +185,9 @@ id = "VbCHCG3y0tVzLsSyFrR8k"
 uri = "file://docs/GAP_ANALYSIS_PSOHUB.docx"
 type = "word_document"
 title = "Gap Analysis: SecureProfit Hub vs PSOHUB (Word) - perbaikan"
+
+[[outputs]]
+id = "fyFo4QxXztsKEobmuHZfZ"
+uri = "file://attached_assets/Estimasi-Profit-Insight-Hub.docx"
+type = "word_document"
+title = "Estimasi Pembuatan Profit Insight Hub (Word)"
