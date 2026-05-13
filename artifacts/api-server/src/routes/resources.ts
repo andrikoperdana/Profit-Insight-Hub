@@ -123,6 +123,24 @@ async function upsertResource(req: any, res: any, opts: { propose: boolean }) {
     res.status(404).json({ error: "User not found" });
     return;
   }
+  // Mirror the UI rule: when assigning a user whose system role doesn't already
+  // imply their function on the project (i.e. anyone other than KONSULTAN /
+  // TECHNICAL_WRITER / ADMIN_PROJECT — typically the "Resource Lainnya" flow
+  // for Sales / SOC Manager / Security Engineer / Junior SE / etc.),
+  // `roleInProject` must be filled so the row carries a meaningful position label.
+  const IMPLIED_ROLE = new Set<UserRole>([
+    "KONSULTAN",
+    "TECHNICAL_WRITER",
+    "ADMIN_PROJECT",
+  ]);
+  const roleInProjectClean =
+    typeof roleInProject === "string" ? roleInProject.trim() : "";
+  if (!IMPLIED_ROLE.has(user.role) && !roleInProjectClean) {
+    res.status(400).json({
+      error: "roleInProject required for non-Konsultan/Writer/Admin resources (e.g. SOC Manager, Security Engineer)",
+    });
+    return;
+  }
   const authz = await canWriteResourceFor({
     callerRole: req.user!.role as UserRole,
     callerId: req.user!.sub,
