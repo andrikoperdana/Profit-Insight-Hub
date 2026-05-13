@@ -122,7 +122,7 @@ async function ensureBusinessUnitsAndSkills() {
   }
 }
 
-async function main() {
+export async function runSeed() {
   const hash = (p: string) => bcrypt.hash(p, 10);
   const passwordDefault = await hash("password123");
 
@@ -266,4 +266,14 @@ async function main() {
   console.log("Seed complete.");
 }
 
-main().catch((e) => { console.error(e); process.exit(1); }).finally(async () => { await prisma.$disconnect(); });
+// CLI entrypoint: only run when invoked directly via `pnpm run seed`,
+// not when imported by the api-server's auto-seed hook.
+const isDirectRun = (() => {
+  try {
+    const arg = process.argv[1] ?? "";
+    return arg.endsWith("/seed.ts") || arg.endsWith("\\seed.ts") || arg.endsWith("/seed.js") || arg.endsWith("\\seed.js");
+  } catch { return false; }
+})();
+if (isDirectRun) {
+  runSeed().catch((e) => { console.error(e); process.exit(1); }).finally(async () => { await prisma.$disconnect(); });
+}
