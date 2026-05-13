@@ -29,10 +29,14 @@ function serializeExpense(e: {
   createdById: string | null;
   createdBy?: { name: string } | null;
   createdAt: Date;
+  project?: { code: string; name: string; client?: { name: string } | null } | null;
 }) {
   return {
     id: e.id,
     projectId: e.projectId,
+    projectCode: e.project?.code ?? null,
+    projectName: e.project?.name ?? null,
+    clientName: e.project?.client?.name ?? null,
     category: e.category,
     description: e.description,
     amount: e.amount,
@@ -224,5 +228,42 @@ router.delete(
     res.json({ success: true });
   },
 );
+
+// Cross-project expense listing for the global /expenses page.
+// MGMT sees everything; PM sees own projects; SALES sees own projects;
+// other roles get 403 (commercial data).
+router.get("/expenses", async (req, res) => {
+  const role = req.user!.role;
+  const userId = req.user!.sub;
+  // Explicit allowlist — broader financial roles like ADMIN_PROJECT/SITE_ADMIN
+  // do not need cross-project commercial expense visibility.
+  const allowed = role === "MANAGEMENT" || role === "PROJECT_MANAGER" || role === "SALES";
+  if (!allowed) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  const where: Record<string, unknown> = {};
+  if (role === "PROJECT_MANAGER") {
+    where.project = { pmId: userId };
+  } else if (role === "SALES") {
+    where.project = { salesId: userId };
+  }
+  const expenses = await prisma.projectExpense.findMany({
+    where,
+    include: {
+      createdBy: { select: { name: true } },
+      project: {
+        select: {
+          code: true,
+          name: true,
+          client: { select: { name: true } },
+        },
+      },
+    },
+    orderBy: { spentAt: "desc" },
+    take: 1000,
+  });
+  res.json(expenses.map((e) => serializeExpense(e)));
+});
 
 export default router;

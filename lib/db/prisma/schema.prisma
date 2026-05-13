@@ -285,6 +285,7 @@ model Task {
   title        String
   description  String?
   status       TaskStatus    @default(TODO)
+  progressPercent Int        @default(0)
   startDate    DateTime?
   endDate      DateTime?
   assigneeId   String?

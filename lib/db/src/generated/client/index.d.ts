@@ -14589,8 +14589,18 @@ export namespace Prisma {
 
   export type AggregateTask = {
     _count: TaskCountAggregateOutputType | null
+    _avg: TaskAvgAggregateOutputType | null
+    _sum: TaskSumAggregateOutputType | null
     _min: TaskMinAggregateOutputType | null
     _max: TaskMaxAggregateOutputType | null
+  }
+
+  export type TaskAvgAggregateOutputType = {
+    progressPercent: number | null
+  }
+
+  export type TaskSumAggregateOutputType = {
+    progressPercent: number | null
   }
 
   export type TaskMinAggregateOutputType = {
@@ -14599,6 +14609,7 @@ export namespace Prisma {
     title: string | null
     description: string | null
     status: $Enums.TaskStatus | null
+    progressPercent: number | null
     startDate: Date | null
     endDate: Date | null
     assigneeId: string | null
@@ -14613,6 +14624,7 @@ export namespace Prisma {
     title: string | null
     description: string | null
     status: $Enums.TaskStatus | null
+    progressPercent: number | null
     startDate: Date | null
     endDate: Date | null
     assigneeId: string | null
@@ -14627,6 +14639,7 @@ export namespace Prisma {
     title: number
     description: number
     status: number
+    progressPercent: number
     startDate: number
     endDate: number
     assigneeId: number
@@ -14637,12 +14650,21 @@ export namespace Prisma {
   }
 
 
+  export type TaskAvgAggregateInputType = {
+    progressPercent?: true
+  }
+
+  export type TaskSumAggregateInputType = {
+    progressPercent?: true
+  }
+
   export type TaskMinAggregateInputType = {
     id?: true
     projectId?: true
     title?: true
     description?: true
     status?: true
+    progressPercent?: true
     startDate?: true
     endDate?: true
     assigneeId?: true
@@ -14657,6 +14679,7 @@ export namespace Prisma {
     title?: true
     description?: true
     status?: true
+    progressPercent?: true
     startDate?: true
     endDate?: true
     assigneeId?: true
@@ -14671,6 +14694,7 @@ export namespace Prisma {
     title?: true
     description?: true
     status?: true
+    progressPercent?: true
     startDate?: true
     endDate?: true
     assigneeId?: true
@@ -14718,6 +14742,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: TaskAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TaskSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: TaskMinAggregateInputType
@@ -14748,6 +14784,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: TaskCountAggregateInputType | true
+    _avg?: TaskAvgAggregateInputType
+    _sum?: TaskSumAggregateInputType
     _min?: TaskMinAggregateInputType
     _max?: TaskMaxAggregateInputType
   }
@@ -14758,6 +14796,7 @@ export namespace Prisma {
     title: string
     description: string | null
     status: $Enums.TaskStatus
+    progressPercent: number
     startDate: Date | null
     endDate: Date | null
     assigneeId: string | null
@@ -14765,6 +14804,8 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     _count: TaskCountAggregateOutputType | null
+    _avg: TaskAvgAggregateOutputType | null
+    _sum: TaskSumAggregateOutputType | null
     _min: TaskMinAggregateOutputType | null
     _max: TaskMaxAggregateOutputType | null
   }
@@ -14789,6 +14830,7 @@ export namespace Prisma {
     title?: boolean
     description?: boolean
     status?: boolean
+    progressPercent?: boolean
     startDate?: boolean
     endDate?: boolean
     assigneeId?: boolean
@@ -14808,6 +14850,7 @@ export namespace Prisma {
     title?: boolean
     description?: boolean
     status?: boolean
+    progressPercent?: boolean
     startDate?: boolean
     endDate?: boolean
     assigneeId?: boolean
@@ -14825,6 +14868,7 @@ export namespace Prisma {
     title?: boolean
     description?: boolean
     status?: boolean
+    progressPercent?: boolean
     startDate?: boolean
     endDate?: boolean
     assigneeId?: boolean
@@ -14860,6 +14904,7 @@ export namespace Prisma {
       title: string
       description: string | null
       status: $Enums.TaskStatus
+      progressPercent: number
       startDate: Date | null
       endDate: Date | null
       assigneeId: string | null
@@ -15268,6 +15313,7 @@ export namespace Prisma {
     readonly title: FieldRef<"Task", 'String'>
     readonly description: FieldRef<"Task", 'String'>
     readonly status: FieldRef<"Task", 'TaskStatus'>
+    readonly progressPercent: FieldRef<"Task", 'Int'>
     readonly startDate: FieldRef<"Task", 'DateTime'>
     readonly endDate: FieldRef<"Task", 'DateTime'>
     readonly assigneeId: FieldRef<"Task", 'String'>
@@ -17836,6 +17882,7 @@ export namespace Prisma {
     title: 'title',
     description: 'description',
     status: 'status',
+    progressPercent: 'progressPercent',
     startDate: 'startDate',
     endDate: 'endDate',
     assigneeId: 'assigneeId',
@@ -19172,6 +19219,7 @@ export namespace Prisma {
     title?: StringFilter<"Task"> | string
     description?: StringNullableFilter<"Task"> | string | null
     status?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
+    progressPercent?: IntFilter<"Task"> | number
     startDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     endDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     assigneeId?: StringNullableFilter<"Task"> | string | null
@@ -19190,6 +19238,7 @@ export namespace Prisma {
     title?: SortOrder
     description?: SortOrderInput | SortOrder
     status?: SortOrder
+    progressPercent?: SortOrder
     startDate?: SortOrderInput | SortOrder
     endDate?: SortOrderInput | SortOrder
     assigneeId?: SortOrderInput | SortOrder
@@ -19211,6 +19260,7 @@ export namespace Prisma {
     title?: StringFilter<"Task"> | string
     description?: StringNullableFilter<"Task"> | string | null
     status?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
+    progressPercent?: IntFilter<"Task"> | number
     startDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     endDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     assigneeId?: StringNullableFilter<"Task"> | string | null
@@ -19229,6 +19279,7 @@ export namespace Prisma {
     title?: SortOrder
     description?: SortOrderInput | SortOrder
     status?: SortOrder
+    progressPercent?: SortOrder
     startDate?: SortOrderInput | SortOrder
     endDate?: SortOrderInput | SortOrder
     assigneeId?: SortOrderInput | SortOrder
@@ -19236,8 +19287,10 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: TaskCountOrderByAggregateInput
+    _avg?: TaskAvgOrderByAggregateInput
     _max?: TaskMaxOrderByAggregateInput
     _min?: TaskMinOrderByAggregateInput
+    _sum?: TaskSumOrderByAggregateInput
   }
 
   export type TaskScalarWhereWithAggregatesInput = {
@@ -19249,6 +19302,7 @@ export namespace Prisma {
     title?: StringWithAggregatesFilter<"Task"> | string
     description?: StringNullableWithAggregatesFilter<"Task"> | string | null
     status?: EnumTaskStatusWithAggregatesFilter<"Task"> | $Enums.TaskStatus
+    progressPercent?: IntWithAggregatesFilter<"Task"> | number
     startDate?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
     endDate?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
     assigneeId?: StringNullableWithAggregatesFilter<"Task"> | string | null
@@ -20612,6 +20666,7 @@ export namespace Prisma {
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
+    progressPercent?: number
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -20628,6 +20683,7 @@ export namespace Prisma {
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
+    progressPercent?: number
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -20642,6 +20698,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20658,6 +20715,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20673,6 +20731,7 @@ export namespace Prisma {
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
+    progressPercent?: number
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -20686,6 +20745,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20698,6 +20758,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21929,6 +21990,7 @@ export namespace Prisma {
     title?: SortOrder
     description?: SortOrder
     status?: SortOrder
+    progressPercent?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
     assigneeId?: SortOrder
@@ -21937,12 +21999,17 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type TaskAvgOrderByAggregateInput = {
+    progressPercent?: SortOrder
+  }
+
   export type TaskMaxOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
     title?: SortOrder
     description?: SortOrder
     status?: SortOrder
+    progressPercent?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
     assigneeId?: SortOrder
@@ -21957,12 +22024,17 @@ export namespace Prisma {
     title?: SortOrder
     description?: SortOrder
     status?: SortOrder
+    progressPercent?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
     assigneeId?: SortOrder
     createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type TaskSumOrderByAggregateInput = {
+    progressPercent?: SortOrder
   }
 
   export type EnumTaskStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -24924,6 +24996,7 @@ export namespace Prisma {
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
+    progressPercent?: number
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -24939,6 +25012,7 @@ export namespace Prisma {
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
+    progressPercent?: number
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdById?: string | null
@@ -24962,6 +25036,7 @@ export namespace Prisma {
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
+    progressPercent?: number
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -24977,6 +25052,7 @@ export namespace Prisma {
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
+    progressPercent?: number
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -25607,6 +25683,7 @@ export namespace Prisma {
     title?: StringFilter<"Task"> | string
     description?: StringNullableFilter<"Task"> | string | null
     status?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
+    progressPercent?: IntFilter<"Task"> | number
     startDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     endDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     assigneeId?: StringNullableFilter<"Task"> | string | null
@@ -26308,6 +26385,7 @@ export namespace Prisma {
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
+    progressPercent?: number
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -26322,6 +26400,7 @@ export namespace Prisma {
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
+    progressPercent?: number
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -29513,6 +29592,7 @@ export namespace Prisma {
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
+    progressPercent?: number
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -29528,6 +29608,7 @@ export namespace Prisma {
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
+    progressPercent?: number
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -29628,6 +29709,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29643,6 +29725,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30135,6 +30218,7 @@ export namespace Prisma {
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
+    progressPercent?: number
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdById?: string | null
@@ -30148,6 +30232,7 @@ export namespace Prisma {
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
+    progressPercent?: number
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -31066,6 +31151,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31081,6 +31167,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31095,6 +31182,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31107,6 +31195,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31122,6 +31211,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31136,6 +31226,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31413,6 +31504,7 @@ export namespace Prisma {
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
+    progressPercent?: number
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -31636,6 +31728,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31650,6 +31743,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31664,6 +31758,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null

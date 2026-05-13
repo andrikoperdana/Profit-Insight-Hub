@@ -20,6 +20,7 @@ import Resources from "@/pages/resources";
 import CapacityPlanning from "@/pages/capacity";
 import AuditLogPage from "@/pages/audit-logs";
 import BusinessIntelligence from "@/pages/business-intelligence";
+import ExpensesPage from "@/pages/expenses";
 import SurveyTemplateEditor from "@/pages/settings/SurveyTemplate";
 import PublicSurveyPage from "@/pages/survey/[token]";
 import { ThemeProvider } from "@/lib/theme";
@@ -68,6 +69,7 @@ function Router() {
       <Route path="/settings" component={() => <ProtectedRoute component={Settings} />} />
       <Route path="/audit-logs" component={() => <ProtectedRoute component={AuditLogPage} />} />
       <Route path="/business-intelligence" component={() => <ProtectedRoute component={BusinessIntelligence} />} />
+      <Route path="/expenses" component={() => <ProtectedRoute component={ExpensesPage} />} />
       <Route component={NotFound} />
     </Switch>
   );

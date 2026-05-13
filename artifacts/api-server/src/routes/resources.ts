@@ -140,22 +140,10 @@ async function upsertResource(req: any, res: any, opts: { propose: boolean }) {
     where: { id: projectId },
     select: { status: true },
   });
-  const targetIsActive =
-    !!targetProject && (targetProject.status === "OBSERVATION" || targetProject.status === "ACTIVE");
-  if (!existing && user.role === "KONSULTAN" && targetIsActive) {
-    const activeCount = await prisma.projectResource.count({
-      where: {
-        userId: user.id,
-        project: { status: { in: ["OBSERVATION", "ACTIVE"] }, deletedAt: null },
-      },
-    });
-    if (activeCount >= 2) {
-      res.status(409).json({
-        error: `${user.name} is already on ${activeCount} active project(s) (maximum 2 for Consultants).`,
-      });
-      return;
-    }
-  }
+  // Note: previously enforced a hard cap of 2 active projects per KONSULTAN
+  // (returned 409). Removed at user request — allocation overload is now a
+  // warning surfaced in the UI (PM Allocation / Resource cards), but never
+  // blocks assignment. PM has final say.
   const now = new Date();
   // PM/MGMT writes always count as accepted. Principal writes via /propose are
   // marked proposed (acceptedAt = null until PM acts).

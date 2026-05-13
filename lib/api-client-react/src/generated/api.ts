@@ -2596,6 +2596,79 @@ export const useAddProjectExpense = <
   return useMutation(getAddProjectExpenseMutationOptions(options));
 };
 
+/**
+ * Cross-project expense listing. Management sees all; Project Manager sees
+own projects; Sales sees own projects; other roles get 403.
+
+ */
+export const getListExpensesUrl = () => {
+  return `/api/expenses`;
+};
+
+export const listExpenses = async (
+  options?: RequestInit,
+): Promise<ProjectExpense[]> => {
+  return customFetch<ProjectExpense[]>(getListExpensesUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListExpensesQueryKey = () => {
+  return [`/api/expenses`] as const;
+};
+
+export const getListExpensesQueryOptions = <
+  TData = Awaited<ReturnType<typeof listExpenses>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listExpenses>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListExpensesQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listExpenses>>> = ({
+    signal,
+  }) => listExpenses({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listExpenses>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListExpensesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listExpenses>>
+>;
+export type ListExpensesQueryError = ErrorType<unknown>;
+
+export function useListExpenses<
+  TData = Awaited<ReturnType<typeof listExpenses>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listExpenses>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListExpensesQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
 export const getRemoveProjectExpenseUrl = (expenseId: string) => {
   return `/api/expenses/${expenseId}`;
 };

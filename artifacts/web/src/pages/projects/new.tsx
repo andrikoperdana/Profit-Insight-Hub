@@ -33,6 +33,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { LoadingPage } from "@/components/common/Loading";
 import { PdfUploadField } from "@/components/common/PdfUploadField";
 import { formatIDR } from "@/lib/format";
+import NewClientDialog from "@/components/clients/NewClientDialog";
 
 const ROLE_RATES: Record<string, { label: string; rate: number }> = {
   PROJECT_MANAGER: { label: "Project Manager", rate: 2_500_000 },
@@ -184,7 +185,10 @@ function SalesIntakeForm() {
                 name="clientId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Client *</FormLabel>
+                    <div className="flex items-center justify-between">
+                      <FormLabel>Client *</FormLabel>
+                      <NewClientDialog onCreated={(id) => field.onChange(id)} />
+                    </div>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger><SelectValue placeholder="Select client" /></SelectTrigger>
@@ -459,7 +463,10 @@ function FullProjectForm() {
                 name="clientId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Client *</FormLabel>
+                    <div className="flex items-center justify-between">
+                      <FormLabel>Client *</FormLabel>
+                      <NewClientDialog onCreated={(id) => field.onChange(id)} />
+                    </div>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger><SelectValue placeholder="Select client" /></SelectTrigger>

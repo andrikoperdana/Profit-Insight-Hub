@@ -16,6 +16,7 @@ import {
   ScrollText,
   TrendingUp,
   ClipboardList,
+  Receipt,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -36,10 +37,16 @@ export default function Sidebar() {
     ...(isSiteAdmin ? [] : [{ href: "/timesheets", label: "Time Tracking", icon: Clock }]),
   ];
 
+  const canSeeExpenses =
+    user?.role === "MANAGEMENT" ||
+    user?.role === "PROJECT_MANAGER" ||
+    user?.role === "SALES";
+
   const operations: NavLink[] = [
     ...(isPM ? [{ href: "/approvals", label: "Approval Inbox", icon: Inbox }] : []),
     ...(canViewResources(user?.role) ? [{ href: "/resources", label: "Resources", icon: UserCog }] : []),
     ...(isPM ? [{ href: "/capacity", label: "Capacity Planning", icon: CalendarRange }] : []),
+    ...(canSeeExpenses ? [{ href: "/expenses", label: "Expenses", icon: Receipt }] : []),
   ];
 
   const admin: NavLink[] = [

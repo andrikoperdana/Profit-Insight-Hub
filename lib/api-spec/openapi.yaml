@@ -479,6 +479,22 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/ProjectExpense" }
 
+  /expenses:
+    get:
+      operationId: listExpenses
+      tags: [expenses]
+      description: |
+        Cross-project expense listing. Management sees all; Project Manager sees
+        own projects; Sales sees own projects; other roles get 403.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ProjectExpense" }
+
   /expenses/{expenseId}:
     delete:
       operationId: removeProjectExpense
@@ -841,7 +857,7 @@ components:
 
     Task:
       type: object
-      required: [id, projectId, title, status, loggedHours, createdAt, updatedAt]
+      required: [id, projectId, title, status, progressPercent, loggedHours, createdAt, updatedAt]
       properties:
         id: { type: string }
         projectId: { type: string }
@@ -850,6 +866,7 @@ components:
         title: { type: string }
         description: { type: string, nullable: true }
         status: { $ref: "#/components/schemas/TaskStatus" }
+        progressPercent: { type: integer, minimum: 0, maximum: 100 }
         startDate: { type: string, nullable: true }
         endDate: { type: string, nullable: true }
         assigneeId: { type: string, nullable: true }
@@ -867,6 +884,7 @@ components:
         title: { type: string }
         description: { type: string, nullable: true }
         status: { $ref: "#/components/schemas/TaskStatus" }
+        progressPercent: { type: integer, minimum: 0, maximum: 100 }
         startDate: { type: string, nullable: true }
         endDate: { type: string, nullable: true }
         assigneeId: { type: string, nullable: true }
@@ -877,6 +895,7 @@ components:
         title: { type: string }
         description: { type: string, nullable: true }
         status: { $ref: "#/components/schemas/TaskStatus" }
+        progressPercent: { type: integer, minimum: 0, maximum: 100 }
         startDate: { type: string, nullable: true }
         endDate: { type: string, nullable: true }
         assigneeId: { type: string, nullable: true }
@@ -1036,6 +1055,9 @@ components:
       properties:
         id: { type: string }
         projectId: { type: string }
+        projectCode: { type: string, nullable: true }
+        projectName: { type: string, nullable: true }
+        clientName: { type: string, nullable: true }
         category: { type: string, enum: [SOFTWARE, HARDWARE, LICENSE, TRAVEL, OTHER] }
         description: { type: string }
         amount: { type: number }

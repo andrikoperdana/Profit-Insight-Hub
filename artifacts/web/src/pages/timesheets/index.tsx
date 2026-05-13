@@ -64,6 +64,8 @@ const logTimeSchema = z.object({
 export default function TimesheetsWorkspace() {
   const { user } = useAuth();
   const isAutoApprove = user?.role === UserRole.PROJECT_MANAGER || user?.role === UserRole.MANAGEMENT;
+  const canSeeTeam = user?.role === UserRole.PROJECT_MANAGER || user?.role === UserRole.MANAGEMENT;
+  const [tab, setTab] = useState<"mine" | "team">("mine");
 
   return (
     <div className="space-y-6">
@@ -79,15 +81,58 @@ export default function TimesheetsWorkspace() {
         <LogTimeDialog isAutoApprove={isAutoApprove} />
       </div>
 
-      <Card className="border-border shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-base">My Timesheets</CardTitle>
-          <CardDescription>Only approved entries count toward project cost calculations.</CardDescription>
-        </CardHeader>
-        <CardContent className="p-0">
-          <MyTimesheetsTable />
-        </CardContent>
-      </Card>
+      {canSeeTeam && (
+        <div className="flex border-b border-border">
+          <button
+            onClick={() => setTab("mine")}
+            className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
+              tab === "mine"
+                ? "border-primary text-primary"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+            data-testid="tab-my-timesheets"
+          >
+            My Timesheets
+          </button>
+          <button
+            onClick={() => setTab("team")}
+            className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
+              tab === "team"
+                ? "border-primary text-primary"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+            data-testid="tab-team-timesheets"
+          >
+            Team Timesheets
+          </button>
+        </div>
+      )}
+
+      {(!canSeeTeam || tab === "mine") && (
+        <Card className="border-border shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-base">My Timesheets</CardTitle>
+            <CardDescription>Only approved entries count toward project cost calculations.</CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <MyTimesheetsTable />
+          </CardContent>
+        </Card>
+      )}
+
+      {canSeeTeam && tab === "team" && (
+        <Card className="border-border shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-base">Team Timesheets</CardTitle>
+            <CardDescription>
+              Semua timesheet di seluruh proyek{user?.role === UserRole.PROJECT_MANAGER ? " yang Anda kelola" : ""}. Filter per proyek dan ekspor ke CSV.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <TeamTimesheetsTable />
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
@@ -309,6 +354,157 @@ function MyTimesheetsTable() {
       onPageSizeChange={pager.setPageSize}
       testId="timesheets-pagination"
     />
+    </>
+  );
+}
+
+function TeamTimesheetsTable() {
+  const params = { scope: "all" as const };
+  const { data: timesheets, isLoading } = useListTimesheets(params, {
+    query: { queryKey: getListTimesheetsQueryKey(params) },
+  });
+  const { data: projects } = useListProjects();
+
+  const [projectFilter, setProjectFilter] = useState<string>("__all");
+  const [statusFilter, setStatusFilter] = useState<string>("__all");
+
+  const filtered = (timesheets ?? []).filter((ts) => {
+    if (projectFilter !== "__all" && ts.projectId !== projectFilter) return false;
+    if (statusFilter !== "__all" && ts.status !== statusFilter) return false;
+    return true;
+  });
+
+  const pager = usePagination(filtered, { resetKey: `${projectFilter}|${statusFilter}` });
+
+  function handleExportCsv() {
+    const rows = filtered.map((ts) => ({
+      Date: ts.workDate ?? "",
+      Consultant: (ts as any).userName ?? "",
+      Project: ts.projectName ?? "",
+      Hours: ts.hours ?? 0,
+      Description: ts.description ?? "",
+      Status: ts.status,
+      RejectionReason: ts.rejectionReason ?? "",
+      SubmittedAt: ts.createdAt ?? "",
+    }));
+    exportCsv("team-timesheets", rows);
+  }
+
+  if (isLoading) return <div className="p-6"><TableSkeleton columns={6} rows={6} /></div>;
+
+  const totalHours = filtered.reduce((s, t) => s + (t.hours ?? 0), 0);
+  const approvedHours = filtered.filter(t => t.status === "APPROVED").reduce((s, t) => s + (t.hours ?? 0), 0);
+
+  return (
+    <>
+      <div className="flex flex-wrap items-center justify-between gap-3 px-4 pt-4">
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground uppercase tracking-wide">Project</span>
+            <Select value={projectFilter} onValueChange={setProjectFilter}>
+              <SelectTrigger className="h-8 w-[220px]" data-testid="filter-team-project">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__all">Semua proyek</SelectItem>
+                {projects?.map((p) => (
+                  <SelectItem key={p.id} value={p.id}>{p.code} — {p.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground uppercase tracking-wide">Status</span>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="h-8 w-[150px]" data-testid="filter-team-status">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__all">Semua</SelectItem>
+                <SelectItem value="DRAFT">Draft</SelectItem>
+                <SelectItem value="SUBMITTED">Submitted</SelectItem>
+                <SelectItem value="APPROVED">Approved</SelectItem>
+                <SelectItem value="REJECTED">Rejected</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="text-xs text-muted-foreground">
+            Total: <span className="font-mono text-foreground">{totalHours.toFixed(1)}h</span>
+            <span className="mx-2">·</span>
+            Approved: <span className="font-mono text-emerald-500">{approvedHours.toFixed(1)}h</span>
+            <span className="mx-2">·</span>
+            <span>{filtered.length} entries</span>
+          </div>
+        </div>
+        <UIButton
+          variant="outline"
+          size="sm"
+          onClick={handleExportCsv}
+          disabled={!filtered.length}
+          data-testid="button-export-team-timesheets-csv"
+        >
+          <Download className="h-4 w-4 mr-2" /> Export CSV
+        </UIButton>
+      </div>
+
+      {!filtered.length ? (
+        <div className="p-6">
+          <EmptyState
+            title="Tidak ada timesheet"
+            description="Tidak ada entry yang cocok dengan filter saat ini."
+            icon={<Clock className="h-10 w-10 text-muted-foreground/50" />}
+          />
+        </div>
+      ) : (
+        <Table>
+          <TableHeader className="bg-muted/50">
+            <TableRow>
+              <TableHead>Date</TableHead>
+              <TableHead>Consultant</TableHead>
+              <TableHead>Project</TableHead>
+              <TableHead className="text-right">Hours</TableHead>
+              <TableHead>Description</TableHead>
+              <TableHead>Status</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {pager.pageItems.map((ts: any) => (
+              <TableRow key={ts.id}>
+                <TableCell className="whitespace-nowrap text-sm">
+                  <div className="flex items-center">
+                    <Calendar className="h-3 w-3 mr-2 text-muted-foreground" />
+                    {formatDate(ts.workDate)}
+                  </div>
+                </TableCell>
+                <TableCell className="text-sm font-medium">{ts.userName ?? "—"}</TableCell>
+                <TableCell>
+                  <Link href={`/projects/${ts.projectId}`} className="text-primary hover:underline text-sm">
+                    {ts.projectName}
+                  </Link>
+                </TableCell>
+                <TableCell className="text-right font-mono">{ts.hours}</TableCell>
+                <TableCell className="max-w-md">
+                  <p className="text-sm text-foreground/90 line-clamp-2" title={ts.description ?? ""}>
+                    {ts.description || <span className="text-muted-foreground italic">no description</span>}
+                  </p>
+                </TableCell>
+                <TableCell><TimesheetStatusBadge status={ts.status} /></TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
+      {filtered.length > 0 && (
+        <Pagination
+          page={pager.page}
+          pageSize={pager.pageSize}
+          total={pager.total}
+          totalPages={pager.totalPages}
+          onPageChange={pager.setPage}
+          onPageSizeChange={pager.setPageSize}
+          testId="team-timesheets-pagination"
+        />
+      )}
     </>
   );
 }

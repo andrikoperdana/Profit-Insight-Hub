@@ -77,6 +77,11 @@ export interface Task {
   title: string;
   description?: string | null;
   status: TaskStatus;
+  /**
+   * @minimum 0
+   * @maximum 100
+   */
+  progressPercent: number;
   startDate?: string | null;
   endDate?: string | null;
   assigneeId?: string | null;
@@ -92,6 +97,11 @@ export interface CreateTaskBody {
   title: string;
   description?: string | null;
   status?: TaskStatus;
+  /**
+   * @minimum 0
+   * @maximum 100
+   */
+  progressPercent?: number;
   startDate?: string | null;
   endDate?: string | null;
   assigneeId?: string | null;
@@ -101,6 +111,11 @@ export interface UpdateTaskBody {
   title?: string;
   description?: string | null;
   status?: TaskStatus;
+  /**
+   * @minimum 0
+   * @maximum 100
+   */
+  progressPercent?: number;
   startDate?: string | null;
   endDate?: string | null;
   assigneeId?: string | null;
@@ -250,6 +265,9 @@ export const ProjectExpenseCategory = {
 export interface ProjectExpense {
   id: string;
   projectId: string;
+  projectCode?: string | null;
+  projectName?: string | null;
+  clientName?: string | null;
   category: ProjectExpenseCategory;
   description: string;
   amount: number;

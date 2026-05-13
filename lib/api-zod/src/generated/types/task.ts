@@ -15,6 +15,11 @@ export interface Task {
   title: string;
   description?: string | null;
   status: TaskStatus;
+  /**
+   * @minimum 0
+   * @maximum 100
+   */
+  progressPercent: number;
   startDate?: string | null;
   endDate?: string | null;
   assigneeId?: string | null;

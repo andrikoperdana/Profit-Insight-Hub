@@ -15,6 +15,7 @@ type TaskWithRelations = {
   title: string;
   description: string | null;
   status: string;
+  progressPercent: number;
   startDate: Date | null;
   endDate: Date | null;
   assigneeId: string | null;
@@ -37,6 +38,7 @@ function serializeTask(t: TaskWithRelations) {
     title: t.title,
     description: t.description,
     status: t.status,
+    progressPercent: t.progressPercent ?? 0,
     startDate: t.startDate ? t.startDate.toISOString() : null,
     endDate: t.endDate ? t.endDate.toISOString() : null,
     assigneeId: t.assigneeId,
@@ -138,7 +140,7 @@ router.post("/projects/:id/tasks", async (req, res) => {
       .json({ error: "Only Management or the assigned PM can create tasks" });
     return;
   }
-  const { title, description, status, startDate, endDate, assigneeId } =
+  const { title, description, status, startDate, endDate, assigneeId, progressPercent } =
     req.body || {};
   const trimmedTitle = typeof title === "string" ? title.trim() : "";
   if (!trimmedTitle) {
@@ -178,12 +180,26 @@ router.post("/projects/:id/tasks", async (req, res) => {
     }
   }
 
+  let pct = 0;
+  if (progressPercent !== undefined && progressPercent !== null && progressPercent !== "") {
+    const n = Number(progressPercent);
+    if (!isFinite(n) || n < 0 || n > 100) {
+      res.status(400).json({ error: "progressPercent must be 0-100" });
+      return;
+    }
+    pct = Math.round(n);
+  }
+  // Final invariant override: DONE→100, TODO→0, regardless of caller-supplied progress.
+  if (st === "DONE") pct = 100;
+  else if (st === "TODO") pct = 0;
+
   const task = await prisma.task.create({
     data: {
       projectId,
       title: trimmedTitle,
       description: desc,
       status: st as "TODO" | "IN_PROGRESS" | "BLOCKED" | "DONE",
+      progressPercent: pct,
       startDate: start ?? null,
       endDate: end ?? null,
       assigneeId: assigneeId ? String(assigneeId) : null,
@@ -238,7 +254,7 @@ router.patch("/tasks/:taskId", async (req, res) => {
     return;
   }
 
-  const { title, description, status, startDate, endDate, assigneeId } =
+  const { title, description, status, startDate, endDate, assigneeId, progressPercent } =
     req.body || {};
 
   const data: Record<string, unknown> = {};
@@ -269,6 +285,24 @@ router.patch("/tasks/:taskId", async (req, res) => {
     }
     data.status = String(status);
   }
+  if (progressPercent !== undefined && progressPercent !== null) {
+    if (!isManager) {
+      res.status(403).json({ error: "Only Management/PM can change progress" });
+      return;
+    }
+    const n = Number(progressPercent);
+    if (!isFinite(n) || n < 0 || n > 100) {
+      res.status(400).json({ error: "progressPercent must be 0-100" });
+      return;
+    }
+    data.progressPercent = Math.round(n);
+  }
+  // Final invariant override: status DONE → 100, TODO → 0, regardless of any
+  // progressPercent supplied in the same request. Applies whether status is
+  // changing now or already set on the existing task.
+  const effectiveStatus = (data.status as string | undefined) ?? before.status;
+  if (effectiveStatus === "DONE") data.progressPercent = 100;
+  else if (effectiveStatus === "TODO") data.progressPercent = 0;
   if (startDate !== undefined) {
     if (!isManager) {
       res.status(403).json({ error: "Only Management/PM can change dates" });

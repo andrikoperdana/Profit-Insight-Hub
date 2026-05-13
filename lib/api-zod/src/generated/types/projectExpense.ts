@@ -10,6 +10,9 @@ import type { ProjectExpenseCategory } from "./projectExpenseCategory";
 export interface ProjectExpense {
   id: string;
   projectId: string;
+  projectCode?: string | null;
+  projectName?: string | null;
+  clientName?: string | null;
   category: ProjectExpenseCategory;
   description: string;
   amount: number;

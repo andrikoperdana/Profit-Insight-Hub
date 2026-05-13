@@ -120,6 +120,7 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
       Title: t.title,
       Description: t.description ?? "",
       Status: STATUS_LABELS[t.status],
+      Progress: `${(t as any).progressPercent ?? 0}%`,
       Assignee: t.assigneeName ?? "",
       StartDate: t.startDate ?? "",
       EndDate: t.endDate ?? "",
@@ -182,6 +183,7 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
                   <TableHead>Assignee</TableHead>
                   <TableHead>Schedule</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead className="w-[140px]">Progress</TableHead>
                   <TableHead className="text-right">Hours</TableHead>
                   <TableHead className="text-right w-[200px]">Actions</TableHead>
                 </TableRow>
@@ -216,6 +218,9 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
                         ) : (
                           <StatusBadge status={t.status} />
                         )}
+                      </TableCell>
+                      <TableCell>
+                        <ProgressBar value={(t as any).progressPercent ?? 0} />
                       </TableCell>
                       <TableCell className="text-right font-mono">
                         <button
@@ -313,6 +318,20 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
   );
 }
 
+function ProgressBar({ value }: { value: number }) {
+  const v = Math.max(0, Math.min(100, value));
+  const color =
+    v >= 100 ? "bg-emerald-500" : v >= 50 ? "bg-primary" : v > 0 ? "bg-amber-500" : "bg-muted-foreground/30";
+  return (
+    <div className="flex items-center gap-2">
+      <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
+        <div className={`h-full ${color} transition-all`} style={{ width: `${v}%` }} />
+      </div>
+      <span className="text-xs font-mono w-9 text-right tabular-nums">{v}%</span>
+    </div>
+  );
+}
+
 function SummaryCard({
   label,
   value,
@@ -392,6 +411,7 @@ function TaskFormDialog({
   const [title, setTitle] = useState(task?.title ?? "");
   const [description, setDescription] = useState(task?.description ?? "");
   const [status, setStatus] = useState<TaskStatus>((task?.status as TaskStatus) ?? "TODO");
+  const [progressPercent, setProgressPercent] = useState<number>(((task as any)?.progressPercent ?? 0));
   const [startDate, setStartDate] = useState(task?.startDate ? task.startDate.slice(0, 10) : "");
   const [endDate, setEndDate] = useState(task?.endDate ? task.endDate.slice(0, 10) : "");
   const [assigneeId, setAssigneeId] = useState<string>(task?.assigneeId ?? "");
@@ -448,10 +468,12 @@ function TaskFormDialog({
       }
       return;
     }
+    const effectivePct = status === "DONE" ? 100 : status === "TODO" ? 0 : progressPercent;
     const payload: Record<string, unknown> = {
       title: title.trim(),
       description: description.trim() || undefined,
       status,
+      progressPercent: effectivePct,
       startDate: startDate || undefined,
       endDate: endDate || undefined,
       assigneeId: assigneeId || undefined,
@@ -464,6 +486,7 @@ function TaskFormDialog({
           title: title.trim(),
           description: description.trim() ? description.trim() : null,
           status,
+          progressPercent: effectivePct,
           startDate: startDate || null,
           endDate: endDate || null,
           assigneeId: assigneeId || null,
@@ -562,6 +585,29 @@ function TaskFormDialog({
                 </SelectContent>
               </Select>
             </div>
+          </div>
+          <div>
+            <div className="flex items-center justify-between">
+              <Label>Progress</Label>
+              <span className="text-xs font-mono text-muted-foreground">
+                {status === "DONE" ? 100 : status === "TODO" ? 0 : progressPercent}%
+              </span>
+            </div>
+            <Input
+              type="range"
+              min={0}
+              max={100}
+              step={5}
+              value={progressPercent}
+              onChange={(e) => setProgressPercent(Number(e.target.value))}
+              disabled={status === "DONE" || status === "TODO"}
+              data-testid="input-task-progress"
+            />
+            {(status === "DONE" || status === "TODO") && (
+              <p className="text-[11px] text-muted-foreground mt-1">
+                Progress dikunci otomatis sesuai status ({status === "DONE" ? "100%" : "0%"}). Ubah status ke In Progress / Blocked untuk menyetel manual.
+              </p>
+            )}
           </div>
         </div>
         <DialogFooter>

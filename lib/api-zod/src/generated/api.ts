@@ -941,6 +941,9 @@ export const ListProjectExpensesParams = zod.object({
 export const ListProjectExpensesResponseItem = zod.object({
   id: zod.string(),
   projectId: zod.string(),
+  projectCode: zod.string().nullish(),
+  projectName: zod.string().nullish(),
+  clientName: zod.string().nullish(),
   category: zod.enum(["SOFTWARE", "HARDWARE", "LICENSE", "TRAVEL", "OTHER"]),
   description: zod.string(),
   amount: zod.number(),
@@ -970,6 +973,29 @@ export const AddProjectExpenseBody = zod.object({
     .describe("Base64 data URL of supporting invoice\/receipt PDF or image"),
   evidenceFileName: zod.string().nullish(),
 });
+
+/**
+ * Cross-project expense listing. Management sees all; Project Manager sees
+own projects; Sales sees own projects; other roles get 403.
+
+ */
+export const ListExpensesResponseItem = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  projectCode: zod.string().nullish(),
+  projectName: zod.string().nullish(),
+  clientName: zod.string().nullish(),
+  category: zod.enum(["SOFTWARE", "HARDWARE", "LICENSE", "TRAVEL", "OTHER"]),
+  description: zod.string(),
+  amount: zod.number(),
+  spentAt: zod.string(),
+  evidenceUrl: zod.string().nullish(),
+  evidenceFileName: zod.string().nullish(),
+  createdById: zod.string().nullish(),
+  createdByName: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+export const ListExpensesResponse = zod.array(ListExpensesResponseItem);
 
 export const RemoveProjectExpenseParams = zod.object({
   expenseId: zod.coerce.string(),
@@ -1136,6 +1162,9 @@ export const ListProjectTasksParams = zod.object({
   id: zod.coerce.string(),
 });
 
+export const listProjectTasksResponseProgressPercentMin = 0;
+export const listProjectTasksResponseProgressPercentMax = 100;
+
 export const ListProjectTasksResponseItem = zod.object({
   id: zod.string(),
   projectId: zod.string(),
@@ -1144,6 +1173,10 @@ export const ListProjectTasksResponseItem = zod.object({
   title: zod.string(),
   description: zod.string().nullish(),
   status: zod.enum(["TODO", "IN_PROGRESS", "BLOCKED", "DONE"]),
+  progressPercent: zod
+    .number()
+    .min(listProjectTasksResponseProgressPercentMin)
+    .max(listProjectTasksResponseProgressPercentMax),
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   assigneeId: zod.string().nullish(),
@@ -1160,14 +1193,25 @@ export const CreateProjectTaskParams = zod.object({
   id: zod.coerce.string(),
 });
 
+export const createProjectTaskBodyProgressPercentMin = 0;
+export const createProjectTaskBodyProgressPercentMax = 100;
+
 export const CreateProjectTaskBody = zod.object({
   title: zod.string(),
   description: zod.string().nullish(),
   status: zod.enum(["TODO", "IN_PROGRESS", "BLOCKED", "DONE"]).optional(),
+  progressPercent: zod
+    .number()
+    .min(createProjectTaskBodyProgressPercentMin)
+    .max(createProjectTaskBodyProgressPercentMax)
+    .optional(),
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   assigneeId: zod.string().nullish(),
 });
+
+export const listMyTasksResponseProgressPercentMin = 0;
+export const listMyTasksResponseProgressPercentMax = 100;
 
 export const ListMyTasksResponseItem = zod.object({
   id: zod.string(),
@@ -1177,6 +1221,10 @@ export const ListMyTasksResponseItem = zod.object({
   title: zod.string(),
   description: zod.string().nullish(),
   status: zod.enum(["TODO", "IN_PROGRESS", "BLOCKED", "DONE"]),
+  progressPercent: zod
+    .number()
+    .min(listMyTasksResponseProgressPercentMin)
+    .max(listMyTasksResponseProgressPercentMax),
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   assigneeId: zod.string().nullish(),
@@ -1193,14 +1241,25 @@ export const UpdateTaskParams = zod.object({
   taskId: zod.coerce.string(),
 });
 
+export const updateTaskBodyProgressPercentMin = 0;
+export const updateTaskBodyProgressPercentMax = 100;
+
 export const UpdateTaskBody = zod.object({
   title: zod.string().optional(),
   description: zod.string().nullish(),
   status: zod.enum(["TODO", "IN_PROGRESS", "BLOCKED", "DONE"]).optional(),
+  progressPercent: zod
+    .number()
+    .min(updateTaskBodyProgressPercentMin)
+    .max(updateTaskBodyProgressPercentMax)
+    .optional(),
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   assigneeId: zod.string().nullish(),
 });
+
+export const updateTaskResponseProgressPercentMin = 0;
+export const updateTaskResponseProgressPercentMax = 100;
 
 export const UpdateTaskResponse = zod.object({
   id: zod.string(),
@@ -1210,6 +1269,10 @@ export const UpdateTaskResponse = zod.object({
   title: zod.string(),
   description: zod.string().nullish(),
   status: zod.enum(["TODO", "IN_PROGRESS", "BLOCKED", "DONE"]),
+  progressPercent: zod
+    .number()
+    .min(updateTaskResponseProgressPercentMin)
+    .max(updateTaskResponseProgressPercentMax),
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   assigneeId: zod.string().nullish(),
