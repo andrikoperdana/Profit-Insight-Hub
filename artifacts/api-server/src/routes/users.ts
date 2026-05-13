@@ -149,6 +149,20 @@ router.post(
       res.status(400).json({ error: "email, password, name, role required" });
       return;
     }
+    const emailClean = String(email).toLowerCase().trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailClean) || emailClean.length > 200) {
+      res.status(400).json({ error: "email must be a valid email address (max 200 chars)" });
+      return;
+    }
+    const nameClean = String(name).trim();
+    if (!nameClean || nameClean.length > 200) {
+      res.status(400).json({ error: "name required (max 200 chars)" });
+      return;
+    }
+    if (!ALL_ROLES.includes(role as UserRole)) {
+      res.status(400).json({ error: `role must be one of ${ALL_ROLES.join(", ")}` });
+      return;
+    }
     if (String(password).length < 6) {
       res.status(400).json({ error: "Password must be at least 6 characters" });
       return;
@@ -158,7 +172,7 @@ router.post(
       return;
     }
     const exists = await prisma.user.findUnique({
-      where: { email: String(email).toLowerCase() },
+      where: { email: emailClean },
     });
     if (exists) {
       res.status(409).json({ error: "Email already in use" });
@@ -167,9 +181,9 @@ router.post(
     const passwordHash = await hashPassword(String(password));
     const u = await prisma.user.create({
       data: {
-        email: String(email).toLowerCase(),
+        email: emailClean,
         passwordHash,
-        name: String(name),
+        name: nameClean,
         role: role as UserRole,
         title: title || null,
         dailyRate: dailyRate != null ? Number(dailyRate) : null,
@@ -210,8 +224,19 @@ router.patch("/users/:id", async (req, res) => {
     res.status(400).json({ error: "Password must be at least 6 characters" });
     return;
   }
+  if (name !== undefined) {
+    const n = String(name).trim();
+    if (!n || n.length > 200) {
+      res.status(400).json({ error: "name required (max 200 chars)" });
+      return;
+    }
+  }
+  if (role !== undefined && !ALL_ROLES.includes(role as UserRole)) {
+    res.status(400).json({ error: `role must be one of ${ALL_ROLES.join(", ")}` });
+    return;
+  }
   const data: Record<string, unknown> = {};
-  if (name !== undefined) data.name = String(name);
+  if (name !== undefined) data.name = String(name).trim();
   if (title !== undefined) data.title = title || null;
   if (password) data.passwordHash = await hashPassword(String(password));
   if (isAdmin) {
