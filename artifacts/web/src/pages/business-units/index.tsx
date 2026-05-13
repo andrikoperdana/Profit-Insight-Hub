@@ -39,28 +39,28 @@ export default function BusinessUnitsPage() {
 
   const createM = useCreateBusinessUnit({
     mutation: {
-      onSuccess: () => { toast({ title: "Business unit dibuat" }); setCreateOpen(false); invalidate(); },
-      onError: (e: any) => toast({ variant: "destructive", title: "Gagal", description: e?.message }),
+      onSuccess: () => { toast({ title: "Business unit created" }); setCreateOpen(false); invalidate(); },
+      onError: (e: any) => toast({ variant: "destructive", title: "Failed", description: e?.message }),
     },
   });
   const updateM = useUpdateBusinessUnit({
     mutation: {
-      onSuccess: () => { toast({ title: "Business unit diperbarui" }); setEditing(null); invalidate(); },
-      onError: (e: any) => toast({ variant: "destructive", title: "Gagal", description: e?.message }),
+      onSuccess: () => { toast({ title: "Business unit updated" }); setEditing(null); invalidate(); },
+      onError: (e: any) => toast({ variant: "destructive", title: "Failed", description: e?.message }),
     },
   });
   const deleteM = useDeleteBusinessUnit({
     mutation: {
-      onSuccess: () => { toast({ title: "Business unit dihapus" }); invalidate(); },
-      onError: (e: any) => toast({ variant: "destructive", title: "Gagal", description: e?.message }),
+      onSuccess: () => { toast({ title: "Business unit deleted" }); invalidate(); },
+      onError: (e: any) => toast({ variant: "destructive", title: "Failed", description: e?.message }),
     },
   });
 
   if (!canManageUsers(user?.role)) {
     return (
       <EmptyState
-        title="Akses ditolak"
-        description="Hanya Site Admin yang dapat mengelola business unit."
+        title="Access denied"
+        description="Only Site Admins can manage business units."
         icon={<ShieldAlert className="h-10 w-10 text-destructive/50" />}
       />
     );
@@ -72,15 +72,15 @@ export default function BusinessUnitsPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Business Units</h1>
           <p className="text-muted-foreground">
-            Pengelompokan tim berdasarkan layanan (mis. Pentest, GRC, Threat Hunting).
+            Group teams by service line (e.g. Pentest, GRC, Threat Hunting).
           </p>
         </div>
         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
           <DialogTrigger asChild>
-            <Button data-testid="button-new-bu"><Plus className="h-4 w-4 mr-2" /> BU Baru</Button>
+            <Button data-testid="button-new-bu"><Plus className="h-4 w-4 mr-2" /> New BU</Button>
           </DialogTrigger>
           <BUFormDialog
-            title="Tambah Business Unit"
+            title="Add Business Unit"
             onSubmit={(data) => createM.mutate({ data })}
             isPending={createM.isPending}
           />
@@ -91,8 +91,8 @@ export default function BusinessUnitsPage() {
         <TableSkeleton columns={4} rows={4} />
       ) : !units?.length ? (
         <EmptyState
-          title="Belum ada business unit"
-          description="Buat BU pertama untuk mulai membagi tim per layanan."
+          title="No business units yet"
+          description="Create your first BU to start splitting teams by service line."
           icon={<Network className="h-10 w-10 text-muted-foreground/50" />}
         />
       ) : (
@@ -100,11 +100,11 @@ export default function BusinessUnitsPage() {
           <Table>
             <TableHeader className="bg-muted/40">
               <TableRow>
-                <TableHead>Nama</TableHead>
-                <TableHead>Deskripsi</TableHead>
-                <TableHead className="text-right">Anggota</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead className="text-right">Members</TableHead>
                 <TableHead className="text-center">Status</TableHead>
-                <TableHead className="text-right w-[120px]">Aksi</TableHead>
+                <TableHead className="text-right w-[120px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -115,7 +115,7 @@ export default function BusinessUnitsPage() {
                   <TableCell className="text-right font-mono text-sm">{b.memberCount ?? 0}</TableCell>
                   <TableCell className="text-center">
                     <Badge variant="outline" className={b.isActive ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30" : "bg-muted text-muted-foreground"}>
-                      {b.isActive ? "Aktif" : "Nonaktif"}
+                      {b.isActive ? "Active" : "Inactive"}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right">
@@ -127,7 +127,7 @@ export default function BusinessUnitsPage() {
                       variant="ghost"
                       className="text-destructive hover:text-destructive"
                       onClick={() => {
-                        if (confirm(`Hapus business unit "${b.name}"?`)) deleteM.mutate({ id: b.id });
+                        if (confirm(`Delete business unit "${b.name}"?`)) deleteM.mutate({ id: b.id });
                       }}
                       data-testid={`button-delete-bu-${b.id}`}
                     >
@@ -170,19 +170,19 @@ function BUFormDialog({
     <DialogContent className="sm:max-w-[460px]">
       <DialogHeader>
         <DialogTitle>{title}</DialogTitle>
-        <DialogDescription>Contoh: Pentest, GRC, Threat Hunting.</DialogDescription>
+        <DialogDescription>Examples: Pentest, GRC, Threat Hunting.</DialogDescription>
       </DialogHeader>
       <div className="space-y-3 py-2">
         <div>
-          <Label>Nama *</Label>
+          <Label>Name *</Label>
           <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Pentest" data-testid="input-bu-name" />
         </div>
         <div>
-          <Label>Deskripsi</Label>
+          <Label>Description</Label>
           <Textarea
             value={description ?? ""}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Layanan offensive security testing…"
+            placeholder="Offensive security testing services…"
             className="resize-none h-20"
             data-testid="input-bu-description"
           />
@@ -190,7 +190,7 @@ function BUFormDialog({
         {initial && (
           <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} />
-            Aktif
+            Active
           </label>
         )}
       </div>
@@ -200,7 +200,7 @@ function BUFormDialog({
           onClick={() => onSubmit({ name: name.trim(), description: description?.trim() || null, ...(initial ? { isActive } : {}) })}
           data-testid="button-save-bu"
         >
-          {isPending ? "Menyimpan…" : "Simpan"}
+          {isPending ? "Saving…" : "Save"}
         </Button>
       </DialogFooter>
     </DialogContent>

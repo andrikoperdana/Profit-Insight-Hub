@@ -18,7 +18,7 @@ interface NewClientDialogProps {
   triggerLabel?: string;
 }
 
-export default function NewClientDialog({ onCreated, triggerLabel = "Tambah Klien Baru" }: NewClientDialogProps) {
+export default function NewClientDialog({ onCreated, triggerLabel = "Add New Client" }: NewClientDialogProps) {
   const { toast } = useToast();
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -31,14 +31,14 @@ export default function NewClientDialog({ onCreated, triggerLabel = "Tambah Klie
   const create = useCreateClient({
     mutation: {
       onSuccess: (c: any) => {
-        toast({ title: "Klien dibuat", description: c?.name });
+        toast({ title: "Client created", description: c?.name });
         qc.invalidateQueries({ queryKey: getListClientsQueryKey() });
         if (c?.id) onCreated?.(c.id);
         setOpen(false);
         setName(""); setContactPerson(""); setEmail(""); setPhone(""); setIndustry("");
       },
       onError: (e: any) =>
-        toast({ title: "Gagal membuat klien", description: e?.message, variant: "destructive" }),
+        toast({ title: "Failed to create client", description: e?.message, variant: "destructive" }),
     },
   });
 
@@ -58,43 +58,43 @@ export default function NewClientDialog({ onCreated, triggerLabel = "Tambah Klie
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Tambah Klien Baru</DialogTitle>
+            <DialogTitle>Add New Client</DialogTitle>
             <DialogDescription>
-              Isi data klien. Hanya nama yang wajib — selebihnya bisa dilengkapi nanti di halaman Clients.
+              Enter the client details. Only the name is required — the rest can be filled in later from the Clients page.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             <div>
-              <Label>Nama Perusahaan *</Label>
+              <Label>Company Name *</Label>
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="cth. PT Bank Mandiri"
+                placeholder="e.g. PT Bank Mandiri"
                 data-testid="input-new-client-name"
                 autoFocus
               />
             </div>
             <div>
               <Label>Contact Person</Label>
-              <Input value={contactPerson} onChange={(e) => setContactPerson(e.target.value)} placeholder="Nama PIC" />
+              <Input value={contactPerson} onChange={(e) => setContactPerson(e.target.value)} placeholder="PIC name" />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label>Email</Label>
-                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@klien.co.id" />
+                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@client.co.id" />
               </div>
               <div>
-                <Label>Telepon</Label>
+                <Label>Phone</Label>
                 <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+62 ..." />
               </div>
             </div>
             <div>
-              <Label>Industri</Label>
-              <Input value={industry} onChange={(e) => setIndustry(e.target.value)} placeholder="cth. Perbankan" />
+              <Label>Industry</Label>
+              <Input value={industry} onChange={(e) => setIndustry(e.target.value)} placeholder="e.g. Banking" />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setOpen(false)}>Batal</Button>
+            <Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
             <Button
               onClick={() =>
                 create.mutate({
@@ -111,7 +111,7 @@ export default function NewClientDialog({ onCreated, triggerLabel = "Tambah Klie
               data-testid="button-save-new-client"
             >
               {create.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-              Simpan Klien
+              Save Client
             </Button>
           </DialogFooter>
         </DialogContent>

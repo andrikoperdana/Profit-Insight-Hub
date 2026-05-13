@@ -248,7 +248,7 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
                             <Badge
                               variant="outline"
                               className="bg-amber-500/15 text-amber-400 border-amber-500/30 text-[10px]"
-                              title="Non-billable: jam tidak masuk revenue/margin"
+                              title="Non-billable: hours don't count toward revenue/margin"
                             >
                               Non-billable
                             </Badge>
@@ -698,7 +698,7 @@ function TaskFormDialog({
             </div>
             {resources.length === 0 ? (
               <p className="text-xs text-muted-foreground italic px-1">
-                Belum ada resource pada proyek ini. Tambahkan resource dulu di tab Resources.
+                No resources on this project yet. Add a resource first on the Resources tab.
               </p>
             ) : (
               <div className="border rounded-md divide-y max-h-40 overflow-y-auto">
@@ -722,7 +722,7 @@ function TaskFormDialog({
               </div>
             )}
             <p className="text-[11px] text-muted-foreground mt-1">
-              Pilih lebih dari satu untuk task yang dikerjakan beberapa orang sekaligus.
+              Select more than one for tasks worked on by multiple people at the same time.
             </p>
           </div>
           <div>
@@ -746,7 +746,7 @@ function TaskFormDialog({
               </SelectContent>
             </Select>
             <p className="text-[11px] text-muted-foreground mt-1">
-              Pilih task induk untuk membuat sub-task (Work Breakdown Structure).
+              Pick a parent task to create a sub-task (Work Breakdown Structure).
             </p>
           </div>
           <div>
@@ -758,7 +758,7 @@ function TaskFormDialog({
               if (candidates.length === 0) {
                 return (
                   <p className="text-xs text-muted-foreground italic px-2 py-3 border rounded-md">
-                    Belum ada task lain di project ini untuk dijadikan dependency.
+                    No other tasks in this project to depend on yet.
                   </p>
                 );
               }
@@ -797,10 +797,10 @@ function TaskFormDialog({
               data-testid="checkbox-task-billable"
             />
             <Label htmlFor="task-billable" className="cursor-pointer text-sm font-medium">
-              Billable (jam masuk perhitungan revenue/margin)
+              Billable (hours count toward revenue/margin)
             </Label>
             <span className="ml-auto text-[11px] text-muted-foreground">
-              Default: aktif. Matikan jika task internal/training/non-billable — jam tetap dicatat tapi tidak dihitung sebagai revenue.
+              Default: on. Turn off for internal/training/non-billable tasks — hours are still recorded but won't count toward revenue.
             </span>
           </div>
           <div>

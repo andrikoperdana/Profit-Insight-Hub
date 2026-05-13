@@ -127,7 +127,7 @@ export default function TimesheetsWorkspace() {
           <CardHeader>
             <CardTitle className="text-base">Team Timesheets</CardTitle>
             <CardDescription>
-              Semua timesheet di seluruh proyek{user?.role === UserRole.PROJECT_MANAGER ? " yang Anda kelola" : ""}. Filter per proyek dan ekspor ke CSV.
+              All timesheets across every project{user?.role === UserRole.PROJECT_MANAGER ? " you manage" : ""}. Filter by project and export to CSV.
             </CardDescription>
           </CardHeader>
           <CardContent className="p-0">
@@ -216,7 +216,7 @@ function LogTimeDialog({ isAutoApprove }: { isAutoApprove: boolean }) {
             )} />
             <FormField control={form.control} name="taskId" render={({ field }) => (
               <FormItem>
-                <FormLabel>Task (opsional)</FormLabel>
+                <FormLabel>Task (optional)</FormLabel>
                 <Select
                   onValueChange={(v) => field.onChange(v === "__none" ? "" : v)}
                   value={field.value || "__none"}
@@ -224,11 +224,11 @@ function LogTimeDialog({ isAutoApprove }: { isAutoApprove: boolean }) {
                 >
                   <FormControl>
                     <SelectTrigger data-testid="select-timesheet-task">
-                      <SelectValue placeholder={selectedProjectId ? "Pilih task (opsional)" : "Pilih project dulu"} />
+                      <SelectValue placeholder={selectedProjectId ? "Select task (optional)" : "Select project first"} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="__none">Tidak terkait task</SelectItem>
+                    <SelectItem value="__none">Not linked to a task</SelectItem>
                     {tasksForProject.map((t) => (
                       <SelectItem key={t.id} value={t.id}>{t.title}</SelectItem>
                     ))}
@@ -236,8 +236,8 @@ function LogTimeDialog({ isAutoApprove }: { isAutoApprove: boolean }) {
                 </Select>
                 <FormDescription className="text-xs">
                   {selectedProjectId && tasksForProject.length === 0
-                    ? "Anda belum di-assign ke task aktif pada project ini."
-                    : "Pilih task untuk menghubungkan jam kerja ini ke pekerjaan tertentu."}
+                    ? "You aren't assigned to any active tasks on this project yet."
+                    : "Pick a task to link these hours to a specific piece of work."}
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -462,7 +462,7 @@ function TeamTimesheetsTable() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="__all">Semua proyek</SelectItem>
+                <SelectItem value="__all">All projects</SelectItem>
                 {projects?.map((p) => (
                   <SelectItem key={p.id} value={p.id}>{p.code} — {p.name}</SelectItem>
                 ))}
@@ -506,8 +506,8 @@ function TeamTimesheetsTable() {
       {!filtered.length ? (
         <div className="p-6">
           <EmptyState
-            title="Tidak ada timesheet"
-            description="Tidak ada entry yang cocok dengan filter saat ini."
+            title="No timesheets"
+            description="No entries match the current filters."
             icon={<Clock className="h-10 w-10 text-muted-foreground/50" />}
           />
         </div>

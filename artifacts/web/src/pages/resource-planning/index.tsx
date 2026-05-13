@@ -30,7 +30,7 @@ export default function ResourcePlanningPage() {
     if (!data?.weekStarts) return [];
     return data.weekStarts.map((iso) => {
       const d = new Date(iso);
-      const m = d.toLocaleDateString("id-ID", { month: "short" });
+      const m = d.toLocaleDateString("en-US", { month: "short" });
       return { iso, label: `${d.getDate()} ${m}` };
     });
   }, [data]);
@@ -38,8 +38,8 @@ export default function ResourcePlanningPage() {
   if (!isPM) {
     return (
       <EmptyState
-        title="Akses ditolak"
-        description="Resource Planning hanya untuk Project Manager dan Management."
+        title="Access denied"
+        description="Resource Planning is available to Project Managers and Management only."
         icon={<ShieldAlert className="h-10 w-10 text-destructive/50" />}
       />
     );
@@ -50,23 +50,23 @@ export default function ResourcePlanningPage() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Resource Planning</h1>
         <p className="text-muted-foreground">
-          Matrix alokasi mingguan per resource, dikelompokkan per Business Unit. Angka = total mandays planned dari semua project di minggu itu.
+          Weekly allocation matrix per resource, grouped by Business Unit. Each cell = total planned mandays from all projects in that week.
         </p>
       </div>
 
       <Card className="border-border">
         <CardHeader className="pb-3">
           <CardTitle className="text-base">Filter</CardTitle>
-          <CardDescription>Atur tanggal mulai (Senin) dan rentang minggu (1–26).</CardDescription>
+          <CardDescription>Set the start date (Monday) and the number of weeks (1–26).</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div>
-              <Label htmlFor="rp-start">Mulai (Senin)</Label>
+              <Label htmlFor="rp-start">Start (Monday)</Label>
               <Input id="rp-start" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} data-testid="input-planning-start" />
             </div>
             <div>
-              <Label htmlFor="rp-weeks">Jumlah Minggu</Label>
+              <Label htmlFor="rp-weeks">Number of Weeks</Label>
               <Input
                 id="rp-weeks"
                 type="number"
@@ -93,8 +93,8 @@ export default function ResourcePlanningPage() {
         <TableSkeleton columns={6} rows={5} />
       ) : !data?.groups?.length ? (
         <EmptyState
-          title="Belum ada data alokasi"
-          description="Belum ada resource planned pada rentang ini."
+          title="No allocation data yet"
+          description="No planned resources in this date range."
           icon={<Grid3x3 className="h-10 w-10 text-muted-foreground/50" />}
         />
       ) : (
@@ -105,7 +105,7 @@ export default function ResourcePlanningPage() {
                 <CardTitle className="text-base flex items-center gap-2">
                   <span>{g.businessUnitName}</span>
                   <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30 text-[10px]">
-                    {g.rows.length} resource
+                    {g.rows.length} resource{g.rows.length === 1 ? "" : "s"}
                   </Badge>
                 </CardTitle>
               </CardHeader>
@@ -149,7 +149,7 @@ export default function ResourcePlanningPage() {
                             const allocs = c.allocations ?? [];
                             const tooltip = allocs.length > 0
                               ? allocs.map((a) => `${a.projectName}: ${a.mandays}md`).join("\n")
-                              : "Tidak ada alokasi";
+                              : "No allocations";
                             return (
                               <td key={c.weekStart} className={`p-2 text-right font-mono ${tone}`} title={tooltip}>
                                 {v > 0 ? v.toFixed(1) : "—"}

@@ -399,22 +399,22 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
   const approveMutation = useApproveProjectExpense({
     mutation: {
       onSuccess: () => {
-        toast({ title: "Expense disetujui", description: "Total cost project diperbarui." });
+        toast({ title: "Expense approved", description: "Project total cost updated." });
         invalidateAll();
       },
       onError: (e: any) =>
-        toast({ variant: "destructive", title: "Gagal approve", description: e?.message ?? "Unknown error" }),
+        toast({ variant: "destructive", title: "Failed to approve", description: e?.message ?? "Unknown error" }),
     },
   });
 
   const rejectMutation = useRejectProjectExpense({
     mutation: {
       onSuccess: () => {
-        toast({ title: "Expense ditolak" });
+        toast({ title: "Expense rejected" });
         invalidateAll();
       },
       onError: (e: any) =>
-        toast({ variant: "destructive", title: "Gagal reject", description: e?.message ?? "Unknown error" }),
+        toast({ variant: "destructive", title: "Failed to reject", description: e?.message ?? "Unknown error" }),
     },
   });
 
@@ -473,7 +473,7 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
         <CardHeader>
           <CardTitle className="text-base">Additional Project Expenses</CardTitle>
           <CardDescription>
-            Catat biaya non-resource (software, hardware, lisensi, perjalanan). Siapa saja yang ada di project boleh submit; PM/Management menyetujui. Hanya expense ber-status <span className="font-medium text-foreground">APPROVED</span> yang dihitung ke total cost &amp; margin.
+            Track non-resource costs (software, hardware, licenses, travel). Anyone on the project can submit; PM/Management approve. Only expenses with status <span className="font-medium text-foreground">APPROVED</span> count toward total cost &amp; margin.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -665,7 +665,7 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
                                 disabled={rejectMutation.isPending}
                                 data-testid={`button-reject-expense-${e.id}`}
                                 onClick={() => {
-                                  const reason = prompt(`Alasan menolak "${e.description}"?`, "");
+                                  const reason = prompt(`Reason for rejecting "${e.description}"?`, "");
                                   if (reason && reason.trim()) {
                                     rejectMutation.mutate({ expenseId: e.id, data: { reason: reason.trim() } });
                                   }
@@ -1623,7 +1623,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
         : konsultanOptions;
   const dialogRoleLabel =
     addingRole === "OTHER"
-      ? "Resource Lainnya"
+      ? "Other Resource"
       : addingRole === "TECHNICAL_WRITER"
         ? "Technical Writer"
         : "Konsultan";
@@ -1635,8 +1635,8 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
     }
     if (addingRole === "OTHER" && !form.roleInProject.trim()) {
       toast({
-        title: "Role di project wajib diisi",
-        description: "Tulis posisi seperti 'SOC Manager', 'Security Engineer', 'Sales Support', dll.",
+        title: "Role on project is required",
+        description: "Enter a position such as 'SOC Manager', 'Security Engineer', 'Sales Support', etc.",
         variant: "destructive",
       });
       return;
@@ -1939,15 +1939,15 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
         </CardContent>
       </Card>
 
-      {/* Resource Lainnya — fleksibel, untuk Sales / SOC Manager / Security Engineer / Junior SE / dll */}
+      {/* Other Resources — flexible, for Sales / SOC Manager / Security Engineer / Junior SE / etc. */}
       <Card className="border-border shadow-sm">
         <CardHeader className="flex flex-row items-start justify-between gap-4">
           <div>
-            <CardTitle className="text-base">Resource Lainnya</CardTitle>
+            <CardTitle className="text-base">Other Resources</CardTitle>
             <CardDescription>
-              Tambahkan resource di luar Konsultan / Technical Writer (misal Sales, SOC Manager,
-              Security Engineer, Junior Security Engineer). Tulis posisinya bebas pada kolom
-              "Role di Project".
+              Add resources outside Consultant / Technical Writer (e.g. Sales, SOC Manager,
+              Security Engineer, Junior Security Engineer). Enter a free-form position in the
+              "Role on Project" field.
             </CardDescription>
           </div>
           {canEdit && (
@@ -1960,14 +1960,14 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
               className="shrink-0"
               data-testid="button-add-other-resource"
             >
-              + Tambah Resource Lainnya
+              + Add Other Resource
             </Button>
           )}
         </CardHeader>
         <CardContent>
           {otherList.length === 0 ? (
             <div className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-              Belum ada resource tambahan. Klik tombol di atas untuk menambah.
+              No additional resources yet. Click the button above to add one.
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -2057,7 +2057,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                     ? "Assign a Konsultan to this project. Multiple Konsultans can be assigned per project."
                     : addingRole === "TECHNICAL_WRITER"
                       ? "Assign a Technical Writer to this project. Multiple Technical Writers can be assigned per project."
-                      : "Tambahkan user manapun (Sales, SOC Manager, Security Engineer, dll) sebagai resource. Tulis posisinya pada \"Role di Project\".")
+                      : "Add any user (Sales, SOC Manager, Security Engineer, etc.) as a resource. Enter their position under \"Role on Project\".")
                 : "Pick one of your supervisees to propose. The PM will be notified and may accept or replace your proposal."}
             </DialogDescription>
           </DialogHeader>
@@ -2092,11 +2092,11 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
             </div>
             <div className="space-y-1.5">
               <Label>
-                Role di Project{" "}
+                Role on Project{" "}
                 {addingRole === "OTHER" ? (
                   <span className="text-destructive text-xs">*</span>
                 ) : (
-                  <span className="text-muted-foreground text-xs">(opsional)</span>
+                  <span className="text-muted-foreground text-xs">(optional)</span>
                 )}
               </Label>
               <Input

@@ -115,13 +115,13 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
       {summary.totalPct > 100 && (
         <div className="rounded-md border border-destructive/40 bg-destructive/5 p-3 text-xs text-destructive flex items-center gap-2">
           <AlertCircle className="h-3.5 w-3.5" />
-          Total alokasi {summary.totalPct.toFixed(1)}% melebihi 100% dari nilai kontrak.
+          Total allocation {summary.totalPct.toFixed(1)}% exceeds 100% of the contract value.
         </div>
       )}
       {summary.totalPct < 100 && (milestones ?? []).length > 0 && (
         <div className="rounded-md border border-amber-500/40 bg-amber-500/5 p-3 text-xs text-amber-400 flex items-center gap-2">
           <AlertCircle className="h-3.5 w-3.5" />
-          Total alokasi {summary.totalPct.toFixed(1)}% — masih kurang {(100 - summary.totalPct).toFixed(1)}% untuk mencapai 100%.
+          Total allocation {summary.totalPct.toFixed(1)}% — {(100 - summary.totalPct).toFixed(1)}% short of 100%.
         </div>
       )}
 
@@ -132,7 +132,7 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
               <Receipt className="h-4 w-4" /> Billing Plan (Terms of Payment)
             </CardTitle>
             <CardDescription>
-              Susun milestone tagihan beserta porsi dari nilai kontrak. Contoh: 30% DP, 40% Mid, 30% After BAST.
+              Plan billing milestones and their share of the contract value. Example: 30% DP, 40% Mid, 30% After BAST.
             </CardDescription>
           </div>
           {isManager && (
@@ -149,8 +149,8 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
               title="No billing milestones yet"
               description={
                 isManager
-                  ? "Tambahkan milestone tagihan pertama untuk proyek ini."
-                  : "PM belum menyusun rencana tagihan untuk proyek ini."
+                  ? "Add the first billing milestone for this project."
+                  : "The PM hasn't set up a billing plan for this project yet."
               }
             />
           ) : (
@@ -345,7 +345,7 @@ function MilestoneFormDialog({
         <DialogHeader>
           <DialogTitle>{editing ? "Edit Milestone" : "New Billing Milestone"}</DialogTitle>
           <DialogDescription>
-            Setiap milestone mewakili termin tagihan ke klien. Persentase dihitung dari nilai kontrak.
+            Each milestone represents a billing term to the client. Percentages are computed from the contract value.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-3">
@@ -363,7 +363,7 @@ function MilestoneFormDialog({
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Optional — syarat tagih, dokumen yang harus diserahkan, dll."
+              placeholder="Optional — billing prerequisites, documents to submit, etc."
               className="resize-none h-16"
             />
           </div>
@@ -392,7 +392,7 @@ function MilestoneFormDialog({
                 checked={overrideAmount}
                 onChange={(e) => setOverrideAmount(e.target.checked)}
               />
-              Override jumlah (default: dihitung dari persentase × kontrak)
+              Override amount (default: computed from percentage × contract)
             </label>
             {overrideAmount ? (
               <Input
@@ -401,7 +401,7 @@ function MilestoneFormDialog({
                 step="any"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                placeholder="Jumlah dalam IDR"
+                placeholder="Amount in IDR"
                 data-testid="input-milestone-amount"
               />
             ) : (

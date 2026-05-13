@@ -104,31 +104,31 @@ export default function ExpensesPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground">Expenses</h1>
           <p className="text-muted-foreground">
-            Biaya non-resource (software, hardware, license, travel, lain-lain) di seluruh proyek
-            {user.role === UserRole.PROJECT_MANAGER ? " yang Anda kelola" : user.role === UserRole.SALES ? " yang Anda tangani" : ""}.
+            Non-resource costs (software, hardware, license, travel, other) across every project
+            {user.role === UserRole.PROJECT_MANAGER ? " you manage" : user.role === UserRole.SALES ? " you handle" : ""}.
           </p>
         </div>
       </div>
 
       <div className="grid gap-3 grid-cols-2 md:grid-cols-4">
-        <SummaryCard label="Total Biaya" value={formatIDR(summary.total)} />
-        <SummaryCard label="Jumlah Entry" value={String(summary.count)} />
+        <SummaryCard label="Total Cost" value={formatIDR(summary.total)} />
+        <SummaryCard label="Entry Count" value={String(summary.count)} />
         <SummaryCard label="Software + License" value={formatIDR((summary.byCat.SOFTWARE ?? 0) + (summary.byCat.LICENSE ?? 0))} />
         <SummaryCard label="Travel" value={formatIDR(summary.byCat.TRAVEL ?? 0)} />
       </div>
 
       <Card className="border-border shadow-sm">
         <CardHeader>
-          <CardTitle className="text-base">Daftar Pengeluaran</CardTitle>
+          <CardTitle className="text-base">Expense List</CardTitle>
           <CardDescription>
-            Tambah atau hapus pengeluaran dari halaman detail proyek (tab "Expenses"). Halaman ini bersifat read-only dengan filter dan ekspor.
+            Add or remove expenses from the project detail page (the "Expenses" tab). This page is read-only with filters and export.
           </CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           <div className="flex flex-wrap items-center justify-between gap-3 px-4 pt-4">
             <div className="flex flex-wrap items-center gap-3">
               <Input
-                placeholder="Cari deskripsi / proyek / klien..."
+                placeholder="Search description / project / client..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="h-8 w-[220px]"
@@ -136,10 +136,10 @@ export default function ExpensesPage() {
               />
               <Select value={projectFilter} onValueChange={setProjectFilter}>
                 <SelectTrigger className="h-8 w-[220px]" data-testid="filter-expense-project">
-                  <SelectValue placeholder="Semua proyek" />
+                  <SelectValue placeholder="All projects" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="__all">Semua proyek</SelectItem>
+                  <SelectItem value="__all">All projects</SelectItem>
                   {projects?.map((p) => (
                     <SelectItem key={p.id} value={p.id}>{p.code} — {p.name}</SelectItem>
                   ))}
@@ -150,7 +150,7 @@ export default function ExpensesPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="__all">Semua kategori</SelectItem>
+                  <SelectItem value="__all">All categories</SelectItem>
                   {CATEGORIES.map((c) => (
                     <SelectItem key={c} value={c}>{c}</SelectItem>
                   ))}
@@ -172,21 +172,21 @@ export default function ExpensesPage() {
             <div className="p-6"><TableSkeleton columns={6} rows={6} /></div>
           ) : !filtered.length ? (
             <EmptyState
-              title="Belum ada pengeluaran"
-              description="Tambahkan pengeluaran dari tab Expenses pada halaman detail proyek."
+              title="No expenses yet"
+              description="Add expenses from the Expenses tab on a project detail page."
               icon={<Receipt className="h-10 w-10 text-muted-foreground/50" />}
             />
           ) : (
             <Table>
               <TableHeader className="bg-muted/50">
                 <TableRow>
-                  <TableHead>Tanggal</TableHead>
-                  <TableHead>Proyek</TableHead>
-                  <TableHead>Klien</TableHead>
-                  <TableHead>Kategori</TableHead>
-                  <TableHead>Deskripsi</TableHead>
-                  <TableHead className="text-right">Jumlah (IDR)</TableHead>
-                  <TableHead>Bukti</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Project</TableHead>
+                  <TableHead>Client</TableHead>
+                  <TableHead>Category</TableHead>
+                  <TableHead>Description</TableHead>
+                  <TableHead className="text-right">Amount (IDR)</TableHead>
+                  <TableHead>Proof</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

@@ -571,7 +571,7 @@ export default function UsersList() {
                   <div className="space-y-2">
                     <div className="text-sm font-medium text-foreground">Skills</div>
                     {!skillsCatalog?.length ? (
-                      <p className="text-xs text-muted-foreground">Belum ada skill di katalog.</p>
+                      <p className="text-xs text-muted-foreground">No skills in the catalog yet.</p>
                     ) : (
                       <ScrollArea className="h-32 rounded-md border border-border p-2">
                         <div className="grid grid-cols-2 gap-1">
@@ -860,7 +860,7 @@ export default function UsersList() {
               <div className="space-y-2">
                 <div className="text-sm font-medium text-foreground">Skills</div>
                 {!skillsCatalog?.length ? (
-                  <p className="text-xs text-muted-foreground">Belum ada skill di katalog.</p>
+                  <p className="text-xs text-muted-foreground">No skills in the catalog yet.</p>
                 ) : (
                   <ScrollArea className="h-32 rounded-md border border-border p-2">
                     <div className="grid grid-cols-2 gap-1">

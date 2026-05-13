@@ -218,10 +218,10 @@ export default function PMDashboard() {
           <CardContent className="flex items-center justify-between gap-3 py-4">
             <div>
               <div className="text-sm font-medium text-amber-400">
-                Expense Menunggu Persetujuan ({pendingExpenses.length})
+                Expenses Awaiting Approval ({pendingExpenses.length})
               </div>
               <div className="text-xs text-muted-foreground">
-                Total nilai pending: <span className="font-mono font-medium text-foreground">{formatIDR(pendingExpenseTotal)}</span>. Review &amp; approve di tab Expenses tiap project; hanya APPROVED yang masuk ke perhitungan margin.
+                Total pending value: <span className="font-mono font-medium text-foreground">{formatIDR(pendingExpenseTotal)}</span>. Review &amp; approve from the Expenses tab on each project; only APPROVED entries count toward margin.
               </div>
             </div>
             <Link href="/expenses">
