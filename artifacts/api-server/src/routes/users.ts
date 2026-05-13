@@ -47,6 +47,28 @@ router.get("/users/under-supervision", async (req, res) => {
   res.json(users.map(serializeUser));
 });
 
+router.get("/users/active-all", async (req, res) => {
+  const role = req.user!.role;
+  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER") {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  const users = await prisma.user.findMany({
+    where: { deletedAt: null, isActive: true },
+    orderBy: [{ role: "asc" }, { name: "asc" }],
+  });
+  res.json(
+    users.map((u) => ({
+      id: u.id,
+      name: u.name,
+      email: u.email,
+      role: u.role,
+      title: u.title,
+      dailyRate: u.dailyRate,
+    })),
+  );
+});
+
 router.get("/users/available", async (req, res) => {
   const callerRole = req.user!.role;
   const callerId = req.user!.sub;

@@ -408,6 +408,15 @@ export interface AvailableUser {
   atCapacity: boolean;
 }
 
+export interface ActiveUser {
+  id: string;
+  name: string;
+  email?: string;
+  role: UserRole;
+  title?: string | null;
+  dailyRate?: number | null;
+}
+
 export interface Notification {
   id: string;
   userId: string;

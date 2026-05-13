@@ -81,6 +81,36 @@ export const ListAvailableUsersResponse = zod.array(
   ListAvailableUsersResponseItem,
 );
 
+/**
+ * Returns all active users regardless of role. Available to MANAGEMENT and
+PROJECT_MANAGER. Used by the project Resources tab to assign "other"
+resources (Sales, SOC Manager, Security Engineer, etc.) with a free-text
+project role.
+
+ */
+export const ListActiveAllUsersResponseItem = zod.object({
+  id: zod.string(),
+  name: zod.string(),
+  email: zod.string().optional(),
+  role: zod.enum([
+    "MANAGEMENT",
+    "PROJECT_MANAGER",
+    "SALES",
+    "KONSULTAN",
+    "TECHNICAL_WRITER",
+    "ADMIN_PROJECT",
+    "PRINCIPAL_KONSULTAN",
+    "PRINCIPAL_TECHNICAL_WRITER",
+    "PRINCIPAL_ADMIN_PROJECT",
+    "SITE_ADMIN",
+  ]),
+  title: zod.string().nullish(),
+  dailyRate: zod.number().nullish(),
+});
+export const ListActiveAllUsersResponse = zod.array(
+  ListActiveAllUsersResponseItem,
+);
+
 export const UpdateProjectReportParams = zod.object({
   id: zod.coerce.string(),
 });

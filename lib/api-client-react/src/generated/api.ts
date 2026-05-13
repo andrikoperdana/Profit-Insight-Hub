@@ -17,6 +17,7 @@ import type {
 } from "@tanstack/react-query";
 
 import type {
+  ActiveUser,
   ActivityItem,
   AddProjectExpenseBody,
   AddResourceBody,
@@ -370,6 +371,81 @@ export function useListAvailableUsers<
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getListAvailableUsersQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * Returns all active users regardless of role. Available to MANAGEMENT and
+PROJECT_MANAGER. Used by the project Resources tab to assign "other"
+resources (Sales, SOC Manager, Security Engineer, etc.) with a free-text
+project role.
+
+ */
+export const getListActiveAllUsersUrl = () => {
+  return `/api/users/active-all`;
+};
+
+export const listActiveAllUsers = async (
+  options?: RequestInit,
+): Promise<ActiveUser[]> => {
+  return customFetch<ActiveUser[]>(getListActiveAllUsersUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListActiveAllUsersQueryKey = () => {
+  return [`/api/users/active-all`] as const;
+};
+
+export const getListActiveAllUsersQueryOptions = <
+  TData = Awaited<ReturnType<typeof listActiveAllUsers>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listActiveAllUsers>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListActiveAllUsersQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listActiveAllUsers>>
+  > = ({ signal }) => listActiveAllUsers({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listActiveAllUsers>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListActiveAllUsersQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listActiveAllUsers>>
+>;
+export type ListActiveAllUsersQueryError = ErrorType<unknown>;
+
+export function useListActiveAllUsers<
+  TData = Awaited<ReturnType<typeof listActiveAllUsers>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listActiveAllUsers>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListActiveAllUsersQueryOptions(options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

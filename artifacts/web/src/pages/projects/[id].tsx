@@ -14,6 +14,7 @@ import {
   useRemoveProjectResource,
   getListProjectResourcesQueryKey,
   useListAvailableUsers,
+  useListActiveAllUsers,
   useListUsersUnderSupervision,
   useListClients,
   useListTimesheets,
@@ -1057,7 +1058,10 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
     { role: "ADMIN_PROJECT" },
     { query: { enabled: canEdit, queryKey: ["users-available", "ADMIN_PROJECT"] } }
   );
-  const [addingRole, setAddingRole] = useState<null | "KONSULTAN" | "TECHNICAL_WRITER">(null);
+  const { data: allActiveUsers } = useListActiveAllUsers({
+    query: { enabled: canEdit, queryKey: ["users-active-all"] },
+  });
+  const [addingRole, setAddingRole] = useState<null | "KONSULTAN" | "TECHNICAL_WRITER" | "OTHER">(null);
   const [form, setForm] = useState({ userId: "", roleInProject: "", plannedMandays: "10", dailyRate: "1500000" });
 
   const updateProject = useUpdateProject({
@@ -1136,16 +1140,50 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
   );
   const writerOptions = canEdit ? availableWriters : principalWriterPool;
 
+  // Other Resources: anyone active in the system who isn't already a Konsultan/TW/AdminProject
+  // resource on this project. Free-text "Role di Project" required.
+  const otherList = allList.filter(
+    (r: any) => r.userRole !== "KONSULTAN" && r.userRole !== "TECHNICAL_WRITER",
+  );
+  const otherTotalPlanned = otherList.reduce((s: number, r: any) => s + (r.plannedMandays ?? 0), 0);
+  const otherTotalActual = otherList.reduce((s: number, r: any) => s + (r.actualMandays ?? 0), 0);
+  const otherEstCost = otherList.reduce(
+    (s: number, r: any) => s + (r.plannedMandays ?? 0) * (r.dailyRate ?? 0),
+    0,
+  );
+  const assignedAnyIds = new Set(allList.map((r: any) => r.userId));
+  const otherPool = (allActiveUsers ?? []).filter((u: any) => !assignedAnyIds.has(u.id));
+
   const dialogPool =
-    addingRole === "TECHNICAL_WRITER"
-      ? (canEdit ? (writerPool ?? []) : principalWriterPool)
-      : (canEdit ? (konsultanPool ?? []) : principalKonsultanPool);
-  const dialogOptions = addingRole === "TECHNICAL_WRITER" ? writerOptions : konsultanOptions;
-  const dialogRoleLabel = addingRole === "TECHNICAL_WRITER" ? "Technical Writer" : "Konsultan";
+    addingRole === "OTHER"
+      ? otherPool
+      : addingRole === "TECHNICAL_WRITER"
+        ? (canEdit ? (writerPool ?? []) : principalWriterPool)
+        : (canEdit ? (konsultanPool ?? []) : principalKonsultanPool);
+  const dialogOptions =
+    addingRole === "OTHER"
+      ? otherPool
+      : addingRole === "TECHNICAL_WRITER"
+        ? writerOptions
+        : konsultanOptions;
+  const dialogRoleLabel =
+    addingRole === "OTHER"
+      ? "Resource Lainnya"
+      : addingRole === "TECHNICAL_WRITER"
+        ? "Technical Writer"
+        : "Konsultan";
 
   const handleAdd = () => {
     if (!form.userId || !addingRole) {
       toast({ title: "Please select a team member", variant: "destructive" });
+      return;
+    }
+    if (addingRole === "OTHER" && !form.roleInProject.trim()) {
+      toast({
+        title: "Role di project wajib diisi",
+        description: "Tulis posisi seperti 'SOC Manager', 'Security Engineer', 'Sales Support', dll.",
+        variant: "destructive",
+      });
       return;
     }
     const payload = {
@@ -1242,7 +1280,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
           <div>
             <CardTitle className="text-base">Konsultan Team</CardTitle>
             <CardDescription>
-              Konsultan assigned to {project?.code ?? "this project"}. Each Konsultan can be active on a maximum of 2 projects (OBSERVATION or ACTIVE).
+              Konsultan assigned to {project?.code ?? "this project"}. Multiple Konsultans can be assigned per project; the active-project count is shown for awareness only.
             </CardDescription>
           </div>
           {canEdit ? (
@@ -1446,6 +1484,112 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
         </CardContent>
       </Card>
 
+      {/* Resource Lainnya — fleksibel, untuk Sales / SOC Manager / Security Engineer / Junior SE / dll */}
+      <Card className="border-border shadow-sm">
+        <CardHeader className="flex flex-row items-start justify-between gap-4">
+          <div>
+            <CardTitle className="text-base">Resource Lainnya</CardTitle>
+            <CardDescription>
+              Tambahkan resource di luar Konsultan / Technical Writer (misal Sales, SOC Manager,
+              Security Engineer, Junior Security Engineer). Tulis posisinya bebas pada kolom
+              "Role di Project".
+            </CardDescription>
+          </div>
+          {canEdit && (
+            <Button
+              size="sm"
+              onClick={() => {
+                setForm({ userId: "", roleInProject: "", plannedMandays: "10", dailyRate: "1500000" });
+                setAddingRole("OTHER");
+              }}
+              className="shrink-0"
+              data-testid="button-add-other-resource"
+            >
+              + Tambah Resource Lainnya
+            </Button>
+          )}
+        </CardHeader>
+        <CardContent>
+          {otherList.length === 0 ? (
+            <div className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+              Belum ada resource tambahan. Klik tombol di atas untuk menambah.
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-left text-xs text-muted-foreground border-b border-border">
+                    <th className="py-2 pr-3 font-medium">Name</th>
+                    <th className="py-2 pr-3 font-medium">Role di Project</th>
+                    <th className="py-2 pr-3 font-medium">System Role</th>
+                    <th className="py-2 pr-3 font-medium text-right">Planned (md)</th>
+                    <th className="py-2 pr-3 font-medium text-right">Actual (md)</th>
+                    <th className="py-2 pr-3 font-medium text-right">Daily Rate</th>
+                    <th className="py-2 pr-3 font-medium text-right">Est. Cost</th>
+                    {canEdit && <th className="py-2 pr-3 font-medium text-right w-12"></th>}
+                  </tr>
+                </thead>
+                <tbody>
+                  {otherList.map((r: any) => {
+                    const planned = r.plannedMandays ?? 0;
+                    const actual = r.actualMandays ?? 0;
+                    return (
+                      <tr key={r.id ?? r.userId} className="border-b border-border/40 hover:bg-muted/30">
+                        <td className="py-2 pr-3 font-medium">{r.userName ?? "—"}</td>
+                        <td className="py-2 pr-3">
+                          {r.roleInProject ?? <span className="text-muted-foreground italic">not set</span>}
+                        </td>
+                        <td className="py-2 pr-3">
+                          <Badge variant="outline" className="text-[10px]">
+                            {RoleLabels[r.userRole as keyof typeof RoleLabels] ?? r.userRole}
+                          </Badge>
+                        </td>
+                        <td className="py-2 pr-3 text-right font-mono">{planned.toFixed(1)}</td>
+                        <td className="py-2 pr-3 text-right font-mono">{actual.toFixed(1)}</td>
+                        <td className="py-2 pr-3 text-right font-mono">{formatIDR(r.dailyRate ?? 0)}</td>
+                        <td className="py-2 pr-3 text-right font-mono">
+                          {formatIDR(planned * (r.dailyRate ?? 0))}
+                        </td>
+                        {canEdit && (
+                          <td className="py-2 pr-3 text-right">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
+                              disabled={removeMutation.isPending}
+                              onClick={() => {
+                                if (confirm(`Remove ${r.userName} from this project?`)) {
+                                  removeMutation.mutate({ resourceId: r.id });
+                                }
+                              }}
+                              title="Remove from project"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                          </td>
+                        )}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+                <tfoot>
+                  <tr className="text-xs font-medium">
+                    <td colSpan={3} className="py-2 pr-3 text-muted-foreground">
+                      Total ({otherList.length} {otherList.length === 1 ? "person" : "people"})
+                    </td>
+                    <td className="py-2 pr-3 text-right font-mono">{otherTotalPlanned.toFixed(1)}</td>
+                    <td className="py-2 pr-3 text-right font-mono">{otherTotalActual.toFixed(1)}</td>
+                    <td className="py-2 pr-3"></td>
+                    <td className="py-2 pr-3 text-right font-mono text-primary">{formatIDR(otherEstCost)}</td>
+                    {canEdit && <td></td>}
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       <Dialog open={!!addingRole} onOpenChange={(o) => !o && setAddingRole(null)}>
         <DialogContent>
           <DialogHeader>
@@ -1455,8 +1599,10 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
             <DialogDescription>
               {canEdit
                 ? (addingRole === "KONSULTAN"
-                    ? "Each Konsultan can be active on a maximum of 2 projects. Konsultans already at capacity are hidden from the list."
-                    : "Assign a Technical Writer to this project. Multiple Technical Writers can be assigned per project.")
+                    ? "Assign a Konsultan to this project. Multiple Konsultans can be assigned per project."
+                    : addingRole === "TECHNICAL_WRITER"
+                      ? "Assign a Technical Writer to this project. Multiple Technical Writers can be assigned per project."
+                      : "Tambahkan user manapun (Sales, SOC Manager, Security Engineer, dll) sebagai resource. Tulis posisinya pada \"Role di Project\".")
                 : "Pick one of your supervisees to propose. The PM will be notified and may accept or replace your proposal."}
             </DialogDescription>
           </DialogHeader>
@@ -1490,9 +1636,20 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label>Project Role <span className="text-muted-foreground text-xs">(optional)</span></Label>
+              <Label>
+                Role di Project{" "}
+                {addingRole === "OTHER" ? (
+                  <span className="text-destructive text-xs">*</span>
+                ) : (
+                  <span className="text-muted-foreground text-xs">(opsional)</span>
+                )}
+              </Label>
               <Input
-                placeholder="e.g. Lead Consultant, Penetration Tester"
+                placeholder={
+                  addingRole === "OTHER"
+                    ? "cth. SOC Manager, Security Engineer, Junior SE, Sales Support"
+                    : "cth. Lead Consultant, Penetration Tester"
+                }
                 value={form.roleInProject}
                 onChange={(e) => setForm({ ...form, roleInProject: e.target.value })}
               />

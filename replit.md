@@ -125,6 +125,14 @@ Principals never see commercial figures: `canViewProjectFinancials()` returns fa
 - `principal.tw.m9k2@itsecasia.com` — Indah Kusumawardani (PRINCIPAL_TECHNICAL_WRITER)
 - `principal.ap.r3n8@itsecasia.com` — Fajar Nugroho (PRINCIPAL_ADMIN_PROJECT)
 
+## Resources tab — fleksibel role
+
+Resources tab pada `/projects/:id` punya empat section:
+1. **Admin Project** (single-pick on `Project.adminProjectId`)
+2. **Konsultan Team** (multi-pick `ProjectResource` dengan `userRole === KONSULTAN`; cap 2-projek lama sudah dihapus)
+3. **Technical Writer Team** (multi-pick `ProjectResource` dengan `userRole === TECHNICAL_WRITER`)
+4. **Resource Lainnya** — fleksibel: MGMT/PM bisa tambahkan user manapun (Sales, MANAGEMENT, SOC role kustom, dll) sebagai `ProjectResource` dengan free-text `roleInProject` (contoh: "SOC Manager", "Security Engineer", "Junior Security Engineer", "Sales Support"). Tabel ini menampilkan semua resource yang `userRole` bukan KONSULTAN/TECHNICAL_WRITER. Backed by endpoint baru `GET /api/users/active-all` (MGMT + PM only) — return semua user aktif tanpa filter role. Dialog memaksa `roleInProject` non-empty saat mode `OTHER`.
+
 ## Role-based access
 
 Enforced server-side via `requireRole` middleware in `artifacts/api-server/src/middlewares/auth.ts`:

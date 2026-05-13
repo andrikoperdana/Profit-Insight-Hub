@@ -75,6 +75,24 @@ paths:
                 type: array
                 items: { $ref: "#/components/schemas/AvailableUser" }
 
+  /users/active-all:
+    get:
+      operationId: listActiveAllUsers
+      tags: [users]
+      description: |
+        Returns all active users regardless of role. Available to MANAGEMENT and
+        PROJECT_MANAGER. Used by the project Resources tab to assign "other"
+        resources (Sales, SOC Manager, Security Engineer, etc.) with a free-text
+        project role.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ActiveUser" }
+
   /projects/{id}/report:
     patch:
       operationId: updateProjectReport
@@ -1174,6 +1192,17 @@ components:
         dailyRate: { type: number, nullable: true }
         activeProjectCount: { type: integer }
         atCapacity: { type: boolean }
+
+    ActiveUser:
+      type: object
+      required: [id, name, role]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        email: { type: string }
+        role: { $ref: "#/components/schemas/UserRole" }
+        title: { type: string, nullable: true }
+        dailyRate: { type: number, nullable: true }
 
     Notification:
       type: object
