@@ -167,3 +167,9 @@ id = "p49TlcyyF9iotK7iRWt_S"
 uri = "file://DEPLOY-LOKAL.md"
 type = "text"
 title = "Panduan Deploy SecureProfit Hub di Server Lokal"
+
+[[outputs]]
+id = "drUBxbAh1GVtXUrbJ2GSA"
+uri = "file://exports/Review-9-Pertanyaan-User.docx"
+type = "word_document"
+title = "Review 9 Pertanyaan User (DOCX)"
