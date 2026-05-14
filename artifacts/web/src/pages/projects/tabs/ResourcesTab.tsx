@@ -177,7 +177,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
   const estCost = list.reduce((s: number, r: any) => s + (r.plannedMandays ?? 0) * (r.dailyRate ?? 0), 0);
   const assignedKonsultanIds = new Set(list.map((r: any) => r.userId));
   const availableKonsultan = (konsultanPool ?? []).filter(
-    (u: any) => !assignedKonsultanIds.has(u.id) && (!u.atCapacity || form.userId === u.id),
+    (u: any) => !assignedKonsultanIds.has(u.id),
   );
   const principalKonsultanPool = (supervisees ?? []).filter(
     (u: any) => u.role === "KONSULTAN" && !assignedKonsultanIds.has(u.id),
@@ -677,8 +677,8 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                     <SelectItem key={u.id} value={u.id}>
                       {u.name}
                       {canEdit && addingRole === "KONSULTAN" && (
-                        <span className="text-muted-foreground text-xs">
-                          {" "}— {u.activeProjectCount}/2 active
+                        <span className={`text-xs ${u.atCapacity ? "text-amber-500" : "text-muted-foreground"}`}>
+                          {" "}— {u.activeProjectCount} active{u.atCapacity ? " (at capacity)" : ""}
                         </span>
                       )}
                       {canEdit && addingRole === "TECHNICAL_WRITER" && typeof u.activeProjectCount === "number" && (

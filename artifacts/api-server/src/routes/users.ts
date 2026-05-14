@@ -164,7 +164,7 @@ router.get("/users/available", async (req, res) => {
           where: { adminProjectId: u.id, status: { in: ["OBSERVATION", "ACTIVE", "NO_NEED_CONSULTANT"] }, deletedAt: null },
         });
       }
-      const atCapacity = role === "KONSULTAN" ? activeProjectCount >= 2 : false;
+      const atCapacity = role === "KONSULTAN" ? activeProjectCount >= 4 : false;
       return {
         id: u.id,
         name: u.name,
