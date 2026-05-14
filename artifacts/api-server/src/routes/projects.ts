@@ -10,6 +10,7 @@ import {
 import { recordAudit } from "../lib/audit.js";
 import { issueSurveyTokenIfMissing } from "../lib/surveyDefaults.js";
 import { notifyUsers } from "../lib/notifications.js";
+import { userCanAccessProject } from "../lib/projectAccess.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -211,6 +212,10 @@ router.get("/projects", async (req, res) => {
 });
 
 router.get("/projects/:id", async (req, res) => {
+  if (!(await userCanAccessProject(req.params.id, req.user!))) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
   const p = await prisma.project.findUnique({
     where: { id: req.params.id },
     include: {
@@ -717,6 +722,15 @@ router.patch("/projects/:id/report", async (req, res) => {
 });
 
 router.get("/projects/:id/whatif", async (req, res) => {
+  const role = req.user?.role ?? "";
+  if (role === "KONSULTAN" || role === "TECHNICAL_WRITER" || role.startsWith("PRINCIPAL_")) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  if (!(await userCanAccessProject(req.params.id, req.user!))) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
   const addMandays = Number(req.query.addMandays ?? 0);
   if (!isFinite(addMandays)) {
     res.status(400).json({ error: "addMandays must be a number" });
@@ -807,6 +821,10 @@ router.get("/projects/:id/financials", async (req, res) => {
   const role = req.user?.role ?? "";
   if (role === "KONSULTAN" || role === "TECHNICAL_WRITER" || role.startsWith("PRINCIPAL_")) {
     res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  if (!(await userCanAccessProject(req.params.id, req.user!))) {
+    res.status(404).json({ error: "Not found" });
     return;
   }
   const p = await prisma.project.findUnique({

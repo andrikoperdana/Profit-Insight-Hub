@@ -35,7 +35,7 @@ export default function VatRecapPage() {
           <Card className="rounded-xl border-destructive/40">
             <CardContent className="p-6 flex items-center gap-3 text-destructive">
               <AlertCircle className="h-5 w-5" />
-              Halaman Rekap PPN hanya dapat diakses oleh Management.
+              The VAT Recap page is restricted to Management users only.
             </CardContent>
           </Card>
         </div>
@@ -46,9 +46,9 @@ export default function VatRecapPage() {
   function exportCsv() {
     if (!data) return;
     const header = [
-      "Bulan", "Jumlah Milestone", "Invoiced", "Paid",
-      "Total DPP", "Total PPN", "Total Gross",
-      "PPN Sudah Dibayar", "PPN Outstanding",
+      "Month", "Milestone Count", "Invoiced", "Paid",
+      "Total DPP", "Total VAT", "Total Gross",
+      "VAT Paid", "VAT Outstanding",
     ];
     const rows = data.months.map((m) => [
       m.monthLabel,
@@ -77,7 +77,7 @@ export default function VatRecapPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `rekap-ppn-${data.year}.csv`;
+    a.download = `vat-recap-${data.year}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -88,12 +88,12 @@ export default function VatRecapPage() {
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
             <h1 className="text-2xl font-bold flex items-center gap-2">
-              <Receipt className="h-6 w-6 text-primary" /> Rekap PPN Bulanan
+              <Receipt className="h-6 w-6 text-primary" /> Monthly VAT Recap
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Agregat DPP & PPN dari semua milestone yang telah di-invoice atau dibayar.
-              Berbasis tanggal <span className="font-mono">invoicedAt</span>. Cocok sebagai
-              referensi penyusunan SPT Masa PPN.
+              Aggregate DPP and VAT across all milestones that have been invoiced or paid,
+              keyed by <span className="font-mono">invoicedAt</span>. Useful as a reference
+              when preparing the monthly VAT return (SPT Masa PPN).
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -104,7 +104,7 @@ export default function VatRecapPage() {
               <SelectContent>
                 {yearOptions.map((y) => (
                   <SelectItem key={y} value={String(y)}>
-                    Tahun {y}
+                    Year {y}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -118,36 +118,36 @@ export default function VatRecapPage() {
         {data && (
           <div className="grid gap-3 grid-cols-2 md:grid-cols-4">
             <Stat label={`Total DPP ${year}`} value={formatIDR(data.totals.totalDPP)} />
-            <Stat label={`Total PPN ${year}`} value={formatIDR(data.totals.totalVat)} tone="primary" />
-            <Stat label="PPN Sudah Dibayar" value={formatIDR(data.totals.paidVat)} tone="success" />
-            <Stat label="PPN Outstanding" value={formatIDR(data.totals.outstandingVat)} tone="warn" />
+            <Stat label={`Total VAT ${year}`} value={formatIDR(data.totals.totalVat)} tone="primary" />
+            <Stat label="VAT Paid" value={formatIDR(data.totals.paidVat)} tone="success" />
+            <Stat label="VAT Outstanding" value={formatIDR(data.totals.outstandingVat)} tone="warn" />
           </div>
         )}
 
         <Card className="rounded-xl border-border shadow-sm">
           <CardHeader>
-            <CardTitle>Breakdown Bulanan {year}</CardTitle>
+            <CardTitle>Monthly Breakdown {year}</CardTitle>
             <CardDescription>
-              Outstanding = sudah di-invoice tapi belum dibayar klien (PPN belum diterima kas).
+              Outstanding = invoiced but not yet paid by the client (VAT not yet received in cash).
             </CardDescription>
           </CardHeader>
           <CardContent className="p-0">
             {isLoading ? (
-              <div className="p-6 text-sm text-muted-foreground">Memuat…</div>
+              <div className="p-6 text-sm text-muted-foreground">Loading…</div>
             ) : !data ? (
-              <div className="p-6 text-sm text-muted-foreground">Tidak ada data.</div>
+              <div className="p-6 text-sm text-muted-foreground">No data available.</div>
             ) : (
               <Table>
                 <TableHeader className="bg-muted/40">
                   <TableRow>
-                    <TableHead>Bulan</TableHead>
+                    <TableHead>Month</TableHead>
                     <TableHead className="text-right">Milestone</TableHead>
                     <TableHead className="text-right">Invoiced / Paid</TableHead>
                     <TableHead className="text-right">DPP</TableHead>
-                    <TableHead className="text-right">PPN</TableHead>
+                    <TableHead className="text-right">VAT</TableHead>
                     <TableHead className="text-right">Gross</TableHead>
-                    <TableHead className="text-right">PPN Dibayar</TableHead>
-                    <TableHead className="text-right">PPN Outstanding</TableHead>
+                    <TableHead className="text-right">VAT Paid</TableHead>
+                    <TableHead className="text-right">VAT Outstanding</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

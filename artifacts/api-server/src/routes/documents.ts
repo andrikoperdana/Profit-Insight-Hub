@@ -3,6 +3,10 @@ import { prisma, type DocumentType, type Prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
 import { issueSurveyTokenIfMissing } from "../lib/surveyDefaults.js";
+import {
+  userCanAccessProject,
+  userCanWriteProject,
+} from "../lib/projectAccess.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -27,6 +31,13 @@ function serialize(
 }
 
 router.get("/projects/:id/documents", async (req, res) => {
+  // Documents may contain BAST/Invoice PDFs with confidential client data.
+  // Require the same project visibility as the project detail endpoint to
+  // prevent IDOR enumeration across projects.
+  if (!(await userCanAccessProject(String(req.params.id), req.user!))) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
   const docs = await prisma.document.findMany({
     where: { projectId: String(req.params.id) },
     include: { uploadedBy: true },
@@ -39,6 +50,13 @@ router.post(
   "/projects/:id/documents",
   requireRole("ADMIN_PROJECT", "MANAGEMENT", "PROJECT_MANAGER"),
   async (req, res) => {
+    // Tighten role gate: only the assigned PM (or MGMT / project's Admin
+    // Project) may upload documents. Without this, any PROJECT_MANAGER could
+    // upload BAST/Invoice on a project they don't own.
+    if (!(await userCanWriteProject(String(req.params.id), req.user!))) {
+      res.status(403).json({ error: "Forbidden" });
+      return;
+    }
     const { type, fileName, fileUrl, invoiceNumber, invoiceAmount, invoiceStatus, notes } =
       req.body || {};
     if (!type || !fileName || !fileUrl) {
@@ -122,6 +140,10 @@ router.delete(
     });
     if (!before) {
       res.status(404).json({ error: "Not found" });
+      return;
+    }
+    if (!(await userCanWriteProject(before.projectId, req.user!))) {
+      res.status(403).json({ error: "Forbidden" });
       return;
     }
     await prisma.document.delete({ where: { id: String(req.params.id) } });
