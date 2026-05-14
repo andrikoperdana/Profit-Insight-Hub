@@ -197,3 +197,9 @@ id = "-wEZaSnG4JEByOiKVmVy_"
 uri = "file://attached_assets/Gap-Analysis-SecureProfit-vs-PSOhub.docx"
 type = "word_document"
 title = "Gap Analysis: SecureProfit Hub vs PSOhub"
+
+[[outputs]]
+id = "2Am5Tyz-rCx7AnieUef48"
+uri = "file://attached_assets/Gap-Analysis-SecureProfit-vs-PSOHUB-Detail.docx"
+type = "word_document"
+title = "Gap Analysis SecureProfit Hub vs PSOHUB (Detail)"
