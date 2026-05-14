@@ -191,3 +191,9 @@ id = "fyFo4QxXztsKEobmuHZfZ"
 uri = "file://attached_assets/Estimasi-Profit-Insight-Hub.docx"
 type = "word_document"
 title = "Estimasi Pembuatan Profit Insight Hub (Word)"
+
+[[outputs]]
+id = "-wEZaSnG4JEByOiKVmVy_"
+uri = "file://attached_assets/Gap-Analysis-SecureProfit-vs-PSOhub.docx"
+type = "word_document"
+title = "Gap Analysis: SecureProfit Hub vs PSOhub"
