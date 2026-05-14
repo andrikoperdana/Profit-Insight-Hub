@@ -53,10 +53,10 @@ function FilterField({ filter, value, onChange }: { filter: FilterSpec; value: s
     return (
       <Select value={value || "__all__"} onValueChange={(v) => onChange(v === "__all__" ? "" : v)}>
         <SelectTrigger data-testid={`filter-${filter.key}`}>
-          <SelectValue placeholder={filter.placeholder ?? "Semua"} />
+          <SelectValue placeholder={filter.placeholder ?? "All"} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="__all__">Semua</SelectItem>
+          <SelectItem value="__all__">All</SelectItem>
           {opts.map((o) => (
             <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
           ))}
@@ -79,7 +79,7 @@ function formatCell(value: unknown, col: ColumnSpec): string {
     case "date": {
       const d = new Date(String(value));
       if (isNaN(d.getTime())) return String(value);
-      return d.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+      return d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
     }
     default:
       return String(value);
@@ -136,7 +136,7 @@ export default function ReportRunner() {
         <Card className="rounded-xl border-destructive/40">
           <CardContent className="p-6 flex items-center gap-3 text-destructive">
             <AlertCircle className="h-5 w-5" />
-            Hanya Management dan Project Manager yang dapat membuka laporan.
+            Only Management and Project Manager can open reports.
           </CardContent>
         </Card>
       </div>
@@ -172,7 +172,7 @@ export default function ReportRunner() {
         a.remove();
         URL.revokeObjectURL(url);
       })
-      .catch(() => alert("Gagal mengunduh laporan."));
+      .catch(() => alert("Failed to download report."));
   }
 
   return (
@@ -221,7 +221,7 @@ export default function ReportRunner() {
                 ))}
                 <div className="flex items-end">
                   <Button onClick={() => refetch()} disabled={isFetching} data-testid="button-apply-filters">
-                    {isFetching ? "Memproses..." : "Terapkan"}
+                    {isFetching ? "Processing..." : "Apply"}
                   </Button>
                 </div>
               </div>
@@ -232,7 +232,7 @@ export default function ReportRunner() {
         {chart && rows.length > 0 && (
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm">Visualisasi</CardTitle>
+              <CardTitle className="text-sm">Visualization</CardTitle>
             </CardHeader>
             <CardContent style={{ width: "100%", height: 320 }}>
               <ResponsiveContainer>
@@ -285,14 +285,14 @@ export default function ReportRunner() {
         <Card>
           <CardHeader className="pb-3 flex flex-row items-center justify-between">
             <CardTitle className="text-sm">
-              Hasil <Badge variant="secondary" className="ml-2">{rows.length} baris</Badge>
+              Results <Badge variant="secondary" className="ml-2">{rows.length} rows</Badge>
             </CardTitle>
           </CardHeader>
           <CardContent className="overflow-x-auto">
             {isExecuting ? (
-              <div className="text-sm text-muted-foreground py-6 text-center">Memuat data...</div>
+              <div className="text-sm text-muted-foreground py-6 text-center">Loading data...</div>
             ) : rows.length === 0 ? (
-              <div className="text-sm text-muted-foreground py-6 text-center">Tidak ada data untuk filter ini.</div>
+              <div className="text-sm text-muted-foreground py-6 text-center">No data for these filters.</div>
             ) : (
               <Table>
                 <TableHeader>

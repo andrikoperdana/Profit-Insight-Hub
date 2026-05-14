@@ -218,9 +218,9 @@ export default function PMDashboard() {
           <CardContent className="flex items-center justify-between gap-3 py-4">
             <div>
               <div className="text-sm font-medium text-primary">Reports</div>
-              <div className="text-xs text-muted-foreground">10 laporan siap-pakai: profitabilitas, utilisasi, billing aging, expense, PPN. Export CSV / Excel / PDF.</div>
+              <div className="text-xs text-muted-foreground">10 ready-to-use reports: profitability, utilization, billing aging, expenses, VAT. Export CSV / Excel / PDF.</div>
             </div>
-            <Button size="sm" variant="outline" className="border-primary/40 text-primary hover:bg-primary/10">Buka</Button>
+            <Button size="sm" variant="outline" className="border-primary/40 text-primary hover:bg-primary/10">Open</Button>
           </CardContent>
         </Card>
       </Link>

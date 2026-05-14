@@ -1,5 +1,6 @@
 import { prisma } from "./index.js";
 import bcrypt from "bcryptjs";
+import { ensureSampleReportData } from "./sample-report-data.js";
 
 // Idempotent additive Principal hierarchy patch — runs even when database is
 // already seeded, so we can introduce the supervisor model on top of an
@@ -131,7 +132,8 @@ export async function runSeed() {
     console.log(`Existing data — running idempotent Principal hierarchy patch only.`);
     await ensurePrincipals(passwordDefault);
     await ensureBusinessUnitsAndSkills();
-    console.log("Principals + hierarchy + BU/Skills ensured.");
+    await ensureSampleReportData();
+    console.log("Principals + hierarchy + BU/Skills + sample report data ensured.");
     return;
   }
 
@@ -262,6 +264,7 @@ export async function runSeed() {
   });
 
   await ensureBusinessUnitsAndSkills();
+  await ensureSampleReportData();
 
   console.log("Seed complete.");
 }

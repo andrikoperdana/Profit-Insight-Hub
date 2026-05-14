@@ -51,10 +51,10 @@ async function loadOptions(source: OptionsSource, viewer: { sub: string; role: s
       return ["PLANNED", "INVOICED", "PAID", "CANCELLED"].map((v) => ({ value: v, label: v }));
     case "agingBuckets":
       return [
-        { value: "0-30", label: "0–30 hari" },
-        { value: "31-60", label: "31–60 hari" },
-        { value: "61-90", label: "61–90 hari" },
-        { value: "90+", label: "90+ hari" },
+        { value: "0-30", label: "0–30 days" },
+        { value: "31-60", label: "31–60 days" },
+        { value: "61-90", label: "61–90 days" },
+        { value: "90+", label: "90+ days" },
       ];
     case "seniorities":
       return ["JUNIOR", "MID", "SENIOR", "PRINCIPAL"].map((v) => ({ value: v, label: v }));

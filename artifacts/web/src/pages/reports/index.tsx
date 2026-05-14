@@ -7,10 +7,10 @@ import { useListReports } from "@workspace/api-client-react";
 import { TrendingUp, Activity, Wallet, FileCheck, AlertCircle, ChevronRight } from "lucide-react";
 
 const CATEGORY_META: Record<string, { label: string; icon: typeof TrendingUp; color: string }> = {
-  profitability: { label: "Profitabilitas", icon: TrendingUp, color: "text-emerald-500" },
-  operations: { label: "Operasional & Resource", icon: Activity, color: "text-blue-500" },
+  profitability: { label: "Profitability", icon: TrendingUp, color: "text-emerald-500" },
+  operations: { label: "Operations & Resource", icon: Activity, color: "text-blue-500" },
   cashflow: { label: "Cash Flow & Billing", icon: Wallet, color: "text-amber-500" },
-  compliance: { label: "Compliance & Pajak", icon: FileCheck, color: "text-purple-500" },
+  compliance: { label: "Compliance & Tax", icon: FileCheck, color: "text-purple-500" },
 };
 
 export default function ReportsIndex() {
@@ -26,7 +26,7 @@ export default function ReportsIndex() {
         <Card className="rounded-xl border-destructive/40">
           <CardContent className="p-6 flex items-center gap-3 text-destructive">
             <AlertCircle className="h-5 w-5" />
-            Halaman Reports hanya dapat diakses oleh Management dan Project Manager.
+            The Reports page is only accessible to Management and Project Manager roles.
           </CardContent>
         </Card>
       </div>
@@ -44,7 +44,7 @@ export default function ReportsIndex() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Reports</h1>
           <p className="text-muted-foreground">
-            10 laporan siap-pakai dengan filter, chart, dan export ke CSV / Excel / PDF.
+            10 ready-to-use reports with filters, charts, and CSV / Excel / PDF export.
           </p>
         </div>
 

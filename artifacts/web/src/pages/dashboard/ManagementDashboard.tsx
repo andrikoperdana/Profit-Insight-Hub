@@ -108,9 +108,9 @@ export default function Dashboard() {
           <CardContent className="flex items-center justify-between gap-3 py-4">
             <div>
               <div className="text-sm font-medium text-primary">Reports</div>
-              <CardDescription className="text-xs">10 laporan siap-pakai: profitabilitas, utilisasi, cash inflow, billing aging, PPN. Export CSV / Excel / PDF.</CardDescription>
+              <CardDescription className="text-xs">10 ready-to-use reports: profitability, utilization, cash inflow, billing aging, VAT. Export CSV / Excel / PDF.</CardDescription>
             </div>
-            <Button size="sm" variant="outline" className="border-primary/40 text-primary hover:bg-primary/10">Buka</Button>
+            <Button size="sm" variant="outline" className="border-primary/40 text-primary hover:bg-primary/10">Open</Button>
           </CardContent>
         </Card>
       </a>
