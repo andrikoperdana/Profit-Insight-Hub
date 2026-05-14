@@ -18,6 +18,7 @@ export const prisma: PrismaClientType =
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 export { runSeed } from "./seed.js";
+export { ensureSampleReportData } from "./sample-report-data.js";
 
 export type {
   User,

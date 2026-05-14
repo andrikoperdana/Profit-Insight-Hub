@@ -48,7 +48,8 @@ export type AuditAction =
   | "billing_milestone.created"
   | "billing_milestone.updated"
   | "billing_milestone.deleted"
-  | "project.report_updated";
+  | "project.report_updated"
+  | "admin.sample_data_seeded";
 
 export type EntityType =
   | "User"
@@ -64,7 +65,8 @@ export type EntityType =
   | "TaskTimeLog"
   | "Skill"
   | "BusinessUnit"
-  | "BillingMilestone";
+  | "BillingMilestone"
+  | "System";
 
 interface AuditInput {
   action: AuditAction;
