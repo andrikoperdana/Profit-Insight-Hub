@@ -70,11 +70,6 @@ export default function ReportsIndex() {
                         </CardTitle>
                         <CardDescription className="text-xs leading-snug">{r.description}</CardDescription>
                       </CardHeader>
-                      <CardContent className="pt-0 flex flex-wrap gap-1">
-                        {(r.scope as string[]).map((s) => (
-                          <Badge key={s} variant="secondary" className="text-[10px]">{s.replace("_", " ")}</Badge>
-                        ))}
-                      </CardContent>
                     </Card>
                   </Link>
                 ))}
