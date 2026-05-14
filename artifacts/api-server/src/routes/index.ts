@@ -21,6 +21,7 @@ import skillsRouter from "./skills.js";
 import businessUnitsRouter from "./business-units.js";
 import resourcePlanningRouter from "./resource-planning.js";
 import billingMilestonesRouter from "./billing-milestones.js";
+import reportsRouter from "./reports.js";
 
 const router: IRouter = Router();
 
@@ -46,5 +47,6 @@ router.use(skillsRouter);
 router.use(businessUnitsRouter);
 router.use(resourcePlanningRouter);
 router.use(billingMilestonesRouter);
+router.use(reportsRouter);
 
 export default router;

@@ -20,8 +20,48 @@ tags:
   - name: dashboard
   - name: notifications
   - name: report
+  - name: reports
 
 paths:
+  /reports:
+    get:
+      operationId: listReports
+      tags: [reports]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ReportMeta" }
+  /reports/options:
+    get:
+      operationId: getReportOptions
+      tags: [reports]
+      parameters:
+        - { name: source, in: query, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ReportFilterOption" }
+  /reports/{id}:
+    get:
+      operationId: executeReport
+      tags: [reports]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ReportResult" }
+
   /notifications:
     get:
       operationId: listNotifications
@@ -1903,3 +1943,100 @@ components:
         groups:
           type: array
           items: { $ref: "#/components/schemas/ResourcePlanningGroup" }
+
+    ReportFilterOption:
+      type: object
+      required: [value, label]
+      properties:
+        value: { type: string }
+        label: { type: string }
+
+    ReportFilterSpec:
+      type: object
+      required: [key, label, type]
+      properties:
+        key: { type: string }
+        label: { type: string }
+        type: { type: string, enum: [date, year, month, select, multiselect, text] }
+        options:
+          type: array
+          nullable: true
+          items: { $ref: "#/components/schemas/ReportFilterOption" }
+        optionsSource: { type: string, nullable: true }
+        defaultValue: { type: string, nullable: true }
+        placeholder: { type: string, nullable: true }
+
+    ReportColumnSpec:
+      type: object
+      required: [key, label, type]
+      properties:
+        key: { type: string }
+        label: { type: string }
+        type: { type: string, enum: [string, number, currency, percent, date, month, badge] }
+        align: { type: string, nullable: true, enum: [left, right, center, null] }
+        width: { type: number, nullable: true }
+        total: { type: string, nullable: true, enum: [sum, avg, min, max, null] }
+        fixed: { type: number, nullable: true }
+        badgeMap:
+          type: object
+          nullable: true
+          additionalProperties: { type: string }
+
+    ReportChartSpec:
+      type: object
+      required: [type, xKey, yKey]
+      properties:
+        type: { type: string, enum: [bar, line, pie] }
+        xKey: { type: string }
+        yKey:
+          oneOf:
+            - { type: string }
+            - { type: array, items: { type: string } }
+        yLabel: { type: string, nullable: true }
+        stacked: { type: boolean, nullable: true }
+
+    ReportMeta:
+      type: object
+      required: [id, name, description, category, scope, filters, columns]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        description: { type: string }
+        category: { type: string, enum: [profitability, operations, cashflow, compliance] }
+        scope:
+          type: array
+          items: { $ref: "#/components/schemas/UserRole" }
+        filters:
+          type: array
+          items: { $ref: "#/components/schemas/ReportFilterSpec" }
+        columns:
+          type: array
+          items: { $ref: "#/components/schemas/ReportColumnSpec" }
+        chart:
+          nullable: true
+          allOf:
+            - { $ref: "#/components/schemas/ReportChartSpec" }
+
+    ReportResult:
+      type: object
+      required: [id, name, description, columns, rows]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        description: { type: string }
+        columns:
+          type: array
+          items: { $ref: "#/components/schemas/ReportColumnSpec" }
+        chart:
+          nullable: true
+          allOf:
+            - { $ref: "#/components/schemas/ReportChartSpec" }
+        rows:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        totals:
+          type: object
+          nullable: true
+          additionalProperties: true

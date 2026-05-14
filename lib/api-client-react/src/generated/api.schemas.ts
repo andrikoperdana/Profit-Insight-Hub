@@ -816,6 +816,136 @@ export interface ResourcePlanningMatrix {
   groups: ResourcePlanningGroup[];
 }
 
+export interface ReportFilterOption {
+  value: string;
+  label: string;
+}
+
+export type ReportFilterSpecType =
+  (typeof ReportFilterSpecType)[keyof typeof ReportFilterSpecType];
+
+export const ReportFilterSpecType = {
+  date: "date",
+  year: "year",
+  month: "month",
+  select: "select",
+  multiselect: "multiselect",
+  text: "text",
+} as const;
+
+export interface ReportFilterSpec {
+  key: string;
+  label: string;
+  type: ReportFilterSpecType;
+  options?: ReportFilterOption[] | null;
+  optionsSource?: string | null;
+  defaultValue?: string | null;
+  placeholder?: string | null;
+}
+
+export type ReportColumnSpecType =
+  (typeof ReportColumnSpecType)[keyof typeof ReportColumnSpecType];
+
+export const ReportColumnSpecType = {
+  string: "string",
+  number: "number",
+  currency: "currency",
+  percent: "percent",
+  date: "date",
+  month: "month",
+  badge: "badge",
+} as const;
+
+export type ReportColumnSpecAlign =
+  | (typeof ReportColumnSpecAlign)[keyof typeof ReportColumnSpecAlign]
+  | null;
+
+export const ReportColumnSpecAlign = {
+  left: "left",
+  right: "right",
+  center: "center",
+} as const;
+
+export type ReportColumnSpecTotal =
+  | (typeof ReportColumnSpecTotal)[keyof typeof ReportColumnSpecTotal]
+  | null;
+
+export const ReportColumnSpecTotal = {
+  sum: "sum",
+  avg: "avg",
+  min: "min",
+  max: "max",
+} as const;
+
+export type ReportColumnSpecBadgeMap = { [key: string]: string } | null;
+
+export interface ReportColumnSpec {
+  key: string;
+  label: string;
+  type: ReportColumnSpecType;
+  align?: ReportColumnSpecAlign;
+  width?: number | null;
+  total?: ReportColumnSpecTotal;
+  fixed?: number | null;
+  badgeMap?: ReportColumnSpecBadgeMap;
+}
+
+export type ReportChartSpecType =
+  (typeof ReportChartSpecType)[keyof typeof ReportChartSpecType];
+
+export const ReportChartSpecType = {
+  bar: "bar",
+  line: "line",
+  pie: "pie",
+} as const;
+
+export interface ReportChartSpec {
+  type: ReportChartSpecType;
+  xKey: string;
+  yKey: string | string[];
+  yLabel?: string | null;
+  stacked?: boolean | null;
+}
+
+export type ReportMetaCategory =
+  (typeof ReportMetaCategory)[keyof typeof ReportMetaCategory];
+
+export const ReportMetaCategory = {
+  profitability: "profitability",
+  operations: "operations",
+  cashflow: "cashflow",
+  compliance: "compliance",
+} as const;
+
+export interface ReportMeta {
+  id: string;
+  name: string;
+  description: string;
+  category: ReportMetaCategory;
+  scope: UserRole[];
+  filters: ReportFilterSpec[];
+  columns: ReportColumnSpec[];
+  chart?: ReportChartSpec | null;
+}
+
+export type ReportResultRowsItem = { [key: string]: unknown };
+
+export type ReportResultTotals = { [key: string]: unknown } | null;
+
+export interface ReportResult {
+  id: string;
+  name: string;
+  description: string;
+  columns: ReportColumnSpec[];
+  chart?: ReportChartSpec | null;
+  rows: ReportResultRowsItem[];
+  totals?: ReportResultTotals;
+}
+
+export type GetReportOptionsParams = {
+  source: string;
+};
+
 export type ListAvailableUsersParams = {
   role: UserRole;
 };

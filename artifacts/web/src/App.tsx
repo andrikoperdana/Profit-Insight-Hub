@@ -29,6 +29,8 @@ const SkillsPage = lazy(() => import("@/pages/skills"));
 const BusinessUnitsPage = lazy(() => import("@/pages/business-units"));
 const ResourcePlanningPage = lazy(() => import("@/pages/resource-planning"));
 const VatRecapPage = lazy(() => import("@/pages/vat-recap"));
+const ReportsIndex = lazy(() => import("@/pages/reports"));
+const ReportRunner = lazy(() => import("@/pages/reports/[id]"));
 const SurveyTemplateEditor = lazy(() => import("@/pages/settings/SurveyTemplate"));
 const PublicSurveyPage = lazy(() => import("@/pages/survey/[token]"));
 import { ThemeProvider } from "@/lib/theme";
@@ -91,6 +93,8 @@ function Router() {
         <Route path="/settings" component={() => <ProtectedRoute component={Settings} />} />
         <Route path="/audit-logs" component={() => <ProtectedRoute component={AuditLogPage} />} />
         <Route path="/business-intelligence" component={() => <ProtectedRoute component={BusinessIntelligence} />} />
+        <Route path="/reports" component={() => <ProtectedRoute component={ReportsIndex} />} />
+        <Route path="/reports/:id" component={() => <ProtectedRoute component={ReportRunner} />} />
         <Route path="/expenses" component={() => <ProtectedRoute component={ExpensesPage} />} />
         <Route path="/skills" component={() => <ProtectedRoute component={SkillsPage} />} />
         <Route path="/business-units" component={() => <ProtectedRoute component={BusinessUnitsPage} />} />

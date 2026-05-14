@@ -20,6 +20,7 @@ import {
   Network,
   Award,
   Grid3x3,
+  FileBarChart,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -51,6 +52,7 @@ export default function Sidebar() {
     ...(isPM ? [{ href: "/capacity", label: "Capacity Planning", icon: CalendarRange }] : []),
     ...(canSeeExpenses ? [{ href: "/expenses", label: "Expenses", icon: Receipt }] : []),
     ...(isPM ? [{ href: "/resource-planning", label: "Resource Planning", icon: Grid3x3 }] : []),
+    ...(isPM ? [{ href: "/reports", label: "Reports", icon: FileBarChart }] : []),
   ];
 
   const admin: NavLink[] = [

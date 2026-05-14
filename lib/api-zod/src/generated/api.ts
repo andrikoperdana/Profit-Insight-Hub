@@ -7,6 +7,163 @@
  */
 import * as zod from "zod";
 
+export const ListReportsResponseItem = zod.object({
+  id: zod.string(),
+  name: zod.string(),
+  description: zod.string(),
+  category: zod.enum(["profitability", "operations", "cashflow", "compliance"]),
+  scope: zod.array(
+    zod.enum([
+      "MANAGEMENT",
+      "PROJECT_MANAGER",
+      "SALES",
+      "KONSULTAN",
+      "TECHNICAL_WRITER",
+      "ADMIN_PROJECT",
+      "PRINCIPAL_KONSULTAN",
+      "PRINCIPAL_TECHNICAL_WRITER",
+      "PRINCIPAL_ADMIN_PROJECT",
+      "SITE_ADMIN",
+    ]),
+  ),
+  filters: zod.array(
+    zod.object({
+      key: zod.string(),
+      label: zod.string(),
+      type: zod.enum([
+        "date",
+        "year",
+        "month",
+        "select",
+        "multiselect",
+        "text",
+      ]),
+      options: zod
+        .array(
+          zod.object({
+            value: zod.string(),
+            label: zod.string(),
+          }),
+        )
+        .nullish(),
+      optionsSource: zod.string().nullish(),
+      defaultValue: zod.string().nullish(),
+      placeholder: zod.string().nullish(),
+    }),
+  ),
+  columns: zod.array(
+    zod.object({
+      key: zod.string(),
+      label: zod.string(),
+      type: zod.enum([
+        "string",
+        "number",
+        "currency",
+        "percent",
+        "date",
+        "month",
+        "badge",
+      ]),
+      align: zod
+        .union([
+          zod.literal("left"),
+          zod.literal("right"),
+          zod.literal("center"),
+          zod.literal(null),
+        ])
+        .nullish(),
+      width: zod.number().nullish(),
+      total: zod
+        .union([
+          zod.literal("sum"),
+          zod.literal("avg"),
+          zod.literal("min"),
+          zod.literal("max"),
+          zod.literal(null),
+        ])
+        .nullish(),
+      fixed: zod.number().nullish(),
+      badgeMap: zod.record(zod.string(), zod.string()).nullish(),
+    }),
+  ),
+  chart: zod
+    .object({
+      type: zod.enum(["bar", "line", "pie"]),
+      xKey: zod.string(),
+      yKey: zod.union([zod.string(), zod.array(zod.string())]),
+      yLabel: zod.string().nullish(),
+      stacked: zod.boolean().nullish(),
+    })
+    .nullish(),
+});
+export const ListReportsResponse = zod.array(ListReportsResponseItem);
+
+export const GetReportOptionsQueryParams = zod.object({
+  source: zod.coerce.string(),
+});
+
+export const GetReportOptionsResponseItem = zod.object({
+  value: zod.string(),
+  label: zod.string(),
+});
+export const GetReportOptionsResponse = zod.array(GetReportOptionsResponseItem);
+
+export const ExecuteReportParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const ExecuteReportResponse = zod.object({
+  id: zod.string(),
+  name: zod.string(),
+  description: zod.string(),
+  columns: zod.array(
+    zod.object({
+      key: zod.string(),
+      label: zod.string(),
+      type: zod.enum([
+        "string",
+        "number",
+        "currency",
+        "percent",
+        "date",
+        "month",
+        "badge",
+      ]),
+      align: zod
+        .union([
+          zod.literal("left"),
+          zod.literal("right"),
+          zod.literal("center"),
+          zod.literal(null),
+        ])
+        .nullish(),
+      width: zod.number().nullish(),
+      total: zod
+        .union([
+          zod.literal("sum"),
+          zod.literal("avg"),
+          zod.literal("min"),
+          zod.literal("max"),
+          zod.literal(null),
+        ])
+        .nullish(),
+      fixed: zod.number().nullish(),
+      badgeMap: zod.record(zod.string(), zod.string()).nullish(),
+    }),
+  ),
+  chart: zod
+    .object({
+      type: zod.enum(["bar", "line", "pie"]),
+      xKey: zod.string(),
+      yKey: zod.union([zod.string(), zod.array(zod.string())]),
+      yLabel: zod.string().nullish(),
+      stacked: zod.boolean().nullish(),
+    })
+    .nullish(),
+  rows: zod.array(zod.record(zod.string(), zod.unknown())),
+  totals: zod.record(zod.string(), zod.unknown()).nullish(),
+});
+
 export const ListNotificationsResponseItem = zod.object({
   id: zod.string(),
   userId: zod.string(),

@@ -213,6 +213,18 @@ export default function PMDashboard() {
     <div className="space-y-6">
       <WelcomeBanner subtitle="Snapshot of your active projects, approval queue, and team status." />
 
+      <Link href="/reports">
+        <Card className="cursor-pointer border-primary/30 bg-primary/5 hover:border-primary/60 transition" data-testid="card-reports-shortcut">
+          <CardContent className="flex items-center justify-between gap-3 py-4">
+            <div>
+              <div className="text-sm font-medium text-primary">Reports</div>
+              <div className="text-xs text-muted-foreground">10 laporan siap-pakai: profitabilitas, utilisasi, billing aging, expense, PPN. Export CSV / Excel / PDF.</div>
+            </div>
+            <Button size="sm" variant="outline" className="border-primary/40 text-primary hover:bg-primary/10">Buka</Button>
+          </CardContent>
+        </Card>
+      </Link>
+
       {pendingExpenses.length > 0 && (
         <Card className="border-amber-500/40 bg-amber-500/5" data-testid="card-pending-expenses">
           <CardContent className="flex items-center justify-between gap-3 py-4">

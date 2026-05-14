@@ -178,6 +178,32 @@ Server-side data scoping:
 
 Shared `WelcomeBanner` (`components/dashboard/WelcomeBanner.tsx`) shows time-aware greeting + role label.
 
+## Reports (`/reports`, MGMT + PM)
+
+Generic report engine — each report is a `ReportDefinition` (id, scope, filters, columns, optional chart, query function) registered in `artifacts/api-server/src/reports/definitions.ts`. Frontend has one catalog page (`pages/reports/index.tsx`) and one dynamic runner (`pages/reports/[id].tsx`) that renders any report's filters/table/chart from its meta.
+
+Endpoints in `routes/reports.ts` (MGMT + PROJECT_MANAGER only):
+- `GET /api/reports` — list available reports for caller's role.
+- `GET /api/reports/options?source=...` — load enum options for filters (e.g. `clients`, `business-units`, `pms`).
+- `GET /api/reports/:id?<filters>` — execute and return `{columns, chart?, rows, totals?}`.
+- `GET /api/reports/:id/export?format=csv|xlsx|pdf&<filters>` — binary export (NOT in OpenAPI; frontend fetches with Bearer header and saves blob). CSV via inline join, XLSX via `exceljs`, PDF via `pdfkit`.
+
+PM-scoped reports automatically filter rows where `pmId === req.user.sub`. MANAGEMENT sees everything. Hooks: `useListReports`, `useGetReportOptions` (generated). Report execution uses `useQuery + customFetch` directly because filter params are dynamic.
+
+10 reports shipped:
+1. `profitability-per-project` (profitability) — contract/cost/profit/margin/burn per project
+2. `margin-trend-by-bu` (profitability) — monthly weighted margin by Business Unit, line chart
+3. `profitability-per-client` (profitability) — aggregated by client, bar chart
+4. `resource-utilization` (operations) — per-user planned vs actual mandays, % utilization
+5. `project-burn-rate` (operations) — actual vs planned mandays consumption
+6. `pm-workload` (operations) — projects/contract value per PM by status
+7. `billing-aging` (cashflow) — INVOICED milestones bucketed 0-30 / 31-60 / 61-90 / >90 days
+8. `cash-inflow-forecast` (cashflow) — projected PAID inflow by month from milestone due dates
+9. `expense-report` (operations) — `ProjectExpense` rows with category/status filters
+10. `ppn-detail` (compliance) — per-milestone PPN breakdown for SPT Masa PPN reconciliation
+
+Sidebar entry "Reports" appears for MGMT and PM. Both `ManagementDashboard` and `PMDashboard` show a primary-tinted shortcut card linking to `/reports`.
+
 ## Pages & sidebar
 
 `/login`, `/` (dashboard), `/projects`, `/projects/new`, `/projects/:id`, `/timesheets`, `/clients`, `/users` (SITE_ADMIN), `/skills` (SITE_ADMIN), `/business-units` (SITE_ADMIN), `/resource-planning` (PM/MGMT), `/settings`.

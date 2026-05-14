@@ -103,6 +103,18 @@ export default function Dashboard() {
     <div className="space-y-6">
       <WelcomeBanner subtitle="Executive snapshot: portfolio health, profitability, and team utilization." />
 
+      <a href="/reports">
+        <Card className="cursor-pointer border-primary/30 bg-primary/5 hover:border-primary/60 transition" data-testid="card-reports-shortcut">
+          <CardContent className="flex items-center justify-between gap-3 py-4">
+            <div>
+              <div className="text-sm font-medium text-primary">Reports</div>
+              <CardDescription className="text-xs">10 laporan siap-pakai: profitabilitas, utilisasi, cash inflow, billing aging, PPN. Export CSV / Excel / PDF.</CardDescription>
+            </div>
+            <Button size="sm" variant="outline" className="border-primary/40 text-primary hover:bg-primary/10">Buka</Button>
+          </CardContent>
+        </Card>
+      </a>
+
       {pendingAssignment.length > 0 && (
         <PendingAssignmentSection projects={pendingAssignment} />
       )}
