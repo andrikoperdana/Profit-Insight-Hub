@@ -28,6 +28,7 @@ const ExpensesPage = lazy(() => import("@/pages/expenses"));
 const SkillsPage = lazy(() => import("@/pages/skills"));
 const BusinessUnitsPage = lazy(() => import("@/pages/business-units"));
 const ResourcePlanningPage = lazy(() => import("@/pages/resource-planning"));
+const VatRecapPage = lazy(() => import("@/pages/vat-recap"));
 const SurveyTemplateEditor = lazy(() => import("@/pages/settings/SurveyTemplate"));
 const PublicSurveyPage = lazy(() => import("@/pages/survey/[token]"));
 import { ThemeProvider } from "@/lib/theme";
@@ -94,6 +95,7 @@ function Router() {
         <Route path="/skills" component={() => <ProtectedRoute component={SkillsPage} />} />
         <Route path="/business-units" component={() => <ProtectedRoute component={BusinessUnitsPage} />} />
         <Route path="/resource-planning" component={() => <ProtectedRoute component={ResourcePlanningPage} />} />
+        <Route path="/vat-recap" component={() => <ProtectedRoute component={VatRecapPage} />} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>

@@ -99,13 +99,17 @@ Four sections:
 
 Categories: `SOFTWARE`, `HARDWARE`, `LICENSE`, `TRAVEL`, `OTHER`. **Only APPROVED expenses count in `actualCost` / `additionalCost` / margin.** ExpensesTab shows status badges, approve/reject buttons (gated on `isApprover && status === PENDING`), and a "Pending Approval" summary stat. PMDashboard shows an amber "Expense Menunggu Persetujuan" card when any PENDING expense exists for projects in the PM's scope. Audit: `expense.{created,deleted,approved,rejected}`. Hooks: `useListProjectExpenses`, `useAddProjectExpense`, `useRemoveProjectExpense`, `useApproveProjectExpense`, `useRejectProjectExpense`.
 
+### Rekap PPN Bulanan (`/vat-recap`, MGMT-only)
+
+Halaman agregat PPN lintas-projek untuk referensi SPT Masa PPN. Endpoint `GET /api/billing-milestones/vat-recap?year=YYYY` (MGMT-only) memuat semua `BillingMilestone` ber-status `INVOICED`/`PAID` dengan `invoicedAt` di tahun tsb, lalu hitung per milestone: `gross = amount ?? (project.contractValue × percentage/100)`, kemudian split DPP/PPN sesuai `Project.contractValueIncludesVat` & `Project.vatPercent`. Output: array 12 bulan + totals tahunan dengan `totalDPP`, `totalVat`, `paidVat` (PAID), `outstandingVat` (INVOICED belum PAID). Frontend: tabel breakdown bulanan + 4 stat cards + Export CSV. Hook: `useGetVatRecap`. Sidebar entry "Rekap PPN" muncul khusus MANAGEMENT.
+
 ### Billing (Terms of Payment milestones)
 
 `BillingMilestone` — `name`, `description?`, `percentage`, `amount?` override, `dueDate?`, `status ∈ PLANNED/INVOICED/PAID/CANCELLED`, `invoiceNumber?`, `invoicedAt?`, `paidAt?`, `sortOrder`. Endpoints in `routes/billing-milestones.ts`:
 - `GET/POST /api/projects/:id/billing-milestones` — read open to anyone with project visibility; writes restricted to MGMT or assigned PM.
 - `PATCH/DELETE /api/billing-milestones/:milestoneId`
 
-Setting status to `INVOICED` auto-stamps `invoicedAt`; `PAID` auto-stamps `paidAt` (if not provided). The **Billing** tab on `/projects/:id` (gated to roles that can view financials) renders milestone table with % allocated, computed/override amount, due date, status badge, invoice number, and a banner when total % > 100 or < 100. Audit: `billing_milestone.{created,updated,deleted}`. Hooks: `useListBillingMilestones`, `useCreateBillingMilestone`, `useUpdateBillingMilestone`, `useDeleteBillingMilestone`. Component: `pages/projects/BillingTab.tsx`.
+Setting status to `INVOICED` auto-stamps `invoicedAt`; `PAID` auto-stamps `paidAt` (if not provided). The **Billing** tab on `/projects/:id` (gated to roles that can view financials) renders milestone table with **% allocated, DPP, PPN (vatPercent%), Total**, due date, status badge, and invoice number. DPP/PPN per milestone diturunkan dari `amountFor(m)` dengan helper `splitVat()` yang menghormati `Project.contractValueIncludesVat`. Summary cards menampilkan Invoiced (Total), Paid (Total), Total DPP/PPN Invoiced, PPN Sudah Dibayar, dan PPN Outstanding. Banner muncul saat total % > 100 atau < 100. Audit: `billing_milestone.{created,updated,deleted}`. Hooks: `useListBillingMilestones`, `useCreateBillingMilestone`, `useUpdateBillingMilestone`, `useDeleteBillingMilestone`. Component: `pages/projects/BillingTab.tsx`.
 
 ## Financials computation
 

@@ -48,7 +48,26 @@ const STATUS_STYLE: Record<BillingMilestoneStatus, string> = {
 
 interface BillingTabProps {
   projectId: string;
-  project: { pmId?: string | null; contractValue?: number };
+  project: {
+    pmId?: string | null;
+    contractValue?: number;
+    vatPercent?: number;
+    contractValueIncludesVat?: boolean;
+  };
+}
+
+function splitVat(
+  amount: number,
+  vatPercent: number,
+  includesVat: boolean,
+): { dpp: number; vat: number; gross: number } {
+  if (!isFinite(amount) || amount <= 0) return { dpp: 0, vat: 0, gross: 0 };
+  if (includesVat) {
+    const dpp = amount / (1 + vatPercent / 100);
+    return { dpp, vat: amount - dpp, gross: amount };
+  }
+  const vat = amount * (vatPercent / 100);
+  return { dpp: amount, vat, gross: amount + vat };
 }
 
 export default function BillingTab({ projectId, project }: BillingTabProps) {
@@ -82,34 +101,60 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
     },
   });
 
-  const summary = useMemo(() => {
-    const list = milestones ?? [];
-    const totalPct = list
-      .filter((m) => m.status !== "CANCELLED")
-      .reduce((s, m) => s + (m.percentage || 0), 0);
-    const cv = project.contractValue ?? 0;
-    const planned = list.filter((m) => m.status === "PLANNED").length;
-    const invoiced = list
-      .filter((m) => m.status === "INVOICED" || m.status === "PAID")
-      .reduce((s, m) => s + (m.amount ?? (cv * (m.percentage || 0)) / 100), 0);
-    const paid = list
-      .filter((m) => m.status === "PAID")
-      .reduce((s, m) => s + (m.amount ?? (cv * (m.percentage || 0)) / 100), 0);
-    return { totalPct, planned, invoiced, paid };
-  }, [milestones, project.contractValue]);
+  const vatPercent = project.vatPercent ?? 11;
+  const includesVat = project.contractValueIncludesVat ?? true;
 
   function amountFor(m: BillingMilestone): number {
     if (m.amount != null) return m.amount;
     return ((project.contractValue ?? 0) * (m.percentage || 0)) / 100;
   }
 
+  const summary = useMemo(() => {
+    const list = milestones ?? [];
+    const totalPct = list
+      .filter((m) => m.status !== "CANCELLED")
+      .reduce((s, m) => s + (m.percentage || 0), 0);
+    const planned = list.filter((m) => m.status === "PLANNED").length;
+    let invoicedGross = 0, paidGross = 0;
+    let invoicedDPP = 0, invoicedVat = 0;
+    let paidVat = 0, outstandingVat = 0;
+    for (const m of list) {
+      if (m.status !== "INVOICED" && m.status !== "PAID") continue;
+      const { dpp, vat, gross } = splitVat(amountFor(m), vatPercent, includesVat);
+      invoicedGross += gross;
+      invoicedDPP += dpp;
+      invoicedVat += vat;
+      if (m.status === "PAID") {
+        paidGross += gross;
+        paidVat += vat;
+      } else {
+        outstandingVat += vat;
+      }
+    }
+    return { totalPct, planned, invoicedGross, paidGross, invoicedDPP, invoicedVat, paidVat, outstandingVat };
+  }, [milestones, project.contractValue, vatPercent, includesVat]);
+
   return (
     <div className="space-y-4">
       <div className="grid gap-3 grid-cols-2 md:grid-cols-4">
         <Stat label="% Allocated" value={`${summary.totalPct.toFixed(1)}%`} />
+        <Stat label="Invoiced (Total)" value={formatIDR(summary.invoicedGross)} tone="info" />
+        <Stat label="Paid (Total)" value={formatIDR(summary.paidGross)} tone="success" />
+        <Stat label={`PPN ${vatPercent}% Outstanding`} value={formatIDR(summary.outstandingVat)} tone="primary" />
+      </div>
+      <div className="grid gap-3 grid-cols-2 md:grid-cols-4">
+        <Stat label="Total DPP (Invoiced)" value={formatIDR(summary.invoicedDPP)} />
+        <Stat label={`Total PPN ${vatPercent}% (Invoiced)`} value={formatIDR(summary.invoicedVat)} />
+        <Stat label="PPN Sudah Dibayar" value={formatIDR(summary.paidVat)} tone="success" />
         <Stat label="Planned" value={String(summary.planned)} />
-        <Stat label="Invoiced" value={formatIDR(summary.invoiced)} tone="info" />
-        <Stat label="Paid" value={formatIDR(summary.paid)} tone="success" />
+      </div>
+      <div className="rounded-md border border-border bg-muted/20 px-3 py-2 text-xs text-muted-foreground">
+        Skema PPN: <span className="font-mono text-foreground">{vatPercent}%</span> —
+        contract value diperlakukan sebagai{" "}
+        <span className="font-medium text-foreground">
+          {includesVat ? "GROSS (sudah termasuk PPN)" : "NET / DPP (belum termasuk PPN)"}
+        </span>
+        . Setiap milestone amount mengikuti skema yang sama; DPP & PPN diturunkan otomatis.
       </div>
 
       {summary.totalPct > 100 && (
@@ -160,7 +205,9 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
                   <TableHead className="w-[40px]">#</TableHead>
                   <TableHead>Milestone</TableHead>
                   <TableHead className="text-right">%</TableHead>
-                  <TableHead className="text-right">Amount</TableHead>
+                  <TableHead className="text-right">DPP</TableHead>
+                  <TableHead className="text-right">PPN {vatPercent}%</TableHead>
+                  <TableHead className="text-right">Total</TableHead>
                   <TableHead>Due</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Invoice #</TableHead>
@@ -168,7 +215,9 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {milestones.map((m, idx) => (
+                {milestones.map((m, idx) => {
+                  const split = splitVat(amountFor(m), vatPercent, includesVat);
+                  return (
                   <TableRow key={m.id} className="hover:bg-muted/30 align-top">
                     <TableCell className="text-muted-foreground font-mono text-xs">{idx + 1}</TableCell>
                     <TableCell>
@@ -178,7 +227,9 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
                       )}
                     </TableCell>
                     <TableCell className="text-right font-mono">{m.percentage.toFixed(1)}%</TableCell>
-                    <TableCell className="text-right font-mono">{formatIDR(amountFor(m))}</TableCell>
+                    <TableCell className="text-right font-mono text-xs">{formatIDR(split.dpp)}</TableCell>
+                    <TableCell className="text-right font-mono text-xs text-amber-400">{formatIDR(split.vat)}</TableCell>
+                    <TableCell className="text-right font-mono font-semibold">{formatIDR(split.gross)}</TableCell>
                     <TableCell className="text-xs whitespace-nowrap">{m.dueDate ? formatDate(m.dueDate) : "—"}</TableCell>
                     <TableCell>
                       <Badge variant="outline" className={STATUS_STYLE[m.status]}>
@@ -210,7 +261,8 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
                       </div>
                     </TableCell>
                   </TableRow>
-                ))}
+                  );
+                })}
               </TableBody>
             </Table>
           )}

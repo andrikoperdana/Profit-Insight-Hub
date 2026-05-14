@@ -1802,6 +1802,46 @@ export const LogTaskTimeBody = zod.object({
   loggedAt: zod.string().optional(),
 });
 
+/**
+ * @summary Monthly PPN/VAT recap across all projects (MANAGEMENT only)
+ */
+export const getVatRecapQueryYearMin = 2000;
+export const getVatRecapQueryYearMax = 2100;
+
+export const GetVatRecapQueryParams = zod.object({
+  year: zod.coerce
+    .number()
+    .min(getVatRecapQueryYearMin)
+    .max(getVatRecapQueryYearMax)
+    .optional(),
+});
+
+export const GetVatRecapResponse = zod.object({
+  year: zod.number(),
+  months: zod.array(
+    zod.object({
+      month: zod.string().describe("YYYY-MM"),
+      monthLabel: zod.string(),
+      milestoneCount: zod.number(),
+      invoicedCount: zod.number(),
+      paidCount: zod.number(),
+      totalGross: zod.number(),
+      totalDPP: zod.number(),
+      totalVat: zod.number(),
+      paidVat: zod.number(),
+      outstandingVat: zod.number(),
+    }),
+  ),
+  totals: zod.object({
+    milestoneCount: zod.number(),
+    totalGross: zod.number(),
+    totalDPP: zod.number(),
+    totalVat: zod.number(),
+    paidVat: zod.number(),
+    outstandingVat: zod.number(),
+  }),
+});
+
 export const ListBillingMilestonesParams = zod.object({
   id: zod.coerce.string(),
 });

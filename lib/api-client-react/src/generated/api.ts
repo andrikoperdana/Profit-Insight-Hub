@@ -38,6 +38,7 @@ import type {
   DashboardSummary,
   Document,
   GetResourcePlanningParams,
+  GetVatRecapParams,
   HealthStatus,
   ListAvailableUsersParams,
   ListProjectsParams,
@@ -69,6 +70,7 @@ import type {
   UpdateUserBody,
   User,
   UtilizationRow,
+  VatRecap,
 } from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
@@ -4981,6 +4983,103 @@ export const useLogTaskTime = <
 > => {
   return useMutation(getLogTaskTimeMutationOptions(options));
 };
+
+/**
+ * @summary Monthly PPN/VAT recap across all projects (MANAGEMENT only)
+ */
+export const getGetVatRecapUrl = (params?: GetVatRecapParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/billing-milestones/vat-recap?${stringifiedParams}`
+    : `/api/billing-milestones/vat-recap`;
+};
+
+export const getVatRecap = async (
+  params?: GetVatRecapParams,
+  options?: RequestInit,
+): Promise<VatRecap> => {
+  return customFetch<VatRecap>(getGetVatRecapUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetVatRecapQueryKey = (params?: GetVatRecapParams) => {
+  return [
+    `/api/billing-milestones/vat-recap`,
+    ...(params ? [params] : []),
+  ] as const;
+};
+
+export const getGetVatRecapQueryOptions = <
+  TData = Awaited<ReturnType<typeof getVatRecap>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetVatRecapParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getVatRecap>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetVatRecapQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getVatRecap>>> = ({
+    signal,
+  }) => getVatRecap(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getVatRecap>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetVatRecapQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getVatRecap>>
+>;
+export type GetVatRecapQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Monthly PPN/VAT recap across all projects (MANAGEMENT only)
+ */
+
+export function useGetVatRecap<
+  TData = Awaited<ReturnType<typeof getVatRecap>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetVatRecapParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getVatRecap>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetVatRecapQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
 
 export const getListBillingMilestonesUrl = (id: string) => {
   return `/api/projects/${id}/billing-milestones`;

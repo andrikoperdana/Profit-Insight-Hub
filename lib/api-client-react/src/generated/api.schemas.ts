@@ -91,6 +91,35 @@ export interface TaskAssignee {
   name: string;
 }
 
+export interface VatRecapMonth {
+  /** YYYY-MM */
+  month: string;
+  monthLabel: string;
+  milestoneCount: number;
+  invoicedCount: number;
+  paidCount: number;
+  totalGross: number;
+  totalDPP: number;
+  totalVat: number;
+  paidVat: number;
+  outstandingVat: number;
+}
+
+export interface VatRecapTotals {
+  milestoneCount: number;
+  totalGross: number;
+  totalDPP: number;
+  totalVat: number;
+  paidVat: number;
+  outstandingVat: number;
+}
+
+export interface VatRecap {
+  year: number;
+  months: VatRecapMonth[];
+  totals: VatRecapTotals;
+}
+
 export type BillingMilestoneStatus =
   (typeof BillingMilestoneStatus)[keyof typeof BillingMilestoneStatus];
 
@@ -826,3 +855,11 @@ export const ListTimesheetsScope = {
   approval: "approval",
   all: "all",
 } as const;
+
+export type GetVatRecapParams = {
+  /**
+   * @minimum 2000
+   * @maximum 2100
+   */
+  year?: number;
+};

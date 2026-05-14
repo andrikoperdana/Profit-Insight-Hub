@@ -59,6 +59,7 @@ export default function Sidebar() {
     ...(canManageUsers(user?.role) ? [{ href: "/business-units", label: "Business Units", icon: Network }] : []),
     ...(canManageUsers(user?.role) ? [{ href: "/skills", label: "Skills", icon: Award }] : []),
     ...(user?.role === "MANAGEMENT" ? [{ href: "/business-intelligence", label: "Business Intelligence", icon: TrendingUp }] : []),
+    ...(user?.role === "MANAGEMENT" ? [{ href: "/vat-recap", label: "Rekap PPN", icon: Receipt }] : []),
     ...(user?.role === "MANAGEMENT" ? [{ href: "/settings/survey-template", label: "Survey Template", icon: ClipboardList }] : []),
     ...(canViewAuditLogs(user?.role) ? [{ href: "/audit-logs", label: "Audit Log", icon: ScrollText }] : []),
   ];

@@ -64,6 +64,134 @@ function serialize(m: any) {
   };
 }
 
+/**
+ * GET /api/billing-milestones/vat-recap?year=YYYY
+ * Monthly recap of PPN (VAT) obligations across all projects, based on
+ * BillingMilestone with status INVOICED or PAID and a non-null invoicedAt.
+ *
+ * For each milestone:
+ *  - gross = m.amount ?? (project.contractValue * percentage / 100)
+ *  - if project.contractValueIncludesVat: DPP = gross / (1 + vat/100), PPN = gross - DPP
+ *  - else: DPP = gross, PPN = gross * vat / 100, total = DPP + PPN
+ *
+ * Restricted to MANAGEMENT (commercial figures).
+ */
+router.get("/billing-milestones/vat-recap", async (req, res) => {
+  if (req.user?.role !== "MANAGEMENT") {
+    res.status(403).json({ error: "Only Management can view VAT recap" });
+    return;
+  }
+  const yearParam = req.query.year;
+  const now = new Date();
+  const year = yearParam !== undefined && yearParam !== ""
+    ? Number(yearParam)
+    : now.getUTCFullYear();
+  if (!isFinite(year) || year < 2000 || year > 2100) {
+    res.status(400).json({ error: "year must be a valid 4-digit year" });
+    return;
+  }
+  const start = new Date(Date.UTC(year, 0, 1));
+  const end = new Date(Date.UTC(year + 1, 0, 1));
+
+  const rows = await prisma.billingMilestone.findMany({
+    where: {
+      status: { in: ["INVOICED", "PAID"] },
+      invoicedAt: { gte: start, lt: end },
+    },
+    include: {
+      project: {
+        select: {
+          id: true, code: true, name: true,
+          contractValue: true,
+          vatPercent: true,
+          contractValueIncludesVat: true,
+        },
+      },
+    },
+    orderBy: [{ invoicedAt: "asc" }],
+  });
+
+  type MonthBucket = {
+    month: string;
+    monthLabel: string;
+    milestoneCount: number;
+    invoicedCount: number;
+    paidCount: number;
+    totalGross: number;
+    totalDPP: number;
+    totalVat: number;
+    paidVat: number;
+    outstandingVat: number;
+  };
+  const MONTH_LABELS = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
+  const buckets = new Map<string, MonthBucket>();
+  for (let m = 0; m < 12; m++) {
+    const key = `${year}-${String(m + 1).padStart(2, "0")}`;
+    buckets.set(key, {
+      month: key,
+      monthLabel: `${MONTH_LABELS[m]} ${year}`,
+      milestoneCount: 0,
+      invoicedCount: 0,
+      paidCount: 0,
+      totalGross: 0,
+      totalDPP: 0,
+      totalVat: 0,
+      paidVat: 0,
+      outstandingVat: 0,
+    });
+  }
+
+  for (const r of rows) {
+    if (!r.invoicedAt) continue;
+    const d = new Date(r.invoicedAt);
+    const key = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
+    const b = buckets.get(key);
+    if (!b) continue;
+    const cv = r.project.contractValue ?? 0;
+    const vatPct = r.project.vatPercent ?? 11;
+    const includesVat = r.project.contractValueIncludesVat ?? true;
+    const baseAmount = r.amount ?? (cv * (r.percentage || 0)) / 100;
+    let dpp: number;
+    let vat: number;
+    let gross: number;
+    if (includesVat) {
+      gross = baseAmount;
+      dpp = baseAmount / (1 + vatPct / 100);
+      vat = gross - dpp;
+    } else {
+      dpp = baseAmount;
+      vat = baseAmount * (vatPct / 100);
+      gross = dpp + vat;
+    }
+    b.milestoneCount += 1;
+    if (r.status === "PAID") {
+      b.paidCount += 1;
+      b.paidVat += vat;
+    } else {
+      b.invoicedCount += 1;
+      b.outstandingVat += vat;
+    }
+    b.totalGross += gross;
+    b.totalDPP += dpp;
+    b.totalVat += vat;
+  }
+
+  const months = Array.from(buckets.values());
+  const totals = months.reduce(
+    (acc, b) => ({
+      milestoneCount: acc.milestoneCount + b.milestoneCount,
+      totalGross: acc.totalGross + b.totalGross,
+      totalDPP: acc.totalDPP + b.totalDPP,
+      totalVat: acc.totalVat + b.totalVat,
+      paidVat: acc.paidVat + b.paidVat,
+      outstandingVat: acc.outstandingVat + b.outstandingVat,
+    }),
+    { milestoneCount: 0, totalGross: 0, totalDPP: 0, totalVat: 0, paidVat: 0, outstandingVat: 0 },
+  );
+
+  res.json({ year, months, totals });
+});
+
 router.get("/projects/:id/billing-milestones", async (req, res) => {
   const projectId = req.params.id;
   const project = await prisma.project.findUnique({

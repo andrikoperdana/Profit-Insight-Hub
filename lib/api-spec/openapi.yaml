@@ -926,6 +926,24 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/TaskTimeLog" }
 
+  /billing-milestones/vat-recap:
+    get:
+      operationId: getVatRecap
+      summary: Monthly PPN/VAT recap across all projects (MANAGEMENT only)
+      tags: [BillingMilestones]
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: query
+          name: year
+          required: false
+          schema: { type: integer, minimum: 2000, maximum: 2100 }
+      responses:
+        "200":
+          description: Monthly recap of DPP/PPN
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/VatRecap" }
+
   /projects/{id}/billing-milestones:
     get:
       operationId: listBillingMilestones
@@ -1111,6 +1129,42 @@ components:
       properties:
         userId: { type: string }
         name: { type: string }
+
+    VatRecapMonth:
+      type: object
+      required: [month, monthLabel, milestoneCount, invoicedCount, paidCount, totalGross, totalDPP, totalVat, paidVat, outstandingVat]
+      properties:
+        month: { type: string, description: "YYYY-MM" }
+        monthLabel: { type: string }
+        milestoneCount: { type: integer }
+        invoicedCount: { type: integer }
+        paidCount: { type: integer }
+        totalGross: { type: number }
+        totalDPP: { type: number }
+        totalVat: { type: number }
+        paidVat: { type: number }
+        outstandingVat: { type: number }
+
+    VatRecapTotals:
+      type: object
+      required: [milestoneCount, totalGross, totalDPP, totalVat, paidVat, outstandingVat]
+      properties:
+        milestoneCount: { type: integer }
+        totalGross: { type: number }
+        totalDPP: { type: number }
+        totalVat: { type: number }
+        paidVat: { type: number }
+        outstandingVat: { type: number }
+
+    VatRecap:
+      type: object
+      required: [year, months, totals]
+      properties:
+        year: { type: integer }
+        months:
+          type: array
+          items: { $ref: "#/components/schemas/VatRecapMonth" }
+        totals: { $ref: "#/components/schemas/VatRecapTotals" }
 
     BillingMilestoneStatus:
       type: string
