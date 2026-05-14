@@ -1,245 +1,148 @@
 # SecureProfit Hub
 
-Full-stack web application for an Indonesian IT security consulting firm. Tracks consulting projects from observation through delivery, monitoring profit margins in real time as consultants log billable mandays. Roles: Management, Project Manager, Sales, Konsultan, Technical Writer, Admin Project, three Principal supervisors, and Site Admin.
+Full-stack web app for an Indonesian IT security consulting firm. Tracks projects from intake to delivery, monitoring profit margins as consultants log billable mandays.
 
-## Architecture
+## Stack
 
-- **Monorepo**: pnpm workspace with shared `lib/` packages and `artifacts/` for runnable apps
-- **Frontend** (`artifacts/web`): React + Vite + TypeScript + Tailwind v4 + shadcn/ui + Recharts, wouter for routing, dark theme by default with cyber-green accent
-- **Backend** (`artifacts/api-server`): Node + Express + Pino, JWT auth (HS256), bcryptjs hashing
-- **Database** (`lib/db`): PostgreSQL via Prisma ORM (user-mandated). Schema in `lib/db/prisma/schema.prisma`. Generated client output to `lib/db/src/generated/client/` and re-exported from `lib/db/src/index.ts`
-- **API contract** (`lib/api-spec`): Single OpenAPI 3 source at `openapi.yaml`, codegen produces React Query hooks in `lib/api-client-react` and zod validators in `lib/api-zod`
-- **Auth flow**: `POST /api/auth/login` returns `{ token, user }`. Frontend stores token in `localStorage["auth_token"]`; `lib/api-client-react/src/custom-fetch.ts` automatically attaches `Authorization: Bearer` and redirects to `/login` on 401
+- **Monorepo**: pnpm workspace (`lib/` shared, `artifacts/` runnable apps)
+- **Frontend** (`artifacts/web`): React + Vite + TS + Tailwind v4 + shadcn/ui + Recharts, wouter routing, dark cyber-green theme
+- **Backend** (`artifacts/api-server`): Node + Express + Pino, JWT auth (HS256), bcryptjs
+- **DB** (`lib/db`): PostgreSQL via Prisma. Schema in `lib/db/prisma/schema.prisma`; client generated to `lib/db/src/generated/client/`
+- **API contract** (`lib/api-spec`): OpenAPI 3 → React Query hooks (`lib/api-client-react`) + zod schemas (`lib/api-zod`)
+- **Auth**: `POST /api/auth/login` → `{ token, user }`. Token in `localStorage["auth_token"]`; `lib/api-client-react/src/custom-fetch.ts` attaches `Authorization: Bearer` and redirects to `/login` on 401
 
-## Domain entities (Prisma)
+## Roles
 
-- **User** — `seniority` (`JUNIOR/MID/SENIOR/PRINCIPAL`), `businessUnitId`, `managerId` (PM → PMO), `principalId` (delivery user → Principal supervisor)
-- **BusinessUnit** — `name unique`, optional `description`, `isActive`. Seeded: Pentest, GRC, Threat Hunting
-- **Skill** + **UserSkill** join (M:N) — `name unique`, optional `category`, `isActive`
-- **Client**, **Project**, **Activity** (audit trail), **Document** (BAST/INVOICE/CONTRACT/REPORT/OTHER, base64 in DB)
-- **ProjectResource** — per-project staffing with planned mandays + daily rate
-- **Timesheet** — `DRAFT → SUBMITTED → APPROVED/REJECTED`, optional `taskId` linking the entry to a Task
-- **ProjectExpense** — non-resource project costs (SOFTWARE/HARDWARE/LICENSE/TRAVEL/OTHER) with approval workflow (see below)
-- **BillingMilestone** — Terms-of-Payment milestone per project (see Billing tab)
-- **Task** — per-project work items with TODO/IN_PROGRESS/BLOCKED/DONE status, `billable` flag, `parentTaskId` self-relation (WBS), optional start/end dates
-- **TaskAssignee** (M:N join Task↔User) — multi-assignee model, replaces single-assignee. Legacy `Task.assigneeId` kept as a mirror of the first assignee for backward compat
-- **TaskDependency** — `(taskId, dependsOnTaskId)` unique join for finish-to-start dependencies
-- **TaskTimeLog** — clock-in entries by any assignee against a Task; cascades on task delete
+Management (PMO Director), Project Manager, Sales, Konsultan, Technical Writer, Admin Project, Principal supervisors (KONSULTAN/TECHNICAL_WRITER/ADMIN_PROJECT), Site Admin.
+
+## Domain (Prisma)
+
+- **User** — `seniority` JUNIOR/MID/SENIOR/PRINCIPAL, `businessUnitId`, `managerId` (PM→PMO), `principalId` (delivery user→Principal)
+- **BusinessUnit**, **Skill** + **UserSkill** join — seeded BUs: Pentest, GRC, Threat Hunting; 11 skills
+- **Client**, **Project**, **Activity** (audit), **Document** (BAST/INVOICE/CONTRACT/REPORT/OTHER, base64)
+- **ProjectResource** — staffing with planned mandays + daily rate
+- **Timesheet** — DRAFT→SUBMITTED→APPROVED/REJECTED, optional `taskId`
+- **ProjectExpense** — non-resource costs (SOFTWARE/HARDWARE/LICENSE/TRAVEL/OTHER) with PENDING/APPROVED/REJECTED
+- **BillingMilestone** — Terms-of-Payment per project, status PLANNED/INVOICED/PAID/CANCELLED
+- **Task** + **TaskAssignee** (M:N) + **TaskDependency** + **TaskTimeLog** — WBS via `parentTaskId`, `billable` flag, finish-to-start deps
 
 ## Project lifecycle
 
-`DRAFT (Sales intake, awaiting PMO assignment) → OBSERVATION (PM completed details) → ACTIVE (delivering) → PAUSE / COMPLETE → CLOSED`.
+`DRAFT (Sales intake) → OBSERVATION (PM completed) → ACTIVE → PAUSE / COMPLETE → CLOSED`.
 
-### Draft intake flow (Sales → PMO → PM)
+Intake: Sales fills 4-field form at `/projects/new` (server forces `status=DRAFT`, `salesId`, `pmId=null`). MGMT assigns PM (409 if already set). PM sees `DraftCompletionCard` to fill description/dates/revenue/mandays/cost → transitions to OBSERVATION.
 
-1. **Sales** opens `/projects/new` — minimal 4-field intake form (Name + SPK + Client + Project Value). Server forces `status=DRAFT`, `salesId=req.user.sub`, `pmId=null` regardless of body.
-2. **PMO Director (MANAGEMENT)** sees the project under a purple "Pending PM Assignment" card on dashboard; "Assign PM" PATCHes `pmId`. The 409 invariant prevents reassigning if a PM is already set on a DRAFT project.
-3. **PM** sees the project on their dashboard under "New project(s) assigned to you". The `DraftCompletionCard` (rendered above tabs only when `status === DRAFT`) collects Description, Start/End dates, Revenue, Planned Mandays, Estimated Cost, then transitions to OBSERVATION.
+### `PATCH /api/projects/:id` rules (`routes/projects.ts`)
 
-### PATCH /api/projects/:id authorization rules
+- **SALES** (own only): on DRAFT may edit `{code,name,description,clientId,contractValue}`; on other statuses same fields but no people/client/status changes.
+- **PROJECT_MANAGER** (own only): all fields except `salesId`/`pmId`/`clientId`.
+- **MANAGEMENT**: full access. Setting `pmId` on DRAFT that already has one → 409.
 
-Field-level + ownership guards in `routes/projects.ts`:
-- **SALES**: only own projects (`salesId === userId`).
-  - On DRAFT: allowed fields = `{code, name, description, clientId, contractValue}`; everything else returns 403.
-  - On any other status: same descriptive/financial fields PM can change, but cannot reassign people (`salesId`/`pmId`), reassign the client (`clientId`), or change `status`/`statusChangeReason`.
-- **PROJECT_MANAGER**: only own assignments (`pmId === userId`); all fields except `salesId`/`pmId`/`clientId`.
-- **MANAGEMENT**: full access. Setting `pmId` on a DRAFT that already has one returns 409.
+## Project tabs (`/projects/:id`)
 
-## Project detail tabs (`/projects/:id`)
+- **Overview** (editable by MGMT/assigned PM/Sales owner; hidden on DRAFT). Yellow banner when essential fields missing. Inline edit → "Review & Save" dialog → PATCH. Client field is Select only for MGMT.
+- **Timeline** — drag-and-drop Gantt (`TaskGanttChart` + `GanttBar`): bar body drags whole task, 8-px edge handles resize. PATCH on pointer-up via `useUpdateTask`. `DependencyArrows` SVG draws elbow paths between predecessor and dependent bars; recomputes on drag/resize/scroll. Server doesn't enforce dep timing — toast warns instead.
+- **Tasks** — MGMT/PM-of-project create/edit/delete; assignees only change `status` and log hours. Endpoints in `routes/tasks.ts`. Multi-assignee via `assigneeIds[]` (canonical) — omitted = preserved, `[]`/null = clear, non-array = 400. WBS `parentTaskId` (manager-only, ancestor-BFS cycle check). Dependencies `dependencyTaskIds[]` (forward-BFS cycle check). Pickers exclude self+descendants. `Task.billable` defaults true; non-billable time logs don't roll into revenue/margin. `Timesheet.taskId` validates project + assignee. Audit: `task.{created,updated,deleted,time_logged}`.
+- **Resources** — 4 sections: Admin Project (single-pick `Project.adminProjectId`), Konsultan team (`ProjectResource` role=KONSULTAN), Technical Writer team (role=TECHNICAL_WRITER), Other Resources (any active user with free-text `roleInProject`, backed by `GET /api/users/active-all` MGMT+PM only).
+- **Expenses** — `routes/expenses.ts`. Anyone with project visibility can submit; MGMT auto-APPROVED. Approve/reject by PM-of-project or MGMT. **Only APPROVED count toward `actualCost`/margin.** PMDashboard shows pending-expense alert.
+- **Billing** — `BillingMilestone` table with %, DPP, VAT (vatPercent%), Total, due date, status, invoice #. Status→INVOICED auto-stamps `invoicedAt`; →PAID auto-stamps `paidAt`. DPP/VAT split via `splitVat()` honoring `Project.contractValueIncludesVat`. Banner when total % ≠ 100. Writes restricted to MGMT/assigned PM. Component: `pages/projects/BillingTab.tsx`.
 
-### Overview (editable)
+## VAT recap (`/vat-recap`, MGMT only)
 
-Editable by MANAGEMENT, the assigned PM, or the project's Sales owner via "Edit" button (hidden on DRAFT). Yellow banner on non-DRAFT when essential fields are missing (Client, Start/End, Contract Value, Planned Mandays, Estimated Cost, Description). Save uses inline edit → "Review & Save" confirmation dialog → "Confirm & Save" PATCH. The Client field is a Select only for MANAGEMENT; PM/Sales see read-only (and `PM_FORBIDDEN` / `SALES_ONGOING_FORBIDDEN` reject any direct attempt to change `clientId` on in-flight projects).
+`GET /api/billing-milestones/vat-recap?year=YYYY` aggregates INVOICED/PAID milestones across projects. Returns 12-month breakdown + annual totals (DPP, VAT, paidVat, outstandingVat). UI: monthly table + 4 stat cards + CSV export. Hook: `useGetVatRecap`.
 
-### Timeline (drag-n-drop Gantt with dependencies)
+## Financials (`routes/.../serializers.ts`)
 
-`TaskGanttChart` uses a per-bar `GanttBar` subcomponent: pointer-down on the bar body drags the whole task (shifts both start & end by the same number of days), pointer-down on the left/right 8-px edge handles resizes that side. Drag is preview-only via local state; on pointer-up the new dates are PATCHed via `useUpdateTask`. A `DependencyArrows` SVG overlay measures bar bounding rects against the lanes container and draws elbow paths with arrowheads from each predecessor's right edge to its dependent's left edge; recomputes on drag-tick, window resize/scroll, and `ResizeObserver` lanes-resize so arrows stay aligned. If a drop violates a dependency (start < predecessor's end+1), the change is still saved (server doesn't enforce timing) but a toast warns the PM.
-
-### Tasks
-
-MGMT and the PM-of-project can create/edit/delete tasks; assignees may change `status` only and log hours. Endpoints in `routes/tasks.ts`:
-
-- `GET /api/projects/:id/tasks` — same visibility as `/projects/:id/resources` (MGMT/ADMIN_PROJECT all; PM own; Sales own; Konsultan/TW only if a resource on the project).
-- `POST /api/projects/:id/tasks`, `PATCH /api/tasks/:taskId`, `DELETE /api/tasks/:taskId`
-- `GET /api/tasks/mine`
-- `GET/POST /api/tasks/:taskId/time-logs` — assignee logs `hours ∈ (0, 24]` with optional `note` and `loggedAt`.
-
-**Multi-assignee**: POST/PATCH accept `assigneeIds: string[]` (canonical); legacy `assigneeId` still honored. PATCH semantics:
-- `assigneeIds` omitted → preserved.
-- `assigneeIds: []` or `null` → unassign all.
-- Not an array of strings → 400 (never silently coerce).
-
-Replacement runs in a Prisma transaction (deleteMany → createMany → task.update). Visibility/permission checks OR the legacy `assigneeId` with the join. Serializer returns both `assignees: [{userId, name}]` and the legacy `assigneeId/assigneeName` (first assignee).
-
-**WBS (parent/child)**: POST/PATCH accept `parentTaskId` (manager-only, ancestor-BFS cycle check). Serializer returns `parentTaskId` and `subtaskCount`. TasksTab form has a "Parent Task" select; the table renders rows in DFS tree order with depth-based indentation and a `└` glyph for child rows.
-
-**Dependencies**: POST/PATCH accept `dependencyTaskIds: string[]` (manager-only, forward-BFS cycle check). TasksTab form has a "Depends On (predecessors)" checkbox grid; both Parent and Depends-On pickers exclude self + descendants so the UI never offers cycles the server would reject.
-
-**Billable flag**: `Task.billable` defaults true. Toggle in form; non-billable tasks render an amber badge and time logs against them are recorded for visibility but do **not** roll into revenue/margin.
-
-**Timesheet ↔ Task linkage**: `Timesheet.taskId` is optional. `POST /api/timesheets` validates that the task belongs to the chosen project AND the caller is one of its assignees. List serializer returns `taskId` + `taskTitle`, surfaced as a "Task" column on My/Team Timesheets and CSV exports. Log Time dialog shows a Task select filtered by chosen project.
-
-Audit actions: `task.{created,updated,deleted,time_logged}`. Hooks: `useListProjectTasks`, `useCreateProjectTask`, `useUpdateTask`, `useDeleteTask`, `useListMyTasks`, `useListTaskTimeLogs`, `useLogTaskTime`. Components: `pages/projects/TasksTab.tsx` and `MyTasksCard` inside `ConsultantDashboard.tsx`.
-
-### Resources (fleksibel role)
-
-Four sections:
-1. **Admin Project** — single-pick on `Project.adminProjectId`
-2. **Konsultan Team** — multi-pick `ProjectResource` with `userRole === KONSULTAN` (cap 2-projek lama sudah dihapus)
-3. **Technical Writer Team** — multi-pick `ProjectResource` with `userRole === TECHNICAL_WRITER`
-4. **Resource Lainnya** — fleksibel: MGMT/PM bisa tambahkan user manapun (Sales, MANAGEMENT, SOC role kustom, dll) sebagai `ProjectResource` dengan free-text `roleInProject` (contoh: "SOC Manager", "Security Engineer"). Backed by `GET /api/users/active-all` (MGMT + PM only) — return semua user aktif tanpa filter role. Dialog memaksa `roleInProject` non-empty saat mode `OTHER`.
-
-### Expenses (PM cost capture beyond resources, with approval workflow)
-
-`ProjectExpense.status ∈ {PENDING, APPROVED, REJECTED}` with `approvedById/approvedByName/approvedAt/rejectionReason`. Endpoints in `routes/expenses.ts`:
-- `GET /api/projects/:id/expenses` — open to any authenticated user with project visibility.
-- `POST /api/projects/:id/expenses` — anyone with project visibility may submit. MGMT submissions auto-APPROVED.
-- `POST /api/expenses/:id/approve` and `POST /api/expenses/:id/reject` (`{ reason }`) — PM-of-project or MANAGEMENT only.
-- `DELETE /api/expenses/:expenseId` — MGMT or PM-of-project.
-
-Categories: `SOFTWARE`, `HARDWARE`, `LICENSE`, `TRAVEL`, `OTHER`. **Only APPROVED expenses count in `actualCost` / `additionalCost` / margin.** ExpensesTab shows status badges, approve/reject buttons (gated on `isApprover && status === PENDING`), and a "Pending Approval" summary stat. PMDashboard shows an amber "Expense Menunggu Persetujuan" card when any PENDING expense exists for projects in the PM's scope. Audit: `expense.{created,deleted,approved,rejected}`. Hooks: `useListProjectExpenses`, `useAddProjectExpense`, `useRemoveProjectExpense`, `useApproveProjectExpense`, `useRejectProjectExpense`.
-
-### Rekap PPN Bulanan (`/vat-recap`, MGMT-only)
-
-Halaman agregat PPN lintas-projek untuk referensi SPT Masa PPN. Endpoint `GET /api/billing-milestones/vat-recap?year=YYYY` (MGMT-only) memuat semua `BillingMilestone` ber-status `INVOICED`/`PAID` dengan `invoicedAt` di tahun tsb, lalu hitung per milestone: `gross = amount ?? (project.contractValue × percentage/100)`, kemudian split DPP/PPN sesuai `Project.contractValueIncludesVat` & `Project.vatPercent`. Output: array 12 bulan + totals tahunan dengan `totalDPP`, `totalVat`, `paidVat` (PAID), `outstandingVat` (INVOICED belum PAID). Frontend: tabel breakdown bulanan + 4 stat cards + Export CSV. Hook: `useGetVatRecap`. Sidebar entry "Rekap PPN" muncul khusus MANAGEMENT.
-
-### Billing (Terms of Payment milestones)
-
-`BillingMilestone` — `name`, `description?`, `percentage`, `amount?` override, `dueDate?`, `status ∈ PLANNED/INVOICED/PAID/CANCELLED`, `invoiceNumber?`, `invoicedAt?`, `paidAt?`, `sortOrder`. Endpoints in `routes/billing-milestones.ts`:
-- `GET/POST /api/projects/:id/billing-milestones` — read open to anyone with project visibility; writes restricted to MGMT or assigned PM.
-- `PATCH/DELETE /api/billing-milestones/:milestoneId`
-
-Setting status to `INVOICED` auto-stamps `invoicedAt`; `PAID` auto-stamps `paidAt` (if not provided). The **Billing** tab on `/projects/:id` (gated to roles that can view financials) renders milestone table with **% allocated, DPP, PPN (vatPercent%), Total**, due date, status badge, and invoice number. DPP/PPN per milestone diturunkan dari `amountFor(m)` dengan helper `splitVat()` yang menghormati `Project.contractValueIncludesVat`. Summary cards menampilkan Invoiced (Total), Paid (Total), Total DPP/PPN Invoiced, PPN Sudah Dibayar, dan PPN Outstanding. Banner muncul saat total % > 100 atau < 100. Audit: `billing_milestone.{created,updated,deleted}`. Hooks: `useListBillingMilestones`, `useCreateBillingMilestone`, `useUpdateBillingMilestone`, `useDeleteBillingMilestone`. Component: `pages/projects/BillingTab.tsx`.
-
-## Financials computation
-
-Computed in `routes/.../serializers.ts`:
-- `resourceCost` = sum over APPROVED timesheets of `(hours / 8) * resource.dailyRate`
-- `additionalCost` = sum of **APPROVED** `ProjectExpense.amount` for the project
+- `resourceCost` = sum of APPROVED timesheets `(hours/8) × resource.dailyRate`
+- `additionalCost` = sum of APPROVED `ProjectExpense.amount`
 - `actualCost` = `resourceCost + additionalCost`
 - `actualProfit` = `contractValue - actualCost`
-- `marginPct` = `actualProfit / contractValue * 100`
-- Forecast: linear projection of cost based on burn rate
+- `marginPct` = `actualProfit / contractValue × 100`
+- Forecast: linear projection from burn rate
 
-`/api/projects/:id/financials` aggregates approved timesheets per month and pairs with contract value spread evenly across active months for chart rendering.
+`/api/projects/:id/financials` aggregates approved timesheets per month, pairs with contract value spread across active months.
 
-## Hierarchy & Principal roles
+## Hierarchy & Principal
 
-Three Principal roles supervise delivery teams: **PRINCIPAL_KONSULTAN**, **PRINCIPAL_TECHNICAL_WRITER**, **PRINCIPAL_ADMIN_PROJECT**. PMs report to MANAGEMENT (PMO Director). Mapping in `pages/lib/roles.ts` (`PRINCIPAL_TO_REPORT_ROLE`):
-
+3 Principal roles supervise delivery teams. PMs report to MGMT. Mapping in `pages/lib/roles.ts` (`PRINCIPAL_TO_REPORT_ROLE`):
 - PRINCIPAL_KONSULTAN → KONSULTAN
 - PRINCIPAL_TECHNICAL_WRITER → TECHNICAL_WRITER
 - PRINCIPAL_ADMIN_PROJECT → ADMIN_PROJECT
 
-### Resource propose workflow (Principal → PM)
+**Propose workflow** (`routes/resources.ts`, `routes/principal.ts`): Principal proposes a direct supervisee onto OBSERVATION/ACTIVE projects via `POST /api/projects/:id/resources/propose` (sets `proposedById`, `acceptedAt=null`). PM/MGMT accept via `POST /api/resources/:id/accept`. DELETE allowed for MGMT/PM/supervising Principal. `GET /api/principal/projects-needing-resource` and `/api/users/under-supervision` are Principal-only.
 
-Principals can propose a supervisee onto an OBSERVATION/ACTIVE project that lacks an assigned resource of the role they supervise. PM has final say. Endpoints in `routes/resources.ts` and `routes/principal.ts`:
+**Visibility**: `canViewProjectFinancials()` returns false for any `PRINCIPAL_*` role — hides Financials/Billing tabs and all contractValue/margin/cost columns including Estimated Cost.
 
-- `POST /api/projects/:id/resources/propose` — Principal-only; proposed `userId` must be a direct supervisee (`User.principalId === req.user.sub`); creates `ProjectResource` with `proposedById`/`proposedAt` set and `acceptedAt` null.
-- `POST /api/resources/:resourceId/accept` — MGMT or the project's PM; sets `acceptedAt`.
-- `DELETE /api/resources/:resourceId` — MGMT, project's PM, or supervising Principal of the row's user.
-- `GET /api/principal/projects-needing-resource` — Principal-only.
-- `GET /api/users/under-supervision` — Principal-only.
+## Resource Planning (`/resource-planning`, PM+MGMT)
 
-Audit: `resource.{proposed,accepted}`. Hooks: `useProposeProjectResource`, `useAcceptProjectResource`, `useListProjectsNeedingResource`, `useListUsersUnderSupervision`. Page: `pages/dashboard/PrincipalDashboard.tsx`.
-
-### Principal visibility constraints
-
-Principals never see commercial figures: `canViewProjectFinancials()` returns false for any role starting with `PRINCIPAL_`, hiding the Financials/Billing tabs and all contractValue/margin/cost columns. Estimated Cost on Overview also sits inside the financials gate.
-
-## Resource Planning matrix
-
-Page: `/resource-planning` (PM + MANAGEMENT). `GET /api/resource-planning?startDate=YYYY-MM-DD&weeks=N` returns rows grouped per Business Unit, each row showing weekly planned mandays cells (sum of `ProjectResource.plannedMandays` distributed across active project weeks). Cells color-coded by load (>=6 destructive, >=4 amber, >0 emerald) with per-cell tooltip listing project allocations.
-
-## Role-based access
-
-Enforced server-side via `requireRole` middleware in `middlewares/auth.ts`:
-- **Management**: full access
-- **Project Manager**: write projects/resources, approve timesheets for projects where they are PM
-- **Sales**: write clients/projects
-- **Konsultan / Technical Writer**: log own timesheets only
-- **Admin Project**: upload documents and invoices
-
-Server-side data scoping:
-- `GET /api/projects` filters by role: PM → own (`pmId`), Sales → own (`salesId`), Konsultan/TW → assigned or has timesheet, Management/Admin → all.
-- `GET /api/dashboard/resource-utilization-detail` restricted to Management + PM, with PM seeing only resources working on own projects.
-
-**Express router gotcha**: avoid `router.use(requireRole(...))` at the top of a sub-router mounted via `router.use(subRouter)` (no path prefix). Express runs the sub-router's middleware for *every* incoming request before path matching, so a router-level `requireRole` will reject requests destined for *other* sibling routers. Apply `requireAuth` / `requireRole` per-route, or mount the router under a path prefix (`router.use("/bi", biRouter)`).
-
-## Role-based dashboards
-
-`pages/dashboard/index.tsx` routes per role:
-- **MANAGEMENT** → `ManagementDashboard` (executive KPIs, profit trend, status breakdown, aging buckets, at-risk-projects alert, `<PMAllocationCard />` showing each PM's in-flight/active/observation/draft counts + total contract value, color-coded by load `>=6 destructive, >=4 amber`)
-- **PROJECT_MANAGER** → `PMDashboard` (PM-scoped active projects, approval inbox with Approve All, my-team utilization, revenue-vs-profit chart, overdue-approval alert, pending-expense alert)
-- **SALES** → `SalesDashboard` (own pipeline, revenue-by-client, status pie, 6-month profitability trend)
-- **KONSULTAN / TECHNICAL_WRITER** → `ConsultantDashboard` (welcome banner, prominent "Log Today's Time Sheet" CTA, 14-day trend, recent submissions, MyTasksCard)
-- **ADMIN_PROJECT** → `AdminProjectDashboard` (closing-doc inbox + alert for projects complete >3 days)
-- **SITE_ADMIN** → `SiteAdminDashboard` (Users + Audit Log management, recent activity feed). User administration and audit log are exclusive to SITE_ADMIN.
-
-Shared `WelcomeBanner` (`components/dashboard/WelcomeBanner.tsx`) shows time-aware greeting + role label.
+`GET /api/resource-planning?startDate=YYYY-MM-DD&weeks=N` returns BU-grouped rows with weekly mandays cells (sum `ProjectResource.plannedMandays` distributed across active project weeks). Cells color-coded: ≥6 destructive, ≥4 amber, >0 emerald. Per-cell tooltip lists project allocations.
 
 ## Reports (`/reports`, MGMT + PM)
 
-Generic report engine — each report is a `ReportDefinition` (id, scope, filters, columns, optional chart, query function) registered in `artifacts/api-server/src/reports/definitions.ts`. Frontend has one catalog page (`pages/reports/index.tsx`) and one dynamic runner (`pages/reports/[id].tsx`) that renders any report's filters/table/chart from its meta.
+Generic engine: each report is a `ReportDefinition` (id, scope, filters, columns, optional chart, query) registered in `artifacts/api-server/src/reports/definitions.ts`. Single catalog page (`pages/reports/index.tsx`) + dynamic runner (`pages/reports/[id].tsx`).
 
-Endpoints in `routes/reports.ts` (MGMT + PROJECT_MANAGER only):
-- `GET /api/reports` — list available reports for caller's role.
-- `GET /api/reports/options?source=...` — load enum options for filters (e.g. `clients`, `business-units`, `pms`).
-- `GET /api/reports/:id?<filters>` — execute and return `{columns, chart?, rows, totals?}`.
-- `GET /api/reports/:id/export?format=csv|xlsx|pdf&<filters>` — binary export (NOT in OpenAPI; frontend fetches with Bearer header and saves blob). CSV via inline join, XLSX via `exceljs`, PDF via `pdfkit`.
+Endpoints (`routes/reports.ts`, MGMT+PM only):
+- `GET /api/reports` — list reports for caller's role
+- `GET /api/reports/options?source=...` — enum options (clients, business-units, pms, projects — PM-scoped)
+- `GET /api/reports/:id?<filters>` — execute → `{columns, chart?, rows, totals?}`
+- `GET /api/reports/:id/export?format=csv|xlsx|pdf&<filters>` — binary export (NOT in OpenAPI; frontend uses Bearer + blob save). CSV/XLSX cells sanitized against formula injection (`=`, `+`, `-`, `@` prefixes).
 
-PM-scoped reports automatically filter rows where `pmId === req.user.sub`. MANAGEMENT sees everything. Hooks: `useListReports`, `useGetReportOptions` (generated). Report execution uses `useQuery + customFetch` directly because filter params are dynamic.
+PM-scoped reports filter by `pmId === req.user.sub` and intersect any user-supplied `projectId` with the PM's owned set (cannot escape scope).
 
-10 reports shipped:
-1. `profitability-per-project` (profitability) — contract/cost/profit/margin/burn per project
-2. `margin-trend-by-bu` (profitability) — monthly weighted margin by Business Unit, line chart
-3. `profitability-per-client` (profitability) — aggregated by client, bar chart
-4. `resource-utilization` (operations) — per-user planned vs actual mandays, % utilization
-5. `project-burn-rate` (operations) — actual vs planned mandays consumption
-6. `pm-workload` (operations) — projects/contract value per PM by status
-7. `billing-aging` (cashflow) — INVOICED milestones bucketed 0-30 / 31-60 / 61-90 / >90 days
-8. `cash-inflow-forecast` (cashflow) — projected PAID inflow by month from milestone due dates
-9. `expense-report` (operations) — `ProjectExpense` rows with category/status filters
-10. `ppn-detail` (compliance) — per-milestone PPN breakdown for SPT Masa PPN reconciliation
+10 reports shipped: `profitability-per-project`, `margin-trend-by-bu`, `profitability-per-client`, `resource-utilization`, `project-burn-rate`, `pm-workload`, `billing-aging`, `cash-inflow-forecast`, `expense-report`, `ppn-detail` (VAT 11% per invoice).
 
-Sidebar entry "Reports" appears for MGMT and PM. Both `ManagementDashboard` and `PMDashboard` show a primary-tinted shortcut card linking to `/reports`.
+Sidebar entry "Reports" + shortcut card on both ManagementDashboard and PMDashboard.
 
-## Pages & sidebar
+## Role-based access
 
-`/login`, `/` (dashboard), `/projects`, `/projects/new`, `/projects/:id`, `/timesheets`, `/clients`, `/users` (SITE_ADMIN), `/skills` (SITE_ADMIN), `/business-units` (SITE_ADMIN), `/resource-planning` (PM/MGMT), `/settings`.
+Server-side `requireRole` (`middlewares/auth.ts`):
+- **Management**: full
+- **PM**: write own projects/resources, approve own-project timesheets
+- **Sales**: write clients/projects
+- **Konsultan/TW**: log own timesheets only
+- **Admin Project**: documents/invoices
 
-Skill catalog: `Skill` model (`name unique`, optional `category`, `isActive`). CRUD endpoints `GET/POST /api/skills`, `PATCH/DELETE /api/skills/:id`. Business Units: `GET/POST /api/business-units`, `PATCH/DELETE /api/business-units/:id`.
+Data scoping: `GET /api/projects` filters by role (PM `pmId`, Sales `salesId`, Konsultan/TW assigned-or-has-timesheet, MGMT/Admin all). `GET /api/dashboard/resource-utilization-detail` MGMT+PM only (PM sees own-project resources).
+
+**Express gotcha**: never `router.use(requireRole(...))` at top of a sub-router mounted via `router.use(subRouter)` (no path prefix) — Express runs sub-router middleware for every request before path matching, rejecting siblings. Apply per-route or mount under a path prefix.
+
+## Dashboards (`pages/dashboard/index.tsx`)
+
+- **MANAGEMENT** → executive KPIs, profit trend, status breakdown, aging buckets, at-risk alert, `<PMAllocationCard />` (per-PM in-flight/active/observation/draft + total contract, color-coded)
+- **PROJECT_MANAGER** → PM-scoped active projects, approval inbox + Approve All, team utilization, revenue-vs-profit chart, overdue + pending-expense alerts
+- **SALES** → pipeline, revenue-by-client, status pie, 6-month profitability trend
+- **KONSULTAN/TECHNICAL_WRITER** → welcome banner, "Log Today's Time Sheet" CTA, 14-day trend, recent submissions, MyTasksCard
+- **ADMIN_PROJECT** → closing-doc inbox + alert for projects complete >3 days
+- **SITE_ADMIN** → Users + Audit Log management, recent activity feed (exclusive to SITE_ADMIN)
+
+Shared `WelcomeBanner` shows time-aware greeting + role label.
+
+## Pages
+
+`/login`, `/` (dashboard), `/projects`, `/projects/new`, `/projects/:id`, `/timesheets`, `/clients`, `/users` (SITE_ADMIN), `/skills` (SITE_ADMIN), `/business-units` (SITE_ADMIN), `/resource-planning` (PM/MGMT), `/reports` (MGMT/PM), `/vat-recap` (MGMT), `/settings`.
+
+CRUD endpoints: `GET/POST/PATCH/DELETE /api/skills`, `/api/business-units`.
 
 ## Conventions
 
-- All currency formatted as IDR via `formatIDR()` in `pages/lib/format.ts`
-- Frontend imports hooks from `@workspace/api-client-react` (not subpaths)
-- API server uses ESM with `.js` import extensions in TypeScript source
+- Currency via `formatIDR()` in `pages/lib/format.ts`
+- Frontend imports hooks from `@workspace/api-client-react` (no subpaths)
+- API server uses ESM with `.js` import extensions in TS source
 - No emojis in UI
-- Frontend route splitting: `App.tsx` lazy-loads every page except `/login` and `/` (Dashboard) via `React.lazy()` + a single `<Suspense>` boundary; global QueryClient sets `staleTime: 30_000` + `gcTime: 5min`
+- App.tsx lazy-loads every page except `/login` and `/` via `React.lazy()` + single `<Suspense>`. Global QueryClient: `staleTime: 30_000`, `gcTime: 5min`
 
 ## Common tasks
 
 - Regenerate Prisma: `pnpm --filter @workspace/db exec prisma generate`
 - Push schema: `pnpm --filter @workspace/db exec prisma db push`
-- Regenerate API client/zod: `pnpm --filter @workspace/api-spec run codegen` (post-step `lib/api-spec/scripts/fix-zod-barrel.mjs` rewrites `lib/api-zod/src/index.ts` to only re-export `./generated/api`, avoiding the orval-generated barrel ambiguity between zod schemas in `api.ts` and TS interfaces in `generated/types/`)
+- Regenerate API client/zod: `pnpm --filter @workspace/api-spec run codegen` (post-step `lib/api-spec/scripts/fix-zod-barrel.mjs` rewrites `lib/api-zod/src/index.ts` to only re-export `./generated/api`)
 - Reseed DB: `pnpm --filter @workspace/db run seed`
+- Add sample report data to existing DB: `pnpm --filter @workspace/db exec tsx src/sample-report-data.ts` (idempotent — dedups by natural keys)
 
-Seed file: `lib/db/src/seed.ts`. Idempotent `ensureBusinessUnitsAndSkills()` block creates 3 BUs + 11 skills (Web/Mobile/Infra Pentest, Red Team, SWIFT/ISO 27001/SOC 2/PCI DSS Audit, DFIR, Threat Hunting, Technical Writing) and assigns sensible seniority + BU + skills to existing seeded users on every run.
+Seed: `lib/db/src/seed.ts`. Idempotent helpers `ensurePrincipals`, `ensureBusinessUnitsAndSkills`, `ensureSampleReportData` run on every invocation. Sample data adds 2nd PM, billing milestones across all aging buckets, expenses with mixed approval status, recent timesheets — all marked with `[sample]` tag in description for safe re-runs.
 
 ## Seed credentials (password: `password123`)
 
-Main accounts (`@secureprofit.id`):
-- `management@` — Adi Wibowo (MANAGEMENT)
-- `pm@` — Sari Pratiwi (PROJECT_MANAGER)
-- `sales@` — Budi Santoso (SALES)
-- `konsultan@` — Rian Hidayat (KONSULTAN)
-- `konsultan2@` — Dewi Lestari (KONSULTAN)
-- `writer@` — Ayu Wulandari (TECHNICAL_WRITER)
-- `admin@` — Tono Setiawan (ADMIN_PROJECT)
-- `siteadmin@` — Rina Kartika (SITE_ADMIN)
+Main (`@secureprofit.id`): `management@` (Adi Wibowo), `pm@` (Sari Pratiwi), `pm2@` (Yusuf Maulana — added by sample data), `sales@` (Budi Santoso), `konsultan@` (Rian Hidayat), `konsultan2@` (Dewi Lestari), `writer@` (Ayu Wulandari), `admin@` (Tono Setiawan), `siteadmin@` (Rina Kartika).
 
-Principals (`@itsecasia.com`):
-- `principal.kon.h7q4@` — Bayu Prasetyo (PRINCIPAL_KONSULTAN)
-- `principal.tw.m9k2@` — Indah Kusumawardani (PRINCIPAL_TECHNICAL_WRITER)
-- `principal.ap.r3n8@` — Fajar Nugroho (PRINCIPAL_ADMIN_PROJECT)
+Principals (`@itsecasia.com`): `principal.kon.h7q4@` (Bayu Prasetyo), `principal.tw.m9k2@` (Indah Kusumawardani), `principal.ap.r3n8@` (Fajar Nugroho).
