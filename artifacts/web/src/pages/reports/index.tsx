@@ -44,7 +44,7 @@ export default function ReportsIndex() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Reports</h1>
           <p className="text-muted-foreground">
-            10 ready-to-use reports with filters, charts, and CSV / Excel / PDF export.
+            Ready-to-use reports with filters, charts, and CSV / Excel / PDF export.
           </p>
         </div>
 
