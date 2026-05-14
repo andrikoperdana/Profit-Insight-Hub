@@ -86,8 +86,8 @@ router.get("/billing-milestones/vat-recap", async (req, res) => {
   const year = yearParam !== undefined && yearParam !== ""
     ? Number(yearParam)
     : now.getUTCFullYear();
-  if (!isFinite(year) || year < 2000 || year > 2100) {
-    res.status(400).json({ error: "year must be a valid 4-digit year" });
+  if (!Number.isInteger(year) || year < 2000 || year > 2100) {
+    res.status(400).json({ error: "year must be an integer between 2000 and 2100" });
     return;
   }
   const start = new Date(Date.UTC(year, 0, 1));
