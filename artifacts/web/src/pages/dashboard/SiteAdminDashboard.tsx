@@ -1,20 +1,12 @@
 import { Link } from "wouter";
-import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, ScrollText, ChevronRight, Shield, Database, Loader2 } from "lucide-react";
+import { Users, ScrollText, ChevronRight, Shield } from "lucide-react";
 import WelcomeBanner from "@/components/dashboard/WelcomeBanner";
 import { useListUsers } from "@workspace/api-client-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { customFetch } from "@workspace/api-client-react";
 import { formatDistanceToNow } from "date-fns";
-import { useToast } from "@/hooks/use-toast";
-
-interface SeedResponse {
-  ok: boolean;
-  created: { users: number; billingMilestones: number; expenses: number; timesheets: number };
-  totals: { users: number; milestones: number; expenses: number; timesheets: number };
-}
 
 interface AuditLogItem {
   id: string;
@@ -36,35 +28,6 @@ export default function SiteAdminDashboard() {
     queryKey: ["site-admin-recent-audit"],
     queryFn: () => customFetch<AuditResp>("/api/audit-logs?page=1&pageSize=8"),
   });
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
-  const [lastSeed, setLastSeed] = useState<SeedResponse["created"] | null>(null);
-
-  const seedMutation = useMutation<SeedResponse, Error, void>({
-    mutationFn: () =>
-      customFetch<SeedResponse>("/api/admin/seed-sample-data", { method: "POST" }),
-    onSuccess: (data) => {
-      setLastSeed(data.created);
-      const c = data.created;
-      const total = c.users + c.billingMilestones + c.expenses + c.timesheets;
-      toast({
-        title: total === 0 ? "Sample data already present" : "Sample data created",
-        description:
-          total === 0
-            ? "Nothing was added — sample data already exists for all reports."
-            : `Added: ${c.users} user(s), ${c.billingMilestones} billing milestone(s), ${c.expenses} expense(s), ${c.timesheets} timesheet(s).`,
-      });
-      queryClient.invalidateQueries({ queryKey: ["site-admin-recent-audit"] });
-    },
-    onError: (err) => {
-      toast({
-        title: "Seed failed",
-        description: err.message || "Could not seed sample data.",
-        variant: "destructive",
-      });
-    },
-  });
-
   const activeUsers = (users ?? []).filter((u) => u.isActive).length;
   const totalUsers = (users ?? []).length;
 
@@ -125,38 +88,6 @@ export default function SiteAdminDashboard() {
           </CardContent>
         </Card>
       </div>
-
-      <Card>
-        <CardHeader className="flex flex-row items-start justify-between space-y-0">
-          <div>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Database className="h-5 w-5 text-primary" />
-              Seed Sample Report Data
-            </CardTitle>
-            <CardDescription>
-              Populate billing milestones, expenses, and timesheets so all 10 reports show meaningful results. Idempotent — safe to run multiple times.
-            </CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <Button
-            onClick={() => seedMutation.mutate()}
-            disabled={seedMutation.isPending}
-            data-testid="button-seed-sample-data"
-          >
-            {seedMutation.isPending ? (
-              <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Seeding…</>
-            ) : (
-              <>Run Sample Data Seed</>
-            )}
-          </Button>
-          {lastSeed && (
-            <div className="mt-3 text-xs text-muted-foreground">
-              Last run added: {lastSeed.users} user(s), {lastSeed.billingMilestones} milestone(s), {lastSeed.expenses} expense(s), {lastSeed.timesheets} timesheet(s).
-            </div>
-          )}
-        </CardContent>
-      </Card>
 
       <Card>
         <CardHeader>
