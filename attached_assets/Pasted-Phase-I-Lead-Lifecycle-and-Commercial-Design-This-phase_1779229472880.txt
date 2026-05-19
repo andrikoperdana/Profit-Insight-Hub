@@ -1,0 +1,29 @@
+Phase I: Lead Lifecycle and Commercial Design
+This phase tracks external client onboarding operations prior to core system project creation:
+Lead / Inquiry Capture: Inbound prospects are generated from marketing pipelines, referrals, or client requests. The system captures account profiles, core timelines, and preliminary goals.
+CRM Qualification: Account executives assess structural fit, contact validation, and budget health to establish explicit opportunity parameters.
+Gateway - Opportunity Viable? If an opportunity is deemed unviable, it diverts to the *Nurture / Disqualify* pathway to preserve CRM sanitation. If viable, it advances to active model design.
+[PSOhub] Services Scoping and Estimate: Operational subject matter experts formulate delivery structures, estimating project hours, target roles, project phases, and operational delivery boundaries.
+[PSOhub] Build Commercial Model & Proposal Submission: Estimates map to defined pricing contracts (Time & Materials, Fixed Fee, Retainers, or Milestone billing). A formal quote document is created and submitted.
+Gateway - Internal Approval Required: High-risk quotes (based on discount thresholds, gross margins, or resource constraints) route to an orange control checkpoint for rigorous internal review. Standard quotes bypass this block.
+Client Acceptance / Contract Signing: The customer reviews and signs the commercial agreement, marking a confirmed business outcome. This triggers a Sales-to-Delivery Handoff meeting to explicitly pass across terms, baseline budgets, and risks. This handoff executes a systemic trigger to create a new delivery record shell.
+Phase II: Project Initialization and Resource Capacity Check [PSOhub] 
+Once a contract is finalized, operations move entirely into the execution core:
+Create Project Shell: The system automatically builds a delivery project, establishing distinct phases, tracking tasks, target financial thresholds, and baseline billing methods based on the won proposal.
+Governance Setup: Operations management assigns an active Project Manager (PM) and establishes a regular operational delivery review cadence.
+Resource Planning Engine: The PM schedules delivery assets by configuring target project roles, named personnel assignments, expected task durations, and accounting for personal calendar absences.
+Gateway - Capacity Confirmed? The core application evaluates cross-project resource utilization. If capacity is broken (No), the workflow loops back to a *Re-plan / Negotiate* exception cycle to re-align scope, timelines, or staffing levels. If capacity is validated (Yes), the project progresses to *Project Kickoff*, aligning baseline criteria, communication channels, and client delivery acceptance parameters.
+Phase III: Execution, Change Control, and Effort Tracking [PSOhub] 
+This phase covers the day-to-day delivery lifecycle and continuous operational feedback mechanisms:
+Project Delivery Execution: Assigned staff execute tasks, track deliverables, collaborate on timelines, and address active implementation blockers.
+Gateway - Scope / Commercial Change? PMs continuously track execution velocity against the project budget. If a budget variance or client addendum occurs (Yes), the process enters a *Change Control* loop. This module estimates business impacts, secures formal authorizations, and routes a *re-estimate/requote* back to the commercial pipeline to update the project baseline. If execution is normal (No), tracking continues.
+Time and Expense Capture: Delivery resources enter billable or non-billable task entries, hours worked, and project-incurred expenses into the operational logging layer.
+PM / Lead Approval Flow: Logged time cards and expense records are submitted weekly to the PM for validation, audit review, and exception checks.
+Gateway - Approved for Billing and Reporting? If entries contain errors (No), the PM rejects them into a *Correction Cycle* where records are modified and resubmitted. Approved entries (Yes) flow simultaneously into Management Reporting and the Billing Preparation module.
+Phase IV: Billing Preparation, Financial Posting, and Project Closure
+The final operational phase translates delivery milestones into validated accounting entries:
+Billing Preparation: The system aggregates approved time logs, milestone completions, and expense metrics against the active contract rules to calculate Work-in-Progress (WIP), revenue margin metrics, and target backlog parameters.
+Draft Invoice Generation: An automated invoice layout is built, detailing professional services descriptions and accumulated items.
+Invoice Review Control: Finance leads and PMs review the draft invoice to ensure total compliance with localized tax rules, contract terms, gross margin rules, and Purchase Order (PO) balances. Once approved, the *Operational Invoice* is finalized and dispatched to the customer.
+Accounting / ERP Post Sync: The operational billing engine automatically posts data to the Financial ERP (Xero). The ERP manages accounts receivable, general ledger balancing, cash collection application, and aging tracking. Paid cash applications are reported back as *financial status updates*.
+Project Closure Evaluation: Once all deliverables are completed and final invoicing matches contract constraints, a final project completion review captures performance logs, archives system assets, and records client feedback.
