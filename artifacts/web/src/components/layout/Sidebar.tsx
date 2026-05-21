@@ -48,7 +48,7 @@ export default function Sidebar() {
     user?.role === "PROJECT_MANAGER" ||
     user?.role === "SALES";
 
-  const canSeeLeads = user?.role === "MANAGEMENT" || user?.role === "SALES";
+  const canSeeLeads = user?.role === "SALES";
 
   const operations: NavLink[] = [
     ...(canSeeLeads ? [{ href: "/leads", label: "Sales Pipeline", icon: Target }] : []),
