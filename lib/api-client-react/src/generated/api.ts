@@ -37,10 +37,12 @@ import type {
   CreateUserBody,
   DashboardSummary,
   Document,
+  GetInvoicePlanningParams,
   GetReportOptionsParams,
   GetResourcePlanningParams,
   GetVatRecapParams,
   HealthStatus,
+  InvoicePlanningMatrix,
   ListAvailableUsersParams,
   ListProjectsParams,
   ListTimesheetsParams,
@@ -3948,6 +3950,99 @@ export function useGetResourcePlanning<
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetResourcePlanningQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * Returns matrix of projects grouped by PM's Business Unit with billing milestones bucketed across weekly or monthly periods.
+ */
+export const getGetInvoicePlanningUrl = (params?: GetInvoicePlanningParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/invoice-planning?${stringifiedParams}`
+    : `/api/invoice-planning`;
+};
+
+export const getInvoicePlanning = async (
+  params?: GetInvoicePlanningParams,
+  options?: RequestInit,
+): Promise<InvoicePlanningMatrix> => {
+  return customFetch<InvoicePlanningMatrix>(getGetInvoicePlanningUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetInvoicePlanningQueryKey = (
+  params?: GetInvoicePlanningParams,
+) => {
+  return [`/api/invoice-planning`, ...(params ? [params] : [])] as const;
+};
+
+export const getGetInvoicePlanningQueryOptions = <
+  TData = Awaited<ReturnType<typeof getInvoicePlanning>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetInvoicePlanningParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getInvoicePlanning>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetInvoicePlanningQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getInvoicePlanning>>
+  > = ({ signal }) => getInvoicePlanning(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getInvoicePlanning>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetInvoicePlanningQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getInvoicePlanning>>
+>;
+export type GetInvoicePlanningQueryError = ErrorType<unknown>;
+
+export function useGetInvoicePlanning<
+  TData = Awaited<ReturnType<typeof getInvoicePlanning>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetInvoicePlanningParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getInvoicePlanning>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetInvoicePlanningQueryOptions(params, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

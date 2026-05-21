@@ -816,6 +816,71 @@ export interface ResourcePlanningMatrix {
   groups: ResourcePlanningGroup[];
 }
 
+export interface InvoicePlanningCellMilestone {
+  id: string;
+  name: string;
+  status: string;
+  invoiceNumber?: string | null;
+  dueDate?: string | null;
+  dpp: number;
+  vat: number;
+  total: number;
+}
+
+export interface InvoicePlanningCell {
+  periodStart: string;
+  dpp: number;
+  vat: number;
+  total: number;
+  milestones: InvoicePlanningCellMilestone[];
+}
+
+export interface InvoicePlanningRow {
+  projectId: string;
+  projectCode?: string | null;
+  projectName: string;
+  projectStatus: string;
+  clientName?: string | null;
+  pmName?: string | null;
+  cells: InvoicePlanningCell[];
+  rowTotalDpp: number;
+  rowTotalVat: number;
+  rowTotalTotal: number;
+}
+
+export interface InvoicePlanningGroup {
+  businessUnitId: string | null;
+  businessUnitName: string;
+  rows: InvoicePlanningRow[];
+}
+
+export interface InvoicePlanningPeriodTotal {
+  periodStart: string;
+  dpp: number;
+  vat: number;
+  total: number;
+  milestoneCount: number;
+}
+
+export type InvoicePlanningMatrixMode =
+  (typeof InvoicePlanningMatrixMode)[keyof typeof InvoicePlanningMatrixMode];
+
+export const InvoicePlanningMatrixMode = {
+  week: "week",
+  month: "month",
+} as const;
+
+export interface InvoicePlanningMatrix {
+  mode: InvoicePlanningMatrixMode;
+  startDate: string;
+  periods: number;
+  periodStarts: string[];
+  groups: InvoicePlanningGroup[];
+  periodTotals: InvoicePlanningPeriodTotal[];
+  /** Count of milestones (in visible projects) with no due date — not shown in matrix. */
+  unscheduledCount: number;
+}
+
 export interface ReportFilterOption {
   value: string;
   label: string;
@@ -970,6 +1035,31 @@ export type GetResourcePlanningParams = {
    */
   weeks?: number;
 };
+
+export type GetInvoicePlanningParams = {
+  /**
+   * ISO date YYYY-MM-DD; defaults to start of current period
+   */
+  startDate?: string;
+  /**
+   * Number of periods (weekly default 8, monthly default 6)
+   * @minimum 1
+   * @maximum 26
+   */
+  periods?: number;
+  /**
+   * Period granularity (default week)
+   */
+  mode?: GetInvoicePlanningMode;
+};
+
+export type GetInvoicePlanningMode =
+  (typeof GetInvoicePlanningMode)[keyof typeof GetInvoicePlanningMode];
+
+export const GetInvoicePlanningMode = {
+  week: "week",
+  month: "month",
+} as const;
 
 export type ListTimesheetsParams = {
   status?: string;

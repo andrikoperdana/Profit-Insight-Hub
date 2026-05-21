@@ -1575,6 +1575,88 @@ export const GetResourcePlanningResponse = zod.object({
   ),
 });
 
+/**
+ * Returns matrix of projects grouped by PM's Business Unit with billing milestones bucketed across weekly or monthly periods.
+ */
+export const getInvoicePlanningQueryPeriodsMax = 26;
+
+export const GetInvoicePlanningQueryParams = zod.object({
+  startDate: zod.coerce
+    .string()
+    .optional()
+    .describe("ISO date YYYY-MM-DD; defaults to start of current period"),
+  periods: zod.coerce
+    .number()
+    .min(1)
+    .max(getInvoicePlanningQueryPeriodsMax)
+    .optional()
+    .describe("Number of periods (weekly default 8, monthly default 6)"),
+  mode: zod
+    .enum(["week", "month"])
+    .optional()
+    .describe("Period granularity (default week)"),
+});
+
+export const GetInvoicePlanningResponse = zod.object({
+  mode: zod.enum(["week", "month"]),
+  startDate: zod.string(),
+  periods: zod.number(),
+  periodStarts: zod.array(zod.string()),
+  groups: zod.array(
+    zod.object({
+      businessUnitId: zod.string().nullable(),
+      businessUnitName: zod.string(),
+      rows: zod.array(
+        zod.object({
+          projectId: zod.string(),
+          projectCode: zod.string().nullish(),
+          projectName: zod.string(),
+          projectStatus: zod.string(),
+          clientName: zod.string().nullish(),
+          pmName: zod.string().nullish(),
+          cells: zod.array(
+            zod.object({
+              periodStart: zod.string(),
+              dpp: zod.number(),
+              vat: zod.number(),
+              total: zod.number(),
+              milestones: zod.array(
+                zod.object({
+                  id: zod.string(),
+                  name: zod.string(),
+                  status: zod.string(),
+                  invoiceNumber: zod.string().nullish(),
+                  dueDate: zod.string().nullish(),
+                  dpp: zod.number(),
+                  vat: zod.number(),
+                  total: zod.number(),
+                }),
+              ),
+            }),
+          ),
+          rowTotalDpp: zod.number(),
+          rowTotalVat: zod.number(),
+          rowTotalTotal: zod.number(),
+        }),
+      ),
+    }),
+  ),
+  periodTotals: zod.array(
+    zod.object({
+      periodStart: zod.string(),
+      dpp: zod.number(),
+      vat: zod.number(),
+      total: zod.number(),
+      milestoneCount: zod.number(),
+    }),
+  ),
+  unscheduledCount: zod
+    .number()
+    .describe(
+      "Count of milestones (in visible projects) with no due date — not shown in matrix.",
+    ),
+});
+
 export const ListTimesheetsQueryParams = zod.object({
   status: zod.coerce.string().optional(),
   projectId: zod.coerce.string().optional(),

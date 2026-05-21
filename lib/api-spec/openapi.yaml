@@ -730,6 +730,22 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/ResourcePlanningMatrix" }
 
+  /invoice-planning:
+    get:
+      operationId: getInvoicePlanning
+      tags: [invoice-planning]
+      description: Returns matrix of projects grouped by PM's Business Unit with billing milestones bucketed across weekly or monthly periods.
+      parameters:
+        - { name: startDate, in: query, required: false, schema: { type: string }, description: "ISO date YYYY-MM-DD; defaults to start of current period" }
+        - { name: periods,   in: query, required: false, schema: { type: integer, minimum: 1, maximum: 26 }, description: "Number of periods (weekly default 8, monthly default 6)" }
+        - { name: mode,      in: query, required: false, schema: { type: string, enum: [week, month] }, description: "Period granularity (default week)" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/InvoicePlanningMatrix" }
+
   /timesheets:
     get:
       operationId: listTimesheets
@@ -1943,6 +1959,88 @@ components:
         groups:
           type: array
           items: { $ref: "#/components/schemas/ResourcePlanningGroup" }
+
+    InvoicePlanningCellMilestone:
+      type: object
+      required: [id, name, status, dpp, vat, total]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        status: { type: string }
+        invoiceNumber: { type: string, nullable: true }
+        dueDate: { type: string, nullable: true }
+        dpp: { type: number }
+        vat: { type: number }
+        total: { type: number }
+
+    InvoicePlanningCell:
+      type: object
+      required: [periodStart, dpp, vat, total, milestones]
+      properties:
+        periodStart: { type: string }
+        dpp: { type: number }
+        vat: { type: number }
+        total: { type: number }
+        milestones:
+          type: array
+          items: { $ref: "#/components/schemas/InvoicePlanningCellMilestone" }
+
+    InvoicePlanningRow:
+      type: object
+      required: [projectId, projectName, projectStatus, cells, rowTotalDpp, rowTotalVat, rowTotalTotal]
+      properties:
+        projectId: { type: string }
+        projectCode: { type: string, nullable: true }
+        projectName: { type: string }
+        projectStatus: { type: string }
+        clientName: { type: string, nullable: true }
+        pmName: { type: string, nullable: true }
+        cells:
+          type: array
+          items: { $ref: "#/components/schemas/InvoicePlanningCell" }
+        rowTotalDpp: { type: number }
+        rowTotalVat: { type: number }
+        rowTotalTotal: { type: number }
+
+    InvoicePlanningGroup:
+      type: object
+      required: [businessUnitId, businessUnitName, rows]
+      properties:
+        businessUnitId: { type: string, nullable: true }
+        businessUnitName: { type: string }
+        rows:
+          type: array
+          items: { $ref: "#/components/schemas/InvoicePlanningRow" }
+
+    InvoicePlanningPeriodTotal:
+      type: object
+      required: [periodStart, dpp, vat, total, milestoneCount]
+      properties:
+        periodStart: { type: string }
+        dpp: { type: number }
+        vat: { type: number }
+        total: { type: number }
+        milestoneCount: { type: integer }
+
+    InvoicePlanningMatrix:
+      type: object
+      required: [mode, startDate, periods, periodStarts, groups, periodTotals, unscheduledCount]
+      properties:
+        mode: { type: string, enum: [week, month] }
+        startDate: { type: string }
+        periods: { type: integer }
+        periodStarts:
+          type: array
+          items: { type: string }
+        groups:
+          type: array
+          items: { $ref: "#/components/schemas/InvoicePlanningGroup" }
+        periodTotals:
+          type: array
+          items: { $ref: "#/components/schemas/InvoicePlanningPeriodTotal" }
+        unscheduledCount:
+          type: integer
+          description: "Count of milestones (in visible projects) with no due date — not shown in matrix."
 
     ReportFilterOption:
       type: object

@@ -28,6 +28,7 @@ const ExpensesPage = lazy(() => import("@/pages/expenses"));
 const SkillsPage = lazy(() => import("@/pages/skills"));
 const BusinessUnitsPage = lazy(() => import("@/pages/business-units"));
 const ResourcePlanningPage = lazy(() => import("@/pages/resource-planning"));
+const InvoicePlanningPage = lazy(() => import("@/pages/invoice-planning"));
 const VatRecapPage = lazy(() => import("@/pages/vat-recap"));
 const ReportsIndex = lazy(() => import("@/pages/reports"));
 const ReportRunner = lazy(() => import("@/pages/reports/[id]"));
@@ -99,6 +100,7 @@ function Router() {
         <Route path="/skills" component={() => <ProtectedRoute component={SkillsPage} />} />
         <Route path="/business-units" component={() => <ProtectedRoute component={BusinessUnitsPage} />} />
         <Route path="/resource-planning" component={() => <ProtectedRoute component={ResourcePlanningPage} />} />
+        <Route path="/invoice-planning" component={() => <ProtectedRoute component={InvoicePlanningPage} />} />
         <Route path="/vat-recap" component={() => <ProtectedRoute component={VatRecapPage} />} />
         <Route component={NotFound} />
       </Switch>
