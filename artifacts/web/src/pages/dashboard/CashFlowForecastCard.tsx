@@ -66,9 +66,9 @@ export default function CashFlowForecastCard() {
         <div className="flex items-start gap-3">
           <TrendingUp className="h-5 w-5 text-primary mt-1" />
           <div>
-            <CardTitle className="text-base">Cash Flow Forecast (6 bulan)</CardTitle>
+            <CardTitle className="text-base">Cash Flow Forecast (6 months)</CardTitle>
             <CardDescription>
-              Proyeksi penagihan dari billing milestones — kombinasi Paid, Invoiced (outstanding), dan Planned.
+              Projected billing inflow from milestones — Paid, Invoiced (outstanding), and Planned combined.
             </CardDescription>
           </div>
         </div>
@@ -83,7 +83,7 @@ export default function CashFlowForecastCard() {
       <CardContent>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4 text-xs">
           <div className="rounded border border-border bg-muted/20 px-3 py-2">
-            <div className="text-muted-foreground">Total 6 bulan</div>
+            <div className="text-muted-foreground">Total 6 months</div>
             <div className="text-base font-bold">{compactIDR(totals.all)}</div>
           </div>
           <div className="rounded border border-blue-500/30 bg-blue-500/10 px-3 py-2">

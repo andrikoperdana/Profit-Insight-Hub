@@ -4,7 +4,7 @@ import { useAuth } from "@/lib/auth";
 import { useListProjects, ProjectStatus } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Briefcase, Wallet, TrendingUp, Target, Activity, FilePlus2, Clock, AlertTriangle } from "lucide-react";
+import { Briefcase, Wallet, TrendingUp, Target, Activity, FilePlus2, Clock, AlertTriangle, FileText, Kanban } from "lucide-react";
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 function SpkMissingIcon() {
@@ -125,6 +125,31 @@ export default function SalesDashboard() {
           </Link>
         </CardContent>
       </Card>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        <Link href="/leads">
+          <Card className="hover:border-primary/50 transition cursor-pointer border-border" data-testid="card-shortcut-leads">
+            <CardContent className="flex items-center gap-3 py-4">
+              <Kanban className="h-5 w-5 text-primary" />
+              <div>
+                <div className="font-semibold text-sm">Sales Pipeline</div>
+                <div className="text-xs text-muted-foreground">Manage leads from prospect to close</div>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+        <Link href="/invoice-planning">
+          <Card className="hover:border-primary/50 transition cursor-pointer border-border" data-testid="card-shortcut-invoice-planning">
+            <CardContent className="flex items-center gap-3 py-4">
+              <FileText className="h-5 w-5 text-primary" />
+              <div>
+                <div className="font-semibold text-sm">Invoice Planning</div>
+                <div className="text-xs text-muted-foreground">Track billing milestones across your projects</div>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+      </div>
 
       {myDrafts.length > 0 && (
         <Card className="border-purple-500/30 bg-purple-500/5">

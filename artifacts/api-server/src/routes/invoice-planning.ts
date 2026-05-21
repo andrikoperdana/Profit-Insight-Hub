@@ -47,12 +47,13 @@ function splitVat(gross: number, vatPct: number, includesVat: boolean) {
  *   MANAGEMENT      — all projects
  *   PROJECT_MANAGER — projects where pmId === user
  *   ADMIN_PROJECT   — projects where adminProjectId === user
+ *   SALES           — projects where salesId === user
  *   others          — 403
  */
 router.get("/invoice-planning", async (req, res) => {
   const role = req.user!.role;
   const userId = req.user!.sub;
-  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER" && role !== "ADMIN_PROJECT") {
+  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER" && role !== "ADMIN_PROJECT" && role !== "SALES") {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
@@ -87,6 +88,7 @@ router.get("/invoice-planning", async (req, res) => {
   };
   if (role === "PROJECT_MANAGER") projectWhere.pmId = userId;
   else if (role === "ADMIN_PROJECT") projectWhere.adminProjectId = userId;
+  else if (role === "SALES") projectWhere.salesId = userId;
 
   const projects = await prisma.project.findMany({
     where: projectWhere,

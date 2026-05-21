@@ -14,7 +14,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { useAuth } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -143,7 +143,7 @@ export default function LeadsPage() {
 
   async function handleSubmit() {
     if (!form.title.trim()) {
-      toast({ title: "Title wajib diisi", variant: "destructive" });
+      toast({ title: "Title is required", variant: "destructive" });
       return;
     }
     const payload = {
@@ -164,26 +164,26 @@ export default function LeadsPage() {
     try {
       if (editingId) {
         await update.mutateAsync({ id: editingId, data: payload as any });
-        toast({ title: "Lead diperbarui" });
+        toast({ title: "Lead updated" });
       } else {
         await create.mutateAsync({ data: payload as any });
-        toast({ title: "Lead ditambahkan" });
+        toast({ title: "Lead added" });
       }
       setFormOpen(false);
       qc.invalidateQueries({ queryKey: getListLeadsQueryKey() });
     } catch (e: any) {
-      toast({ title: "Gagal menyimpan", description: e?.message, variant: "destructive" });
+      toast({ title: "Failed to save", description: e?.message, variant: "destructive" });
     }
   }
 
   async function handleDelete(l: Lead) {
-    if (!confirm(`Hapus lead "${l.title}"?`)) return;
+    if (!confirm(`Delete lead "${l.title}"?`)) return;
     try {
       await del.mutateAsync({ id: l.id });
       qc.invalidateQueries({ queryKey: getListLeadsQueryKey() });
-      toast({ title: "Lead dihapus" });
+      toast({ title: "Lead deleted" });
     } catch (e: any) {
-      toast({ title: "Gagal menghapus", description: e?.message, variant: "destructive" });
+      toast({ title: "Failed to delete", description: e?.message, variant: "destructive" });
     }
   }
 
@@ -193,7 +193,7 @@ export default function LeadsPage() {
       await update.mutateAsync({ id: l.id, data: { stage: newStage } as any });
       qc.invalidateQueries({ queryKey: getListLeadsQueryKey() });
     } catch (e: any) {
-      toast({ title: "Gagal pindah stage", description: e?.message, variant: "destructive" });
+      toast({ title: "Failed to change stage", description: e?.message, variant: "destructive" });
     }
   }
 
@@ -209,12 +209,12 @@ export default function LeadsPage() {
         id: convertingLead.id,
         data: { code: convertCode } as any,
       });
-      toast({ title: "Lead dikonversi ke project", description: r.projectCode });
+      toast({ title: "Lead converted to project", description: r.projectCode });
       qc.invalidateQueries({ queryKey: getListLeadsQueryKey() });
       setConvertingLead(null);
       navigate(`/projects/${r.projectId}`);
     } catch (e: any) {
-      toast({ title: "Gagal konversi", description: e?.message, variant: "destructive" });
+      toast({ title: "Conversion failed", description: e?.message, variant: "destructive" });
     }
   }
 
@@ -223,7 +223,7 @@ export default function LeadsPage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">Sales Pipeline</h1>
-          <p className="text-sm text-muted-foreground">Kanban lead dari prospek hingga konversi project.</p>
+          <p className="text-sm text-muted-foreground">Kanban board from prospect to project conversion.</p>
         </div>
         <div className="flex items-center gap-3">
           <div className="text-right">
@@ -232,7 +232,7 @@ export default function LeadsPage() {
           </div>
           {canWrite && (
             <Button onClick={openCreate} data-testid="button-new-lead">
-              <Plus className="h-4 w-4 mr-1" /> Lead Baru
+              <Plus className="h-4 w-4 mr-1" /> New Lead
             </Button>
           )}
         </div>
@@ -316,7 +316,7 @@ export default function LeadsPage() {
                 </Card>
               ))}
               {!isLoading && (grouped[s.key] ?? []).length === 0 && (
-                <div className="text-[11px] text-muted-foreground italic">Kosong</div>
+                <div className="text-[11px] text-muted-foreground italic">Empty</div>
               )}
             </div>
           </div>
@@ -326,19 +326,19 @@ export default function LeadsPage() {
       <Dialog open={isFormOpen} onOpenChange={setFormOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{editingId ? "Edit Lead" : "Lead Baru"}</DialogTitle>
+            <DialogTitle>{editingId ? "Edit Lead" : "New Lead"}</DialogTitle>
           </DialogHeader>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div className="md:col-span-2">
-              <Label>Judul Opportunity *</Label>
+              <Label>Opportunity Title *</Label>
               <Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="Pentest Bank XYZ 2026" data-testid="input-lead-title" />
             </div>
             <div>
               <Label>Client (existing)</Label>
               <Select value={form.clientId || "_none"} onValueChange={(v) => setForm({ ...form, clientId: v === "_none" ? "" : v })}>
-                <SelectTrigger><SelectValue placeholder="Pilih client" /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Select client" /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="_none">— Belum ada / Prospek baru —</SelectItem>
+                  <SelectItem value="_none">— None / New prospect —</SelectItem>
                   {(clients ?? []).map((c) => (
                     <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
                   ))}
@@ -346,7 +346,7 @@ export default function LeadsPage() {
               </Select>
             </div>
             <div>
-              <Label>Atau Nama Prospek Baru</Label>
+              <Label>Or New Prospect Name</Label>
               <Input value={form.prospectiveClientName} onChange={(e) => setForm({ ...form, prospectiveClientName: e.target.value })} disabled={!!form.clientId} />
             </div>
             <div>
@@ -361,15 +361,15 @@ export default function LeadsPage() {
               </Select>
             </div>
             <div>
-              <Label>Sumber</Label>
+              <Label>Source</Label>
               <Input value={form.source} onChange={(e) => setForm({ ...form, source: e.target.value })} placeholder="Referral / Web / Cold call" />
             </div>
             <div>
-              <Label>Estimasi Nilai (IDR)</Label>
+              <Label>Estimated Value (IDR)</Label>
               <Input type="number" value={form.estimatedValue} onChange={(e) => setForm({ ...form, estimatedValue: e.target.value })} />
             </div>
             <div>
-              <Label>Probabilitas (%)</Label>
+              <Label>Probability (%)</Label>
               <Input type="number" min={0} max={100} value={form.probability} onChange={(e) => setForm({ ...form, probability: e.target.value })} />
             </div>
             <div>
@@ -377,30 +377,30 @@ export default function LeadsPage() {
               <Input type="date" value={form.expectedCloseDate} onChange={(e) => setForm({ ...form, expectedCloseDate: e.target.value })} />
             </div>
             <div>
-              <Label>Industri</Label>
+              <Label>Industry</Label>
               <Input value={form.industry} onChange={(e) => setForm({ ...form, industry: e.target.value })} />
             </div>
             <div>
-              <Label>Nama Kontak</Label>
+              <Label>Contact Name</Label>
               <Input value={form.contactName} onChange={(e) => setForm({ ...form, contactName: e.target.value })} />
             </div>
             <div>
-              <Label>Email Kontak</Label>
+              <Label>Contact Email</Label>
               <Input type="email" value={form.contactEmail} onChange={(e) => setForm({ ...form, contactEmail: e.target.value })} />
             </div>
             <div className="md:col-span-2">
-              <Label>Telepon</Label>
+              <Label>Phone</Label>
               <Input value={form.contactPhone} onChange={(e) => setForm({ ...form, contactPhone: e.target.value })} />
             </div>
             <div className="md:col-span-2">
-              <Label>Catatan</Label>
+              <Label>Notes</Label>
               <Textarea rows={3} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setFormOpen(false)}>Batal</Button>
+            <Button variant="ghost" onClick={() => setFormOpen(false)}>Cancel</Button>
             <Button onClick={handleSubmit} disabled={create.isPending || update.isPending} data-testid="button-save-lead">
-              Simpan
+              Save
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -409,14 +409,14 @@ export default function LeadsPage() {
       <Dialog open={!!convertingLead} onOpenChange={(o) => !o && setConvertingLead(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Konversi Lead ke Project</DialogTitle>
+            <DialogTitle>Convert Lead to Project</DialogTitle>
           </DialogHeader>
           {convertingLead && (
             <div className="space-y-3">
               <div className="text-sm">
                 <div className="font-medium">{convertingLead.title}</div>
                 <div className="text-muted-foreground">
-                  {convertingLead.clientName || convertingLead.prospectiveClientName || "Prospek baru"} · {formatIDR(convertingLead.estimatedValue)}
+                  {convertingLead.clientName || convertingLead.prospectiveClientName || "New prospect"} · {formatIDR(convertingLead.estimatedValue)}
                 </div>
               </div>
               <div>
@@ -424,15 +424,15 @@ export default function LeadsPage() {
                 <Input value={convertCode} onChange={(e) => setConvertCode(e.target.value)} />
               </div>
               <p className="text-xs text-muted-foreground">
-                Project akan dibuat dengan status DRAFT. Lead akan ditandai WON dan ditautkan ke project ini.
-                {!convertingLead.clientId && " Karena belum ada client terkait, client baru akan dibuat otomatis."}
+                A project will be created with DRAFT status. The lead will be marked WON and linked to this project.
+                {!convertingLead.clientId && " Since no client is linked yet, a new client will be created automatically."}
               </p>
             </div>
           )}
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setConvertingLead(null)}>Batal</Button>
+            <Button variant="ghost" onClick={() => setConvertingLead(null)}>Cancel</Button>
             <Button onClick={handleConvert} disabled={convert.isPending} data-testid="button-confirm-convert">
-              Konversi
+              Convert
             </Button>
           </DialogFooter>
         </DialogContent>

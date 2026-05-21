@@ -55,7 +55,8 @@ export default function InvoicePlanningPage() {
   const allowed =
     user?.role === "MANAGEMENT" ||
     user?.role === "PROJECT_MANAGER" ||
-    user?.role === "ADMIN_PROJECT";
+    user?.role === "ADMIN_PROJECT" ||
+    user?.role === "SALES";
 
   const today = new Date();
   const day = today.getDay();

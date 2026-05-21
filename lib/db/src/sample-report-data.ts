@@ -264,6 +264,173 @@ export async function ensureSampleReportData() {
       else console.log(`Skipping recent timesheets (sample rows already present).`);
     }
   }
+
+  await ensureSampleLeads();
+}
+
+const LEAD_MARKER = "[sample]";
+
+export async function ensureSampleLeads() {
+  const sales = await prisma.user.findUnique({ where: { email: "sales@secureprofit.id" } });
+  if (!sales) return;
+
+  const existing = await prisma.lead.count({ where: { notes: { contains: LEAD_MARKER } } });
+  if (existing > 0) {
+    console.log(`Skipping sample leads (${existing} already present).`);
+    return;
+  }
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const addDays = (n: number) => { const x = new Date(today); x.setDate(x.getDate() + n); return x; };
+
+  const samples = [
+    {
+      title: "Web Application Pentest — Bank Mandiri Digital",
+      stage: "NEW",
+      prospectiveClientName: "Bank Mandiri",
+      industry: "Banking",
+      source: "Referral",
+      estimatedValue: 450_000_000,
+      probability: 20,
+      expectedCloseDate: addDays(60),
+      contactName: "Rahmat Hidayat",
+      contactEmail: "rahmat.hidayat@bankmandiri.example",
+      contactPhone: "+62 811 2233 4455",
+    },
+    {
+      title: "ISO 27001 Gap Assessment — Tokopedia",
+      stage: "QUALIFIED",
+      prospectiveClientName: "Tokopedia",
+      industry: "E-commerce",
+      source: "Inbound web",
+      estimatedValue: 320_000_000,
+      probability: 40,
+      expectedCloseDate: addDays(45),
+      contactName: "Sinta Permata",
+      contactEmail: "sinta.permata@tokopedia.example",
+    },
+    {
+      title: "Red Team Engagement — Telkomsel Core Network",
+      stage: "PROPOSAL",
+      prospectiveClientName: "Telkomsel",
+      industry: "Telecommunications",
+      source: "Existing relationship",
+      estimatedValue: 1_200_000_000,
+      probability: 55,
+      expectedCloseDate: addDays(30),
+      contactName: "Andi Pratama",
+      contactEmail: "andi.pratama@telkomsel.example",
+      contactPhone: "+62 812 3456 7890",
+    },
+    {
+      title: "Threat Hunting Retainer — Pertamina SOC",
+      stage: "NEGOTIATION",
+      prospectiveClientName: "Pertamina",
+      industry: "Energy",
+      source: "Tender",
+      estimatedValue: 2_400_000_000,
+      probability: 70,
+      expectedCloseDate: addDays(21),
+      contactName: "Wahyu Saputra",
+      contactEmail: "wahyu.saputra@pertamina.example",
+    },
+    {
+      title: "Mobile App Pentest — BCA Mobile Banking",
+      stage: "NEGOTIATION",
+      prospectiveClientName: "Bank Central Asia",
+      industry: "Banking",
+      source: "Referral",
+      estimatedValue: 380_000_000,
+      probability: 65,
+      expectedCloseDate: addDays(14),
+      contactName: "Maya Anggraini",
+      contactEmail: "maya.anggraini@bca.example",
+    },
+    {
+      title: "Cloud Security Assessment — Bukalapak AWS",
+      stage: "QUALIFIED",
+      prospectiveClientName: "Bukalapak",
+      industry: "E-commerce",
+      source: "Conference",
+      estimatedValue: 275_000_000,
+      probability: 35,
+      expectedCloseDate: addDays(50),
+      contactName: "Dani Setiawan",
+      contactEmail: "dani.setiawan@bukalapak.example",
+    },
+    {
+      title: "GRC Advisory Project — Asuransi Jiwasraya",
+      stage: "PROPOSAL",
+      prospectiveClientName: "Jiwasraya",
+      industry: "Insurance",
+      source: "Cold outreach",
+      estimatedValue: 540_000_000,
+      probability: 45,
+      expectedCloseDate: addDays(40),
+      contactName: "Lina Marlina",
+      contactEmail: "lina.marlina@jiwasraya.example",
+    },
+    {
+      title: "Annual Pentest — Garuda Indonesia",
+      stage: "WON",
+      prospectiveClientName: "Garuda Indonesia",
+      industry: "Aviation",
+      source: "Existing relationship",
+      estimatedValue: 620_000_000,
+      probability: 100,
+      expectedCloseDate: addDays(-10),
+      contactName: "Bagus Wirawan",
+      contactEmail: "bagus.wirawan@garuda.example",
+    },
+    {
+      title: "Phishing Simulation Program — Gojek HR",
+      stage: "LOST",
+      prospectiveClientName: "Gojek",
+      industry: "Ride-hailing",
+      source: "Inbound web",
+      estimatedValue: 180_000_000,
+      probability: 0,
+      expectedCloseDate: addDays(-20),
+      contactName: "Putri Larasati",
+      contactEmail: "putri.larasati@gojek.example",
+    },
+    {
+      title: "PCI-DSS Readiness — DANA Wallet",
+      stage: "NEW",
+      prospectiveClientName: "DANA",
+      industry: "Fintech",
+      source: "Referral",
+      estimatedValue: 410_000_000,
+      probability: 25,
+      expectedCloseDate: addDays(75),
+      contactName: "Reza Mahendra",
+      contactEmail: "reza.mahendra@dana.example",
+    },
+  ];
+
+  let created = 0;
+  for (const s of samples) {
+    await prisma.lead.create({
+      data: {
+        title: s.title,
+        stage: s.stage as any,
+        prospectiveClientName: s.prospectiveClientName,
+        industry: s.industry,
+        source: s.source,
+        estimatedValue: s.estimatedValue,
+        probability: s.probability,
+        expectedCloseDate: s.expectedCloseDate,
+        contactName: s.contactName,
+        contactEmail: s.contactEmail,
+        contactPhone: (s as any).contactPhone ?? null,
+        ownerId: sales.id,
+        notes: `${LEAD_MARKER} Seeded sample lead for demo purposes.`,
+      },
+    });
+    created++;
+  }
+  console.log(`Created ${created} sample leads.`);
 }
 
 const isDirectRun = (() => {
