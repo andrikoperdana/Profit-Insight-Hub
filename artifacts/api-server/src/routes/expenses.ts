@@ -3,6 +3,7 @@ import { prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
 import { canViewProjectFinancials } from "../lib/serializers.js";
+import { notifyUser } from "../lib/notifications.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -468,6 +469,15 @@ router.post(
       before: { status: before.status },
       after: { status: updated.status, rejectionReason: updated.rejectionReason },
     });
+    if (updated.createdById && updated.createdById !== userId) {
+      await notifyUser({
+        userId: updated.createdById,
+        type: "expense.rejected",
+        title: "Expense rejected",
+        message: `Your ${updated.category} expense on ${before.project.name} (${updated.description}) was rejected: ${reason}`,
+        link: `/projects/${updated.projectId}`,
+      });
+    }
     res.json(serializeExpense(updated as any));
   },
 );

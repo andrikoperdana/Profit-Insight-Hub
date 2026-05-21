@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { prisma, type TimesheetStatus, type Prisma } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
+import { notifyUser } from "../lib/notifications.js";
 
 const MAX_HOURS_PER_ENTRY = 24;
 
@@ -337,6 +338,10 @@ router.post("/timesheets/:id/reject", async (req, res) => {
     res.status(403).json({ error: "Not your project" });
     return;
   }
+  if (existing.status !== "SUBMITTED") {
+    res.status(409).json({ error: `Cannot reject a timesheet in ${existing.status} state` });
+    return;
+  }
   const ts = await prisma.timesheet.update({
     where: { id: req.params.id },
     data: {
@@ -355,6 +360,15 @@ router.post("/timesheets/:id/reject", async (req, res) => {
     before: { status: existing.status },
     after: { status: ts.status, rejectionReason: reason },
   });
+  if (ts.userId !== req.user!.sub) {
+    await notifyUser({
+      userId: ts.userId,
+      type: "timesheet.rejected",
+      title: "Timesheet rejected",
+      message: `Your ${ts.hours}h entry on ${ts.project.name} was rejected: ${reason}`,
+      link: "/timesheets",
+    });
+  }
   res.json(serialize(ts));
 });
 
