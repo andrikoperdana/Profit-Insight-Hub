@@ -1,6 +1,9 @@
 import { useMemo, useState } from "react";
 import { useAuth } from "@/lib/auth";
-import { useGetInvoicePlanning } from "@workspace/api-client-react";
+import { useGetInvoicePlanning, getGetInvoicePlanningQueryKey, customFetch } from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
+import { Sparkles } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -66,8 +69,37 @@ export default function InvoicePlanningPage() {
   const [metric, setMetric] = useState<Metric>("dpp");
   const [startDate, setStartDate] = useState<string>(defaultMonIso);
   const [periods, setPeriods] = useState<number>(8);
+  const [seeding, setSeeding] = useState(false);
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   const { data, isLoading } = useGetInvoicePlanning({ startDate, periods, mode });
+
+  const isManagement = user?.role === "MANAGEMENT";
+  const hasMilestones = useMemo(() => {
+    if (!data) return false;
+    for (const g of data.groups) for (const r of g.rows) for (const c of r.cells) if (c.milestones.length) return true;
+    return false;
+  }, [data]);
+
+  async function handleSeedSample() {
+    if (seeding) return;
+    setSeeding(true);
+    try {
+      const r = (await customFetch("/api/invoice-planning/seed-sample", { method: "POST" })) as {
+        created: number; projectsSeeded: number; skipped: number;
+      };
+      toast({
+        title: "Sample data created",
+        description: `${r.created} milestones across ${r.projectsSeeded} project${r.projectsSeeded === 1 ? "" : "s"}. ${r.skipped} skipped (already had milestones).`,
+      });
+      await queryClient.invalidateQueries({ queryKey: getGetInvoicePlanningQueryKey({ startDate, periods, mode }) });
+    } catch (e: any) {
+      toast({ title: "Failed to seed sample", description: e?.message ?? "Unknown error", variant: "destructive" });
+    } finally {
+      setSeeding(false);
+    }
+  }
 
   const headers = useMemo(() => {
     if (!data?.periodStarts) return [];
@@ -202,10 +234,16 @@ export default function InvoicePlanningPage() {
                 data-testid="input-ip-periods"
               />
             </div>
-            <div className="flex items-end gap-2">
+            <div className="flex items-end gap-2 flex-wrap">
               <Button variant="outline" onClick={handleExport} disabled={!data?.groups?.length} data-testid="button-ip-export">
                 <Download className="h-4 w-4 mr-2" /> Export CSV
               </Button>
+              {isManagement && !hasMilestones && data?.groups?.length ? (
+                <Button onClick={handleSeedSample} disabled={seeding} data-testid="button-ip-seed">
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  {seeding ? "Seeding…" : "Seed Sample Data"}
+                </Button>
+              ) : null}
             </div>
           </div>
         </CardContent>
