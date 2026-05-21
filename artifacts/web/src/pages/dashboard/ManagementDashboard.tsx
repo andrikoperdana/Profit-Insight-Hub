@@ -1,6 +1,6 @@
-import { useGetDashboardSummary, useGetProfitTrend, useGetStatusBreakdown, useGetTopProjects, useGetRecentActivity, useGetUtilization, customFetch, useListUsers, useUpdateProject, getListProjectsQueryKey, UserRole } from "@workspace/api-client-react";
+import { useGetDashboardSummary, useGetProfitTrend, useGetStatusBreakdown, useGetTopProjects, useGetRecentActivity, useGetUtilization, customFetch, useListUsers, useUpdateProject, getListProjectsQueryKey, getListNotificationsQueryKey, UserRole } from "@workspace/api-client-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { formatIDR, formatPct } from "@/lib/format";
 import { Briefcase, Wallet, TrendingUp, Clock, Activity, AlarmClock, Download, UserPlus } from "lucide-react";
@@ -15,6 +15,7 @@ import { SkeletonCard, TableSkeleton } from "@/components/common/Loading";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { MarginBadge } from "@/components/common/Badges";
 import ResourceUtilizationSection from "@/components/dashboard/ResourceUtilizationSection";
+import CashFlowForecastCard from "./CashFlowForecastCard";
 import { formatDistanceToNow } from "date-fns";
 import { Link } from "wouter";
 import { ProjectStatus, useListProjects } from "@workspace/api-client-react";
@@ -38,6 +39,12 @@ function SpkMissingIcon() {
 }
 
 export default function Dashboard() {
+  const dashQc = useQueryClient();
+  useEffect(() => {
+    customFetch("/api/notifications/run-checks", { method: "POST" })
+      .then(() => dashQc.invalidateQueries({ queryKey: getListNotificationsQueryKey() }))
+      .catch(() => {});
+  }, [dashQc]);
   const { data: summary, isLoading: loadingSummary } = useGetDashboardSummary();
   const { data: trend, isLoading: loadingTrend } = useGetProfitTrend();
   const { data: statusBreakdown, isLoading: loadingStatus } = useGetStatusBreakdown();
@@ -230,6 +237,9 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       )}
+
+      {/* Cash Flow Forecast: 6-month billing inflow projection */}
+      <CashFlowForecastCard />
 
       {/* PM Allocation: managers reporting up to PMO */}
       <PMAllocationCard />

@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
+import { runAllNotificationChecks } from "../lib/notificationRules.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -58,6 +59,27 @@ router.post("/notifications/read-all", async (req, res) => {
     data: { readAt: new Date() },
   });
   res.json({ success: true });
+});
+
+/**
+ * Run the notification rules engine. Idempotent (dedup-per-day).
+ * MANAGEMENT or PROJECT_MANAGER can trigger; everyone else gets 403.
+ * Frontend calls this from dashboard load so checks stay fresh without cron.
+ */
+router.post("/notifications/run-checks", async (req, res) => {
+  const role = req.user!.role;
+  if (role !== "MANAGEMENT") {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  try {
+    const result = await runAllNotificationChecks();
+    req.log.info({ result }, "Notification rules engine ran");
+    res.json(result);
+  } catch (err) {
+    req.log.error({ err }, "Notification rules engine failed");
+    res.status(500).json({ error: "Failed to run checks" });
+  }
 });
 
 export default router;

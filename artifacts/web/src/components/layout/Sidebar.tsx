@@ -22,6 +22,7 @@ import {
   Grid3x3,
   FileBarChart,
   Wallet,
+  Target,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -47,7 +48,10 @@ export default function Sidebar() {
     user?.role === "PROJECT_MANAGER" ||
     user?.role === "SALES";
 
+  const canSeeLeads = user?.role === "MANAGEMENT" || user?.role === "SALES";
+
   const operations: NavLink[] = [
+    ...(canSeeLeads ? [{ href: "/leads", label: "Sales Pipeline", icon: Target }] : []),
     ...(isPM ? [{ href: "/approvals", label: "Approval Inbox", icon: Inbox }] : []),
     ...(canViewResources(user?.role) ? [{ href: "/resources", label: "Resources", icon: UserCog }] : []),
     ...(isPM ? [{ href: "/capacity", label: "Capacity Planning", icon: CalendarRange }] : []),

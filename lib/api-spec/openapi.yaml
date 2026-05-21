@@ -267,6 +267,80 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/SuccessMessage" }
 
+  /leads:
+    get:
+      operationId: listLeads
+      tags: [leads]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Lead" }
+    post:
+      operationId: createLead
+      tags: [leads]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateLeadBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Lead" }
+
+  /leads/{id}:
+    patch:
+      operationId: updateLead
+      tags: [leads]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpdateLeadBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Lead" }
+    delete:
+      operationId: deleteLead
+      tags: [leads]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /leads/{id}/convert:
+    post:
+      operationId: convertLead
+      tags: [leads]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ConvertLeadBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ConvertLeadResult" }
+
   /clients:
     get:
       operationId: listClients
@@ -1439,6 +1513,89 @@ components:
         password: { type: string }
         managerId: { type: string, nullable: true }
         principalId: { type: string, nullable: true }
+
+    LeadStage:
+      type: string
+      enum: [NEW, QUALIFIED, PROPOSAL, NEGOTIATION, WON, LOST]
+
+    Lead:
+      type: object
+      required: [id, title, stage, estimatedValue, probability, ownerId, createdAt, updatedAt]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        contactName: { type: string, nullable: true }
+        contactEmail: { type: string, nullable: true }
+        contactPhone: { type: string, nullable: true }
+        clientId: { type: string, nullable: true }
+        clientName: { type: string, nullable: true }
+        prospectiveClientName: { type: string, nullable: true }
+        industry: { type: string, nullable: true }
+        source: { type: string, nullable: true }
+        stage: { $ref: "#/components/schemas/LeadStage" }
+        estimatedValue: { type: number }
+        probability: { type: integer }
+        expectedCloseDate: { type: string, nullable: true }
+        ownerId: { type: string }
+        ownerName: { type: string, nullable: true }
+        notes: { type: string, nullable: true }
+        lostReason: { type: string, nullable: true }
+        convertedProjectId: { type: string, nullable: true }
+        wonAt: { type: string, nullable: true }
+        lostAt: { type: string, nullable: true }
+        createdAt: { type: string }
+        updatedAt: { type: string }
+
+    CreateLeadBody:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string }
+        contactName: { type: string }
+        contactEmail: { type: string }
+        contactPhone: { type: string }
+        clientId: { type: string, nullable: true }
+        prospectiveClientName: { type: string }
+        industry: { type: string }
+        source: { type: string }
+        stage: { $ref: "#/components/schemas/LeadStage" }
+        estimatedValue: { type: number }
+        probability: { type: integer }
+        expectedCloseDate: { type: string, nullable: true }
+        ownerId: { type: string }
+        notes: { type: string }
+
+    UpdateLeadBody:
+      type: object
+      properties:
+        title: { type: string }
+        contactName: { type: string, nullable: true }
+        contactEmail: { type: string, nullable: true }
+        contactPhone: { type: string, nullable: true }
+        clientId: { type: string, nullable: true }
+        prospectiveClientName: { type: string, nullable: true }
+        industry: { type: string, nullable: true }
+        source: { type: string, nullable: true }
+        stage: { $ref: "#/components/schemas/LeadStage" }
+        estimatedValue: { type: number }
+        probability: { type: integer }
+        expectedCloseDate: { type: string, nullable: true }
+        ownerId: { type: string }
+        notes: { type: string, nullable: true }
+        lostReason: { type: string, nullable: true }
+
+    ConvertLeadBody:
+      type: object
+      properties:
+        code: { type: string }
+        clientName: { type: string }
+
+    ConvertLeadResult:
+      type: object
+      required: [projectId, projectCode]
+      properties:
+        projectId: { type: string }
+        projectCode: { type: string }
 
     Client:
       type: object

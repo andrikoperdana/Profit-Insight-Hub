@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -8,6 +8,7 @@ import {
   ProjectStatus,
   customFetch,
   getListTimesheetsQueryKey,
+  getListNotificationsQueryKey,
 } from "@workspace/api-client-react";
 import { useAuth } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
@@ -97,6 +98,11 @@ export default function PMDashboard() {
   const { user } = useAuth();
   const qc = useQueryClient();
   const { toast } = useToast();
+
+  useEffect(() => {
+    // PM cannot trigger run-checks (MGMT-only); just refresh own notifications list.
+    qc.invalidateQueries({ queryKey: getListNotificationsQueryKey() });
+  }, [qc]);
 
   const { data: allProjects, isLoading: loadingProjects } = useListProjects();
   const { data: allExpenses } = useListExpenses();

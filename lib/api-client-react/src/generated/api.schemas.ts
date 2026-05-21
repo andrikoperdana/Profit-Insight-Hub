@@ -353,6 +353,88 @@ export interface UpdateUserBody {
   principalId?: string | null;
 }
 
+export type LeadStage = (typeof LeadStage)[keyof typeof LeadStage];
+
+export const LeadStage = {
+  NEW: "NEW",
+  QUALIFIED: "QUALIFIED",
+  PROPOSAL: "PROPOSAL",
+  NEGOTIATION: "NEGOTIATION",
+  WON: "WON",
+  LOST: "LOST",
+} as const;
+
+export interface Lead {
+  id: string;
+  title: string;
+  contactName?: string | null;
+  contactEmail?: string | null;
+  contactPhone?: string | null;
+  clientId?: string | null;
+  clientName?: string | null;
+  prospectiveClientName?: string | null;
+  industry?: string | null;
+  source?: string | null;
+  stage: LeadStage;
+  estimatedValue: number;
+  probability: number;
+  expectedCloseDate?: string | null;
+  ownerId: string;
+  ownerName?: string | null;
+  notes?: string | null;
+  lostReason?: string | null;
+  convertedProjectId?: string | null;
+  wonAt?: string | null;
+  lostAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateLeadBody {
+  title: string;
+  contactName?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  clientId?: string | null;
+  prospectiveClientName?: string;
+  industry?: string;
+  source?: string;
+  stage?: LeadStage;
+  estimatedValue?: number;
+  probability?: number;
+  expectedCloseDate?: string | null;
+  ownerId?: string;
+  notes?: string;
+}
+
+export interface UpdateLeadBody {
+  title?: string;
+  contactName?: string | null;
+  contactEmail?: string | null;
+  contactPhone?: string | null;
+  clientId?: string | null;
+  prospectiveClientName?: string | null;
+  industry?: string | null;
+  source?: string | null;
+  stage?: LeadStage;
+  estimatedValue?: number;
+  probability?: number;
+  expectedCloseDate?: string | null;
+  ownerId?: string;
+  notes?: string | null;
+  lostReason?: string | null;
+}
+
+export interface ConvertLeadBody {
+  code?: string;
+  clientName?: string;
+}
+
+export interface ConvertLeadResult {
+  projectId: string;
+  projectCode: string;
+}
+
 export interface Client {
   id: string;
   name: string;

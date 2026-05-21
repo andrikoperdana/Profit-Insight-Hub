@@ -109,6 +109,11 @@ export type TaskAssignee = $Result.DefaultSelection<Prisma.$TaskAssigneePayload>
  */
 export type TaskTimeLog = $Result.DefaultSelection<Prisma.$TaskTimeLogPayload>
 /**
+ * Model Lead
+ * 
+ */
+export type Lead = $Result.DefaultSelection<Prisma.$LeadPayload>
+/**
  * Model Notification
  * 
  */
@@ -205,6 +210,18 @@ export const BillingMilestoneStatus: {
 
 export type BillingMilestoneStatus = (typeof BillingMilestoneStatus)[keyof typeof BillingMilestoneStatus]
 
+
+export const LeadStage: {
+  NEW: 'NEW',
+  QUALIFIED: 'QUALIFIED',
+  PROPOSAL: 'PROPOSAL',
+  NEGOTIATION: 'NEGOTIATION',
+  WON: 'WON',
+  LOST: 'LOST'
+};
+
+export type LeadStage = (typeof LeadStage)[keyof typeof LeadStage]
+
 }
 
 export type UserRole = $Enums.UserRole
@@ -238,6 +255,10 @@ export const TaskStatus: typeof $Enums.TaskStatus
 export type BillingMilestoneStatus = $Enums.BillingMilestoneStatus
 
 export const BillingMilestoneStatus: typeof $Enums.BillingMilestoneStatus
+
+export type LeadStage = $Enums.LeadStage
+
+export const LeadStage: typeof $Enums.LeadStage
 
 /**
  * ##  Prisma Client ʲˢ
@@ -551,6 +572,16 @@ export class PrismaClient<
     * ```
     */
   get taskTimeLog(): Prisma.TaskTimeLogDelegate<ExtArgs>;
+
+  /**
+   * `prisma.lead`: Exposes CRUD operations for the **Lead** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Leads
+    * const leads = await prisma.lead.findMany()
+    * ```
+    */
+  get lead(): Prisma.LeadDelegate<ExtArgs>;
 
   /**
    * `prisma.notification`: Exposes CRUD operations for the **Notification** model.
@@ -1021,6 +1052,7 @@ export namespace Prisma {
     BillingMilestone: 'BillingMilestone',
     TaskAssignee: 'TaskAssignee',
     TaskTimeLog: 'TaskTimeLog',
+    Lead: 'Lead',
     Notification: 'Notification'
   };
 
@@ -1037,7 +1069,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "client" | "project" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "notification"
+      modelProps: "user" | "client" | "project" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "notification"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2371,6 +2403,76 @@ export namespace Prisma {
           }
         }
       }
+      Lead: {
+        payload: Prisma.$LeadPayload<ExtArgs>
+        fields: Prisma.LeadFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.LeadFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.LeadFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadPayload>
+          }
+          findFirst: {
+            args: Prisma.LeadFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.LeadFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadPayload>
+          }
+          findMany: {
+            args: Prisma.LeadFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadPayload>[]
+          }
+          create: {
+            args: Prisma.LeadCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadPayload>
+          }
+          createMany: {
+            args: Prisma.LeadCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.LeadCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadPayload>[]
+          }
+          delete: {
+            args: Prisma.LeadDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadPayload>
+          }
+          update: {
+            args: Prisma.LeadUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadPayload>
+          }
+          deleteMany: {
+            args: Prisma.LeadDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.LeadUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.LeadUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadPayload>
+          }
+          aggregate: {
+            args: Prisma.LeadAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLead>
+          }
+          groupBy: {
+            args: Prisma.LeadGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LeadGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.LeadCountArgs<ExtArgs>
+            result: $Utils.Optional<LeadCountAggregateOutputType> | number
+          }
+        }
+      }
       Notification: {
         payload: Prisma.$NotificationPayload<ExtArgs>
         fields: Prisma.NotificationFieldRefs
@@ -2623,6 +2725,7 @@ export namespace Prisma {
     taskAssignments: number
     taskTimeLogs: number
     notifications: number
+    leadsOwned: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2647,6 +2750,7 @@ export namespace Prisma {
     taskAssignments?: boolean | UserCountOutputTypeCountTaskAssignmentsArgs
     taskTimeLogs?: boolean | UserCountOutputTypeCountTaskTimeLogsArgs
     notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
+    leadsOwned?: boolean | UserCountOutputTypeCountLeadsOwnedArgs
   }
 
   // Custom InputTypes
@@ -2807,6 +2911,13 @@ export namespace Prisma {
     where?: NotificationWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountLeadsOwnedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LeadWhereInput
+  }
+
 
   /**
    * Count Type ClientCountOutputType
@@ -2814,10 +2925,12 @@ export namespace Prisma {
 
   export type ClientCountOutputType = {
     projects: number
+    leads: number
   }
 
   export type ClientCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     projects?: boolean | ClientCountOutputTypeCountProjectsArgs
+    leads?: boolean | ClientCountOutputTypeCountLeadsArgs
   }
 
   // Custom InputTypes
@@ -2836,6 +2949,13 @@ export namespace Prisma {
    */
   export type ClientCountOutputTypeCountProjectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectWhereInput
+  }
+
+  /**
+   * ClientCountOutputType without action
+   */
+  export type ClientCountOutputTypeCountLeadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LeadWhereInput
   }
 
 
@@ -3377,6 +3497,7 @@ export namespace Prisma {
     taskAssignments?: boolean | User$taskAssignmentsArgs<ExtArgs>
     taskTimeLogs?: boolean | User$taskTimeLogsArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
+    leadsOwned?: boolean | User$leadsOwnedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3444,6 +3565,7 @@ export namespace Prisma {
     taskAssignments?: boolean | User$taskAssignmentsArgs<ExtArgs>
     taskTimeLogs?: boolean | User$taskTimeLogsArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
+    leadsOwned?: boolean | User$leadsOwnedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3479,6 +3601,7 @@ export namespace Prisma {
       taskAssignments: Prisma.$TaskAssigneePayload<ExtArgs>[]
       taskTimeLogs: Prisma.$TaskTimeLogPayload<ExtArgs>[]
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
+      leadsOwned: Prisma.$LeadPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3884,6 +4007,7 @@ export namespace Prisma {
     taskAssignments<T extends User$taskAssignmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$taskAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskAssigneePayload<ExtArgs>, T, "findMany"> | Null>
     taskTimeLogs<T extends User$taskTimeLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$taskTimeLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskTimeLogPayload<ExtArgs>, T, "findMany"> | Null>
     notifications<T extends User$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany"> | Null>
+    leadsOwned<T extends User$leadsOwnedArgs<ExtArgs> = {}>(args?: Subset<T, User$leadsOwnedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4711,6 +4835,26 @@ export namespace Prisma {
   }
 
   /**
+   * User.leadsOwned
+   */
+  export type User$leadsOwnedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Lead
+     */
+    select?: LeadSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadInclude<ExtArgs> | null
+    where?: LeadWhereInput
+    orderBy?: LeadOrderByWithRelationInput | LeadOrderByWithRelationInput[]
+    cursor?: LeadWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LeadScalarFieldEnum | LeadScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4914,6 +5058,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     projects?: boolean | Client$projectsArgs<ExtArgs>
+    leads?: boolean | Client$leadsArgs<ExtArgs>
     _count?: boolean | ClientCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["client"]>
 
@@ -4941,6 +5086,7 @@ export namespace Prisma {
 
   export type ClientInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     projects?: boolean | Client$projectsArgs<ExtArgs>
+    leads?: boolean | Client$leadsArgs<ExtArgs>
     _count?: boolean | ClientCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ClientIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -4949,6 +5095,7 @@ export namespace Prisma {
     name: "Client"
     objects: {
       projects: Prisma.$ProjectPayload<ExtArgs>[]
+      leads: Prisma.$LeadPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5324,6 +5471,7 @@ export namespace Prisma {
   export interface Prisma__ClientClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     projects<T extends Client$projectsArgs<ExtArgs> = {}>(args?: Subset<T, Client$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany"> | Null>
+    leads<T extends Client$leadsArgs<ExtArgs> = {}>(args?: Subset<T, Client$leadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5692,6 +5840,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProjectScalarFieldEnum | ProjectScalarFieldEnum[]
+  }
+
+  /**
+   * Client.leads
+   */
+  export type Client$leadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Lead
+     */
+    select?: LeadSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadInclude<ExtArgs> | null
+    where?: LeadWhereInput
+    orderBy?: LeadOrderByWithRelationInput | LeadOrderByWithRelationInput[]
+    cursor?: LeadWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LeadScalarFieldEnum | LeadScalarFieldEnum[]
   }
 
   /**
@@ -23638,6 +23806,1202 @@ export namespace Prisma {
 
 
   /**
+   * Model Lead
+   */
+
+  export type AggregateLead = {
+    _count: LeadCountAggregateOutputType | null
+    _avg: LeadAvgAggregateOutputType | null
+    _sum: LeadSumAggregateOutputType | null
+    _min: LeadMinAggregateOutputType | null
+    _max: LeadMaxAggregateOutputType | null
+  }
+
+  export type LeadAvgAggregateOutputType = {
+    estimatedValue: number | null
+    probability: number | null
+  }
+
+  export type LeadSumAggregateOutputType = {
+    estimatedValue: number | null
+    probability: number | null
+  }
+
+  export type LeadMinAggregateOutputType = {
+    id: string | null
+    title: string | null
+    contactName: string | null
+    contactEmail: string | null
+    contactPhone: string | null
+    clientId: string | null
+    prospectiveClientName: string | null
+    industry: string | null
+    source: string | null
+    stage: $Enums.LeadStage | null
+    estimatedValue: number | null
+    probability: number | null
+    expectedCloseDate: Date | null
+    ownerId: string | null
+    notes: string | null
+    lostReason: string | null
+    convertedProjectId: string | null
+    wonAt: Date | null
+    lostAt: Date | null
+    deletedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type LeadMaxAggregateOutputType = {
+    id: string | null
+    title: string | null
+    contactName: string | null
+    contactEmail: string | null
+    contactPhone: string | null
+    clientId: string | null
+    prospectiveClientName: string | null
+    industry: string | null
+    source: string | null
+    stage: $Enums.LeadStage | null
+    estimatedValue: number | null
+    probability: number | null
+    expectedCloseDate: Date | null
+    ownerId: string | null
+    notes: string | null
+    lostReason: string | null
+    convertedProjectId: string | null
+    wonAt: Date | null
+    lostAt: Date | null
+    deletedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type LeadCountAggregateOutputType = {
+    id: number
+    title: number
+    contactName: number
+    contactEmail: number
+    contactPhone: number
+    clientId: number
+    prospectiveClientName: number
+    industry: number
+    source: number
+    stage: number
+    estimatedValue: number
+    probability: number
+    expectedCloseDate: number
+    ownerId: number
+    notes: number
+    lostReason: number
+    convertedProjectId: number
+    wonAt: number
+    lostAt: number
+    deletedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type LeadAvgAggregateInputType = {
+    estimatedValue?: true
+    probability?: true
+  }
+
+  export type LeadSumAggregateInputType = {
+    estimatedValue?: true
+    probability?: true
+  }
+
+  export type LeadMinAggregateInputType = {
+    id?: true
+    title?: true
+    contactName?: true
+    contactEmail?: true
+    contactPhone?: true
+    clientId?: true
+    prospectiveClientName?: true
+    industry?: true
+    source?: true
+    stage?: true
+    estimatedValue?: true
+    probability?: true
+    expectedCloseDate?: true
+    ownerId?: true
+    notes?: true
+    lostReason?: true
+    convertedProjectId?: true
+    wonAt?: true
+    lostAt?: true
+    deletedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type LeadMaxAggregateInputType = {
+    id?: true
+    title?: true
+    contactName?: true
+    contactEmail?: true
+    contactPhone?: true
+    clientId?: true
+    prospectiveClientName?: true
+    industry?: true
+    source?: true
+    stage?: true
+    estimatedValue?: true
+    probability?: true
+    expectedCloseDate?: true
+    ownerId?: true
+    notes?: true
+    lostReason?: true
+    convertedProjectId?: true
+    wonAt?: true
+    lostAt?: true
+    deletedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type LeadCountAggregateInputType = {
+    id?: true
+    title?: true
+    contactName?: true
+    contactEmail?: true
+    contactPhone?: true
+    clientId?: true
+    prospectiveClientName?: true
+    industry?: true
+    source?: true
+    stage?: true
+    estimatedValue?: true
+    probability?: true
+    expectedCloseDate?: true
+    ownerId?: true
+    notes?: true
+    lostReason?: true
+    convertedProjectId?: true
+    wonAt?: true
+    lostAt?: true
+    deletedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type LeadAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Lead to aggregate.
+     */
+    where?: LeadWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Leads to fetch.
+     */
+    orderBy?: LeadOrderByWithRelationInput | LeadOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: LeadWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Leads from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Leads.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Leads
+    **/
+    _count?: true | LeadCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: LeadAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: LeadSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LeadMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LeadMaxAggregateInputType
+  }
+
+  export type GetLeadAggregateType<T extends LeadAggregateArgs> = {
+        [P in keyof T & keyof AggregateLead]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLead[P]>
+      : GetScalarType<T[P], AggregateLead[P]>
+  }
+
+
+
+
+  export type LeadGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LeadWhereInput
+    orderBy?: LeadOrderByWithAggregationInput | LeadOrderByWithAggregationInput[]
+    by: LeadScalarFieldEnum[] | LeadScalarFieldEnum
+    having?: LeadScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LeadCountAggregateInputType | true
+    _avg?: LeadAvgAggregateInputType
+    _sum?: LeadSumAggregateInputType
+    _min?: LeadMinAggregateInputType
+    _max?: LeadMaxAggregateInputType
+  }
+
+  export type LeadGroupByOutputType = {
+    id: string
+    title: string
+    contactName: string | null
+    contactEmail: string | null
+    contactPhone: string | null
+    clientId: string | null
+    prospectiveClientName: string | null
+    industry: string | null
+    source: string | null
+    stage: $Enums.LeadStage
+    estimatedValue: number
+    probability: number
+    expectedCloseDate: Date | null
+    ownerId: string
+    notes: string | null
+    lostReason: string | null
+    convertedProjectId: string | null
+    wonAt: Date | null
+    lostAt: Date | null
+    deletedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: LeadCountAggregateOutputType | null
+    _avg: LeadAvgAggregateOutputType | null
+    _sum: LeadSumAggregateOutputType | null
+    _min: LeadMinAggregateOutputType | null
+    _max: LeadMaxAggregateOutputType | null
+  }
+
+  type GetLeadGroupByPayload<T extends LeadGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LeadGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LeadGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LeadGroupByOutputType[P]>
+            : GetScalarType<T[P], LeadGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type LeadSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    contactName?: boolean
+    contactEmail?: boolean
+    contactPhone?: boolean
+    clientId?: boolean
+    prospectiveClientName?: boolean
+    industry?: boolean
+    source?: boolean
+    stage?: boolean
+    estimatedValue?: boolean
+    probability?: boolean
+    expectedCloseDate?: boolean
+    ownerId?: boolean
+    notes?: boolean
+    lostReason?: boolean
+    convertedProjectId?: boolean
+    wonAt?: boolean
+    lostAt?: boolean
+    deletedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    client?: boolean | Lead$clientArgs<ExtArgs>
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["lead"]>
+
+  export type LeadSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    contactName?: boolean
+    contactEmail?: boolean
+    contactPhone?: boolean
+    clientId?: boolean
+    prospectiveClientName?: boolean
+    industry?: boolean
+    source?: boolean
+    stage?: boolean
+    estimatedValue?: boolean
+    probability?: boolean
+    expectedCloseDate?: boolean
+    ownerId?: boolean
+    notes?: boolean
+    lostReason?: boolean
+    convertedProjectId?: boolean
+    wonAt?: boolean
+    lostAt?: boolean
+    deletedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    client?: boolean | Lead$clientArgs<ExtArgs>
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["lead"]>
+
+  export type LeadSelectScalar = {
+    id?: boolean
+    title?: boolean
+    contactName?: boolean
+    contactEmail?: boolean
+    contactPhone?: boolean
+    clientId?: boolean
+    prospectiveClientName?: boolean
+    industry?: boolean
+    source?: boolean
+    stage?: boolean
+    estimatedValue?: boolean
+    probability?: boolean
+    expectedCloseDate?: boolean
+    ownerId?: boolean
+    notes?: boolean
+    lostReason?: boolean
+    convertedProjectId?: boolean
+    wonAt?: boolean
+    lostAt?: boolean
+    deletedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type LeadInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    client?: boolean | Lead$clientArgs<ExtArgs>
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type LeadIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    client?: boolean | Lead$clientArgs<ExtArgs>
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $LeadPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Lead"
+    objects: {
+      client: Prisma.$ClientPayload<ExtArgs> | null
+      owner: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      title: string
+      contactName: string | null
+      contactEmail: string | null
+      contactPhone: string | null
+      clientId: string | null
+      prospectiveClientName: string | null
+      industry: string | null
+      source: string | null
+      stage: $Enums.LeadStage
+      estimatedValue: number
+      probability: number
+      expectedCloseDate: Date | null
+      ownerId: string
+      notes: string | null
+      lostReason: string | null
+      convertedProjectId: string | null
+      wonAt: Date | null
+      lostAt: Date | null
+      deletedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["lead"]>
+    composites: {}
+  }
+
+  type LeadGetPayload<S extends boolean | null | undefined | LeadDefaultArgs> = $Result.GetResult<Prisma.$LeadPayload, S>
+
+  type LeadCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<LeadFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: LeadCountAggregateInputType | true
+    }
+
+  export interface LeadDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Lead'], meta: { name: 'Lead' } }
+    /**
+     * Find zero or one Lead that matches the filter.
+     * @param {LeadFindUniqueArgs} args - Arguments to find a Lead
+     * @example
+     * // Get one Lead
+     * const lead = await prisma.lead.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends LeadFindUniqueArgs>(args: SelectSubset<T, LeadFindUniqueArgs<ExtArgs>>): Prisma__LeadClient<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Lead that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {LeadFindUniqueOrThrowArgs} args - Arguments to find a Lead
+     * @example
+     * // Get one Lead
+     * const lead = await prisma.lead.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends LeadFindUniqueOrThrowArgs>(args: SelectSubset<T, LeadFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LeadClient<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Lead that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadFindFirstArgs} args - Arguments to find a Lead
+     * @example
+     * // Get one Lead
+     * const lead = await prisma.lead.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends LeadFindFirstArgs>(args?: SelectSubset<T, LeadFindFirstArgs<ExtArgs>>): Prisma__LeadClient<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Lead that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadFindFirstOrThrowArgs} args - Arguments to find a Lead
+     * @example
+     * // Get one Lead
+     * const lead = await prisma.lead.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends LeadFindFirstOrThrowArgs>(args?: SelectSubset<T, LeadFindFirstOrThrowArgs<ExtArgs>>): Prisma__LeadClient<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Leads that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Leads
+     * const leads = await prisma.lead.findMany()
+     * 
+     * // Get first 10 Leads
+     * const leads = await prisma.lead.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const leadWithIdOnly = await prisma.lead.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends LeadFindManyArgs>(args?: SelectSubset<T, LeadFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Lead.
+     * @param {LeadCreateArgs} args - Arguments to create a Lead.
+     * @example
+     * // Create one Lead
+     * const Lead = await prisma.lead.create({
+     *   data: {
+     *     // ... data to create a Lead
+     *   }
+     * })
+     * 
+     */
+    create<T extends LeadCreateArgs>(args: SelectSubset<T, LeadCreateArgs<ExtArgs>>): Prisma__LeadClient<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Leads.
+     * @param {LeadCreateManyArgs} args - Arguments to create many Leads.
+     * @example
+     * // Create many Leads
+     * const lead = await prisma.lead.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends LeadCreateManyArgs>(args?: SelectSubset<T, LeadCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Leads and returns the data saved in the database.
+     * @param {LeadCreateManyAndReturnArgs} args - Arguments to create many Leads.
+     * @example
+     * // Create many Leads
+     * const lead = await prisma.lead.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Leads and only return the `id`
+     * const leadWithIdOnly = await prisma.lead.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends LeadCreateManyAndReturnArgs>(args?: SelectSubset<T, LeadCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a Lead.
+     * @param {LeadDeleteArgs} args - Arguments to delete one Lead.
+     * @example
+     * // Delete one Lead
+     * const Lead = await prisma.lead.delete({
+     *   where: {
+     *     // ... filter to delete one Lead
+     *   }
+     * })
+     * 
+     */
+    delete<T extends LeadDeleteArgs>(args: SelectSubset<T, LeadDeleteArgs<ExtArgs>>): Prisma__LeadClient<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Lead.
+     * @param {LeadUpdateArgs} args - Arguments to update one Lead.
+     * @example
+     * // Update one Lead
+     * const lead = await prisma.lead.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends LeadUpdateArgs>(args: SelectSubset<T, LeadUpdateArgs<ExtArgs>>): Prisma__LeadClient<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Leads.
+     * @param {LeadDeleteManyArgs} args - Arguments to filter Leads to delete.
+     * @example
+     * // Delete a few Leads
+     * const { count } = await prisma.lead.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends LeadDeleteManyArgs>(args?: SelectSubset<T, LeadDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Leads.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Leads
+     * const lead = await prisma.lead.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends LeadUpdateManyArgs>(args: SelectSubset<T, LeadUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Lead.
+     * @param {LeadUpsertArgs} args - Arguments to update or create a Lead.
+     * @example
+     * // Update or create a Lead
+     * const lead = await prisma.lead.upsert({
+     *   create: {
+     *     // ... data to create a Lead
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Lead we want to update
+     *   }
+     * })
+     */
+    upsert<T extends LeadUpsertArgs>(args: SelectSubset<T, LeadUpsertArgs<ExtArgs>>): Prisma__LeadClient<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Leads.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadCountArgs} args - Arguments to filter Leads to count.
+     * @example
+     * // Count the number of Leads
+     * const count = await prisma.lead.count({
+     *   where: {
+     *     // ... the filter for the Leads we want to count
+     *   }
+     * })
+    **/
+    count<T extends LeadCountArgs>(
+      args?: Subset<T, LeadCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LeadCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Lead.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LeadAggregateArgs>(args: Subset<T, LeadAggregateArgs>): Prisma.PrismaPromise<GetLeadAggregateType<T>>
+
+    /**
+     * Group by Lead.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends LeadGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: LeadGroupByArgs['orderBy'] }
+        : { orderBy?: LeadGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, LeadGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLeadGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Lead model
+   */
+  readonly fields: LeadFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Lead.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__LeadClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    client<T extends Lead$clientArgs<ExtArgs> = {}>(args?: Subset<T, Lead$clientArgs<ExtArgs>>): Prisma__ClientClient<$Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    owner<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Lead model
+   */ 
+  interface LeadFieldRefs {
+    readonly id: FieldRef<"Lead", 'String'>
+    readonly title: FieldRef<"Lead", 'String'>
+    readonly contactName: FieldRef<"Lead", 'String'>
+    readonly contactEmail: FieldRef<"Lead", 'String'>
+    readonly contactPhone: FieldRef<"Lead", 'String'>
+    readonly clientId: FieldRef<"Lead", 'String'>
+    readonly prospectiveClientName: FieldRef<"Lead", 'String'>
+    readonly industry: FieldRef<"Lead", 'String'>
+    readonly source: FieldRef<"Lead", 'String'>
+    readonly stage: FieldRef<"Lead", 'LeadStage'>
+    readonly estimatedValue: FieldRef<"Lead", 'Float'>
+    readonly probability: FieldRef<"Lead", 'Int'>
+    readonly expectedCloseDate: FieldRef<"Lead", 'DateTime'>
+    readonly ownerId: FieldRef<"Lead", 'String'>
+    readonly notes: FieldRef<"Lead", 'String'>
+    readonly lostReason: FieldRef<"Lead", 'String'>
+    readonly convertedProjectId: FieldRef<"Lead", 'String'>
+    readonly wonAt: FieldRef<"Lead", 'DateTime'>
+    readonly lostAt: FieldRef<"Lead", 'DateTime'>
+    readonly deletedAt: FieldRef<"Lead", 'DateTime'>
+    readonly createdAt: FieldRef<"Lead", 'DateTime'>
+    readonly updatedAt: FieldRef<"Lead", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Lead findUnique
+   */
+  export type LeadFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Lead
+     */
+    select?: LeadSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadInclude<ExtArgs> | null
+    /**
+     * Filter, which Lead to fetch.
+     */
+    where: LeadWhereUniqueInput
+  }
+
+  /**
+   * Lead findUniqueOrThrow
+   */
+  export type LeadFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Lead
+     */
+    select?: LeadSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadInclude<ExtArgs> | null
+    /**
+     * Filter, which Lead to fetch.
+     */
+    where: LeadWhereUniqueInput
+  }
+
+  /**
+   * Lead findFirst
+   */
+  export type LeadFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Lead
+     */
+    select?: LeadSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadInclude<ExtArgs> | null
+    /**
+     * Filter, which Lead to fetch.
+     */
+    where?: LeadWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Leads to fetch.
+     */
+    orderBy?: LeadOrderByWithRelationInput | LeadOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Leads.
+     */
+    cursor?: LeadWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Leads from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Leads.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Leads.
+     */
+    distinct?: LeadScalarFieldEnum | LeadScalarFieldEnum[]
+  }
+
+  /**
+   * Lead findFirstOrThrow
+   */
+  export type LeadFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Lead
+     */
+    select?: LeadSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadInclude<ExtArgs> | null
+    /**
+     * Filter, which Lead to fetch.
+     */
+    where?: LeadWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Leads to fetch.
+     */
+    orderBy?: LeadOrderByWithRelationInput | LeadOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Leads.
+     */
+    cursor?: LeadWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Leads from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Leads.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Leads.
+     */
+    distinct?: LeadScalarFieldEnum | LeadScalarFieldEnum[]
+  }
+
+  /**
+   * Lead findMany
+   */
+  export type LeadFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Lead
+     */
+    select?: LeadSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadInclude<ExtArgs> | null
+    /**
+     * Filter, which Leads to fetch.
+     */
+    where?: LeadWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Leads to fetch.
+     */
+    orderBy?: LeadOrderByWithRelationInput | LeadOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Leads.
+     */
+    cursor?: LeadWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Leads from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Leads.
+     */
+    skip?: number
+    distinct?: LeadScalarFieldEnum | LeadScalarFieldEnum[]
+  }
+
+  /**
+   * Lead create
+   */
+  export type LeadCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Lead
+     */
+    select?: LeadSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Lead.
+     */
+    data: XOR<LeadCreateInput, LeadUncheckedCreateInput>
+  }
+
+  /**
+   * Lead createMany
+   */
+  export type LeadCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Leads.
+     */
+    data: LeadCreateManyInput | LeadCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Lead createManyAndReturn
+   */
+  export type LeadCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Lead
+     */
+    select?: LeadSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Leads.
+     */
+    data: LeadCreateManyInput | LeadCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Lead update
+   */
+  export type LeadUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Lead
+     */
+    select?: LeadSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Lead.
+     */
+    data: XOR<LeadUpdateInput, LeadUncheckedUpdateInput>
+    /**
+     * Choose, which Lead to update.
+     */
+    where: LeadWhereUniqueInput
+  }
+
+  /**
+   * Lead updateMany
+   */
+  export type LeadUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Leads.
+     */
+    data: XOR<LeadUpdateManyMutationInput, LeadUncheckedUpdateManyInput>
+    /**
+     * Filter which Leads to update
+     */
+    where?: LeadWhereInput
+  }
+
+  /**
+   * Lead upsert
+   */
+  export type LeadUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Lead
+     */
+    select?: LeadSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Lead to update in case it exists.
+     */
+    where: LeadWhereUniqueInput
+    /**
+     * In case the Lead found by the `where` argument doesn't exist, create a new Lead with this data.
+     */
+    create: XOR<LeadCreateInput, LeadUncheckedCreateInput>
+    /**
+     * In case the Lead was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LeadUpdateInput, LeadUncheckedUpdateInput>
+  }
+
+  /**
+   * Lead delete
+   */
+  export type LeadDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Lead
+     */
+    select?: LeadSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadInclude<ExtArgs> | null
+    /**
+     * Filter which Lead to delete.
+     */
+    where: LeadWhereUniqueInput
+  }
+
+  /**
+   * Lead deleteMany
+   */
+  export type LeadDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Leads to delete
+     */
+    where?: LeadWhereInput
+  }
+
+  /**
+   * Lead.client
+   */
+  export type Lead$clientArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Client
+     */
+    select?: ClientSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClientInclude<ExtArgs> | null
+    where?: ClientWhereInput
+  }
+
+  /**
+   * Lead without action
+   */
+  export type LeadDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Lead
+     */
+    select?: LeadSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Notification
    */
 
@@ -24929,6 +26293,34 @@ export namespace Prisma {
   export type TaskTimeLogScalarFieldEnum = (typeof TaskTimeLogScalarFieldEnum)[keyof typeof TaskTimeLogScalarFieldEnum]
 
 
+  export const LeadScalarFieldEnum: {
+    id: 'id',
+    title: 'title',
+    contactName: 'contactName',
+    contactEmail: 'contactEmail',
+    contactPhone: 'contactPhone',
+    clientId: 'clientId',
+    prospectiveClientName: 'prospectiveClientName',
+    industry: 'industry',
+    source: 'source',
+    stage: 'stage',
+    estimatedValue: 'estimatedValue',
+    probability: 'probability',
+    expectedCloseDate: 'expectedCloseDate',
+    ownerId: 'ownerId',
+    notes: 'notes',
+    lostReason: 'lostReason',
+    convertedProjectId: 'convertedProjectId',
+    wonAt: 'wonAt',
+    lostAt: 'lostAt',
+    deletedAt: 'deletedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type LeadScalarFieldEnum = (typeof LeadScalarFieldEnum)[keyof typeof LeadScalarFieldEnum]
+
+
   export const NotificationScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
@@ -25176,6 +26568,20 @@ export namespace Prisma {
    */
   export type ListEnumBillingMilestoneStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BillingMilestoneStatus[]'>
     
+
+
+  /**
+   * Reference to a field of type 'LeadStage'
+   */
+  export type EnumLeadStageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadStage'>
+    
+
+
+  /**
+   * Reference to a field of type 'LeadStage[]'
+   */
+  export type ListEnumLeadStageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadStage[]'>
+    
   /**
    * Deep Input Types
    */
@@ -25224,6 +26630,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeListRelationFilter
     taskTimeLogs?: TaskTimeLogListRelationFilter
     notifications?: NotificationListRelationFilter
+    leadsOwned?: LeadListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -25266,6 +26673,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeOrderByRelationAggregateInput
     taskTimeLogs?: TaskTimeLogOrderByRelationAggregateInput
     notifications?: NotificationOrderByRelationAggregateInput
+    leadsOwned?: LeadOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -25311,6 +26719,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeListRelationFilter
     taskTimeLogs?: TaskTimeLogListRelationFilter
     notifications?: NotificationListRelationFilter
+    leadsOwned?: LeadListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -25370,6 +26779,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Client"> | Date | string
     updatedAt?: DateTimeFilter<"Client"> | Date | string
     projects?: ProjectListRelationFilter
+    leads?: LeadListRelationFilter
   }
 
   export type ClientOrderByWithRelationInput = {
@@ -25382,6 +26792,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     projects?: ProjectOrderByRelationAggregateInput
+    leads?: LeadOrderByRelationAggregateInput
   }
 
   export type ClientWhereUniqueInput = Prisma.AtLeast<{
@@ -25397,6 +26808,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Client"> | Date | string
     updatedAt?: DateTimeFilter<"Client"> | Date | string
     projects?: ProjectListRelationFilter
+    leads?: LeadListRelationFilter
   }, "id">
 
   export type ClientOrderByWithAggregationInput = {
@@ -26920,6 +28332,151 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"TaskTimeLog"> | Date | string
   }
 
+  export type LeadWhereInput = {
+    AND?: LeadWhereInput | LeadWhereInput[]
+    OR?: LeadWhereInput[]
+    NOT?: LeadWhereInput | LeadWhereInput[]
+    id?: StringFilter<"Lead"> | string
+    title?: StringFilter<"Lead"> | string
+    contactName?: StringNullableFilter<"Lead"> | string | null
+    contactEmail?: StringNullableFilter<"Lead"> | string | null
+    contactPhone?: StringNullableFilter<"Lead"> | string | null
+    clientId?: StringNullableFilter<"Lead"> | string | null
+    prospectiveClientName?: StringNullableFilter<"Lead"> | string | null
+    industry?: StringNullableFilter<"Lead"> | string | null
+    source?: StringNullableFilter<"Lead"> | string | null
+    stage?: EnumLeadStageFilter<"Lead"> | $Enums.LeadStage
+    estimatedValue?: FloatFilter<"Lead"> | number
+    probability?: IntFilter<"Lead"> | number
+    expectedCloseDate?: DateTimeNullableFilter<"Lead"> | Date | string | null
+    ownerId?: StringFilter<"Lead"> | string
+    notes?: StringNullableFilter<"Lead"> | string | null
+    lostReason?: StringNullableFilter<"Lead"> | string | null
+    convertedProjectId?: StringNullableFilter<"Lead"> | string | null
+    wonAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
+    lostAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
+    deletedAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
+    createdAt?: DateTimeFilter<"Lead"> | Date | string
+    updatedAt?: DateTimeFilter<"Lead"> | Date | string
+    client?: XOR<ClientNullableRelationFilter, ClientWhereInput> | null
+    owner?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type LeadOrderByWithRelationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    contactName?: SortOrderInput | SortOrder
+    contactEmail?: SortOrderInput | SortOrder
+    contactPhone?: SortOrderInput | SortOrder
+    clientId?: SortOrderInput | SortOrder
+    prospectiveClientName?: SortOrderInput | SortOrder
+    industry?: SortOrderInput | SortOrder
+    source?: SortOrderInput | SortOrder
+    stage?: SortOrder
+    estimatedValue?: SortOrder
+    probability?: SortOrder
+    expectedCloseDate?: SortOrderInput | SortOrder
+    ownerId?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    lostReason?: SortOrderInput | SortOrder
+    convertedProjectId?: SortOrderInput | SortOrder
+    wonAt?: SortOrderInput | SortOrder
+    lostAt?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    client?: ClientOrderByWithRelationInput
+    owner?: UserOrderByWithRelationInput
+  }
+
+  export type LeadWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    convertedProjectId?: string
+    AND?: LeadWhereInput | LeadWhereInput[]
+    OR?: LeadWhereInput[]
+    NOT?: LeadWhereInput | LeadWhereInput[]
+    title?: StringFilter<"Lead"> | string
+    contactName?: StringNullableFilter<"Lead"> | string | null
+    contactEmail?: StringNullableFilter<"Lead"> | string | null
+    contactPhone?: StringNullableFilter<"Lead"> | string | null
+    clientId?: StringNullableFilter<"Lead"> | string | null
+    prospectiveClientName?: StringNullableFilter<"Lead"> | string | null
+    industry?: StringNullableFilter<"Lead"> | string | null
+    source?: StringNullableFilter<"Lead"> | string | null
+    stage?: EnumLeadStageFilter<"Lead"> | $Enums.LeadStage
+    estimatedValue?: FloatFilter<"Lead"> | number
+    probability?: IntFilter<"Lead"> | number
+    expectedCloseDate?: DateTimeNullableFilter<"Lead"> | Date | string | null
+    ownerId?: StringFilter<"Lead"> | string
+    notes?: StringNullableFilter<"Lead"> | string | null
+    lostReason?: StringNullableFilter<"Lead"> | string | null
+    wonAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
+    lostAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
+    deletedAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
+    createdAt?: DateTimeFilter<"Lead"> | Date | string
+    updatedAt?: DateTimeFilter<"Lead"> | Date | string
+    client?: XOR<ClientNullableRelationFilter, ClientWhereInput> | null
+    owner?: XOR<UserRelationFilter, UserWhereInput>
+  }, "id" | "convertedProjectId">
+
+  export type LeadOrderByWithAggregationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    contactName?: SortOrderInput | SortOrder
+    contactEmail?: SortOrderInput | SortOrder
+    contactPhone?: SortOrderInput | SortOrder
+    clientId?: SortOrderInput | SortOrder
+    prospectiveClientName?: SortOrderInput | SortOrder
+    industry?: SortOrderInput | SortOrder
+    source?: SortOrderInput | SortOrder
+    stage?: SortOrder
+    estimatedValue?: SortOrder
+    probability?: SortOrder
+    expectedCloseDate?: SortOrderInput | SortOrder
+    ownerId?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    lostReason?: SortOrderInput | SortOrder
+    convertedProjectId?: SortOrderInput | SortOrder
+    wonAt?: SortOrderInput | SortOrder
+    lostAt?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: LeadCountOrderByAggregateInput
+    _avg?: LeadAvgOrderByAggregateInput
+    _max?: LeadMaxOrderByAggregateInput
+    _min?: LeadMinOrderByAggregateInput
+    _sum?: LeadSumOrderByAggregateInput
+  }
+
+  export type LeadScalarWhereWithAggregatesInput = {
+    AND?: LeadScalarWhereWithAggregatesInput | LeadScalarWhereWithAggregatesInput[]
+    OR?: LeadScalarWhereWithAggregatesInput[]
+    NOT?: LeadScalarWhereWithAggregatesInput | LeadScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Lead"> | string
+    title?: StringWithAggregatesFilter<"Lead"> | string
+    contactName?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    contactEmail?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    contactPhone?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    clientId?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    prospectiveClientName?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    industry?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    source?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    stage?: EnumLeadStageWithAggregatesFilter<"Lead"> | $Enums.LeadStage
+    estimatedValue?: FloatWithAggregatesFilter<"Lead"> | number
+    probability?: IntWithAggregatesFilter<"Lead"> | number
+    expectedCloseDate?: DateTimeNullableWithAggregatesFilter<"Lead"> | Date | string | null
+    ownerId?: StringWithAggregatesFilter<"Lead"> | string
+    notes?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    lostReason?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    convertedProjectId?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    wonAt?: DateTimeNullableWithAggregatesFilter<"Lead"> | Date | string | null
+    lostAt?: DateTimeNullableWithAggregatesFilter<"Lead"> | Date | string | null
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"Lead"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Lead"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Lead"> | Date | string
+  }
+
   export type NotificationWhereInput = {
     AND?: NotificationWhereInput | NotificationWhereInput[]
     OR?: NotificationWhereInput[]
@@ -27027,6 +28584,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -27066,6 +28624,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUpdateInput = {
@@ -27105,6 +28664,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -27144,6 +28704,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -27207,6 +28768,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectCreateNestedManyWithoutClientInput
+    leads?: LeadCreateNestedManyWithoutClientInput
   }
 
   export type ClientUncheckedCreateInput = {
@@ -27219,6 +28781,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutClientInput
+    leads?: LeadUncheckedCreateNestedManyWithoutClientInput
   }
 
   export type ClientUpdateInput = {
@@ -27231,6 +28794,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUpdateManyWithoutClientNestedInput
+    leads?: LeadUpdateManyWithoutClientNestedInput
   }
 
   export type ClientUncheckedUpdateInput = {
@@ -27243,6 +28807,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutClientNestedInput
+    leads?: LeadUncheckedUpdateManyWithoutClientNestedInput
   }
 
   export type ClientCreateManyInput = {
@@ -28869,6 +30434,179 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type LeadCreateInput = {
+    id?: string
+    title: string
+    contactName?: string | null
+    contactEmail?: string | null
+    contactPhone?: string | null
+    prospectiveClientName?: string | null
+    industry?: string | null
+    source?: string | null
+    stage?: $Enums.LeadStage
+    estimatedValue?: number
+    probability?: number
+    expectedCloseDate?: Date | string | null
+    notes?: string | null
+    lostReason?: string | null
+    convertedProjectId?: string | null
+    wonAt?: Date | string | null
+    lostAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    client?: ClientCreateNestedOneWithoutLeadsInput
+    owner: UserCreateNestedOneWithoutLeadsOwnedInput
+  }
+
+  export type LeadUncheckedCreateInput = {
+    id?: string
+    title: string
+    contactName?: string | null
+    contactEmail?: string | null
+    contactPhone?: string | null
+    clientId?: string | null
+    prospectiveClientName?: string | null
+    industry?: string | null
+    source?: string | null
+    stage?: $Enums.LeadStage
+    estimatedValue?: number
+    probability?: number
+    expectedCloseDate?: Date | string | null
+    ownerId: string
+    notes?: string | null
+    lostReason?: string | null
+    convertedProjectId?: string | null
+    wonAt?: Date | string | null
+    lostAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LeadUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    prospectiveClientName?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    estimatedValue?: FloatFieldUpdateOperationsInput | number
+    probability?: IntFieldUpdateOperationsInput | number
+    expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    lostReason?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedProjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    client?: ClientUpdateOneWithoutLeadsNestedInput
+    owner?: UserUpdateOneRequiredWithoutLeadsOwnedNestedInput
+  }
+
+  export type LeadUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    clientId?: NullableStringFieldUpdateOperationsInput | string | null
+    prospectiveClientName?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    estimatedValue?: FloatFieldUpdateOperationsInput | number
+    probability?: IntFieldUpdateOperationsInput | number
+    expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ownerId?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    lostReason?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedProjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeadCreateManyInput = {
+    id?: string
+    title: string
+    contactName?: string | null
+    contactEmail?: string | null
+    contactPhone?: string | null
+    clientId?: string | null
+    prospectiveClientName?: string | null
+    industry?: string | null
+    source?: string | null
+    stage?: $Enums.LeadStage
+    estimatedValue?: number
+    probability?: number
+    expectedCloseDate?: Date | string | null
+    ownerId: string
+    notes?: string | null
+    lostReason?: string | null
+    convertedProjectId?: string | null
+    wonAt?: Date | string | null
+    lostAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LeadUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    prospectiveClientName?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    estimatedValue?: FloatFieldUpdateOperationsInput | number
+    probability?: IntFieldUpdateOperationsInput | number
+    expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    lostReason?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedProjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeadUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    clientId?: NullableStringFieldUpdateOperationsInput | string | null
+    prospectiveClientName?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    estimatedValue?: FloatFieldUpdateOperationsInput | number
+    probability?: IntFieldUpdateOperationsInput | number
+    expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ownerId?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    lostReason?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedProjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type NotificationCreateInput = {
     id?: string
     type: string
@@ -29115,6 +30853,12 @@ export namespace Prisma {
     none?: NotificationWhereInput
   }
 
+  export type LeadListRelationFilter = {
+    every?: LeadWhereInput
+    some?: LeadWhereInput
+    none?: LeadWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -29169,6 +30913,10 @@ export namespace Prisma {
   }
 
   export type NotificationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type LeadOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -30463,6 +32211,113 @@ export namespace Prisma {
     hours?: SortOrder
   }
 
+  export type EnumLeadStageFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeadStage | EnumLeadStageFieldRefInput<$PrismaModel>
+    in?: $Enums.LeadStage[] | ListEnumLeadStageFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeadStage[] | ListEnumLeadStageFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeadStageFilter<$PrismaModel> | $Enums.LeadStage
+  }
+
+  export type ClientNullableRelationFilter = {
+    is?: ClientWhereInput | null
+    isNot?: ClientWhereInput | null
+  }
+
+  export type LeadCountOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    contactName?: SortOrder
+    contactEmail?: SortOrder
+    contactPhone?: SortOrder
+    clientId?: SortOrder
+    prospectiveClientName?: SortOrder
+    industry?: SortOrder
+    source?: SortOrder
+    stage?: SortOrder
+    estimatedValue?: SortOrder
+    probability?: SortOrder
+    expectedCloseDate?: SortOrder
+    ownerId?: SortOrder
+    notes?: SortOrder
+    lostReason?: SortOrder
+    convertedProjectId?: SortOrder
+    wonAt?: SortOrder
+    lostAt?: SortOrder
+    deletedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type LeadAvgOrderByAggregateInput = {
+    estimatedValue?: SortOrder
+    probability?: SortOrder
+  }
+
+  export type LeadMaxOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    contactName?: SortOrder
+    contactEmail?: SortOrder
+    contactPhone?: SortOrder
+    clientId?: SortOrder
+    prospectiveClientName?: SortOrder
+    industry?: SortOrder
+    source?: SortOrder
+    stage?: SortOrder
+    estimatedValue?: SortOrder
+    probability?: SortOrder
+    expectedCloseDate?: SortOrder
+    ownerId?: SortOrder
+    notes?: SortOrder
+    lostReason?: SortOrder
+    convertedProjectId?: SortOrder
+    wonAt?: SortOrder
+    lostAt?: SortOrder
+    deletedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type LeadMinOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    contactName?: SortOrder
+    contactEmail?: SortOrder
+    contactPhone?: SortOrder
+    clientId?: SortOrder
+    prospectiveClientName?: SortOrder
+    industry?: SortOrder
+    source?: SortOrder
+    stage?: SortOrder
+    estimatedValue?: SortOrder
+    probability?: SortOrder
+    expectedCloseDate?: SortOrder
+    ownerId?: SortOrder
+    notes?: SortOrder
+    lostReason?: SortOrder
+    convertedProjectId?: SortOrder
+    wonAt?: SortOrder
+    lostAt?: SortOrder
+    deletedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type LeadSumOrderByAggregateInput = {
+    estimatedValue?: SortOrder
+    probability?: SortOrder
+  }
+
+  export type EnumLeadStageWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeadStage | EnumLeadStageFieldRefInput<$PrismaModel>
+    in?: $Enums.LeadStage[] | ListEnumLeadStageFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeadStage[] | ListEnumLeadStageFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeadStageWithAggregatesFilter<$PrismaModel> | $Enums.LeadStage
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLeadStageFilter<$PrismaModel>
+    _max?: NestedEnumLeadStageFilter<$PrismaModel>
+  }
+
   export type NotificationCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -30661,6 +32516,13 @@ export namespace Prisma {
     connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
   }
 
+  export type LeadCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<LeadCreateWithoutOwnerInput, LeadUncheckedCreateWithoutOwnerInput> | LeadCreateWithoutOwnerInput[] | LeadUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: LeadCreateOrConnectWithoutOwnerInput | LeadCreateOrConnectWithoutOwnerInput[]
+    createMany?: LeadCreateManyOwnerInputEnvelope
+    connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutManagerInput = {
     create?: XOR<UserCreateWithoutManagerInput, UserUncheckedCreateWithoutManagerInput> | UserCreateWithoutManagerInput[] | UserUncheckedCreateWithoutManagerInput[]
     connectOrCreate?: UserCreateOrConnectWithoutManagerInput | UserCreateOrConnectWithoutManagerInput[]
@@ -30806,6 +32668,13 @@ export namespace Prisma {
     connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
     createMany?: NotificationCreateManyUserInputEnvelope
     connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+  }
+
+  export type LeadUncheckedCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<LeadCreateWithoutOwnerInput, LeadUncheckedCreateWithoutOwnerInput> | LeadCreateWithoutOwnerInput[] | LeadUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: LeadCreateOrConnectWithoutOwnerInput | LeadCreateOrConnectWithoutOwnerInput[]
+    createMany?: LeadCreateManyOwnerInputEnvelope
+    connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -31168,6 +33037,20 @@ export namespace Prisma {
     deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
   }
 
+  export type LeadUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<LeadCreateWithoutOwnerInput, LeadUncheckedCreateWithoutOwnerInput> | LeadCreateWithoutOwnerInput[] | LeadUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: LeadCreateOrConnectWithoutOwnerInput | LeadCreateOrConnectWithoutOwnerInput[]
+    upsert?: LeadUpsertWithWhereUniqueWithoutOwnerInput | LeadUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: LeadCreateManyOwnerInputEnvelope
+    set?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    disconnect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    delete?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    update?: LeadUpdateWithWhereUniqueWithoutOwnerInput | LeadUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: LeadUpdateManyWithWhereWithoutOwnerInput | LeadUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: LeadScalarWhereInput | LeadScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutManagerNestedInput = {
     create?: XOR<UserCreateWithoutManagerInput, UserUncheckedCreateWithoutManagerInput> | UserCreateWithoutManagerInput[] | UserUncheckedCreateWithoutManagerInput[]
     connectOrCreate?: UserCreateOrConnectWithoutManagerInput | UserCreateOrConnectWithoutManagerInput[]
@@ -31462,6 +33345,20 @@ export namespace Prisma {
     deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
   }
 
+  export type LeadUncheckedUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<LeadCreateWithoutOwnerInput, LeadUncheckedCreateWithoutOwnerInput> | LeadCreateWithoutOwnerInput[] | LeadUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: LeadCreateOrConnectWithoutOwnerInput | LeadCreateOrConnectWithoutOwnerInput[]
+    upsert?: LeadUpsertWithWhereUniqueWithoutOwnerInput | LeadUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: LeadCreateManyOwnerInputEnvelope
+    set?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    disconnect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    delete?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    update?: LeadUpdateWithWhereUniqueWithoutOwnerInput | LeadUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: LeadUpdateManyWithWhereWithoutOwnerInput | LeadUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: LeadScalarWhereInput | LeadScalarWhereInput[]
+  }
+
   export type ProjectCreateNestedManyWithoutClientInput = {
     create?: XOR<ProjectCreateWithoutClientInput, ProjectUncheckedCreateWithoutClientInput> | ProjectCreateWithoutClientInput[] | ProjectUncheckedCreateWithoutClientInput[]
     connectOrCreate?: ProjectCreateOrConnectWithoutClientInput | ProjectCreateOrConnectWithoutClientInput[]
@@ -31469,11 +33366,25 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
   }
 
+  export type LeadCreateNestedManyWithoutClientInput = {
+    create?: XOR<LeadCreateWithoutClientInput, LeadUncheckedCreateWithoutClientInput> | LeadCreateWithoutClientInput[] | LeadUncheckedCreateWithoutClientInput[]
+    connectOrCreate?: LeadCreateOrConnectWithoutClientInput | LeadCreateOrConnectWithoutClientInput[]
+    createMany?: LeadCreateManyClientInputEnvelope
+    connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+  }
+
   export type ProjectUncheckedCreateNestedManyWithoutClientInput = {
     create?: XOR<ProjectCreateWithoutClientInput, ProjectUncheckedCreateWithoutClientInput> | ProjectCreateWithoutClientInput[] | ProjectUncheckedCreateWithoutClientInput[]
     connectOrCreate?: ProjectCreateOrConnectWithoutClientInput | ProjectCreateOrConnectWithoutClientInput[]
     createMany?: ProjectCreateManyClientInputEnvelope
     connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+  }
+
+  export type LeadUncheckedCreateNestedManyWithoutClientInput = {
+    create?: XOR<LeadCreateWithoutClientInput, LeadUncheckedCreateWithoutClientInput> | LeadCreateWithoutClientInput[] | LeadUncheckedCreateWithoutClientInput[]
+    connectOrCreate?: LeadCreateOrConnectWithoutClientInput | LeadCreateOrConnectWithoutClientInput[]
+    createMany?: LeadCreateManyClientInputEnvelope
+    connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
   }
 
   export type ProjectUpdateManyWithoutClientNestedInput = {
@@ -31490,6 +33401,20 @@ export namespace Prisma {
     deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
   }
 
+  export type LeadUpdateManyWithoutClientNestedInput = {
+    create?: XOR<LeadCreateWithoutClientInput, LeadUncheckedCreateWithoutClientInput> | LeadCreateWithoutClientInput[] | LeadUncheckedCreateWithoutClientInput[]
+    connectOrCreate?: LeadCreateOrConnectWithoutClientInput | LeadCreateOrConnectWithoutClientInput[]
+    upsert?: LeadUpsertWithWhereUniqueWithoutClientInput | LeadUpsertWithWhereUniqueWithoutClientInput[]
+    createMany?: LeadCreateManyClientInputEnvelope
+    set?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    disconnect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    delete?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    update?: LeadUpdateWithWhereUniqueWithoutClientInput | LeadUpdateWithWhereUniqueWithoutClientInput[]
+    updateMany?: LeadUpdateManyWithWhereWithoutClientInput | LeadUpdateManyWithWhereWithoutClientInput[]
+    deleteMany?: LeadScalarWhereInput | LeadScalarWhereInput[]
+  }
+
   export type ProjectUncheckedUpdateManyWithoutClientNestedInput = {
     create?: XOR<ProjectCreateWithoutClientInput, ProjectUncheckedCreateWithoutClientInput> | ProjectCreateWithoutClientInput[] | ProjectUncheckedCreateWithoutClientInput[]
     connectOrCreate?: ProjectCreateOrConnectWithoutClientInput | ProjectCreateOrConnectWithoutClientInput[]
@@ -31502,6 +33427,20 @@ export namespace Prisma {
     update?: ProjectUpdateWithWhereUniqueWithoutClientInput | ProjectUpdateWithWhereUniqueWithoutClientInput[]
     updateMany?: ProjectUpdateManyWithWhereWithoutClientInput | ProjectUpdateManyWithWhereWithoutClientInput[]
     deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
+  }
+
+  export type LeadUncheckedUpdateManyWithoutClientNestedInput = {
+    create?: XOR<LeadCreateWithoutClientInput, LeadUncheckedCreateWithoutClientInput> | LeadCreateWithoutClientInput[] | LeadUncheckedCreateWithoutClientInput[]
+    connectOrCreate?: LeadCreateOrConnectWithoutClientInput | LeadCreateOrConnectWithoutClientInput[]
+    upsert?: LeadUpsertWithWhereUniqueWithoutClientInput | LeadUpsertWithWhereUniqueWithoutClientInput[]
+    createMany?: LeadCreateManyClientInputEnvelope
+    set?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    disconnect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    delete?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    update?: LeadUpdateWithWhereUniqueWithoutClientInput | LeadUpdateWithWhereUniqueWithoutClientInput[]
+    updateMany?: LeadUpdateManyWithWhereWithoutClientInput | LeadUpdateManyWithWhereWithoutClientInput[]
+    deleteMany?: LeadScalarWhereInput | LeadScalarWhereInput[]
   }
 
   export type ClientCreateNestedOneWithoutProjectsInput = {
@@ -32724,6 +34663,40 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTaskTimeLogsInput, UserUpdateWithoutTaskTimeLogsInput>, UserUncheckedUpdateWithoutTaskTimeLogsInput>
   }
 
+  export type ClientCreateNestedOneWithoutLeadsInput = {
+    create?: XOR<ClientCreateWithoutLeadsInput, ClientUncheckedCreateWithoutLeadsInput>
+    connectOrCreate?: ClientCreateOrConnectWithoutLeadsInput
+    connect?: ClientWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutLeadsOwnedInput = {
+    create?: XOR<UserCreateWithoutLeadsOwnedInput, UserUncheckedCreateWithoutLeadsOwnedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutLeadsOwnedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumLeadStageFieldUpdateOperationsInput = {
+    set?: $Enums.LeadStage
+  }
+
+  export type ClientUpdateOneWithoutLeadsNestedInput = {
+    create?: XOR<ClientCreateWithoutLeadsInput, ClientUncheckedCreateWithoutLeadsInput>
+    connectOrCreate?: ClientCreateOrConnectWithoutLeadsInput
+    upsert?: ClientUpsertWithoutLeadsInput
+    disconnect?: ClientWhereInput | boolean
+    delete?: ClientWhereInput | boolean
+    connect?: ClientWhereUniqueInput
+    update?: XOR<XOR<ClientUpdateToOneWithWhereWithoutLeadsInput, ClientUpdateWithoutLeadsInput>, ClientUncheckedUpdateWithoutLeadsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutLeadsOwnedNestedInput = {
+    create?: XOR<UserCreateWithoutLeadsOwnedInput, UserUncheckedCreateWithoutLeadsOwnedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutLeadsOwnedInput
+    upsert?: UserUpsertWithoutLeadsOwnedInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLeadsOwnedInput, UserUpdateWithoutLeadsOwnedInput>, UserUncheckedUpdateWithoutLeadsOwnedInput>
+  }
+
   export type UserCreateNestedOneWithoutNotificationsInput = {
     create?: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
     connectOrCreate?: UserCreateOrConnectWithoutNotificationsInput
@@ -33135,6 +35108,23 @@ export namespace Prisma {
     _max?: NestedEnumBillingMilestoneStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumLeadStageFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeadStage | EnumLeadStageFieldRefInput<$PrismaModel>
+    in?: $Enums.LeadStage[] | ListEnumLeadStageFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeadStage[] | ListEnumLeadStageFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeadStageFilter<$PrismaModel> | $Enums.LeadStage
+  }
+
+  export type NestedEnumLeadStageWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeadStage | EnumLeadStageFieldRefInput<$PrismaModel>
+    in?: $Enums.LeadStage[] | ListEnumLeadStageFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeadStage[] | ListEnumLeadStageFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeadStageWithAggregatesFilter<$PrismaModel> | $Enums.LeadStage
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLeadStageFilter<$PrismaModel>
+    _max?: NestedEnumLeadStageFilter<$PrismaModel>
+  }
+
   export type BusinessUnitCreateWithoutUsersInput = {
     id?: string
     name: string
@@ -33194,6 +35184,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutReportsInput = {
@@ -33232,6 +35223,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutReportsInput = {
@@ -33275,6 +35267,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutManagerInput = {
@@ -33313,6 +35306,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutManagerInput = {
@@ -33361,6 +35355,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutSuperviseesInput = {
@@ -33399,6 +35394,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutSuperviseesInput = {
@@ -33442,6 +35438,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutPrincipalInput = {
@@ -33480,6 +35477,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutPrincipalInput = {
@@ -34390,6 +36388,64 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type LeadCreateWithoutOwnerInput = {
+    id?: string
+    title: string
+    contactName?: string | null
+    contactEmail?: string | null
+    contactPhone?: string | null
+    prospectiveClientName?: string | null
+    industry?: string | null
+    source?: string | null
+    stage?: $Enums.LeadStage
+    estimatedValue?: number
+    probability?: number
+    expectedCloseDate?: Date | string | null
+    notes?: string | null
+    lostReason?: string | null
+    convertedProjectId?: string | null
+    wonAt?: Date | string | null
+    lostAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    client?: ClientCreateNestedOneWithoutLeadsInput
+  }
+
+  export type LeadUncheckedCreateWithoutOwnerInput = {
+    id?: string
+    title: string
+    contactName?: string | null
+    contactEmail?: string | null
+    contactPhone?: string | null
+    clientId?: string | null
+    prospectiveClientName?: string | null
+    industry?: string | null
+    source?: string | null
+    stage?: $Enums.LeadStage
+    estimatedValue?: number
+    probability?: number
+    expectedCloseDate?: Date | string | null
+    notes?: string | null
+    lostReason?: string | null
+    convertedProjectId?: string | null
+    wonAt?: Date | string | null
+    lostAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LeadCreateOrConnectWithoutOwnerInput = {
+    where: LeadWhereUniqueInput
+    create: XOR<LeadCreateWithoutOwnerInput, LeadUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type LeadCreateManyOwnerInputEnvelope = {
+    data: LeadCreateManyOwnerInput | LeadCreateManyOwnerInput[]
+    skipDuplicates?: boolean
+  }
+
   export type BusinessUnitUpsertWithoutUsersInput = {
     update: XOR<BusinessUnitUpdateWithoutUsersInput, BusinessUnitUncheckedUpdateWithoutUsersInput>
     create: XOR<BusinessUnitCreateWithoutUsersInput, BusinessUnitUncheckedCreateWithoutUsersInput>
@@ -34466,6 +36522,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReportsInput = {
@@ -34504,6 +36561,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutManagerInput = {
@@ -34590,6 +36648,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSuperviseesInput = {
@@ -34628,6 +36687,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutPrincipalInput = {
@@ -35155,6 +37215,50 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Notification"> | Date | string
   }
 
+  export type LeadUpsertWithWhereUniqueWithoutOwnerInput = {
+    where: LeadWhereUniqueInput
+    update: XOR<LeadUpdateWithoutOwnerInput, LeadUncheckedUpdateWithoutOwnerInput>
+    create: XOR<LeadCreateWithoutOwnerInput, LeadUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type LeadUpdateWithWhereUniqueWithoutOwnerInput = {
+    where: LeadWhereUniqueInput
+    data: XOR<LeadUpdateWithoutOwnerInput, LeadUncheckedUpdateWithoutOwnerInput>
+  }
+
+  export type LeadUpdateManyWithWhereWithoutOwnerInput = {
+    where: LeadScalarWhereInput
+    data: XOR<LeadUpdateManyMutationInput, LeadUncheckedUpdateManyWithoutOwnerInput>
+  }
+
+  export type LeadScalarWhereInput = {
+    AND?: LeadScalarWhereInput | LeadScalarWhereInput[]
+    OR?: LeadScalarWhereInput[]
+    NOT?: LeadScalarWhereInput | LeadScalarWhereInput[]
+    id?: StringFilter<"Lead"> | string
+    title?: StringFilter<"Lead"> | string
+    contactName?: StringNullableFilter<"Lead"> | string | null
+    contactEmail?: StringNullableFilter<"Lead"> | string | null
+    contactPhone?: StringNullableFilter<"Lead"> | string | null
+    clientId?: StringNullableFilter<"Lead"> | string | null
+    prospectiveClientName?: StringNullableFilter<"Lead"> | string | null
+    industry?: StringNullableFilter<"Lead"> | string | null
+    source?: StringNullableFilter<"Lead"> | string | null
+    stage?: EnumLeadStageFilter<"Lead"> | $Enums.LeadStage
+    estimatedValue?: FloatFilter<"Lead"> | number
+    probability?: IntFilter<"Lead"> | number
+    expectedCloseDate?: DateTimeNullableFilter<"Lead"> | Date | string | null
+    ownerId?: StringFilter<"Lead"> | string
+    notes?: StringNullableFilter<"Lead"> | string | null
+    lostReason?: StringNullableFilter<"Lead"> | string | null
+    convertedProjectId?: StringNullableFilter<"Lead"> | string | null
+    wonAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
+    lostAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
+    deletedAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
+    createdAt?: DateTimeFilter<"Lead"> | Date | string
+    updatedAt?: DateTimeFilter<"Lead"> | Date | string
+  }
+
   export type ProjectCreateWithoutClientInput = {
     id?: string
     code: string
@@ -35243,6 +37347,64 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type LeadCreateWithoutClientInput = {
+    id?: string
+    title: string
+    contactName?: string | null
+    contactEmail?: string | null
+    contactPhone?: string | null
+    prospectiveClientName?: string | null
+    industry?: string | null
+    source?: string | null
+    stage?: $Enums.LeadStage
+    estimatedValue?: number
+    probability?: number
+    expectedCloseDate?: Date | string | null
+    notes?: string | null
+    lostReason?: string | null
+    convertedProjectId?: string | null
+    wonAt?: Date | string | null
+    lostAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutLeadsOwnedInput
+  }
+
+  export type LeadUncheckedCreateWithoutClientInput = {
+    id?: string
+    title: string
+    contactName?: string | null
+    contactEmail?: string | null
+    contactPhone?: string | null
+    prospectiveClientName?: string | null
+    industry?: string | null
+    source?: string | null
+    stage?: $Enums.LeadStage
+    estimatedValue?: number
+    probability?: number
+    expectedCloseDate?: Date | string | null
+    ownerId: string
+    notes?: string | null
+    lostReason?: string | null
+    convertedProjectId?: string | null
+    wonAt?: Date | string | null
+    lostAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LeadCreateOrConnectWithoutClientInput = {
+    where: LeadWhereUniqueInput
+    create: XOR<LeadCreateWithoutClientInput, LeadUncheckedCreateWithoutClientInput>
+  }
+
+  export type LeadCreateManyClientInputEnvelope = {
+    data: LeadCreateManyClientInput | LeadCreateManyClientInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ProjectUpsertWithWhereUniqueWithoutClientInput = {
     where: ProjectWhereUniqueInput
     update: XOR<ProjectUpdateWithoutClientInput, ProjectUncheckedUpdateWithoutClientInput>
@@ -35259,6 +37421,22 @@ export namespace Prisma {
     data: XOR<ProjectUpdateManyMutationInput, ProjectUncheckedUpdateManyWithoutClientInput>
   }
 
+  export type LeadUpsertWithWhereUniqueWithoutClientInput = {
+    where: LeadWhereUniqueInput
+    update: XOR<LeadUpdateWithoutClientInput, LeadUncheckedUpdateWithoutClientInput>
+    create: XOR<LeadCreateWithoutClientInput, LeadUncheckedCreateWithoutClientInput>
+  }
+
+  export type LeadUpdateWithWhereUniqueWithoutClientInput = {
+    where: LeadWhereUniqueInput
+    data: XOR<LeadUpdateWithoutClientInput, LeadUncheckedUpdateWithoutClientInput>
+  }
+
+  export type LeadUpdateManyWithWhereWithoutClientInput = {
+    where: LeadScalarWhereInput
+    data: XOR<LeadUpdateManyMutationInput, LeadUncheckedUpdateManyWithoutClientInput>
+  }
+
   export type ClientCreateWithoutProjectsInput = {
     id?: string
     name: string
@@ -35268,6 +37446,7 @@ export namespace Prisma {
     industry?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    leads?: LeadCreateNestedManyWithoutClientInput
   }
 
   export type ClientUncheckedCreateWithoutProjectsInput = {
@@ -35279,6 +37458,7 @@ export namespace Prisma {
     industry?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    leads?: LeadUncheckedCreateNestedManyWithoutClientInput
   }
 
   export type ClientCreateOrConnectWithoutProjectsInput = {
@@ -35322,6 +37502,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutProjectsAsSalesInput = {
@@ -35360,6 +37541,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutProjectsAsSalesInput = {
@@ -35403,6 +37585,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutProjectsAsPmInput = {
@@ -35441,6 +37624,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutProjectsAsPmInput = {
@@ -35484,6 +37668,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutProjectsAsTwInput = {
@@ -35522,6 +37707,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutProjectsAsTwInput = {
@@ -35565,6 +37751,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutProjectsAsAdminInput = {
@@ -35603,6 +37790,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutProjectsAsAdminInput = {
@@ -35936,6 +38124,7 @@ export namespace Prisma {
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leads?: LeadUpdateManyWithoutClientNestedInput
   }
 
   export type ClientUncheckedUpdateWithoutProjectsInput = {
@@ -35947,6 +38136,7 @@ export namespace Prisma {
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leads?: LeadUncheckedUpdateManyWithoutClientNestedInput
   }
 
   export type UserUpsertWithoutProjectsAsSalesInput = {
@@ -35996,6 +38186,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsAsSalesInput = {
@@ -36034,6 +38225,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUpsertWithoutProjectsAsPmInput = {
@@ -36083,6 +38275,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsAsPmInput = {
@@ -36121,6 +38314,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUpsertWithoutProjectsAsTwInput = {
@@ -36170,6 +38364,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsAsTwInput = {
@@ -36208,6 +38403,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUpsertWithoutProjectsAsAdminInput = {
@@ -36257,6 +38453,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsAsAdminInput = {
@@ -36295,6 +38492,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type ProjectResourceUpsertWithWhereUniqueWithoutProjectInput = {
@@ -36667,6 +38865,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -36705,6 +38904,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -36759,6 +38959,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -36797,6 +38998,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type ProjectCreateWithoutResourcesInput = {
@@ -36918,6 +39120,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutResourcesInput = {
@@ -36956,6 +39159,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutResourcesInput = {
@@ -36999,6 +39203,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutProposedResourcesInput = {
@@ -37037,6 +39242,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutProposedResourcesInput = {
@@ -37180,6 +39386,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutResourcesInput = {
@@ -37218,6 +39425,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUpsertWithoutProposedResourcesInput = {
@@ -37267,6 +39475,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProposedResourcesInput = {
@@ -37305,6 +39514,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type ProjectCreateWithoutTimesheetsInput = {
@@ -37426,6 +39636,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutTimesheetsInput = {
@@ -37464,6 +39675,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutTimesheetsInput = {
@@ -37556,6 +39768,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutApprovedTimesheetsInput = {
@@ -37594,6 +39807,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutApprovedTimesheetsInput = {
@@ -37737,6 +39951,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTimesheetsInput = {
@@ -37775,6 +39990,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type TaskUpsertWithoutTimesheetsInput = {
@@ -37879,6 +40095,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutApprovedTimesheetsInput = {
@@ -37917,6 +40134,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type ProjectCreateWithoutDocumentsInput = {
@@ -38038,6 +40256,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutDocumentsUploadedInput = {
@@ -38076,6 +40295,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutDocumentsUploadedInput = {
@@ -38219,6 +40439,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDocumentsUploadedInput = {
@@ -38257,6 +40478,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type ProjectCreateWithoutExpensesInput = {
@@ -38378,6 +40600,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutApprovedExpensesInput = {
@@ -38416,6 +40639,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutApprovedExpensesInput = {
@@ -38459,6 +40683,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutProjectExpensesInput = {
@@ -38497,6 +40722,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutProjectExpensesInput = {
@@ -38640,6 +40866,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutApprovedExpensesInput = {
@@ -38678,6 +40905,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUpsertWithoutProjectExpensesInput = {
@@ -38727,6 +40955,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectExpensesInput = {
@@ -38765,6 +40994,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserCreateWithoutBusinessUnitInput = {
@@ -38803,6 +41033,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutBusinessUnitInput = {
@@ -38841,6 +41072,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutBusinessUnitInput = {
@@ -38945,6 +41177,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutSkillsInput = {
@@ -38983,6 +41216,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutSkillsInput = {
@@ -39060,6 +41294,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSkillsInput = {
@@ -39098,6 +41333,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type SkillUpsertWithoutUsersInput = {
@@ -39165,6 +41401,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutActivitiesInput = {
@@ -39203,6 +41440,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutActivitiesInput = {
@@ -39340,6 +41578,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutActivitiesInput = {
@@ -39378,6 +41617,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type ProjectUpsertWithoutActivitiesInput = {
@@ -39588,6 +41828,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutTasksAssignedInput = {
@@ -39626,6 +41867,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutTasksAssignedInput = {
@@ -39669,6 +41911,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutTasksCreatedInput = {
@@ -39707,6 +41950,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutTasksCreatedInput = {
@@ -40087,6 +42331,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTasksAssignedInput = {
@@ -40125,6 +42370,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUpsertWithoutTasksCreatedInput = {
@@ -40174,6 +42420,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTasksCreatedInput = {
@@ -40212,6 +42459,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type TaskUpsertWithoutSubtasksInput = {
@@ -40840,6 +43088,7 @@ export namespace Prisma {
     tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutTaskAssignmentsInput = {
@@ -40878,6 +43127,7 @@ export namespace Prisma {
     tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutTaskAssignmentsInput = {
@@ -40987,6 +43237,7 @@ export namespace Prisma {
     tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTaskAssignmentsInput = {
@@ -41025,6 +43276,7 @@ export namespace Prisma {
     tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type TaskCreateWithoutTimeLogsInput = {
@@ -41112,6 +43364,7 @@ export namespace Prisma {
     tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutTaskTimeLogsInput = {
@@ -41150,6 +43403,7 @@ export namespace Prisma {
     tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutTaskTimeLogsInput = {
@@ -41259,6 +43513,7 @@ export namespace Prisma {
     tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTaskTimeLogsInput = {
@@ -41296,6 +43551,243 @@ export namespace Prisma {
     tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
+  }
+
+  export type ClientCreateWithoutLeadsInput = {
+    id?: string
+    name: string
+    contactPerson?: string | null
+    email?: string | null
+    phone?: string | null
+    industry?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projects?: ProjectCreateNestedManyWithoutClientInput
+  }
+
+  export type ClientUncheckedCreateWithoutLeadsInput = {
+    id?: string
+    name: string
+    contactPerson?: string | null
+    email?: string | null
+    phone?: string | null
+    industry?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projects?: ProjectUncheckedCreateNestedManyWithoutClientInput
+  }
+
+  export type ClientCreateOrConnectWithoutLeadsInput = {
+    where: ClientWhereUniqueInput
+    create: XOR<ClientCreateWithoutLeadsInput, ClientUncheckedCreateWithoutLeadsInput>
+  }
+
+  export type UserCreateWithoutLeadsOwnedInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutLeadsOwnedInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnitId?: string | null
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutLeadsOwnedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutLeadsOwnedInput, UserUncheckedCreateWithoutLeadsOwnedInput>
+  }
+
+  export type ClientUpsertWithoutLeadsInput = {
+    update: XOR<ClientUpdateWithoutLeadsInput, ClientUncheckedUpdateWithoutLeadsInput>
+    create: XOR<ClientCreateWithoutLeadsInput, ClientUncheckedCreateWithoutLeadsInput>
+    where?: ClientWhereInput
+  }
+
+  export type ClientUpdateToOneWithWhereWithoutLeadsInput = {
+    where?: ClientWhereInput
+    data: XOR<ClientUpdateWithoutLeadsInput, ClientUncheckedUpdateWithoutLeadsInput>
+  }
+
+  export type ClientUpdateWithoutLeadsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    contactPerson?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projects?: ProjectUpdateManyWithoutClientNestedInput
+  }
+
+  export type ClientUncheckedUpdateWithoutLeadsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    contactPerson?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projects?: ProjectUncheckedUpdateManyWithoutClientNestedInput
+  }
+
+  export type UserUpsertWithoutLeadsOwnedInput = {
+    update: XOR<UserUpdateWithoutLeadsOwnedInput, UserUncheckedUpdateWithoutLeadsOwnedInput>
+    create: XOR<UserCreateWithoutLeadsOwnedInput, UserUncheckedCreateWithoutLeadsOwnedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutLeadsOwnedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutLeadsOwnedInput, UserUncheckedUpdateWithoutLeadsOwnedInput>
+  }
+
+  export type UserUpdateWithoutLeadsOwnedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutLeadsOwnedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -41335,6 +43827,7 @@ export namespace Prisma {
     tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
     taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -41373,6 +43866,7 @@ export namespace Prisma {
     tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
     taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -41427,6 +43921,7 @@ export namespace Prisma {
     tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -41465,6 +43960,7 @@ export namespace Prisma {
     tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserCreateManyManagerInput = {
@@ -41811,6 +44307,30 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type LeadCreateManyOwnerInput = {
+    id?: string
+    title: string
+    contactName?: string | null
+    contactEmail?: string | null
+    contactPhone?: string | null
+    clientId?: string | null
+    prospectiveClientName?: string | null
+    industry?: string | null
+    source?: string | null
+    stage?: $Enums.LeadStage
+    estimatedValue?: number
+    probability?: number
+    expectedCloseDate?: Date | string | null
+    notes?: string | null
+    lostReason?: string | null
+    convertedProjectId?: string | null
+    wonAt?: Date | string | null
+    lostAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type UserUpdateWithoutManagerInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
@@ -41847,6 +44367,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutManagerInput = {
@@ -41885,6 +44406,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutManagerInput = {
@@ -41940,6 +44462,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPrincipalInput = {
@@ -41978,6 +44501,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutPrincipalInput = {
@@ -43015,6 +45539,78 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type LeadUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    prospectiveClientName?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    estimatedValue?: FloatFieldUpdateOperationsInput | number
+    probability?: IntFieldUpdateOperationsInput | number
+    expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    lostReason?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedProjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    client?: ClientUpdateOneWithoutLeadsNestedInput
+  }
+
+  export type LeadUncheckedUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    clientId?: NullableStringFieldUpdateOperationsInput | string | null
+    prospectiveClientName?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    estimatedValue?: FloatFieldUpdateOperationsInput | number
+    probability?: IntFieldUpdateOperationsInput | number
+    expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    lostReason?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedProjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeadUncheckedUpdateManyWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    clientId?: NullableStringFieldUpdateOperationsInput | string | null
+    prospectiveClientName?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    estimatedValue?: FloatFieldUpdateOperationsInput | number
+    probability?: IntFieldUpdateOperationsInput | number
+    expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    lostReason?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedProjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ProjectCreateManyClientInput = {
     id?: string
     code: string
@@ -43044,6 +45640,30 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     surveyToken?: string | null
+  }
+
+  export type LeadCreateManyClientInput = {
+    id?: string
+    title: string
+    contactName?: string | null
+    contactEmail?: string | null
+    contactPhone?: string | null
+    prospectiveClientName?: string | null
+    industry?: string | null
+    source?: string | null
+    stage?: $Enums.LeadStage
+    estimatedValue?: number
+    probability?: number
+    expectedCloseDate?: Date | string | null
+    ownerId: string
+    notes?: string | null
+    lostReason?: string | null
+    convertedProjectId?: string | null
+    wonAt?: Date | string | null
+    lostAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ProjectUpdateWithoutClientInput = {
@@ -43153,6 +45773,78 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type LeadUpdateWithoutClientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    prospectiveClientName?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    estimatedValue?: FloatFieldUpdateOperationsInput | number
+    probability?: IntFieldUpdateOperationsInput | number
+    expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    lostReason?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedProjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutLeadsOwnedNestedInput
+  }
+
+  export type LeadUncheckedUpdateWithoutClientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    prospectiveClientName?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    estimatedValue?: FloatFieldUpdateOperationsInput | number
+    probability?: IntFieldUpdateOperationsInput | number
+    expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ownerId?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    lostReason?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedProjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeadUncheckedUpdateManyWithoutClientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    contactName?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    contactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    prospectiveClientName?: NullableStringFieldUpdateOperationsInput | string | null
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    estimatedValue?: FloatFieldUpdateOperationsInput | number
+    probability?: IntFieldUpdateOperationsInput | number
+    expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ownerId?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    lostReason?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedProjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProjectResourceCreateManyProjectInput = {
@@ -43648,6 +46340,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBusinessUnitInput = {
@@ -43686,6 +46379,7 @@ export namespace Prisma {
     taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutBusinessUnitInput = {
@@ -44082,6 +46776,10 @@ export namespace Prisma {
      * @deprecated Use TaskTimeLogDefaultArgs instead
      */
     export type TaskTimeLogArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = TaskTimeLogDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use LeadDefaultArgs instead
+     */
+    export type LeadArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = LeadDefaultArgs<ExtArgs>
     /**
      * @deprecated Use NotificationDefaultArgs instead
      */

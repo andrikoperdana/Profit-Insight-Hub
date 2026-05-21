@@ -117,6 +117,7 @@ model User {
   taskAssignments    TaskAssignee[]
   taskTimeLogs       TaskTimeLog[]
   notifications      Notification[]
+  leadsOwned         Lead[]            @relation("LeadOwner")
 }
 
 model Client {
@@ -130,6 +131,7 @@ model Client {
   updatedAt     DateTime @updatedAt
 
   projects Project[]
+  leads    Lead[]
 }
 
 model Project {
@@ -447,6 +449,46 @@ model TaskTimeLog {
   @@index([taskId])
   @@index([userId])
   @@index([loggedAt])
+}
+
+enum LeadStage {
+  NEW
+  QUALIFIED
+  PROPOSAL
+  NEGOTIATION
+  WON
+  LOST
+}
+
+model Lead {
+  id                    String    @id @default(cuid())
+  title                 String
+  contactName           String?
+  contactEmail          String?
+  contactPhone          String?
+  clientId              String?
+  client                Client?   @relation(fields: [clientId], references: [id])
+  prospectiveClientName String?
+  industry              String?
+  source                String?
+  stage                 LeadStage @default(NEW)
+  estimatedValue        Float     @default(0)
+  probability           Int       @default(20)
+  expectedCloseDate     DateTime?
+  ownerId               String
+  owner                 User      @relation("LeadOwner", fields: [ownerId], references: [id])
+  notes                 String?
+  lostReason            String?
+  convertedProjectId    String?   @unique
+  wonAt                 DateTime?
+  lostAt                DateTime?
+  deletedAt             DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([ownerId])
+  @@index([stage])
+  @@index([deletedAt])
 }
 
 model Notification {

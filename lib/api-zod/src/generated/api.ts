@@ -663,6 +663,134 @@ export const DeleteUserResponse = zod.object({
   message: zod.string().optional(),
 });
 
+export const ListLeadsResponseItem = zod.object({
+  id: zod.string(),
+  title: zod.string(),
+  contactName: zod.string().nullish(),
+  contactEmail: zod.string().nullish(),
+  contactPhone: zod.string().nullish(),
+  clientId: zod.string().nullish(),
+  clientName: zod.string().nullish(),
+  prospectiveClientName: zod.string().nullish(),
+  industry: zod.string().nullish(),
+  source: zod.string().nullish(),
+  stage: zod.enum([
+    "NEW",
+    "QUALIFIED",
+    "PROPOSAL",
+    "NEGOTIATION",
+    "WON",
+    "LOST",
+  ]),
+  estimatedValue: zod.number(),
+  probability: zod.number(),
+  expectedCloseDate: zod.string().nullish(),
+  ownerId: zod.string(),
+  ownerName: zod.string().nullish(),
+  notes: zod.string().nullish(),
+  lostReason: zod.string().nullish(),
+  convertedProjectId: zod.string().nullish(),
+  wonAt: zod.string().nullish(),
+  lostAt: zod.string().nullish(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+export const ListLeadsResponse = zod.array(ListLeadsResponseItem);
+
+export const CreateLeadBody = zod.object({
+  title: zod.string(),
+  contactName: zod.string().optional(),
+  contactEmail: zod.string().optional(),
+  contactPhone: zod.string().optional(),
+  clientId: zod.string().nullish(),
+  prospectiveClientName: zod.string().optional(),
+  industry: zod.string().optional(),
+  source: zod.string().optional(),
+  stage: zod
+    .enum(["NEW", "QUALIFIED", "PROPOSAL", "NEGOTIATION", "WON", "LOST"])
+    .optional(),
+  estimatedValue: zod.number().optional(),
+  probability: zod.number().optional(),
+  expectedCloseDate: zod.string().nullish(),
+  ownerId: zod.string().optional(),
+  notes: zod.string().optional(),
+});
+
+export const UpdateLeadParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const UpdateLeadBody = zod.object({
+  title: zod.string().optional(),
+  contactName: zod.string().nullish(),
+  contactEmail: zod.string().nullish(),
+  contactPhone: zod.string().nullish(),
+  clientId: zod.string().nullish(),
+  prospectiveClientName: zod.string().nullish(),
+  industry: zod.string().nullish(),
+  source: zod.string().nullish(),
+  stage: zod
+    .enum(["NEW", "QUALIFIED", "PROPOSAL", "NEGOTIATION", "WON", "LOST"])
+    .optional(),
+  estimatedValue: zod.number().optional(),
+  probability: zod.number().optional(),
+  expectedCloseDate: zod.string().nullish(),
+  ownerId: zod.string().optional(),
+  notes: zod.string().nullish(),
+  lostReason: zod.string().nullish(),
+});
+
+export const UpdateLeadResponse = zod.object({
+  id: zod.string(),
+  title: zod.string(),
+  contactName: zod.string().nullish(),
+  contactEmail: zod.string().nullish(),
+  contactPhone: zod.string().nullish(),
+  clientId: zod.string().nullish(),
+  clientName: zod.string().nullish(),
+  prospectiveClientName: zod.string().nullish(),
+  industry: zod.string().nullish(),
+  source: zod.string().nullish(),
+  stage: zod.enum([
+    "NEW",
+    "QUALIFIED",
+    "PROPOSAL",
+    "NEGOTIATION",
+    "WON",
+    "LOST",
+  ]),
+  estimatedValue: zod.number(),
+  probability: zod.number(),
+  expectedCloseDate: zod.string().nullish(),
+  ownerId: zod.string(),
+  ownerName: zod.string().nullish(),
+  notes: zod.string().nullish(),
+  lostReason: zod.string().nullish(),
+  convertedProjectId: zod.string().nullish(),
+  wonAt: zod.string().nullish(),
+  lostAt: zod.string().nullish(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+export const DeleteLeadParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const DeleteLeadResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+export const ConvertLeadParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const ConvertLeadBody = zod.object({
+  code: zod.string().optional(),
+  clientName: zod.string().optional(),
+});
+
 export const ListClientsResponseItem = zod.object({
   id: zod.string(),
   name: zod.string(),
