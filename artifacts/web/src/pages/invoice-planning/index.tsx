@@ -191,7 +191,7 @@ export default function InvoicePlanningPage() {
         <CardHeader className="pb-3">
           <CardTitle className="text-base">Filter</CardTitle>
           <CardDescription>
-            Switch between weekly (up to 26 weeks) and monthly (up to 12 months) view. Toggle DPP (Net) vs Total (incl. PPN).
+            Switch between weekly (up to 26 weeks) and monthly (up to 12 months) view. Toggle DPP (Net) vs Total (incl. VAT).
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -212,7 +212,7 @@ export default function InvoicePlanningPage() {
                 <SelectTrigger data-testid="select-ip-metric"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="dpp">DPP (Net)</SelectItem>
-                  <SelectItem value="total">Total (incl. PPN)</SelectItem>
+                  <SelectItem value="total">Total (incl. VAT)</SelectItem>
                 </SelectContent>
               </Select>
             </div>

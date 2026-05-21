@@ -104,15 +104,15 @@ function FinancialsTab({ projectId }: { projectId: string }) {
           value={formatIDR(f.contractValue)}
           subtitle={
             f.contractValueIncludesVat
-              ? `Includes PPN ${(f.vatPercent ?? 0)}%`
-              : `Excludes PPN ${(f.vatPercent ?? 0)}%`
+              ? `Includes VAT ${(f.vatPercent ?? 0)}%`
+              : `Excludes VAT ${(f.vatPercent ?? 0)}%`
           }
         />
         <FinancialCard
           icon={<DollarSign className="h-4 w-4 text-primary" />}
           label="Revenue Net (DPP)"
           value={formatIDR(f.revenueNet ?? f.contractValue)}
-          subtitle={`PPN: ${formatIDR(f.vatAmount ?? 0)} (PSAK 72 base)`}
+          subtitle={`VAT: ${formatIDR(f.vatAmount ?? 0)} (PSAK 72 base)`}
         />
         <FinancialCard
           icon={<Activity className="h-4 w-4 text-primary" />}

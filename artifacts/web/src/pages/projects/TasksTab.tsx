@@ -785,7 +785,7 @@ function TaskFormDialog({
               );
             })()}
             <p className="text-[11px] text-muted-foreground mt-1">
-              Task ini hanya boleh mulai setelah semua predecessor selesai. Garis panah otomatis muncul di Gantt.
+              This task can only start after all predecessors are complete. Arrows are drawn automatically on the Gantt.
             </p>
           </div>
           <div className="flex items-center gap-2 rounded-md border border-border px-3 py-2">
@@ -835,7 +835,7 @@ function TaskFormDialog({
             />
             {(status === "DONE" || status === "TODO") && (
               <p className="text-[11px] text-muted-foreground mt-1">
-                Progress dikunci otomatis sesuai status ({status === "DONE" ? "100%" : "0%"}). Ubah status ke In Progress / Blocked untuk menyetel manual.
+                Progress is locked automatically based on status ({status === "DONE" ? "100%" : "0%"}). Change status to In Progress / Blocked to set it manually.
               </p>
             )}
           </div>

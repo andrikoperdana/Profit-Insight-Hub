@@ -229,7 +229,7 @@ function SalesIntakeForm() {
                   name="vatPercent"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>PPN / VAT (%)</FormLabel>
+                      <FormLabel>VAT (%)</FormLabel>
                       <FormControl>
                         <Input type="number" min={0} max={100} step={0.5} className="font-mono" data-testid="input-intake-vat-percent" {...field} />
                       </FormControl>
@@ -251,8 +251,8 @@ function SalesIntakeForm() {
                           <SelectTrigger data-testid="select-intake-vat-type"><SelectValue /></SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="incl">Includes PPN (gross)</SelectItem>
-                          <SelectItem value="excl">Excludes PPN (DPP / net)</SelectItem>
+                          <SelectItem value="incl">Includes VAT (gross)</SelectItem>
+                          <SelectItem value="excl">Excludes VAT (DPP / net)</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -262,7 +262,7 @@ function SalesIntakeForm() {
                 <div className="rounded-md border border-border bg-muted/30 p-3 text-xs space-y-1">
                   <p className="text-muted-foreground uppercase tracking-wide">Breakdown</p>
                   <p className="font-mono">DPP: {formatIDR(dppPreview)}</p>
-                  <p className="font-mono text-muted-foreground">PPN: {formatIDR(ppnPreview)}</p>
+                  <p className="font-mono text-muted-foreground">VAT: {formatIDR(ppnPreview)}</p>
                 </div>
               </div>
               <PdfUploadField
@@ -497,7 +497,7 @@ function FullProjectForm() {
                 name="vatPercent"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>PPN / VAT (%)</FormLabel>
+                    <FormLabel>VAT (%)</FormLabel>
                     <FormControl><Input type="number" min={0} max={100} step={0.5} {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
@@ -512,8 +512,8 @@ function FullProjectForm() {
                     <Select onValueChange={(v) => field.onChange(v === "incl")} value={field.value ? "incl" : "excl"}>
                       <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
                       <SelectContent>
-                        <SelectItem value="incl">Includes PPN (gross)</SelectItem>
-                        <SelectItem value="excl">Excludes PPN (DPP)</SelectItem>
+                        <SelectItem value="incl">Includes VAT (gross)</SelectItem>
+                        <SelectItem value="excl">Excludes VAT (DPP)</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />

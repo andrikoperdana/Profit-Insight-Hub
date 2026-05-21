@@ -115,7 +115,7 @@ function DraftCompletionCard({ project }: { project: any }) {
     }
     const vp = Number(vatPercent);
     if (!isFinite(vp) || vp < 0 || vp > 100) {
-      toast({ variant: "destructive", title: "Invalid VAT", description: "VAT (PPN) percent must be between 0 and 100." });
+      toast({ variant: "destructive", title: "Invalid VAT", description: "VAT (VAT) percent must be between 0 and 100." });
       return;
     }
     update.mutate({
@@ -168,7 +168,7 @@ function DraftCompletionCard({ project }: { project: any }) {
             <Input id="draft-revenue" type="number" min={0} value={contractValue} onChange={(e) => setContractValue(e.target.value)} className="mt-1 font-mono" data-testid="input-draft-revenue" />
           </div>
           <div>
-            <Label htmlFor="draft-vat">PPN / VAT (%)</Label>
+            <Label htmlFor="draft-vat">VAT (%)</Label>
             <Input id="draft-vat" type="number" min={0} max={100} step="0.5" value={vatPercent} onChange={(e) => setVatPercent(e.target.value)} className="mt-1 font-mono" data-testid="input-draft-vat" />
           </div>
           <div>
@@ -176,8 +176,8 @@ function DraftCompletionCard({ project }: { project: any }) {
             <Select value={contractValueIncludesVat ? "incl" : "excl"} onValueChange={(v) => setContractValueIncludesVat(v === "incl")}>
               <SelectTrigger id="draft-vat-type" className="mt-1" data-testid="select-draft-vat-type"><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="incl">Includes PPN (gross)</SelectItem>
-                <SelectItem value="excl">Excludes PPN (DPP)</SelectItem>
+                <SelectItem value="incl">Includes VAT (gross)</SelectItem>
+                <SelectItem value="excl">Excludes VAT (DPP)</SelectItem>
               </SelectContent>
             </Select>
           </div>

@@ -476,7 +476,7 @@ function TeamTimesheetsTable() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="__all">Semua</SelectItem>
+                <SelectItem value="__all">All</SelectItem>
                 <SelectItem value="DRAFT">Draft</SelectItem>
                 <SelectItem value="SUBMITTED">Submitted</SelectItem>
                 <SelectItem value="APPROVED">Approved</SelectItem>

@@ -190,7 +190,7 @@ function OverviewTab({ project }: { project: any }) {
       toast({
         variant: "destructive",
         title: "Invalid VAT",
-        description: "VAT (PPN) percent must be a number between 0 and 100.",
+        description: "VAT (VAT) percent must be a number between 0 and 100.",
       });
       return;
     }
@@ -455,7 +455,7 @@ function OverviewTab({ project }: { project: any }) {
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <Label htmlFor="ov-vat">PPN / VAT (%)</Label>
+                    <Label htmlFor="ov-vat">VAT (%)</Label>
                     <Input
                       id="ov-vat"
                       type="number"
@@ -476,8 +476,8 @@ function OverviewTab({ project }: { project: any }) {
                     >
                       <SelectTrigger id="ov-vat-type" className="mt-1" data-testid="select-overview-vat-type"><SelectValue /></SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="incl">Includes PPN (gross)</SelectItem>
-                        <SelectItem value="excl">Excludes PPN (DPP)</SelectItem>
+                        <SelectItem value="incl">Includes VAT (gross)</SelectItem>
+                        <SelectItem value="excl">Excludes VAT (DPP)</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -579,8 +579,8 @@ function OverviewTab({ project }: { project: any }) {
                   } />
                   <ConfirmRow label="Revenue" value={formatIDR(Number(form.contractValue) || 0)} />
                   <ConfirmRow
-                    label="PPN"
-                    value={`${Number(form.vatPercent || 0)}% · ${form.contractValueIncludesVat ? "Includes PPN (gross)" : "Excludes PPN (DPP)"}`}
+                    label="VAT"
+                    value={`${Number(form.vatPercent || 0)}% · ${form.contractValueIncludesVat ? "Includes VAT (gross)" : "Excludes VAT (DPP)"}`}
                   />
                   <ConfirmRow label="Estimated Cost" value={formatIDR(Number(form.estimatedCost) || 0)} />
                   <ConfirmRow label="Planned Mandays" value={(Number(form.plannedMandays) || 0).toFixed(1)} />

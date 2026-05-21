@@ -140,21 +140,21 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
         <Stat label="% Allocated" value={`${summary.totalPct.toFixed(1)}%`} />
         <Stat label="Invoiced (Total)" value={formatIDR(summary.invoicedGross)} tone="info" />
         <Stat label="Paid (Total)" value={formatIDR(summary.paidGross)} tone="success" />
-        <Stat label={`PPN ${vatPercent}% Outstanding`} value={formatIDR(summary.outstandingVat)} tone="primary" />
+        <Stat label={`VAT ${vatPercent}% Outstanding`} value={formatIDR(summary.outstandingVat)} tone="primary" />
       </div>
       <div className="grid gap-3 grid-cols-2 md:grid-cols-4">
         <Stat label="Total DPP (Invoiced)" value={formatIDR(summary.invoicedDPP)} />
-        <Stat label={`Total PPN ${vatPercent}% (Invoiced)`} value={formatIDR(summary.invoicedVat)} />
-        <Stat label="PPN Sudah Dibayar" value={formatIDR(summary.paidVat)} tone="success" />
+        <Stat label={`Total VAT ${vatPercent}% (Invoiced)`} value={formatIDR(summary.invoicedVat)} />
+        <Stat label="VAT Paid" value={formatIDR(summary.paidVat)} tone="success" />
         <Stat label="Planned" value={String(summary.planned)} />
       </div>
       <div className="rounded-md border border-border bg-muted/20 px-3 py-2 text-xs text-muted-foreground">
-        Skema PPN: <span className="font-mono text-foreground">{vatPercent}%</span> —
-        contract value diperlakukan sebagai{" "}
+        VAT scheme: <span className="font-mono text-foreground">{vatPercent}%</span> —
+        contract value is treated as{" "}
         <span className="font-medium text-foreground">
-          {includesVat ? "GROSS (sudah termasuk PPN)" : "NET / DPP (belum termasuk PPN)"}
+          {includesVat ? "GROSS (VAT included)" : "NET / DPP (VAT excluded)"}
         </span>
-        . Setiap milestone amount mengikuti skema yang sama; DPP & PPN diturunkan otomatis.
+        . Each milestone amount follows the same scheme; DPP & VAT are derived automatically.
       </div>
 
       {summary.totalPct > 100 && (
@@ -206,7 +206,7 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
                   <TableHead>Milestone</TableHead>
                   <TableHead className="text-right">%</TableHead>
                   <TableHead className="text-right">DPP</TableHead>
-                  <TableHead className="text-right">PPN {vatPercent}%</TableHead>
+                  <TableHead className="text-right">VAT {vatPercent}%</TableHead>
                   <TableHead className="text-right">Total</TableHead>
                   <TableHead>Due</TableHead>
                   <TableHead>Status</TableHead>
@@ -406,7 +406,7 @@ function MilestoneFormDialog({
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. DP 30% Setelah Kontrak"
+              placeholder="e.g. DP 30% After Contract"
               data-testid="input-milestone-name"
             />
           </div>
