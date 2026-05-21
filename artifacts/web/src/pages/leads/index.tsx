@@ -71,8 +71,9 @@ export default function LeadsPage() {
   const { toast } = useToast();
   const [, navigate] = useLocation();
   const qc = useQueryClient();
+  const isAllowed = !user || user.role === "SALES";
 
-  const { data: leads, isLoading } = useListLeads();
+  const { data: leads, isLoading } = useListLeads({ query: { enabled: isAllowed } } as any);
   const { data: clients } = useListClients();
   const create = useCreateLead();
   const update = useUpdateLead();
@@ -216,6 +217,17 @@ export default function LeadsPage() {
     } catch (e: any) {
       toast({ title: "Conversion failed", description: e?.message, variant: "destructive" });
     }
+  }
+
+  if (!isAllowed) {
+    return (
+      <div className="rounded-lg border border-destructive/40 bg-destructive/5 p-6 text-sm">
+        <div className="font-semibold text-destructive mb-1">Access denied</div>
+        <div className="text-muted-foreground">
+          Sales Pipeline is only accessible to users with the Sales role.
+        </div>
+      </div>
+    );
   }
 
   return (

@@ -38,7 +38,6 @@ function serialize(l: any) {
 
 function scope(req: any) {
   const role = req.user.role;
-  if (role === "MANAGEMENT") return {};
   if (role === "SALES") return { ownerId: req.user.sub };
   return null;
 }
@@ -71,7 +70,7 @@ function validate(b: any, partial: boolean): string | null {
   return null;
 }
 
-router.post("/leads", requireRole("MANAGEMENT", "SALES"), async (req: any, res) => {
+router.post("/leads", requireRole("SALES"), async (req: any, res) => {
   const body = req.body || {};
   const err = validate(body, false);
   if (err) {
@@ -101,7 +100,7 @@ router.post("/leads", requireRole("MANAGEMENT", "SALES"), async (req: any, res) 
   res.status(201).json(serialize(lead));
 });
 
-router.patch("/leads/:id", requireRole("MANAGEMENT", "SALES"), async (req: any, res) => {
+router.patch("/leads/:id", requireRole("SALES"), async (req: any, res) => {
   const body = req.body || {};
   const err = validate(body, true);
   if (err) {
@@ -133,7 +132,6 @@ router.patch("/leads/:id", requireRole("MANAGEMENT", "SALES"), async (req: any, 
     ...(body.expectedCloseDate !== undefined ? { expectedCloseDate: body.expectedCloseDate ? new Date(body.expectedCloseDate) : null } : {}),
     ...(body.notes !== undefined ? { notes: body.notes || null } : {}),
     ...(body.lostReason !== undefined ? { lostReason: body.lostReason || null } : {}),
-    ...(req.user.role === "MANAGEMENT" && body.ownerId !== undefined ? { ownerId: body.ownerId } : {}),
   };
   if (stageChanged) {
     if (body.stage === "WON") data.wonAt = new Date();
@@ -147,7 +145,7 @@ router.patch("/leads/:id", requireRole("MANAGEMENT", "SALES"), async (req: any, 
   res.json(serialize(lead));
 });
 
-router.delete("/leads/:id", requireRole("MANAGEMENT", "SALES"), async (req: any, res) => {
+router.delete("/leads/:id", requireRole("SALES"), async (req: any, res) => {
   const existing = await prisma.lead.findUnique({ where: { id: String(req.params.id) } });
   if (!existing || existing.deletedAt) {
     res.status(404).json({ error: "Lead not found" });
@@ -161,7 +159,7 @@ router.delete("/leads/:id", requireRole("MANAGEMENT", "SALES"), async (req: any,
   res.json({ success: true });
 });
 
-router.post("/leads/:id/convert", requireRole("MANAGEMENT", "SALES"), async (req: any, res) => {
+router.post("/leads/:id/convert", requireRole("SALES"), async (req: any, res) => {
   const body = req.body || {};
   const lead = await prisma.lead.findUnique({ where: { id: String(req.params.id) } });
   if (!lead || lead.deletedAt) {
