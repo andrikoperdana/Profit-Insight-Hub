@@ -221,3 +221,9 @@ id = "Yk_9nZg90BYAIOfKc717G"
 uri = "file://exports/FitGap_SecureProfitHub_vs_PSOhub.docx"
 type = "word_document"
 title = "Fit-Gap Analysis: SecureProfit Hub vs PSOhub"
+
+[[outputs]]
+id = "6QWzghRDJoS6_XHUmx3z9"
+uri = "file://exports/FitGap_SecureProfitHub_vs_PSOhub_EN.docx"
+type = "word_document"
+title = "Fit-Gap Analysis (EN): SecureProfit Hub vs PSOhub"
