@@ -57,6 +57,15 @@ export default function SalesDashboard() {
     [allProjects, user]
   );
 
+  const myProjectsLatest = useMemo(() => {
+    const ts = (p: any) => {
+      const v = p.updatedAt ?? p.createdAt ?? p.startDate ?? 0;
+      const t = typeof v === "string" ? Date.parse(v) : Number(v);
+      return Number.isFinite(t) ? t : 0;
+    };
+    return [...myProjects].sort((a, b) => ts(b) - ts(a)).slice(0, 15);
+  }, [myProjects]);
+
   const myDrafts = useMemo(
     () => myProjects.filter((p) => p.status === ProjectStatus.DRAFT),
     [myProjects]
@@ -298,7 +307,11 @@ export default function SalesDashboard() {
       <Card className="border-border shadow-sm">
         <CardHeader>
           <CardTitle>My Project List</CardTitle>
-          <CardDescription>All engagements where you are the assigned Sales</CardDescription>
+          <CardDescription>
+            {myProjects.length > 15
+              ? `Showing latest 15 of ${myProjects.length} engagements where you are the assigned Sales`
+              : "All engagements where you are the assigned Sales"}
+          </CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           {isLoading ? (
@@ -318,7 +331,7 @@ export default function SalesDashboard() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {myProjects.map((p) => (
+                {myProjectsLatest.map((p) => (
                   <TableRow key={p.id} className="cursor-pointer hover:bg-muted/30">
                     <TableCell>
                       <Link href={`/projects/${p.id}`} className="block">
