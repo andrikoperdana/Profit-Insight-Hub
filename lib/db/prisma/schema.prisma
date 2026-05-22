@@ -119,6 +119,8 @@ model User {
   notifications      Notification[]
   leadsOwned         Lead[]            @relation("LeadOwner")
   leadActivities     LeadActivity[]    @relation("LeadActivityCreator")
+  leaves             UserLeave[]
+  taskTemplatesCreated TaskTemplate[]  @relation("TaskTemplateCreator")
 }
 
 model Client {
@@ -317,7 +319,8 @@ model BusinessUnit {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  users       User[]
+  users         User[]
+  taskTemplates TaskTemplate[]
 }
 
 model Skill {
@@ -516,6 +519,45 @@ model LeadActivity {
 
   @@index([leadId, occurredAt])
   @@index([nextActionAt])
+}
+
+enum LeaveType {
+  ANNUAL
+  SICK
+  TRAINING
+  UNPAID
+  OTHER
+}
+
+model UserLeave {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  startDate DateTime
+  endDate   DateTime
+  type      LeaveType @default(ANNUAL)
+  note      String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([userId, startDate])
+  @@index([startDate, endDate])
+}
+
+model TaskTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  businessUnitId String?
+  businessUnit   BusinessUnit? @relation(fields: [businessUnitId], references: [id])
+  tasks       Json
+  createdById String
+  createdBy   User     @relation("TaskTemplateCreator", fields: [createdById], references: [id])
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([businessUnitId, isActive])
 }
 
 model Notification {

@@ -27,6 +27,9 @@ import billingMilestonesRouter from "./billing-milestones.js";
 import reportsRouter from "./reports.js";
 import adminRouter from "./admin.js";
 import leadsRouter from "./leads.js";
+import skillMatrixRouter from "./skill-matrix.js";
+import taskTemplatesRouter from "./task-templates.js";
+import leavesRouter from "./leaves.js";
 
 const router: IRouter = Router();
 
@@ -58,5 +61,8 @@ router.use(billingMilestonesRouter);
 router.use(reportsRouter);
 router.use(adminRouter);
 router.use(leadsRouter);
+router.use(skillMatrixRouter);
+router.use(taskTemplatesRouter);
+router.use(leavesRouter);
 
 export default router;

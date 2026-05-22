@@ -1254,6 +1254,136 @@ export interface ReportResult {
   totals?: ReportResultTotals;
 }
 
+export type CreateBulkTimesheetsBodyEntriesItem = {
+  projectId: string;
+  workDate: string;
+  hours: number;
+  taskId?: string | null;
+  description?: string | null;
+};
+
+export interface CreateBulkTimesheetsBody {
+  entries: CreateBulkTimesheetsBodyEntriesItem[];
+}
+
+export type CreateBulkTimesheetsResponseResultsItem = {
+  index: number;
+  ok: boolean;
+  id?: string | null;
+  error?: string | null;
+};
+
+export interface CreateBulkTimesheetsResponse {
+  created: number;
+  failed: number;
+  results: CreateBulkTimesheetsResponseResultsItem[];
+}
+
+export interface SkillMatrixUser {
+  userId: string;
+  userName: string;
+  role: UserRole;
+  seniority: string | null;
+  businessUnitName?: string | null;
+}
+
+export interface SkillMatrixCell {
+  skillId: string;
+  userId: string;
+  proficiency: number;
+}
+
+export interface SkillMatrixGap {
+  skillId: string;
+  skillName: string;
+  category?: string | null;
+  totalCount: number;
+  juniorCount?: number;
+  midCount?: number;
+  seniorCount: number;
+  principalCount: number;
+  avgProficiency?: number;
+  isGap: boolean;
+  gapReason?: string | null;
+}
+
+export interface SkillMatrix {
+  skills: Skill[];
+  users: SkillMatrixUser[];
+  cells: SkillMatrixCell[];
+  gaps: SkillMatrixGap[];
+}
+
+export interface TaskTemplateItem {
+  title: string;
+  description?: string | null;
+  durationDays?: number | null;
+  offsetDays?: number | null;
+  billable?: boolean | null;
+  parentIndex?: number | null;
+}
+
+export interface TaskTemplate {
+  id: string;
+  name: string;
+  description?: string | null;
+  businessUnitId?: string | null;
+  businessUnitName?: string | null;
+  tasks: TaskTemplateItem[];
+  createdById: string;
+  createdByName: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CreateTaskTemplateBody {
+  name: string;
+  description?: string | null;
+  businessUnitId?: string | null;
+  isActive?: boolean | null;
+  tasks: TaskTemplateItem[];
+}
+
+export type UserLeaveType = (typeof UserLeaveType)[keyof typeof UserLeaveType];
+
+export const UserLeaveType = {
+  ANNUAL: "ANNUAL",
+  SICK: "SICK",
+  TRAINING: "TRAINING",
+  UNPAID: "UNPAID",
+  OTHER: "OTHER",
+} as const;
+
+export interface UserLeave {
+  id: string;
+  userId: string;
+  userName: string;
+  startDate: string;
+  endDate: string;
+  type: UserLeaveType;
+  note?: string | null;
+  createdAt: string;
+}
+
+export type CreateLeaveBodyType =
+  (typeof CreateLeaveBodyType)[keyof typeof CreateLeaveBodyType];
+
+export const CreateLeaveBodyType = {
+  ANNUAL: "ANNUAL",
+  SICK: "SICK",
+  TRAINING: "TRAINING",
+  UNPAID: "UNPAID",
+  OTHER: "OTHER",
+} as const;
+
+export interface CreateLeaveBody {
+  userId?: string | null;
+  startDate: string;
+  endDate: string;
+  type: CreateLeaveBodyType;
+  note?: string | null;
+}
+
 export type GetReportOptionsParams = {
   source: string;
 };
@@ -1327,6 +1457,26 @@ export const ListTimesheetsScope = {
   approval: "approval",
   all: "all",
 } as const;
+
+export type ListTaskTemplatesParams = {
+  businessUnitId?: string;
+};
+
+export type ApplyTaskTemplateBody = {
+  templateId: string;
+  /** ISO date YYYY-MM-DD; defaults to today */
+  startDate?: string;
+};
+
+export type ApplyTaskTemplate201 = {
+  created?: number;
+};
+
+export type ListLeavesParams = {
+  userId?: string;
+  startDate?: string;
+  endDate?: string;
+};
 
 export type GetVatRecapParams = {
   /**

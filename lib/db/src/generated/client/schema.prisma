@@ -100,25 +100,27 @@ model User {
   skills           UserSkill[]
   approvedExpenses ProjectExpense[] @relation("ExpenseApprover")
 
-  projectsAsSales    Project[]         @relation("ProjectSales")
-  projectsAsPm       Project[]         @relation("ProjectPm")
-  projectsAsTw       Project[]         @relation("ProjectTechWriter")
-  projectsAsAdmin    Project[]         @relation("ProjectAdmin")
-  resources          ProjectResource[]
-  proposedResources  ProjectResource[] @relation("ResourceProposer")
-  timesheets         Timesheet[]
-  approvedTimesheets Timesheet[]       @relation("TimesheetApprover")
-  documentsUploaded  Document[]
-  activities         Activity[]
-  auditLogs          AuditLog[]
-  projectExpenses    ProjectExpense[]
-  tasksAssigned      Task[]            @relation("TaskAssignee")
-  tasksCreated       Task[]            @relation("TaskCreator")
-  taskAssignments    TaskAssignee[]
-  taskTimeLogs       TaskTimeLog[]
-  notifications      Notification[]
-  leadsOwned         Lead[]            @relation("LeadOwner")
-  leadActivities     LeadActivity[]    @relation("LeadActivityCreator")
+  projectsAsSales      Project[]         @relation("ProjectSales")
+  projectsAsPm         Project[]         @relation("ProjectPm")
+  projectsAsTw         Project[]         @relation("ProjectTechWriter")
+  projectsAsAdmin      Project[]         @relation("ProjectAdmin")
+  resources            ProjectResource[]
+  proposedResources    ProjectResource[] @relation("ResourceProposer")
+  timesheets           Timesheet[]
+  approvedTimesheets   Timesheet[]       @relation("TimesheetApprover")
+  documentsUploaded    Document[]
+  activities           Activity[]
+  auditLogs            AuditLog[]
+  projectExpenses      ProjectExpense[]
+  tasksAssigned        Task[]            @relation("TaskAssignee")
+  tasksCreated         Task[]            @relation("TaskCreator")
+  taskAssignments      TaskAssignee[]
+  taskTimeLogs         TaskTimeLog[]
+  notifications        Notification[]
+  leadsOwned           Lead[]            @relation("LeadOwner")
+  leadActivities       LeadActivity[]    @relation("LeadActivityCreator")
+  leaves               UserLeave[]
+  taskTemplatesCreated TaskTemplate[]    @relation("TaskTemplateCreator")
 }
 
 model Client {
@@ -317,7 +319,8 @@ model BusinessUnit {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  users User[]
+  users         User[]
+  taskTemplates TaskTemplate[]
 }
 
 model Skill {
@@ -516,6 +519,45 @@ model LeadActivity {
 
   @@index([leadId, occurredAt])
   @@index([nextActionAt])
+}
+
+enum LeaveType {
+  ANNUAL
+  SICK
+  TRAINING
+  UNPAID
+  OTHER
+}
+
+model UserLeave {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  startDate DateTime
+  endDate   DateTime
+  type      LeaveType @default(ANNUAL)
+  note      String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([userId, startDate])
+  @@index([startDate, endDate])
+}
+
+model TaskTemplate {
+  id             String        @id @default(cuid())
+  name           String
+  description    String?
+  businessUnitId String?
+  businessUnit   BusinessUnit? @relation(fields: [businessUnitId], references: [id])
+  tasks          Json
+  createdById    String
+  createdBy      User          @relation("TaskTemplateCreator", fields: [createdById], references: [id])
+  isActive       Boolean       @default(true)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([businessUnitId, isActive])
 }
 
 model Notification {

@@ -1945,6 +1945,221 @@ export const CreateTimesheetBody = zod.object({
   description: zod.string().optional(),
 });
 
+export const CreateBulkTimesheetsBody = zod.object({
+  entries: zod.array(
+    zod.object({
+      projectId: zod.string(),
+      workDate: zod.string(),
+      hours: zod.number(),
+      taskId: zod.string().nullish(),
+      description: zod.string().nullish(),
+    }),
+  ),
+});
+
+/**
+ * Returns skill coverage matrix across users (Konsultan/Technical Writer/Principal) with gap analysis. MGMT/PM only.
+ */
+export const GetSkillMatrixResponse = zod.object({
+  skills: zod.array(
+    zod.object({
+      id: zod.string(),
+      name: zod.string(),
+      category: zod.string().nullish(),
+      isActive: zod.boolean(),
+      userCount: zod.number().optional(),
+      createdAt: zod.string(),
+    }),
+  ),
+  users: zod.array(
+    zod.object({
+      userId: zod.string(),
+      userName: zod.string(),
+      role: zod.enum([
+        "MANAGEMENT",
+        "PROJECT_MANAGER",
+        "SALES",
+        "KONSULTAN",
+        "TECHNICAL_WRITER",
+        "ADMIN_PROJECT",
+        "PRINCIPAL_KONSULTAN",
+        "PRINCIPAL_TECHNICAL_WRITER",
+        "PRINCIPAL_ADMIN_PROJECT",
+        "SITE_ADMIN",
+      ]),
+      seniority: zod.string().nullable(),
+      businessUnitName: zod.string().nullish(),
+    }),
+  ),
+  cells: zod.array(
+    zod.object({
+      skillId: zod.string(),
+      userId: zod.string(),
+      proficiency: zod.number(),
+    }),
+  ),
+  gaps: zod.array(
+    zod.object({
+      skillId: zod.string(),
+      skillName: zod.string(),
+      category: zod.string().nullish(),
+      totalCount: zod.number(),
+      juniorCount: zod.number().optional(),
+      midCount: zod.number().optional(),
+      seniorCount: zod.number(),
+      principalCount: zod.number(),
+      avgProficiency: zod.number().optional(),
+      isGap: zod.boolean(),
+      gapReason: zod.string().nullish(),
+    }),
+  ),
+});
+
+export const ListTaskTemplatesQueryParams = zod.object({
+  businessUnitId: zod.coerce.string().optional(),
+});
+
+export const ListTaskTemplatesResponseItem = zod.object({
+  id: zod.string(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  businessUnitId: zod.string().nullish(),
+  businessUnitName: zod.string().nullish(),
+  tasks: zod.array(
+    zod.object({
+      title: zod.string(),
+      description: zod.string().nullish(),
+      durationDays: zod.number().nullish(),
+      offsetDays: zod.number().nullish(),
+      billable: zod.boolean().nullish(),
+      parentIndex: zod.number().nullish(),
+    }),
+  ),
+  createdById: zod.string(),
+  createdByName: zod.string(),
+  isActive: zod.boolean(),
+  createdAt: zod.string(),
+});
+export const ListTaskTemplatesResponse = zod.array(
+  ListTaskTemplatesResponseItem,
+);
+
+export const CreateTaskTemplateBody = zod.object({
+  name: zod.string(),
+  description: zod.string().nullish(),
+  businessUnitId: zod.string().nullish(),
+  isActive: zod.boolean().nullish(),
+  tasks: zod.array(
+    zod.object({
+      title: zod.string(),
+      description: zod.string().nullish(),
+      durationDays: zod.number().nullish(),
+      offsetDays: zod.number().nullish(),
+      billable: zod.boolean().nullish(),
+      parentIndex: zod.number().nullish(),
+    }),
+  ),
+});
+
+export const UpdateTaskTemplateParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const UpdateTaskTemplateBody = zod.object({
+  name: zod.string(),
+  description: zod.string().nullish(),
+  businessUnitId: zod.string().nullish(),
+  isActive: zod.boolean().nullish(),
+  tasks: zod.array(
+    zod.object({
+      title: zod.string(),
+      description: zod.string().nullish(),
+      durationDays: zod.number().nullish(),
+      offsetDays: zod.number().nullish(),
+      billable: zod.boolean().nullish(),
+      parentIndex: zod.number().nullish(),
+    }),
+  ),
+});
+
+export const UpdateTaskTemplateResponse = zod.object({
+  id: zod.string(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  businessUnitId: zod.string().nullish(),
+  businessUnitName: zod.string().nullish(),
+  tasks: zod.array(
+    zod.object({
+      title: zod.string(),
+      description: zod.string().nullish(),
+      durationDays: zod.number().nullish(),
+      offsetDays: zod.number().nullish(),
+      billable: zod.boolean().nullish(),
+      parentIndex: zod.number().nullish(),
+    }),
+  ),
+  createdById: zod.string(),
+  createdByName: zod.string(),
+  isActive: zod.boolean(),
+  createdAt: zod.string(),
+});
+
+export const DeleteTaskTemplateParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const DeleteTaskTemplateResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+export const ApplyTaskTemplateParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const ApplyTaskTemplateBody = zod.object({
+  templateId: zod.string(),
+  startDate: zod
+    .string()
+    .optional()
+    .describe("ISO date YYYY-MM-DD; defaults to today"),
+});
+
+export const ListLeavesQueryParams = zod.object({
+  userId: zod.coerce.string().optional(),
+  startDate: zod.coerce.string().optional(),
+  endDate: zod.coerce.string().optional(),
+});
+
+export const ListLeavesResponseItem = zod.object({
+  id: zod.string(),
+  userId: zod.string(),
+  userName: zod.string(),
+  startDate: zod.string(),
+  endDate: zod.string(),
+  type: zod.enum(["ANNUAL", "SICK", "TRAINING", "UNPAID", "OTHER"]),
+  note: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+export const ListLeavesResponse = zod.array(ListLeavesResponseItem);
+
+export const CreateLeaveBody = zod.object({
+  userId: zod.string().nullish(),
+  startDate: zod.string(),
+  endDate: zod.string(),
+  type: zod.enum(["ANNUAL", "SICK", "TRAINING", "UNPAID", "OTHER"]),
+  note: zod.string().nullish(),
+});
+
+export const DeleteLeaveParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const DeleteLeaveResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
 export const SubmitTimesheetParams = zod.object({
   id: zod.coerce.string(),
 });

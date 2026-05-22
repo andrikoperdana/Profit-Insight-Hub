@@ -119,7 +119,14 @@ Shared `WelcomeBanner` shows time-aware greeting + role label.
 
 ## Pages
 
-`/login`, `/` (dashboard), `/projects`, `/projects/new`, `/projects/:id`, `/timesheets`, `/clients`, `/users` (SITE_ADMIN), `/skills` (SITE_ADMIN), `/business-units` (SITE_ADMIN), `/resource-planning` (PM/MGMT), `/reports` (MGMT/PM), `/vat-recap` (MGMT), `/settings`.
+`/login`, `/` (dashboard), `/projects`, `/projects/new`, `/projects/:id`, `/timesheets`, `/clients`, `/users` (SITE_ADMIN), `/skills` (SITE_ADMIN), `/business-units` (SITE_ADMIN), `/resource-planning` (PM/MGMT), `/skill-matrix` (PM/MGMT), `/task-templates` (PM/MGMT), `/reports` (MGMT/PM), `/vat-recap` (MGMT), `/settings`.
+
+## Phase-2 features
+
+- **Bulk weekly timesheet entry** (`/timesheets` → "Entry Mingguan"). Grid project × 5 hari kerja (Sen–Jum); submit via `POST /api/timesheets/bulk` (max 50 entries). PM/MGMT auto-approved.
+- **Leave / availability** (`UserLeave` model, `LeaveType` enum ANNUAL/SICK/TRAINING/UNPAID/OTHER). Self-service log via `/timesheets` → "Log Leave". `GET /api/leaves?startDate&endDate` (MGMT/PM see all, others own only). Resource Planning cells overlay slate "L" marker + tooltip on weeks overlapping a leave.
+- **Skill matrix & gap analysis** (`/skill-matrix`, PM/MGMT). `GET /api/skill-matrix` returns `{users, skills, cells, gaps}`. Gap = no holders, or only 1 person, or no Senior/Principal. UI: amber gap-cards + skill×user grid with proficiency 1–5 color coding.
+- **Task templates** (`/task-templates`, MGMT manage / PM read+apply). `TaskTemplate` model stores WBS as JSON (`{title, durationDays, offsetDays, parentIndex, billable}[]`). `GET/POST/PATCH/DELETE /api/task-templates` + `POST /api/projects/:id/task-templates/apply` (creates tasks with dates relative to start). "Apply Template" button on project TasksTab.
 
 CRUD endpoints: `GET/POST/PATCH/DELETE /api/skills`, `/api/business-units`.
 

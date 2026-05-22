@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useAuth } from "@/lib/auth";
-import { useGetResourcePlanning } from "@workspace/api-client-react";
+import { useGetResourcePlanning, useListLeaves } from "@workspace/api-client-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,34 @@ export default function ResourcePlanningPage() {
   const [weeks, setWeeks] = useState<number>(8);
 
   const { data, isLoading } = useGetResourcePlanning({ startDate, weeks });
+
+  const rangeEnd = useMemo(() => {
+    const d = new Date(startDate);
+    d.setDate(d.getDate() + weeks * 7);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  }, [startDate, weeks]);
+  const { data: leaves } = useListLeaves({ startDate, endDate: rangeEnd });
+  const leavesByUser = useMemo(() => {
+    const m = new Map<string, { start: Date; end: Date; type: string }[]>();
+    (leaves ?? []).forEach((l) => {
+      const arr = m.get(l.userId) ?? [];
+      arr.push({ start: new Date(l.startDate), end: new Date(l.endDate), type: l.type });
+      m.set(l.userId, arr);
+    });
+    return m;
+  }, [leaves]);
+  const userHasLeaveInWeek = (userId: string, weekStartIso: string) => {
+    const arr = leavesByUser.get(userId);
+    if (!arr) return null;
+    const ws = new Date(weekStartIso);
+    const we = new Date(ws);
+    we.setDate(ws.getDate() + 6);
+    const hit = arr.find((l) => l.start <= we && l.end >= ws);
+    return hit ? hit.type : null;
+  };
 
   const weekHeaders = useMemo(() => {
     if (!data?.weekStarts) return [];
@@ -141,18 +169,25 @@ export default function ResourcePlanningPage() {
                           </td>
                           {r.cells.map((c) => {
                             const v = c.plannedMandays ?? 0;
-                            const tone =
-                              v >= 6 ? "bg-destructive/30 text-destructive font-bold" :
-                              v >= 4 ? "bg-amber-500/20 text-amber-300 font-semibold" :
-                              v > 0 ? "bg-emerald-500/15 text-emerald-300" :
-                              "text-muted-foreground/50";
+                            const leaveType = userHasLeaveInWeek(r.userId, c.weekStart);
+                            const tone = leaveType
+                              ? "bg-slate-500/30 text-slate-300 italic"
+                              : v >= 6 ? "bg-destructive/30 text-destructive font-bold" :
+                                v >= 4 ? "bg-amber-500/20 text-amber-300 font-semibold" :
+                                v > 0 ? "bg-emerald-500/15 text-emerald-300" :
+                                "text-muted-foreground/50";
                             const allocs = c.allocations ?? [];
-                            const tooltip = allocs.length > 0
+                            const allocTip = allocs.length > 0
                               ? allocs.map((a) => `${a.projectName}: ${a.mandays}md`).join("\n")
                               : "No allocations";
+                            const tooltip = leaveType
+                              ? `LEAVE (${leaveType})\n${allocTip}`
+                              : allocTip;
                             return (
                               <td key={c.weekStart} className={`p-2 text-right font-mono ${tone}`} title={tooltip}>
-                                {v > 0 ? v.toFixed(1) : "—"}
+                                {leaveType
+                                  ? <span title={leaveType}>L{v > 0 ? `·${v.toFixed(1)}` : ""}</span>
+                                  : v > 0 ? v.toFixed(1) : "—"}
                               </td>
                             );
                           })}

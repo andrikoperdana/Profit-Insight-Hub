@@ -38,6 +38,8 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { TableSkeleton } from "@/components/common/Loading";
 import { Pagination, usePagination } from "@/components/common/Pagination";
 import { Button as UIButton } from "@/components/ui/button";
+import WeeklyEntryDialog from "./WeeklyEntryDialog";
+import LeaveDialog from "./LeaveDialog";
 
 function earliestAllowedWorkDate(today: Date, businessDays: number): Date {
   const d = new Date(today);
@@ -80,7 +82,11 @@ export default function TimesheetsWorkspace() {
               : "Log your hours. Submissions go to your Project Manager for approval."}
           </p>
         </div>
-        <LogTimeDialog isAutoApprove={isAutoApprove} />
+        <div className="flex items-center gap-2 flex-wrap">
+          <LeaveDialog />
+          <WeeklyEntryDialog isAutoApprove={isAutoApprove} />
+          <LogTimeDialog isAutoApprove={isAutoApprove} />
+        </div>
       </div>
 
       {canSeeTeam && (

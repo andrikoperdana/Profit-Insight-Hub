@@ -119,6 +119,16 @@ export type Lead = $Result.DefaultSelection<Prisma.$LeadPayload>
  */
 export type LeadActivity = $Result.DefaultSelection<Prisma.$LeadActivityPayload>
 /**
+ * Model UserLeave
+ * 
+ */
+export type UserLeave = $Result.DefaultSelection<Prisma.$UserLeavePayload>
+/**
+ * Model TaskTemplate
+ * 
+ */
+export type TaskTemplate = $Result.DefaultSelection<Prisma.$TaskTemplatePayload>
+/**
  * Model Notification
  * 
  */
@@ -237,6 +247,17 @@ export const LeadActivityType: {
 
 export type LeadActivityType = (typeof LeadActivityType)[keyof typeof LeadActivityType]
 
+
+export const LeaveType: {
+  ANNUAL: 'ANNUAL',
+  SICK: 'SICK',
+  TRAINING: 'TRAINING',
+  UNPAID: 'UNPAID',
+  OTHER: 'OTHER'
+};
+
+export type LeaveType = (typeof LeaveType)[keyof typeof LeaveType]
+
 }
 
 export type UserRole = $Enums.UserRole
@@ -278,6 +299,10 @@ export const LeadStage: typeof $Enums.LeadStage
 export type LeadActivityType = $Enums.LeadActivityType
 
 export const LeadActivityType: typeof $Enums.LeadActivityType
+
+export type LeaveType = $Enums.LeaveType
+
+export const LeaveType: typeof $Enums.LeaveType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -611,6 +636,26 @@ export class PrismaClient<
     * ```
     */
   get leadActivity(): Prisma.LeadActivityDelegate<ExtArgs>;
+
+  /**
+   * `prisma.userLeave`: Exposes CRUD operations for the **UserLeave** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserLeaves
+    * const userLeaves = await prisma.userLeave.findMany()
+    * ```
+    */
+  get userLeave(): Prisma.UserLeaveDelegate<ExtArgs>;
+
+  /**
+   * `prisma.taskTemplate`: Exposes CRUD operations for the **TaskTemplate** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TaskTemplates
+    * const taskTemplates = await prisma.taskTemplate.findMany()
+    * ```
+    */
+  get taskTemplate(): Prisma.TaskTemplateDelegate<ExtArgs>;
 
   /**
    * `prisma.notification`: Exposes CRUD operations for the **Notification** model.
@@ -1083,6 +1128,8 @@ export namespace Prisma {
     TaskTimeLog: 'TaskTimeLog',
     Lead: 'Lead',
     LeadActivity: 'LeadActivity',
+    UserLeave: 'UserLeave',
+    TaskTemplate: 'TaskTemplate',
     Notification: 'Notification'
   };
 
@@ -1099,7 +1146,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "client" | "project" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "notification"
+      modelProps: "user" | "client" | "project" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "notification"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2573,6 +2620,146 @@ export namespace Prisma {
           }
         }
       }
+      UserLeave: {
+        payload: Prisma.$UserLeavePayload<ExtArgs>
+        fields: Prisma.UserLeaveFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserLeaveFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserLeavePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserLeaveFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserLeavePayload>
+          }
+          findFirst: {
+            args: Prisma.UserLeaveFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserLeavePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserLeaveFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserLeavePayload>
+          }
+          findMany: {
+            args: Prisma.UserLeaveFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserLeavePayload>[]
+          }
+          create: {
+            args: Prisma.UserLeaveCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserLeavePayload>
+          }
+          createMany: {
+            args: Prisma.UserLeaveCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserLeaveCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserLeavePayload>[]
+          }
+          delete: {
+            args: Prisma.UserLeaveDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserLeavePayload>
+          }
+          update: {
+            args: Prisma.UserLeaveUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserLeavePayload>
+          }
+          deleteMany: {
+            args: Prisma.UserLeaveDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserLeaveUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.UserLeaveUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserLeavePayload>
+          }
+          aggregate: {
+            args: Prisma.UserLeaveAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserLeave>
+          }
+          groupBy: {
+            args: Prisma.UserLeaveGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserLeaveGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserLeaveCountArgs<ExtArgs>
+            result: $Utils.Optional<UserLeaveCountAggregateOutputType> | number
+          }
+        }
+      }
+      TaskTemplate: {
+        payload: Prisma.$TaskTemplatePayload<ExtArgs>
+        fields: Prisma.TaskTemplateFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TaskTemplateFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskTemplatePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TaskTemplateFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskTemplatePayload>
+          }
+          findFirst: {
+            args: Prisma.TaskTemplateFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskTemplatePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TaskTemplateFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskTemplatePayload>
+          }
+          findMany: {
+            args: Prisma.TaskTemplateFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskTemplatePayload>[]
+          }
+          create: {
+            args: Prisma.TaskTemplateCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskTemplatePayload>
+          }
+          createMany: {
+            args: Prisma.TaskTemplateCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TaskTemplateCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskTemplatePayload>[]
+          }
+          delete: {
+            args: Prisma.TaskTemplateDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskTemplatePayload>
+          }
+          update: {
+            args: Prisma.TaskTemplateUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskTemplatePayload>
+          }
+          deleteMany: {
+            args: Prisma.TaskTemplateDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TaskTemplateUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.TaskTemplateUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskTemplatePayload>
+          }
+          aggregate: {
+            args: Prisma.TaskTemplateAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTaskTemplate>
+          }
+          groupBy: {
+            args: Prisma.TaskTemplateGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TaskTemplateGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TaskTemplateCountArgs<ExtArgs>
+            result: $Utils.Optional<TaskTemplateCountAggregateOutputType> | number
+          }
+        }
+      }
       Notification: {
         payload: Prisma.$NotificationPayload<ExtArgs>
         fields: Prisma.NotificationFieldRefs
@@ -2827,6 +3014,8 @@ export namespace Prisma {
     notifications: number
     leadsOwned: number
     leadActivities: number
+    leaves: number
+    taskTemplatesCreated: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2853,6 +3042,8 @@ export namespace Prisma {
     notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
     leadsOwned?: boolean | UserCountOutputTypeCountLeadsOwnedArgs
     leadActivities?: boolean | UserCountOutputTypeCountLeadActivitiesArgs
+    leaves?: boolean | UserCountOutputTypeCountLeavesArgs
+    taskTemplatesCreated?: boolean | UserCountOutputTypeCountTaskTemplatesCreatedArgs
   }
 
   // Custom InputTypes
@@ -3027,6 +3218,20 @@ export namespace Prisma {
     where?: LeadActivityWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountLeavesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserLeaveWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountTaskTemplatesCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaskTemplateWhereInput
+  }
+
 
   /**
    * Count Type ClientCountOutputType
@@ -3168,10 +3373,12 @@ export namespace Prisma {
 
   export type BusinessUnitCountOutputType = {
     users: number
+    taskTemplates: number
   }
 
   export type BusinessUnitCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | BusinessUnitCountOutputTypeCountUsersArgs
+    taskTemplates?: boolean | BusinessUnitCountOutputTypeCountTaskTemplatesArgs
   }
 
   // Custom InputTypes
@@ -3190,6 +3397,13 @@ export namespace Prisma {
    */
   export type BusinessUnitCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserWhereInput
+  }
+
+  /**
+   * BusinessUnitCountOutputType without action
+   */
+  export type BusinessUnitCountOutputTypeCountTaskTemplatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaskTemplateWhereInput
   }
 
 
@@ -3639,6 +3853,8 @@ export namespace Prisma {
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     leadsOwned?: boolean | User$leadsOwnedArgs<ExtArgs>
     leadActivities?: boolean | User$leadActivitiesArgs<ExtArgs>
+    leaves?: boolean | User$leavesArgs<ExtArgs>
+    taskTemplatesCreated?: boolean | User$taskTemplatesCreatedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3708,6 +3924,8 @@ export namespace Prisma {
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     leadsOwned?: boolean | User$leadsOwnedArgs<ExtArgs>
     leadActivities?: boolean | User$leadActivitiesArgs<ExtArgs>
+    leaves?: boolean | User$leavesArgs<ExtArgs>
+    taskTemplatesCreated?: boolean | User$taskTemplatesCreatedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3745,6 +3963,8 @@ export namespace Prisma {
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
       leadsOwned: Prisma.$LeadPayload<ExtArgs>[]
       leadActivities: Prisma.$LeadActivityPayload<ExtArgs>[]
+      leaves: Prisma.$UserLeavePayload<ExtArgs>[]
+      taskTemplatesCreated: Prisma.$TaskTemplatePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4152,6 +4372,8 @@ export namespace Prisma {
     notifications<T extends User$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany"> | Null>
     leadsOwned<T extends User$leadsOwnedArgs<ExtArgs> = {}>(args?: Subset<T, User$leadsOwnedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany"> | Null>
     leadActivities<T extends User$leadActivitiesArgs<ExtArgs> = {}>(args?: Subset<T, User$leadActivitiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadActivityPayload<ExtArgs>, T, "findMany"> | Null>
+    leaves<T extends User$leavesArgs<ExtArgs> = {}>(args?: Subset<T, User$leavesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserLeavePayload<ExtArgs>, T, "findMany"> | Null>
+    taskTemplatesCreated<T extends User$taskTemplatesCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$taskTemplatesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskTemplatePayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5016,6 +5238,46 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: LeadActivityScalarFieldEnum | LeadActivityScalarFieldEnum[]
+  }
+
+  /**
+   * User.leaves
+   */
+  export type User$leavesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLeave
+     */
+    select?: UserLeaveSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLeaveInclude<ExtArgs> | null
+    where?: UserLeaveWhereInput
+    orderBy?: UserLeaveOrderByWithRelationInput | UserLeaveOrderByWithRelationInput[]
+    cursor?: UserLeaveWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserLeaveScalarFieldEnum | UserLeaveScalarFieldEnum[]
+  }
+
+  /**
+   * User.taskTemplatesCreated
+   */
+  export type User$taskTemplatesCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskTemplate
+     */
+    select?: TaskTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskTemplateInclude<ExtArgs> | null
+    where?: TaskTemplateWhereInput
+    orderBy?: TaskTemplateOrderByWithRelationInput | TaskTemplateOrderByWithRelationInput[]
+    cursor?: TaskTemplateWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TaskTemplateScalarFieldEnum | TaskTemplateScalarFieldEnum[]
   }
 
   /**
@@ -15050,6 +15312,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     users?: boolean | BusinessUnit$usersArgs<ExtArgs>
+    taskTemplates?: boolean | BusinessUnit$taskTemplatesArgs<ExtArgs>
     _count?: boolean | BusinessUnitCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["businessUnit"]>
 
@@ -15073,6 +15336,7 @@ export namespace Prisma {
 
   export type BusinessUnitInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | BusinessUnit$usersArgs<ExtArgs>
+    taskTemplates?: boolean | BusinessUnit$taskTemplatesArgs<ExtArgs>
     _count?: boolean | BusinessUnitCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type BusinessUnitIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -15081,6 +15345,7 @@ export namespace Prisma {
     name: "BusinessUnit"
     objects: {
       users: Prisma.$UserPayload<ExtArgs>[]
+      taskTemplates: Prisma.$TaskTemplatePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -15454,6 +15719,7 @@ export namespace Prisma {
   export interface Prisma__BusinessUnitClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     users<T extends BusinessUnit$usersArgs<ExtArgs> = {}>(args?: Subset<T, BusinessUnit$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany"> | Null>
+    taskTemplates<T extends BusinessUnit$taskTemplatesArgs<ExtArgs> = {}>(args?: Subset<T, BusinessUnit$taskTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskTemplatePayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -15820,6 +16086,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * BusinessUnit.taskTemplates
+   */
+  export type BusinessUnit$taskTemplatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskTemplate
+     */
+    select?: TaskTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskTemplateInclude<ExtArgs> | null
+    where?: TaskTemplateWhereInput
+    orderBy?: TaskTemplateOrderByWithRelationInput | TaskTemplateOrderByWithRelationInput[]
+    cursor?: TaskTemplateWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TaskTemplateScalarFieldEnum | TaskTemplateScalarFieldEnum[]
   }
 
   /**
@@ -26191,6 +26477,1973 @@ export namespace Prisma {
 
 
   /**
+   * Model UserLeave
+   */
+
+  export type AggregateUserLeave = {
+    _count: UserLeaveCountAggregateOutputType | null
+    _min: UserLeaveMinAggregateOutputType | null
+    _max: UserLeaveMaxAggregateOutputType | null
+  }
+
+  export type UserLeaveMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    startDate: Date | null
+    endDate: Date | null
+    type: $Enums.LeaveType | null
+    note: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserLeaveMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    startDate: Date | null
+    endDate: Date | null
+    type: $Enums.LeaveType | null
+    note: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserLeaveCountAggregateOutputType = {
+    id: number
+    userId: number
+    startDate: number
+    endDate: number
+    type: number
+    note: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type UserLeaveMinAggregateInputType = {
+    id?: true
+    userId?: true
+    startDate?: true
+    endDate?: true
+    type?: true
+    note?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserLeaveMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    startDate?: true
+    endDate?: true
+    type?: true
+    note?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserLeaveCountAggregateInputType = {
+    id?: true
+    userId?: true
+    startDate?: true
+    endDate?: true
+    type?: true
+    note?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type UserLeaveAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserLeave to aggregate.
+     */
+    where?: UserLeaveWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserLeaves to fetch.
+     */
+    orderBy?: UserLeaveOrderByWithRelationInput | UserLeaveOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserLeaveWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserLeaves from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserLeaves.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserLeaves
+    **/
+    _count?: true | UserLeaveCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserLeaveMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserLeaveMaxAggregateInputType
+  }
+
+  export type GetUserLeaveAggregateType<T extends UserLeaveAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserLeave]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserLeave[P]>
+      : GetScalarType<T[P], AggregateUserLeave[P]>
+  }
+
+
+
+
+  export type UserLeaveGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserLeaveWhereInput
+    orderBy?: UserLeaveOrderByWithAggregationInput | UserLeaveOrderByWithAggregationInput[]
+    by: UserLeaveScalarFieldEnum[] | UserLeaveScalarFieldEnum
+    having?: UserLeaveScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserLeaveCountAggregateInputType | true
+    _min?: UserLeaveMinAggregateInputType
+    _max?: UserLeaveMaxAggregateInputType
+  }
+
+  export type UserLeaveGroupByOutputType = {
+    id: string
+    userId: string
+    startDate: Date
+    endDate: Date
+    type: $Enums.LeaveType
+    note: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: UserLeaveCountAggregateOutputType | null
+    _min: UserLeaveMinAggregateOutputType | null
+    _max: UserLeaveMaxAggregateOutputType | null
+  }
+
+  type GetUserLeaveGroupByPayload<T extends UserLeaveGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserLeaveGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserLeaveGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserLeaveGroupByOutputType[P]>
+            : GetScalarType<T[P], UserLeaveGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserLeaveSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    type?: boolean
+    note?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userLeave"]>
+
+  export type UserLeaveSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    type?: boolean
+    note?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userLeave"]>
+
+  export type UserLeaveSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    type?: boolean
+    note?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type UserLeaveInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserLeaveIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $UserLeavePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserLeave"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      startDate: Date
+      endDate: Date
+      type: $Enums.LeaveType
+      note: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["userLeave"]>
+    composites: {}
+  }
+
+  type UserLeaveGetPayload<S extends boolean | null | undefined | UserLeaveDefaultArgs> = $Result.GetResult<Prisma.$UserLeavePayload, S>
+
+  type UserLeaveCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<UserLeaveFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: UserLeaveCountAggregateInputType | true
+    }
+
+  export interface UserLeaveDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserLeave'], meta: { name: 'UserLeave' } }
+    /**
+     * Find zero or one UserLeave that matches the filter.
+     * @param {UserLeaveFindUniqueArgs} args - Arguments to find a UserLeave
+     * @example
+     * // Get one UserLeave
+     * const userLeave = await prisma.userLeave.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserLeaveFindUniqueArgs>(args: SelectSubset<T, UserLeaveFindUniqueArgs<ExtArgs>>): Prisma__UserLeaveClient<$Result.GetResult<Prisma.$UserLeavePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one UserLeave that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {UserLeaveFindUniqueOrThrowArgs} args - Arguments to find a UserLeave
+     * @example
+     * // Get one UserLeave
+     * const userLeave = await prisma.userLeave.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserLeaveFindUniqueOrThrowArgs>(args: SelectSubset<T, UserLeaveFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserLeaveClient<$Result.GetResult<Prisma.$UserLeavePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first UserLeave that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserLeaveFindFirstArgs} args - Arguments to find a UserLeave
+     * @example
+     * // Get one UserLeave
+     * const userLeave = await prisma.userLeave.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserLeaveFindFirstArgs>(args?: SelectSubset<T, UserLeaveFindFirstArgs<ExtArgs>>): Prisma__UserLeaveClient<$Result.GetResult<Prisma.$UserLeavePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first UserLeave that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserLeaveFindFirstOrThrowArgs} args - Arguments to find a UserLeave
+     * @example
+     * // Get one UserLeave
+     * const userLeave = await prisma.userLeave.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserLeaveFindFirstOrThrowArgs>(args?: SelectSubset<T, UserLeaveFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserLeaveClient<$Result.GetResult<Prisma.$UserLeavePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more UserLeaves that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserLeaveFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserLeaves
+     * const userLeaves = await prisma.userLeave.findMany()
+     * 
+     * // Get first 10 UserLeaves
+     * const userLeaves = await prisma.userLeave.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userLeaveWithIdOnly = await prisma.userLeave.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserLeaveFindManyArgs>(args?: SelectSubset<T, UserLeaveFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserLeavePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a UserLeave.
+     * @param {UserLeaveCreateArgs} args - Arguments to create a UserLeave.
+     * @example
+     * // Create one UserLeave
+     * const UserLeave = await prisma.userLeave.create({
+     *   data: {
+     *     // ... data to create a UserLeave
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserLeaveCreateArgs>(args: SelectSubset<T, UserLeaveCreateArgs<ExtArgs>>): Prisma__UserLeaveClient<$Result.GetResult<Prisma.$UserLeavePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many UserLeaves.
+     * @param {UserLeaveCreateManyArgs} args - Arguments to create many UserLeaves.
+     * @example
+     * // Create many UserLeaves
+     * const userLeave = await prisma.userLeave.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserLeaveCreateManyArgs>(args?: SelectSubset<T, UserLeaveCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserLeaves and returns the data saved in the database.
+     * @param {UserLeaveCreateManyAndReturnArgs} args - Arguments to create many UserLeaves.
+     * @example
+     * // Create many UserLeaves
+     * const userLeave = await prisma.userLeave.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserLeaves and only return the `id`
+     * const userLeaveWithIdOnly = await prisma.userLeave.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserLeaveCreateManyAndReturnArgs>(args?: SelectSubset<T, UserLeaveCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserLeavePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a UserLeave.
+     * @param {UserLeaveDeleteArgs} args - Arguments to delete one UserLeave.
+     * @example
+     * // Delete one UserLeave
+     * const UserLeave = await prisma.userLeave.delete({
+     *   where: {
+     *     // ... filter to delete one UserLeave
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserLeaveDeleteArgs>(args: SelectSubset<T, UserLeaveDeleteArgs<ExtArgs>>): Prisma__UserLeaveClient<$Result.GetResult<Prisma.$UserLeavePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one UserLeave.
+     * @param {UserLeaveUpdateArgs} args - Arguments to update one UserLeave.
+     * @example
+     * // Update one UserLeave
+     * const userLeave = await prisma.userLeave.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserLeaveUpdateArgs>(args: SelectSubset<T, UserLeaveUpdateArgs<ExtArgs>>): Prisma__UserLeaveClient<$Result.GetResult<Prisma.$UserLeavePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more UserLeaves.
+     * @param {UserLeaveDeleteManyArgs} args - Arguments to filter UserLeaves to delete.
+     * @example
+     * // Delete a few UserLeaves
+     * const { count } = await prisma.userLeave.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserLeaveDeleteManyArgs>(args?: SelectSubset<T, UserLeaveDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserLeaves.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserLeaveUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserLeaves
+     * const userLeave = await prisma.userLeave.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserLeaveUpdateManyArgs>(args: SelectSubset<T, UserLeaveUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one UserLeave.
+     * @param {UserLeaveUpsertArgs} args - Arguments to update or create a UserLeave.
+     * @example
+     * // Update or create a UserLeave
+     * const userLeave = await prisma.userLeave.upsert({
+     *   create: {
+     *     // ... data to create a UserLeave
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserLeave we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserLeaveUpsertArgs>(args: SelectSubset<T, UserLeaveUpsertArgs<ExtArgs>>): Prisma__UserLeaveClient<$Result.GetResult<Prisma.$UserLeavePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of UserLeaves.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserLeaveCountArgs} args - Arguments to filter UserLeaves to count.
+     * @example
+     * // Count the number of UserLeaves
+     * const count = await prisma.userLeave.count({
+     *   where: {
+     *     // ... the filter for the UserLeaves we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserLeaveCountArgs>(
+      args?: Subset<T, UserLeaveCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserLeaveCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserLeave.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserLeaveAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserLeaveAggregateArgs>(args: Subset<T, UserLeaveAggregateArgs>): Prisma.PrismaPromise<GetUserLeaveAggregateType<T>>
+
+    /**
+     * Group by UserLeave.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserLeaveGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserLeaveGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserLeaveGroupByArgs['orderBy'] }
+        : { orderBy?: UserLeaveGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserLeaveGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserLeaveGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserLeave model
+   */
+  readonly fields: UserLeaveFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserLeave.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserLeaveClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserLeave model
+   */ 
+  interface UserLeaveFieldRefs {
+    readonly id: FieldRef<"UserLeave", 'String'>
+    readonly userId: FieldRef<"UserLeave", 'String'>
+    readonly startDate: FieldRef<"UserLeave", 'DateTime'>
+    readonly endDate: FieldRef<"UserLeave", 'DateTime'>
+    readonly type: FieldRef<"UserLeave", 'LeaveType'>
+    readonly note: FieldRef<"UserLeave", 'String'>
+    readonly createdAt: FieldRef<"UserLeave", 'DateTime'>
+    readonly updatedAt: FieldRef<"UserLeave", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserLeave findUnique
+   */
+  export type UserLeaveFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLeave
+     */
+    select?: UserLeaveSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLeaveInclude<ExtArgs> | null
+    /**
+     * Filter, which UserLeave to fetch.
+     */
+    where: UserLeaveWhereUniqueInput
+  }
+
+  /**
+   * UserLeave findUniqueOrThrow
+   */
+  export type UserLeaveFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLeave
+     */
+    select?: UserLeaveSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLeaveInclude<ExtArgs> | null
+    /**
+     * Filter, which UserLeave to fetch.
+     */
+    where: UserLeaveWhereUniqueInput
+  }
+
+  /**
+   * UserLeave findFirst
+   */
+  export type UserLeaveFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLeave
+     */
+    select?: UserLeaveSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLeaveInclude<ExtArgs> | null
+    /**
+     * Filter, which UserLeave to fetch.
+     */
+    where?: UserLeaveWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserLeaves to fetch.
+     */
+    orderBy?: UserLeaveOrderByWithRelationInput | UserLeaveOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserLeaves.
+     */
+    cursor?: UserLeaveWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserLeaves from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserLeaves.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserLeaves.
+     */
+    distinct?: UserLeaveScalarFieldEnum | UserLeaveScalarFieldEnum[]
+  }
+
+  /**
+   * UserLeave findFirstOrThrow
+   */
+  export type UserLeaveFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLeave
+     */
+    select?: UserLeaveSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLeaveInclude<ExtArgs> | null
+    /**
+     * Filter, which UserLeave to fetch.
+     */
+    where?: UserLeaveWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserLeaves to fetch.
+     */
+    orderBy?: UserLeaveOrderByWithRelationInput | UserLeaveOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserLeaves.
+     */
+    cursor?: UserLeaveWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserLeaves from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserLeaves.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserLeaves.
+     */
+    distinct?: UserLeaveScalarFieldEnum | UserLeaveScalarFieldEnum[]
+  }
+
+  /**
+   * UserLeave findMany
+   */
+  export type UserLeaveFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLeave
+     */
+    select?: UserLeaveSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLeaveInclude<ExtArgs> | null
+    /**
+     * Filter, which UserLeaves to fetch.
+     */
+    where?: UserLeaveWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserLeaves to fetch.
+     */
+    orderBy?: UserLeaveOrderByWithRelationInput | UserLeaveOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserLeaves.
+     */
+    cursor?: UserLeaveWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserLeaves from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserLeaves.
+     */
+    skip?: number
+    distinct?: UserLeaveScalarFieldEnum | UserLeaveScalarFieldEnum[]
+  }
+
+  /**
+   * UserLeave create
+   */
+  export type UserLeaveCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLeave
+     */
+    select?: UserLeaveSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLeaveInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserLeave.
+     */
+    data: XOR<UserLeaveCreateInput, UserLeaveUncheckedCreateInput>
+  }
+
+  /**
+   * UserLeave createMany
+   */
+  export type UserLeaveCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserLeaves.
+     */
+    data: UserLeaveCreateManyInput | UserLeaveCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserLeave createManyAndReturn
+   */
+  export type UserLeaveCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLeave
+     */
+    select?: UserLeaveSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many UserLeaves.
+     */
+    data: UserLeaveCreateManyInput | UserLeaveCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLeaveIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserLeave update
+   */
+  export type UserLeaveUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLeave
+     */
+    select?: UserLeaveSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLeaveInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserLeave.
+     */
+    data: XOR<UserLeaveUpdateInput, UserLeaveUncheckedUpdateInput>
+    /**
+     * Choose, which UserLeave to update.
+     */
+    where: UserLeaveWhereUniqueInput
+  }
+
+  /**
+   * UserLeave updateMany
+   */
+  export type UserLeaveUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserLeaves.
+     */
+    data: XOR<UserLeaveUpdateManyMutationInput, UserLeaveUncheckedUpdateManyInput>
+    /**
+     * Filter which UserLeaves to update
+     */
+    where?: UserLeaveWhereInput
+  }
+
+  /**
+   * UserLeave upsert
+   */
+  export type UserLeaveUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLeave
+     */
+    select?: UserLeaveSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLeaveInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserLeave to update in case it exists.
+     */
+    where: UserLeaveWhereUniqueInput
+    /**
+     * In case the UserLeave found by the `where` argument doesn't exist, create a new UserLeave with this data.
+     */
+    create: XOR<UserLeaveCreateInput, UserLeaveUncheckedCreateInput>
+    /**
+     * In case the UserLeave was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserLeaveUpdateInput, UserLeaveUncheckedUpdateInput>
+  }
+
+  /**
+   * UserLeave delete
+   */
+  export type UserLeaveDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLeave
+     */
+    select?: UserLeaveSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLeaveInclude<ExtArgs> | null
+    /**
+     * Filter which UserLeave to delete.
+     */
+    where: UserLeaveWhereUniqueInput
+  }
+
+  /**
+   * UserLeave deleteMany
+   */
+  export type UserLeaveDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserLeaves to delete
+     */
+    where?: UserLeaveWhereInput
+  }
+
+  /**
+   * UserLeave without action
+   */
+  export type UserLeaveDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLeave
+     */
+    select?: UserLeaveSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLeaveInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TaskTemplate
+   */
+
+  export type AggregateTaskTemplate = {
+    _count: TaskTemplateCountAggregateOutputType | null
+    _min: TaskTemplateMinAggregateOutputType | null
+    _max: TaskTemplateMaxAggregateOutputType | null
+  }
+
+  export type TaskTemplateMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    businessUnitId: string | null
+    createdById: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TaskTemplateMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    businessUnitId: string | null
+    createdById: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TaskTemplateCountAggregateOutputType = {
+    id: number
+    name: number
+    description: number
+    businessUnitId: number
+    tasks: number
+    createdById: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TaskTemplateMinAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    businessUnitId?: true
+    createdById?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TaskTemplateMaxAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    businessUnitId?: true
+    createdById?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TaskTemplateCountAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    businessUnitId?: true
+    tasks?: true
+    createdById?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TaskTemplateAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TaskTemplate to aggregate.
+     */
+    where?: TaskTemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TaskTemplates to fetch.
+     */
+    orderBy?: TaskTemplateOrderByWithRelationInput | TaskTemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TaskTemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TaskTemplates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TaskTemplates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TaskTemplates
+    **/
+    _count?: true | TaskTemplateCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TaskTemplateMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TaskTemplateMaxAggregateInputType
+  }
+
+  export type GetTaskTemplateAggregateType<T extends TaskTemplateAggregateArgs> = {
+        [P in keyof T & keyof AggregateTaskTemplate]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTaskTemplate[P]>
+      : GetScalarType<T[P], AggregateTaskTemplate[P]>
+  }
+
+
+
+
+  export type TaskTemplateGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaskTemplateWhereInput
+    orderBy?: TaskTemplateOrderByWithAggregationInput | TaskTemplateOrderByWithAggregationInput[]
+    by: TaskTemplateScalarFieldEnum[] | TaskTemplateScalarFieldEnum
+    having?: TaskTemplateScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TaskTemplateCountAggregateInputType | true
+    _min?: TaskTemplateMinAggregateInputType
+    _max?: TaskTemplateMaxAggregateInputType
+  }
+
+  export type TaskTemplateGroupByOutputType = {
+    id: string
+    name: string
+    description: string | null
+    businessUnitId: string | null
+    tasks: JsonValue
+    createdById: string
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: TaskTemplateCountAggregateOutputType | null
+    _min: TaskTemplateMinAggregateOutputType | null
+    _max: TaskTemplateMaxAggregateOutputType | null
+  }
+
+  type GetTaskTemplateGroupByPayload<T extends TaskTemplateGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TaskTemplateGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TaskTemplateGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TaskTemplateGroupByOutputType[P]>
+            : GetScalarType<T[P], TaskTemplateGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TaskTemplateSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    businessUnitId?: boolean
+    tasks?: boolean
+    createdById?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    businessUnit?: boolean | TaskTemplate$businessUnitArgs<ExtArgs>
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["taskTemplate"]>
+
+  export type TaskTemplateSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    businessUnitId?: boolean
+    tasks?: boolean
+    createdById?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    businessUnit?: boolean | TaskTemplate$businessUnitArgs<ExtArgs>
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["taskTemplate"]>
+
+  export type TaskTemplateSelectScalar = {
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    businessUnitId?: boolean
+    tasks?: boolean
+    createdById?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TaskTemplateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    businessUnit?: boolean | TaskTemplate$businessUnitArgs<ExtArgs>
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type TaskTemplateIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    businessUnit?: boolean | TaskTemplate$businessUnitArgs<ExtArgs>
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $TaskTemplatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TaskTemplate"
+    objects: {
+      businessUnit: Prisma.$BusinessUnitPayload<ExtArgs> | null
+      createdBy: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      description: string | null
+      businessUnitId: string | null
+      tasks: Prisma.JsonValue
+      createdById: string
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["taskTemplate"]>
+    composites: {}
+  }
+
+  type TaskTemplateGetPayload<S extends boolean | null | undefined | TaskTemplateDefaultArgs> = $Result.GetResult<Prisma.$TaskTemplatePayload, S>
+
+  type TaskTemplateCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<TaskTemplateFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: TaskTemplateCountAggregateInputType | true
+    }
+
+  export interface TaskTemplateDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TaskTemplate'], meta: { name: 'TaskTemplate' } }
+    /**
+     * Find zero or one TaskTemplate that matches the filter.
+     * @param {TaskTemplateFindUniqueArgs} args - Arguments to find a TaskTemplate
+     * @example
+     * // Get one TaskTemplate
+     * const taskTemplate = await prisma.taskTemplate.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TaskTemplateFindUniqueArgs>(args: SelectSubset<T, TaskTemplateFindUniqueArgs<ExtArgs>>): Prisma__TaskTemplateClient<$Result.GetResult<Prisma.$TaskTemplatePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one TaskTemplate that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {TaskTemplateFindUniqueOrThrowArgs} args - Arguments to find a TaskTemplate
+     * @example
+     * // Get one TaskTemplate
+     * const taskTemplate = await prisma.taskTemplate.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TaskTemplateFindUniqueOrThrowArgs>(args: SelectSubset<T, TaskTemplateFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TaskTemplateClient<$Result.GetResult<Prisma.$TaskTemplatePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first TaskTemplate that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskTemplateFindFirstArgs} args - Arguments to find a TaskTemplate
+     * @example
+     * // Get one TaskTemplate
+     * const taskTemplate = await prisma.taskTemplate.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TaskTemplateFindFirstArgs>(args?: SelectSubset<T, TaskTemplateFindFirstArgs<ExtArgs>>): Prisma__TaskTemplateClient<$Result.GetResult<Prisma.$TaskTemplatePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first TaskTemplate that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskTemplateFindFirstOrThrowArgs} args - Arguments to find a TaskTemplate
+     * @example
+     * // Get one TaskTemplate
+     * const taskTemplate = await prisma.taskTemplate.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TaskTemplateFindFirstOrThrowArgs>(args?: SelectSubset<T, TaskTemplateFindFirstOrThrowArgs<ExtArgs>>): Prisma__TaskTemplateClient<$Result.GetResult<Prisma.$TaskTemplatePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more TaskTemplates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskTemplateFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TaskTemplates
+     * const taskTemplates = await prisma.taskTemplate.findMany()
+     * 
+     * // Get first 10 TaskTemplates
+     * const taskTemplates = await prisma.taskTemplate.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const taskTemplateWithIdOnly = await prisma.taskTemplate.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TaskTemplateFindManyArgs>(args?: SelectSubset<T, TaskTemplateFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskTemplatePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a TaskTemplate.
+     * @param {TaskTemplateCreateArgs} args - Arguments to create a TaskTemplate.
+     * @example
+     * // Create one TaskTemplate
+     * const TaskTemplate = await prisma.taskTemplate.create({
+     *   data: {
+     *     // ... data to create a TaskTemplate
+     *   }
+     * })
+     * 
+     */
+    create<T extends TaskTemplateCreateArgs>(args: SelectSubset<T, TaskTemplateCreateArgs<ExtArgs>>): Prisma__TaskTemplateClient<$Result.GetResult<Prisma.$TaskTemplatePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many TaskTemplates.
+     * @param {TaskTemplateCreateManyArgs} args - Arguments to create many TaskTemplates.
+     * @example
+     * // Create many TaskTemplates
+     * const taskTemplate = await prisma.taskTemplate.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TaskTemplateCreateManyArgs>(args?: SelectSubset<T, TaskTemplateCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TaskTemplates and returns the data saved in the database.
+     * @param {TaskTemplateCreateManyAndReturnArgs} args - Arguments to create many TaskTemplates.
+     * @example
+     * // Create many TaskTemplates
+     * const taskTemplate = await prisma.taskTemplate.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TaskTemplates and only return the `id`
+     * const taskTemplateWithIdOnly = await prisma.taskTemplate.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TaskTemplateCreateManyAndReturnArgs>(args?: SelectSubset<T, TaskTemplateCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskTemplatePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a TaskTemplate.
+     * @param {TaskTemplateDeleteArgs} args - Arguments to delete one TaskTemplate.
+     * @example
+     * // Delete one TaskTemplate
+     * const TaskTemplate = await prisma.taskTemplate.delete({
+     *   where: {
+     *     // ... filter to delete one TaskTemplate
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TaskTemplateDeleteArgs>(args: SelectSubset<T, TaskTemplateDeleteArgs<ExtArgs>>): Prisma__TaskTemplateClient<$Result.GetResult<Prisma.$TaskTemplatePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one TaskTemplate.
+     * @param {TaskTemplateUpdateArgs} args - Arguments to update one TaskTemplate.
+     * @example
+     * // Update one TaskTemplate
+     * const taskTemplate = await prisma.taskTemplate.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TaskTemplateUpdateArgs>(args: SelectSubset<T, TaskTemplateUpdateArgs<ExtArgs>>): Prisma__TaskTemplateClient<$Result.GetResult<Prisma.$TaskTemplatePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more TaskTemplates.
+     * @param {TaskTemplateDeleteManyArgs} args - Arguments to filter TaskTemplates to delete.
+     * @example
+     * // Delete a few TaskTemplates
+     * const { count } = await prisma.taskTemplate.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TaskTemplateDeleteManyArgs>(args?: SelectSubset<T, TaskTemplateDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TaskTemplates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskTemplateUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TaskTemplates
+     * const taskTemplate = await prisma.taskTemplate.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TaskTemplateUpdateManyArgs>(args: SelectSubset<T, TaskTemplateUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one TaskTemplate.
+     * @param {TaskTemplateUpsertArgs} args - Arguments to update or create a TaskTemplate.
+     * @example
+     * // Update or create a TaskTemplate
+     * const taskTemplate = await prisma.taskTemplate.upsert({
+     *   create: {
+     *     // ... data to create a TaskTemplate
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TaskTemplate we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TaskTemplateUpsertArgs>(args: SelectSubset<T, TaskTemplateUpsertArgs<ExtArgs>>): Prisma__TaskTemplateClient<$Result.GetResult<Prisma.$TaskTemplatePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of TaskTemplates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskTemplateCountArgs} args - Arguments to filter TaskTemplates to count.
+     * @example
+     * // Count the number of TaskTemplates
+     * const count = await prisma.taskTemplate.count({
+     *   where: {
+     *     // ... the filter for the TaskTemplates we want to count
+     *   }
+     * })
+    **/
+    count<T extends TaskTemplateCountArgs>(
+      args?: Subset<T, TaskTemplateCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TaskTemplateCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TaskTemplate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskTemplateAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TaskTemplateAggregateArgs>(args: Subset<T, TaskTemplateAggregateArgs>): Prisma.PrismaPromise<GetTaskTemplateAggregateType<T>>
+
+    /**
+     * Group by TaskTemplate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskTemplateGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TaskTemplateGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TaskTemplateGroupByArgs['orderBy'] }
+        : { orderBy?: TaskTemplateGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TaskTemplateGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTaskTemplateGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TaskTemplate model
+   */
+  readonly fields: TaskTemplateFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TaskTemplate.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TaskTemplateClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    businessUnit<T extends TaskTemplate$businessUnitArgs<ExtArgs> = {}>(args?: Subset<T, TaskTemplate$businessUnitArgs<ExtArgs>>): Prisma__BusinessUnitClient<$Result.GetResult<Prisma.$BusinessUnitPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    createdBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TaskTemplate model
+   */ 
+  interface TaskTemplateFieldRefs {
+    readonly id: FieldRef<"TaskTemplate", 'String'>
+    readonly name: FieldRef<"TaskTemplate", 'String'>
+    readonly description: FieldRef<"TaskTemplate", 'String'>
+    readonly businessUnitId: FieldRef<"TaskTemplate", 'String'>
+    readonly tasks: FieldRef<"TaskTemplate", 'Json'>
+    readonly createdById: FieldRef<"TaskTemplate", 'String'>
+    readonly isActive: FieldRef<"TaskTemplate", 'Boolean'>
+    readonly createdAt: FieldRef<"TaskTemplate", 'DateTime'>
+    readonly updatedAt: FieldRef<"TaskTemplate", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TaskTemplate findUnique
+   */
+  export type TaskTemplateFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskTemplate
+     */
+    select?: TaskTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskTemplateInclude<ExtArgs> | null
+    /**
+     * Filter, which TaskTemplate to fetch.
+     */
+    where: TaskTemplateWhereUniqueInput
+  }
+
+  /**
+   * TaskTemplate findUniqueOrThrow
+   */
+  export type TaskTemplateFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskTemplate
+     */
+    select?: TaskTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskTemplateInclude<ExtArgs> | null
+    /**
+     * Filter, which TaskTemplate to fetch.
+     */
+    where: TaskTemplateWhereUniqueInput
+  }
+
+  /**
+   * TaskTemplate findFirst
+   */
+  export type TaskTemplateFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskTemplate
+     */
+    select?: TaskTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskTemplateInclude<ExtArgs> | null
+    /**
+     * Filter, which TaskTemplate to fetch.
+     */
+    where?: TaskTemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TaskTemplates to fetch.
+     */
+    orderBy?: TaskTemplateOrderByWithRelationInput | TaskTemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TaskTemplates.
+     */
+    cursor?: TaskTemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TaskTemplates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TaskTemplates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TaskTemplates.
+     */
+    distinct?: TaskTemplateScalarFieldEnum | TaskTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * TaskTemplate findFirstOrThrow
+   */
+  export type TaskTemplateFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskTemplate
+     */
+    select?: TaskTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskTemplateInclude<ExtArgs> | null
+    /**
+     * Filter, which TaskTemplate to fetch.
+     */
+    where?: TaskTemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TaskTemplates to fetch.
+     */
+    orderBy?: TaskTemplateOrderByWithRelationInput | TaskTemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TaskTemplates.
+     */
+    cursor?: TaskTemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TaskTemplates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TaskTemplates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TaskTemplates.
+     */
+    distinct?: TaskTemplateScalarFieldEnum | TaskTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * TaskTemplate findMany
+   */
+  export type TaskTemplateFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskTemplate
+     */
+    select?: TaskTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskTemplateInclude<ExtArgs> | null
+    /**
+     * Filter, which TaskTemplates to fetch.
+     */
+    where?: TaskTemplateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TaskTemplates to fetch.
+     */
+    orderBy?: TaskTemplateOrderByWithRelationInput | TaskTemplateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TaskTemplates.
+     */
+    cursor?: TaskTemplateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TaskTemplates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TaskTemplates.
+     */
+    skip?: number
+    distinct?: TaskTemplateScalarFieldEnum | TaskTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * TaskTemplate create
+   */
+  export type TaskTemplateCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskTemplate
+     */
+    select?: TaskTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskTemplateInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TaskTemplate.
+     */
+    data: XOR<TaskTemplateCreateInput, TaskTemplateUncheckedCreateInput>
+  }
+
+  /**
+   * TaskTemplate createMany
+   */
+  export type TaskTemplateCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TaskTemplates.
+     */
+    data: TaskTemplateCreateManyInput | TaskTemplateCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TaskTemplate createManyAndReturn
+   */
+  export type TaskTemplateCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskTemplate
+     */
+    select?: TaskTemplateSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many TaskTemplates.
+     */
+    data: TaskTemplateCreateManyInput | TaskTemplateCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskTemplateIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TaskTemplate update
+   */
+  export type TaskTemplateUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskTemplate
+     */
+    select?: TaskTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskTemplateInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TaskTemplate.
+     */
+    data: XOR<TaskTemplateUpdateInput, TaskTemplateUncheckedUpdateInput>
+    /**
+     * Choose, which TaskTemplate to update.
+     */
+    where: TaskTemplateWhereUniqueInput
+  }
+
+  /**
+   * TaskTemplate updateMany
+   */
+  export type TaskTemplateUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TaskTemplates.
+     */
+    data: XOR<TaskTemplateUpdateManyMutationInput, TaskTemplateUncheckedUpdateManyInput>
+    /**
+     * Filter which TaskTemplates to update
+     */
+    where?: TaskTemplateWhereInput
+  }
+
+  /**
+   * TaskTemplate upsert
+   */
+  export type TaskTemplateUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskTemplate
+     */
+    select?: TaskTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskTemplateInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TaskTemplate to update in case it exists.
+     */
+    where: TaskTemplateWhereUniqueInput
+    /**
+     * In case the TaskTemplate found by the `where` argument doesn't exist, create a new TaskTemplate with this data.
+     */
+    create: XOR<TaskTemplateCreateInput, TaskTemplateUncheckedCreateInput>
+    /**
+     * In case the TaskTemplate was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TaskTemplateUpdateInput, TaskTemplateUncheckedUpdateInput>
+  }
+
+  /**
+   * TaskTemplate delete
+   */
+  export type TaskTemplateDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskTemplate
+     */
+    select?: TaskTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskTemplateInclude<ExtArgs> | null
+    /**
+     * Filter which TaskTemplate to delete.
+     */
+    where: TaskTemplateWhereUniqueInput
+  }
+
+  /**
+   * TaskTemplate deleteMany
+   */
+  export type TaskTemplateDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TaskTemplates to delete
+     */
+    where?: TaskTemplateWhereInput
+  }
+
+  /**
+   * TaskTemplate.businessUnit
+   */
+  export type TaskTemplate$businessUnitArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessUnit
+     */
+    select?: BusinessUnitSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessUnitInclude<ExtArgs> | null
+    where?: BusinessUnitWhereInput
+  }
+
+  /**
+   * TaskTemplate without action
+   */
+  export type TaskTemplateDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskTemplate
+     */
+    select?: TaskTemplateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskTemplateInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Notification
    */
 
@@ -27526,6 +29779,35 @@ export namespace Prisma {
   export type LeadActivityScalarFieldEnum = (typeof LeadActivityScalarFieldEnum)[keyof typeof LeadActivityScalarFieldEnum]
 
 
+  export const UserLeaveScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    startDate: 'startDate',
+    endDate: 'endDate',
+    type: 'type',
+    note: 'note',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type UserLeaveScalarFieldEnum = (typeof UserLeaveScalarFieldEnum)[keyof typeof UserLeaveScalarFieldEnum]
+
+
+  export const TaskTemplateScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    businessUnitId: 'businessUnitId',
+    tasks: 'tasks',
+    createdById: 'createdById',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TaskTemplateScalarFieldEnum = (typeof TaskTemplateScalarFieldEnum)[keyof typeof TaskTemplateScalarFieldEnum]
+
+
   export const NotificationScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
@@ -27801,6 +30083,20 @@ export namespace Prisma {
    */
   export type ListEnumLeadActivityTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadActivityType[]'>
     
+
+
+  /**
+   * Reference to a field of type 'LeaveType'
+   */
+  export type EnumLeaveTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeaveType'>
+    
+
+
+  /**
+   * Reference to a field of type 'LeaveType[]'
+   */
+  export type ListEnumLeaveTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeaveType[]'>
+    
   /**
    * Deep Input Types
    */
@@ -27851,6 +30147,8 @@ export namespace Prisma {
     notifications?: NotificationListRelationFilter
     leadsOwned?: LeadListRelationFilter
     leadActivities?: LeadActivityListRelationFilter
+    leaves?: UserLeaveListRelationFilter
+    taskTemplatesCreated?: TaskTemplateListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -27895,6 +30193,8 @@ export namespace Prisma {
     notifications?: NotificationOrderByRelationAggregateInput
     leadsOwned?: LeadOrderByRelationAggregateInput
     leadActivities?: LeadActivityOrderByRelationAggregateInput
+    leaves?: UserLeaveOrderByRelationAggregateInput
+    taskTemplatesCreated?: TaskTemplateOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -27942,6 +30242,8 @@ export namespace Prisma {
     notifications?: NotificationListRelationFilter
     leadsOwned?: LeadListRelationFilter
     leadActivities?: LeadActivityListRelationFilter
+    leaves?: UserLeaveListRelationFilter
+    taskTemplatesCreated?: TaskTemplateListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -28912,6 +31214,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"BusinessUnit"> | Date | string
     updatedAt?: DateTimeFilter<"BusinessUnit"> | Date | string
     users?: UserListRelationFilter
+    taskTemplates?: TaskTemplateListRelationFilter
   }
 
   export type BusinessUnitOrderByWithRelationInput = {
@@ -28922,6 +31225,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     users?: UserOrderByRelationAggregateInput
+    taskTemplates?: TaskTemplateOrderByRelationAggregateInput
   }
 
   export type BusinessUnitWhereUniqueInput = Prisma.AtLeast<{
@@ -28935,6 +31239,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"BusinessUnit"> | Date | string
     updatedAt?: DateTimeFilter<"BusinessUnit"> | Date | string
     users?: UserListRelationFilter
+    taskTemplates?: TaskTemplateListRelationFilter
   }, "id" | "name">
 
   export type BusinessUnitOrderByWithAggregationInput = {
@@ -29785,6 +32090,154 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"LeadActivity"> | Date | string
   }
 
+  export type UserLeaveWhereInput = {
+    AND?: UserLeaveWhereInput | UserLeaveWhereInput[]
+    OR?: UserLeaveWhereInput[]
+    NOT?: UserLeaveWhereInput | UserLeaveWhereInput[]
+    id?: StringFilter<"UserLeave"> | string
+    userId?: StringFilter<"UserLeave"> | string
+    startDate?: DateTimeFilter<"UserLeave"> | Date | string
+    endDate?: DateTimeFilter<"UserLeave"> | Date | string
+    type?: EnumLeaveTypeFilter<"UserLeave"> | $Enums.LeaveType
+    note?: StringNullableFilter<"UserLeave"> | string | null
+    createdAt?: DateTimeFilter<"UserLeave"> | Date | string
+    updatedAt?: DateTimeFilter<"UserLeave"> | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type UserLeaveOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    type?: SortOrder
+    note?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type UserLeaveWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: UserLeaveWhereInput | UserLeaveWhereInput[]
+    OR?: UserLeaveWhereInput[]
+    NOT?: UserLeaveWhereInput | UserLeaveWhereInput[]
+    userId?: StringFilter<"UserLeave"> | string
+    startDate?: DateTimeFilter<"UserLeave"> | Date | string
+    endDate?: DateTimeFilter<"UserLeave"> | Date | string
+    type?: EnumLeaveTypeFilter<"UserLeave"> | $Enums.LeaveType
+    note?: StringNullableFilter<"UserLeave"> | string | null
+    createdAt?: DateTimeFilter<"UserLeave"> | Date | string
+    updatedAt?: DateTimeFilter<"UserLeave"> | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type UserLeaveOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    type?: SortOrder
+    note?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: UserLeaveCountOrderByAggregateInput
+    _max?: UserLeaveMaxOrderByAggregateInput
+    _min?: UserLeaveMinOrderByAggregateInput
+  }
+
+  export type UserLeaveScalarWhereWithAggregatesInput = {
+    AND?: UserLeaveScalarWhereWithAggregatesInput | UserLeaveScalarWhereWithAggregatesInput[]
+    OR?: UserLeaveScalarWhereWithAggregatesInput[]
+    NOT?: UserLeaveScalarWhereWithAggregatesInput | UserLeaveScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UserLeave"> | string
+    userId?: StringWithAggregatesFilter<"UserLeave"> | string
+    startDate?: DateTimeWithAggregatesFilter<"UserLeave"> | Date | string
+    endDate?: DateTimeWithAggregatesFilter<"UserLeave"> | Date | string
+    type?: EnumLeaveTypeWithAggregatesFilter<"UserLeave"> | $Enums.LeaveType
+    note?: StringNullableWithAggregatesFilter<"UserLeave"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"UserLeave"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"UserLeave"> | Date | string
+  }
+
+  export type TaskTemplateWhereInput = {
+    AND?: TaskTemplateWhereInput | TaskTemplateWhereInput[]
+    OR?: TaskTemplateWhereInput[]
+    NOT?: TaskTemplateWhereInput | TaskTemplateWhereInput[]
+    id?: StringFilter<"TaskTemplate"> | string
+    name?: StringFilter<"TaskTemplate"> | string
+    description?: StringNullableFilter<"TaskTemplate"> | string | null
+    businessUnitId?: StringNullableFilter<"TaskTemplate"> | string | null
+    tasks?: JsonFilter<"TaskTemplate">
+    createdById?: StringFilter<"TaskTemplate"> | string
+    isActive?: BoolFilter<"TaskTemplate"> | boolean
+    createdAt?: DateTimeFilter<"TaskTemplate"> | Date | string
+    updatedAt?: DateTimeFilter<"TaskTemplate"> | Date | string
+    businessUnit?: XOR<BusinessUnitNullableRelationFilter, BusinessUnitWhereInput> | null
+    createdBy?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type TaskTemplateOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    businessUnitId?: SortOrderInput | SortOrder
+    tasks?: SortOrder
+    createdById?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    businessUnit?: BusinessUnitOrderByWithRelationInput
+    createdBy?: UserOrderByWithRelationInput
+  }
+
+  export type TaskTemplateWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: TaskTemplateWhereInput | TaskTemplateWhereInput[]
+    OR?: TaskTemplateWhereInput[]
+    NOT?: TaskTemplateWhereInput | TaskTemplateWhereInput[]
+    name?: StringFilter<"TaskTemplate"> | string
+    description?: StringNullableFilter<"TaskTemplate"> | string | null
+    businessUnitId?: StringNullableFilter<"TaskTemplate"> | string | null
+    tasks?: JsonFilter<"TaskTemplate">
+    createdById?: StringFilter<"TaskTemplate"> | string
+    isActive?: BoolFilter<"TaskTemplate"> | boolean
+    createdAt?: DateTimeFilter<"TaskTemplate"> | Date | string
+    updatedAt?: DateTimeFilter<"TaskTemplate"> | Date | string
+    businessUnit?: XOR<BusinessUnitNullableRelationFilter, BusinessUnitWhereInput> | null
+    createdBy?: XOR<UserRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type TaskTemplateOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    businessUnitId?: SortOrderInput | SortOrder
+    tasks?: SortOrder
+    createdById?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TaskTemplateCountOrderByAggregateInput
+    _max?: TaskTemplateMaxOrderByAggregateInput
+    _min?: TaskTemplateMinOrderByAggregateInput
+  }
+
+  export type TaskTemplateScalarWhereWithAggregatesInput = {
+    AND?: TaskTemplateScalarWhereWithAggregatesInput | TaskTemplateScalarWhereWithAggregatesInput[]
+    OR?: TaskTemplateScalarWhereWithAggregatesInput[]
+    NOT?: TaskTemplateScalarWhereWithAggregatesInput | TaskTemplateScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TaskTemplate"> | string
+    name?: StringWithAggregatesFilter<"TaskTemplate"> | string
+    description?: StringNullableWithAggregatesFilter<"TaskTemplate"> | string | null
+    businessUnitId?: StringNullableWithAggregatesFilter<"TaskTemplate"> | string | null
+    tasks?: JsonWithAggregatesFilter<"TaskTemplate">
+    createdById?: StringWithAggregatesFilter<"TaskTemplate"> | string
+    isActive?: BoolWithAggregatesFilter<"TaskTemplate"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"TaskTemplate"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"TaskTemplate"> | Date | string
+  }
+
   export type NotificationWhereInput = {
     AND?: NotificationWhereInput | NotificationWhereInput[]
     OR?: NotificationWhereInput[]
@@ -29894,6 +32347,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -29935,6 +32390,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUpdateInput = {
@@ -29976,6 +32433,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -30017,6 +32476,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -31086,6 +33547,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutBusinessUnitInput
+    taskTemplates?: TaskTemplateCreateNestedManyWithoutBusinessUnitInput
   }
 
   export type BusinessUnitUncheckedCreateInput = {
@@ -31096,6 +33558,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutBusinessUnitInput
+    taskTemplates?: TaskTemplateUncheckedCreateNestedManyWithoutBusinessUnitInput
   }
 
   export type BusinessUnitUpdateInput = {
@@ -31106,6 +33569,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutBusinessUnitNestedInput
+    taskTemplates?: TaskTemplateUpdateManyWithoutBusinessUnitNestedInput
   }
 
   export type BusinessUnitUncheckedUpdateInput = {
@@ -31116,6 +33580,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutBusinessUnitNestedInput
+    taskTemplates?: TaskTemplateUncheckedUpdateManyWithoutBusinessUnitNestedInput
   }
 
   export type BusinessUnitCreateManyInput = {
@@ -32012,6 +34477,164 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type UserLeaveCreateInput = {
+    id?: string
+    startDate: Date | string
+    endDate: Date | string
+    type?: $Enums.LeaveType
+    note?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutLeavesInput
+  }
+
+  export type UserLeaveUncheckedCreateInput = {
+    id?: string
+    userId: string
+    startDate: Date | string
+    endDate: Date | string
+    type?: $Enums.LeaveType
+    note?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserLeaveUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutLeavesNestedInput
+  }
+
+  export type UserLeaveUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserLeaveCreateManyInput = {
+    id?: string
+    userId: string
+    startDate: Date | string
+    endDate: Date | string
+    type?: $Enums.LeaveType
+    note?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserLeaveUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserLeaveUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskTemplateCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    tasks: JsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutTaskTemplatesInput
+    createdBy: UserCreateNestedOneWithoutTaskTemplatesCreatedInput
+  }
+
+  export type TaskTemplateUncheckedCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    businessUnitId?: string | null
+    tasks: JsonNullValueInput | InputJsonValue
+    createdById: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TaskTemplateUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tasks?: JsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutTaskTemplatesNestedInput
+    createdBy?: UserUpdateOneRequiredWithoutTaskTemplatesCreatedNestedInput
+  }
+
+  export type TaskTemplateUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    tasks?: JsonNullValueInput | InputJsonValue
+    createdById?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskTemplateCreateManyInput = {
+    id?: string
+    name: string
+    description?: string | null
+    businessUnitId?: string | null
+    tasks: JsonNullValueInput | InputJsonValue
+    createdById: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TaskTemplateUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tasks?: JsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskTemplateUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    tasks?: JsonNullValueInput | InputJsonValue
+    createdById?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type NotificationCreateInput = {
     id?: string
     type: string
@@ -32270,6 +34893,18 @@ export namespace Prisma {
     none?: LeadActivityWhereInput
   }
 
+  export type UserLeaveListRelationFilter = {
+    every?: UserLeaveWhereInput
+    some?: UserLeaveWhereInput
+    none?: UserLeaveWhereInput
+  }
+
+  export type TaskTemplateListRelationFilter = {
+    every?: TaskTemplateWhereInput
+    some?: TaskTemplateWhereInput
+    none?: TaskTemplateWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -32332,6 +34967,14 @@ export namespace Prisma {
   }
 
   export type LeadActivityOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserLeaveOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TaskTemplateOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -33794,6 +36437,90 @@ export namespace Prisma {
     _max?: NestedEnumLeadActivityTypeFilter<$PrismaModel>
   }
 
+  export type EnumLeaveTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeaveType | EnumLeaveTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.LeaveType[] | ListEnumLeaveTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeaveType[] | ListEnumLeaveTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeaveTypeFilter<$PrismaModel> | $Enums.LeaveType
+  }
+
+  export type UserLeaveCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    type?: SortOrder
+    note?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserLeaveMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    type?: SortOrder
+    note?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserLeaveMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    type?: SortOrder
+    note?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumLeaveTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeaveType | EnumLeaveTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.LeaveType[] | ListEnumLeaveTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeaveType[] | ListEnumLeaveTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeaveTypeWithAggregatesFilter<$PrismaModel> | $Enums.LeaveType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLeaveTypeFilter<$PrismaModel>
+    _max?: NestedEnumLeaveTypeFilter<$PrismaModel>
+  }
+
+  export type TaskTemplateCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    businessUnitId?: SortOrder
+    tasks?: SortOrder
+    createdById?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TaskTemplateMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    businessUnitId?: SortOrder
+    createdById?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TaskTemplateMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    businessUnitId?: SortOrder
+    createdById?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type NotificationCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -34006,6 +36733,20 @@ export namespace Prisma {
     connect?: LeadActivityWhereUniqueInput | LeadActivityWhereUniqueInput[]
   }
 
+  export type UserLeaveCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserLeaveCreateWithoutUserInput, UserLeaveUncheckedCreateWithoutUserInput> | UserLeaveCreateWithoutUserInput[] | UserLeaveUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserLeaveCreateOrConnectWithoutUserInput | UserLeaveCreateOrConnectWithoutUserInput[]
+    createMany?: UserLeaveCreateManyUserInputEnvelope
+    connect?: UserLeaveWhereUniqueInput | UserLeaveWhereUniqueInput[]
+  }
+
+  export type TaskTemplateCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<TaskTemplateCreateWithoutCreatedByInput, TaskTemplateUncheckedCreateWithoutCreatedByInput> | TaskTemplateCreateWithoutCreatedByInput[] | TaskTemplateUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: TaskTemplateCreateOrConnectWithoutCreatedByInput | TaskTemplateCreateOrConnectWithoutCreatedByInput[]
+    createMany?: TaskTemplateCreateManyCreatedByInputEnvelope
+    connect?: TaskTemplateWhereUniqueInput | TaskTemplateWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutManagerInput = {
     create?: XOR<UserCreateWithoutManagerInput, UserUncheckedCreateWithoutManagerInput> | UserCreateWithoutManagerInput[] | UserUncheckedCreateWithoutManagerInput[]
     connectOrCreate?: UserCreateOrConnectWithoutManagerInput | UserCreateOrConnectWithoutManagerInput[]
@@ -34165,6 +36906,20 @@ export namespace Prisma {
     connectOrCreate?: LeadActivityCreateOrConnectWithoutCreatedByInput | LeadActivityCreateOrConnectWithoutCreatedByInput[]
     createMany?: LeadActivityCreateManyCreatedByInputEnvelope
     connect?: LeadActivityWhereUniqueInput | LeadActivityWhereUniqueInput[]
+  }
+
+  export type UserLeaveUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserLeaveCreateWithoutUserInput, UserLeaveUncheckedCreateWithoutUserInput> | UserLeaveCreateWithoutUserInput[] | UserLeaveUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserLeaveCreateOrConnectWithoutUserInput | UserLeaveCreateOrConnectWithoutUserInput[]
+    createMany?: UserLeaveCreateManyUserInputEnvelope
+    connect?: UserLeaveWhereUniqueInput | UserLeaveWhereUniqueInput[]
+  }
+
+  export type TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<TaskTemplateCreateWithoutCreatedByInput, TaskTemplateUncheckedCreateWithoutCreatedByInput> | TaskTemplateCreateWithoutCreatedByInput[] | TaskTemplateUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: TaskTemplateCreateOrConnectWithoutCreatedByInput | TaskTemplateCreateOrConnectWithoutCreatedByInput[]
+    createMany?: TaskTemplateCreateManyCreatedByInputEnvelope
+    connect?: TaskTemplateWhereUniqueInput | TaskTemplateWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -34555,6 +37310,34 @@ export namespace Prisma {
     deleteMany?: LeadActivityScalarWhereInput | LeadActivityScalarWhereInput[]
   }
 
+  export type UserLeaveUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserLeaveCreateWithoutUserInput, UserLeaveUncheckedCreateWithoutUserInput> | UserLeaveCreateWithoutUserInput[] | UserLeaveUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserLeaveCreateOrConnectWithoutUserInput | UserLeaveCreateOrConnectWithoutUserInput[]
+    upsert?: UserLeaveUpsertWithWhereUniqueWithoutUserInput | UserLeaveUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserLeaveCreateManyUserInputEnvelope
+    set?: UserLeaveWhereUniqueInput | UserLeaveWhereUniqueInput[]
+    disconnect?: UserLeaveWhereUniqueInput | UserLeaveWhereUniqueInput[]
+    delete?: UserLeaveWhereUniqueInput | UserLeaveWhereUniqueInput[]
+    connect?: UserLeaveWhereUniqueInput | UserLeaveWhereUniqueInput[]
+    update?: UserLeaveUpdateWithWhereUniqueWithoutUserInput | UserLeaveUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserLeaveUpdateManyWithWhereWithoutUserInput | UserLeaveUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserLeaveScalarWhereInput | UserLeaveScalarWhereInput[]
+  }
+
+  export type TaskTemplateUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<TaskTemplateCreateWithoutCreatedByInput, TaskTemplateUncheckedCreateWithoutCreatedByInput> | TaskTemplateCreateWithoutCreatedByInput[] | TaskTemplateUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: TaskTemplateCreateOrConnectWithoutCreatedByInput | TaskTemplateCreateOrConnectWithoutCreatedByInput[]
+    upsert?: TaskTemplateUpsertWithWhereUniqueWithoutCreatedByInput | TaskTemplateUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: TaskTemplateCreateManyCreatedByInputEnvelope
+    set?: TaskTemplateWhereUniqueInput | TaskTemplateWhereUniqueInput[]
+    disconnect?: TaskTemplateWhereUniqueInput | TaskTemplateWhereUniqueInput[]
+    delete?: TaskTemplateWhereUniqueInput | TaskTemplateWhereUniqueInput[]
+    connect?: TaskTemplateWhereUniqueInput | TaskTemplateWhereUniqueInput[]
+    update?: TaskTemplateUpdateWithWhereUniqueWithoutCreatedByInput | TaskTemplateUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: TaskTemplateUpdateManyWithWhereWithoutCreatedByInput | TaskTemplateUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: TaskTemplateScalarWhereInput | TaskTemplateScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutManagerNestedInput = {
     create?: XOR<UserCreateWithoutManagerInput, UserUncheckedCreateWithoutManagerInput> | UserCreateWithoutManagerInput[] | UserUncheckedCreateWithoutManagerInput[]
     connectOrCreate?: UserCreateOrConnectWithoutManagerInput | UserCreateOrConnectWithoutManagerInput[]
@@ -34875,6 +37658,34 @@ export namespace Prisma {
     update?: LeadActivityUpdateWithWhereUniqueWithoutCreatedByInput | LeadActivityUpdateWithWhereUniqueWithoutCreatedByInput[]
     updateMany?: LeadActivityUpdateManyWithWhereWithoutCreatedByInput | LeadActivityUpdateManyWithWhereWithoutCreatedByInput[]
     deleteMany?: LeadActivityScalarWhereInput | LeadActivityScalarWhereInput[]
+  }
+
+  export type UserLeaveUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserLeaveCreateWithoutUserInput, UserLeaveUncheckedCreateWithoutUserInput> | UserLeaveCreateWithoutUserInput[] | UserLeaveUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserLeaveCreateOrConnectWithoutUserInput | UserLeaveCreateOrConnectWithoutUserInput[]
+    upsert?: UserLeaveUpsertWithWhereUniqueWithoutUserInput | UserLeaveUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserLeaveCreateManyUserInputEnvelope
+    set?: UserLeaveWhereUniqueInput | UserLeaveWhereUniqueInput[]
+    disconnect?: UserLeaveWhereUniqueInput | UserLeaveWhereUniqueInput[]
+    delete?: UserLeaveWhereUniqueInput | UserLeaveWhereUniqueInput[]
+    connect?: UserLeaveWhereUniqueInput | UserLeaveWhereUniqueInput[]
+    update?: UserLeaveUpdateWithWhereUniqueWithoutUserInput | UserLeaveUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserLeaveUpdateManyWithWhereWithoutUserInput | UserLeaveUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserLeaveScalarWhereInput | UserLeaveScalarWhereInput[]
+  }
+
+  export type TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<TaskTemplateCreateWithoutCreatedByInput, TaskTemplateUncheckedCreateWithoutCreatedByInput> | TaskTemplateCreateWithoutCreatedByInput[] | TaskTemplateUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: TaskTemplateCreateOrConnectWithoutCreatedByInput | TaskTemplateCreateOrConnectWithoutCreatedByInput[]
+    upsert?: TaskTemplateUpsertWithWhereUniqueWithoutCreatedByInput | TaskTemplateUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: TaskTemplateCreateManyCreatedByInputEnvelope
+    set?: TaskTemplateWhereUniqueInput | TaskTemplateWhereUniqueInput[]
+    disconnect?: TaskTemplateWhereUniqueInput | TaskTemplateWhereUniqueInput[]
+    delete?: TaskTemplateWhereUniqueInput | TaskTemplateWhereUniqueInput[]
+    connect?: TaskTemplateWhereUniqueInput | TaskTemplateWhereUniqueInput[]
+    update?: TaskTemplateUpdateWithWhereUniqueWithoutCreatedByInput | TaskTemplateUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: TaskTemplateUpdateManyWithWhereWithoutCreatedByInput | TaskTemplateUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: TaskTemplateScalarWhereInput | TaskTemplateScalarWhereInput[]
   }
 
   export type ProjectCreateNestedManyWithoutClientInput = {
@@ -35624,11 +38435,25 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
+  export type TaskTemplateCreateNestedManyWithoutBusinessUnitInput = {
+    create?: XOR<TaskTemplateCreateWithoutBusinessUnitInput, TaskTemplateUncheckedCreateWithoutBusinessUnitInput> | TaskTemplateCreateWithoutBusinessUnitInput[] | TaskTemplateUncheckedCreateWithoutBusinessUnitInput[]
+    connectOrCreate?: TaskTemplateCreateOrConnectWithoutBusinessUnitInput | TaskTemplateCreateOrConnectWithoutBusinessUnitInput[]
+    createMany?: TaskTemplateCreateManyBusinessUnitInputEnvelope
+    connect?: TaskTemplateWhereUniqueInput | TaskTemplateWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutBusinessUnitInput = {
     create?: XOR<UserCreateWithoutBusinessUnitInput, UserUncheckedCreateWithoutBusinessUnitInput> | UserCreateWithoutBusinessUnitInput[] | UserUncheckedCreateWithoutBusinessUnitInput[]
     connectOrCreate?: UserCreateOrConnectWithoutBusinessUnitInput | UserCreateOrConnectWithoutBusinessUnitInput[]
     createMany?: UserCreateManyBusinessUnitInputEnvelope
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type TaskTemplateUncheckedCreateNestedManyWithoutBusinessUnitInput = {
+    create?: XOR<TaskTemplateCreateWithoutBusinessUnitInput, TaskTemplateUncheckedCreateWithoutBusinessUnitInput> | TaskTemplateCreateWithoutBusinessUnitInput[] | TaskTemplateUncheckedCreateWithoutBusinessUnitInput[]
+    connectOrCreate?: TaskTemplateCreateOrConnectWithoutBusinessUnitInput | TaskTemplateCreateOrConnectWithoutBusinessUnitInput[]
+    createMany?: TaskTemplateCreateManyBusinessUnitInputEnvelope
+    connect?: TaskTemplateWhereUniqueInput | TaskTemplateWhereUniqueInput[]
   }
 
   export type UserUpdateManyWithoutBusinessUnitNestedInput = {
@@ -35645,6 +38470,20 @@ export namespace Prisma {
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
+  export type TaskTemplateUpdateManyWithoutBusinessUnitNestedInput = {
+    create?: XOR<TaskTemplateCreateWithoutBusinessUnitInput, TaskTemplateUncheckedCreateWithoutBusinessUnitInput> | TaskTemplateCreateWithoutBusinessUnitInput[] | TaskTemplateUncheckedCreateWithoutBusinessUnitInput[]
+    connectOrCreate?: TaskTemplateCreateOrConnectWithoutBusinessUnitInput | TaskTemplateCreateOrConnectWithoutBusinessUnitInput[]
+    upsert?: TaskTemplateUpsertWithWhereUniqueWithoutBusinessUnitInput | TaskTemplateUpsertWithWhereUniqueWithoutBusinessUnitInput[]
+    createMany?: TaskTemplateCreateManyBusinessUnitInputEnvelope
+    set?: TaskTemplateWhereUniqueInput | TaskTemplateWhereUniqueInput[]
+    disconnect?: TaskTemplateWhereUniqueInput | TaskTemplateWhereUniqueInput[]
+    delete?: TaskTemplateWhereUniqueInput | TaskTemplateWhereUniqueInput[]
+    connect?: TaskTemplateWhereUniqueInput | TaskTemplateWhereUniqueInput[]
+    update?: TaskTemplateUpdateWithWhereUniqueWithoutBusinessUnitInput | TaskTemplateUpdateWithWhereUniqueWithoutBusinessUnitInput[]
+    updateMany?: TaskTemplateUpdateManyWithWhereWithoutBusinessUnitInput | TaskTemplateUpdateManyWithWhereWithoutBusinessUnitInput[]
+    deleteMany?: TaskTemplateScalarWhereInput | TaskTemplateScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutBusinessUnitNestedInput = {
     create?: XOR<UserCreateWithoutBusinessUnitInput, UserUncheckedCreateWithoutBusinessUnitInput> | UserCreateWithoutBusinessUnitInput[] | UserUncheckedCreateWithoutBusinessUnitInput[]
     connectOrCreate?: UserCreateOrConnectWithoutBusinessUnitInput | UserCreateOrConnectWithoutBusinessUnitInput[]
@@ -35657,6 +38496,20 @@ export namespace Prisma {
     update?: UserUpdateWithWhereUniqueWithoutBusinessUnitInput | UserUpdateWithWhereUniqueWithoutBusinessUnitInput[]
     updateMany?: UserUpdateManyWithWhereWithoutBusinessUnitInput | UserUpdateManyWithWhereWithoutBusinessUnitInput[]
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type TaskTemplateUncheckedUpdateManyWithoutBusinessUnitNestedInput = {
+    create?: XOR<TaskTemplateCreateWithoutBusinessUnitInput, TaskTemplateUncheckedCreateWithoutBusinessUnitInput> | TaskTemplateCreateWithoutBusinessUnitInput[] | TaskTemplateUncheckedCreateWithoutBusinessUnitInput[]
+    connectOrCreate?: TaskTemplateCreateOrConnectWithoutBusinessUnitInput | TaskTemplateCreateOrConnectWithoutBusinessUnitInput[]
+    upsert?: TaskTemplateUpsertWithWhereUniqueWithoutBusinessUnitInput | TaskTemplateUpsertWithWhereUniqueWithoutBusinessUnitInput[]
+    createMany?: TaskTemplateCreateManyBusinessUnitInputEnvelope
+    set?: TaskTemplateWhereUniqueInput | TaskTemplateWhereUniqueInput[]
+    disconnect?: TaskTemplateWhereUniqueInput | TaskTemplateWhereUniqueInput[]
+    delete?: TaskTemplateWhereUniqueInput | TaskTemplateWhereUniqueInput[]
+    connect?: TaskTemplateWhereUniqueInput | TaskTemplateWhereUniqueInput[]
+    update?: TaskTemplateUpdateWithWhereUniqueWithoutBusinessUnitInput | TaskTemplateUpdateWithWhereUniqueWithoutBusinessUnitInput[]
+    updateMany?: TaskTemplateUpdateManyWithWhereWithoutBusinessUnitInput | TaskTemplateUpdateManyWithWhereWithoutBusinessUnitInput[]
+    deleteMany?: TaskTemplateScalarWhereInput | TaskTemplateScalarWhereInput[]
   }
 
   export type UserSkillCreateNestedManyWithoutSkillInput = {
@@ -36289,6 +39142,54 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLeadActivitiesInput, UserUpdateWithoutLeadActivitiesInput>, UserUncheckedUpdateWithoutLeadActivitiesInput>
   }
 
+  export type UserCreateNestedOneWithoutLeavesInput = {
+    create?: XOR<UserCreateWithoutLeavesInput, UserUncheckedCreateWithoutLeavesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutLeavesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumLeaveTypeFieldUpdateOperationsInput = {
+    set?: $Enums.LeaveType
+  }
+
+  export type UserUpdateOneRequiredWithoutLeavesNestedInput = {
+    create?: XOR<UserCreateWithoutLeavesInput, UserUncheckedCreateWithoutLeavesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutLeavesInput
+    upsert?: UserUpsertWithoutLeavesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLeavesInput, UserUpdateWithoutLeavesInput>, UserUncheckedUpdateWithoutLeavesInput>
+  }
+
+  export type BusinessUnitCreateNestedOneWithoutTaskTemplatesInput = {
+    create?: XOR<BusinessUnitCreateWithoutTaskTemplatesInput, BusinessUnitUncheckedCreateWithoutTaskTemplatesInput>
+    connectOrCreate?: BusinessUnitCreateOrConnectWithoutTaskTemplatesInput
+    connect?: BusinessUnitWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutTaskTemplatesCreatedInput = {
+    create?: XOR<UserCreateWithoutTaskTemplatesCreatedInput, UserUncheckedCreateWithoutTaskTemplatesCreatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTaskTemplatesCreatedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type BusinessUnitUpdateOneWithoutTaskTemplatesNestedInput = {
+    create?: XOR<BusinessUnitCreateWithoutTaskTemplatesInput, BusinessUnitUncheckedCreateWithoutTaskTemplatesInput>
+    connectOrCreate?: BusinessUnitCreateOrConnectWithoutTaskTemplatesInput
+    upsert?: BusinessUnitUpsertWithoutTaskTemplatesInput
+    disconnect?: BusinessUnitWhereInput | boolean
+    delete?: BusinessUnitWhereInput | boolean
+    connect?: BusinessUnitWhereUniqueInput
+    update?: XOR<XOR<BusinessUnitUpdateToOneWithWhereWithoutTaskTemplatesInput, BusinessUnitUpdateWithoutTaskTemplatesInput>, BusinessUnitUncheckedUpdateWithoutTaskTemplatesInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutTaskTemplatesCreatedNestedInput = {
+    create?: XOR<UserCreateWithoutTaskTemplatesCreatedInput, UserUncheckedCreateWithoutTaskTemplatesCreatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTaskTemplatesCreatedInput
+    upsert?: UserUpsertWithoutTaskTemplatesCreatedInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTaskTemplatesCreatedInput, UserUpdateWithoutTaskTemplatesCreatedInput>, UserUncheckedUpdateWithoutTaskTemplatesCreatedInput>
+  }
+
   export type UserCreateNestedOneWithoutNotificationsInput = {
     create?: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
     connectOrCreate?: UserCreateOrConnectWithoutNotificationsInput
@@ -36734,6 +39635,23 @@ export namespace Prisma {
     _max?: NestedEnumLeadActivityTypeFilter<$PrismaModel>
   }
 
+  export type NestedEnumLeaveTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeaveType | EnumLeaveTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.LeaveType[] | ListEnumLeaveTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeaveType[] | ListEnumLeaveTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeaveTypeFilter<$PrismaModel> | $Enums.LeaveType
+  }
+
+  export type NestedEnumLeaveTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeaveType | EnumLeaveTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.LeaveType[] | ListEnumLeaveTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeaveType[] | ListEnumLeaveTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeaveTypeWithAggregatesFilter<$PrismaModel> | $Enums.LeaveType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLeaveTypeFilter<$PrismaModel>
+    _max?: NestedEnumLeaveTypeFilter<$PrismaModel>
+  }
+
   export type BusinessUnitCreateWithoutUsersInput = {
     id?: string
     name: string
@@ -36741,6 +39659,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    taskTemplates?: TaskTemplateCreateNestedManyWithoutBusinessUnitInput
   }
 
   export type BusinessUnitUncheckedCreateWithoutUsersInput = {
@@ -36750,6 +39669,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    taskTemplates?: TaskTemplateUncheckedCreateNestedManyWithoutBusinessUnitInput
   }
 
   export type BusinessUnitCreateOrConnectWithoutUsersInput = {
@@ -36795,6 +39715,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutReportsInput = {
@@ -36835,6 +39757,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutReportsInput = {
@@ -36880,6 +39804,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutManagerInput = {
@@ -36920,6 +39846,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutManagerInput = {
@@ -36970,6 +39898,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutSuperviseesInput = {
@@ -37010,6 +39940,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutSuperviseesInput = {
@@ -37055,6 +39987,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutPrincipalInput = {
@@ -37095,6 +40029,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutPrincipalInput = {
@@ -38099,6 +41035,68 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type UserLeaveCreateWithoutUserInput = {
+    id?: string
+    startDate: Date | string
+    endDate: Date | string
+    type?: $Enums.LeaveType
+    note?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserLeaveUncheckedCreateWithoutUserInput = {
+    id?: string
+    startDate: Date | string
+    endDate: Date | string
+    type?: $Enums.LeaveType
+    note?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserLeaveCreateOrConnectWithoutUserInput = {
+    where: UserLeaveWhereUniqueInput
+    create: XOR<UserLeaveCreateWithoutUserInput, UserLeaveUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserLeaveCreateManyUserInputEnvelope = {
+    data: UserLeaveCreateManyUserInput | UserLeaveCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TaskTemplateCreateWithoutCreatedByInput = {
+    id?: string
+    name: string
+    description?: string | null
+    tasks: JsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutTaskTemplatesInput
+  }
+
+  export type TaskTemplateUncheckedCreateWithoutCreatedByInput = {
+    id?: string
+    name: string
+    description?: string | null
+    businessUnitId?: string | null
+    tasks: JsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TaskTemplateCreateOrConnectWithoutCreatedByInput = {
+    where: TaskTemplateWhereUniqueInput
+    create: XOR<TaskTemplateCreateWithoutCreatedByInput, TaskTemplateUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type TaskTemplateCreateManyCreatedByInputEnvelope = {
+    data: TaskTemplateCreateManyCreatedByInput | TaskTemplateCreateManyCreatedByInput[]
+    skipDuplicates?: boolean
+  }
+
   export type BusinessUnitUpsertWithoutUsersInput = {
     update: XOR<BusinessUnitUpdateWithoutUsersInput, BusinessUnitUncheckedUpdateWithoutUsersInput>
     create: XOR<BusinessUnitCreateWithoutUsersInput, BusinessUnitUncheckedCreateWithoutUsersInput>
@@ -38117,6 +41115,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    taskTemplates?: TaskTemplateUpdateManyWithoutBusinessUnitNestedInput
   }
 
   export type BusinessUnitUncheckedUpdateWithoutUsersInput = {
@@ -38126,6 +41125,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    taskTemplates?: TaskTemplateUncheckedUpdateManyWithoutBusinessUnitNestedInput
   }
 
   export type UserUpsertWithoutReportsInput = {
@@ -38177,6 +41177,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReportsInput = {
@@ -38217,6 +41219,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutManagerInput = {
@@ -38305,6 +41309,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSuperviseesInput = {
@@ -38345,6 +41351,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutPrincipalInput = {
@@ -38948,6 +41956,67 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"LeadActivity"> | Date | string
   }
 
+  export type UserLeaveUpsertWithWhereUniqueWithoutUserInput = {
+    where: UserLeaveWhereUniqueInput
+    update: XOR<UserLeaveUpdateWithoutUserInput, UserLeaveUncheckedUpdateWithoutUserInput>
+    create: XOR<UserLeaveCreateWithoutUserInput, UserLeaveUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserLeaveUpdateWithWhereUniqueWithoutUserInput = {
+    where: UserLeaveWhereUniqueInput
+    data: XOR<UserLeaveUpdateWithoutUserInput, UserLeaveUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserLeaveUpdateManyWithWhereWithoutUserInput = {
+    where: UserLeaveScalarWhereInput
+    data: XOR<UserLeaveUpdateManyMutationInput, UserLeaveUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type UserLeaveScalarWhereInput = {
+    AND?: UserLeaveScalarWhereInput | UserLeaveScalarWhereInput[]
+    OR?: UserLeaveScalarWhereInput[]
+    NOT?: UserLeaveScalarWhereInput | UserLeaveScalarWhereInput[]
+    id?: StringFilter<"UserLeave"> | string
+    userId?: StringFilter<"UserLeave"> | string
+    startDate?: DateTimeFilter<"UserLeave"> | Date | string
+    endDate?: DateTimeFilter<"UserLeave"> | Date | string
+    type?: EnumLeaveTypeFilter<"UserLeave"> | $Enums.LeaveType
+    note?: StringNullableFilter<"UserLeave"> | string | null
+    createdAt?: DateTimeFilter<"UserLeave"> | Date | string
+    updatedAt?: DateTimeFilter<"UserLeave"> | Date | string
+  }
+
+  export type TaskTemplateUpsertWithWhereUniqueWithoutCreatedByInput = {
+    where: TaskTemplateWhereUniqueInput
+    update: XOR<TaskTemplateUpdateWithoutCreatedByInput, TaskTemplateUncheckedUpdateWithoutCreatedByInput>
+    create: XOR<TaskTemplateCreateWithoutCreatedByInput, TaskTemplateUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type TaskTemplateUpdateWithWhereUniqueWithoutCreatedByInput = {
+    where: TaskTemplateWhereUniqueInput
+    data: XOR<TaskTemplateUpdateWithoutCreatedByInput, TaskTemplateUncheckedUpdateWithoutCreatedByInput>
+  }
+
+  export type TaskTemplateUpdateManyWithWhereWithoutCreatedByInput = {
+    where: TaskTemplateScalarWhereInput
+    data: XOR<TaskTemplateUpdateManyMutationInput, TaskTemplateUncheckedUpdateManyWithoutCreatedByInput>
+  }
+
+  export type TaskTemplateScalarWhereInput = {
+    AND?: TaskTemplateScalarWhereInput | TaskTemplateScalarWhereInput[]
+    OR?: TaskTemplateScalarWhereInput[]
+    NOT?: TaskTemplateScalarWhereInput | TaskTemplateScalarWhereInput[]
+    id?: StringFilter<"TaskTemplate"> | string
+    name?: StringFilter<"TaskTemplate"> | string
+    description?: StringNullableFilter<"TaskTemplate"> | string | null
+    businessUnitId?: StringNullableFilter<"TaskTemplate"> | string | null
+    tasks?: JsonFilter<"TaskTemplate">
+    createdById?: StringFilter<"TaskTemplate"> | string
+    isActive?: BoolFilter<"TaskTemplate"> | boolean
+    createdAt?: DateTimeFilter<"TaskTemplate"> | Date | string
+    updatedAt?: DateTimeFilter<"TaskTemplate"> | Date | string
+  }
+
   export type ProjectCreateWithoutClientInput = {
     id?: string
     code: string
@@ -39197,6 +42266,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutProjectsAsSalesInput = {
@@ -39237,6 +42308,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutProjectsAsSalesInput = {
@@ -39282,6 +42355,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutProjectsAsPmInput = {
@@ -39322,6 +42397,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutProjectsAsPmInput = {
@@ -39367,6 +42444,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutProjectsAsTwInput = {
@@ -39407,6 +42486,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutProjectsAsTwInput = {
@@ -39452,6 +42533,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutProjectsAsAdminInput = {
@@ -39492,6 +42575,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutProjectsAsAdminInput = {
@@ -39889,6 +42974,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsAsSalesInput = {
@@ -39929,6 +43016,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUpsertWithoutProjectsAsPmInput = {
@@ -39980,6 +43069,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsAsPmInput = {
@@ -40020,6 +43111,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUpsertWithoutProjectsAsTwInput = {
@@ -40071,6 +43164,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsAsTwInput = {
@@ -40111,6 +43206,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUpsertWithoutProjectsAsAdminInput = {
@@ -40162,6 +43259,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsAsAdminInput = {
@@ -40202,6 +43301,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ProjectResourceUpsertWithWhereUniqueWithoutProjectInput = {
@@ -40576,6 +43677,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -40616,6 +43719,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -40672,6 +43777,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -40712,6 +43819,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ProjectCreateWithoutResourcesInput = {
@@ -40835,6 +43944,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutResourcesInput = {
@@ -40875,6 +43986,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutResourcesInput = {
@@ -40920,6 +44033,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutProposedResourcesInput = {
@@ -40960,6 +44075,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutProposedResourcesInput = {
@@ -41105,6 +44222,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutResourcesInput = {
@@ -41145,6 +44264,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUpsertWithoutProposedResourcesInput = {
@@ -41196,6 +44317,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProposedResourcesInput = {
@@ -41236,6 +44359,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ProjectCreateWithoutTimesheetsInput = {
@@ -41359,6 +44484,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutTimesheetsInput = {
@@ -41399,6 +44526,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutTimesheetsInput = {
@@ -41493,6 +44622,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutApprovedTimesheetsInput = {
@@ -41533,6 +44664,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutApprovedTimesheetsInput = {
@@ -41678,6 +44811,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTimesheetsInput = {
@@ -41718,6 +44853,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type TaskUpsertWithoutTimesheetsInput = {
@@ -41824,6 +44961,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutApprovedTimesheetsInput = {
@@ -41864,6 +45003,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ProjectCreateWithoutDocumentsInput = {
@@ -41987,6 +45128,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutDocumentsUploadedInput = {
@@ -42027,6 +45170,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutDocumentsUploadedInput = {
@@ -42172,6 +45317,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDocumentsUploadedInput = {
@@ -42212,6 +45359,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ProjectCreateWithoutExpensesInput = {
@@ -42335,6 +45484,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutApprovedExpensesInput = {
@@ -42375,6 +45526,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutApprovedExpensesInput = {
@@ -42420,6 +45573,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutProjectExpensesInput = {
@@ -42460,6 +45615,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutProjectExpensesInput = {
@@ -42605,6 +45762,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutApprovedExpensesInput = {
@@ -42645,6 +45804,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUpsertWithoutProjectExpensesInput = {
@@ -42696,6 +45857,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectExpensesInput = {
@@ -42736,6 +45899,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserCreateWithoutBusinessUnitInput = {
@@ -42776,6 +45941,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutBusinessUnitInput = {
@@ -42816,6 +45983,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutBusinessUnitInput = {
@@ -42825,6 +45994,38 @@ export namespace Prisma {
 
   export type UserCreateManyBusinessUnitInputEnvelope = {
     data: UserCreateManyBusinessUnitInput | UserCreateManyBusinessUnitInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TaskTemplateCreateWithoutBusinessUnitInput = {
+    id?: string
+    name: string
+    description?: string | null
+    tasks: JsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy: UserCreateNestedOneWithoutTaskTemplatesCreatedInput
+  }
+
+  export type TaskTemplateUncheckedCreateWithoutBusinessUnitInput = {
+    id?: string
+    name: string
+    description?: string | null
+    tasks: JsonNullValueInput | InputJsonValue
+    createdById: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TaskTemplateCreateOrConnectWithoutBusinessUnitInput = {
+    where: TaskTemplateWhereUniqueInput
+    create: XOR<TaskTemplateCreateWithoutBusinessUnitInput, TaskTemplateUncheckedCreateWithoutBusinessUnitInput>
+  }
+
+  export type TaskTemplateCreateManyBusinessUnitInputEnvelope = {
+    data: TaskTemplateCreateManyBusinessUnitInput | TaskTemplateCreateManyBusinessUnitInput[]
     skipDuplicates?: boolean
   }
 
@@ -42842,6 +46043,22 @@ export namespace Prisma {
   export type UserUpdateManyWithWhereWithoutBusinessUnitInput = {
     where: UserScalarWhereInput
     data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutBusinessUnitInput>
+  }
+
+  export type TaskTemplateUpsertWithWhereUniqueWithoutBusinessUnitInput = {
+    where: TaskTemplateWhereUniqueInput
+    update: XOR<TaskTemplateUpdateWithoutBusinessUnitInput, TaskTemplateUncheckedUpdateWithoutBusinessUnitInput>
+    create: XOR<TaskTemplateCreateWithoutBusinessUnitInput, TaskTemplateUncheckedCreateWithoutBusinessUnitInput>
+  }
+
+  export type TaskTemplateUpdateWithWhereUniqueWithoutBusinessUnitInput = {
+    where: TaskTemplateWhereUniqueInput
+    data: XOR<TaskTemplateUpdateWithoutBusinessUnitInput, TaskTemplateUncheckedUpdateWithoutBusinessUnitInput>
+  }
+
+  export type TaskTemplateUpdateManyWithWhereWithoutBusinessUnitInput = {
+    where: TaskTemplateScalarWhereInput
+    data: XOR<TaskTemplateUpdateManyMutationInput, TaskTemplateUncheckedUpdateManyWithoutBusinessUnitInput>
   }
 
   export type UserSkillCreateWithoutSkillInput = {
@@ -42922,6 +46139,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutSkillsInput = {
@@ -42962,6 +46181,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutSkillsInput = {
@@ -43041,6 +46262,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSkillsInput = {
@@ -43081,6 +46304,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type SkillUpsertWithoutUsersInput = {
@@ -43150,6 +46375,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutActivitiesInput = {
@@ -43190,6 +46417,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutActivitiesInput = {
@@ -43329,6 +46558,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutActivitiesInput = {
@@ -43369,6 +46600,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ProjectUpsertWithoutActivitiesInput = {
@@ -43581,6 +46814,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutTasksAssignedInput = {
@@ -43621,6 +46856,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutTasksAssignedInput = {
@@ -43666,6 +46903,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutTasksCreatedInput = {
@@ -43706,6 +46945,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutTasksCreatedInput = {
@@ -44088,6 +47329,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTasksAssignedInput = {
@@ -44128,6 +47371,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUpsertWithoutTasksCreatedInput = {
@@ -44179,6 +47424,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTasksCreatedInput = {
@@ -44219,6 +47466,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type TaskUpsertWithoutSubtasksInput = {
@@ -44849,6 +48098,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutTaskAssignmentsInput = {
@@ -44889,6 +48140,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutTaskAssignmentsInput = {
@@ -45000,6 +48253,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTaskAssignmentsInput = {
@@ -45040,6 +48295,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type TaskCreateWithoutTimeLogsInput = {
@@ -45129,6 +48386,8 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutTaskTimeLogsInput = {
@@ -45169,6 +48428,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutTaskTimeLogsInput = {
@@ -45280,6 +48541,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTaskTimeLogsInput = {
@@ -45320,6 +48583,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ClientCreateWithoutLeadsInput = {
@@ -45389,6 +48654,8 @@ export namespace Prisma {
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutLeadsOwnedInput = {
@@ -45429,6 +48696,8 @@ export namespace Prisma {
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutLeadsOwnedInput = {
@@ -45552,6 +48821,8 @@ export namespace Prisma {
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLeadsOwnedInput = {
@@ -45592,6 +48863,8 @@ export namespace Prisma {
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type LeadActivityUpsertWithWhereUniqueWithoutLeadInput = {
@@ -45705,6 +48978,8 @@ export namespace Prisma {
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutLeadActivitiesInput = {
@@ -45745,6 +49020,8 @@ export namespace Prisma {
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutLeadActivitiesInput = {
@@ -45864,6 +49141,8 @@ export namespace Prisma {
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLeadActivitiesInput = {
@@ -45904,6 +49183,432 @@ export namespace Prisma {
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type UserCreateWithoutLeavesInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type UserUncheckedCreateWithoutLeavesInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnitId?: string | null
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type UserCreateOrConnectWithoutLeavesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutLeavesInput, UserUncheckedCreateWithoutLeavesInput>
+  }
+
+  export type UserUpsertWithoutLeavesInput = {
+    update: XOR<UserUpdateWithoutLeavesInput, UserUncheckedUpdateWithoutLeavesInput>
+    create: XOR<UserCreateWithoutLeavesInput, UserUncheckedCreateWithoutLeavesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutLeavesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutLeavesInput, UserUncheckedUpdateWithoutLeavesInput>
+  }
+
+  export type UserUpdateWithoutLeavesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutLeavesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type BusinessUnitCreateWithoutTaskTemplatesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserCreateNestedManyWithoutBusinessUnitInput
+  }
+
+  export type BusinessUnitUncheckedCreateWithoutTaskTemplatesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutBusinessUnitInput
+  }
+
+  export type BusinessUnitCreateOrConnectWithoutTaskTemplatesInput = {
+    where: BusinessUnitWhereUniqueInput
+    create: XOR<BusinessUnitCreateWithoutTaskTemplatesInput, BusinessUnitUncheckedCreateWithoutTaskTemplatesInput>
+  }
+
+  export type UserCreateWithoutTaskTemplatesCreatedInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutTaskTemplatesCreatedInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnitId?: string | null
+    managerId?: string | null
+    principalId?: string | null
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutTaskTemplatesCreatedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutTaskTemplatesCreatedInput, UserUncheckedCreateWithoutTaskTemplatesCreatedInput>
+  }
+
+  export type BusinessUnitUpsertWithoutTaskTemplatesInput = {
+    update: XOR<BusinessUnitUpdateWithoutTaskTemplatesInput, BusinessUnitUncheckedUpdateWithoutTaskTemplatesInput>
+    create: XOR<BusinessUnitCreateWithoutTaskTemplatesInput, BusinessUnitUncheckedCreateWithoutTaskTemplatesInput>
+    where?: BusinessUnitWhereInput
+  }
+
+  export type BusinessUnitUpdateToOneWithWhereWithoutTaskTemplatesInput = {
+    where?: BusinessUnitWhereInput
+    data: XOR<BusinessUnitUpdateWithoutTaskTemplatesInput, BusinessUnitUncheckedUpdateWithoutTaskTemplatesInput>
+  }
+
+  export type BusinessUnitUpdateWithoutTaskTemplatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutBusinessUnitNestedInput
+  }
+
+  export type BusinessUnitUncheckedUpdateWithoutTaskTemplatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutBusinessUnitNestedInput
+  }
+
+  export type UserUpsertWithoutTaskTemplatesCreatedInput = {
+    update: XOR<UserUpdateWithoutTaskTemplatesCreatedInput, UserUncheckedUpdateWithoutTaskTemplatesCreatedInput>
+    create: XOR<UserCreateWithoutTaskTemplatesCreatedInput, UserUncheckedCreateWithoutTaskTemplatesCreatedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutTaskTemplatesCreatedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutTaskTemplatesCreatedInput, UserUncheckedUpdateWithoutTaskTemplatesCreatedInput>
+  }
+
+  export type UserUpdateWithoutTaskTemplatesCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutTaskTemplatesCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutNotificationsInput = {
@@ -45944,6 +49649,8 @@ export namespace Prisma {
     taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -45984,6 +49691,8 @@ export namespace Prisma {
     taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -46040,6 +49749,8 @@ export namespace Prisma {
     taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -46080,6 +49791,8 @@ export namespace Prisma {
     taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserCreateManyManagerInput = {
@@ -46462,6 +50175,27 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type UserLeaveCreateManyUserInput = {
+    id?: string
+    startDate: Date | string
+    endDate: Date | string
+    type?: $Enums.LeaveType
+    note?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TaskTemplateCreateManyCreatedByInput = {
+    id?: string
+    name: string
+    description?: string | null
+    businessUnitId?: string | null
+    tasks: JsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type UserUpdateWithoutManagerInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
@@ -46500,6 +50234,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutManagerInput = {
@@ -46540,6 +50276,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutManagerInput = {
@@ -46597,6 +50335,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPrincipalInput = {
@@ -46637,6 +50377,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutPrincipalInput = {
@@ -47784,6 +51526,69 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type UserLeaveUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserLeaveUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserLeaveUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskTemplateUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tasks?: JsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutTaskTemplatesNestedInput
+  }
+
+  export type TaskTemplateUncheckedUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    tasks?: JsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskTemplateUncheckedUpdateManyWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    tasks?: JsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ProjectCreateManyClientInput = {
     id?: string
     code: string
@@ -48483,6 +52288,17 @@ export namespace Prisma {
     principalId?: string | null
   }
 
+  export type TaskTemplateCreateManyBusinessUnitInput = {
+    id?: string
+    name: string
+    description?: string | null
+    tasks: JsonNullValueInput | InputJsonValue
+    createdById: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type UserUpdateWithoutBusinessUnitInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
@@ -48521,6 +52337,8 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBusinessUnitInput = {
@@ -48561,6 +52379,8 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutBusinessUnitInput = {
@@ -48578,6 +52398,39 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type TaskTemplateUpdateWithoutBusinessUnitInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tasks?: JsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: UserUpdateOneRequiredWithoutTaskTemplatesCreatedNestedInput
+  }
+
+  export type TaskTemplateUncheckedUpdateWithoutBusinessUnitInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tasks?: JsonNullValueInput | InputJsonValue
+    createdById?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskTemplateUncheckedUpdateManyWithoutBusinessUnitInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tasks?: JsonNullValueInput | InputJsonValue
+    createdById?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserSkillCreateManySkillInput = {
@@ -49013,6 +52866,14 @@ export namespace Prisma {
      * @deprecated Use LeadActivityDefaultArgs instead
      */
     export type LeadActivityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = LeadActivityDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use UserLeaveDefaultArgs instead
+     */
+    export type UserLeaveArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserLeaveDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use TaskTemplateDefaultArgs instead
+     */
+    export type TaskTemplateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = TaskTemplateDefaultArgs<ExtArgs>
     /**
      * @deprecated Use NotificationDefaultArgs instead
      */

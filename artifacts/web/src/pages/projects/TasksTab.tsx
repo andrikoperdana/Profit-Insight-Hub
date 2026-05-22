@@ -7,6 +7,8 @@ import {
   useLogTaskTime,
   useListProjectResources,
   useListTaskTimeLogs,
+  useListTaskTemplates,
+  useApplyTaskTemplate,
   getListProjectTasksQueryKey,
   getListMyTasksQueryKey,
   getListTaskTimeLogsQueryKey,
@@ -39,8 +41,68 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { TableSkeleton } from "@/components/common/Loading";
 import { Pagination, usePagination } from "@/components/common/Pagination";
 import {
-  Plus, Trash2, Clock, Pencil, ListChecks, Loader2, CalendarRange, Download,
+  Plus, Trash2, Clock, Pencil, ListChecks, Loader2, CalendarRange, Download, FileStack,
 } from "lucide-react";
+
+function ApplyTemplateButton({ projectId }: { projectId: string }) {
+  const { toast } = useToast();
+  const qc = useQueryClient();
+  const [open, setOpen] = useState(false);
+  const [templateId, setTemplateId] = useState("");
+  const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 10));
+  const { data: templates } = useListTaskTemplates(undefined, { query: { enabled: open, queryKey: ["task-templates", { open }] as const } });
+  const apply = useApplyTaskTemplate({
+    mutation: {
+      onSuccess: (res) => {
+        toast({ title: `${res.created} task dibuat dari template` });
+        qc.invalidateQueries({ queryKey: getListProjectTasksQueryKey(projectId) });
+        setOpen(false);
+        setTemplateId("");
+      },
+      onError: (e: any) => toast({ variant: "destructive", title: "Gagal apply", description: e?.message }),
+    },
+  });
+  return (
+    <>
+      <Button variant="outline" size="sm" onClick={() => setOpen(true)} data-testid="button-apply-template">
+        <FileStack className="h-4 w-4 mr-2" /> Apply Template
+      </Button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Apply Task Template</DialogTitle>
+            <DialogDescription>Template akan membuat task otomatis dengan tanggal relatif terhadap start date.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 pt-2">
+            <div>
+              <Label>Template</Label>
+              <Select value={templateId} onValueChange={setTemplateId}>
+                <SelectTrigger data-testid="select-template"><SelectValue placeholder="Pilih template" /></SelectTrigger>
+                <SelectContent>
+                  {templates?.length === 0 && <SelectItem value="__none" disabled>Belum ada template</SelectItem>}
+                  {templates?.map((t) => (
+                    <SelectItem key={t.id} value={t.id}>{t.name} ({t.tasks.length} task)</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Start Date</Label>
+              <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+              <p className="text-[10px] text-muted-foreground mt-1">Task pertama dimulai dari tanggal ini.</p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpen(false)}>Batal</Button>
+            <Button onClick={() => apply.mutate({ id: projectId, data: { templateId, startDate } })} disabled={!templateId || apply.isPending} data-testid="button-apply-template-confirm">
+              {apply.isPending ? "Menerapkan…" : "Apply"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
 
 const STATUS_LABELS: Record<TaskStatus, string> = {
   TODO: "To Do",
@@ -191,9 +253,12 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
               <Download className="h-4 w-4 mr-2" /> CSV
             </Button>
             {isManager && (
-              <Button onClick={() => setCreateOpen(true)} data-testid="button-new-task">
-                <Plus className="h-4 w-4 mr-2" /> New Task
-              </Button>
+              <>
+                <ApplyTemplateButton projectId={projectId} />
+                <Button onClick={() => setCreateOpen(true)} data-testid="button-new-task">
+                  <Plus className="h-4 w-4 mr-2" /> New Task
+                </Button>
+              </>
             )}
           </div>
         </CardHeader>

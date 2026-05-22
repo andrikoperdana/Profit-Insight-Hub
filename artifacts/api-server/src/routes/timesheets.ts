@@ -129,7 +129,16 @@ router.post("/timesheets", async (req, res) => {
   }
 
   const role = req.user!.role;
-  const isAutoApprove = role === "PROJECT_MANAGER" || role === "MANAGEMENT";
+  // Auto-approve only if MGMT, or PM-of-this-project. PMs logging on a project
+  // they don't manage must still go through approval.
+  let isAutoApprove = role === "MANAGEMENT";
+  if (!isAutoApprove && role === "PROJECT_MANAGER") {
+    const proj = await prisma.project.findUnique({
+      where: { id: String(projectId) },
+      select: { pmId: true },
+    });
+    isAutoApprove = proj?.pmId === req.user!.sub;
+  }
   const status = isAutoApprove ? "APPROVED" : "SUBMITTED";
 
   // Optional task linkage: validate the task belongs to this project AND the
@@ -196,6 +205,107 @@ router.post("/timesheets", async (req, res) => {
   });
 
   res.status(201).json(serialize(ts));
+});
+
+router.post("/timesheets/bulk", async (req, res) => {
+  const entries = Array.isArray(req.body?.entries) ? req.body.entries : null;
+  if (!entries || entries.length === 0) {
+    res.status(400).json({ error: "entries[] required" });
+    return;
+  }
+  if (entries.length > 50) {
+    res.status(400).json({ error: "maximum 50 entries per batch" });
+    return;
+  }
+  const role = req.user!.role;
+  const userId = req.user!.sub;
+  const isMgmt = role === "MANAGEMENT";
+  const isPm = role === "PROJECT_MANAGER";
+  // Pre-fetch pmId for every referenced project so PMs only auto-approve hours
+  // on projects they actually manage.
+  const projectIds: string[] = Array.from(new Set(entries.map((e: any) => String(e?.projectId || "")).filter(Boolean)));
+  const projectPmMap = new Map<string, string | null>();
+  if (projectIds.length > 0) {
+    const projs = await prisma.project.findMany({
+      where: { id: { in: projectIds } },
+      select: { id: true, pmId: true },
+    });
+    projs.forEach((p) => projectPmMap.set(p.id, p.pmId));
+  }
+  const todayStart = startOfDay(new Date());
+  const earliest = earliestAllowedWorkDate(todayStart, 5);
+  const results: Array<{ index: number; ok: boolean; id?: string | null; error?: string | null }> = [];
+  let created = 0;
+  let failed = 0;
+  for (let i = 0; i < entries.length; i++) {
+    const e = entries[i];
+    try {
+      const projectId = e?.projectId ? String(e.projectId) : "";
+      const workDateStr = e?.workDate ? String(e.workDate) : "";
+      const hoursNum = Number(e?.hours);
+      if (!projectId || !workDateStr || !isFinite(hoursNum)) {
+        results.push({ index: i, ok: false, error: "projectId, workDate, hours required" });
+        failed++;
+        continue;
+      }
+      if (hoursNum <= 0 || hoursNum > MAX_HOURS_PER_ENTRY) {
+        results.push({ index: i, ok: false, error: `hours must be 0 < h <= ${MAX_HOURS_PER_ENTRY}` });
+        failed++;
+        continue;
+      }
+      const work = startOfDay(new Date(workDateStr));
+      if (work > todayStart || work < earliest) {
+        results.push({ index: i, ok: false, error: "workDate out of allowed range" });
+        failed++;
+        continue;
+      }
+      let resolvedTaskId: string | null = null;
+      if (e.taskId) {
+        const t = await prisma.task.findUnique({
+          where: { id: String(e.taskId) },
+          select: { id: true, projectId: true, assigneeId: true, assignees: { select: { userId: true } } },
+        });
+        if (!t || t.projectId !== projectId) {
+          results.push({ index: i, ok: false, error: "task does not belong to project" });
+          failed++;
+          continue;
+        }
+        const isAssignee = t.assigneeId === userId || t.assignees.some((a) => a.userId === userId);
+        if (!isAssignee) {
+          results.push({ index: i, ok: false, error: "not an assignee of task" });
+          failed++;
+          continue;
+        }
+        resolvedTaskId = t.id;
+      }
+      const entryAutoApprove = isMgmt || (isPm && projectPmMap.get(projectId) === userId);
+      const ts = await prisma.timesheet.create({
+        data: {
+          projectId,
+          userId,
+          taskId: resolvedTaskId,
+          workDate: new Date(workDateStr),
+          hours: hoursNum,
+          description: e.description || null,
+          status: entryAutoApprove ? "APPROVED" : "SUBMITTED",
+          approvedById: entryAutoApprove ? userId : null,
+          approvedAt: entryAutoApprove ? new Date() : null,
+        },
+      });
+      results.push({ index: i, ok: true, id: ts.id });
+      created++;
+    } catch (err) {
+      results.push({ index: i, ok: false, error: err instanceof Error ? err.message : "Unknown error" });
+      failed++;
+    }
+  }
+  await recordAudit(req, {
+    action: "timesheet.bulk_created",
+    entityType: "Timesheet",
+    entityId: userId,
+    description: `Bulk timesheet entry: ${created} created, ${failed} failed`,
+  });
+  res.status(201).json({ created, failed, results });
 });
 
 router.post("/timesheets/:id/submit", async (req, res) => {

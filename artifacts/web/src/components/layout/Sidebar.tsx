@@ -23,6 +23,7 @@ import {
   FileBarChart,
   Wallet,
   Target,
+  ListChecks,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -58,6 +59,8 @@ export default function Sidebar() {
     ...(canSeeExpenses ? [{ href: "/expenses", label: "Expenses", icon: Receipt }] : []),
     ...(isPM ? [{ href: "/resource-planning", label: "Resource Planning", icon: Grid3x3 }] : []),
     ...(isPM ? [{ href: "/bench", label: "Bench Report", icon: UserCog }] : []),
+    ...(isPM ? [{ href: "/skill-matrix", label: "Skill Matrix", icon: Award }] : []),
+    ...(isPM ? [{ href: "/task-templates", label: "Task Templates", icon: ListChecks }] : []),
     ...(isPM || user?.role === "ADMIN_PROJECT" || user?.role === "SALES" ? [{ href: "/invoice-planning", label: "Invoice Planning", icon: Wallet }] : []),
     ...(isPM ? [{ href: "/reports", label: "Reports", icon: FileBarChart }] : []),
   ];

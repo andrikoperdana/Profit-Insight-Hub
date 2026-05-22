@@ -943,6 +943,162 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/Timesheet" }
 
+  /timesheets/bulk:
+    post:
+      operationId: createBulkTimesheets
+      tags: [timesheets]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateBulkTimesheetsBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CreateBulkTimesheetsResponse" }
+
+  /skill-matrix:
+    get:
+      operationId: getSkillMatrix
+      tags: [skills]
+      description: Returns skill coverage matrix across users (Konsultan/Technical Writer/Principal) with gap analysis. MGMT/PM only.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SkillMatrix" }
+
+  /task-templates:
+    get:
+      operationId: listTaskTemplates
+      tags: [task-templates]
+      parameters:
+        - { name: businessUnitId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/TaskTemplate" }
+    post:
+      operationId: createTaskTemplate
+      tags: [task-templates]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateTaskTemplateBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TaskTemplate" }
+
+  /task-templates/{id}:
+    patch:
+      operationId: updateTaskTemplate
+      tags: [task-templates]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateTaskTemplateBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TaskTemplate" }
+    delete:
+      operationId: deleteTaskTemplate
+      tags: [task-templates]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /projects/{id}/apply-task-template:
+    post:
+      operationId: applyTaskTemplate
+      tags: [task-templates]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [templateId]
+              properties:
+                templateId: { type: string }
+                startDate: { type: string, description: "ISO date YYYY-MM-DD; defaults to today" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  created: { type: integer }
+
+  /leaves:
+    get:
+      operationId: listLeaves
+      tags: [leaves]
+      parameters:
+        - { name: userId, in: query, required: false, schema: { type: string } }
+        - { name: startDate, in: query, required: false, schema: { type: string } }
+        - { name: endDate, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/UserLeave" }
+    post:
+      operationId: createLeave
+      tags: [leaves]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateLeaveBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/UserLeave" }
+
+  /leaves/{id}:
+    delete:
+      operationId: deleteLeave
+      tags: [leaves]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
   /timesheets/{id}/submit:
     post:
       operationId: submitTimesheet
@@ -2585,3 +2741,150 @@ components:
           type: object
           nullable: true
           additionalProperties: true
+
+    CreateBulkTimesheetsBody:
+      type: object
+      required: [entries]
+      properties:
+        entries:
+          type: array
+          items:
+            type: object
+            required: [projectId, workDate, hours]
+            properties:
+              projectId: { type: string }
+              workDate: { type: string }
+              hours: { type: number }
+              taskId: { type: string, nullable: true }
+              description: { type: string, nullable: true }
+
+    CreateBulkTimesheetsResponse:
+      type: object
+      required: [created, failed, results]
+      properties:
+        created: { type: integer }
+        failed: { type: integer }
+        results:
+          type: array
+          items:
+            type: object
+            required: [index, ok]
+            properties:
+              index: { type: integer }
+              ok: { type: boolean }
+              id: { type: string, nullable: true }
+              error: { type: string, nullable: true }
+
+    SkillMatrixUser:
+      type: object
+      required: [userId, userName, role, seniority]
+      properties:
+        userId: { type: string }
+        userName: { type: string }
+        role: { $ref: "#/components/schemas/UserRole" }
+        seniority: { type: string, nullable: true }
+        businessUnitName: { type: string, nullable: true }
+
+    SkillMatrixCell:
+      type: object
+      required: [skillId, userId, proficiency]
+      properties:
+        skillId: { type: string }
+        userId: { type: string }
+        proficiency: { type: integer }
+
+    SkillMatrixGap:
+      type: object
+      required: [skillId, skillName, totalCount, seniorCount, principalCount, isGap]
+      properties:
+        skillId: { type: string }
+        skillName: { type: string }
+        category: { type: string, nullable: true }
+        totalCount: { type: integer }
+        juniorCount: { type: integer }
+        midCount: { type: integer }
+        seniorCount: { type: integer }
+        principalCount: { type: integer }
+        avgProficiency: { type: number }
+        isGap: { type: boolean }
+        gapReason: { type: string, nullable: true }
+
+    SkillMatrix:
+      type: object
+      required: [skills, users, cells, gaps]
+      properties:
+        skills:
+          type: array
+          items: { $ref: "#/components/schemas/Skill" }
+        users:
+          type: array
+          items: { $ref: "#/components/schemas/SkillMatrixUser" }
+        cells:
+          type: array
+          items: { $ref: "#/components/schemas/SkillMatrixCell" }
+        gaps:
+          type: array
+          items: { $ref: "#/components/schemas/SkillMatrixGap" }
+
+    TaskTemplateItem:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string }
+        description: { type: string, nullable: true }
+        durationDays: { type: integer, nullable: true }
+        offsetDays: { type: integer, nullable: true }
+        billable: { type: boolean, nullable: true }
+        parentIndex: { type: integer, nullable: true }
+
+    TaskTemplate:
+      type: object
+      required: [id, name, tasks, createdById, createdByName, isActive, createdAt]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        businessUnitId: { type: string, nullable: true }
+        businessUnitName: { type: string, nullable: true }
+        tasks:
+          type: array
+          items: { $ref: "#/components/schemas/TaskTemplateItem" }
+        createdById: { type: string }
+        createdByName: { type: string }
+        isActive: { type: boolean }
+        createdAt: { type: string }
+
+    CreateTaskTemplateBody:
+      type: object
+      required: [name, tasks]
+      properties:
+        name: { type: string }
+        description: { type: string, nullable: true }
+        businessUnitId: { type: string, nullable: true }
+        isActive: { type: boolean, nullable: true }
+        tasks:
+          type: array
+          items: { $ref: "#/components/schemas/TaskTemplateItem" }
+
+    UserLeave:
+      type: object
+      required: [id, userId, userName, startDate, endDate, type, createdAt]
+      properties:
+        id: { type: string }
+        userId: { type: string }
+        userName: { type: string }
+        startDate: { type: string }
+        endDate: { type: string }
+        type: { type: string, enum: [ANNUAL, SICK, TRAINING, UNPAID, OTHER] }
+        note: { type: string, nullable: true }
+        createdAt: { type: string }
+
+    CreateLeaveBody:
+      type: object
+      required: [startDate, endDate, type]
+      properties:
+        userId: { type: string, nullable: true }
+        startDate: { type: string }
+        endDate: { type: string }
+        type: { type: string, enum: [ANNUAL, SICK, TRAINING, UNPAID, OTHER] }
+        note: { type: string, nullable: true }
