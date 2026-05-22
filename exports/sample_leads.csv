@@ -1,0 +1,11 @@
+title,contactName,contactEmail,contactPhone,prospectiveClientName,industry,source,estimatedValue,expectedCloseDate,notes
+Web Application Pentest - BNI Mobile Banking,Andi Pranata,andi.pranata@bni.co.id,+62-21-2510-3000,Bank Negara Indonesia,Banking,REFERRAL,180000000,2026-07-15,Annual pentest cycle; require OWASP ASVS L2 coverage
+ISO 27001 Surveillance Audit - Indosat,Rina Kurnia,rina.k@indosatooredoo.com,+62-21-3000-3000,Indosat Ooredoo Hutchison,Telecommunications,INBOUND,120000000,2026-06-30,Y2 surveillance; carryover from previous auditor
+Red Team Engagement - PLN Distribution Jakarta,Bagus Setiawan,bagus.setiawan@pln.co.id,+62-21-7251-234,PLN Distribusi Jakarta Raya,Energy & Utilities,OUTBOUND,450000000,2026-09-30,Critical infra; coordination with BSSN required
+SOC Maturity Assessment - Bank Syariah Indonesia,Lutfi Hidayat,lutfi.h@bankbsi.co.id,+62-21-2952-3535,Bank Syariah Indonesia,Banking,REFERRAL,95000000,2026-06-15,Gap assessment vs SOC-CMM v2
+Cloud Security Posture Review - Blibli AWS,Maya Sari,maya.sari@blibli.com,+62-21-5793-9000,Global Digital Niaga (Blibli),E-Commerce,INBOUND,140000000,2026-08-20,Multi-account AWS; expect CIS Benchmark report
+Mobile App Pentest - LinkAja Super App,Dimas Wibisono,dimas.w@linkaja.id,+62-21-2932-2200,Fintek Karya Nusantara (LinkAja),Fintech,REFERRAL,165000000,2026-07-05,iOS + Android + backend APIs
+Threat Hunting Retainer - XL Axiata SOC,Putri Maharani,putri.m@xl.co.id,+62-21-579-59-818,XL Axiata,Telecommunications,OUTBOUND,720000000,2026-12-01,12-month retainer; 2 senior hunters on-site
+PCI-DSS v4.0 Readiness - Doku Payment,Reza Firmansyah,reza.firmansyah@doku.com,+62-21-2978-1000,Nusa Satu Inti Artha (DOKU),Fintech,INBOUND,210000000,2026-10-10,Pre-QSA readiness; SAQ D Service Provider scope
+Phishing Simulation Program - Astra International HR,Citra Lestari,citra.lestari@astra.co.id,+62-21-508-43-888,Astra International,Conglomerate,EVENT,85000000,2026-06-28,Quarterly campaign; 25k employees
+GRC Advisory - Kimia Farma POJK 11,Hendra Wijaya,hendra.w@kimiafarma.co.id,+62-21-384-7709,Kimia Farma,Healthcare & Pharma,REFERRAL,260000000,2026-09-15,POJK 11/2022 alignment + ISO 27001 integration
