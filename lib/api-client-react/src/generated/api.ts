@@ -32,6 +32,7 @@ import type {
   CreateBusinessUnitBody,
   CreateClientBody,
   CreateDocumentBody,
+  CreateLeadActivityBody,
   CreateLeadBody,
   CreateProjectBody,
   CreateSkillBody,
@@ -41,12 +42,15 @@ import type {
   DashboardSummary,
   Document,
   GetInvoicePlanningParams,
+  GetLeadsAnalyticsParams,
   GetReportOptionsParams,
   GetResourcePlanningParams,
   GetVatRecapParams,
   HealthStatus,
   InvoicePlanningMatrix,
   Lead,
+  LeadActivity,
+  LeadAnalytics,
   ListAvailableUsersParams,
   ListProjectsParams,
   ListTimesheetsParams,
@@ -73,6 +77,7 @@ import type {
   Timesheet,
   UpdateBillingMilestoneBody,
   UpdateBusinessUnitBody,
+  UpdateLeadActivityBody,
   UpdateLeadBody,
   UpdateProjectBody,
   UpdateProjectReportBody,
@@ -1739,6 +1744,418 @@ export const useDeleteLead = <
   TContext
 > => {
   return useMutation(getDeleteLeadMutationOptions(options));
+};
+
+export const getGetLeadsAnalyticsUrl = (params?: GetLeadsAnalyticsParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/leads/analytics?${stringifiedParams}`
+    : `/api/leads/analytics`;
+};
+
+export const getLeadsAnalytics = async (
+  params?: GetLeadsAnalyticsParams,
+  options?: RequestInit,
+): Promise<LeadAnalytics> => {
+  return customFetch<LeadAnalytics>(getGetLeadsAnalyticsUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetLeadsAnalyticsQueryKey = (
+  params?: GetLeadsAnalyticsParams,
+) => {
+  return [`/api/leads/analytics`, ...(params ? [params] : [])] as const;
+};
+
+export const getGetLeadsAnalyticsQueryOptions = <
+  TData = Awaited<ReturnType<typeof getLeadsAnalytics>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetLeadsAnalyticsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getLeadsAnalytics>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetLeadsAnalyticsQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getLeadsAnalytics>>
+  > = ({ signal }) => getLeadsAnalytics(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getLeadsAnalytics>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetLeadsAnalyticsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getLeadsAnalytics>>
+>;
+export type GetLeadsAnalyticsQueryError = ErrorType<unknown>;
+
+export function useGetLeadsAnalytics<
+  TData = Awaited<ReturnType<typeof getLeadsAnalytics>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetLeadsAnalyticsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getLeadsAnalytics>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetLeadsAnalyticsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getListLeadActivitiesUrl = (id: string) => {
+  return `/api/leads/${id}/activities`;
+};
+
+export const listLeadActivities = async (
+  id: string,
+  options?: RequestInit,
+): Promise<LeadActivity[]> => {
+  return customFetch<LeadActivity[]>(getListLeadActivitiesUrl(id), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListLeadActivitiesQueryKey = (id: string) => {
+  return [`/api/leads/${id}/activities`] as const;
+};
+
+export const getListLeadActivitiesQueryOptions = <
+  TData = Awaited<ReturnType<typeof listLeadActivities>>,
+  TError = ErrorType<unknown>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listLeadActivities>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListLeadActivitiesQueryKey(id);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listLeadActivities>>
+  > = ({ signal }) => listLeadActivities(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof listLeadActivities>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListLeadActivitiesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listLeadActivities>>
+>;
+export type ListLeadActivitiesQueryError = ErrorType<unknown>;
+
+export function useListLeadActivities<
+  TData = Awaited<ReturnType<typeof listLeadActivities>>,
+  TError = ErrorType<unknown>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listLeadActivities>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListLeadActivitiesQueryOptions(id, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getCreateLeadActivityUrl = (id: string) => {
+  return `/api/leads/${id}/activities`;
+};
+
+export const createLeadActivity = async (
+  id: string,
+  createLeadActivityBody: CreateLeadActivityBody,
+  options?: RequestInit,
+): Promise<LeadActivity> => {
+  return customFetch<LeadActivity>(getCreateLeadActivityUrl(id), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createLeadActivityBody),
+  });
+};
+
+export const getCreateLeadActivityMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createLeadActivity>>,
+    TError,
+    { id: string; data: BodyType<CreateLeadActivityBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createLeadActivity>>,
+  TError,
+  { id: string; data: BodyType<CreateLeadActivityBody> },
+  TContext
+> => {
+  const mutationKey = ["createLeadActivity"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createLeadActivity>>,
+    { id: string; data: BodyType<CreateLeadActivityBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return createLeadActivity(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateLeadActivityMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createLeadActivity>>
+>;
+export type CreateLeadActivityMutationBody = BodyType<CreateLeadActivityBody>;
+export type CreateLeadActivityMutationError = ErrorType<unknown>;
+
+export const useCreateLeadActivity = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createLeadActivity>>,
+    TError,
+    { id: string; data: BodyType<CreateLeadActivityBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createLeadActivity>>,
+  TError,
+  { id: string; data: BodyType<CreateLeadActivityBody> },
+  TContext
+> => {
+  return useMutation(getCreateLeadActivityMutationOptions(options));
+};
+
+export const getUpdateLeadActivityUrl = (id: string, activityId: string) => {
+  return `/api/leads/${id}/activities/${activityId}`;
+};
+
+export const updateLeadActivity = async (
+  id: string,
+  activityId: string,
+  updateLeadActivityBody: UpdateLeadActivityBody,
+  options?: RequestInit,
+): Promise<LeadActivity> => {
+  return customFetch<LeadActivity>(getUpdateLeadActivityUrl(id, activityId), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateLeadActivityBody),
+  });
+};
+
+export const getUpdateLeadActivityMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateLeadActivity>>,
+    TError,
+    { id: string; activityId: string; data: BodyType<UpdateLeadActivityBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateLeadActivity>>,
+  TError,
+  { id: string; activityId: string; data: BodyType<UpdateLeadActivityBody> },
+  TContext
+> => {
+  const mutationKey = ["updateLeadActivity"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateLeadActivity>>,
+    { id: string; activityId: string; data: BodyType<UpdateLeadActivityBody> }
+  > = (props) => {
+    const { id, activityId, data } = props ?? {};
+
+    return updateLeadActivity(id, activityId, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateLeadActivityMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateLeadActivity>>
+>;
+export type UpdateLeadActivityMutationBody = BodyType<UpdateLeadActivityBody>;
+export type UpdateLeadActivityMutationError = ErrorType<unknown>;
+
+export const useUpdateLeadActivity = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateLeadActivity>>,
+    TError,
+    { id: string; activityId: string; data: BodyType<UpdateLeadActivityBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateLeadActivity>>,
+  TError,
+  { id: string; activityId: string; data: BodyType<UpdateLeadActivityBody> },
+  TContext
+> => {
+  return useMutation(getUpdateLeadActivityMutationOptions(options));
+};
+
+export const getDeleteLeadActivityUrl = (id: string, activityId: string) => {
+  return `/api/leads/${id}/activities/${activityId}`;
+};
+
+export const deleteLeadActivity = async (
+  id: string,
+  activityId: string,
+  options?: RequestInit,
+): Promise<SuccessMessage> => {
+  return customFetch<SuccessMessage>(getDeleteLeadActivityUrl(id, activityId), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getDeleteLeadActivityMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteLeadActivity>>,
+    TError,
+    { id: string; activityId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteLeadActivity>>,
+  TError,
+  { id: string; activityId: string },
+  TContext
+> => {
+  const mutationKey = ["deleteLeadActivity"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteLeadActivity>>,
+    { id: string; activityId: string }
+  > = (props) => {
+    const { id, activityId } = props ?? {};
+
+    return deleteLeadActivity(id, activityId, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteLeadActivityMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteLeadActivity>>
+>;
+
+export type DeleteLeadActivityMutationError = ErrorType<unknown>;
+
+export const useDeleteLeadActivity = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteLeadActivity>>,
+    TError,
+    { id: string; activityId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteLeadActivity>>,
+  TError,
+  { id: string; activityId: string },
+  TContext
+> => {
+  return useMutation(getDeleteLeadActivityMutationOptions(options));
 };
 
 export const getConvertLeadUrl = (id: string) => {

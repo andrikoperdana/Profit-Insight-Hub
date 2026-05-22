@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   useListLeads,
   useCreateLead,
@@ -6,9 +6,16 @@ import {
   useDeleteLead,
   useConvertLead,
   useListClients,
+  useListUsers,
+  useListLeadActivities,
+  useCreateLeadActivity,
+  useDeleteLeadActivity,
   getListLeadsQueryKey,
+  getListLeadActivitiesQueryKey,
   type Lead,
+  type LeadActivity,
   LeadStage,
+  LeadActivityType,
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
@@ -22,8 +29,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatIDR } from "@/lib/format";
-import { Plus, Trash2, ArrowRight, Briefcase } from "lucide-react";
+import { Plus, Trash2, ArrowRight, Briefcase, AlertTriangle, LayoutGrid, List as ListIcon } from "lucide-react";
 
 const STAGES: { key: LeadStage; label: string; color: string }[] = [
   { key: "NEW" as LeadStage, label: "New", color: "border-slate-500/40 bg-slate-500/5" },
@@ -32,6 +42,19 @@ const STAGES: { key: LeadStage; label: string; color: string }[] = [
   { key: "NEGOTIATION" as LeadStage, label: "Negotiation", color: "border-amber-500/40 bg-amber-500/5" },
   { key: "WON" as LeadStage, label: "Won", color: "border-emerald-500/40 bg-emerald-500/5" },
   { key: "LOST" as LeadStage, label: "Lost", color: "border-destructive/40 bg-destructive/5" },
+];
+
+const DEFAULT_PROB: Record<LeadStage, number> = {
+  NEW: 10, QUALIFIED: 30, PROPOSAL: 50, NEGOTIATION: 70, WON: 100, LOST: 0,
+} as any;
+
+const LOST_REASONS = [
+  { value: "PRICE", label: "Price" },
+  { value: "TIMELINE", label: "Timeline" },
+  { value: "COMPETITOR", label: "Competitor" },
+  { value: "NO_BUDGET", label: "No Budget" },
+  { value: "NO_DECISION", label: "No Decision" },
+  { value: "OTHER", label: "Other" },
 ];
 
 type FormState = {
@@ -46,39 +69,71 @@ type FormState = {
   stage: LeadStage;
   estimatedValue: string;
   probability: string;
+  probabilityTouched: boolean;
   expectedCloseDate: string;
   notes: string;
 };
 
 const emptyForm: FormState = {
-  title: "",
-  contactName: "",
-  contactEmail: "",
-  contactPhone: "",
-  clientId: "",
-  prospectiveClientName: "",
-  industry: "",
-  source: "",
-  stage: "NEW" as LeadStage,
-  estimatedValue: "0",
-  probability: "20",
-  expectedCloseDate: "",
-  notes: "",
+  title: "", contactName: "", contactEmail: "", contactPhone: "",
+  clientId: "", prospectiveClientName: "", industry: "", source: "",
+  stage: "NEW" as LeadStage, estimatedValue: "0", probability: "10",
+  probabilityTouched: false, expectedCloseDate: "", notes: "",
 };
+
+function useUrlState() {
+  const [search, setSearch] = useState(() => typeof window !== "undefined" ? window.location.search : "");
+  useEffect(() => {
+    const h = () => setSearch(window.location.search);
+    window.addEventListener("popstate", h);
+    return () => window.removeEventListener("popstate", h);
+  }, []);
+  const params = useMemo(() => new URLSearchParams(search), [search]);
+  function update(next: Record<string, string | null>) {
+    const p = new URLSearchParams(window.location.search);
+    for (const [k, v] of Object.entries(next)) {
+      if (v === null || v === "") p.delete(k); else p.set(k, v);
+    }
+    const q = p.toString();
+    const url = `${window.location.pathname}${q ? "?" + q : ""}`;
+    window.history.replaceState({}, "", url);
+    setSearch(q ? "?" + q : "");
+  }
+  return [params, update] as const;
+}
 
 export default function LeadsPage() {
   const { user } = useAuth();
   const { toast } = useToast();
   const [, navigate] = useLocation();
   const qc = useQueryClient();
-  const isAllowed = !user || user.role === "SALES";
+  const role = user?.role;
+  const isMgmt = role === "MANAGEMENT";
+  const isSales = role === "SALES";
+  const isAllowed = !user || isSales || isMgmt;
+  const canWrite = isSales;
 
   const { data: leads, isLoading } = useListLeads({ query: { enabled: isAllowed } } as any);
   const { data: clients } = useListClients();
+  const { data: allUsers } = useListUsers({ query: { enabled: isMgmt } } as any);
+  const usersData = useMemo(
+    () => (allUsers ?? []).filter((u) => u.role === "SALES"),
+    [allUsers],
+  );
   const create = useCreateLead();
   const update = useUpdateLead();
   const del = useDeleteLead();
   const convert = useConvertLead();
+  const createActivity = useCreateLeadActivity();
+  const delActivity = useDeleteLeadActivity();
+
+  const [params, setParams] = useUrlState();
+  const view = (params.get("view") || "board") as "board" | "list";
+  const stageFilter = (params.get("stages") || "").split(",").filter(Boolean) as LeadStage[];
+  const ownerFilter = params.get("owner") || "";
+  const sourceFilter = params.get("source") || "";
+  const fromFilter = params.get("from") || "";
+  const toFilter = params.get("to") || "";
 
   const [isFormOpen, setFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -86,21 +141,44 @@ export default function LeadsPage() {
   const [dragId, setDragId] = useState<string | null>(null);
   const [convertingLead, setConvertingLead] = useState<Lead | null>(null);
   const [convertCode, setConvertCode] = useState("");
+  const [convertClientName, setConvertClientName] = useState("");
+  const [lostLead, setLostLead] = useState<Lead | null>(null);
+  const [lostReason, setLostReason] = useState("PRICE");
+  const [lostCompetitor, setLostCompetitor] = useState("");
+  const [lostNotes, setLostNotes] = useState("");
+  const [drawerLead, setDrawerLead] = useState<Lead | null>(null);
 
-  const canWrite = user?.role === "MANAGEMENT" || user?.role === "SALES";
+  // Open drawer from ?leadId=
+  useEffect(() => {
+    const id = params.get("leadId");
+    if (id && leads) {
+      const l = leads.find((x) => x.id === id);
+      if (l) setDrawerLead(l);
+    }
+  }, [params, leads]);
+
+  const filteredLeads = useMemo(() => {
+    let out = leads ?? [];
+    if (stageFilter.length) out = out.filter((l) => stageFilter.includes(l.stage));
+    if (ownerFilter) out = out.filter((l) => l.ownerId === ownerFilter);
+    if (sourceFilter) out = out.filter((l) => (l.source || "").toLowerCase().includes(sourceFilter.toLowerCase()));
+    if (fromFilter) out = out.filter((l) => l.expectedCloseDate && l.expectedCloseDate >= fromFilter);
+    if (toFilter) out = out.filter((l) => l.expectedCloseDate && l.expectedCloseDate <= toFilter);
+    return out;
+  }, [leads, stageFilter, ownerFilter, sourceFilter, fromFilter, toFilter]);
 
   const grouped = useMemo(() => {
     const out: Record<LeadStage, Lead[]> = {
       NEW: [], QUALIFIED: [], PROPOSAL: [], NEGOTIATION: [], WON: [], LOST: [],
     } as any;
-    for (const l of leads ?? []) (out[l.stage] ??= []).push(l);
+    for (const l of filteredLeads) (out[l.stage] ??= []).push(l);
     return out;
-  }, [leads]);
+  }, [filteredLeads]);
 
   const totals = useMemo(() => {
     const t: Record<string, { count: number; value: number; weighted: number }> = {};
     for (const s of STAGES) t[s.key] = { count: 0, value: 0, weighted: 0 };
-    for (const l of leads ?? []) {
+    for (const l of filteredLeads) {
       const k = l.stage as string;
       if (!t[k]) continue;
       t[k].count += 1;
@@ -108,17 +186,17 @@ export default function LeadsPage() {
       t[k].weighted += l.estimatedValue * (l.probability / 100);
     }
     return t;
-  }, [leads]);
+  }, [filteredLeads]);
 
   const pipelineValue = useMemo(() => {
-    return (leads ?? [])
+    return filteredLeads
       .filter((l) => l.stage !== "WON" && l.stage !== "LOST")
       .reduce((s, l) => s + l.estimatedValue * (l.probability / 100), 0);
-  }, [leads]);
+  }, [filteredLeads]);
 
   function openCreate() {
     setEditingId(null);
-    setForm(emptyForm);
+    setForm({ ...emptyForm });
     setFormOpen(true);
   }
 
@@ -136,10 +214,18 @@ export default function LeadsPage() {
       stage: l.stage,
       estimatedValue: String(l.estimatedValue),
       probability: String(l.probability),
+      probabilityTouched: true,
       expectedCloseDate: l.expectedCloseDate ? l.expectedCloseDate.slice(0, 10) : "",
       notes: l.notes ?? "",
     });
     setFormOpen(true);
+  }
+
+  function setStage(next: LeadStage) {
+    setForm((f) => {
+      const newProb = !f.probabilityTouched ? String(DEFAULT_PROB[next] ?? f.probability) : f.probability;
+      return { ...f, stage: next, probability: newProb };
+    });
   }
 
   async function handleSubmit() {
@@ -190,6 +276,17 @@ export default function LeadsPage() {
 
   async function handleStageChange(l: Lead, newStage: LeadStage) {
     if (l.stage === newStage) return;
+    if (newStage === "LOST") {
+      setLostLead(l);
+      setLostReason("PRICE");
+      setLostCompetitor("");
+      setLostNotes("");
+      return;
+    }
+    if (newStage === "WON") {
+      openConvert(l);
+      return;
+    }
     try {
       await update.mutateAsync({ id: l.id, data: { stage: newStage } as any });
       qc.invalidateQueries({ queryKey: getListLeadsQueryKey() });
@@ -198,9 +295,33 @@ export default function LeadsPage() {
     }
   }
 
+  async function confirmLost() {
+    if (!lostLead) return;
+    try {
+      const notesAppend = lostNotes
+        ? `${lostLead.notes ? lostLead.notes + "\n\n" : ""}[LOST] ${lostNotes}`
+        : lostLead.notes ?? undefined;
+      await update.mutateAsync({
+        id: lostLead.id,
+        data: {
+          stage: "LOST" as LeadStage,
+          lostReason,
+          competitorWon: lostCompetitor || null,
+          notes: notesAppend,
+        } as any,
+      });
+      qc.invalidateQueries({ queryKey: getListLeadsQueryKey() });
+      toast({ title: "Lead marked as LOST" });
+      setLostLead(null);
+    } catch (e: any) {
+      toast({ title: "Failed", description: e?.message, variant: "destructive" });
+    }
+  }
+
   function openConvert(l: Lead) {
     setConvertingLead(l);
     setConvertCode(`LEAD-${l.id.slice(-6).toUpperCase()}`);
+    setConvertClientName(l.prospectiveClientName ?? "");
   }
 
   async function handleConvert() {
@@ -208,7 +329,10 @@ export default function LeadsPage() {
     try {
       const r = await convert.mutateAsync({
         id: convertingLead.id,
-        data: { code: convertCode } as any,
+        data: {
+          code: convertCode,
+          clientName: convertingLead.clientId ? undefined : convertClientName,
+        } as any,
       });
       toast({ title: "Lead converted to project", description: r.projectCode });
       qc.invalidateQueries({ queryKey: getListLeadsQueryKey() });
@@ -224,7 +348,7 @@ export default function LeadsPage() {
       <div className="rounded-lg border border-destructive/40 bg-destructive/5 p-6 text-sm">
         <div className="font-semibold text-destructive mb-1">Access denied</div>
         <div className="text-muted-foreground">
-          Sales Pipeline is only accessible to users with the Sales role.
+          Sales Pipeline is only accessible to Sales or Management.
         </div>
       </div>
     );
@@ -235,12 +359,22 @@ export default function LeadsPage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">Sales Pipeline</h1>
-          <p className="text-sm text-muted-foreground">Kanban board from prospect to project conversion.</p>
+          <p className="text-sm text-muted-foreground">
+            {isMgmt ? "Read-only view of all leads." : "Kanban board from prospect to project conversion."}
+          </p>
         </div>
         <div className="flex items-center gap-3">
           <div className="text-right">
             <div className="text-xs text-muted-foreground">Weighted Pipeline (open)</div>
             <div className="text-lg font-bold text-primary">{formatIDR(pipelineValue)}</div>
+          </div>
+          <div className="flex border rounded-md overflow-hidden">
+            <Button size="sm" variant={view === "board" ? "default" : "ghost"} className="rounded-none" onClick={() => setParams({ view: "board" })} data-testid="button-view-board">
+              <LayoutGrid className="h-4 w-4" />
+            </Button>
+            <Button size="sm" variant={view === "list" ? "default" : "ghost"} className="rounded-none" onClick={() => setParams({ view: "list" })} data-testid="button-view-list">
+              <ListIcon className="h-4 w-4" />
+            </Button>
           </div>
           {canWrite && (
             <Button onClick={openCreate} data-testid="button-new-lead">
@@ -250,91 +384,259 @@ export default function LeadsPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
-        {STAGES.map((s) => (
-          <div
-            key={s.key}
-            className={`rounded-lg border ${s.color} p-3 min-h-[300px]`}
-            onDragOver={(e) => { if (dragId) e.preventDefault(); }}
-            onDrop={() => {
-              if (!dragId) return;
-              const lead = (leads ?? []).find((x) => x.id === dragId);
-              if (lead) handleStageChange(lead, s.key);
-              setDragId(null);
-            }}
-            data-testid={`column-${s.key}`}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <div className="font-semibold text-sm">{s.label}</div>
-              <Badge variant="outline" className="text-[10px]">{totals[s.key]?.count ?? 0}</Badge>
-            </div>
-            <div className="text-[11px] text-muted-foreground mb-3">
-              {formatIDR(totals[s.key]?.value ?? 0)}
-            </div>
-            <div className="space-y-2">
-              {(grouped[s.key] ?? []).map((l) => (
-                <Card
-                  key={l.id}
-                  draggable={canWrite}
-                  onDragStart={() => setDragId(l.id)}
-                  onDragEnd={() => setDragId(null)}
-                  className="bg-card cursor-grab hover:border-primary/40 transition"
-                  data-testid={`lead-${l.id}`}
-                >
-                  <CardContent className="p-3 space-y-2">
-                    <div className="font-medium text-sm leading-tight line-clamp-2">{l.title}</div>
-                    <div className="text-xs text-muted-foreground">
-                      {l.clientName || l.prospectiveClientName || "—"}
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-primary font-semibold">{formatIDR(l.estimatedValue)}</span>
-                      <span className="text-muted-foreground">{l.probability}%</span>
-                    </div>
-                    {l.ownerName && (
-                      <div className="text-[10px] text-muted-foreground">Owner: {l.ownerName}</div>
-                    )}
-                    {canWrite && (
-                      <div className="flex items-center gap-1 pt-1">
-                        <Button size="sm" variant="ghost" className="h-7 px-2 text-xs" onClick={() => openEdit(l)}>
-                          Edit
-                        </Button>
-                        {!l.convertedProjectId && (s.key === "NEGOTIATION" || s.key === "PROPOSAL" || s.key === "WON") && (
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="h-7 px-2 text-xs text-primary"
-                            onClick={() => openConvert(l)}
-                            data-testid={`button-convert-${l.id}`}
-                          >
-                            <ArrowRight className="h-3 w-3 mr-1" /> Convert
-                          </Button>
-                        )}
-                        {l.convertedProjectId && (
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="h-7 px-2 text-xs"
-                            onClick={() => navigate(`/projects/${l.convertedProjectId}`)}
-                          >
-                            <Briefcase className="h-3 w-3 mr-1" /> Project
-                          </Button>
-                        )}
-                        <Button size="sm" variant="ghost" className="h-7 px-2 text-xs text-destructive ml-auto" onClick={() => handleDelete(l)}>
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              ))}
-              {!isLoading && (grouped[s.key] ?? []).length === 0 && (
-                <div className="text-[11px] text-muted-foreground italic">Empty</div>
-              )}
+      {/* Filters */}
+      <Card className="border-border">
+        <CardContent className="py-3 px-3 flex flex-wrap items-end gap-3">
+          <div className="flex-1 min-w-[200px]">
+            <Label className="text-xs text-muted-foreground">Stage</Label>
+            <div className="flex flex-wrap gap-1 mt-1">
+              {STAGES.map((s) => {
+                const on = stageFilter.includes(s.key);
+                return (
+                  <Badge
+                    key={s.key}
+                    variant={on ? "default" : "outline"}
+                    className="cursor-pointer text-[11px]"
+                    onClick={() => {
+                      const next = on ? stageFilter.filter((x) => x !== s.key) : [...stageFilter, s.key];
+                      setParams({ stages: next.join(",") || null });
+                    }}
+                  >
+                    {s.label}
+                  </Badge>
+                );
+              })}
             </div>
           </div>
-        ))}
-      </div>
+          {isMgmt && (
+            <div className="min-w-[180px]">
+              <Label className="text-xs text-muted-foreground">Owner</Label>
+              <Select value={ownerFilter || "_all"} onValueChange={(v) => setParams({ owner: v === "_all" ? null : v })}>
+                <SelectTrigger><SelectValue placeholder="All" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="_all">All owners</SelectItem>
+                  {(usersData ?? []).map((u) => (
+                    <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+          <div className="min-w-[150px]">
+            <Label className="text-xs text-muted-foreground">Source</Label>
+            <Input value={sourceFilter} onChange={(e) => setParams({ source: e.target.value || null })} placeholder="any" />
+          </div>
+          <div>
+            <Label className="text-xs text-muted-foreground">Close date from</Label>
+            <Input type="date" value={fromFilter} onChange={(e) => setParams({ from: e.target.value || null })} />
+          </div>
+          <div>
+            <Label className="text-xs text-muted-foreground">to</Label>
+            <Input type="date" value={toFilter} onChange={(e) => setParams({ to: e.target.value || null })} />
+          </div>
+          {(stageFilter.length || ownerFilter || sourceFilter || fromFilter || toFilter) ? (
+            <Button size="sm" variant="ghost" onClick={() => setParams({ stages: null, owner: null, source: null, from: null, to: null })}>
+              Clear
+            </Button>
+          ) : null}
+        </CardContent>
+      </Card>
 
+      {view === "board" ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
+          {STAGES.map((s) => (
+            <div
+              key={s.key}
+              className={`rounded-lg border ${s.color} p-3 min-h-[300px]`}
+              onDragOver={(e) => { if (dragId && canWrite) e.preventDefault(); }}
+              onDrop={() => {
+                if (!dragId || !canWrite) return;
+                const lead = filteredLeads.find((x) => x.id === dragId);
+                if (lead) handleStageChange(lead, s.key);
+                setDragId(null);
+              }}
+              data-testid={`column-${s.key}`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <div className="font-semibold text-sm">{s.label}</div>
+                <Badge variant="outline" className="text-[10px]">{totals[s.key]?.count ?? 0}</Badge>
+              </div>
+              <div className="text-[11px] text-muted-foreground mb-3">
+                {formatIDR(totals[s.key]?.value ?? 0)} · weighted {formatIDR(totals[s.key]?.weighted ?? 0)}
+              </div>
+              <div className="space-y-2">
+                {(grouped[s.key] ?? []).map((l) => (
+                  <Card
+                    key={l.id}
+                    draggable={canWrite}
+                    onDragStart={() => setDragId(l.id)}
+                    onDragEnd={() => setDragId(null)}
+                    onClick={() => setDrawerLead(l)}
+                    className="bg-card cursor-pointer hover:border-primary/40 transition"
+                    data-testid={`lead-${l.id}`}
+                  >
+                    <CardContent className="p-3 space-y-2">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="font-medium text-sm leading-tight line-clamp-2 flex-1">{l.title}</div>
+                        {(l as any).followupOverdue && (
+                          <Badge variant="destructive" className="text-[9px] gap-1 shrink-0">
+                            <AlertTriangle className="h-3 w-3" /> follow-up
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {l.clientName || l.prospectiveClientName || "—"}
+                      </div>
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-primary font-semibold">{formatIDR(l.estimatedValue)}</span>
+                        <span className="text-muted-foreground">{l.probability}%</span>
+                      </div>
+                      {l.ownerName && (
+                        <div className="text-[10px] text-muted-foreground">Owner: {l.ownerName}</div>
+                      )}
+                      {canWrite && (
+                        <div className="flex items-center gap-1 pt-1" onClick={(e) => e.stopPropagation()}>
+                          <Button size="sm" variant="ghost" className="h-7 px-2 text-xs" onClick={() => openEdit(l)}>
+                            Edit
+                          </Button>
+                          {!l.convertedProjectId && (s.key === "NEGOTIATION" || s.key === "PROPOSAL") && (
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="h-7 px-2 text-xs text-primary"
+                              onClick={() => openConvert(l)}
+                              data-testid={`button-convert-${l.id}`}
+                            >
+                              <ArrowRight className="h-3 w-3 mr-1" /> Convert
+                            </Button>
+                          )}
+                          {l.convertedProjectId && (
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="h-7 px-2 text-xs"
+                              onClick={() => navigate(`/projects/${l.convertedProjectId}`)}
+                            >
+                              <Briefcase className="h-3 w-3 mr-1" /> Project
+                            </Button>
+                          )}
+                          <Button size="sm" variant="ghost" className="h-7 px-2 text-xs text-destructive ml-auto" onClick={() => handleDelete(l)}>
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+                {!isLoading && (grouped[s.key] ?? []).length === 0 && (
+                  <div className="text-[11px] text-muted-foreground italic">Empty</div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <Card className="border-border">
+          <CardContent className="p-0">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Title</TableHead>
+                  <TableHead>Client</TableHead>
+                  <TableHead>Stage</TableHead>
+                  <TableHead className="text-right">Value</TableHead>
+                  <TableHead className="text-right">Prob</TableHead>
+                  <TableHead>Owner</TableHead>
+                  <TableHead>Close</TableHead>
+                  <TableHead></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredLeads.map((l) => (
+                  <TableRow key={l.id} className="cursor-pointer hover:bg-muted/30" onClick={() => setDrawerLead(l)}>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">{l.title}</span>
+                        {(l as any).followupOverdue && <AlertTriangle className="h-3 w-3 text-destructive" />}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-sm">{l.clientName || l.prospectiveClientName || "—"}</TableCell>
+                    <TableCell><Badge variant="outline" className="text-[10px]">{l.stage}</Badge></TableCell>
+                    <TableCell className="text-right font-mono text-sm">{formatIDR(l.estimatedValue)}</TableCell>
+                    <TableCell className="text-right text-sm">{l.probability}%</TableCell>
+                    <TableCell className="text-sm">{l.ownerName ?? "—"}</TableCell>
+                    <TableCell className="text-sm">{l.expectedCloseDate ? l.expectedCloseDate.slice(0, 10) : "—"}</TableCell>
+                    <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
+                      {canWrite && (
+                        <Button size="sm" variant="ghost" onClick={() => openEdit(l)}>Edit</Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {filteredLeads.length === 0 && (
+                  <TableRow><TableCell colSpan={8} className="text-center text-muted-foreground py-8">No leads.</TableCell></TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Detail/Activities drawer */}
+      <Sheet open={!!drawerLead} onOpenChange={(o) => { if (!o) { setDrawerLead(null); setParams({ leadId: null }); } }}>
+        <SheetContent className="sm:max-w-xl overflow-y-auto">
+          {drawerLead && (
+            <>
+              <SheetHeader>
+                <SheetTitle>{drawerLead.title}</SheetTitle>
+              </SheetHeader>
+              <Tabs defaultValue="detail" className="mt-4">
+                <TabsList>
+                  <TabsTrigger value="detail">Detail</TabsTrigger>
+                  <TabsTrigger value="activities" data-testid="tab-activities">Activities</TabsTrigger>
+                </TabsList>
+                <TabsContent value="detail" className="space-y-2 text-sm">
+                  <Row k="Client" v={drawerLead.clientName || drawerLead.prospectiveClientName || "—"} />
+                  <Row k="Stage" v={drawerLead.stage} />
+                  <Row k="Value" v={formatIDR(drawerLead.estimatedValue)} />
+                  <Row k="Probability" v={`${drawerLead.probability}%`} />
+                  <Row k="Weighted" v={formatIDR(drawerLead.estimatedValue * drawerLead.probability / 100)} />
+                  <Row k="Source" v={drawerLead.source || "—"} />
+                  <Row k="Industry" v={drawerLead.industry || "—"} />
+                  <Row k="Contact" v={drawerLead.contactName ? `${drawerLead.contactName}${drawerLead.contactEmail ? " · " + drawerLead.contactEmail : ""}` : "—"} />
+                  <Row k="Owner" v={drawerLead.ownerName || "—"} />
+                  <Row k="Close date" v={drawerLead.expectedCloseDate ? drawerLead.expectedCloseDate.slice(0, 10) : "—"} />
+                  {drawerLead.lostReason && <Row k="Lost reason" v={drawerLead.lostReason} />}
+                  {drawerLead.competitorWon && <Row k="Competitor" v={drawerLead.competitorWon} />}
+                  {drawerLead.notes && (
+                    <div className="pt-2">
+                      <div className="text-xs text-muted-foreground mb-1">Notes</div>
+                      <div className="whitespace-pre-wrap text-sm">{drawerLead.notes}</div>
+                    </div>
+                  )}
+                  {canWrite && (
+                    <Button className="mt-3" onClick={() => { openEdit(drawerLead); setDrawerLead(null); }}>Edit lead</Button>
+                  )}
+                </TabsContent>
+                <TabsContent value="activities">
+                  <ActivitiesPanel
+                    leadId={drawerLead.id}
+                    canWrite={canWrite && drawerLead.ownerId === user?.id}
+                    onMutated={() => {
+                      qc.invalidateQueries({ queryKey: getListLeadActivitiesQueryKey(drawerLead.id) });
+                      qc.invalidateQueries({ queryKey: getListLeadsQueryKey() });
+                    }}
+                    createActivity={createActivity}
+                    delActivity={delActivity}
+                  />
+                </TabsContent>
+              </Tabs>
+            </>
+          )}
+        </SheetContent>
+      </Sheet>
+
+      {/* Form */}
       <Dialog open={isFormOpen} onOpenChange={setFormOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -363,7 +665,7 @@ export default function LeadsPage() {
             </div>
             <div>
               <Label>Stage</Label>
-              <Select value={form.stage} onValueChange={(v) => setForm({ ...form, stage: v as LeadStage })}>
+              <Select value={form.stage} onValueChange={(v) => setStage(v as LeadStage)}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
                   {STAGES.map((s) => (
@@ -381,8 +683,8 @@ export default function LeadsPage() {
               <Input type="number" value={form.estimatedValue} onChange={(e) => setForm({ ...form, estimatedValue: e.target.value })} />
             </div>
             <div>
-              <Label>Probability (%)</Label>
-              <Input type="number" min={0} max={100} value={form.probability} onChange={(e) => setForm({ ...form, probability: e.target.value })} />
+              <Label>Probability (%) <span className="text-[10px] text-muted-foreground">default for {form.stage}: {DEFAULT_PROB[form.stage]}%</span></Label>
+              <Input type="number" min={0} max={100} value={form.probability} onChange={(e) => setForm({ ...form, probability: e.target.value, probabilityTouched: true })} />
             </div>
             <div>
               <Label>Expected Close Date</Label>
@@ -418,10 +720,48 @@ export default function LeadsPage() {
         </DialogContent>
       </Dialog>
 
+      {/* LOST dialog */}
+      <Dialog open={!!lostLead} onOpenChange={(o) => !o && setLostLead(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Mark Lead as Lost</DialogTitle>
+          </DialogHeader>
+          {lostLead && (
+            <div className="space-y-3">
+              <div className="text-sm font-medium">{lostLead.title}</div>
+              <div>
+                <Label>Reason *</Label>
+                <Select value={lostReason} onValueChange={setLostReason}>
+                  <SelectTrigger data-testid="select-lost-reason"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {LOST_REASONS.map((r) => (
+                      <SelectItem key={r.value} value={r.value}>{r.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Competitor (won the deal)</Label>
+                <Input value={lostCompetitor} onChange={(e) => setLostCompetitor(e.target.value)} placeholder="Optional" />
+              </div>
+              <div>
+                <Label>Notes</Label>
+                <Textarea rows={2} value={lostNotes} onChange={(e) => setLostNotes(e.target.value)} placeholder="Optional context — will be appended to lead notes." />
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setLostLead(null)}>Cancel</Button>
+            <Button onClick={confirmLost} disabled={update.isPending} data-testid="button-confirm-lost">Mark Lost</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Convert dialog */}
       <Dialog open={!!convertingLead} onOpenChange={(o) => !o && setConvertingLead(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Convert Lead to Project</DialogTitle>
+            <DialogTitle>Convert Lead to Project (Won)</DialogTitle>
           </DialogHeader>
           {convertingLead && (
             <div className="space-y-3">
@@ -435,9 +775,14 @@ export default function LeadsPage() {
                 <Label>Project Code</Label>
                 <Input value={convertCode} onChange={(e) => setConvertCode(e.target.value)} />
               </div>
+              {!convertingLead.clientId && (
+                <div>
+                  <Label>Client Name *</Label>
+                  <Input value={convertClientName} onChange={(e) => setConvertClientName(e.target.value)} placeholder="New client to create" />
+                </div>
+              )}
               <p className="text-xs text-muted-foreground">
                 A project will be created with DRAFT status. The lead will be marked WON and linked to this project.
-                {!convertingLead.clientId && " Since no client is linked yet, a new client will be created automatically."}
               </p>
             </div>
           )}
@@ -449,6 +794,139 @@ export default function LeadsPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+function Row({ k, v }: { k: string; v: string }) {
+  return (
+    <div className="flex items-start gap-3">
+      <div className="text-xs text-muted-foreground w-28 shrink-0">{k}</div>
+      <div className="text-sm">{v}</div>
+    </div>
+  );
+}
+
+function ActivitiesPanel({
+  leadId, canWrite, onMutated, createActivity, delActivity,
+}: {
+  leadId: string;
+  canWrite: boolean;
+  onMutated: () => void;
+  createActivity: ReturnType<typeof useCreateLeadActivity>;
+  delActivity: ReturnType<typeof useDeleteLeadActivity>;
+}) {
+  const { data: activities, isLoading } = useListLeadActivities(leadId);
+  const { toast } = useToast();
+  const [type, setType] = useState<LeadActivityType>("CALL" as LeadActivityType);
+  const [outcome, setOutcome] = useState("");
+  const [nextDate, setNextDate] = useState("");
+  const [nextNote, setNextNote] = useState("");
+
+  async function add() {
+    if (!outcome.trim() && !nextNote.trim()) {
+      toast({ title: "Add an outcome or next action", variant: "destructive" });
+      return;
+    }
+    try {
+      await createActivity.mutateAsync({
+        id: leadId,
+        data: {
+          type,
+          outcome: outcome || null,
+          nextActionAt: nextDate || null,
+          nextActionNote: nextNote || null,
+        } as any,
+      });
+      setOutcome(""); setNextDate(""); setNextNote("");
+      onMutated();
+      toast({ title: "Activity added" });
+    } catch (e: any) {
+      toast({ title: "Failed", description: e?.message, variant: "destructive" });
+    }
+  }
+
+  async function remove(a: LeadActivity) {
+    if (!confirm("Delete this activity?")) return;
+    try {
+      await delActivity.mutateAsync({ id: leadId, activityId: a.id });
+      onMutated();
+    } catch (e: any) {
+      toast({ title: "Failed", description: e?.message, variant: "destructive" });
+    }
+  }
+
+  return (
+    <div className="space-y-4 mt-2">
+      {canWrite && (
+        <div className="rounded-md border p-3 space-y-2">
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <Label className="text-xs">Type</Label>
+              <Select value={type} onValueChange={(v) => setType(v as LeadActivityType)}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="CALL">Call</SelectItem>
+                  <SelectItem value="EMAIL">Email</SelectItem>
+                  <SelectItem value="MEETING">Meeting</SelectItem>
+                  <SelectItem value="NOTE">Note</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="text-xs">Next action date</Label>
+              <Input type="date" value={nextDate} onChange={(e) => setNextDate(e.target.value)} />
+            </div>
+          </div>
+          <div>
+            <Label className="text-xs">Outcome</Label>
+            <Textarea rows={2} value={outcome} onChange={(e) => setOutcome(e.target.value)} placeholder="What happened?" data-testid="input-activity-outcome" />
+          </div>
+          <div>
+            <Label className="text-xs">Next action note</Label>
+            <Input value={nextNote} onChange={(e) => setNextNote(e.target.value)} placeholder="Follow-up reminder" />
+          </div>
+          <div className="flex justify-end">
+            <Button size="sm" onClick={add} disabled={createActivity.isPending} data-testid="button-add-activity">
+              <Plus className="h-3 w-3 mr-1" /> Log activity
+            </Button>
+          </div>
+        </div>
+      )}
+      {isLoading ? (
+        <div className="text-sm text-muted-foreground">Loading…</div>
+      ) : (activities ?? []).length === 0 ? (
+        <div className="text-sm text-muted-foreground italic">No activities logged.</div>
+      ) : (
+        <div className="space-y-2">
+          {(activities ?? []).map((a) => {
+            const overdue = a.nextActionAt && new Date(a.nextActionAt) <= new Date();
+            return (
+              <div key={a.id} className="border rounded-md p-2 text-sm">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-[10px]">{a.type}</Badge>
+                    <span className="text-xs text-muted-foreground">{new Date(a.occurredAt).toLocaleString()}</span>
+                  </div>
+                  {canWrite && (
+                    <Button size="sm" variant="ghost" className="h-6 px-1" onClick={() => remove(a)}>
+                      <Trash2 className="h-3 w-3 text-destructive" />
+                    </Button>
+                  )}
+                </div>
+                {a.outcome && <div className="mt-1 whitespace-pre-wrap">{a.outcome}</div>}
+                {a.nextActionAt && (
+                  <div className={`text-xs mt-1 ${overdue ? "text-destructive font-medium" : "text-muted-foreground"}`}>
+                    Next action: {a.nextActionAt.slice(0, 10)} {overdue && "(overdue)"}
+                    {a.nextActionNote && ` — ${a.nextActionNote}`}
+                  </div>
+                )}
+                <div className="text-[10px] text-muted-foreground mt-1">by {a.createdByName ?? "user"}</div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

@@ -323,6 +323,82 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/SuccessMessage" }
 
+  /leads/analytics:
+    get:
+      operationId: getLeadsAnalytics
+      tags: [leads]
+      parameters:
+        - { name: from, in: query, required: false, schema: { type: string } }
+        - { name: to, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LeadAnalytics" }
+
+  /leads/{id}/activities:
+    get:
+      operationId: listLeadActivities
+      tags: [leads]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/LeadActivity" }
+    post:
+      operationId: createLeadActivity
+      tags: [leads]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateLeadActivityBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LeadActivity" }
+
+  /leads/{id}/activities/{activityId}:
+    patch:
+      operationId: updateLeadActivity
+      tags: [leads]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+        - { name: activityId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpdateLeadActivityBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LeadActivity" }
+    delete:
+      operationId: deleteLeadActivity
+      tags: [leads]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+        - { name: activityId, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
   /leads/{id}/convert:
     post:
       operationId: convertLead
@@ -1540,11 +1616,97 @@ components:
         ownerName: { type: string, nullable: true }
         notes: { type: string, nullable: true }
         lostReason: { type: string, nullable: true }
+        competitorWon: { type: string, nullable: true }
         convertedProjectId: { type: string, nullable: true }
         wonAt: { type: string, nullable: true }
         lostAt: { type: string, nullable: true }
+        nextActionAt: { type: string, nullable: true }
+        followupOverdue: { type: boolean, nullable: true }
         createdAt: { type: string }
         updatedAt: { type: string }
+
+    LeadActivityType:
+      type: string
+      enum: [CALL, EMAIL, MEETING, NOTE]
+
+    LeadActivity:
+      type: object
+      required: [id, leadId, type, occurredAt, createdById, createdAt]
+      properties:
+        id: { type: string }
+        leadId: { type: string }
+        type: { $ref: "#/components/schemas/LeadActivityType" }
+        occurredAt: { type: string }
+        outcome: { type: string, nullable: true }
+        nextActionAt: { type: string, nullable: true }
+        nextActionNote: { type: string, nullable: true }
+        createdById: { type: string }
+        createdByName: { type: string, nullable: true }
+        createdAt: { type: string }
+
+    CreateLeadActivityBody:
+      type: object
+      required: [type]
+      properties:
+        type: { $ref: "#/components/schemas/LeadActivityType" }
+        occurredAt: { type: string, nullable: true }
+        outcome: { type: string, nullable: true }
+        nextActionAt: { type: string, nullable: true }
+        nextActionNote: { type: string, nullable: true }
+
+    UpdateLeadActivityBody:
+      type: object
+      properties:
+        type: { $ref: "#/components/schemas/LeadActivityType" }
+        occurredAt: { type: string, nullable: true }
+        outcome: { type: string, nullable: true }
+        nextActionAt: { type: string, nullable: true }
+        nextActionNote: { type: string, nullable: true }
+
+    LeadAnalyticsBucket:
+      type: object
+      required: [count, value, weighted]
+      properties:
+        count: { type: integer }
+        value: { type: number }
+        weighted: { type: number }
+
+    LeadConversionRate:
+      type: object
+      required: [from, to, fromCount, toCount, rate]
+      properties:
+        from: { type: string }
+        to: { type: string }
+        fromCount: { type: integer }
+        toCount: { type: integer }
+        rate: { type: number }
+
+    LeadLostBucket:
+      type: object
+      required: [count, value]
+      properties:
+        count: { type: integer }
+        value: { type: number }
+
+    LeadAnalytics:
+      type: object
+      required: [weightedPipelineByStage, expectedRevenueThisQuarter, funnel, conversionRates, lostReasonBreakdown, windowFrom, windowTo]
+      properties:
+        weightedPipelineByStage:
+          type: object
+          additionalProperties: { $ref: "#/components/schemas/LeadAnalyticsBucket" }
+        expectedRevenueThisQuarter: { type: number }
+        funnel:
+          type: object
+          additionalProperties: { type: integer }
+        conversionRates:
+          type: array
+          items: { $ref: "#/components/schemas/LeadConversionRate" }
+        lostReasonBreakdown:
+          type: object
+          additionalProperties: { $ref: "#/components/schemas/LeadLostBucket" }
+        windowFrom: { type: string }
+        windowTo: { type: string }
 
     CreateLeadBody:
       type: object

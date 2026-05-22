@@ -689,9 +689,12 @@ export const ListLeadsResponseItem = zod.object({
   ownerName: zod.string().nullish(),
   notes: zod.string().nullish(),
   lostReason: zod.string().nullish(),
+  competitorWon: zod.string().nullish(),
   convertedProjectId: zod.string().nullish(),
   wonAt: zod.string().nullish(),
   lostAt: zod.string().nullish(),
+  nextActionAt: zod.string().nullish(),
+  followupOverdue: zod.boolean().nullish(),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -766,9 +769,12 @@ export const UpdateLeadResponse = zod.object({
   ownerName: zod.string().nullish(),
   notes: zod.string().nullish(),
   lostReason: zod.string().nullish(),
+  competitorWon: zod.string().nullish(),
   convertedProjectId: zod.string().nullish(),
   wonAt: zod.string().nullish(),
   lostAt: zod.string().nullish(),
+  nextActionAt: zod.string().nullish(),
+  followupOverdue: zod.boolean().nullish(),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -778,6 +784,110 @@ export const DeleteLeadParams = zod.object({
 });
 
 export const DeleteLeadResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+export const GetLeadsAnalyticsQueryParams = zod.object({
+  from: zod.coerce.string().optional(),
+  to: zod.coerce.string().optional(),
+});
+
+export const GetLeadsAnalyticsResponse = zod.object({
+  weightedPipelineByStage: zod.record(
+    zod.string(),
+    zod.object({
+      count: zod.number(),
+      value: zod.number(),
+      weighted: zod.number(),
+    }),
+  ),
+  expectedRevenueThisQuarter: zod.number(),
+  funnel: zod.record(zod.string(), zod.number()),
+  conversionRates: zod.array(
+    zod.object({
+      from: zod.string(),
+      to: zod.string(),
+      fromCount: zod.number(),
+      toCount: zod.number(),
+      rate: zod.number(),
+    }),
+  ),
+  lostReasonBreakdown: zod.record(
+    zod.string(),
+    zod.object({
+      count: zod.number(),
+      value: zod.number(),
+    }),
+  ),
+  windowFrom: zod.string(),
+  windowTo: zod.string(),
+});
+
+export const ListLeadActivitiesParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const ListLeadActivitiesResponseItem = zod.object({
+  id: zod.string(),
+  leadId: zod.string(),
+  type: zod.enum(["CALL", "EMAIL", "MEETING", "NOTE"]),
+  occurredAt: zod.string(),
+  outcome: zod.string().nullish(),
+  nextActionAt: zod.string().nullish(),
+  nextActionNote: zod.string().nullish(),
+  createdById: zod.string(),
+  createdByName: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+export const ListLeadActivitiesResponse = zod.array(
+  ListLeadActivitiesResponseItem,
+);
+
+export const CreateLeadActivityParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const CreateLeadActivityBody = zod.object({
+  type: zod.enum(["CALL", "EMAIL", "MEETING", "NOTE"]),
+  occurredAt: zod.string().nullish(),
+  outcome: zod.string().nullish(),
+  nextActionAt: zod.string().nullish(),
+  nextActionNote: zod.string().nullish(),
+});
+
+export const UpdateLeadActivityParams = zod.object({
+  id: zod.coerce.string(),
+  activityId: zod.coerce.string(),
+});
+
+export const UpdateLeadActivityBody = zod.object({
+  type: zod.enum(["CALL", "EMAIL", "MEETING", "NOTE"]).optional(),
+  occurredAt: zod.string().nullish(),
+  outcome: zod.string().nullish(),
+  nextActionAt: zod.string().nullish(),
+  nextActionNote: zod.string().nullish(),
+});
+
+export const UpdateLeadActivityResponse = zod.object({
+  id: zod.string(),
+  leadId: zod.string(),
+  type: zod.enum(["CALL", "EMAIL", "MEETING", "NOTE"]),
+  occurredAt: zod.string(),
+  outcome: zod.string().nullish(),
+  nextActionAt: zod.string().nullish(),
+  nextActionNote: zod.string().nullish(),
+  createdById: zod.string(),
+  createdByName: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+
+export const DeleteLeadActivityParams = zod.object({
+  id: zod.coerce.string(),
+  activityId: zod.coerce.string(),
+});
+
+export const DeleteLeadActivityResponse = zod.object({
   success: zod.boolean(),
   message: zod.string().optional(),
 });

@@ -118,6 +118,7 @@ model User {
   taskTimeLogs       TaskTimeLog[]
   notifications      Notification[]
   leadsOwned         Lead[]            @relation("LeadOwner")
+  leadActivities     LeadActivity[]    @relation("LeadActivityCreator")
 }
 
 model Client {
@@ -461,34 +462,60 @@ enum LeadStage {
 }
 
 model Lead {
-  id                    String    @id @default(cuid())
+  id                    String         @id @default(cuid())
   title                 String
   contactName           String?
   contactEmail          String?
   contactPhone          String?
   clientId              String?
-  client                Client?   @relation(fields: [clientId], references: [id])
+  client                Client?        @relation(fields: [clientId], references: [id])
   prospectiveClientName String?
   industry              String?
   source                String?
-  stage                 LeadStage @default(NEW)
-  estimatedValue        Float     @default(0)
-  probability           Int       @default(20)
+  stage                 LeadStage      @default(NEW)
+  estimatedValue        Float          @default(0)
+  probability           Int            @default(20)
   expectedCloseDate     DateTime?
   ownerId               String
-  owner                 User      @relation("LeadOwner", fields: [ownerId], references: [id])
+  owner                 User           @relation("LeadOwner", fields: [ownerId], references: [id])
   notes                 String?
   lostReason            String?
-  convertedProjectId    String?   @unique
+  competitorWon         String?
+  convertedProjectId    String?        @unique
   wonAt                 DateTime?
   lostAt                DateTime?
   deletedAt             DateTime?
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  activities            LeadActivity[]
 
   @@index([ownerId])
   @@index([stage])
   @@index([deletedAt])
+}
+
+enum LeadActivityType {
+  CALL
+  EMAIL
+  MEETING
+  NOTE
+}
+
+model LeadActivity {
+  id             String           @id @default(cuid())
+  leadId         String
+  lead           Lead             @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  type           LeadActivityType
+  occurredAt     DateTime         @default(now())
+  outcome        String?
+  nextActionAt   DateTime?
+  nextActionNote String?
+  createdById    String
+  createdBy      User             @relation("LeadActivityCreator", fields: [createdById], references: [id])
+  createdAt      DateTime         @default(now())
+
+  @@index([leadId, occurredAt])
+  @@index([nextActionAt])
 }
 
 model Notification {

@@ -26,9 +26,12 @@ export interface Lead {
   ownerName?: string | null;
   notes?: string | null;
   lostReason?: string | null;
+  competitorWon?: string | null;
   convertedProjectId?: string | null;
   wonAt?: string | null;
   lostAt?: string | null;
+  nextActionAt?: string | null;
+  followupOverdue?: boolean | null;
   createdAt: string;
   updatedAt: string;
 }

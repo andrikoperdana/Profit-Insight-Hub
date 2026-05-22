@@ -1,4 +1,4 @@
-import { useGetDashboardSummary, useGetProfitTrend, useGetStatusBreakdown, useGetTopProjects, useGetRecentActivity, useGetUtilization, customFetch, useListUsers, useUpdateProject, getListProjectsQueryKey, getListNotificationsQueryKey, UserRole } from "@workspace/api-client-react";
+import { useGetDashboardSummary, useGetProfitTrend, useGetStatusBreakdown, useGetTopProjects, useGetRecentActivity, useGetUtilization, customFetch, useListUsers, useUpdateProject, getListProjectsQueryKey, getListNotificationsQueryKey, UserRole, useGetLeadsAnalytics } from "@workspace/api-client-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -242,6 +242,7 @@ export default function Dashboard() {
       <CashFlowForecastCard />
 
       {/* PM Allocation: managers reporting up to PMO */}
+      <CrmSummaryCard />
       <PMAllocationCard />
 
       {/* Resource Utilization */}
@@ -626,6 +627,51 @@ function SatisfactionWidget() {
             </div>
           </div>
         )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function CrmSummaryCard() {
+  const { data } = useGetLeadsAnalytics();
+  const stages = ["NEW", "QUALIFIED", "PROPOSAL", "NEGOTIATION"];
+  const weightedTotal = stages.reduce(
+    (s, k) => s + (data?.weightedPipelineByStage?.[k]?.weighted ?? 0),
+    0,
+  );
+  const countTotal = stages.reduce(
+    (s, k) => s + (data?.weightedPipelineByStage?.[k]?.count ?? 0),
+    0,
+  );
+  const lostCount = data?.lostReasonBreakdown
+    ? Object.values(data.lostReasonBreakdown).reduce((s: number, v: any) => s + v.count, 0)
+    : 0;
+  return (
+    <Card className="border-border shadow-sm">
+      <CardHeader>
+        <CardTitle className="text-base">Sales Pipeline Snapshot</CardTitle>
+        <CardDescription>
+          Read-only summary of CRM leads across the company.{" "}
+          <Link href="/leads" className="text-primary hover:underline">Open full pipeline →</Link>
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-3 md:grid-cols-4">
+        <div className="rounded-md border p-3">
+          <div className="text-xs text-muted-foreground">Weighted Pipeline (open)</div>
+          <div className="text-lg font-bold font-mono">{formatIDR(weightedTotal)}</div>
+        </div>
+        <div className="rounded-md border p-3">
+          <div className="text-xs text-muted-foreground">Expected This Quarter</div>
+          <div className="text-lg font-bold font-mono">{formatIDR(data?.expectedRevenueThisQuarter ?? 0)}</div>
+        </div>
+        <div className="rounded-md border p-3">
+          <div className="text-xs text-muted-foreground">Active Leads</div>
+          <div className="text-lg font-bold">{countTotal}</div>
+        </div>
+        <div className="rounded-md border p-3">
+          <div className="text-xs text-muted-foreground">Lost (6 months)</div>
+          <div className="text-lg font-bold">{lostCount}</div>
+        </div>
       </CardContent>
     </Card>
   );

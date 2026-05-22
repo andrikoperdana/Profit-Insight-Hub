@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Link } from "wouter";
 import { useAuth } from "@/lib/auth";
-import { useListProjects, ProjectStatus } from "@workspace/api-client-react";
+import { useListProjects, ProjectStatus, useGetLeadsAnalytics } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Briefcase, Wallet, TrendingUp, Target, Activity, FilePlus2, Clock, AlertTriangle, FileText, Kanban } from "lucide-react";
@@ -42,9 +42,15 @@ const STATUS_COLORS: Record<ProjectStatus, string> = {
   [ProjectStatus.NO_NEED_CONSULTANT]: "hsl(25, 95%, 53%)",
 };
 
+const LOST_LABELS: Record<string, string> = {
+  PRICE: "Price", TIMELINE: "Timeline", COMPETITOR: "Competitor",
+  NO_BUDGET: "No Budget", NO_DECISION: "No Decision", OTHER: "Other",
+};
+
 export default function SalesDashboard() {
   const { user } = useAuth();
   const { data: allProjects, isLoading } = useListProjects();
+  const { data: leadAnalytics } = useGetLeadsAnalytics();
 
   const myProjects = useMemo(
     () => (allProjects ?? []).filter((p) => p.salesId === user?.id),
@@ -264,6 +270,8 @@ export default function SalesDashboard() {
         </Card>
       </div>
 
+      <CrmInsights data={leadAnalytics} />
+
       <Card className="border-border shadow-sm">
         <CardHeader>
           <CardTitle>Profitability Trend (6 Months)</CardTitle>
@@ -335,6 +343,96 @@ export default function SalesDashboard() {
           )}
         </CardContent>
       </Card>
+    </div>
+  );
+}
+
+function CrmInsights({ data }: { data?: any }) {
+  const stages = ["NEW", "QUALIFIED", "PROPOSAL", "NEGOTIATION"];
+  const weightedTotal = useMemo(() => {
+    if (!data?.weightedPipelineByStage) return 0;
+    return stages.reduce((s, k) => s + (data.weightedPipelineByStage[k]?.weighted ?? 0), 0);
+  }, [data]);
+  const funnelChart = useMemo(() => {
+    if (!data?.funnel) return [];
+    return ["NEW", "QUALIFIED", "PROPOSAL", "NEGOTIATION", "WON"].map((k) => ({ stage: k, count: data.funnel[k] ?? 0 }));
+  }, [data]);
+  const lostRows = useMemo(() => {
+    if (!data?.lostReasonBreakdown) return [];
+    return Object.entries(data.lostReasonBreakdown).map(([reason, v]: any) => ({ reason, ...v }))
+      .sort((a, b) => b.count - a.count);
+  }, [data]);
+
+  return (
+    <div className="space-y-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <KpiCard icon={<Kanban className="h-4 w-4 text-primary" />} label="Weighted Pipeline" value={formatIDR(weightedTotal)} sub="Σ value × probability (open stages)" mono />
+        <KpiCard icon={<Target className="h-4 w-4 text-primary" />} label="Expected This Quarter" value={formatIDR(data?.expectedRevenueThisQuarter ?? 0)} sub="Weighted, by expected close date" mono />
+        <KpiCard icon={<TrendingUp className="h-4 w-4 text-primary" />} label="Active Leads" value={String(stages.reduce((s, k) => s + (data?.weightedPipelineByStage?.[k]?.count ?? 0), 0))} sub="Across open stages" />
+        <KpiCard icon={<AlertTriangle className="h-4 w-4 text-primary" />} label="Lost (6mo)" value={String((data?.lostReasonBreakdown ? Object.values(data.lostReasonBreakdown) : []).reduce((s: number, v: any) => s + v.count, 0))} sub="Deals lost in last 6 months" />
+      </div>
+      <div className="grid gap-6 md:grid-cols-7">
+        <Card className="md:col-span-4 border-border shadow-sm">
+          <CardHeader>
+            <CardTitle>Conversion Funnel</CardTitle>
+            <CardDescription>Leads reaching each stage (last 6 months)</CardDescription>
+          </CardHeader>
+          <CardContent className="h-[260px]">
+            {funnelChart.length === 0 ? (
+              <div className="h-full flex items-center justify-center text-sm text-muted-foreground">No lead data.</div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={funnelChart} layout="vertical" margin={{ top: 10, right: 30, left: 10, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="hsl(var(--border))" />
+                  <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                  <YAxis dataKey="stage" type="category" width={100} stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} />
+                  <Tooltip contentStyle={{ backgroundColor: "hsl(var(--card))", borderColor: "hsl(var(--border))", borderRadius: "8px" }} />
+                  <Bar dataKey="count" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+            {data?.conversionRates && data.conversionRates.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-3 text-[11px]">
+                {data.conversionRates.map((c: any) => (
+                  <span key={`${c.from}-${c.to}`} className="px-2 py-1 rounded bg-muted/50 text-muted-foreground">
+                    {c.from} → {c.to}: <span className="text-foreground font-semibold">{c.rate.toFixed(0)}%</span>
+                  </span>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+        <Card className="md:col-span-3 border-border shadow-sm">
+          <CardHeader>
+            <CardTitle>Win/Loss Analysis</CardTitle>
+            <CardDescription>Lost reasons in last 6 months</CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            {lostRows.length === 0 ? (
+              <div className="p-6 text-sm text-muted-foreground text-center">No lost deals recorded.</div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Reason</TableHead>
+                    <TableHead className="text-right">Count</TableHead>
+                    <TableHead className="text-right">Value lost</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {lostRows.map((r) => (
+                    <TableRow key={r.reason}>
+                      <TableCell>{LOST_LABELS[r.reason] ?? r.reason}</TableCell>
+                      <TableCell className="text-right">{r.count}</TableCell>
+                      <TableCell className="text-right font-mono text-sm">{formatIDR(r.value)}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

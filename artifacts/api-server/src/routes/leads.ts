@@ -1,12 +1,16 @@
 import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
+import { notifyOnceDailyForLead } from "../lib/leadNotifications.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
 
 const STAGES = ["NEW", "QUALIFIED", "PROPOSAL", "NEGOTIATION", "WON", "LOST"] as const;
 type Stage = (typeof STAGES)[number];
+const LOST_REASONS = ["PRICE", "TIMELINE", "COMPETITOR", "NO_BUDGET", "NO_DECISION", "OTHER"] as const;
+const ACTIVITY_TYPES = ["CALL", "EMAIL", "MEETING", "NOTE"] as const;
+type ActivityType = (typeof ACTIVITY_TYPES)[number];
 
 function serialize(l: any) {
   return {
@@ -28,6 +32,7 @@ function serialize(l: any) {
     ownerName: l.owner?.name ?? null,
     notes: l.notes,
     lostReason: l.lostReason,
+    competitorWon: l.competitorWon,
     convertedProjectId: l.convertedProjectId,
     wonAt: l.wonAt ? l.wonAt.toISOString() : null,
     lostAt: l.lostAt ? l.lostAt.toISOString() : null,
@@ -36,10 +41,35 @@ function serialize(l: any) {
   };
 }
 
-function scope(req: any) {
+function serializeActivity(a: any) {
+  return {
+    id: a.id,
+    leadId: a.leadId,
+    type: a.type,
+    occurredAt: a.occurredAt.toISOString(),
+    outcome: a.outcome,
+    nextActionAt: a.nextActionAt ? a.nextActionAt.toISOString() : null,
+    nextActionNote: a.nextActionNote,
+    createdById: a.createdById,
+    createdByName: a.createdBy?.name ?? null,
+    createdAt: a.createdAt.toISOString(),
+  };
+}
+
+/**
+ * Returns Prisma `where` scope clause, or `null` if forbidden.
+ * SALES: own leads only. MANAGEMENT: read-only, sees all.
+ */
+function scope(req: any): Record<string, unknown> | null {
   const role = req.user.role;
   if (role === "SALES") return { ownerId: req.user.sub };
+  if (role === "MANAGEMENT") return {};
   return null;
+}
+
+function canMutate(req: any, lead: { ownerId: string }): boolean {
+  if (req.user.role === "SALES") return lead.ownerId === req.user.sub;
+  return false;
 }
 
 router.get("/leads", async (req: any, res) => {
@@ -50,10 +80,108 @@ router.get("/leads", async (req: any, res) => {
   }
   const leads = await prisma.lead.findMany({
     where: { deletedAt: null, ...s },
-    include: { client: { select: { name: true } }, owner: { select: { name: true } } },
+    include: {
+      client: { select: { name: true } },
+      owner: { select: { name: true } },
+      activities: {
+        orderBy: { occurredAt: "desc" },
+        take: 1,
+        select: { nextActionAt: true },
+      },
+    },
     orderBy: [{ stage: "asc" }, { updatedAt: "desc" }],
   });
-  res.json(leads.map(serialize));
+  const now = new Date();
+  res.json(
+    leads.map((l) => {
+      const next = l.activities[0]?.nextActionAt ?? null;
+      return {
+        ...serialize(l),
+        nextActionAt: next ? next.toISOString() : null,
+        followupOverdue: next ? next.getTime() <= now.getTime() : false,
+      };
+    }),
+  );
+});
+
+router.get("/leads/analytics", async (req: any, res) => {
+  const role = req.user.role;
+  if (role !== "SALES" && role !== "MANAGEMENT") {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  const ownerFilter = role === "SALES" ? { ownerId: req.user.sub } : {};
+  const from = req.query.from ? new Date(String(req.query.from)) : new Date(Date.now() - 180 * 24 * 60 * 60 * 1000);
+  const to = req.query.to ? new Date(String(req.query.to)) : new Date();
+
+  const allOpen = await prisma.lead.findMany({
+    where: { deletedAt: null, ...ownerFilter, stage: { notIn: ["WON", "LOST"] } },
+    select: { stage: true, estimatedValue: true, probability: true, expectedCloseDate: true },
+  });
+  const weightedPipelineByStage: Record<string, { count: number; value: number; weighted: number }> = {};
+  for (const s of STAGES) weightedPipelineByStage[s] = { count: 0, value: 0, weighted: 0 };
+  for (const l of allOpen) {
+    const k = l.stage as string;
+    weightedPipelineByStage[k].count += 1;
+    weightedPipelineByStage[k].value += l.estimatedValue;
+    weightedPipelineByStage[k].weighted += l.estimatedValue * (l.probability / 100);
+  }
+
+  const now = new Date();
+  const qStart = new Date(now.getFullYear(), Math.floor(now.getMonth() / 3) * 3, 1);
+  const qEnd = new Date(qStart.getFullYear(), qStart.getMonth() + 3, 1);
+  const expectedRevenueThisQuarter = allOpen
+    .filter((l) => l.expectedCloseDate && l.expectedCloseDate >= qStart && l.expectedCloseDate < qEnd)
+    .reduce((s, l) => s + l.estimatedValue * (l.probability / 100), 0);
+
+  // Funnel based on lead creation in window
+  const windowLeads = await prisma.lead.findMany({
+    where: { deletedAt: null, ...ownerFilter, createdAt: { gte: from, lte: to } },
+    select: { stage: true, estimatedValue: true, lostReason: true, lostAt: true },
+  });
+  const funnel: Record<string, number> = {};
+  for (const s of STAGES) funnel[s] = 0;
+  for (const l of windowLeads) funnel[l.stage as string] += 1;
+
+  // Conversion rates: NEW -> QUALIFIED -> PROPOSAL -> NEGOTIATION -> WON
+  // For "lead reached stage X" we treat any lead currently at >=X as having reached X.
+  const ORDER: Stage[] = ["NEW", "QUALIFIED", "PROPOSAL", "NEGOTIATION", "WON"];
+  const stageRank = new Map(ORDER.map((s, i) => [s, i]));
+  const reached: number[] = ORDER.map(() => 0);
+  for (const l of windowLeads) {
+    const r = stageRank.get(l.stage as Stage);
+    if (r === undefined) continue; // skip LOST
+    for (let i = 0; i <= r; i++) reached[i] += 1;
+  }
+  const conversionRates = ORDER.slice(0, -1).map((from, i) => {
+    const fromCount = reached[i];
+    const toCount = reached[i + 1];
+    const rate = fromCount > 0 ? (toCount / fromCount) * 100 : 0;
+    return { from, to: ORDER[i + 1], fromCount, toCount, rate };
+  });
+
+  const lostBreakdown: Record<string, { count: number; value: number }> = {};
+  const sixMo = new Date(Date.now() - 180 * 24 * 60 * 60 * 1000);
+  const lostLeads = await prisma.lead.findMany({
+    where: { deletedAt: null, ...ownerFilter, stage: "LOST", lostAt: { gte: sixMo } },
+    select: { lostReason: true, estimatedValue: true },
+  });
+  for (const l of lostLeads) {
+    const reason = l.lostReason || "OTHER";
+    if (!lostBreakdown[reason]) lostBreakdown[reason] = { count: 0, value: 0 };
+    lostBreakdown[reason].count += 1;
+    lostBreakdown[reason].value += l.estimatedValue;
+  }
+
+  res.json({
+    weightedPipelineByStage,
+    expectedRevenueThisQuarter,
+    funnel,
+    conversionRates,
+    lostReasonBreakdown: lostBreakdown,
+    windowFrom: from.toISOString(),
+    windowTo: to.toISOString(),
+  });
 });
 
 function validate(b: any, partial: boolean): string | null {
@@ -112,11 +240,19 @@ router.patch("/leads/:id", requireRole("SALES"), async (req: any, res) => {
     res.status(404).json({ error: "Lead not found" });
     return;
   }
-  if (req.user.role === "SALES" && existing.ownerId !== req.user.sub) {
+  if (!canMutate(req, existing)) {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
   const stageChanged = body.stage && body.stage !== existing.stage;
+  // If moving to LOST, require lostReason
+  if (stageChanged && body.stage === "LOST") {
+    const reason = typeof body.lostReason === "string" ? body.lostReason.trim() : "";
+    if (!reason) {
+      res.status(400).json({ error: "lostReason required when stage = LOST" });
+      return;
+    }
+  }
   const data: any = {
     ...(body.title !== undefined ? { title: String(body.title).trim() } : {}),
     ...(body.contactName !== undefined ? { contactName: body.contactName || null } : {}),
@@ -132,6 +268,7 @@ router.patch("/leads/:id", requireRole("SALES"), async (req: any, res) => {
     ...(body.expectedCloseDate !== undefined ? { expectedCloseDate: body.expectedCloseDate ? new Date(body.expectedCloseDate) : null } : {}),
     ...(body.notes !== undefined ? { notes: body.notes || null } : {}),
     ...(body.lostReason !== undefined ? { lostReason: body.lostReason || null } : {}),
+    ...(body.competitorWon !== undefined ? { competitorWon: body.competitorWon || null } : {}),
   };
   if (stageChanged) {
     if (body.stage === "WON") data.wonAt = new Date();
@@ -151,7 +288,7 @@ router.delete("/leads/:id", requireRole("SALES"), async (req: any, res) => {
     res.status(404).json({ error: "Lead not found" });
     return;
   }
-  if (req.user.role === "SALES" && existing.ownerId !== req.user.sub) {
+  if (!canMutate(req, existing)) {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
@@ -166,7 +303,7 @@ router.post("/leads/:id/convert", requireRole("SALES"), async (req: any, res) =>
     res.status(404).json({ error: "Lead not found" });
     return;
   }
-  if (req.user.role === "SALES" && lead.ownerId !== req.user.sub) {
+  if (!canMutate(req, lead)) {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
@@ -236,4 +373,118 @@ router.post("/leads/:id/convert", requireRole("SALES"), async (req: any, res) =>
   }
 });
 
+// ─── Activities ──────────────────────────────────────────────────────────────
+
+async function loadLeadForActivity(req: any, res: any): Promise<any | null> {
+  const lead = await prisma.lead.findUnique({ where: { id: String(req.params.id) } });
+  if (!lead || lead.deletedAt) {
+    res.status(404).json({ error: "Lead not found" });
+    return null;
+  }
+  const role = req.user.role;
+  if (role === "SALES") {
+    if (lead.ownerId !== req.user.sub) {
+      res.status(403).json({ error: "Forbidden" });
+      return null;
+    }
+  } else if (role !== "MANAGEMENT") {
+    res.status(403).json({ error: "Forbidden" });
+    return null;
+  }
+  return lead;
+}
+
+router.get("/leads/:id/activities", async (req: any, res) => {
+  const lead = await loadLeadForActivity(req, res);
+  if (!lead) return;
+  const activities = await prisma.leadActivity.findMany({
+    where: { leadId: lead.id },
+    include: { createdBy: { select: { name: true } } },
+    orderBy: { occurredAt: "desc" },
+  });
+
+  // Lazy notification check: notify the lead owner about overdue follow-ups
+  // on read (no cron). Idempotent per day inside notifyOnceDailyForLead.
+  await notifyOnceDailyForLead(lead, activities).catch(() => {});
+
+  res.json(activities.map(serializeActivity));
+});
+
+router.post("/leads/:id/activities", async (req: any, res) => {
+  const lead = await loadLeadForActivity(req, res);
+  if (!lead) return;
+  if (req.user.role !== "SALES" || lead.ownerId !== req.user.sub) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  const body = req.body || {};
+  const type = typeof body.type === "string" ? body.type.toUpperCase() : "";
+  if (!ACTIVITY_TYPES.includes(type as ActivityType)) {
+    res.status(400).json({ error: "Invalid activity type" });
+    return;
+  }
+  const activity = await prisma.leadActivity.create({
+    data: {
+      leadId: lead.id,
+      type: type as ActivityType,
+      occurredAt: body.occurredAt ? new Date(body.occurredAt) : new Date(),
+      outcome: body.outcome || null,
+      nextActionAt: body.nextActionAt ? new Date(body.nextActionAt) : null,
+      nextActionNote: body.nextActionNote || null,
+      createdById: req.user.sub,
+    },
+    include: { createdBy: { select: { name: true } } },
+  });
+  res.status(201).json(serializeActivity(activity));
+});
+
+router.patch("/leads/:id/activities/:activityId", async (req: any, res) => {
+  const lead = await loadLeadForActivity(req, res);
+  if (!lead) return;
+  if (req.user.role !== "SALES" || lead.ownerId !== req.user.sub) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  const existing = await prisma.leadActivity.findUnique({ where: { id: String(req.params.activityId) } });
+  if (!existing || existing.leadId !== lead.id) {
+    res.status(404).json({ error: "Activity not found" });
+    return;
+  }
+  const body = req.body || {};
+  if (body.type !== undefined && !ACTIVITY_TYPES.includes(String(body.type).toUpperCase() as ActivityType)) {
+    res.status(400).json({ error: "Invalid activity type" });
+    return;
+  }
+  const activity = await prisma.leadActivity.update({
+    where: { id: existing.id },
+    data: {
+      ...(body.type !== undefined ? { type: String(body.type).toUpperCase() as ActivityType } : {}),
+      ...(body.occurredAt !== undefined ? { occurredAt: body.occurredAt ? new Date(body.occurredAt) : new Date() } : {}),
+      ...(body.outcome !== undefined ? { outcome: body.outcome || null } : {}),
+      ...(body.nextActionAt !== undefined ? { nextActionAt: body.nextActionAt ? new Date(body.nextActionAt) : null } : {}),
+      ...(body.nextActionNote !== undefined ? { nextActionNote: body.nextActionNote || null } : {}),
+    },
+    include: { createdBy: { select: { name: true } } },
+  });
+  res.json(serializeActivity(activity));
+});
+
+router.delete("/leads/:id/activities/:activityId", async (req: any, res) => {
+  const lead = await loadLeadForActivity(req, res);
+  if (!lead) return;
+  if (req.user.role !== "SALES" || lead.ownerId !== req.user.sub) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  const existing = await prisma.leadActivity.findUnique({ where: { id: String(req.params.activityId) } });
+  if (!existing || existing.leadId !== lead.id) {
+    res.status(404).json({ error: "Activity not found" });
+    return;
+  }
+  await prisma.leadActivity.delete({ where: { id: existing.id } });
+  res.json({ success: true });
+});
+
 export default router;
+
+export { LOST_REASONS };

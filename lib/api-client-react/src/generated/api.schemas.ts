@@ -383,11 +383,92 @@ export interface Lead {
   ownerName?: string | null;
   notes?: string | null;
   lostReason?: string | null;
+  competitorWon?: string | null;
   convertedProjectId?: string | null;
   wonAt?: string | null;
   lostAt?: string | null;
+  nextActionAt?: string | null;
+  followupOverdue?: boolean | null;
   createdAt: string;
   updatedAt: string;
+}
+
+export type LeadActivityType =
+  (typeof LeadActivityType)[keyof typeof LeadActivityType];
+
+export const LeadActivityType = {
+  CALL: "CALL",
+  EMAIL: "EMAIL",
+  MEETING: "MEETING",
+  NOTE: "NOTE",
+} as const;
+
+export interface LeadActivity {
+  id: string;
+  leadId: string;
+  type: LeadActivityType;
+  occurredAt: string;
+  outcome?: string | null;
+  nextActionAt?: string | null;
+  nextActionNote?: string | null;
+  createdById: string;
+  createdByName?: string | null;
+  createdAt: string;
+}
+
+export interface CreateLeadActivityBody {
+  type: LeadActivityType;
+  occurredAt?: string | null;
+  outcome?: string | null;
+  nextActionAt?: string | null;
+  nextActionNote?: string | null;
+}
+
+export interface UpdateLeadActivityBody {
+  type?: LeadActivityType;
+  occurredAt?: string | null;
+  outcome?: string | null;
+  nextActionAt?: string | null;
+  nextActionNote?: string | null;
+}
+
+export interface LeadAnalyticsBucket {
+  count: number;
+  value: number;
+  weighted: number;
+}
+
+export interface LeadConversionRate {
+  from: string;
+  to: string;
+  fromCount: number;
+  toCount: number;
+  rate: number;
+}
+
+export interface LeadLostBucket {
+  count: number;
+  value: number;
+}
+
+export type LeadAnalyticsWeightedPipelineByStage = {
+  [key: string]: LeadAnalyticsBucket;
+};
+
+export type LeadAnalyticsFunnel = { [key: string]: number };
+
+export type LeadAnalyticsLostReasonBreakdown = {
+  [key: string]: LeadLostBucket;
+};
+
+export interface LeadAnalytics {
+  weightedPipelineByStage: LeadAnalyticsWeightedPipelineByStage;
+  expectedRevenueThisQuarter: number;
+  funnel: LeadAnalyticsFunnel;
+  conversionRates: LeadConversionRate[];
+  lostReasonBreakdown: LeadAnalyticsLostReasonBreakdown;
+  windowFrom: string;
+  windowTo: string;
 }
 
 export interface CreateLeadBody {
@@ -1095,6 +1176,11 @@ export type GetReportOptionsParams = {
 
 export type ListAvailableUsersParams = {
   role: UserRole;
+};
+
+export type GetLeadsAnalyticsParams = {
+  from?: string;
+  to?: string;
 };
 
 export type ListProjectsParams = {
