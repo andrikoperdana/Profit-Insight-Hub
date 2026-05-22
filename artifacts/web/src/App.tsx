@@ -31,6 +31,7 @@ const ResourcePlanningPage = lazy(() => import("@/pages/resource-planning"));
 const InvoicePlanningPage = lazy(() => import("@/pages/invoice-planning"));
 const VatRecapPage = lazy(() => import("@/pages/vat-recap"));
 const LeadsPage = lazy(() => import("@/pages/leads"));
+const BenchPage = lazy(() => import("@/pages/bench"));
 const ReportsIndex = lazy(() => import("@/pages/reports"));
 const ReportRunner = lazy(() => import("@/pages/reports/[id]"));
 const SurveyTemplateEditor = lazy(() => import("@/pages/settings/SurveyTemplate"));
@@ -104,6 +105,7 @@ function Router() {
         <Route path="/invoice-planning" component={() => <ProtectedRoute component={InvoicePlanningPage} />} />
         <Route path="/vat-recap" component={() => <ProtectedRoute component={VatRecapPage} />} />
         <Route path="/leads" component={() => <ProtectedRoute component={LeadsPage} />} />
+        <Route path="/bench" component={() => <ProtectedRoute component={BenchPage} />} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>

@@ -898,6 +898,74 @@ export interface ActivityItem {
   createdAt: string;
 }
 
+export type BenchResourceRowStatus =
+  (typeof BenchResourceRowStatus)[keyof typeof BenchResourceRowStatus];
+
+export const BenchResourceRowStatus = {
+  ACTIVE: "ACTIVE",
+  IDLE: "IDLE",
+  OVERLOADED: "OVERLOADED",
+} as const;
+
+export interface BenchResourceRow {
+  userId: string;
+  userName: string;
+  role: string;
+  title?: string | null;
+  specialization?: string | null;
+  status: BenchResourceRowStatus;
+  currentProjectId?: string | null;
+  currentProjectName?: string | null;
+  currentProjectStatus?: string | null;
+  currentClientId?: string | null;
+  currentClientName?: string | null;
+  assignmentEndDate?: string | null;
+  daysRemaining?: number | null;
+  finishingSoon: boolean;
+  daysSinceLastActivity?: number | null;
+  idleLong: boolean;
+  overloaded: boolean;
+  avgHoursPerDay7d: number;
+  monthHours: number;
+  utilizationPctMonth: number;
+}
+
+export type ResourceUtilizationDetailSummary = {
+  total: number;
+  active: number;
+  idle: number;
+  vacation: number;
+  finishingSoon: number;
+  overloaded: number;
+  idleLong: number;
+  utilizationPct: number;
+};
+
+export type ResourceUtilizationDetailDistributionItem = {
+  name: string;
+  value: number;
+};
+
+export type ResourceUtilizationDetailFiltersPrincipalsItem = {
+  id: string;
+  name: string;
+};
+
+export type ResourceUtilizationDetailFilters = {
+  principals: ResourceUtilizationDetailFiltersPrincipalsItem[];
+  specializations: string[];
+};
+
+export interface ResourceUtilizationDetail {
+  summary: ResourceUtilizationDetailSummary;
+  distribution: ResourceUtilizationDetailDistributionItem[];
+  filters: ResourceUtilizationDetailFilters;
+  resources: BenchResourceRow[];
+  finishingSoonList: BenchResourceRow[];
+  idleLongList: BenchResourceRow[];
+  overloadedList: BenchResourceRow[];
+}
+
 export interface UtilizationRow {
   userId: string;
   userName: string;

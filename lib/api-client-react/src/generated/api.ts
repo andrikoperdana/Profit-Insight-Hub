@@ -71,6 +71,7 @@ import type {
   ReportMeta,
   ReportResult,
   ResourcePlanningMatrix,
+  ResourceUtilizationDetail,
   Skill,
   StatusCount,
   SuccessMessage,
@@ -7029,6 +7030,79 @@ export function useGetUtilization<
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetUtilizationQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getGetResourceUtilizationDetailUrl = () => {
+  return `/api/dashboard/resource-utilization-detail`;
+};
+
+export const getResourceUtilizationDetail = async (
+  options?: RequestInit,
+): Promise<ResourceUtilizationDetail> => {
+  return customFetch<ResourceUtilizationDetail>(
+    getGetResourceUtilizationDetailUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getGetResourceUtilizationDetailQueryKey = () => {
+  return [`/api/dashboard/resource-utilization-detail`] as const;
+};
+
+export const getGetResourceUtilizationDetailQueryOptions = <
+  TData = Awaited<ReturnType<typeof getResourceUtilizationDetail>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getResourceUtilizationDetail>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetResourceUtilizationDetailQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getResourceUtilizationDetail>>
+  > = ({ signal }) =>
+    getResourceUtilizationDetail({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getResourceUtilizationDetail>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetResourceUtilizationDetailQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getResourceUtilizationDetail>>
+>;
+export type GetResourceUtilizationDetailQueryError = ErrorType<unknown>;
+
+export function useGetResourceUtilizationDetail<
+  TData = Awaited<ReturnType<typeof getResourceUtilizationDetail>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getResourceUtilizationDetail>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetResourceUtilizationDetailQueryOptions(options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

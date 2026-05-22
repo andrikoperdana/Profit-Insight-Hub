@@ -312,7 +312,13 @@ router.get("/dashboard/resource-utilization-detail", async (req, res) => {
 
   const monthHours = await prisma.timesheet.groupBy({
     by: ["userId"],
-    where: { status: "APPROVED", workDate: { gte: monthStart } },
+    where: {
+      status: "APPROVED",
+      workDate: { gte: monthStart },
+      ...(pmProjectIdSet
+        ? { projectId: { in: Array.from(pmProjectIdSet) } }
+        : {}),
+    },
     _sum: { hours: true },
   });
   const monthMap = new Map<string, number>();

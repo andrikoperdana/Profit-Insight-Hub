@@ -251,6 +251,8 @@ function OverviewTab({ project }: { project: any }) {
         </Card>
       )}
 
+      <DocumentChecklistCard projectId={project.id} projectStatus={project.status} />
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="border-border shadow-sm">
           <CardHeader className="flex flex-row items-start justify-between gap-2">
@@ -616,3 +618,129 @@ function OverviewTab({ project }: { project: any }) {
 
 
 export default OverviewTab;
+
+function DocumentChecklistCard({
+  projectId,
+  projectStatus,
+}: {
+  projectId: string;
+  projectStatus: string;
+}) {
+  const { data: docs } = useListProjectDocuments(projectId);
+  const list = (docs ?? []) as Array<{ type: string }>;
+
+  const isComplete = projectStatus === "COMPLETE" || projectStatus === "CLOSED";
+  const isActive =
+    projectStatus === "ACTIVE" || projectStatus === "PAUSE" || isComplete;
+
+  if (!isActive) return null;
+
+  const items = [
+    {
+      key: "CONTRACT",
+      label: "Contract / SPK",
+      required: true,
+      hint: "Signed contract or PO from client",
+    },
+    {
+      key: "INVOICE",
+      label: "Invoice",
+      required: true,
+      hint: "Invoice issued to client",
+    },
+    {
+      key: "BAST",
+      label: "BAST (Handover)",
+      required: isComplete,
+      hint: isComplete ? "Required before closing" : "Final handover document",
+    },
+    {
+      key: "REPORT",
+      label: "Final Report",
+      required: isComplete,
+      hint: isComplete ? "Required before closing" : "Deliverable report",
+    },
+  ];
+
+  const rows = items.map((it) => {
+    const count = list.filter((d) => d.type === it.key).length;
+    const status: "ok" | "missing" | "optional" = count > 0
+      ? "ok"
+      : it.required
+        ? "missing"
+        : "optional";
+    return { ...it, count, status };
+  });
+
+  const missingCount = rows.filter((r) => r.status === "missing").length;
+  const requiredTotal = rows.filter((r) => r.required).length;
+  const requiredReady = rows.filter((r) => r.required && r.count > 0).length;
+
+  return (
+    <Card className="border-border shadow-sm" data-testid="card-document-checklist">
+      <CardHeader className="flex flex-row items-start justify-between gap-2">
+        <div>
+          <CardTitle className="text-base flex items-center gap-2">
+            <FileText className="h-4 w-4" />
+            Document Checklist
+          </CardTitle>
+          <CardDescription className="text-xs mt-1">
+            {missingCount === 0
+              ? `All ${requiredTotal} required document${requiredTotal === 1 ? "" : "s"} are uploaded.`
+              : `${missingCount} required document${missingCount > 1 ? "s" : ""} still missing — open the Documents tab to upload.`}
+          </CardDescription>
+        </div>
+        <Badge
+          variant={missingCount === 0 ? "default" : "destructive"}
+          className="shrink-0"
+        >
+          {requiredReady}/{requiredTotal} ready
+        </Badge>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {rows.map((r) => (
+            <div
+              key={r.key}
+              className={
+                "flex items-start gap-3 p-3 rounded-md border " +
+                (r.status === "ok"
+                  ? "border-primary/40 bg-primary/5"
+                  : r.status === "missing"
+                    ? "border-destructive/40 bg-destructive/5"
+                    : "border-border bg-muted/20")
+              }
+              data-testid={`checklist-${r.key.toLowerCase()}`}
+            >
+              <div className="mt-0.5">
+                {r.status === "ok" ? (
+                  <CheckCircle2 className="h-5 w-5 text-primary" />
+                ) : r.status === "missing" ? (
+                  <AlertCircle className="h-5 w-5 text-destructive" />
+                ) : (
+                  <FileText className="h-5 w-5 text-muted-foreground" />
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-sm font-medium text-foreground">
+                    {r.label}
+                    {r.required && (
+                      <span className="text-destructive ml-1">*</span>
+                    )}
+                  </p>
+                  {r.count > 0 && (
+                    <span className="text-xs text-muted-foreground font-mono">
+                      ×{r.count}
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground mt-0.5">{r.hint}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}

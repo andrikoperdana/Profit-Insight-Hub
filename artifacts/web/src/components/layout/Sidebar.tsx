@@ -57,6 +57,7 @@ export default function Sidebar() {
     ...(isPM ? [{ href: "/capacity", label: "Capacity Planning", icon: CalendarRange }] : []),
     ...(canSeeExpenses ? [{ href: "/expenses", label: "Expenses", icon: Receipt }] : []),
     ...(isPM ? [{ href: "/resource-planning", label: "Resource Planning", icon: Grid3x3 }] : []),
+    ...(isPM ? [{ href: "/bench", label: "Bench Report", icon: UserCog }] : []),
     ...(isPM || user?.role === "ADMIN_PROJECT" || user?.role === "SALES" ? [{ href: "/invoice-planning", label: "Invoice Planning", icon: Wallet }] : []),
     ...(isPM ? [{ href: "/reports", label: "Reports", icon: FileBarChart }] : []),
   ];

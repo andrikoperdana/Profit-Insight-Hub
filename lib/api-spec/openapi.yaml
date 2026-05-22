@@ -1302,6 +1302,17 @@ paths:
                 type: array
                 items: { $ref: "#/components/schemas/UtilizationRow" }
 
+  /dashboard/resource-utilization-detail:
+    get:
+      operationId: getResourceUtilizationDetail
+      tags: [dashboard]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ResourceUtilizationDetail" }
+
 components:
   schemas:
     HealthStatus:
@@ -2191,6 +2202,83 @@ components:
         userName: { type: string, nullable: true }
         projectName: { type: string, nullable: true }
         createdAt: { type: string }
+
+    BenchResourceRow:
+      type: object
+      required: [userId, userName, role, status, finishingSoon, idleLong, overloaded, avgHoursPerDay7d, monthHours, utilizationPctMonth]
+      properties:
+        userId: { type: string }
+        userName: { type: string }
+        role: { type: string }
+        title: { type: string, nullable: true }
+        specialization: { type: string, nullable: true }
+        status: { type: string, enum: [ACTIVE, IDLE, OVERLOADED] }
+        currentProjectId: { type: string, nullable: true }
+        currentProjectName: { type: string, nullable: true }
+        currentProjectStatus: { type: string, nullable: true }
+        currentClientId: { type: string, nullable: true }
+        currentClientName: { type: string, nullable: true }
+        assignmentEndDate: { type: string, nullable: true }
+        daysRemaining: { type: integer, nullable: true }
+        finishingSoon: { type: boolean }
+        daysSinceLastActivity: { type: integer, nullable: true }
+        idleLong: { type: boolean }
+        overloaded: { type: boolean }
+        avgHoursPerDay7d: { type: number }
+        monthHours: { type: number }
+        utilizationPctMonth: { type: number }
+
+    ResourceUtilizationDetail:
+      type: object
+      required: [summary, distribution, filters, resources, finishingSoonList, idleLongList, overloadedList]
+      properties:
+        summary:
+          type: object
+          required: [total, active, idle, vacation, finishingSoon, overloaded, idleLong, utilizationPct]
+          properties:
+            total: { type: integer }
+            active: { type: integer }
+            idle: { type: integer }
+            vacation: { type: integer }
+            finishingSoon: { type: integer }
+            overloaded: { type: integer }
+            idleLong: { type: integer }
+            utilizationPct: { type: number }
+        distribution:
+          type: array
+          items:
+            type: object
+            required: [name, value]
+            properties:
+              name: { type: string }
+              value: { type: number }
+        filters:
+          type: object
+          required: [principals, specializations]
+          properties:
+            principals:
+              type: array
+              items:
+                type: object
+                required: [id, name]
+                properties:
+                  id: { type: string }
+                  name: { type: string }
+            specializations:
+              type: array
+              items: { type: string }
+        resources:
+          type: array
+          items: { $ref: "#/components/schemas/BenchResourceRow" }
+        finishingSoonList:
+          type: array
+          items: { $ref: "#/components/schemas/BenchResourceRow" }
+        idleLongList:
+          type: array
+          items: { $ref: "#/components/schemas/BenchResourceRow" }
+        overloadedList:
+          type: array
+          items: { $ref: "#/components/schemas/BenchResourceRow" }
 
     UtilizationRow:
       type: object
