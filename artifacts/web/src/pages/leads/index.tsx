@@ -5,6 +5,7 @@ import {
   useUpdateLead,
   useDeleteLead,
   useConvertLead,
+  useImportLeads,
   useListClients,
   useListUsers,
   useListLeadActivities,
@@ -33,7 +34,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatIDR } from "@/lib/format";
-import { Plus, Trash2, ArrowRight, Briefcase, AlertTriangle, LayoutGrid, List as ListIcon } from "lucide-react";
+import { Plus, Trash2, ArrowRight, Briefcase, AlertTriangle, LayoutGrid, List as ListIcon, Upload } from "lucide-react";
 
 const STAGES: { key: LeadStage; label: string; color: string }[] = [
   { key: "NEW" as LeadStage, label: "New", color: "border-slate-500/40 bg-slate-500/5" },
@@ -112,6 +113,7 @@ export default function LeadsPage() {
   const isSales = role === "SALES";
   const isAllowed = !user || isSales || isMgmt;
   const canWrite = isSales;
+  const canImport = isSales || isMgmt;
 
   const { data: leads, isLoading } = useListLeads({ query: { enabled: isAllowed } } as any);
   const { data: clients } = useListClients();
@@ -124,6 +126,7 @@ export default function LeadsPage() {
   const update = useUpdateLead();
   const del = useDeleteLead();
   const convert = useConvertLead();
+  const importLeads = useImportLeads();
   const createActivity = useCreateLeadActivity();
   const delActivity = useDeleteLeadActivity();
 
@@ -147,6 +150,15 @@ export default function LeadsPage() {
   const [lostCompetitor, setLostCompetitor] = useState("");
   const [lostNotes, setLostNotes] = useState("");
   const [drawerLead, setDrawerLead] = useState<Lead | null>(null);
+  const [isImportOpen, setImportOpen] = useState(false);
+  const [importCsv, setImportCsv] = useState("");
+  const [importFileName, setImportFileName] = useState("");
+  const [importResult, setImportResult] = useState<{
+    total: number;
+    created: number;
+    failed: number;
+    errors: { row: number; message: string }[];
+  } | null>(null);
 
   // Open drawer from ?leadId=
   useEffect(() => {
@@ -376,6 +388,20 @@ export default function LeadsPage() {
               <ListIcon className="h-4 w-4" />
             </Button>
           </div>
+          {canImport && (
+            <Button
+              variant="outline"
+              onClick={() => {
+                setImportCsv("");
+                setImportFileName("");
+                setImportResult(null);
+                setImportOpen(true);
+              }}
+              data-testid="button-import-leads"
+            >
+              <Upload className="h-4 w-4 mr-1" /> Import CSV
+            </Button>
+          )}
           {canWrite && (
             <Button onClick={openCreate} data-testid="button-new-lead">
               <Plus className="h-4 w-4 mr-1" /> New Lead
@@ -715,6 +741,127 @@ export default function LeadsPage() {
             <Button variant="ghost" onClick={() => setFormOpen(false)}>Cancel</Button>
             <Button onClick={handleSubmit} disabled={create.isPending || update.isPending} data-testid="button-save-lead">
               Save
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Import CSV dialog */}
+      <Dialog open={isImportOpen} onOpenChange={(o) => { if (!o) { setImportOpen(false); setImportResult(null); } }}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Import Leads from CSV</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="text-xs text-muted-foreground space-y-1">
+              <div>
+                Required header: <code className="text-foreground">title</code>. Optional columns:{" "}
+                <code className="text-foreground">contactName, contactEmail, contactPhone, prospectiveClientName, industry, source, estimatedValue, expectedCloseDate, notes</code>.
+              </div>
+              <div>
+                Imported rows are created with stage <strong>NEW</strong> and probability 10%. Use dates in <code className="text-foreground">YYYY-MM-DD</code> format.
+              </div>
+              <button
+                type="button"
+                className="text-primary underline"
+                onClick={() => {
+                  const sample =
+                    "title,contactName,contactEmail,contactPhone,prospectiveClientName,industry,source,estimatedValue,expectedCloseDate,notes\n" +
+                    'Pentest Bank XYZ,Andi,andi@bankxyz.id,+62811000111,Bank XYZ,Finance,Referral,250000000,2026-08-31,"Web app pentest"\n';
+                  const blob = new Blob([sample], { type: "text/csv;charset=utf-8" });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.download = "leads-template.csv";
+                  a.click();
+                  URL.revokeObjectURL(url);
+                }}
+                data-testid="button-download-template"
+              >
+                Download CSV template
+              </button>
+            </div>
+            <div>
+              <Label className="text-xs text-muted-foreground">Choose a CSV file</Label>
+              <Input
+                type="file"
+                accept=".csv,text/csv"
+                onChange={async (e) => {
+                  const f = e.target.files?.[0];
+                  if (!f) return;
+                  setImportFileName(f.name);
+                  const text = await f.text();
+                  setImportCsv(text);
+                  setImportResult(null);
+                }}
+                data-testid="input-import-file"
+              />
+              {importFileName && (
+                <div className="text-[11px] text-muted-foreground mt-1">Selected: {importFileName}</div>
+              )}
+            </div>
+            <div>
+              <Label className="text-xs text-muted-foreground">Or paste CSV</Label>
+              <Textarea
+                rows={6}
+                value={importCsv}
+                onChange={(e) => { setImportCsv(e.target.value); setImportResult(null); }}
+                placeholder="title,contactName,..."
+                className="font-mono text-xs"
+                data-testid="textarea-import-csv"
+              />
+            </div>
+            {importResult && (
+              <div className="rounded-md border border-border p-3 space-y-2 text-sm" data-testid="import-result">
+                <div className="flex gap-4">
+                  <div><span className="text-muted-foreground">Total rows:</span> <strong>{importResult.total}</strong></div>
+                  <div className="text-emerald-500"><span className="text-muted-foreground">Created:</span> <strong>{importResult.created}</strong></div>
+                  <div className={importResult.failed > 0 ? "text-destructive" : ""}>
+                    <span className="text-muted-foreground">Failed:</span> <strong>{importResult.failed}</strong>
+                  </div>
+                </div>
+                {importResult.errors.length > 0 && (
+                  <div className="max-h-40 overflow-auto">
+                    <div className="text-xs font-medium text-destructive mb-1">Row errors</div>
+                    <ul className="text-xs space-y-1">
+                      {importResult.errors.map((e, i) => (
+                        <li key={i}>
+                          <span className="font-mono">Row {e.row}:</span> {e.message}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => { setImportOpen(false); setImportResult(null); }}>
+              {importResult && importResult.created > 0 ? "Close" : "Cancel"}
+            </Button>
+            <Button
+              onClick={async () => {
+                if (!importCsv.trim()) {
+                  toast({ title: "Choose a file or paste CSV first", variant: "destructive" });
+                  return;
+                }
+                try {
+                  const r = await importLeads.mutateAsync({ data: { csv: importCsv } });
+                  setImportResult(r);
+                  qc.invalidateQueries({ queryKey: getListLeadsQueryKey() });
+                  toast({
+                    title: `Imported ${r.created} of ${r.total} leads`,
+                    description: r.failed > 0 ? `${r.failed} row(s) failed validation.` : undefined,
+                    variant: r.failed > 0 && r.created === 0 ? "destructive" : "default",
+                  });
+                } catch (e: any) {
+                  toast({ title: "Import failed", description: e?.message, variant: "destructive" });
+                }
+              }}
+              disabled={importLeads.isPending || !importCsv.trim()}
+              data-testid="button-run-import"
+            >
+              {importLeads.isPending ? "Importing..." : "Import"}
             </Button>
           </DialogFooter>
         </DialogContent>

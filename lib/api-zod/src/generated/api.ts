@@ -892,6 +892,22 @@ export const DeleteLeadActivityResponse = zod.object({
   message: zod.string().optional(),
 });
 
+export const ImportLeadsBody = zod.object({
+  csv: zod.string(),
+});
+
+export const ImportLeadsResponse = zod.object({
+  total: zod.number(),
+  created: zod.number(),
+  failed: zod.number(),
+  errors: zod.array(
+    zod.object({
+      row: zod.number(),
+      message: zod.string(),
+    }),
+  ),
+});
+
 export const ConvertLeadParams = zod.object({
   id: zod.coerce.string(),
 });

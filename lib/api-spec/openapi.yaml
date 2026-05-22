@@ -399,6 +399,22 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/SuccessMessage" }
 
+  /leads/import:
+    post:
+      operationId: importLeads
+      tags: [leads]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ImportLeadsBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ImportLeadsResult" }
+
   /leads/{id}/convert:
     post:
       operationId: convertLead
@@ -1745,6 +1761,30 @@ components:
         ownerId: { type: string }
         notes: { type: string, nullable: true }
         lostReason: { type: string, nullable: true }
+
+    ImportLeadsBody:
+      type: object
+      required: [csv]
+      properties:
+        csv: { type: string }
+
+    ImportLeadRowError:
+      type: object
+      required: [row, message]
+      properties:
+        row: { type: integer }
+        message: { type: string }
+
+    ImportLeadsResult:
+      type: object
+      required: [total, created, failed, errors]
+      properties:
+        total: { type: integer }
+        created: { type: integer }
+        failed: { type: integer }
+        errors:
+          type: array
+          items: { $ref: "#/components/schemas/ImportLeadRowError" }
 
     ConvertLeadBody:
       type: object

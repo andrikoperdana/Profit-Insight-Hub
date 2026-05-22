@@ -198,6 +198,172 @@ function validate(b: any, partial: boolean): string | null {
   return null;
 }
 
+// ─── CSV bulk import ─────────────────────────────────────────────────────────
+
+const IMPORT_COLUMNS = [
+  "title",
+  "contactName",
+  "contactEmail",
+  "contactPhone",
+  "prospectiveClientName",
+  "industry",
+  "source",
+  "estimatedValue",
+  "expectedCloseDate",
+  "notes",
+] as const;
+
+function parseCsv(text: string): string[][] {
+  const rows: string[][] = [];
+  let field = "";
+  let row: string[] = [];
+  let inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQuotes) {
+      if (c === '"') {
+        if (text[i + 1] === '"') {
+          field += '"';
+          i++;
+        } else {
+          inQuotes = false;
+        }
+      } else {
+        field += c;
+      }
+    } else {
+      if (c === '"') {
+        inQuotes = true;
+      } else if (c === ",") {
+        row.push(field);
+        field = "";
+      } else if (c === "\n" || c === "\r") {
+        if (c === "\r" && text[i + 1] === "\n") i++;
+        row.push(field);
+        rows.push(row);
+        row = [];
+        field = "";
+      } else {
+        field += c;
+      }
+    }
+  }
+  if (field.length > 0 || row.length > 0) {
+    row.push(field);
+    rows.push(row);
+  }
+  return rows.filter((r) => r.some((cell) => cell.trim() !== ""));
+}
+
+router.post("/leads/import", requireRole("SALES", "MANAGEMENT"), async (req: any, res) => {
+  const body = req.body || {};
+  const csv = typeof body.csv === "string" ? body.csv : "";
+  if (!csv.trim()) {
+    res.status(400).json({ error: "csv body field is required" });
+    return;
+  }
+
+  let rows: string[][];
+  try {
+    rows = parseCsv(csv);
+  } catch {
+    res.status(400).json({ error: "Failed to parse CSV" });
+    return;
+  }
+  if (rows.length < 1) {
+    res.status(400).json({ error: "CSV is empty" });
+    return;
+  }
+
+  const header = rows[0].map((h) => h.trim());
+  const colIndex: Record<string, number> = {};
+  for (const c of IMPORT_COLUMNS) {
+    const idx = header.findIndex((h) => h.toLowerCase() === c.toLowerCase());
+    if (idx >= 0) colIndex[c] = idx;
+  }
+  if (colIndex.title === undefined) {
+    res.status(400).json({ error: "CSV must include a 'title' column" });
+    return;
+  }
+
+  const errors: { row: number; message: string }[] = [];
+  const toCreate: any[] = [];
+
+  for (let r = 1; r < rows.length; r++) {
+    const cells = rows[r];
+    const get = (key: string): string => {
+      const i = colIndex[key];
+      return i === undefined ? "" : (cells[i] ?? "").trim();
+    };
+    const title = get("title");
+    if (!title) {
+      errors.push({ row: r + 1, message: "title is required" });
+      continue;
+    }
+    if (title.length > 200) {
+      errors.push({ row: r + 1, message: "title too long (max 200)" });
+      continue;
+    }
+
+    const estRaw = get("estimatedValue");
+    let estimatedValue = 0;
+    if (estRaw) {
+      const n = Number(estRaw.replace(/[, ]/g, ""));
+      if (!Number.isFinite(n) || n < 0) {
+        errors.push({ row: r + 1, message: "estimatedValue must be a non-negative number" });
+        continue;
+      }
+      estimatedValue = n;
+    }
+
+    let expectedCloseDate: Date | null = null;
+    const ecdRaw = get("expectedCloseDate");
+    if (ecdRaw) {
+      const d = new Date(ecdRaw);
+      if (Number.isNaN(d.getTime())) {
+        errors.push({ row: r + 1, message: "expectedCloseDate is not a valid date (use YYYY-MM-DD)" });
+        continue;
+      }
+      expectedCloseDate = d;
+    }
+
+    const email = get("contactEmail");
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errors.push({ row: r + 1, message: "contactEmail is not a valid email" });
+      continue;
+    }
+
+    toCreate.push({
+      title,
+      contactName: get("contactName") || null,
+      contactEmail: email || null,
+      contactPhone: get("contactPhone") || null,
+      prospectiveClientName: get("prospectiveClientName") || null,
+      industry: get("industry") || null,
+      source: get("source") || null,
+      stage: "NEW" as Stage,
+      estimatedValue,
+      probability: 10,
+      expectedCloseDate,
+      ownerId: req.user.sub,
+      notes: get("notes") || null,
+    });
+  }
+
+  let created = 0;
+  if (toCreate.length > 0) {
+    const result = await prisma.lead.createMany({ data: toCreate });
+    created = result.count;
+  }
+
+  res.status(200).json({
+    total: rows.length - 1,
+    created,
+    failed: errors.length,
+    errors,
+  });
+});
+
 router.post("/leads", requireRole("SALES"), async (req: any, res) => {
   const body = req.body || {};
   const err = validate(body, false);

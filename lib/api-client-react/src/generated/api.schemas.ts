@@ -506,6 +506,22 @@ export interface UpdateLeadBody {
   lostReason?: string | null;
 }
 
+export interface ImportLeadsBody {
+  csv: string;
+}
+
+export interface ImportLeadRowError {
+  row: number;
+  message: string;
+}
+
+export interface ImportLeadsResult {
+  total: number;
+  created: number;
+  failed: number;
+  errors: ImportLeadRowError[];
+}
+
 export interface ConvertLeadBody {
   code?: string;
   clientName?: string;
