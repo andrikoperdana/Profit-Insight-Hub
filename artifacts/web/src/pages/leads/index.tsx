@@ -111,7 +111,7 @@ export default function LeadsPage() {
   const role = user?.role;
   const isMgmt = role === "MANAGEMENT";
   const isSales = role === "SALES";
-  const isAllowed = !user || isSales || isMgmt;
+  const isAllowed = !!user && (isSales || isMgmt);
   const canWrite = isSales;
   const canImport = isSales || isMgmt;
 
@@ -355,6 +355,9 @@ export default function LeadsPage() {
     }
   }
 
+  if (!user) {
+    return <div className="text-sm text-muted-foreground p-6">Loading…</div>;
+  }
   if (!isAllowed) {
     return (
       <div className="rounded-lg border border-destructive/40 bg-destructive/5 p-6 text-sm">
