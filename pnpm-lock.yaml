@@ -1067,6 +1067,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 25.3.5
+      docx:
+        specifier: ^9.6.1
+        version: 9.6.1
       html-to-docx:
         specifier: ^1.8.0
         version: 1.8.0

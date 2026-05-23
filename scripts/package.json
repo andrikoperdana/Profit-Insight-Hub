@@ -10,6 +10,7 @@
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "docx": "^9.6.1",
     "html-to-docx": "^1.8.0",
     "marked": "^18.0.2",
     "tsx": "catalog:"
