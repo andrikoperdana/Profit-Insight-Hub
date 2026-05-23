@@ -7,6 +7,7 @@ import ConsultantDashboard from "./ConsultantDashboard";
 import AdminProjectDashboard from "./AdminProjectDashboard";
 import PrincipalDashboard from "./PrincipalDashboard";
 import SiteAdminDashboard from "./SiteAdminDashboard";
+import HRDashboard from "./HRDashboard";
 import { isPrincipalRole } from "@/lib/roles";
 
 export default function Dashboard() {
@@ -21,6 +22,7 @@ export default function Dashboard() {
   }
   if (isPrincipalRole(user.role)) return <PrincipalDashboard />;
   if (user.role === UserRole.SITE_ADMIN) return <SiteAdminDashboard />;
+  if (user.role === UserRole.HR) return <HRDashboard />;
   // MANAGEMENT (PMO Director) and FINANCE share the executive dashboard.
   return <ManagementDashboard />;
 }

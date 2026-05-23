@@ -62,7 +62,8 @@ export default function BenchPage() {
   const { user } = useAuth();
   const isMgmt = user?.role === "MANAGEMENT";
   const isPM = user?.role === "PROJECT_MANAGER";
-  const allowed = isMgmt || isPM;
+  const isHr = user?.role === "HR";
+  const allowed = isMgmt || isPM || isHr;
 
   const { data, isLoading } = useGetResourceUtilizationDetail({
     query: { enabled: !!user && allowed },

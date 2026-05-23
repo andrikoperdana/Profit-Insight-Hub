@@ -39,6 +39,9 @@ export async function userCanAccessProject(
     ];
   } else if (role.startsWith("PRINCIPAL_")) {
     where["resources"] = { some: { user: { principalId: userId } } };
+  } else {
+    // HR and any future unrecognized role have no project access by default.
+    return false;
   }
   const found = await prisma.project.findFirst({
     where,

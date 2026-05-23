@@ -5,12 +5,24 @@ import {
   serializeProject,
   projectInclude,
   computeMetrics,
+  canViewProjectFinancials,
 } from "../lib/serializers.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
 
-router.get("/dashboard/summary", async (_req, res) => {
+// Roles that must NOT see commercial portfolio figures via dashboard endpoints.
+// Mirrors the financials masking in serializers.ts.
+function requireFinancialView(req: any, res: any): boolean {
+  if (!canViewProjectFinancials(req.user?.role)) {
+    res.status(403).json({ error: "Forbidden" });
+    return false;
+  }
+  return true;
+}
+
+router.get("/dashboard/summary", async (req, res) => {
+  if (!requireFinancialView(req, res)) return;
   const projects = await prisma.project.findMany({ where: { deletedAt: null }, include: projectInclude });
   const totalProjects = projects.length;
   const activeProjects = projects.filter((p) => p.status === "ACTIVE").length;
@@ -70,7 +82,8 @@ router.get("/dashboard/summary", async (_req, res) => {
   });
 });
 
-router.get("/dashboard/profit-trend", async (_req, res) => {
+router.get("/dashboard/profit-trend", async (req, res) => {
+  if (!requireFinancialView(req, res)) return;
   // Group approved timesheets by month for cost; spread project contract value
   const projects = await prisma.project.findMany({ where: { deletedAt: null }, include: projectInclude });
   const monthly = new Map<string, { revenue: number; cost: number }>();
@@ -111,7 +124,8 @@ router.get("/dashboard/profit-trend", async (_req, res) => {
   );
 });
 
-router.get("/dashboard/status-breakdown", async (_req, res) => {
+router.get("/dashboard/status-breakdown", async (req, res) => {
+  if (!requireFinancialView(req, res)) return;
   const grouped = await prisma.project.groupBy({
     by: ["status"],
     where: { deletedAt: null },
@@ -127,9 +141,10 @@ router.get("/dashboard/status-breakdown", async (_req, res) => {
   );
 });
 
-router.get("/dashboard/top-projects", async (_req, res) => {
+router.get("/dashboard/top-projects", async (req, res) => {
+  if (!requireFinancialView(req, res)) return;
   const projects = await prisma.project.findMany({ where: { deletedAt: null }, include: projectInclude });
-  const serialized = projects.map((p) => serializeProject(p));
+  const serialized = projects.map((p) => serializeProject(p, req.user?.role));
   serialized.sort((a, b) => b.contractValue - a.contractValue);
   res.json(serialized.slice(0, 5));
 });
@@ -250,7 +265,7 @@ router.get("/dashboard/utilization-trend", async (req, res) => {
 
 router.get("/dashboard/resource-utilization-detail", async (req, res) => {
   const role = req.user!.role;
-  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER" && role !== "FINANCE") {
+  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER" && role !== "FINANCE" && role !== "HR") {
     res.status(403).json({ error: "Forbidden" });
     return;
   }

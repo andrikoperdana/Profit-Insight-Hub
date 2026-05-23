@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth";
-import { canManageUsers, RoleLabels, isPrincipalRole, PRINCIPAL_TO_REPORT_ROLE } from "@/lib/roles";
+import { canManageUsers, canViewAllUsers, RoleLabels, isPrincipalRole, PRINCIPAL_TO_REPORT_ROLE } from "@/lib/roles";
 import {
   useListUsers,
   useCreateUser,
@@ -362,14 +362,15 @@ export default function UsersList() {
     toast({ title: "CSV exported", description: `${users.length} users exported.` });
   };
 
-  const hasAccess = canManageUsers(currentUser?.role);
+  const hasAccess = canViewAllUsers(currentUser?.role);
+  const isFullAdmin = canManageUsers(currentUser?.role);
   const pager = usePagination(users as UserRow[] | undefined);
 
   if (!hasAccess) {
     return (
       <EmptyState 
         title="Access Denied" 
-        description="Only PMO Director can view and edit user accounts." 
+        description="Only PMO Director, HR, and Site Admin can view personnel data." 
         icon={<ShieldAlert className="h-10 w-10 text-destructive/50" />} 
       />
     );
@@ -395,11 +396,13 @@ export default function UsersList() {
           </Button>
 
           <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-            <DialogTrigger asChild>
-              <Button className="gap-2" data-testid="button-new-user">
-                <Plus className="h-4 w-4" /> New User
-              </Button>
-            </DialogTrigger>
+            {isFullAdmin && (
+              <DialogTrigger asChild>
+                <Button className="gap-2" data-testid="button-new-user">
+                  <Plus className="h-4 w-4" /> New User
+                </Button>
+              </DialogTrigger>
+            )}
             <DialogContent className="sm:max-w-[500px]">
               <DialogHeader>
                 <DialogTitle>Create New User</DialogTitle>
@@ -696,16 +699,18 @@ export default function UsersList() {
                         >
                           <Pencil className="h-3.5 w-3.5 mr-1" /> Edit
                         </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => toggleStatus(u.id, u.isActive)}
-                          className={u.isActive ? "text-destructive hover:text-destructive/80" : "text-emerald-500 hover:text-emerald-500/80"}
-                          disabled={updateUser.isPending && updateUser.variables?.id === u.id}
-                          data-testid={`button-toggle-${u.id}`}
-                        >
-                          {u.isActive ? "Deactivate" : "Activate"}
-                        </Button>
+                        {isFullAdmin && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => toggleStatus(u.id, u.isActive)}
+                            className={u.isActive ? "text-destructive hover:text-destructive/80" : "text-emerald-500 hover:text-emerald-500/80"}
+                            disabled={updateUser.isPending && updateUser.variables?.id === u.id}
+                            data-testid={`button-toggle-${u.id}`}
+                          >
+                            {u.isActive ? "Deactivate" : "Activate"}
+                          </Button>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>
@@ -748,28 +753,35 @@ export default function UsersList() {
               />
 
               <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={editForm.control}
-                  name="role"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>System Role *</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl>
-                          <SelectTrigger data-testid="select-edit-role">
-                            <SelectValue placeholder="Select a role" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {Object.entries(RoleLabels).map(([key, label]) => (
-                            <SelectItem key={key} value={key}>{label}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {isFullAdmin ? (
+                  <FormField
+                    control={editForm.control}
+                    name="role"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>System Role *</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <FormControl>
+                            <SelectTrigger data-testid="select-edit-role">
+                              <SelectValue placeholder="Select a role" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {Object.entries(RoleLabels).map(([key, label]) => (
+                              <SelectItem key={key} value={key}>{label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                ) : (
+                  <FormItem>
+                    <FormLabel>System Role</FormLabel>
+                    <Input value={editingUser ? RoleLabels[editingUser.role] : ""} disabled />
+                  </FormItem>
+                )}
                 <FormField
                   control={editForm.control}
                   name="title"
@@ -795,17 +807,19 @@ export default function UsersList() {
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={editForm.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Reset Password</FormLabel>
-                      <FormControl><Input type="password" placeholder="Leave blank to keep" {...field} value={field.value || ""} data-testid="input-edit-password" /></FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {isFullAdmin && (
+                  <FormField
+                    control={editForm.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Reset Password</FormLabel>
+                        <FormControl><Input type="password" placeholder="Leave blank to keep" {...field} value={field.value || ""} data-testid="input-edit-password" /></FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-4">

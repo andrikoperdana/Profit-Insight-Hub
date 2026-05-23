@@ -7,7 +7,7 @@ const router: IRouter = Router();
 router.get(
   "/skill-matrix",
   requireAuth,
-  requireRole("MANAGEMENT", "PROJECT_MANAGER"),
+  requireRole("MANAGEMENT", "PROJECT_MANAGER", "HR"),
   async (_req, res) => {
     const [skills, users] = await Promise.all([
       prisma.skill.findMany({

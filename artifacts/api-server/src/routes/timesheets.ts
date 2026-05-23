@@ -9,6 +9,15 @@ const MAX_HOURS_PER_ENTRY = 24;
 const router: IRouter = Router();
 router.use(requireAuth);
 
+// HR is people-ops only and has no timesheet read/write access.
+router.use("/timesheets", (req, res, next) => {
+  if (req.user?.role === "HR") {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  next();
+});
+
 function serialize(
   ts: Prisma.TimesheetGetPayload<{
     include: { user: true; project: true; approvedBy: true; task: true };

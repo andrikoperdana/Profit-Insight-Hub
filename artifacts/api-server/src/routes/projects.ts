@@ -51,6 +51,10 @@ router.get("/projects", async (req, res) => {
       { adminProjectId: userId },
       { status: { in: ["COMPLETE", "CLOSED"] } },
     ];
+  } else if (role === "HR") {
+    // HR has no project visibility. Return empty without leaking existence.
+    res.json([]);
+    return;
   }
   // FINANCE, MANAGEMENT, SITE_ADMIN: no scoping — see all projects.
   const projects = await prisma.project.findMany({

@@ -11,6 +11,7 @@ export const RoleLabels: Record<UserRole, string> = {
   [UserRole.PRINCIPAL_TECHNICAL_WRITER]: "Principal Technical Writer",
   [UserRole.PRINCIPAL_ADMIN_PROJECT]: "Principal Admin Project",
   [UserRole.FINANCE]: "Finance",
+  [UserRole.HR]: "HR",
   [UserRole.SITE_ADMIN]: "Site Admin",
 };
 
@@ -33,6 +34,17 @@ export function canManageUsers(role?: UserRole): boolean {
   return role === UserRole.SITE_ADMIN;
 }
 
+// HR can view all users and edit non-sensitive personnel fields
+// (title, dailyRate, seniority, businessUnit, manager, principal, skills) —
+// but NOT create/delete users, change role, reset passwords, or toggle isActive.
+export function canViewAllUsers(role?: UserRole): boolean {
+  return role === UserRole.SITE_ADMIN || role === UserRole.HR;
+}
+
+export function canEditPersonnel(role?: UserRole): boolean {
+  return role === UserRole.SITE_ADMIN || role === UserRole.HR;
+}
+
 export function canViewAuditLogs(role?: UserRole): boolean {
   return role === UserRole.SITE_ADMIN;
 }
@@ -53,6 +65,7 @@ export function canViewResources(role?: UserRole): boolean {
 export function canViewProjectFinancials(role?: UserRole): boolean {
   if (!role) return false;
   if (role === UserRole.TECHNICAL_WRITER || role === UserRole.KONSULTAN) return false;
+  if (role === UserRole.HR) return false;
   if (isPrincipalRole(role)) return false;
   return true;
 }

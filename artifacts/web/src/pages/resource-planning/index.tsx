@@ -12,7 +12,7 @@ import { Grid3x3, ShieldAlert } from "lucide-react";
 
 export default function ResourcePlanningPage() {
   const { user } = useAuth();
-  const isPM = user?.role === "PROJECT_MANAGER" || user?.role === "MANAGEMENT";
+  const isPM = user?.role === "PROJECT_MANAGER" || user?.role === "MANAGEMENT" || user?.role === "HR";
 
   const today = new Date();
   const day = today.getDay();

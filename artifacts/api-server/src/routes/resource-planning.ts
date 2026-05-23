@@ -35,7 +35,7 @@ function isoDate(d: Date): string {
  */
 router.get(
   "/resource-planning",
-  requireRole("MANAGEMENT", "PROJECT_MANAGER"),
+  requireRole("MANAGEMENT", "PROJECT_MANAGER", "HR"),
   async (req, res) => {
     let weeks = Number(req.query.weeks ?? 8);
     if (!isFinite(weeks) || weeks < 1) weeks = 8;

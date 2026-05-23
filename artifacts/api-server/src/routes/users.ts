@@ -13,7 +13,7 @@ const ALL_ROLES: UserRole[] = [
   "MANAGEMENT", "PROJECT_MANAGER", "SALES",
   "KONSULTAN", "TECHNICAL_WRITER", "ADMIN_PROJECT",
   "PRINCIPAL_KONSULTAN", "PRINCIPAL_TECHNICAL_WRITER", "PRINCIPAL_ADMIN_PROJECT",
-  "SITE_ADMIN",
+  "FINANCE", "HR", "SITE_ADMIN",
 ];
 
 const ALLOWED_SENIORITY = new Set(["JUNIOR", "MID", "SENIOR", "PRINCIPAL"]);
@@ -65,7 +65,7 @@ router.get("/users", async (req, res) => {
   // Other roles should use /users/active-all, /users/under-supervision, or /users/available.
   const allowed =
     role === "SITE_ADMIN" || role === "MANAGEMENT" ||
-    role === "PROJECT_MANAGER" || role === "SALES";
+    role === "PROJECT_MANAGER" || role === "SALES" || role === "HR";
   if (!allowed) {
     res.status(403).json({ error: "Forbidden" });
     return;
@@ -284,7 +284,8 @@ router.patch("/users/:id", async (req, res) => {
   const targetId = req.params.id;
   const isSelf = req.user!.sub === targetId;
   const isAdmin = req.user!.role === "SITE_ADMIN";
-  if (!isSelf && !isAdmin) {
+  const isHr = req.user!.role === "HR";
+  if (!isSelf && !isAdmin && !isHr) {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
@@ -333,12 +334,13 @@ router.patch("/users/:id", async (req, res) => {
     return;
   }
   const data: Record<string, unknown> = {};
-  if (name !== undefined) data.name = String(name).trim();
+  // Name changes are personal — only the user themself or Site Admin may rename.
+  // HR can update personnel attributes but not legal name.
+  if (name !== undefined && (isSelf || isAdmin)) data.name = String(name).trim();
   if (title !== undefined) data.title = title || null;
-  if (password) data.passwordHash = await hashPassword(String(password));
-  if (isAdmin) {
-    if (role !== undefined) data.role = role as UserRole;
-    if (isActive !== undefined) data.isActive = Boolean(isActive);
+  if (password && (isSelf || isAdmin)) data.passwordHash = await hashPassword(String(password));
+  // HR may edit non-sensitive personnel fields on any user, but never role/isActive/password.
+  if (isAdmin || isHr) {
     if (dailyRate !== undefined)
       data.dailyRate = dailyRate != null ? Number(dailyRate) : null;
     if (managerId !== undefined) data.managerId = managerId || null;
@@ -346,8 +348,12 @@ router.patch("/users/:id", async (req, res) => {
     if (seniority !== undefined) data.seniority = seniority ? (String(seniority) as any) : null;
     if (businessUnitId !== undefined) data.businessUnitId = businessUnitId || null;
   }
+  if (isAdmin) {
+    if (role !== undefined) data.role = role as UserRole;
+    if (isActive !== undefined) data.isActive = Boolean(isActive);
+  }
   await prisma.user.update({ where: { id: targetId }, data });
-  if (isAdmin && skillsParsed !== null) {
+  if ((isAdmin || isHr) && skillsParsed !== null) {
     await setUserSkills(targetId, skillsParsed);
   }
   const u = await prisma.user.findUnique({ where: { id: targetId }, include: userInclude });

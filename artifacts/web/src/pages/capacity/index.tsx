@@ -61,7 +61,7 @@ const STATUS_STYLE: Record<Cell["status"], string> = {
 
 export default function CapacityPlanning() {
   const { user } = useAuth();
-  const allowed = user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER";
+  const allowed = user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER" || user?.role === "HR";
 
   const [weeks, setWeeks] = useState<2 | 4>(2);
   const [anchor, setAnchor] = useState<Date>(() => startOfWeek(new Date()));

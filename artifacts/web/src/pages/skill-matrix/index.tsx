@@ -10,7 +10,7 @@ import { Award, AlertTriangle, ShieldAlert } from "lucide-react";
 
 export default function SkillMatrixPage() {
   const { user } = useAuth();
-  const canView = user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER";
+  const canView = user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER" || user?.role === "HR";
   const { data, isLoading } = useGetSkillMatrix();
   const [filter, setFilter] = useState("");
 

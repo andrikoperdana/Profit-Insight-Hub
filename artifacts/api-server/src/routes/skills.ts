@@ -32,7 +32,7 @@ router.get("/skills", async (_req, res) => {
   res.json(skills.map(serializeSkill));
 });
 
-router.post("/skills", requireRole("SITE_ADMIN", "MANAGEMENT"), async (req, res) => {
+router.post("/skills", requireRole("SITE_ADMIN", "MANAGEMENT", "HR"), async (req, res) => {
   const { name, category } = req.body || {};
   const n = typeof name === "string" ? name.trim() : "";
   if (!n) {
@@ -63,7 +63,7 @@ router.post("/skills", requireRole("SITE_ADMIN", "MANAGEMENT"), async (req, res)
   res.status(201).json(serializeSkill(created));
 });
 
-router.patch("/skills/:id", requireRole("SITE_ADMIN", "MANAGEMENT"), async (req, res) => {
+router.patch("/skills/:id", requireRole("SITE_ADMIN", "MANAGEMENT", "HR"), async (req, res) => {
   const id = String(req.params.id);
   const before = await prisma.skill.findUnique({ where: { id } });
   if (!before) {
@@ -107,7 +107,7 @@ router.patch("/skills/:id", requireRole("SITE_ADMIN", "MANAGEMENT"), async (req,
   res.json(serializeSkill(updated));
 });
 
-router.delete("/skills/:id", requireRole("SITE_ADMIN", "MANAGEMENT"), async (req, res) => {
+router.delete("/skills/:id", requireRole("SITE_ADMIN", "MANAGEMENT", "HR"), async (req, res) => {
   const id = String(req.params.id);
   const before = await prisma.skill.findUnique({ where: { id } });
   if (!before) {

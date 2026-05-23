@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
-import { canManageUsers } from "@/lib/roles";
+import { canManageUsers, canViewAllUsers } from "@/lib/roles";
 import {
   useListBusinessUnits,
   useCreateBusinessUnit,
@@ -56,7 +56,7 @@ export default function BusinessUnitsPage() {
     },
   });
 
-  if (!canManageUsers(user?.role)) {
+  if (!canViewAllUsers(user?.role)) {
     return (
       <EmptyState
         title="Access denied"

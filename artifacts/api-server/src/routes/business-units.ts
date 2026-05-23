@@ -32,7 +32,7 @@ router.get("/business-units", async (_req, res) => {
   res.json(bus.map(serializeBU));
 });
 
-router.post("/business-units", requireRole("SITE_ADMIN", "MANAGEMENT"), async (req, res) => {
+router.post("/business-units", requireRole("SITE_ADMIN", "MANAGEMENT", "HR"), async (req, res) => {
   const { name, description } = req.body || {};
   const n = typeof name === "string" ? name.trim() : "";
   if (!n) {
@@ -63,7 +63,7 @@ router.post("/business-units", requireRole("SITE_ADMIN", "MANAGEMENT"), async (r
   res.status(201).json(serializeBU(created));
 });
 
-router.patch("/business-units/:id", requireRole("SITE_ADMIN", "MANAGEMENT"), async (req, res) => {
+router.patch("/business-units/:id", requireRole("SITE_ADMIN", "MANAGEMENT", "HR"), async (req, res) => {
   const id = String(req.params.id);
   const before = await prisma.businessUnit.findUnique({ where: { id } });
   if (!before) {
@@ -108,7 +108,7 @@ router.patch("/business-units/:id", requireRole("SITE_ADMIN", "MANAGEMENT"), asy
   res.json(serializeBU(updated));
 });
 
-router.delete("/business-units/:id", requireRole("SITE_ADMIN", "MANAGEMENT"), async (req, res) => {
+router.delete("/business-units/:id", requireRole("SITE_ADMIN", "MANAGEMENT", "HR"), async (req, res) => {
   const id = String(req.params.id);
   const before = await prisma.businessUnit.findUnique({
     where: { id },

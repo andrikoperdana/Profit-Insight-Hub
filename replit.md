@@ -13,7 +13,7 @@ Full-stack web app for an Indonesian IT security consulting firm. Tracks project
 
 ## Roles
 
-Management (PMO Director), Project Manager, Sales, Konsultan, Technical Writer, Admin Project, Principal supervisors (KONSULTAN/TECHNICAL_WRITER/ADMIN_PROJECT), Finance, Site Admin.
+Management (PMO Director), Project Manager, Sales, Konsultan, Technical Writer, Admin Project, Principal supervisors (KONSULTAN/TECHNICAL_WRITER/ADMIN_PROJECT), Finance, HR, Site Admin.
 
 ## Domain (Prisma)
 
@@ -102,6 +102,7 @@ Server-side `requireRole` (`middlewares/auth.ts`):
 - **Konsultan/TW**: log own timesheets only
 - **Admin Project**: documents/invoices
 - **Finance**: read-only access to all Projects, Clients, Reports (+ exports), VAT Recap, plus MGMT-style dashboard; may upload/delete INVOICE and CONTRACT documents only. No timesheet, billing milestone, or expense write access.
+- **HR**: people-ops only. Menu: HR Dashboard, Employees (`/users` read + edit non-sensitive fields `{title, dailyRate, seniority, businessUnitId, managerId, principalId, skillIds}` — NOT name/role/isActive/password on other users, no create/delete), Org Chart (`/org-chart`), Leave Management (`/leaves` view-only paged + CSV), Skill Matrix (read), Skills CRUD, Business Units CRUD, Bench Report, Capacity Planning (read), Resource Planning (read). Hard-denied from Projects (`GET /projects` returns `[]`, `userCanAccessProject` returns false), Timesheets (whole `/timesheets` router 403), and financial dashboard endpoints (`/dashboard/summary|profit-trend|status-breakdown|top-projects` gated on `canViewProjectFinancials` which now includes HR in `FINANCIALS_BLOCKED_ROLES`). HR retains access to `/dashboard/utilization-trend` and `/dashboard/resource-utilization-detail` for the HR Dashboard.
 
 Data scoping: `GET /api/projects` filters by role (PM `pmId`, Sales `salesId`, Konsultan/TW assigned-or-has-timesheet, MGMT/Admin all). `GET /api/dashboard/resource-utilization-detail` MGMT+PM only (PM sees own-project resources).
 
@@ -115,12 +116,13 @@ Data scoping: `GET /api/projects` filters by role (PM `pmId`, Sales `salesId`, K
 - **KONSULTAN/TECHNICAL_WRITER** → welcome banner, "Log Today's Time Sheet" CTA, 14-day trend, recent submissions, MyTasksCard
 - **ADMIN_PROJECT** → closing-doc inbox + alert for projects complete >3 days
 - **SITE_ADMIN** → Users + Audit Log management, recent activity feed (exclusive to SITE_ADMIN)
+- **HR** → headcount KPIs, headcount per BU, role distribution, utilization trend, leaves today/upcoming, bench summary, skill gaps, new joiners (`HRDashboard.tsx`)
 
 Shared `WelcomeBanner` shows time-aware greeting + role label.
 
 ## Pages
 
-`/login`, `/` (dashboard), `/projects`, `/projects/new`, `/projects/:id`, `/timesheets`, `/clients`, `/users` (SITE_ADMIN), `/skills` (SITE_ADMIN), `/business-units` (SITE_ADMIN), `/resource-planning` (PM/MGMT), `/skill-matrix` (PM/MGMT), `/task-templates` (PM/MGMT), `/reports` (MGMT/PM), `/vat-recap` (MGMT), `/settings`.
+`/login`, `/` (dashboard), `/projects`, `/projects/new`, `/projects/:id`, `/timesheets`, `/clients`, `/users` (SITE_ADMIN + HR view/edit-limited), `/skills` (SITE_ADMIN + HR), `/business-units` (SITE_ADMIN + HR), `/resource-planning` (PM/MGMT/HR), `/skill-matrix` (PM/MGMT/HR), `/bench` (PM/MGMT/HR), `/capacity` (PM/MGMT/HR), `/task-templates` (PM/MGMT), `/leaves` (HR/MGMT/PM read-only), `/org-chart` (HR/MGMT/SITE_ADMIN), `/reports` (MGMT/PM), `/vat-recap` (MGMT), `/settings`.
 
 ## Phase-2 features
 
@@ -153,4 +155,4 @@ Seed: `lib/db/src/seed.ts`. Idempotent helpers `ensurePrincipals`, `ensureBusine
 
 Main (`@secureprofit.id`): `management@` (Adi Wibowo), `pm@` (Sari Pratiwi), `pm2@` (Yusuf Maulana — added by sample data), `sales@` (Budi Santoso), `konsultan@` (Rian Hidayat), `konsultan2@` (Dewi Lestari), `writer@` (Ayu Wulandari), `admin@` (Tono Setiawan), `finance@` (Maya Anggraini), `siteadmin@` (Rina Kartika).
 
-Principals (`@itsecasia.com`): `principal.kon.h7q4@` (Bayu Prasetyo), `principal.tw.m9k2@` (Indah Kusumawardani), `principal.ap.r3n8@` (Fajar Nugroho).
+Principals + HR (`@itsecasia.com`): `principal.kon.h7q4@` (Bayu Prasetyo), `principal.tw.m9k2@` (Indah Kusumawardani), `principal.ap.r3n8@` (Fajar Nugroho), `hr@` (Sinta Permata).

@@ -44,7 +44,7 @@ router.get("/leaves", async (req, res) => {
     if (startDate) (where.AND as Prisma.UserLeaveWhereInput[]).push({ endDate: { gte: new Date(startDate) } });
   }
   // Non-MGMT/PM can only see own leaves
-  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER") {
+  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER" && role !== "HR") {
     where.userId = req.user!.sub;
   }
   const list = await prisma.userLeave.findMany({

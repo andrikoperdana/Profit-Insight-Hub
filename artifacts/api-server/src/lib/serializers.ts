@@ -171,6 +171,7 @@ const FINANCIALS_BLOCKED_ROLES = new Set<string>([
   "PRINCIPAL_KONSULTAN",
   "PRINCIPAL_TECHNICAL_WRITER",
   "PRINCIPAL_ADMIN_PROJECT",
+  "HR",
 ]);
 
 export function canViewProjectFinancials(role: string | null | undefined): boolean {

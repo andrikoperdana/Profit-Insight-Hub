@@ -1,6 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/lib/auth";
-import { canManageUsers, canManageClients, canViewResources, canViewAuditLogs, RoleLabels } from "@/lib/roles";
+import { canManageUsers, canManageClients, canViewResources, canViewAuditLogs, canViewAllUsers, RoleLabels } from "@/lib/roles";
 import {
   LayoutDashboard,
   Briefcase,
@@ -24,6 +24,8 @@ import {
   Wallet,
   Target,
   ListChecks,
+  CalendarOff,
+  GitBranch,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -38,11 +40,12 @@ export default function Sidebar() {
 
   const isSiteAdmin = user?.role === "SITE_ADMIN";
   const isFinance = user?.role === "FINANCE";
+  const isHr = user?.role === "HR";
 
   const main: NavLink[] = [
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
-    ...(isSiteAdmin ? [] : [{ href: "/projects", label: "Projects", icon: Briefcase }]),
-    ...(isSiteAdmin || isFinance ? [] : [{ href: "/timesheets", label: "Time Tracking", icon: Clock }]),
+    ...(isSiteAdmin || isHr ? [] : [{ href: "/projects", label: "Projects", icon: Briefcase }]),
+    ...(isSiteAdmin || isFinance || isHr ? [] : [{ href: "/timesheets", label: "Time Tracking", icon: Clock }]),
   ];
 
   const canSeeExpenses =
@@ -56,19 +59,29 @@ export default function Sidebar() {
     ...(canSeeLeads ? [{ href: "/leads", label: "Sales Pipeline", icon: Target }] : []),
     ...(isPM ? [{ href: "/approvals", label: "Approval Inbox", icon: Inbox }] : []),
     ...(canViewResources(user?.role) ? [{ href: "/resources", label: "Resources", icon: UserCog }] : []),
-    ...(isPM ? [{ href: "/capacity", label: "Capacity Planning", icon: CalendarRange }] : []),
+    ...(isPM || isHr ? [{ href: "/capacity", label: "Capacity Planning", icon: CalendarRange }] : []),
     ...(canSeeExpenses ? [{ href: "/expenses", label: "Expenses", icon: Receipt }] : []),
-    ...(isPM ? [{ href: "/resource-planning", label: "Resource Planning", icon: Grid3x3 }] : []),
-    ...(isPM ? [{ href: "/bench", label: "Bench Report", icon: UserCog }] : []),
-    ...(isPM ? [{ href: "/skill-matrix", label: "Skill Matrix", icon: Award }] : []),
+    ...(isPM || isHr ? [{ href: "/resource-planning", label: "Resource Planning", icon: Grid3x3 }] : []),
+    ...(isPM || isHr ? [{ href: "/bench", label: "Bench Report", icon: UserCog }] : []),
+    ...(isPM || isHr ? [{ href: "/skill-matrix", label: "Skill Matrix", icon: Award }] : []),
     ...(isPM ? [{ href: "/task-templates", label: "Task Templates", icon: ListChecks }] : []),
     ...(isPM || user?.role === "ADMIN_PROJECT" || user?.role === "SALES" ? [{ href: "/invoice-planning", label: "Invoice Planning", icon: Wallet }] : []),
     ...(isPM || isFinance ? [{ href: "/reports", label: "Reports", icon: FileBarChart }] : []),
   ];
 
+  const peopleOps: NavLink[] = isHr
+    ? [
+        { href: "/users", label: "Employees", icon: Users },
+        { href: "/org-chart", label: "Org Chart", icon: GitBranch },
+        { href: "/leaves", label: "Leave Management", icon: CalendarOff },
+        { href: "/business-units", label: "Business Units", icon: Network },
+        { href: "/skills", label: "Skills", icon: Award },
+      ]
+    : [];
+
   const admin: NavLink[] = [
     ...(canManageClients(user?.role) || isFinance ? [{ href: "/clients", label: "Clients", icon: Building2 }] : []),
-    ...(canManageUsers(user?.role) ? [{ href: "/users", label: "Users", icon: Users }] : []),
+    ...(canViewAllUsers(user?.role) && !isHr ? [{ href: "/users", label: "Users", icon: Users }] : []),
     ...(canManageUsers(user?.role) ? [{ href: "/business-units", label: "Business Units", icon: Network }] : []),
     ...(canManageUsers(user?.role) ? [{ href: "/skills", label: "Skills", icon: Award }] : []),
     ...(user?.role === "MANAGEMENT" ? [{ href: "/business-intelligence", label: "Business Intelligence", icon: TrendingUp }] : []),
@@ -99,6 +112,9 @@ export default function Sidebar() {
         <NavSection label="Main" links={main} location={location} />
         {operations.length > 0 && (
           <NavSection label="Operations" links={operations} location={location} />
+        )}
+        {peopleOps.length > 0 && (
+          <NavSection label="People Ops" links={peopleOps} location={location} />
         )}
         {admin.length > 0 && (
           <NavSection label="Administration" links={admin} location={location} />

@@ -36,6 +36,8 @@ const SkillMatrixPage = lazy(() => import("@/pages/skill-matrix"));
 const TaskTemplatesPage = lazy(() => import("@/pages/task-templates"));
 const ReportsIndex = lazy(() => import("@/pages/reports"));
 const ReportRunner = lazy(() => import("@/pages/reports/[id]"));
+const LeavesPage = lazy(() => import("@/pages/leaves"));
+const OrgChartPage = lazy(() => import("@/pages/org-chart"));
 const SurveyTemplateEditor = lazy(() => import("@/pages/settings/SurveyTemplate"));
 const PublicSurveyPage = lazy(() => import("@/pages/survey/[token]"));
 import { ThemeProvider } from "@/lib/theme";
@@ -110,6 +112,8 @@ function Router() {
         <Route path="/bench" component={() => <ProtectedRoute component={BenchPage} />} />
         <Route path="/skill-matrix" component={() => <ProtectedRoute component={SkillMatrixPage} />} />
         <Route path="/task-templates" component={() => <ProtectedRoute component={TaskTemplatesPage} />} />
+        <Route path="/leaves" component={() => <ProtectedRoute component={LeavesPage} />} />
+        <Route path="/org-chart" component={() => <ProtectedRoute component={OrgChartPage} />} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>
