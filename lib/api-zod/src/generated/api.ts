@@ -915,6 +915,15 @@ export const ConvertLeadParams = zod.object({
 export const ConvertLeadBody = zod.object({
   code: zod.string().optional(),
   clientName: zod.string().optional(),
+  clientId: zod.string().nullish(),
+  contractValue: zod.number().nullish(),
+  vatPercent: zod.number().nullish(),
+  contractValueIncludesVat: zod.boolean().nullish(),
+  description: zod.string().nullish(),
+  spkFileUrl: zod.string().nullish(),
+  spkFileName: zod.string().nullish(),
+  contractFileUrl: zod.string().nullish(),
+  contractFileName: zod.string().nullish(),
 });
 
 export const ListClientsResponseItem = zod.object({

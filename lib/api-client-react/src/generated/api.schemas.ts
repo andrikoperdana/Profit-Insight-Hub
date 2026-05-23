@@ -525,6 +525,15 @@ export interface ImportLeadsResult {
 export interface ConvertLeadBody {
   code?: string;
   clientName?: string;
+  clientId?: string | null;
+  contractValue?: number | null;
+  vatPercent?: number | null;
+  contractValueIncludesVat?: boolean | null;
+  description?: string | null;
+  spkFileUrl?: string | null;
+  spkFileName?: string | null;
+  contractFileUrl?: string | null;
+  contractFileName?: string | null;
 }
 
 export interface ConvertLeadResult {

@@ -1958,6 +1958,15 @@ components:
       properties:
         code: { type: string }
         clientName: { type: string }
+        clientId: { type: string, nullable: true }
+        contractValue: { type: number, nullable: true }
+        vatPercent: { type: number, nullable: true }
+        contractValueIncludesVat: { type: boolean, nullable: true }
+        description: { type: string, nullable: true }
+        spkFileUrl: { type: string, nullable: true }
+        spkFileName: { type: string, nullable: true }
+        contractFileUrl: { type: string, nullable: true }
+        contractFileName: { type: string, nullable: true }
 
     ConvertLeadResult:
       type: object

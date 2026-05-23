@@ -1,6 +1,12 @@
 import { useAuth } from "@/lib/auth";
 import { canCreateProject } from "@/lib/roles";
-import { useCreateProject, useListClients, useListUsers } from "@workspace/api-client-react";
+import {
+  useCreateProject,
+  useListClients,
+  useListUsers,
+  useListLeads,
+  useConvertLead,
+} from "@workspace/api-client-react";
 import { z } from "zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -80,6 +86,16 @@ function SalesIntakeForm() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const { data: clients, isLoading: loadingClients } = useListClients();
+  const { data: leads } = useListLeads();
+
+  const params = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
+  const initialLeadId = params.get("leadId") || "";
+  const [selectedLeadId, setSelectedLeadId] = useState<string>(initialLeadId);
+
+  const eligibleLeads = (leads || []).filter(
+    (l) => !l.convertedProjectId && (l.stage === "NEGOTIATION" || l.stage === "WON" || l.stage === "PROPOSAL"),
+  );
+  const selectedLead = eligibleLeads.find((l) => l.id === selectedLeadId) || null;
 
   const createProject = useCreateProject({
     mutation: {
@@ -100,6 +116,25 @@ function SalesIntakeForm() {
     },
   });
 
+  const convertLead = useConvertLead({
+    mutation: {
+      onSuccess: (data) => {
+        toast({
+          title: "Lead berhasil dikonversi",
+          description: `Project ${data.projectCode} dibuat • menunggu penugasan PM`,
+        });
+        setLocation("/");
+      },
+      onError: (err: any) => {
+        toast({
+          variant: "destructive",
+          title: "Gagal konversi lead",
+          description: err?.message ?? "Unknown error",
+        });
+      },
+    },
+  });
+
   const form = useForm<SalesIntake>({
     resolver: zodResolver(salesIntakeSchema),
     defaultValues: { code: "", name: "", clientId: "", contractValue: 0, vatPercent: 11, contractValueIncludesVat: true },
@@ -107,8 +142,41 @@ function SalesIntakeForm() {
 
   const [spkFile, setSpkFile] = useState<{ url: string; name: string } | null>(null);
   const [contractFile, setContractFile] = useState<{ url: string; name: string } | null>(null);
+  const [description, setDescription] = useState<string>("");
+
+  useEffect(() => {
+    if (selectedLead) {
+      form.setValue("name", selectedLead.title || "");
+      form.setValue("contractValue", Number(selectedLead.estimatedValue || 0));
+      if (selectedLead.clientId) form.setValue("clientId", selectedLead.clientId);
+      if (selectedLead.notes) setDescription(selectedLead.notes);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedLeadId]);
 
   const onSubmit = (data: SalesIntake) => {
+    if (selectedLead) {
+      convertLead.mutate({
+        id: selectedLead.id,
+        data: {
+          code: data.code,
+          clientId: selectedLead.clientId ? undefined : data.clientId || undefined,
+          clientName:
+            selectedLead.clientId || data.clientId
+              ? undefined
+              : selectedLead.prospectiveClientName || data.name,
+          contractValue: data.contractValue,
+          vatPercent: data.vatPercent,
+          contractValueIncludesVat: data.contractValueIncludesVat,
+          description: description || null,
+          spkFileUrl: spkFile?.url ?? null,
+          spkFileName: spkFile?.name ?? null,
+          contractFileUrl: contractFile?.url ?? null,
+          contractFileName: contractFile?.name ?? null,
+        },
+      });
+      return;
+    }
     createProject.mutate({
       data: {
         code: data.code,
@@ -118,6 +186,7 @@ function SalesIntakeForm() {
         vatPercent: data.vatPercent,
         contractValueIncludesVat: data.contractValueIncludesVat,
         status: ProjectStatus.DRAFT,
+        description: description || undefined,
         spkFileUrl: spkFile?.url ?? null,
         spkFileName: spkFile?.name ?? null,
         contractFileUrl: contractFile?.url ?? null,
@@ -141,15 +210,66 @@ function SalesIntakeForm() {
           <Link href="/"><ArrowLeft className="h-4 w-4" /></Link>
         </Button>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Register a New Project</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Daftarkan Project Baru</h1>
           <p className="text-muted-foreground">
-            Fill in the basic information — the PMO Director will assign a Project Manager and the PM will complete the details.
+            Isi manual, atau pilih lead yang menang dari Sales Pipeline untuk auto-fill. PMO Director akan menugaskan Project Manager.
           </p>
         </div>
       </div>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <Card className="border-primary/30 bg-primary/5 shadow-sm">
+            <CardHeader>
+              <CardTitle className="text-base">Daftarkan dari Sales Pipeline (opsional)</CardTitle>
+              <CardDescription>
+                Pilih lead yang sudah menang/negosiasi untuk auto-fill nama, nilai, klien, dan deskripsi. Lead akan otomatis ditandai WON setelah submit.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center gap-3">
+                <div className="flex-1">
+                  <Select
+                    value={selectedLeadId || "__none__"}
+                    onValueChange={(v) => setSelectedLeadId(v === "__none__" ? "" : v)}
+                  >
+                    <SelectTrigger data-testid="select-lead-from-pipeline">
+                      <SelectValue placeholder="-- Manual (tanpa lead) --" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="__none__">-- Manual (tanpa lead) --</SelectItem>
+                      {eligibleLeads.map((l) => (
+                        <SelectItem key={l.id} value={l.id}>
+                          [{l.stage}] {l.title} · {formatIDR(l.estimatedValue)}
+                          {l.clientName || l.prospectiveClientName ? ` · ${l.clientName || l.prospectiveClientName}` : ""}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                {selectedLeadId && (
+                  <Button type="button" variant="outline" size="sm" onClick={() => setSelectedLeadId("")}>
+                    Lepas pilihan
+                  </Button>
+                )}
+              </div>
+              {selectedLead && (
+                <div className="rounded-md border border-primary/30 bg-background/60 p-3 text-xs space-y-1">
+                  <p className="font-medium text-foreground">{selectedLead.title}</p>
+                  <p className="text-muted-foreground">
+                    Owner: {selectedLead.ownerName || "—"} · Stage: {selectedLead.stage} · Est:{" "}
+                    {formatIDR(selectedLead.estimatedValue)}
+                  </p>
+                  {!selectedLead.clientId && (
+                    <p className="text-amber-500">
+                      Lead belum punya client terdaftar — klien baru akan dibuat otomatis dari pilihan di bawah (atau nama prospek).
+                    </p>
+                  )}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
           <Card className="border-border shadow-sm">
             <CardHeader>
               <CardTitle>Project Information</CardTitle>
@@ -265,6 +385,16 @@ function SalesIntakeForm() {
                   <p className="font-mono text-muted-foreground">VAT: {formatIDR(ppnPreview)}</p>
                 </div>
               </div>
+              <div>
+                <FormLabel>Deskripsi / Scope (opsional)</FormLabel>
+                <Textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Ringkasan scope of work..."
+                  className="resize-none mt-2"
+                  data-testid="textarea-intake-description"
+                />
+              </div>
               <PdfUploadField
                 label="SPK / PO File (PDF)"
                 fileName={spkFile?.name ?? null}
@@ -284,9 +414,18 @@ function SalesIntakeForm() {
             <Button variant="outline" asChild>
               <Link href="/">Cancel</Link>
             </Button>
-            <Button type="submit" disabled={createProject.isPending} data-testid="button-submit-intake">
-              {createProject.isPending ? "Submitting..." : (
-                <><Send className="mr-2 h-4 w-4" /> Submit to PMO</>
+            <Button
+              type="submit"
+              disabled={createProject.isPending || convertLead.isPending}
+              data-testid="button-submit-intake"
+            >
+              {createProject.isPending || convertLead.isPending ? (
+                "Submitting..."
+              ) : (
+                <>
+                  <Send className="mr-2 h-4 w-4" />
+                  {selectedLead ? "Konversi Lead & Submit ke PMO" : "Submit to PMO"}
+                </>
               )}
             </Button>
           </div>

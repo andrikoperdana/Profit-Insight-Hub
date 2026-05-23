@@ -128,9 +128,9 @@ export default function SalesDashboard() {
       <Card className="border-primary/30 bg-primary/5">
         <CardContent className="flex items-center justify-between gap-4 py-4">
           <div>
-            <p className="text-xs uppercase tracking-wide text-primary font-semibold">Register a New Project</p>
+            <p className="text-xs uppercase tracking-wide text-primary font-semibold">Daftarkan Project Baru</p>
             <p className="text-sm text-muted-foreground mt-1">
-              Fill in just 3 fields — Project Name, SPK Number, and Client. PMO will assign a PM.
+              Manual (isi 4 field) atau pilih dari Sales Pipeline — lead yang menang otomatis terisi datanya. PMO akan menugaskan PM.
             </p>
           </div>
           <Link href="/projects/new">

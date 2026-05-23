@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { notifyOnceDailyForLead } from "../lib/leadNotifications.js";
+import { validatePdfDataUrl, sanitizeFileName } from "../lib/projectValidators.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -479,12 +480,39 @@ router.post("/leads/:id/convert", requireRole("SALES"), async (req: any, res) =>
   }
 
   const code = (body.code || `LEAD-${lead.id.slice(-6).toUpperCase()}`).toString().trim();
-  if (!lead.clientId) {
+  if (!lead.clientId && !body.clientId) {
     const name = (body.clientName || lead.prospectiveClientName || "").toString().trim();
     if (!name) {
-      res.status(400).json({ error: "clientName required when lead has no linked client" });
+      res.status(400).json({ error: "clientName or clientId required when lead has no linked client" });
       return;
     }
+  }
+  if (body.contractValue !== undefined && body.contractValue !== null && body.contractValue !== "") {
+    const cv = Number(body.contractValue);
+    if (Number.isNaN(cv) || cv < 0) {
+      res.status(400).json({ error: "contractValue must be a non-negative number" });
+      return;
+    }
+  }
+  if (body.vatPercent !== undefined && body.vatPercent !== null && body.vatPercent !== "") {
+    const vp = Number(body.vatPercent);
+    if (Number.isNaN(vp) || vp < 0 || vp > 100) {
+      res.status(400).json({ error: "vatPercent must be between 0 and 100" });
+      return;
+    }
+  }
+  let validatedSpkUrl: string | null | undefined = undefined;
+  let validatedContractUrl: string | null | undefined = undefined;
+  try {
+    if (body.spkFileUrl !== undefined) {
+      validatedSpkUrl = validatePdfDataUrl(body.spkFileUrl, "spkFileUrl") ?? null;
+    }
+    if (body.contractFileUrl !== undefined) {
+      validatedContractUrl = validatePdfDataUrl(body.contractFileUrl, "contractFileUrl") ?? null;
+    }
+  } catch (e: any) {
+    res.status(400).json({ error: e?.message || "Invalid PDF file" });
+    return;
   }
 
   try {
@@ -494,6 +522,11 @@ router.post("/leads/:id/convert", requireRole("SALES"), async (req: any, res) =>
       if (fresh.convertedProjectId) throw new Error("ALREADY_CONVERTED");
 
       let clientId = fresh.clientId;
+      if (!clientId && body.clientId) {
+        const existing = await tx.client.findUnique({ where: { id: String(body.clientId) } });
+        if (!existing) throw new Error("CLIENT_NOT_FOUND");
+        clientId = existing.id;
+      }
       if (!clientId) {
         const name = (body.clientName || fresh.prospectiveClientName || "").toString().trim();
         const created = await tx.client.create({ data: { name, industry: fresh.industry || null } });
@@ -503,6 +536,21 @@ router.post("/leads/:id/convert", requireRole("SALES"), async (req: any, res) =>
       const existingCode = await tx.project.findUnique({ where: { code } });
       if (existingCode) throw new Error("CODE_EXISTS");
 
+      const contractValueOverride =
+        body.contractValue !== undefined && body.contractValue !== null && body.contractValue !== ""
+          ? Number(body.contractValue)
+          : null;
+      const vatPercent =
+        body.vatPercent !== undefined && body.vatPercent !== null && body.vatPercent !== ""
+          ? Number(body.vatPercent)
+          : undefined;
+      const contractValueIncludesVat =
+        typeof body.contractValueIncludesVat === "boolean" ? body.contractValueIncludesVat : undefined;
+      const descriptionOverride =
+        typeof body.description === "string" && body.description.trim().length > 0
+          ? body.description
+          : fresh.notes || null;
+
       const project = await tx.project.create({
         data: {
           code,
@@ -510,8 +558,25 @@ router.post("/leads/:id/convert", requireRole("SALES"), async (req: any, res) =>
           status: "DRAFT",
           clientId,
           salesId: fresh.ownerId,
-          contractValue: fresh.estimatedValue,
-          description: fresh.notes || null,
+          contractValue:
+            contractValueOverride !== null && !Number.isNaN(contractValueOverride)
+              ? contractValueOverride
+              : fresh.estimatedValue,
+          description: descriptionOverride,
+          ...(vatPercent !== undefined && !Number.isNaN(vatPercent) ? { vatPercent } : {}),
+          ...(contractValueIncludesVat !== undefined ? { contractValueIncludesVat } : {}),
+          ...(validatedSpkUrl !== undefined ? { spkFileUrl: validatedSpkUrl } : {}),
+          ...(validatedSpkUrl
+            ? { spkFileName: sanitizeFileName(body.spkFileName) ?? null }
+            : validatedSpkUrl === null
+              ? { spkFileName: null }
+              : {}),
+          ...(validatedContractUrl !== undefined ? { contractFileUrl: validatedContractUrl } : {}),
+          ...(validatedContractUrl
+            ? { contractFileName: sanitizeFileName(body.contractFileName) ?? null }
+            : validatedContractUrl === null
+              ? { contractFileName: null }
+              : {}),
         },
       });
 
@@ -533,6 +598,10 @@ router.post("/leads/:id/convert", requireRole("SALES"), async (req: any, res) =>
     }
     if (e?.message === "LEAD_NOT_FOUND") {
       res.status(404).json({ error: "Lead not found" });
+      return;
+    }
+    if (e?.message === "CLIENT_NOT_FOUND") {
+      res.status(404).json({ error: "Client not found" });
       return;
     }
     throw e;

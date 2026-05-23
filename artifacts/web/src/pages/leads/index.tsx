@@ -539,6 +539,17 @@ export default function LeadsPage() {
                               <ArrowRight className="h-3 w-3 mr-1" /> Convert
                             </Button>
                           )}
+                          {!l.convertedProjectId && s.key === "WON" && (
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="h-7 px-2 text-xs text-primary"
+                              onClick={() => navigate(`/projects/new?leadId=${l.id}`)}
+                              data-testid={`button-register-${l.id}`}
+                            >
+                              <ArrowRight className="h-3 w-3 mr-1" /> Daftarkan Project
+                            </Button>
+                          )}
                           {l.convertedProjectId && (
                             <Button
                               size="sm"
