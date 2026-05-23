@@ -24,7 +24,7 @@ export default function DeliverySquad() {
             Security Consultant
           </div>
           <div className="text-[0.95vw] text-muted mt-[1.2vh] leading-snug">
-            konsultan@secureprofit.id<br/>konsultan2@secureprofit.id
+            konsultan@itsecasia.com<br/>konsultan2@itsecasia.com
           </div>
           <div className="border-t border-border my-[2vh]" />
           <ul className="text-[1vw] text-text leading-relaxed space-y-[0.6vh]">
@@ -41,7 +41,7 @@ export default function DeliverySquad() {
             Reporting
           </div>
           <div className="text-[0.95vw] text-muted mt-[1.2vh] leading-snug">
-            writer@secureprofit.id — Ayu Wulandari
+            writer@itsecasia.com — Ayu Wulandari
           </div>
           <div className="border-t border-border my-[2vh]" />
           <ul className="text-[1vw] text-text leading-relaxed space-y-[0.6vh]">
@@ -58,7 +58,7 @@ export default function DeliverySquad() {
             Closing &amp; Invoice
           </div>
           <div className="text-[0.95vw] text-muted mt-[1.2vh] leading-snug">
-            admin@secureprofit.id — Tono Setiawan
+            admin@itsecasia.com — Tono Setiawan
           </div>
           <div className="border-t border-border my-[2vh]" />
           <ul className="text-[1vw] text-text leading-relaxed space-y-[0.6vh]">

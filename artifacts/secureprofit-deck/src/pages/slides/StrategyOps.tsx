@@ -24,7 +24,7 @@ export default function StrategyOps() {
             <div className="font-mono text-[0.8vw] text-primary tracking-widest uppercase">Management</div>
           </div>
           <div className="text-[1vw] text-muted mb-[1.5vh] leading-snug">
-            management@secureprofit.id — Adi Wibowo
+            management@itsecasia.com — Adi Wibowo
           </div>
           <ul className="text-[1vw] text-text leading-relaxed space-y-[0.6vh]">
             <li>· See the entire portfolio &amp; executive KPIs</li>
@@ -40,7 +40,7 @@ export default function StrategyOps() {
             <div className="font-mono text-[0.8vw] text-primary tracking-widest uppercase">PM</div>
           </div>
           <div className="text-[1vw] text-muted mb-[1.5vh] leading-snug">
-            pm@secureprofit.id — Sari Pratiwi
+            pm@itsecasia.com — Sari Pratiwi
           </div>
           <ul className="text-[1vw] text-text leading-relaxed space-y-[0.6vh]">
             <li>· Complete project details (schedule, revenue, mandays, cost)</li>
@@ -56,7 +56,7 @@ export default function StrategyOps() {
             <div className="font-mono text-[0.8vw] text-primary tracking-widest uppercase">Commercial</div>
           </div>
           <div className="text-[1vw] text-muted mb-[1.5vh] leading-snug">
-            sales@secureprofit.id — Budi Santoso
+            sales@itsecasia.com — Budi Santoso
           </div>
           <ul className="text-[1vw] text-text leading-relaxed space-y-[0.6vh]">
             <li>· Onboard new clients &amp; intake projects (4-field form)</li>
@@ -72,7 +72,7 @@ export default function StrategyOps() {
             <div className="font-mono text-[0.8vw] text-primary tracking-widest uppercase">System</div>
           </div>
           <div className="text-[1vw] text-muted mb-[1.5vh] leading-snug">
-            siteadmin@secureprofit.id — Rina Kartika
+            siteadmin@itsecasia.com — Rina Kartika
           </div>
           <ul className="text-[1vw] text-text leading-relaxed space-y-[0.6vh]">
             <li>· Manage users (create, deactivate, change role)</li>

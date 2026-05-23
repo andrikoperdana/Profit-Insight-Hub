@@ -64,16 +64,16 @@ export default function Login() {
   };
 
   const seedUsers = [
-    { email: "management@secureprofit.id", role: "PMO Director" },
-    { email: "pm@secureprofit.id", role: "Project Manager" },
-    { email: "sales@secureprofit.id", role: "Sales" },
-    { email: "konsultan@secureprofit.id", role: "Consultant" },
-    { email: "writer@secureprofit.id", role: "Technical Writer" },
-    { email: "admin@secureprofit.id", role: "Admin Project" },
+    { email: "management@itsecasia.com", role: "PMO Director" },
+    { email: "pm@itsecasia.com", role: "Project Manager" },
+    { email: "sales@itsecasia.com", role: "Sales" },
+    { email: "konsultan@itsecasia.com", role: "Consultant" },
+    { email: "writer@itsecasia.com", role: "Technical Writer" },
+    { email: "admin@itsecasia.com", role: "Admin Project" },
     { email: "principal.kon.h7q4@itsecasia.com", role: "Principal Consultant" },
     { email: "principal.tw.m9k2@itsecasia.com", role: "Principal Technical Writer" },
     { email: "principal.ap.r3n8@itsecasia.com", role: "Principal Admin Project" },
-    { email: "siteadmin@secureprofit.id", role: "Site Admin" },
+    { email: "siteadmin@itsecasia.com", role: "Site Admin" },
   ];
 
   return (
@@ -105,7 +105,7 @@ export default function Login() {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input placeholder="user@secureprofit.id" {...field} className="bg-background" />
+                        <Input placeholder="user@itsecasia.com" {...field} className="bg-background" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

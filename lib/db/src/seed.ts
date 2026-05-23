@@ -10,7 +10,7 @@ async function ensurePrincipals(passwordDefault: string) {
     { email: "principal.kon.h7q4@itsecasia.com", name: "Bayu Prasetyo",      role: "PRINCIPAL_KONSULTAN",         title: "Principal Consultant" },
     { email: "principal.tw.m9k2@itsecasia.com",  name: "Indah Kusumawardani", role: "PRINCIPAL_TECHNICAL_WRITER",  title: "Principal Technical Writer" },
     { email: "principal.ap.r3n8@itsecasia.com",  name: "Fajar Nugroho",       role: "PRINCIPAL_ADMIN_PROJECT",     title: "Principal Admin Project" },
-    { email: "siteadmin@secureprofit.id",        name: "Rina Kartika",        role: "SITE_ADMIN",                  title: "Site Administrator" },
+    { email: "siteadmin@itsecasia.com",        name: "Rina Kartika",        role: "SITE_ADMIN",                  title: "Site Administrator" },
   ];
   for (const p of newPrincipals) {
     await prisma.user.upsert({
@@ -25,10 +25,10 @@ async function ensurePrincipals(passwordDefault: string) {
   });
   const byRole = new Map<string, typeof principals[number]>(principals.map((p) => [p.role as string, p]));
   const reports = [
-    { email: "konsultan@secureprofit.id",  principalRole: "PRINCIPAL_KONSULTAN" },
-    { email: "konsultan2@secureprofit.id", principalRole: "PRINCIPAL_KONSULTAN" },
-    { email: "writer@secureprofit.id",     principalRole: "PRINCIPAL_TECHNICAL_WRITER" },
-    { email: "admin@secureprofit.id",      principalRole: "PRINCIPAL_ADMIN_PROJECT" },
+    { email: "konsultan@itsecasia.com",  principalRole: "PRINCIPAL_KONSULTAN" },
+    { email: "konsultan2@itsecasia.com", principalRole: "PRINCIPAL_KONSULTAN" },
+    { email: "writer@itsecasia.com",     principalRole: "PRINCIPAL_TECHNICAL_WRITER" },
+    { email: "admin@itsecasia.com",      principalRole: "PRINCIPAL_ADMIN_PROJECT" },
   ];
   for (const r of reports) {
     const principal = byRole.get(r.principalRole);
@@ -39,10 +39,10 @@ async function ensurePrincipals(passwordDefault: string) {
     });
   }
   // PM → MGMT manager link
-  const adi = await prisma.user.findUnique({ where: { email: "management@secureprofit.id" } });
+  const adi = await prisma.user.findUnique({ where: { email: "management@itsecasia.com" } });
   if (adi) {
     await prisma.user.updateMany({
-      where: { email: "pm@secureprofit.id", managerId: null },
+      where: { email: "pm@itsecasia.com", managerId: null },
       data: { managerId: adi.id },
     });
   }
@@ -89,11 +89,11 @@ async function ensureBusinessUnitsAndSkills() {
 
   type UserAssign = { email: string; seniority?: string; bu?: string; skills?: string[] };
   const assigns: UserAssign[] = [
-    { email: "pm@secureprofit.id",                    seniority: "SENIOR",    bu: "GRC" },
-    { email: "konsultan@secureprofit.id",             seniority: "SENIOR",    bu: "Pentest",        skills: ["Web Pentest", "Infra Pentest", "Red Team"] },
-    { email: "konsultan2@secureprofit.id",            seniority: "MID",       bu: "Pentest",        skills: ["Web Pentest", "Mobile Pentest"] },
-    { email: "writer@secureprofit.id",                seniority: "MID",       bu: "GRC",            skills: ["Technical Writing", "ISO 27001 Audit"] },
-    { email: "admin@secureprofit.id",                 seniority: "JUNIOR",    bu: "GRC" },
+    { email: "pm@itsecasia.com",                    seniority: "SENIOR",    bu: "GRC" },
+    { email: "konsultan@itsecasia.com",             seniority: "SENIOR",    bu: "Pentest",        skills: ["Web Pentest", "Infra Pentest", "Red Team"] },
+    { email: "konsultan2@itsecasia.com",            seniority: "MID",       bu: "Pentest",        skills: ["Web Pentest", "Mobile Pentest"] },
+    { email: "writer@itsecasia.com",                seniority: "MID",       bu: "GRC",            skills: ["Technical Writing", "ISO 27001 Audit"] },
+    { email: "admin@itsecasia.com",                 seniority: "JUNIOR",    bu: "GRC" },
     { email: "principal.kon.h7q4@itsecasia.com",      seniority: "PRINCIPAL", bu: "Pentest",        skills: ["Web Pentest", "Red Team", "Threat Hunting"] },
     { email: "principal.tw.m9k2@itsecasia.com",       seniority: "PRINCIPAL", bu: "GRC",            skills: ["Technical Writing", "ISO 27001 Audit", "SOC 2 Readiness"] },
     { email: "principal.ap.r3n8@itsecasia.com",       seniority: "PRINCIPAL", bu: "GRC" },
@@ -149,13 +149,13 @@ export async function runSeed() {
   console.log("Seeding users...");
 
   const adi = await prisma.user.create({
-    data: { email: "management@secureprofit.id", passwordHash: passwordDefault, name: "Adi Wibowo", role: "MANAGEMENT", title: "Director" },
+    data: { email: "management@itsecasia.com", passwordHash: passwordDefault, name: "Adi Wibowo", role: "MANAGEMENT", title: "Director" },
   });
   const sari = await prisma.user.create({
-    data: { email: "pm@secureprofit.id", passwordHash: passwordDefault, name: "Sari Pratiwi", role: "PROJECT_MANAGER", title: "Senior Project Manager", dailyRate: 2000000, managerId: adi.id },
+    data: { email: "pm@itsecasia.com", passwordHash: passwordDefault, name: "Sari Pratiwi", role: "PROJECT_MANAGER", title: "Senior Project Manager", dailyRate: 2000000, managerId: adi.id },
   });
   const budi = await prisma.user.create({
-    data: { email: "sales@secureprofit.id", passwordHash: passwordDefault, name: "Budi Santoso", role: "SALES", title: "Account Executive" },
+    data: { email: "sales@itsecasia.com", passwordHash: passwordDefault, name: "Budi Santoso", role: "SALES", title: "Account Executive" },
   });
   const principalKon = await prisma.user.create({
     data: { email: "principal.kon.h7q4@itsecasia.com", passwordHash: passwordDefault, name: "Bayu Prasetyo", role: "PRINCIPAL_KONSULTAN", title: "Principal Consultant" },
@@ -167,19 +167,19 @@ export async function runSeed() {
     data: { email: "principal.ap.r3n8@itsecasia.com", passwordHash: passwordDefault, name: "Fajar Nugroho", role: "PRINCIPAL_ADMIN_PROJECT", title: "Principal Admin Project" },
   });
   const rian = await prisma.user.create({
-    data: { email: "konsultan@secureprofit.id", passwordHash: passwordDefault, name: "Rian Hidayat", role: "KONSULTAN", title: "Senior Security Consultant", dailyRate: 1800000, principalId: principalKon.id },
+    data: { email: "konsultan@itsecasia.com", passwordHash: passwordDefault, name: "Rian Hidayat", role: "KONSULTAN", title: "Senior Security Consultant", dailyRate: 1800000, principalId: principalKon.id },
   });
   const dewi = await prisma.user.create({
-    data: { email: "konsultan2@secureprofit.id", passwordHash: passwordDefault, name: "Dewi Lestari", role: "KONSULTAN", title: "Penetration Tester", dailyRate: 1700000, principalId: principalKon.id },
+    data: { email: "konsultan2@itsecasia.com", passwordHash: passwordDefault, name: "Dewi Lestari", role: "KONSULTAN", title: "Penetration Tester", dailyRate: 1700000, principalId: principalKon.id },
   });
   const ayu = await prisma.user.create({
-    data: { email: "writer@secureprofit.id", passwordHash: passwordDefault, name: "Ayu Wulandari", role: "TECHNICAL_WRITER", title: "Technical Writer", dailyRate: 1200000, principalId: principalTw.id },
+    data: { email: "writer@itsecasia.com", passwordHash: passwordDefault, name: "Ayu Wulandari", role: "TECHNICAL_WRITER", title: "Technical Writer", dailyRate: 1200000, principalId: principalTw.id },
   });
   const tono = await prisma.user.create({
-    data: { email: "admin@secureprofit.id", passwordHash: passwordDefault, name: "Tono Setiawan", role: "ADMIN_PROJECT", title: "Project Administrator", principalId: principalAp.id },
+    data: { email: "admin@itsecasia.com", passwordHash: passwordDefault, name: "Tono Setiawan", role: "ADMIN_PROJECT", title: "Project Administrator", principalId: principalAp.id },
   });
   await prisma.user.create({
-    data: { email: "siteadmin@secureprofit.id", passwordHash: passwordDefault, name: "Rina Kartika", role: "SITE_ADMIN", title: "Site Administrator" },
+    data: { email: "siteadmin@itsecasia.com", passwordHash: passwordDefault, name: "Rina Kartika", role: "SITE_ADMIN", title: "Site Administrator" },
   });
 
   console.log("Seeding clients...");

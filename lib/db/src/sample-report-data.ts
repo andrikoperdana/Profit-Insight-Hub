@@ -12,10 +12,10 @@ export async function ensureSampleReportData() {
   // 1. Second PM (for PM workload variety) — idempotent
   // ---------------------------------------------------------------------
   const passwordHash = await bcrypt.hash("password123", 10);
-  const pm2Email = "pm2@secureprofit.id";
+  const pm2Email = "pm2@itsecasia.com";
   let pm2 = await prisma.user.findUnique({ where: { email: pm2Email } });
   if (!pm2) {
-    const adi = await prisma.user.findUnique({ where: { email: "management@secureprofit.id" } });
+    const adi = await prisma.user.findUnique({ where: { email: "management@itsecasia.com" } });
     pm2 = await prisma.user.create({
       data: {
         email: pm2Email,
@@ -27,11 +27,11 @@ export async function ensureSampleReportData() {
         managerId: adi?.id ?? null,
       },
     });
-    console.log("Created second PM: pm2@secureprofit.id");
+    console.log("Created second PM: pm2@itsecasia.com");
   }
 
   // Reassign 4 of Sari's projects to Yusuf — ONE-TIME, only when Yusuf has zero projects
-  const sari = await prisma.user.findUnique({ where: { email: "pm@secureprofit.id" } });
+  const sari = await prisma.user.findUnique({ where: { email: "pm@itsecasia.com" } });
   if (sari && pm2) {
     const pm2Count = await prisma.project.count({ where: { pmId: pm2.id, deletedAt: null } });
     if (pm2Count === 0) {
@@ -271,7 +271,7 @@ export async function ensureSampleReportData() {
 const LEAD_MARKER = "[sample]";
 
 export async function ensureSampleLeads() {
-  const sales = await prisma.user.findUnique({ where: { email: "sales@secureprofit.id" } });
+  const sales = await prisma.user.findUnique({ where: { email: "sales@itsecasia.com" } });
   if (!sales) return;
 
   const existing = await prisma.lead.count({ where: { notes: { contains: LEAD_MARKER } } });
