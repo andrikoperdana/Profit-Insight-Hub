@@ -11,6 +11,7 @@ async function ensurePrincipals(passwordDefault: string) {
     { email: "principal.tw.m9k2@itsecasia.com",  name: "Indah Kusumawardani", role: "PRINCIPAL_TECHNICAL_WRITER",  title: "Principal Technical Writer" },
     { email: "principal.ap.r3n8@itsecasia.com",  name: "Fajar Nugroho",       role: "PRINCIPAL_ADMIN_PROJECT",     title: "Principal Admin Project" },
     { email: "siteadmin@itsecasia.com",        name: "Rina Kartika",        role: "SITE_ADMIN",                  title: "Site Administrator" },
+    { email: "finance@itsecasia.com",          name: "Maya Anggraini",      role: "FINANCE",                     title: "Finance Manager" },
   ];
   for (const p of newPrincipals) {
     await prisma.user.upsert({
@@ -177,6 +178,9 @@ export async function runSeed() {
   });
   const tono = await prisma.user.create({
     data: { email: "admin@itsecasia.com", passwordHash: passwordDefault, name: "Tono Setiawan", role: "ADMIN_PROJECT", title: "Project Administrator", principalId: principalAp.id },
+  });
+  await prisma.user.create({
+    data: { email: "finance@itsecasia.com", passwordHash: passwordDefault, name: "Maya Anggraini", role: "FINANCE", title: "Finance Manager" },
   });
   await prisma.user.create({
     data: { email: "siteadmin@itsecasia.com", passwordHash: passwordDefault, name: "Rina Kartika", role: "SITE_ADMIN", title: "Site Administrator" },

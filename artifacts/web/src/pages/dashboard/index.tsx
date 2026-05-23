@@ -21,6 +21,6 @@ export default function Dashboard() {
   }
   if (isPrincipalRole(user.role)) return <PrincipalDashboard />;
   if (user.role === UserRole.SITE_ADMIN) return <SiteAdminDashboard />;
-  // MANAGEMENT (PMO Director)
+  // MANAGEMENT (PMO Director) and FINANCE share the executive dashboard.
   return <ManagementDashboard />;
 }

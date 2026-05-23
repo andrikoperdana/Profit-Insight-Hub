@@ -26,7 +26,7 @@ async function canViewProject(
   userId: string | undefined,
   project: { pmId: string | null; salesId: string | null; id: string },
 ): Promise<boolean> {
-  if (role === "MANAGEMENT" || role === "ADMIN_PROJECT" || role === "SITE_ADMIN") return true;
+  if (role === "MANAGEMENT" || role === "ADMIN_PROJECT" || role === "SITE_ADMIN" || role === "FINANCE") return true;
   if (role === "PROJECT_MANAGER" && project.pmId === userId) return true;
   if (role === "SALES" && project.salesId === userId) return true;
   if (role === "KONSULTAN" || role === "TECHNICAL_WRITER") {
@@ -77,8 +77,8 @@ function serialize(m: any) {
  * Restricted to MANAGEMENT (commercial figures).
  */
 router.get("/billing-milestones/vat-recap", async (req, res) => {
-  if (req.user?.role !== "MANAGEMENT") {
-    res.status(403).json({ error: "Only Management can view VAT recap" });
+  if (req.user?.role !== "MANAGEMENT" && req.user?.role !== "FINANCE") {
+    res.status(403).json({ error: "Only Management or Finance can view VAT recap" });
     return;
   }
   const yearParam = req.query.year;

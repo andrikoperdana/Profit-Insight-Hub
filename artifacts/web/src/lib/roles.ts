@@ -10,6 +10,7 @@ export const RoleLabels: Record<UserRole, string> = {
   [UserRole.PRINCIPAL_KONSULTAN]: "Principal Consultant",
   [UserRole.PRINCIPAL_TECHNICAL_WRITER]: "Principal Technical Writer",
   [UserRole.PRINCIPAL_ADMIN_PROJECT]: "Principal Admin Project",
+  [UserRole.FINANCE]: "Finance",
   [UserRole.SITE_ADMIN]: "Site Admin",
 };
 

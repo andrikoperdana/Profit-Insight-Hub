@@ -248,7 +248,7 @@ export async function canViewProject(
   userId: string | undefined,
   project: { pmId: string | null; salesId: string | null; id: string },
 ): Promise<boolean> {
-  if (role === "MANAGEMENT" || role === "ADMIN_PROJECT") return true;
+  if (role === "MANAGEMENT" || role === "ADMIN_PROJECT" || role === "FINANCE") return true;
   if (role === "PROJECT_MANAGER" && project.pmId === userId) return true;
   if (role === "SALES" && project.salesId === userId) return true;
   if (role === "KONSULTAN" || role === "TECHNICAL_WRITER") {

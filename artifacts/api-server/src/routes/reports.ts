@@ -8,7 +8,7 @@ import type { OptionsSource, FilterOption, ReportContext } from "../reports/type
 const router: IRouter = Router();
 router.use(requireAuth);
 
-const ALLOWED_ROLES = new Set(["MANAGEMENT", "PROJECT_MANAGER"]);
+const ALLOWED_ROLES = new Set(["MANAGEMENT", "PROJECT_MANAGER", "FINANCE"]);
 
 async function loadOptions(source: OptionsSource, viewer: { sub: string; role: string }): Promise<FilterOption[]> {
   const isPm = viewer.role === "PROJECT_MANAGER";

@@ -93,7 +93,8 @@ export default function ClientsList() {
     exportCsv("clients", rows);
   }
 
-  const hasAccess = canManageClients(user?.role);
+  const hasAccess = canManageClients(user?.role) || user?.role === "FINANCE";
+  const isReadOnly = user?.role === "FINANCE";
 
   if (!hasAccess) {
     return (
@@ -124,11 +125,13 @@ export default function ClientsList() {
             <Download className="h-4 w-4" /> Export CSV
           </Button>
           <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-            <DialogTrigger asChild>
-              <Button className="gap-2">
-                <Plus className="h-4 w-4" /> New Client
-              </Button>
-            </DialogTrigger>
+            {!isReadOnly && (
+              <DialogTrigger asChild>
+                <Button className="gap-2">
+                  <Plus className="h-4 w-4" /> New Client
+                </Button>
+              </DialogTrigger>
+            )}
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Create New Client</DialogTitle>
@@ -213,7 +216,7 @@ export default function ClientsList() {
           title="No clients found" 
           description="Get started by creating your first client." 
           icon={<Building2 className="h-12 w-12 text-muted-foreground/50" />}
-          action={<Button onClick={() => setIsCreateOpen(true)}><Plus className="h-4 w-4 mr-2" /> Add Client</Button>}
+          action={isReadOnly ? undefined : <Button onClick={() => setIsCreateOpen(true)}><Plus className="h-4 w-4 mr-2" /> Add Client</Button>}
         />
       ) : (
         <Card className="overflow-hidden border-border shadow-sm">

@@ -37,11 +37,12 @@ export default function Sidebar() {
   const isPM = user?.role === "PROJECT_MANAGER" || user?.role === "MANAGEMENT";
 
   const isSiteAdmin = user?.role === "SITE_ADMIN";
+  const isFinance = user?.role === "FINANCE";
 
   const main: NavLink[] = [
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
     ...(isSiteAdmin ? [] : [{ href: "/projects", label: "Projects", icon: Briefcase }]),
-    ...(isSiteAdmin ? [] : [{ href: "/timesheets", label: "Time Tracking", icon: Clock }]),
+    ...(isSiteAdmin || isFinance ? [] : [{ href: "/timesheets", label: "Time Tracking", icon: Clock }]),
   ];
 
   const canSeeExpenses =
@@ -62,16 +63,16 @@ export default function Sidebar() {
     ...(isPM ? [{ href: "/skill-matrix", label: "Skill Matrix", icon: Award }] : []),
     ...(isPM ? [{ href: "/task-templates", label: "Task Templates", icon: ListChecks }] : []),
     ...(isPM || user?.role === "ADMIN_PROJECT" || user?.role === "SALES" ? [{ href: "/invoice-planning", label: "Invoice Planning", icon: Wallet }] : []),
-    ...(isPM ? [{ href: "/reports", label: "Reports", icon: FileBarChart }] : []),
+    ...(isPM || isFinance ? [{ href: "/reports", label: "Reports", icon: FileBarChart }] : []),
   ];
 
   const admin: NavLink[] = [
-    ...(canManageClients(user?.role) ? [{ href: "/clients", label: "Clients", icon: Building2 }] : []),
+    ...(canManageClients(user?.role) || isFinance ? [{ href: "/clients", label: "Clients", icon: Building2 }] : []),
     ...(canManageUsers(user?.role) ? [{ href: "/users", label: "Users", icon: Users }] : []),
     ...(canManageUsers(user?.role) ? [{ href: "/business-units", label: "Business Units", icon: Network }] : []),
     ...(canManageUsers(user?.role) ? [{ href: "/skills", label: "Skills", icon: Award }] : []),
     ...(user?.role === "MANAGEMENT" ? [{ href: "/business-intelligence", label: "Business Intelligence", icon: TrendingUp }] : []),
-    ...(user?.role === "MANAGEMENT" ? [{ href: "/vat-recap", label: "VAT Recap", icon: Receipt }] : []),
+    ...(user?.role === "MANAGEMENT" || isFinance ? [{ href: "/vat-recap", label: "VAT Recap", icon: Receipt }] : []),
     ...(user?.role === "MANAGEMENT" ? [{ href: "/settings/survey-template", label: "Survey Template", icon: ClipboardList }] : []),
     ...(canViewAuditLogs(user?.role) ? [{ href: "/audit-logs", label: "Audit Log", icon: ScrollText }] : []),
   ];

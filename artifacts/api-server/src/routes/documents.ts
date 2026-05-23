@@ -48,19 +48,24 @@ router.get("/projects/:id/documents", async (req, res) => {
 
 router.post(
   "/projects/:id/documents",
-  requireRole("ADMIN_PROJECT", "MANAGEMENT", "PROJECT_MANAGER"),
+  requireRole("ADMIN_PROJECT", "MANAGEMENT", "PROJECT_MANAGER", "FINANCE"),
   async (req, res) => {
-    // Tighten role gate: only the assigned PM (or MGMT / project's Admin
-    // Project) may upload documents. Without this, any PROJECT_MANAGER could
-    // upload BAST/Invoice on a project they don't own.
-    if (!(await userCanWriteProject(String(req.params.id), req.user!))) {
-      res.status(403).json({ error: "Forbidden" });
-      return;
-    }
     const { type, fileName, fileUrl, invoiceNumber, invoiceAmount, invoiceStatus, notes } =
       req.body || {};
     if (!type || !fileName || !fileUrl) {
       res.status(400).json({ error: "type, fileName, fileUrl required" });
+      return;
+    }
+    // FINANCE may only upload INVOICE or CONTRACT documents.
+    if (req.user!.role === "FINANCE" && type !== "INVOICE" && type !== "CONTRACT") {
+      res.status(403).json({ error: "Finance can only upload INVOICE or CONTRACT documents" });
+      return;
+    }
+    // Tighten role gate: only the assigned PM (or MGMT / project's Admin
+    // Project / Finance) may upload documents. Without this, any
+    // PROJECT_MANAGER could upload BAST/Invoice on a project they don't own.
+    if (!(await userCanWriteProject(String(req.params.id), req.user!))) {
+      res.status(403).json({ error: "Forbidden" });
       return;
     }
     const d = await prisma.document.create({
@@ -132,7 +137,7 @@ router.post(
 
 router.delete(
   "/documents/:id",
-  requireRole("ADMIN_PROJECT", "MANAGEMENT", "PROJECT_MANAGER"),
+  requireRole("ADMIN_PROJECT", "MANAGEMENT", "PROJECT_MANAGER", "FINANCE"),
   async (req, res) => {
     const before = await prisma.document.findUnique({
       where: { id: String(req.params.id) },
@@ -140,6 +145,10 @@ router.delete(
     });
     if (!before) {
       res.status(404).json({ error: "Not found" });
+      return;
+    }
+    if (req.user!.role === "FINANCE" && before.type !== "INVOICE" && before.type !== "CONTRACT") {
+      res.status(403).json({ error: "Finance can only delete INVOICE or CONTRACT documents" });
       return;
     }
     if (!(await userCanWriteProject(before.projectId, req.user!))) {

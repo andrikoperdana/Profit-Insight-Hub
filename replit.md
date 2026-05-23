@@ -13,7 +13,7 @@ Full-stack web app for an Indonesian IT security consulting firm. Tracks project
 
 ## Roles
 
-Management (PMO Director), Project Manager, Sales, Konsultan, Technical Writer, Admin Project, Principal supervisors (KONSULTAN/TECHNICAL_WRITER/ADMIN_PROJECT), Site Admin.
+Management (PMO Director), Project Manager, Sales, Konsultan, Technical Writer, Admin Project, Principal supervisors (KONSULTAN/TECHNICAL_WRITER/ADMIN_PROJECT), Finance, Site Admin.
 
 ## Domain (Prisma)
 
@@ -101,6 +101,7 @@ Server-side `requireRole` (`middlewares/auth.ts`):
 - **Sales**: write clients/projects
 - **Konsultan/TW**: log own timesheets only
 - **Admin Project**: documents/invoices
+- **Finance**: read-only access to all Projects, Clients, Reports (+ exports), VAT Recap, plus MGMT-style dashboard; may upload/delete INVOICE and CONTRACT documents only. No timesheet, billing milestone, or expense write access.
 
 Data scoping: `GET /api/projects` filters by role (PM `pmId`, Sales `salesId`, Konsultan/TW assigned-or-has-timesheet, MGMT/Admin all). `GET /api/dashboard/resource-utilization-detail` MGMT+PM only (PM sees own-project resources).
 
@@ -150,6 +151,6 @@ Seed: `lib/db/src/seed.ts`. Idempotent helpers `ensurePrincipals`, `ensureBusine
 
 ## Seed credentials (password: `password123`)
 
-Main (`@secureprofit.id`): `management@` (Adi Wibowo), `pm@` (Sari Pratiwi), `pm2@` (Yusuf Maulana — added by sample data), `sales@` (Budi Santoso), `konsultan@` (Rian Hidayat), `konsultan2@` (Dewi Lestari), `writer@` (Ayu Wulandari), `admin@` (Tono Setiawan), `siteadmin@` (Rina Kartika).
+Main (`@secureprofit.id`): `management@` (Adi Wibowo), `pm@` (Sari Pratiwi), `pm2@` (Yusuf Maulana — added by sample data), `sales@` (Budi Santoso), `konsultan@` (Rian Hidayat), `konsultan2@` (Dewi Lestari), `writer@` (Ayu Wulandari), `admin@` (Tono Setiawan), `finance@` (Maya Anggraini), `siteadmin@` (Rina Kartika).
 
 Principals (`@itsecasia.com`): `principal.kon.h7q4@` (Bayu Prasetyo), `principal.tw.m9k2@` (Indah Kusumawardani), `principal.ap.r3n8@` (Fajar Nugroho).

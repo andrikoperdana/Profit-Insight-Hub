@@ -25,7 +25,7 @@ export default function VatRecapPage() {
     return out;
   }, [currentYear]);
 
-  const isMgmt = user?.role === "MANAGEMENT";
+  const isMgmt = user?.role === "MANAGEMENT" || user?.role === "FINANCE";
 
   if (!isMgmt) {
     return (
@@ -33,7 +33,7 @@ export default function VatRecapPage() {
         <Card className="rounded-xl border-destructive/40">
           <CardContent className="p-6 flex items-center gap-3 text-destructive">
             <AlertCircle className="h-5 w-5" />
-            The VAT Recap page is restricted to Management users only.
+            The VAT Recap page is restricted to Management and Finance users only.
           </CardContent>
         </Card>
       </div>

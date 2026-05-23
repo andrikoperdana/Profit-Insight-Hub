@@ -15,7 +15,7 @@ const CATEGORY_META: Record<string, { label: string; icon: typeof TrendingUp; co
 
 export default function ReportsIndex() {
   const { user } = useAuth();
-  const allowed = user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER";
+  const allowed = user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER" || user?.role === "FINANCE";
   const { data: reports, isLoading } = useListReports({
     query: { enabled: allowed, queryKey: ["reports"] },
   });
@@ -26,7 +26,7 @@ export default function ReportsIndex() {
         <Card className="rounded-xl border-destructive/40">
           <CardContent className="p-6 flex items-center gap-3 text-destructive">
             <AlertCircle className="h-5 w-5" />
-            The Reports page is only accessible to Management and Project Manager roles.
+            The Reports page is only accessible to Management, Project Manager, and Finance roles.
           </CardContent>
         </Card>
       </div>

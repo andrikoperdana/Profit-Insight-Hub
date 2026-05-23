@@ -52,6 +52,7 @@ router.get("/projects", async (req, res) => {
       { status: { in: ["COMPLETE", "CLOSED"] } },
     ];
   }
+  // FINANCE, MANAGEMENT, SITE_ADMIN: no scoping — see all projects.
   const projects = await prisma.project.findMany({
     where,
     include: projectInclude,

@@ -11,7 +11,7 @@ export async function userCanAccessProject(
   user: { sub: string; role: string },
 ): Promise<boolean> {
   const role = user.role;
-  if (role === "MANAGEMENT" || role === "SITE_ADMIN") return true;
+  if (role === "MANAGEMENT" || role === "SITE_ADMIN" || role === "FINANCE") return true;
   const userId = user.sub;
   const where: { id: string; deletedAt: null; [key: string]: unknown } = {
     id: projectId,
@@ -55,7 +55,7 @@ export async function userCanWriteProject(
   user: { sub: string; role: string },
 ): Promise<boolean> {
   const role = user.role;
-  if (role === "MANAGEMENT") return true;
+  if (role === "MANAGEMENT" || role === "FINANCE") return true;
   const project = await prisma.project.findUnique({
     where: { id: projectId },
     select: { pmId: true, adminProjectId: true, deletedAt: true },

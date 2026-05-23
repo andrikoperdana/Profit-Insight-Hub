@@ -154,7 +154,7 @@ router.get("/dashboard/recent-activity", async (_req, res) => {
 
 router.get("/dashboard/pending-aging", async (req, res) => {
   const role = req.user!.role;
-  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER") {
+  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER" && role !== "FINANCE") {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
@@ -250,7 +250,7 @@ router.get("/dashboard/utilization-trend", async (req, res) => {
 
 router.get("/dashboard/resource-utilization-detail", async (req, res) => {
   const role = req.user!.role;
-  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER") {
+  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER" && role !== "FINANCE") {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
