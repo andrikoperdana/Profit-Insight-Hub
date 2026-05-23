@@ -416,7 +416,7 @@ export default function Dashboard() {
               <TableSkeleton columns={1} rows={5} />
             ) : (
               <div className="space-y-4">
-                {recentActivity.map((activity) => (
+                {recentActivity.slice(0, 10).map((activity) => (
                   <div key={activity.id} className="flex items-start space-x-4">
                     <div className="mt-0.5 bg-muted p-1.5 rounded-full border border-border">
                       <Activity className="h-3 w-3 text-muted-foreground" />
