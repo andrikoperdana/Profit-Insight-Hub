@@ -41,8 +41,9 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { TableSkeleton } from "@/components/common/Loading";
 import { Pagination, usePagination } from "@/components/common/Pagination";
 import {
-  Plus, Trash2, Clock, Pencil, ListChecks, Loader2, CalendarRange, Download, FileStack,
+  Plus, Trash2, Clock, Pencil, ListChecks, Loader2, CalendarRange, Download, FileStack, LayoutGrid, List as ListIcon,
 } from "lucide-react";
+import { TaskKanbanBoard } from "./components/TaskKanbanBoard";
 
 function ApplyTemplateButton({ projectId }: { projectId: string }) {
   const { toast } = useToast();
@@ -149,6 +150,14 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
   const [editTask, setEditTask] = useState<Task | null>(null);
   const [logTask, setLogTask] = useState<Task | null>(null);
   const [logsTask, setLogsTask] = useState<Task | null>(null);
+  const [view, setView] = useState<"list" | "kanban">(() => {
+    if (typeof window === "undefined") return "list";
+    return (window.localStorage.getItem(`tasksTab.view.${projectId}`) as "list" | "kanban") || "list";
+  });
+  function changeView(v: "list" | "kanban") {
+    setView(v);
+    try { window.localStorage.setItem(`tasksTab.view.${projectId}`, v); } catch {}
+  }
 
   const invalidate = () => {
     qc.invalidateQueries({ queryKey: getListProjectTasksQueryKey(projectId) });
@@ -243,6 +252,26 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
             </CardDescription>
           </div>
           <div className="flex items-center gap-2">
+            <div className="inline-flex rounded-md border border-border overflow-hidden" role="group" aria-label="View mode">
+              <button
+                type="button"
+                onClick={() => changeView("list")}
+                className={`h-8 px-2.5 text-xs flex items-center gap-1.5 transition-colors ${view === "list" ? "bg-primary text-primary-foreground" : "bg-background hover:bg-muted"}`}
+                data-testid="button-view-list"
+                aria-pressed={view === "list"}
+              >
+                <ListIcon className="h-3.5 w-3.5" /> List
+              </button>
+              <button
+                type="button"
+                onClick={() => changeView("kanban")}
+                className={`h-8 px-2.5 text-xs flex items-center gap-1.5 border-l border-border transition-colors ${view === "kanban" ? "bg-primary text-primary-foreground" : "bg-background hover:bg-muted"}`}
+                data-testid="button-view-kanban"
+                aria-pressed={view === "kanban"}
+              >
+                <LayoutGrid className="h-3.5 w-3.5" /> Kanban
+              </button>
+            </div>
             <Button
               variant="outline"
               size="sm"
@@ -273,6 +302,14 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
                   ? "Create the first task to break this project down for the team."
                   : "Your PM hasn't assigned any tasks on this project yet."
               }
+            />
+          ) : view === "kanban" ? (
+            <TaskKanbanBoard
+              projectId={projectId}
+              tasks={tasks}
+              isManager={isManager}
+              currentUserId={user?.id}
+              onEditTask={(t) => setEditTask(t)}
             />
           ) : (
             <Table>
@@ -405,7 +442,7 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
               </TableBody>
             </Table>
           )}
-          {tasks && tasks.length > 0 && (
+          {tasks && tasks.length > 0 && view === "list" && (
             <Pagination
               page={pager.page}
               pageSize={pager.pageSize}
