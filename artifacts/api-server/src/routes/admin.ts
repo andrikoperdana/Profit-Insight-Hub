@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { prisma, ensureSampleReportData } from "@workspace/db";
+import { prisma, ensureSampleReportData, ensureSampleTaskTemplates } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
 
@@ -46,6 +46,29 @@ router.post(
     });
 
     return res.json({ ok: true, created, totals: after });
+  },
+);
+
+router.post(
+  "/admin/seed-task-templates",
+  requireAuth,
+  requireRole("SITE_ADMIN"),
+  async (req, res) => {
+    const before = await prisma.taskTemplate.count();
+    try {
+      await ensureSampleTaskTemplates();
+    } catch (err) {
+      req.log.error({ err }, "ensureSampleTaskTemplates failed");
+      return res.status(500).json({ error: "Task template seed failed" });
+    }
+    const after = await prisma.taskTemplate.count();
+    await recordAudit(req, {
+      action: "admin.sample_data_seeded",
+      entityType: "System",
+      entityId: "task-templates",
+      description: `Seeded sample task templates: +${after - before} (total ${after})`,
+    });
+    return res.json({ ok: true, created: after - before, total: after });
   },
 );
 
