@@ -56,7 +56,8 @@ export type AuditAction =
   | "billing_milestone.updated"
   | "billing_milestone.deleted"
   | "project.report_updated"
-  | "admin.sample_data_seeded";
+  | "admin.sample_data_seeded"
+  | "admin.emails_renamed";
 
 export type EntityType =
   | "User"
