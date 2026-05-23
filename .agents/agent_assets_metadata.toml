@@ -239,3 +239,9 @@ id = "MkoLtH40TIld8I-EDQhLS"
 uri = "file://scripts/exports/fit-gap-psohub.docx"
 type = "word_document"
 title = "Fit-Gap Analysis: SecureProfit Hub vs PSOhub (v2)"
+
+[[outputs]]
+id = "keE_5ULltT9o-g_ODUmgF"
+uri = "file://scripts/exports/role-features.docx"
+type = "word_document"
+title = "Dokumentasi Fitur per Role - SecureProfit Hub"
