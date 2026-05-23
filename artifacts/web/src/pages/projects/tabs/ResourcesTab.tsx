@@ -230,7 +230,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
       ? "Other Resource"
       : addingRole === "TECHNICAL_WRITER"
         ? "Technical Writer"
-        : "Konsultan";
+        : "Consultant";
 
   const handleAdd = () => {
     if (!form.userId || !addingRole) {
@@ -365,11 +365,11 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
         <CardContent>
           {list.length === 0 ? (
             <div className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-              No Konsultan assigned to this project yet.
+              No Consultant assigned to this project yet.
               {(canEdit || canPrincipalProposeKonsultan) && (
                 <div className="mt-3">
                   <Button size="sm" onClick={() => setAddingRole("KONSULTAN")}>
-                    {canEdit ? "+ Add First Konsultan" : "+ Propose Konsultan"}
+                    {canEdit ? "+ Add First Consultant" : "+ Propose Consultant"}
                   </Button>
                 </div>
               )}
@@ -678,7 +678,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
             <DialogDescription>
               {canEdit
                 ? (addingRole === "KONSULTAN"
-                    ? "Assign a Konsultan to this project. Multiple Konsultans can be assigned per project."
+                    ? "Assign a Consultant to this project. Multiple Consultants can be assigned per project."
                     : addingRole === "TECHNICAL_WRITER"
                       ? "Assign a Technical Writer to this project. Multiple Technical Writers can be assigned per project."
                       : "Add any user (Sales, SOC Manager, Security Engineer, etc.) as a resource. Enter their position under \"Role on Project\".")

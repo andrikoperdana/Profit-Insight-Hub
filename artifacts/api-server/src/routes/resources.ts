@@ -137,7 +137,7 @@ async function upsertResource(req: any, res: any, opts: { propose: boolean }) {
     typeof roleInProject === "string" ? roleInProject.trim() : "";
   if (!IMPLIED_ROLE.has(user.role) && !roleInProjectClean) {
     res.status(400).json({
-      error: "roleInProject required for non-Konsultan/Writer/Admin resources (e.g. SOC Manager, Security Engineer)",
+      error: "roleInProject required for non-Consultant/Writer/Admin resources (e.g. SOC Manager, Security Engineer)",
     });
     return;
   }

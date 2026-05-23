@@ -59,13 +59,13 @@ router.get(
       let gapReason: string | null = null;
       if (totalCount === 0) {
         isGap = true;
-        gapReason = "Tidak ada konsultan yang menguasai skill ini";
+        gapReason = "No consultant holds this skill yet";
       } else if (totalCount < 2) {
         isGap = true;
-        gapReason = "Hanya 1 orang — risiko key-person";
+        gapReason = "Only 1 person — key-person risk";
       } else if (seniorCount + principalCount === 0) {
         isGap = true;
-        gapReason = "Tidak ada Senior/Principal sebagai mentor";
+        gapReason = "No Senior/Principal available as mentor";
       }
       return {
         skillId: s.id,
