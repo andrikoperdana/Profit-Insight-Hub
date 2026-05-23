@@ -37,7 +37,7 @@ export function canViewAuditLogs(role?: UserRole): boolean {
 }
 
 export function canManageClients(role?: UserRole): boolean {
-  return role === UserRole.MANAGEMENT || role === UserRole.PROJECT_MANAGER || role === UserRole.SALES;
+  return role === UserRole.SALES;
 }
 
 export function canViewResources(role?: UserRole): boolean {

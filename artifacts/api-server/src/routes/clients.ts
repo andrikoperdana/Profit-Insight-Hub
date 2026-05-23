@@ -30,7 +30,7 @@ router.get("/clients", async (_req, res) => {
   res.json(clients.map(serialize));
 });
 
-const writeRoles = ["MANAGEMENT", "SALES", "PROJECT_MANAGER"] as const;
+const writeRoles = ["SALES"] as const;
 
 // Loose but enough to reject obvious garbage like "abc" or "no-at-sign.com".
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
