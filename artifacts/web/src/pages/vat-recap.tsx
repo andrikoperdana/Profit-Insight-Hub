@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { useGetVatRecap } from "@workspace/api-client-react";
-import Layout from "@/components/layout/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,16 +29,14 @@ export default function VatRecapPage() {
 
   if (!isMgmt) {
     return (
-      <Layout>
-        <div className="p-6">
-          <Card className="rounded-xl border-destructive/40">
-            <CardContent className="p-6 flex items-center gap-3 text-destructive">
-              <AlertCircle className="h-5 w-5" />
-              The VAT Recap page is restricted to Management users only.
-            </CardContent>
-          </Card>
-        </div>
-      </Layout>
+      <div className="p-6">
+        <Card className="rounded-xl border-destructive/40">
+          <CardContent className="p-6 flex items-center gap-3 text-destructive">
+            <AlertCircle className="h-5 w-5" />
+            The VAT Recap page is restricted to Management users only.
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
@@ -83,7 +80,6 @@ export default function VatRecapPage() {
   }
 
   return (
-    <Layout>
       <div className="p-6 space-y-6">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
@@ -196,7 +192,6 @@ export default function VatRecapPage() {
           </CardContent>
         </Card>
       </div>
-    </Layout>
   );
 }
 
