@@ -37,7 +37,7 @@ export default function Header() {
   const { data: notifications } = useListNotifications({
     query: {
       queryKey: getListNotificationsQueryKey(),
-      refetchInterval: 30000,
+      refetchInterval: 60000,
       enabled: !!user,
     },
   });

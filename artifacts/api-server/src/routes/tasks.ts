@@ -40,6 +40,7 @@ router.get("/projects/:id/tasks", async (req, res) => {
     where: { projectId },
     include: taskInclude,
     orderBy: [{ status: "asc" }, { endDate: "asc" }, { createdAt: "desc" }],
+    take: 1000,
   });
   res.json(tasks.map(serializeTask));
 });

@@ -56,6 +56,7 @@ router.get("/projects", async (req, res) => {
     where,
     include: projectInclude,
     orderBy: { createdAt: "desc" },
+    take: 500,
   });
   res.json(projects.map((p) => serializeProject(p, req.user?.role)));
 });
@@ -89,14 +90,16 @@ router.get("/projects/:id", async (req, res) => {
       industry: p.client.industry,
       createdAt: p.client.createdAt.toISOString(),
     },
-    resources: p.resources.map((r) => {
-      let actualMandays = 0;
+    resources: (() => {
+      const approvedHoursByUser = new Map<string, number>();
       for (const ts of p.timesheets) {
-        if (ts.userId === r.userId && ts.status === "APPROVED") {
-          actualMandays += ts.hours / 8;
+        if (ts.status === "APPROVED") {
+          approvedHoursByUser.set(ts.userId, (approvedHoursByUser.get(ts.userId) ?? 0) + ts.hours);
         }
       }
-      return {
+      return p.resources.map((r) => {
+        const actualMandays = (approvedHoursByUser.get(r.userId) ?? 0) / 8;
+        return {
         id: r.id,
         projectId: r.projectId,
         userId: r.userId,
@@ -107,7 +110,8 @@ router.get("/projects/:id", async (req, res) => {
         actualMandays,
         dailyRate: showFinancials ? r.dailyRate : 0,
       };
-    }),
+    });
+    })(),
     documents: p.documents.map((d) => ({
       id: d.id,
       projectId: d.projectId,

@@ -75,6 +75,7 @@ router.get("/users", async (req, res) => {
     where: includeDeleted ? {} : { deletedAt: null },
     orderBy: { name: "asc" },
     include: userInclude,
+    take: 500,
   });
   res.json(users.map(serializeUser));
 });

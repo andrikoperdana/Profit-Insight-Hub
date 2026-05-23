@@ -270,6 +270,10 @@ model Timesheet {
   updatedAt       DateTime        @updatedAt
 
   @@index([taskId])
+  @@index([userId])
+  @@index([projectId])
+  @@index([status])
+  @@index([workDate])
 }
 
 model Document {
