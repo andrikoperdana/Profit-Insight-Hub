@@ -87,7 +87,7 @@ export default function Login() {
             <Shield className="h-10 w-10 text-primary" />
           </div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground">SecureProfit Hub</h1>
-          <p className="text-muted-foreground text-sm">IT Security Projects, Operations & Margins Console for ITSEC PMO</p>
+          <p className="text-muted-foreground text-sm">IT Security Projects, Operations & Margins Console</p>
         </div>
 
         <Card className="border-border/50 shadow-xl bg-card/80 backdrop-blur-sm">
