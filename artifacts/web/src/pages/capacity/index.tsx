@@ -352,9 +352,9 @@ export default function CapacityPlanning() {
                             </TooltipTrigger>
                             <TooltipContent>
                               <div className="text-xs">
-                                <div className="font-medium">Minggu {w.weekStart}</div>
+                                <div className="font-medium">Week {w.weekStart}</div>
                                 <div className={w.warning ? "text-amber-400" : "text-muted-foreground"}>
-                                  Total {w.hours}h{w.warning ? " · melebihi 40h/minggu" : ""}
+                                  Total {w.hours}h{w.warning ? " · exceeds 40h/week" : ""}
                                 </div>
                               </div>
                             </TooltipContent>

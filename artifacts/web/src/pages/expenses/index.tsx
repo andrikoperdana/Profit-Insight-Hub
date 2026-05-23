@@ -214,7 +214,7 @@ export default function ExpensesPage() {
                     <TableCell className="max-w-md">
                       <p className="text-sm line-clamp-2" title={e.description}>{e.description}</p>
                       {e.createdByName && (
-                        <p className="text-xs text-muted-foreground mt-1">oleh {e.createdByName}</p>
+                        <p className="text-xs text-muted-foreground mt-1">by {e.createdByName}</p>
                       )}
                     </TableCell>
                     <TableCell className="text-right font-mono">{formatIDR(e.amount)}</TableCell>

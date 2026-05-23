@@ -244,7 +244,7 @@ export default function PMDashboard() {
             </div>
             <Link href="/expenses">
               <Button size="sm" variant="outline" className="border-amber-500/50 text-amber-400 hover:bg-amber-500/10">
-                <Inbox className="h-4 w-4 mr-1" /> Lihat
+                <Inbox className="h-4 w-4 mr-1" /> View
               </Button>
             </Link>
           </CardContent>

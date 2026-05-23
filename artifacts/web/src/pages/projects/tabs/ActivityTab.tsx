@@ -82,10 +82,10 @@ export default function ActivityTab({ projectId }: { projectId: string }) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Activity className="h-5 w-5 text-primary" />
-            Audit Trail Project
+            Project Audit Trail
           </CardTitle>
           <CardDescription>
-            Riwayat perubahan pada project ini — siapa, kapan, dan apa yang diubah.
+            History of changes on this project — who, when, and what was changed.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -95,7 +95,7 @@ export default function ActivityTab({ projectId }: { projectId: string }) {
               <Select value={userFilter} onValueChange={(v) => { setUserFilter(v); setPage(1); }}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Semua user</SelectItem>
+                  <SelectItem value="all">All users</SelectItem>
                   {data.filters.users.map((u) => (
                     <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>
                   ))}
@@ -103,11 +103,11 @@ export default function ActivityTab({ projectId }: { projectId: string }) {
               </Select>
             </div>
             <div>
-              <label className="text-xs text-muted-foreground">Aksi</label>
+              <label className="text-xs text-muted-foreground">Action</label>
               <Select value={actionFilter} onValueChange={(v) => { setActionFilter(v); setPage(1); }}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Semua aksi</SelectItem>
+                  <SelectItem value="all">All actions</SelectItem>
                   {data.filters.actions.map((a) => (
                     <SelectItem key={a} value={a}>{a}</SelectItem>
                   ))}
@@ -115,11 +115,11 @@ export default function ActivityTab({ projectId }: { projectId: string }) {
               </Select>
             </div>
             <div>
-              <label className="text-xs text-muted-foreground">Dari tanggal</label>
+              <label className="text-xs text-muted-foreground">From date</label>
               <Input type="date" value={from} onChange={(e) => { setFrom(e.target.value); setPage(1); }} />
             </div>
             <div>
-              <label className="text-xs text-muted-foreground">Sampai tanggal</label>
+              <label className="text-xs text-muted-foreground">To date</label>
               <Input type="date" value={to} onChange={(e) => { setTo(e.target.value); setPage(1); }} />
             </div>
           </div>
@@ -127,18 +127,18 @@ export default function ActivityTab({ projectId }: { projectId: string }) {
           {data.items.length === 0 ? (
             <EmptyState
               icon={<Activity className="h-8 w-8" />}
-              title="Belum ada aktivitas"
-              description="Belum ada perubahan yang tercatat pada project ini."
+              title="No activity yet"
+              description="No changes have been recorded on this project yet."
             />
           ) : (
             <div className="border border-border rounded-md overflow-hidden">
               <table className="w-full text-sm">
                 <thead className="bg-muted/40">
                   <tr className="text-left">
-                    <th className="p-2 font-medium">Waktu</th>
+                    <th className="p-2 font-medium">Time</th>
                     <th className="p-2 font-medium">User</th>
-                    <th className="p-2 font-medium">Aksi</th>
-                    <th className="p-2 font-medium">Deskripsi</th>
+                    <th className="p-2 font-medium">Action</th>
+                    <th className="p-2 font-medium">Description</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -164,14 +164,14 @@ export default function ActivityTab({ projectId }: { projectId: string }) {
 
           <div className="flex items-center justify-between text-sm">
             <div className="text-muted-foreground">
-              {data.total} entri · halaman {data.page} dari {totalPages}
+              {data.total} entries · page {data.page} of {totalPages}
             </div>
             <div className="flex gap-2">
               <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
-                <ChevronLeft className="h-4 w-4" /> Sebelumnya
+                <ChevronLeft className="h-4 w-4" /> Previous
               </Button>
               <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>
-                Berikutnya <ChevronRight className="h-4 w-4" />
+                Next <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
           </div>

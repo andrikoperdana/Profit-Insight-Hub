@@ -23,7 +23,7 @@ function startOfWeek(d: Date): Date {
   return x;
 }
 
-const DAY_LABELS = ["Sen", "Sel", "Rab", "Kam", "Jum"];
+const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
 export default function WeeklyEntryDialog({ isAutoApprove }: { isAutoApprove: boolean }) {
   const { toast } = useToast();
@@ -71,11 +71,11 @@ export default function WeeklyEntryDialog({ isAutoApprove }: { isAutoApprove: bo
           const errs = res.results.filter((r) => !r.ok).map((r) => r.error).slice(0, 3).join("; ");
           toast({
             variant: "destructive",
-            title: `${res.created} berhasil, ${res.failed} gagal`,
+            title: `${res.created} succeeded, ${res.failed} failed`,
             description: errs,
           });
         } else {
-          toast({ title: `${res.created} timesheet berhasil dicatat` });
+          toast({ title: `${res.created} timesheet(s) recorded successfully` });
         }
         qc.invalidateQueries({ queryKey: getListTimesheetsQueryKey({ scope: "mine" }) });
         qc.invalidateQueries({ queryKey: getListTimesheetsQueryKey({ scope: "approval" }) });
@@ -85,7 +85,7 @@ export default function WeeklyEntryDialog({ isAutoApprove }: { isAutoApprove: bo
           setDesc("");
         }
       },
-      onError: (e: any) => toast({ variant: "destructive", title: "Gagal kirim", description: e?.message }),
+      onError: (e: any) => toast({ variant: "destructive", title: "Failed to submit", description: e?.message }),
     },
   });
 
@@ -93,15 +93,15 @@ export default function WeeklyEntryDialog({ isAutoApprove }: { isAutoApprove: bo
     const entries: Array<{ projectId: string; workDate: string; hours: number; description?: string }> = [];
     Object.entries(grid).forEach(([pid, row]) => {
       row.forEach((h, i) => {
-        if (h > 0) entries.push({ projectId: pid, workDate: days[i].iso, hours: h, description: desc || `Mingguan ${weekStartIso}` });
+        if (h > 0) entries.push({ projectId: pid, workDate: days[i].iso, hours: h, description: desc || `Weekly ${weekStartIso}` });
       });
     });
     if (entries.length === 0) {
-      toast({ variant: "destructive", title: "Belum ada jam yang diisi" });
+      toast({ variant: "destructive", title: "No hours entered yet" });
       return;
     }
     if (entries.length > 50) {
-      toast({ variant: "destructive", title: "Maksimal 50 entry per submit" });
+      toast({ variant: "destructive", title: "Maximum 50 entries per submit" });
       return;
     }
     bulk.mutate({ data: { entries } });
@@ -111,20 +111,20 @@ export default function WeeklyEntryDialog({ isAutoApprove }: { isAutoApprove: bo
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className="shrink-0" data-testid="button-weekly-entry">
-          <CalendarRange className="h-4 w-4 mr-2" /> Entry Mingguan
+          <CalendarRange className="h-4 w-4 mr-2" /> Weekly Entry
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Entry Timesheet Mingguan</DialogTitle>
+          <DialogTitle>Weekly Timesheet Entry</DialogTitle>
           <DialogDescription>
-            Isi jam per project per hari. Hanya hari kerja Sen–Jum. Maksimal 5 hari kerja terakhir.
+            Enter hours per project per day. Weekdays only (Mon–Fri). Up to the last 5 working days.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 pt-2">
           <div className="flex items-end gap-3">
             <div>
-              <label className="text-xs text-muted-foreground">Minggu (Senin)</label>
+              <label className="text-xs text-muted-foreground">Week (Monday)</label>
               <Input
                 type="date"
                 value={weekStartIso}
@@ -133,8 +133,8 @@ export default function WeeklyEntryDialog({ isAutoApprove }: { isAutoApprove: bo
               />
             </div>
             <div className="flex-1">
-              <label className="text-xs text-muted-foreground">Deskripsi (opsional, dipakai semua entry)</label>
-              <Input value={desc} onChange={(e) => setDesc(e.target.value)} placeholder="Contoh: Eksekusi pentest, dokumentasi…" />
+              <label className="text-xs text-muted-foreground">Description (optional, applied to all entries)</label>
+              <Input value={desc} onChange={(e) => setDesc(e.target.value)} placeholder="Example: Pentest execution, documentation…" />
             </div>
             <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
               Total: {totals.grand.toFixed(1)}h
@@ -142,7 +142,7 @@ export default function WeeklyEntryDialog({ isAutoApprove }: { isAutoApprove: bo
           </div>
 
           {projectList.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Tidak ada project ACTIVE untuk Anda saat ini.</p>
+            <p className="text-sm text-muted-foreground">No ACTIVE projects assigned to you right now.</p>
           ) : (
             <div className="border border-border rounded overflow-x-auto">
               <table className="w-full text-xs">
@@ -187,7 +187,7 @@ export default function WeeklyEntryDialog({ isAutoApprove }: { isAutoApprove: bo
                     );
                   })}
                   <tr className="border-t-2 border-border bg-muted/30 font-semibold">
-                    <td className="p-2 sticky left-0 bg-muted/30">Total per hari</td>
+                    <td className="p-2 sticky left-0 bg-muted/30">Total per day</td>
                     {totals.perDay.map((t, i) => (
                       <td key={i} className="p-2 text-center font-mono">{t > 0 ? t.toFixed(1) : "—"}</td>
                     ))}
@@ -199,9 +199,9 @@ export default function WeeklyEntryDialog({ isAutoApprove }: { isAutoApprove: bo
           )}
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Batal</Button>
+          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
           <Button onClick={submit} disabled={bulk.isPending || totals.grand === 0} data-testid="button-submit-weekly">
-            {bulk.isPending ? "Menyimpan…" : isAutoApprove ? "Simpan (Auto-approve)" : "Submit Approval"}
+            {bulk.isPending ? "Saving…" : isAutoApprove ? "Save (Auto-approve)" : "Submit Approval"}
           </Button>
         </DialogFooter>
       </DialogContent>

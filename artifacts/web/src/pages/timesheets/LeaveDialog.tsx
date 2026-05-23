@@ -22,11 +22,11 @@ import { Plane, Trash2 } from "lucide-react";
 import { formatDate } from "@/lib/format";
 
 const TYPES = [
-  { value: "ANNUAL", label: "Cuti Tahunan" },
-  { value: "SICK", label: "Sakit" },
+  { value: "ANNUAL", label: "Annual Leave" },
+  { value: "SICK", label: "Sick" },
   { value: "TRAINING", label: "Training" },
   { value: "UNPAID", label: "Unpaid Leave" },
-  { value: "OTHER", label: "Lainnya" },
+  { value: "OTHER", label: "Other" },
 ];
 
 const TYPE_TONE: Record<string, string> = {
@@ -53,17 +53,17 @@ export default function LeaveDialog() {
   const create = useCreateLeave({
     mutation: {
       onSuccess: () => {
-        toast({ title: "Leave dicatat" });
+        toast({ title: "Leave recorded" });
         qc.invalidateQueries({ queryKey: getListLeavesQueryKey() });
         setNote("");
       },
-      onError: (e: any) => toast({ variant: "destructive", title: "Gagal simpan", description: e?.message }),
+      onError: (e: any) => toast({ variant: "destructive", title: "Failed to save", description: e?.message }),
     },
   });
   const del = useDeleteLeave({
     mutation: {
       onSuccess: () => {
-        toast({ title: "Leave dihapus" });
+        toast({ title: "Leave deleted" });
         qc.invalidateQueries({ queryKey: getListLeavesQueryKey() });
       },
     },
@@ -71,7 +71,7 @@ export default function LeaveDialog() {
 
   const submit = () => {
     if (!startDate || !endDate || new Date(endDate) < new Date(startDate)) {
-      toast({ variant: "destructive", title: "Tanggal tidak valid" });
+      toast({ variant: "destructive", title: "Invalid date" });
       return;
     }
     create.mutate({ data: { startDate, endDate, type: type as any, note: note || null } });
@@ -86,24 +86,24 @@ export default function LeaveDialog() {
       </DialogTrigger>
       <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Log Cuti / Tidak Hadir</DialogTitle>
+          <DialogTitle>Log Leave / Absence</DialogTitle>
           <DialogDescription>
-            Catat cuti / training / sakit. Tampil di Resource Planning sehingga PM tidak meng-assign Anda di tanggal tersebut.
+            Record leave / training / sick days. Appears in Resource Planning so PMs do not assign you on those dates.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-3 pt-2">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label>Tanggal Mulai</Label>
+              <Label>Start Date</Label>
               <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} data-testid="input-leave-start" />
             </div>
             <div>
-              <Label>Tanggal Selesai</Label>
+              <Label>End Date</Label>
               <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} data-testid="input-leave-end" />
             </div>
           </div>
           <div>
-            <Label>Tipe</Label>
+            <Label>Type</Label>
             <Select value={type} onValueChange={setType}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -112,17 +112,17 @@ export default function LeaveDialog() {
             </Select>
           </div>
           <div>
-            <Label>Catatan (opsional)</Label>
-            <Textarea rows={2} value={note} onChange={(e) => setNote(e.target.value)} placeholder="Contoh: Cuti keluarga…" />
+            <Label>Note (optional)</Label>
+            <Textarea rows={2} value={note} onChange={(e) => setNote(e.target.value)} placeholder="Example: Family leave…" />
           </div>
           <Button onClick={submit} disabled={create.isPending} className="w-full" data-testid="button-save-leave">
-            {create.isPending ? "Menyimpan…" : "Tambah Leave"}
+            {create.isPending ? "Saving…" : "Add Leave"}
           </Button>
 
           <div className="pt-2 border-t border-border">
-            <Label className="mb-2 block">Leave saya</Label>
+            <Label className="mb-2 block">My Leave</Label>
             {!leaves || leaves.length === 0 ? (
-              <p className="text-xs text-muted-foreground">Belum ada leave yang dicatat.</p>
+              <p className="text-xs text-muted-foreground">No leave recorded yet.</p>
             ) : (
               <div className="space-y-1 max-h-48 overflow-y-auto">
                 {leaves.map((l) => (
@@ -144,7 +144,7 @@ export default function LeaveDialog() {
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Tutup</Button>
+          <Button variant="outline" onClick={() => setOpen(false)}>Close</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

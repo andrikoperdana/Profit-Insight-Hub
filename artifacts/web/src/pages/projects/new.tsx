@@ -120,15 +120,15 @@ function SalesIntakeForm() {
     mutation: {
       onSuccess: (data) => {
         toast({
-          title: "Lead berhasil dikonversi",
-          description: `Project ${data.projectCode} dibuat • menunggu penugasan PM`,
+          title: "Lead converted successfully",
+          description: `Project ${data.projectCode} created • awaiting PM assignment`,
         });
         setLocation("/");
       },
       onError: (err: any) => {
         toast({
           variant: "destructive",
-          title: "Gagal konversi lead",
+          title: "Failed to convert lead",
           description: err?.message ?? "Unknown error",
         });
       },
@@ -210,9 +210,9 @@ function SalesIntakeForm() {
           <Link href="/"><ArrowLeft className="h-4 w-4" /></Link>
         </Button>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Daftarkan Project Baru</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Register New Project</h1>
           <p className="text-muted-foreground">
-            Isi manual, atau pilih lead yang menang dari Sales Pipeline untuk auto-fill. PMO Director akan menugaskan Project Manager.
+            Fill in manually, or pick a won lead from the Sales Pipeline to auto-fill. The PMO Director will assign a Project Manager.
           </p>
         </div>
       </div>
@@ -221,9 +221,9 @@ function SalesIntakeForm() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <Card className="border-primary/30 bg-primary/5 shadow-sm">
             <CardHeader>
-              <CardTitle className="text-base">Daftarkan dari Sales Pipeline (opsional)</CardTitle>
+              <CardTitle className="text-base">Register from Sales Pipeline (optional)</CardTitle>
               <CardDescription>
-                Pilih lead yang sudah menang/negosiasi untuk auto-fill nama, nilai, klien, dan deskripsi. Lead akan otomatis ditandai WON setelah submit.
+                Pick a lead in won/negotiation stage to auto-fill the name, value, client, and description. The lead will be marked WON automatically after submit.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -234,10 +234,10 @@ function SalesIntakeForm() {
                     onValueChange={(v) => setSelectedLeadId(v === "__none__" ? "" : v)}
                   >
                     <SelectTrigger data-testid="select-lead-from-pipeline">
-                      <SelectValue placeholder="-- Manual (tanpa lead) --" />
+                      <SelectValue placeholder="-- Manual (no lead) --" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="__none__">-- Manual (tanpa lead) --</SelectItem>
+                      <SelectItem value="__none__">-- Manual (no lead) --</SelectItem>
                       {eligibleLeads.map((l) => (
                         <SelectItem key={l.id} value={l.id}>
                           [{l.stage}] {l.title} · {formatIDR(l.estimatedValue)}
@@ -249,7 +249,7 @@ function SalesIntakeForm() {
                 </div>
                 {selectedLeadId && (
                   <Button type="button" variant="outline" size="sm" onClick={() => setSelectedLeadId("")}>
-                    Lepas pilihan
+                    Clear selection
                   </Button>
                 )}
               </div>
@@ -262,7 +262,7 @@ function SalesIntakeForm() {
                   </p>
                   {!selectedLead.clientId && (
                     <p className="text-amber-500">
-                      Lead belum punya client terdaftar — klien baru akan dibuat otomatis dari pilihan di bawah (atau nama prospek).
+                      This lead does not have a registered client yet — a new client will be created automatically from the selection below (or the prospect name).
                     </p>
                   )}
                 </div>
@@ -386,11 +386,11 @@ function SalesIntakeForm() {
                 </div>
               </div>
               <div>
-                <FormLabel>Deskripsi / Scope (opsional)</FormLabel>
+                <FormLabel>Description / Scope (optional)</FormLabel>
                 <Textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Ringkasan scope of work..."
+                  placeholder="Summary of the scope of work..."
                   className="resize-none mt-2"
                   data-testid="textarea-intake-description"
                 />
@@ -424,7 +424,7 @@ function SalesIntakeForm() {
               ) : (
                 <>
                   <Send className="mr-2 h-4 w-4" />
-                  {selectedLead ? "Konversi Lead & Submit ke PMO" : "Submit to PMO"}
+                  {selectedLead ? "Convert Lead & Submit to PMO" : "Submit to PMO"}
                 </>
               )}
             </Button>

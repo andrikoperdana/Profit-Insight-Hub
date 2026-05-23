@@ -68,10 +68,10 @@ export default function SkillRecommenderDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            Saran Kandidat — {role}
+            Candidate Suggestions — {role}
           </DialogTitle>
           <DialogDescription>
-            Diurutkan berdasarkan keahlian, beban minggu ini, status leave, dan kecocokan Business Unit.
+            Ranked by skills, workload this week, leave status, and Business Unit match.
           </DialogDescription>
         </DialogHeader>
 
@@ -79,7 +79,7 @@ export default function SkillRecommenderDialog({
           <div className="py-10 flex justify-center"><LoadingSpinner /></div>
         ) : data.candidates.length === 0 ? (
           <p className="py-10 text-center text-sm text-muted-foreground">
-            Tidak ada kandidat dengan role ini yang tersedia.
+            No candidates available for this role.
           </p>
         ) : (
           <div className="space-y-3">
@@ -108,11 +108,11 @@ export default function SkillRecommenderDialog({
                       </div>
                       <div className="mt-1 flex items-center gap-3 text-[11px] text-muted-foreground">
                         <span className={overloaded ? "text-amber-500" : ""}>
-                          {c.assignedHoursThisWeek}h minggu ini
+                          {c.assignedHoursThisWeek}h this week
                           {overloaded && " (>40h)"}
                         </span>
                         <span className="flex items-center gap-1">
-                          <Briefcase className="h-3 w-3" /> {c.activeProjectsCount} project aktif
+                          <Briefcase className="h-3 w-3" /> {c.activeProjectsCount} active projects
                         </span>
                         {c.onLeaveDays > 0 && (
                           <span className="text-amber-500 flex items-center gap-1">
@@ -136,14 +136,14 @@ export default function SkillRecommenderDialog({
                             </Badge>
                           ))}
                           {c.skills.length > 8 && (
-                            <span className="text-[10px] text-muted-foreground">+{c.skills.length - 8} lainnya</span>
+                            <span className="text-[10px] text-muted-foreground">+{c.skills.length - 8} more</span>
                           )}
                         </div>
                       )}
                       {c.activeProjects.length > 0 && (
                         <div className="mt-1 text-[11px] text-muted-foreground">
-                          Lagi di: {c.activeProjects.slice(0, 3).map((p) => p.name).join(", ")}
-                          {c.activeProjects.length > 3 && ` +${c.activeProjects.length - 3} lainnya`}
+                          Currently on: {c.activeProjects.slice(0, 3).map((p) => p.name).join(", ")}
+                          {c.activeProjects.length > 3 && ` +${c.activeProjects.length - 3} more`}
                         </div>
                       )}
                     </div>
@@ -155,7 +155,7 @@ export default function SkillRecommenderDialog({
                       }}
                       data-testid={`select-suggestion-${c.id}`}
                     >
-                      Pilih
+                      Select
                     </Button>
                   </div>
                 </div>
@@ -165,7 +165,7 @@ export default function SkillRecommenderDialog({
         )}
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Tutup</Button>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Close</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

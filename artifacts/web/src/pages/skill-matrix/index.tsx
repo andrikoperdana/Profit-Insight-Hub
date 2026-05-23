@@ -40,8 +40,8 @@ export default function SkillMatrixPage() {
   if (!canView) {
     return (
       <EmptyState
-        title="Akses ditolak"
-        description="Skill Matrix hanya tersedia untuk Management & Project Manager."
+        title="Access denied"
+        description="Skill Matrix is only available to Management & Project Manager."
         icon={<ShieldAlert className="h-10 w-10 text-destructive/50" />}
       />
     );
@@ -52,7 +52,7 @@ export default function SkillMatrixPage() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Skill Matrix &amp; Gap Analysis</h1>
         <p className="text-muted-foreground">
-          Coverage skill di seluruh konsultan &amp; technical writer. Cell menampilkan level proficiency 1–5.
+          Skill coverage across all consultants &amp; technical writers. Cells show proficiency level 1–5.
         </p>
       </div>
 
@@ -61,9 +61,9 @@ export default function SkillMatrixPage() {
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center gap-2 text-amber-300">
               <AlertTriangle className="h-4 w-4" />
-              {gapsOnly.length} Skill Gap terdeteksi
+              {gapsOnly.length} Skill Gaps detected
             </CardTitle>
-            <CardDescription>Skill yang berisiko (tidak ada penguasa / hanya 1 orang / tanpa Senior).</CardDescription>
+            <CardDescription>Skills at risk (no holders / only 1 person / no Senior).</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -86,18 +86,18 @@ export default function SkillMatrixPage() {
       <Card className="border-border">
         <CardHeader className="pb-3 flex flex-row items-center justify-between gap-4">
           <div>
-            <CardTitle className="text-base flex items-center gap-2"><Award className="h-4 w-4" /> Matriks Skill × Orang</CardTitle>
-            <CardDescription>Angka = level proficiency (1=basic, 5=expert). Sel kosong = belum dikuasai.</CardDescription>
+            <CardTitle className="text-base flex items-center gap-2"><Award className="h-4 w-4" /> Skill × People Matrix</CardTitle>
+            <CardDescription>Number = proficiency level (1=basic, 5=expert). Empty cell = not yet acquired.</CardDescription>
           </div>
-          <Input placeholder="Cari skill / kategori…" value={filter} onChange={(e) => setFilter(e.target.value)} className="max-w-xs" data-testid="input-skill-filter" />
+          <Input placeholder="Search skill / category…" value={filter} onChange={(e) => setFilter(e.target.value)} className="max-w-xs" data-testid="input-skill-filter" />
         </CardHeader>
         <CardContent className="p-0 overflow-x-auto">
           {isLoading ? (
             <div className="p-4"><TableSkeleton columns={8} rows={6} /></div>
           ) : !data || data.users.length === 0 ? (
             <EmptyState
-              title="Belum ada data"
-              description="Belum ada konsultan/TW aktif untuk dipetakan."
+              title="No data yet"
+              description="No active consultant/TW to map."
               icon={<Award className="h-10 w-10 text-muted-foreground/50" />}
             />
           ) : (

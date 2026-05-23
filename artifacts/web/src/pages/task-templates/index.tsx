@@ -35,8 +35,8 @@ export default function TaskTemplatesPage() {
   if (user?.role !== "MANAGEMENT" && user?.role !== "PROJECT_MANAGER") {
     return (
       <EmptyState
-        title="Akses ditolak"
-        description="Task Templates hanya tersedia untuk Management & Project Manager."
+        title="Access denied"
+        description="Task Templates are only available to Management & Project Manager."
         icon={<ShieldAlert className="h-10 w-10 text-destructive/50" />}
       />
     );
@@ -48,22 +48,22 @@ export default function TaskTemplatesPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Task Templates</h1>
           <p className="text-muted-foreground">
-            Template Work Breakdown Structure (WBS) yang bisa diterapkan ke project baru sekali klik.
+            Work Breakdown Structure (WBS) templates that can be applied to new projects in one click.
           </p>
         </div>
         {isMgmt && (
           <Button onClick={() => { setEditing(null); setOpen(true); }} data-testid="button-new-template">
-            <Plus className="h-4 w-4 mr-2" /> Template Baru
+            <Plus className="h-4 w-4 mr-2" /> New Template
           </Button>
         )}
       </div>
 
       {isLoading ? (
-        <div className="text-muted-foreground text-sm">Memuat…</div>
+        <div className="text-muted-foreground text-sm">Loading…</div>
       ) : !templates || templates.length === 0 ? (
         <EmptyState
-          title="Belum ada template"
-          description={isMgmt ? "Buat template pertama untuk mempercepat setup project." : "Belum ada template yang dibuat."}
+          title="No templates yet"
+          description={isMgmt ? "Create the first template to speed up project setup." : "No templates have been created yet."}
           icon={<ListChecks className="h-10 w-10 text-muted-foreground/50" />}
         />
       ) : (
@@ -75,7 +75,7 @@ export default function TaskTemplatesPage() {
                   <div>
                     <CardTitle className="text-base">{t.name}</CardTitle>
                     <CardDescription>
-                      {t.businessUnitName ? `${t.businessUnitName} • ` : ""}{t.tasks.length} task
+                      {t.businessUnitName ? `${t.businessUnitName} • ` : ""}{t.tasks.length} tasks
                     </CardDescription>
                   </div>
                   {isMgmt && (
@@ -100,7 +100,7 @@ export default function TaskTemplatesPage() {
                       )}
                     </div>
                   ))}
-                  {t.tasks.length > 6 && <div className="text-[10px] text-muted-foreground">+{t.tasks.length - 6} lagi…</div>}
+                  {t.tasks.length > 6 && <div className="text-[10px] text-muted-foreground">+{t.tasks.length - 6} more…</div>}
                 </div>
               </CardContent>
             </Card>
@@ -121,10 +121,10 @@ function DeleteButton({ id, name }: { id: string; name: string }) {
   const del = useDeleteTaskTemplate({
     mutation: {
       onSuccess: () => {
-        toast({ title: "Template dihapus" });
+        toast({ title: "Template deleted" });
         qc.invalidateQueries({ queryKey: getListTaskTemplatesQueryKey() });
       },
-      onError: (e: any) => toast({ variant: "destructive", title: "Gagal hapus", description: e?.message }),
+      onError: (e: any) => toast({ variant: "destructive", title: "Failed to delete", description: e?.message }),
     },
   });
   return (
@@ -132,7 +132,7 @@ function DeleteButton({ id, name }: { id: string; name: string }) {
       size="icon"
       variant="ghost"
       onClick={() => {
-        if (confirm(`Hapus template "${name}"?`)) del.mutate({ id });
+        if (confirm(`Delete template "${name}"?`)) del.mutate({ id });
       }}
       data-testid={`delete-template-${id}`}
     >
@@ -155,28 +155,28 @@ function TemplateDialog({ open, onClose, editing }: { open: boolean; onClose: ()
   const create = useCreateTaskTemplate({
     mutation: {
       onSuccess: () => {
-        toast({ title: "Template dibuat" });
+        toast({ title: "Template created" });
         qc.invalidateQueries({ queryKey: getListTaskTemplatesQueryKey() });
         onClose();
       },
-      onError: (e: any) => toast({ variant: "destructive", title: "Gagal simpan", description: e?.message }),
+      onError: (e: any) => toast({ variant: "destructive", title: "Failed to save", description: e?.message }),
     },
   });
   const update = useUpdateTaskTemplate({
     mutation: {
       onSuccess: () => {
-        toast({ title: "Template diupdate" });
+        toast({ title: "Template updated" });
         qc.invalidateQueries({ queryKey: getListTaskTemplatesQueryKey() });
         onClose();
       },
-      onError: (e: any) => toast({ variant: "destructive", title: "Gagal update", description: e?.message }),
+      onError: (e: any) => toast({ variant: "destructive", title: "Failed to update", description: e?.message }),
     },
   });
 
   const submit = () => {
     const cleaned = tasks.filter((t) => t.title.trim());
     if (!name.trim() || cleaned.length === 0) {
-      toast({ variant: "destructive", title: "Nama dan minimal 1 task wajib diisi" });
+      toast({ variant: "destructive", title: "Name and at least 1 task are required" });
       return;
     }
     const payload = {
@@ -193,36 +193,36 @@ function TemplateDialog({ open, onClose, editing }: { open: boolean; onClose: ()
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{editing ? "Edit Template" : "Template Baru"}</DialogTitle>
-          <DialogDescription>Definisikan task-task standar yang otomatis dibuat saat template diterapkan.</DialogDescription>
+          <DialogTitle>{editing ? "Edit Template" : "New Template"}</DialogTitle>
+          <DialogDescription>Define the standard tasks that will be created automatically when the template is applied.</DialogDescription>
         </DialogHeader>
         <div className="space-y-4 pt-2">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label>Nama Template *</Label>
-              <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Contoh: Pentest Web Standar" data-testid="input-template-name" />
+              <Label>Template Name *</Label>
+              <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Example: Standard Web Pentest" data-testid="input-template-name" />
             </div>
             <div>
               <Label>Business Unit</Label>
               <Select value={businessUnitId || "__none"} onValueChange={(v) => setBusinessUnitId(v === "__none" ? "" : v)}>
-                <SelectTrigger><SelectValue placeholder="Opsional" /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Optional" /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="__none">— Semua BU —</SelectItem>
+                  <SelectItem value="__none">— All BUs —</SelectItem>
                   {bus?.map((b) => <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
           </div>
           <div>
-            <Label>Deskripsi</Label>
+            <Label>Description</Label>
             <Textarea value={description ?? ""} onChange={(e) => setDescription(e.target.value)} rows={2} />
           </div>
 
           <div>
             <div className="flex justify-between items-center mb-2">
-              <Label>Daftar Task ({tasks.length})</Label>
+              <Label>Task List ({tasks.length})</Label>
               <Button type="button" size="sm" variant="outline" onClick={() => setTasks([...tasks, { title: "", durationDays: 3, offsetDays: 0, billable: true, parentIndex: null }])}>
-                <Plus className="h-3 w-3 mr-1" /> Tambah Task
+                <Plus className="h-3 w-3 mr-1" /> Add Task
               </Button>
             </div>
             <div className="space-y-2">
@@ -230,10 +230,10 @@ function TemplateDialog({ open, onClose, editing }: { open: boolean; onClose: ()
                 <div key={i} className="flex gap-2 items-start border border-border/60 rounded p-2 bg-muted/10">
                   <span className="text-xs text-muted-foreground w-6 pt-2">{i + 1}.</span>
                   <div className="flex-1 grid grid-cols-12 gap-2">
-                    <Input className="col-span-5" placeholder="Judul task" value={t.title} onChange={(e) => {
+                    <Input className="col-span-5" placeholder="Task title" value={t.title} onChange={(e) => {
                       const copy = [...tasks]; copy[i] = { ...t, title: e.target.value }; setTasks(copy);
                     }} data-testid={`input-task-title-${i}`} />
-                    <Input className="col-span-2" type="number" min={1} placeholder="Hari" value={t.durationDays ?? ""} onChange={(e) => {
+                    <Input className="col-span-2" type="number" min={1} placeholder="Days" value={t.durationDays ?? ""} onChange={(e) => {
                       const copy = [...tasks]; copy[i] = { ...t, durationDays: e.target.value ? Number(e.target.value) : null }; setTasks(copy);
                     }} />
                     <Input className="col-span-2" type="number" min={0} placeholder="Offset" value={t.offsetDays ?? 0} onChange={(e) => {
@@ -251,7 +251,7 @@ function TemplateDialog({ open, onClose, editing }: { open: boolean; onClose: ()
                       <SelectContent>
                         <SelectItem value="__root">— Top-level —</SelectItem>
                         {tasks.slice(0, i).map((p, pi) => (
-                          <SelectItem key={pi} value={String(pi)}>{pi + 1}. {p.title || "(belum diisi)"}</SelectItem>
+                          <SelectItem key={pi} value={String(pi)}>{pi + 1}. {p.title || "(not filled in)"}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -263,14 +263,14 @@ function TemplateDialog({ open, onClose, editing }: { open: boolean; onClose: ()
               ))}
             </div>
             <p className="text-[10px] text-muted-foreground mt-2">
-              Hari = durasi. Offset = berapa hari setelah project start. Parent = task induk untuk WBS.
+              Days = duration. Offset = number of days after project start. Parent = parent task for the WBS.
             </p>
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>Batal</Button>
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
           <Button onClick={submit} disabled={create.isPending || update.isPending} data-testid="button-save-template">
-            {editing ? "Update" : "Simpan"}
+            {editing ? "Update" : "Save"}
           </Button>
         </DialogFooter>
       </DialogContent>

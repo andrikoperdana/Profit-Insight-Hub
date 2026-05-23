@@ -547,7 +547,7 @@ export default function LeadsPage() {
                               onClick={() => navigate(`/projects/new?leadId=${l.id}`)}
                               data-testid={`button-register-${l.id}`}
                             >
-                              <ArrowRight className="h-3 w-3 mr-1" /> Daftarkan Project
+                              <ArrowRight className="h-3 w-3 mr-1" /> Register Project
                             </Button>
                           )}
                           {l.convertedProjectId && (

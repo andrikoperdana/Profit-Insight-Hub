@@ -293,7 +293,7 @@ export default function ProjectDetail() {
           )}
           {(user?.role === "MANAGEMENT" ||
             (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id)) && (
-            <TabsTrigger value="activity" data-testid="tab-trigger-activity">Aktivitas</TabsTrigger>
+            <TabsTrigger value="activity" data-testid="tab-trigger-activity">Activity</TabsTrigger>
           )}
         </TabsList>
 

@@ -24,7 +24,7 @@ function CalendarFeedCard() {
       const resp = await customFetch<{ token: string }>("/api/calendar/token");
       setToken(resp.token);
     } catch (e: any) {
-      toast({ title: "Gagal", description: e?.message ?? "Tidak dapat membuat token", variant: "destructive" });
+      toast({ title: "Failed", description: e?.message ?? "Unable to create token", variant: "destructive" });
     } finally {
       setLoading(false);
     }
@@ -35,9 +35,9 @@ function CalendarFeedCard() {
     try {
       const resp = await customFetch<{ token: string }>("/api/calendar/regenerate", { method: "POST" });
       setToken(resp.token);
-      toast({ title: "URL diperbarui", description: "URL lama otomatis tidak berlaku lagi." });
+      toast({ title: "URL updated", description: "The previous URL has been automatically invalidated." });
     } catch (e: any) {
-      toast({ title: "Gagal", description: e?.message ?? "Tidak dapat regenerate", variant: "destructive" });
+      toast({ title: "Failed", description: e?.message ?? "Unable to regenerate", variant: "destructive" });
     } finally {
       setLoading(false);
     }
@@ -52,9 +52,9 @@ function CalendarFeedCard() {
       await navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
-      toast({ title: "URL disalin", description: "Tempel di Google/Outlook/Apple Calendar." });
+      toast({ title: "URL copied", description: "Paste it into Google/Outlook/Apple Calendar." });
     } catch {
-      toast({ title: "Gagal menyalin", variant: "destructive" });
+      toast({ title: "Failed to copy", variant: "destructive" });
     }
   };
 
@@ -65,7 +65,7 @@ function CalendarFeedCard() {
           <Calendar className="h-5 w-5 text-primary" /> Calendar Feed (ICS)
         </CardTitle>
         <CardDescription>
-          Subscribe agar deadline project, task yang ditugaskan, dan milestone billing muncul otomatis di
+          Subscribe so project deadlines, assigned tasks, and billing milestones appear automatically in
           Google Calendar / Outlook / Apple Calendar.
         </CardDescription>
       </CardHeader>
@@ -73,7 +73,7 @@ function CalendarFeedCard() {
         {!token ? (
           <Button onClick={generate} disabled={loading}>
             <Calendar className="h-4 w-4 mr-2" />
-            {loading ? "Membuat URL..." : "Buat URL Subscribe"}
+            {loading ? "Creating URL..." : "Create Subscribe URL"}
           </Button>
         ) : (
           <>
@@ -82,15 +82,15 @@ function CalendarFeedCard() {
               <Button variant="outline" onClick={copy} className="shrink-0">
                 {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
               </Button>
-              <Button variant="outline" onClick={regenerate} disabled={loading} className="shrink-0" title="Regenerate – membatalkan URL lama secara langsung">
+              <Button variant="outline" onClick={regenerate} disabled={loading} className="shrink-0" title="Regenerate – immediately invalidates the previous URL">
                 <RefreshCw className="h-4 w-4" />
               </Button>
             </div>
             <div className="text-xs text-muted-foreground space-y-1">
-              <p><strong>Google Calendar:</strong> Other calendars → From URL → paste link di atas.</p>
+              <p><strong>Google Calendar:</strong> Other calendars → From URL → paste the link above.</p>
               <p><strong>Outlook:</strong> Add calendar → Subscribe from web → paste link.</p>
               <p><strong>Apple Calendar:</strong> File → New Calendar Subscription → paste link.</p>
-              <p className="pt-1">URL berlaku 365 hari. Jangan bagikan ke orang lain — siapapun dengan URL ini bisa lihat agenda Anda.</p>
+              <p className="pt-1">The URL is valid for 365 days. Do not share it with anyone — anyone with this URL can view your agenda.</p>
             </div>
           </>
         )}

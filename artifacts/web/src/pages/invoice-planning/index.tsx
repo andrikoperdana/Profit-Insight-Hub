@@ -397,7 +397,7 @@ export default function InvoicePlanningPage() {
         <span className="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300">Planned</span>
         <span className="px-2 py-0.5 rounded bg-amber-500/15 text-amber-300">Invoiced (outstanding)</span>
         <span className="px-2 py-0.5 rounded bg-blue-500/15 text-blue-300">Paid</span>
-        <span className="text-muted-foreground/70">Values displayed in compact form (M = juta, B = miliar). Hover a cell for details.</span>
+        <span className="text-muted-foreground/70">Values displayed in compact form (M = million, B = billion). Hover a cell for details.</span>
       </div>
     </div>
   );

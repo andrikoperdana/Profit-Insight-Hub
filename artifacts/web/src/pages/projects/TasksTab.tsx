@@ -54,12 +54,12 @@ function ApplyTemplateButton({ projectId }: { projectId: string }) {
   const apply = useApplyTaskTemplate({
     mutation: {
       onSuccess: (res) => {
-        toast({ title: `${res.created} task dibuat dari template` });
+        toast({ title: `${res.created} tasks created from template` });
         qc.invalidateQueries({ queryKey: getListProjectTasksQueryKey(projectId) });
         setOpen(false);
         setTemplateId("");
       },
-      onError: (e: any) => toast({ variant: "destructive", title: "Gagal apply", description: e?.message }),
+      onError: (e: any) => toast({ variant: "destructive", title: "Failed to apply", description: e?.message }),
     },
   });
   return (
@@ -71,17 +71,17 @@ function ApplyTemplateButton({ projectId }: { projectId: string }) {
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Apply Task Template</DialogTitle>
-            <DialogDescription>Template akan membuat task otomatis dengan tanggal relatif terhadap start date.</DialogDescription>
+            <DialogDescription>The template will create tasks automatically with dates relative to the start date.</DialogDescription>
           </DialogHeader>
           <div className="space-y-3 pt-2">
             <div>
               <Label>Template</Label>
               <Select value={templateId} onValueChange={setTemplateId}>
-                <SelectTrigger data-testid="select-template"><SelectValue placeholder="Pilih template" /></SelectTrigger>
+                <SelectTrigger data-testid="select-template"><SelectValue placeholder="Select template" /></SelectTrigger>
                 <SelectContent>
-                  {templates?.length === 0 && <SelectItem value="__none" disabled>Belum ada template</SelectItem>}
+                  {templates?.length === 0 && <SelectItem value="__none" disabled>No templates yet</SelectItem>}
                   {templates?.map((t) => (
-                    <SelectItem key={t.id} value={t.id}>{t.name} ({t.tasks.length} task)</SelectItem>
+                    <SelectItem key={t.id} value={t.id}>{t.name} ({t.tasks.length} tasks)</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -89,13 +89,13 @@ function ApplyTemplateButton({ projectId }: { projectId: string }) {
             <div>
               <Label>Start Date</Label>
               <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-              <p className="text-[10px] text-muted-foreground mt-1">Task pertama dimulai dari tanggal ini.</p>
+              <p className="text-[10px] text-muted-foreground mt-1">The first task starts from this date.</p>
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setOpen(false)}>Batal</Button>
+            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
             <Button onClick={() => apply.mutate({ id: projectId, data: { templateId, startDate } })} disabled={!templateId || apply.isPending} data-testid="button-apply-template-confirm">
-              {apply.isPending ? "Menerapkan…" : "Apply"}
+              {apply.isPending ? "Applying…" : "Apply"}
             </Button>
           </DialogFooter>
         </DialogContent>

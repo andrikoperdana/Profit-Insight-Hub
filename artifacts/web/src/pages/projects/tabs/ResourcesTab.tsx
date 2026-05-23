@@ -200,7 +200,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
   const writerOptions = canEdit ? availableWriters : principalWriterPool;
 
   // Other Resources: anyone active in the system who isn't already a Konsultan/TW/AdminProject
-  // resource on this project. Free-text "Role di Project" required.
+  // resource on this project. Free-text "Role on Project" required.
   const otherList = allList.filter(
     (r: any) => r.userRole !== "KONSULTAN" && r.userRole !== "TECHNICAL_WRITER",
   );
@@ -350,7 +350,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                 onClick={() => setSuggestRole("KONSULTAN")}
                 data-testid="button-suggest-konsultan"
               >
-                <Sparkles className="h-4 w-4 mr-1" /> Saran
+                <Sparkles className="h-4 w-4 mr-1" /> Suggest
               </Button>
               <Button size="sm" onClick={() => setAddingRole("KONSULTAN")} data-testid="button-add-konsultan">
                 + Add Konsultan
@@ -465,7 +465,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                 onClick={() => setSuggestRole("TECHNICAL_WRITER")}
                 data-testid="button-suggest-tw"
               >
-                <Sparkles className="h-4 w-4 mr-1" /> Saran
+                <Sparkles className="h-4 w-4 mr-1" /> Suggest
               </Button>
               <Button size="sm" onClick={() => setAddingRole("TECHNICAL_WRITER")} data-testid="button-add-tw">
                 + Add Technical Writer
@@ -599,7 +599,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                 <thead>
                   <tr className="text-left text-xs text-muted-foreground border-b border-border">
                     <th className="py-2 pr-3 font-medium">Name</th>
-                    <th className="py-2 pr-3 font-medium">Role di Project</th>
+                    <th className="py-2 pr-3 font-medium">Role on Project</th>
                     <th className="py-2 pr-3 font-medium">System Role</th>
                     <th className="py-2 pr-3 font-medium text-right">Planned (md)</th>
                     <th className="py-2 pr-3 font-medium text-right">Actual (md)</th>
@@ -726,8 +726,8 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
               <Input
                 placeholder={
                   addingRole === "OTHER"
-                    ? "cth. SOC Manager, Security Engineer, Junior SE, Sales Support"
-                    : "cth. Lead Consultant, Penetration Tester"
+                    ? "e.g. SOC Manager, Security Engineer, Junior SE, Sales Support"
+                    : "e.g. Lead Consultant, Penetration Tester"
                 }
                 value={form.roleInProject}
                 onChange={(e) => setForm({ ...form, roleInProject: e.target.value })}
