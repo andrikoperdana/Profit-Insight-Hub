@@ -233,3 +233,9 @@ id = "2ms3tqKtK6AfU-Qamn3fT"
 uri = "file://exports/sample_leads.csv"
 type = "table"
 title = "Sample Leads CSV (10 leads)"
+
+[[outputs]]
+id = "MkoLtH40TIld8I-EDQhLS"
+uri = "file://scripts/exports/fit-gap-psohub.docx"
+type = "word_document"
+title = "Fit-Gap Analysis: SecureProfit Hub vs PSOhub"
