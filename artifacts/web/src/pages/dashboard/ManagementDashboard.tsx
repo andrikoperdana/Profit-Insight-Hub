@@ -22,6 +22,7 @@ import { ProjectStatus, useListProjects } from "@workspace/api-client-react";
 import WelcomeBanner from "@/components/dashboard/WelcomeBanner";
 import { AlertTriangle } from "lucide-react";
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useAuth } from "@/lib/auth";
 
 function SpkMissingIcon() {
   return (
@@ -39,6 +40,8 @@ function SpkMissingIcon() {
 }
 
 export default function Dashboard() {
+  const { user } = useAuth();
+  const isFinance = user?.role === UserRole.FINANCE;
   const dashQc = useQueryClient();
   useEffect(() => {
     customFetch("/api/notifications/run-checks", { method: "POST" })
@@ -108,7 +111,7 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <WelcomeBanner subtitle="Executive snapshot: portfolio health, profitability, and team utilization." />
+      <WelcomeBanner subtitle={isFinance ? "Executive snapshot: portfolio health & profitability." : "Executive snapshot: portfolio health, profitability, and team utilization."} />
 
       <a href="/reports">
         <Card className="cursor-pointer border-primary/30 bg-primary/5 hover:border-primary/60 transition" data-testid="card-reports-shortcut">
@@ -192,16 +195,18 @@ export default function Dashboard() {
                 </p>
               </CardContent>
             </Card>
-            <Card className="border-border shadow-sm">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Pending Approvals</CardTitle>
-                <Clock className="h-4 w-4 text-amber-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-foreground">{summary.pendingTimesheets}</div>
-                <p className="text-xs text-muted-foreground mt-1">Timesheets</p>
-              </CardContent>
-            </Card>
+            {!isFinance && (
+              <Card className="border-border shadow-sm">
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">Pending Approvals</CardTitle>
+                  <Clock className="h-4 w-4 text-amber-500" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-foreground">{summary.pendingTimesheets}</div>
+                  <p className="text-xs text-muted-foreground mt-1">Timesheets</p>
+                </CardContent>
+              </Card>
+            )}
           </>
         )}
       </div>
@@ -243,10 +248,10 @@ export default function Dashboard() {
 
       {/* PM Allocation: managers reporting up to PMO */}
       <CrmSummaryCard />
-      <PMAllocationCard />
+      {!isFinance && <PMAllocationCard />}
 
       {/* Resource Utilization */}
-      <ResourceUtilizationSection />
+      {!isFinance && <ResourceUtilizationSection />}
 
       <div className="grid gap-6 md:grid-cols-7 lg:grid-cols-7">
         {/* Profit Trend Chart */}
@@ -406,37 +411,39 @@ export default function Dashboard() {
         </Card>
 
         {/* Recent Activity */}
-        <Card className="border-border shadow-sm flex flex-col">
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-            <CardDescription>Latest system events</CardDescription>
-          </CardHeader>
-          <CardContent className="flex-1">
-            {loadingActivity || !recentActivity ? (
-              <TableSkeleton columns={1} rows={5} />
-            ) : (
-              <div className="space-y-4">
-                {recentActivity.slice(0, 10).map((activity) => (
-                  <div key={activity.id} className="flex items-start space-x-4">
-                    <div className="mt-0.5 bg-muted p-1.5 rounded-full border border-border">
-                      <Activity className="h-3 w-3 text-muted-foreground" />
-                    </div>
-                    <div className="flex-1 space-y-1">
-                      <p className="text-sm">{activity.message}</p>
-                      <div className="flex items-center text-xs text-muted-foreground space-x-2">
-                        {activity.userName && <span>{activity.userName}</span>}
-                        {activity.userName && activity.projectName && <span>•</span>}
-                        {activity.projectName && <span>{activity.projectName}</span>}
-                        <span>•</span>
-                        <span>{formatDistanceToNow(new Date(activity.createdAt), { addSuffix: true })}</span>
+        {!isFinance && (
+          <Card className="border-border shadow-sm flex flex-col">
+            <CardHeader>
+              <CardTitle>Recent Activity</CardTitle>
+              <CardDescription>Latest system events</CardDescription>
+            </CardHeader>
+            <CardContent className="flex-1">
+              {loadingActivity || !recentActivity ? (
+                <TableSkeleton columns={1} rows={5} />
+              ) : (
+                <div className="space-y-4">
+                  {recentActivity.slice(0, 10).map((activity) => (
+                    <div key={activity.id} className="flex items-start space-x-4">
+                      <div className="mt-0.5 bg-muted p-1.5 rounded-full border border-border">
+                        <Activity className="h-3 w-3 text-muted-foreground" />
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <p className="text-sm">{activity.message}</p>
+                        <div className="flex items-center text-xs text-muted-foreground space-x-2">
+                          {activity.userName && <span>{activity.userName}</span>}
+                          {activity.userName && activity.projectName && <span>•</span>}
+                          {activity.projectName && <span>{activity.projectName}</span>}
+                          <span>•</span>
+                          <span>{formatDistanceToNow(new Date(activity.createdAt), { addSuffix: true })}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
       </div>
 
     </div>
