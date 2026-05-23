@@ -87,9 +87,9 @@ export default function VatRecapPage() {
               <Receipt className="h-6 w-6 text-primary" /> Monthly VAT Recap
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Aggregate DPP and VAT across all milestones that have been invoiced or paid,
-              keyed by <span className="font-mono">invoicedAt</span>. Useful as a reference
-              when preparing the monthly VAT return (Indonesian SPT Masa PPN).
+              Monthly summary of DPP and VAT from all billing milestones, grouped by the
+              month each invoice was issued. Use this as a reference when preparing the
+              monthly VAT return (SPT Masa PPN).
             </p>
           </div>
           <div className="flex items-center gap-3">
