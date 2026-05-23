@@ -1,11 +1,103 @@
+import { useState } from "react";
 import { useAuth } from "@/lib/auth";
-import { useGetMe } from "@workspace/api-client-react";
+import { useGetMe, customFetch } from "@workspace/api-client-react";
 import { RoleLabels } from "@/lib/roles";
 import { formatIDR } from "@/lib/format";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { LoadingPage } from "@/components/common/Loading";
+import { Calendar, Copy, RefreshCw, Check } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+
+function CalendarFeedCard() {
+  const { toast } = useToast();
+  const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const generate = async () => {
+    setLoading(true);
+    try {
+      const resp = await customFetch<{ token: string }>("/api/calendar/token");
+      setToken(resp.token);
+    } catch (e: any) {
+      toast({ title: "Gagal", description: e?.message ?? "Tidak dapat membuat token", variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const regenerate = async () => {
+    setLoading(true);
+    try {
+      const resp = await customFetch<{ token: string }>("/api/calendar/regenerate", { method: "POST" });
+      setToken(resp.token);
+      toast({ title: "URL diperbarui", description: "URL lama otomatis tidak berlaku lagi." });
+    } catch (e: any) {
+      toast({ title: "Gagal", description: e?.message ?? "Tidak dapat regenerate", variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  const url = token ? `${origin}/api/calendar/ics?token=${token}` : "";
+
+  const copy = async () => {
+    if (!url) return;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+      toast({ title: "URL disalin", description: "Tempel di Google/Outlook/Apple Calendar." });
+    } catch {
+      toast({ title: "Gagal menyalin", variant: "destructive" });
+    }
+  };
+
+  return (
+    <Card className="border-border shadow-sm">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Calendar className="h-5 w-5 text-primary" /> Calendar Feed (ICS)
+        </CardTitle>
+        <CardDescription>
+          Subscribe agar deadline project, task yang ditugaskan, dan milestone billing muncul otomatis di
+          Google Calendar / Outlook / Apple Calendar.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {!token ? (
+          <Button onClick={generate} disabled={loading}>
+            <Calendar className="h-4 w-4 mr-2" />
+            {loading ? "Membuat URL..." : "Buat URL Subscribe"}
+          </Button>
+        ) : (
+          <>
+            <div className="flex gap-2">
+              <Input readOnly value={url} className="font-mono text-xs" data-testid="ics-url" />
+              <Button variant="outline" onClick={copy} className="shrink-0">
+                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              </Button>
+              <Button variant="outline" onClick={regenerate} disabled={loading} className="shrink-0" title="Regenerate – membatalkan URL lama secara langsung">
+                <RefreshCw className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="text-xs text-muted-foreground space-y-1">
+              <p><strong>Google Calendar:</strong> Other calendars → From URL → paste link di atas.</p>
+              <p><strong>Outlook:</strong> Add calendar → Subscribe from web → paste link.</p>
+              <p><strong>Apple Calendar:</strong> File → New Calendar Subscription → paste link.</p>
+              <p className="pt-1">URL berlaku 365 hari. Jangan bagikan ke orang lain — siapapun dengan URL ini bisa lihat agenda Anda.</p>
+            </div>
+          </>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
 
 export default function Settings() {
   const { user } = useAuth();
@@ -70,6 +162,8 @@ export default function Settings() {
           </div>
         </CardContent>
       </Card>
+
+      <CalendarFeedCard />
     </div>
   );
 }

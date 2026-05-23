@@ -1,5 +1,7 @@
 import { useParams, Link } from "wouter";
 import { useState, useRef, useEffect, useLayoutEffect } from "react";
+import SkillRecommenderDialog from "../components/SkillRecommenderDialog";
+import { Sparkles } from "lucide-react";
 import {
   useGetProject,
   useUpdateTask,
@@ -119,6 +121,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
   });
   const [addingRole, setAddingRole] = useState<null | "KONSULTAN" | "TECHNICAL_WRITER" | "OTHER">(null);
   const [form, setForm] = useState({ userId: "", roleInProject: "", plannedMandays: "10", dailyRate: "1500000" });
+  const [suggestRole, setSuggestRole] = useState<null | "KONSULTAN" | "TECHNICAL_WRITER">(null);
 
   const updateProject = useUpdateProject({
     mutation: {
@@ -340,9 +343,19 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
             </CardDescription>
           </div>
           {canEdit ? (
-            <Button size="sm" onClick={() => setAddingRole("KONSULTAN")} className="shrink-0" data-testid="button-add-konsultan">
-              + Add Konsultan
-            </Button>
+            <div className="flex gap-2 shrink-0">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setSuggestRole("KONSULTAN")}
+                data-testid="button-suggest-konsultan"
+              >
+                <Sparkles className="h-4 w-4 mr-1" /> Saran
+              </Button>
+              <Button size="sm" onClick={() => setAddingRole("KONSULTAN")} data-testid="button-add-konsultan">
+                + Add Konsultan
+              </Button>
+            </div>
           ) : canPrincipalProposeKonsultan ? (
             <Button size="sm" onClick={() => setAddingRole("KONSULTAN")} className="shrink-0" data-testid="button-propose-konsultan">
               + Propose Konsultan
@@ -445,9 +458,19 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
             </CardDescription>
           </div>
           {canEdit ? (
-            <Button size="sm" onClick={() => setAddingRole("TECHNICAL_WRITER")} className="shrink-0" data-testid="button-add-tw">
-              + Add Technical Writer
-            </Button>
+            <div className="flex gap-2 shrink-0">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setSuggestRole("TECHNICAL_WRITER")}
+                data-testid="button-suggest-tw"
+              >
+                <Sparkles className="h-4 w-4 mr-1" /> Saran
+              </Button>
+              <Button size="sm" onClick={() => setAddingRole("TECHNICAL_WRITER")} data-testid="button-add-tw">
+                + Add Technical Writer
+              </Button>
+            </div>
           ) : canPrincipalProposeTw ? (
             <Button size="sm" onClick={() => setAddingRole("TECHNICAL_WRITER")} className="shrink-0" data-testid="button-propose-tw">
               + Propose Technical Writer
@@ -746,6 +769,20 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {suggestRole && (
+        <SkillRecommenderDialog
+          open={!!suggestRole}
+          onOpenChange={(o) => !o && setSuggestRole(null)}
+          projectId={projectId}
+          role={suggestRole}
+          onSelect={(userId) => {
+            setAddingRole(suggestRole);
+            setForm((f) => ({ ...f, userId }));
+            setSuggestRole(null);
+          }}
+        />
+      )}
     </div>
   );
 }

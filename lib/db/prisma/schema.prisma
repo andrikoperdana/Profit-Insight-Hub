@@ -121,6 +121,8 @@ model User {
   leadActivities     LeadActivity[]    @relation("LeadActivityCreator")
   leaves             UserLeave[]
   taskTemplatesCreated TaskTemplate[]  @relation("TaskTemplateCreator")
+
+  calendarTokenVersion Int @default(0)
 }
 
 model Client {

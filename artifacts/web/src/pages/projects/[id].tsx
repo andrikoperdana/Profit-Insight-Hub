@@ -79,6 +79,7 @@ import ResourcesTab from "./tabs/ResourcesTab";
 import ExpensesTab from "./tabs/ExpensesTab";
 import ReportTab from "./tabs/ReportTab";
 import DocumentsTab from "./tabs/DocumentsTab";
+import ActivityTab from "./tabs/ActivityTab";
 import DraftCompletionCard from "./components/DraftCompletionCard";
 import {
   Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis,
@@ -290,6 +291,10 @@ export default function ProjectDetail() {
           {(user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER") && (
             <TabsTrigger value="survey">Customer Survey</TabsTrigger>
           )}
+          {(user?.role === "MANAGEMENT" ||
+            (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id)) && (
+            <TabsTrigger value="activity" data-testid="tab-trigger-activity">Aktivitas</TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value="overview" className="pt-4 m-0">
@@ -325,6 +330,9 @@ export default function ProjectDetail() {
         </TabsContent>
         <TabsContent value="survey" className="pt-4 m-0">
           <SurveyTab projectId={id} />
+        </TabsContent>
+        <TabsContent value="activity" className="pt-4 m-0">
+          <ActivityTab projectId={id} />
         </TabsContent>
       </Tabs>
     </div>

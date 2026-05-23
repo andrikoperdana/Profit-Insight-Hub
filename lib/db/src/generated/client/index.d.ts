@@ -3563,10 +3563,12 @@ export namespace Prisma {
 
   export type UserAvgAggregateOutputType = {
     dailyRate: number | null
+    calendarTokenVersion: number | null
   }
 
   export type UserSumAggregateOutputType = {
     dailyRate: number | null
+    calendarTokenVersion: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -3585,6 +3587,7 @@ export namespace Prisma {
     businessUnitId: string | null
     managerId: string | null
     principalId: string | null
+    calendarTokenVersion: number | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -3603,6 +3606,7 @@ export namespace Prisma {
     businessUnitId: string | null
     managerId: string | null
     principalId: string | null
+    calendarTokenVersion: number | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -3621,16 +3625,19 @@ export namespace Prisma {
     businessUnitId: number
     managerId: number
     principalId: number
+    calendarTokenVersion: number
     _all: number
   }
 
 
   export type UserAvgAggregateInputType = {
     dailyRate?: true
+    calendarTokenVersion?: true
   }
 
   export type UserSumAggregateInputType = {
     dailyRate?: true
+    calendarTokenVersion?: true
   }
 
   export type UserMinAggregateInputType = {
@@ -3649,6 +3656,7 @@ export namespace Prisma {
     businessUnitId?: true
     managerId?: true
     principalId?: true
+    calendarTokenVersion?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -3667,6 +3675,7 @@ export namespace Prisma {
     businessUnitId?: true
     managerId?: true
     principalId?: true
+    calendarTokenVersion?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -3685,6 +3694,7 @@ export namespace Prisma {
     businessUnitId?: true
     managerId?: true
     principalId?: true
+    calendarTokenVersion?: true
     _all?: true
   }
 
@@ -3790,6 +3800,7 @@ export namespace Prisma {
     businessUnitId: string | null
     managerId: string | null
     principalId: string | null
+    calendarTokenVersion: number
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -3827,6 +3838,7 @@ export namespace Prisma {
     businessUnitId?: boolean
     managerId?: boolean
     principalId?: boolean
+    calendarTokenVersion?: boolean
     businessUnit?: boolean | User$businessUnitArgs<ExtArgs>
     manager?: boolean | User$managerArgs<ExtArgs>
     reports?: boolean | User$reportsArgs<ExtArgs>
@@ -3874,6 +3886,7 @@ export namespace Prisma {
     businessUnitId?: boolean
     managerId?: boolean
     principalId?: boolean
+    calendarTokenVersion?: boolean
     businessUnit?: boolean | User$businessUnitArgs<ExtArgs>
     manager?: boolean | User$managerArgs<ExtArgs>
     principal?: boolean | User$principalArgs<ExtArgs>
@@ -3895,6 +3908,7 @@ export namespace Prisma {
     businessUnitId?: boolean
     managerId?: boolean
     principalId?: boolean
+    calendarTokenVersion?: boolean
   }
 
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3982,6 +3996,7 @@ export namespace Prisma {
       businessUnitId: string | null
       managerId: string | null
       principalId: string | null
+      calendarTokenVersion: number
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -4418,6 +4433,7 @@ export namespace Prisma {
     readonly businessUnitId: FieldRef<"User", 'String'>
     readonly managerId: FieldRef<"User", 'String'>
     readonly principalId: FieldRef<"User", 'String'>
+    readonly calendarTokenVersion: FieldRef<"User", 'Int'>
   }
     
 
@@ -29441,7 +29457,8 @@ export namespace Prisma {
     updatedAt: 'updatedAt',
     businessUnitId: 'businessUnitId',
     managerId: 'managerId',
-    principalId: 'principalId'
+    principalId: 'principalId',
+    calendarTokenVersion: 'calendarTokenVersion'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -29953,20 +29970,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'ProjectStatus'
-   */
-  export type EnumProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'ProjectStatus[]'
-   */
-  export type ListEnumProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectStatus[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -29977,6 +29980,20 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ProjectStatus'
+   */
+  export type EnumProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'ProjectStatus[]'
+   */
+  export type ListEnumProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectStatus[]'>
     
 
 
@@ -30121,6 +30138,7 @@ export namespace Prisma {
     businessUnitId?: StringNullableFilter<"User"> | string | null
     managerId?: StringNullableFilter<"User"> | string | null
     principalId?: StringNullableFilter<"User"> | string | null
+    calendarTokenVersion?: IntFilter<"User"> | number
     businessUnit?: XOR<BusinessUnitNullableRelationFilter, BusinessUnitWhereInput> | null
     manager?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     reports?: UserListRelationFilter
@@ -30167,6 +30185,7 @@ export namespace Prisma {
     businessUnitId?: SortOrderInput | SortOrder
     managerId?: SortOrderInput | SortOrder
     principalId?: SortOrderInput | SortOrder
+    calendarTokenVersion?: SortOrder
     businessUnit?: BusinessUnitOrderByWithRelationInput
     manager?: UserOrderByWithRelationInput
     reports?: UserOrderByRelationAggregateInput
@@ -30216,6 +30235,7 @@ export namespace Prisma {
     businessUnitId?: StringNullableFilter<"User"> | string | null
     managerId?: StringNullableFilter<"User"> | string | null
     principalId?: StringNullableFilter<"User"> | string | null
+    calendarTokenVersion?: IntFilter<"User"> | number
     businessUnit?: XOR<BusinessUnitNullableRelationFilter, BusinessUnitWhereInput> | null
     manager?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     reports?: UserListRelationFilter
@@ -30262,6 +30282,7 @@ export namespace Prisma {
     businessUnitId?: SortOrderInput | SortOrder
     managerId?: SortOrderInput | SortOrder
     principalId?: SortOrderInput | SortOrder
+    calendarTokenVersion?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -30288,6 +30309,7 @@ export namespace Prisma {
     businessUnitId?: StringNullableWithAggregatesFilter<"User"> | string | null
     managerId?: StringNullableWithAggregatesFilter<"User"> | string | null
     principalId?: StringNullableWithAggregatesFilter<"User"> | string | null
+    calendarTokenVersion?: IntWithAggregatesFilter<"User"> | number
   }
 
   export type ClientWhereInput = {
@@ -32321,6 +32343,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -32367,6 +32390,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -32407,6 +32431,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -32453,6 +32478,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -32496,6 +32522,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
   }
 
   export type UserUpdateManyMutationInput = {
@@ -32511,6 +32538,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -32529,6 +32557,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
   }
 
   export type ClientCreateInput = {
@@ -34793,6 +34822,17 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type BusinessUnitNullableRelationFilter = {
     is?: BusinessUnitWhereInput | null
     isNot?: BusinessUnitWhereInput | null
@@ -34994,10 +35034,12 @@ export namespace Prisma {
     businessUnitId?: SortOrder
     managerId?: SortOrder
     principalId?: SortOrder
+    calendarTokenVersion?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
     dailyRate?: SortOrder
+    calendarTokenVersion?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -35016,6 +35058,7 @@ export namespace Prisma {
     businessUnitId?: SortOrder
     managerId?: SortOrder
     principalId?: SortOrder
+    calendarTokenVersion?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -35034,10 +35077,12 @@ export namespace Prisma {
     businessUnitId?: SortOrder
     managerId?: SortOrder
     principalId?: SortOrder
+    calendarTokenVersion?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
     dailyRate?: SortOrder
+    calendarTokenVersion?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -35146,6 +35191,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type ClientCountOrderByAggregateInput = {
@@ -35360,17 +35421,6 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type SurveyQuestionCountOrderByAggregateInput = {
     id?: SortOrder
     key?: SortOrder
@@ -35413,22 +35463,6 @@ export namespace Prisma {
 
   export type SurveyQuestionSumOrderByAggregateInput = {
     order?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
   export type JsonFilter<$PrismaModel = never> = 
     | PatchUndefined<
@@ -36958,6 +36992,14 @@ export namespace Prisma {
     set?: Date | string
   }
 
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type BusinessUnitUpdateOneWithoutUsersNestedInput = {
     create?: XOR<BusinessUnitCreateWithoutUsersInput, BusinessUnitUncheckedCreateWithoutUsersInput>
     connectOrCreate?: BusinessUnitCreateOrConnectWithoutUsersInput
@@ -38198,14 +38240,6 @@ export namespace Prisma {
     deleteMany?: BillingMilestoneScalarWhereInput | BillingMilestoneScalarWhereInput[]
   }
 
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type ProjectCreateNestedOneWithoutSurveyResponsesInput = {
     create?: XOR<ProjectCreateWithoutSurveyResponsesInput, ProjectUncheckedCreateWithoutSurveyResponsesInput>
     connectOrCreate?: ProjectCreateOrConnectWithoutSurveyResponsesInput
@@ -39284,6 +39318,17 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type NestedIntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -39299,17 +39344,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type NestedIntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type NestedEnumUserRoleWithAggregatesFilter<$PrismaModel = never> = {
@@ -39412,11 +39446,20 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type NestedEnumProjectStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.ProjectStatus | EnumProjectStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.ProjectStatus[] | ListEnumProjectStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ProjectStatus[] | ListEnumProjectStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumProjectStatusFilter<$PrismaModel> | $Enums.ProjectStatus
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type NestedFloatFilter<$PrismaModel = never> = {
@@ -39428,6 +39471,13 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedEnumProjectStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjectStatus | EnumProjectStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ProjectStatus[] | ListEnumProjectStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProjectStatus[] | ListEnumProjectStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumProjectStatusFilter<$PrismaModel> | $Enums.ProjectStatus
   }
 
   export type NestedEnumProjectStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -39454,22 +39504,6 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
-  }
-
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
   export type NestedJsonFilter<$PrismaModel = never> = 
     | PatchUndefined<
@@ -39690,6 +39724,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
@@ -39735,6 +39770,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
@@ -39779,6 +39815,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     reports?: UserCreateNestedManyWithoutManagerInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
@@ -39823,6 +39860,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     businessUnitId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -39873,6 +39911,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -39918,6 +39957,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
@@ -39962,6 +40002,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -40006,6 +40047,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     businessUnitId?: string | null
     managerId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -41152,6 +41194,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
@@ -41197,6 +41240,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -41258,6 +41302,7 @@ export namespace Prisma {
     businessUnitId?: StringNullableFilter<"User"> | string | null
     managerId?: StringNullableFilter<"User"> | string | null
     principalId?: StringNullableFilter<"User"> | string | null
+    calendarTokenVersion?: IntFilter<"User"> | number
   }
 
   export type UserUpsertWithoutSuperviseesInput = {
@@ -41284,6 +41329,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -41329,6 +41375,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -42241,6 +42288,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -42286,6 +42334,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -42330,6 +42379,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -42375,6 +42425,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -42419,6 +42470,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -42464,6 +42516,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -42508,6 +42561,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -42553,6 +42607,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -42949,6 +43004,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -42994,6 +43050,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -43044,6 +43101,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -43089,6 +43147,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -43139,6 +43198,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -43184,6 +43244,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -43234,6 +43295,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -43279,6 +43341,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -43652,6 +43715,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -43697,6 +43761,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -43752,6 +43817,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -43797,6 +43863,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -43919,6 +43986,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -43964,6 +44032,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -44008,6 +44077,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -44053,6 +44123,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -44197,6 +44268,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -44242,6 +44314,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -44292,6 +44365,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -44337,6 +44411,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -44459,6 +44534,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -44504,6 +44580,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -44597,6 +44674,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -44642,6 +44720,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -44786,6 +44865,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -44831,6 +44911,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -44936,6 +45017,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -44981,6 +45063,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -45103,6 +45186,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -45148,6 +45232,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -45292,6 +45377,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -45337,6 +45423,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -45459,6 +45546,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -45504,6 +45592,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -45548,6 +45637,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -45593,6 +45683,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -45737,6 +45828,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -45782,6 +45874,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -45832,6 +45925,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -45877,6 +45971,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -45916,6 +46011,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
     principal?: UserCreateNestedOneWithoutSuperviseesInput
@@ -45960,6 +46056,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -46114,6 +46211,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -46159,6 +46257,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
@@ -46237,6 +46336,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -46282,6 +46382,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -46350,6 +46451,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -46395,6 +46497,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -46533,6 +46636,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -46578,6 +46682,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -46789,6 +46894,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -46834,6 +46940,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -46878,6 +46985,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -46923,6 +47031,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -47304,6 +47413,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -47349,6 +47459,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -47399,6 +47510,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -47444,6 +47556,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -48073,6 +48186,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -48118,6 +48232,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -48228,6 +48343,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -48273,6 +48389,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -48361,6 +48478,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -48406,6 +48524,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -48516,6 +48635,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -48561,6 +48681,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -48629,6 +48750,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -48674,6 +48796,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -48796,6 +48919,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -48841,6 +48965,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -48953,6 +49078,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -48998,6 +49124,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -49116,6 +49243,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -49161,6 +49289,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -49200,6 +49329,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -49245,6 +49375,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -49300,6 +49431,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -49345,6 +49477,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -49409,6 +49542,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -49454,6 +49588,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -49540,6 +49675,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -49585,6 +49721,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -49624,6 +49761,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    calendarTokenVersion?: number
     businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
     manager?: UserCreateNestedOneWithoutReportsInput
     reports?: UserCreateNestedManyWithoutManagerInput
@@ -49669,6 +49807,7 @@ export namespace Prisma {
     businessUnitId?: string | null
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
@@ -49724,6 +49863,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -49769,6 +49909,7 @@ export namespace Prisma {
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -49810,6 +49951,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     businessUnitId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
   }
 
   export type UserCreateManyPrincipalInput = {
@@ -49827,6 +49969,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     businessUnitId?: string | null
     managerId?: string | null
+    calendarTokenVersion?: number
   }
 
   export type UserSkillCreateManyUserInput = {
@@ -50209,6 +50352,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
@@ -50253,6 +50397,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -50295,6 +50440,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
   }
 
   export type UserUpdateWithoutPrincipalInput = {
@@ -50310,6 +50456,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
@@ -50354,6 +50501,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -50396,6 +50544,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
   }
 
   export type UserSkillUpdateWithoutUserInput = {
@@ -52286,6 +52435,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     managerId?: string | null
     principalId?: string | null
+    calendarTokenVersion?: number
   }
 
   export type TaskTemplateCreateManyBusinessUnitInput = {
@@ -52312,6 +52462,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     manager?: UserUpdateOneWithoutReportsNestedInput
     reports?: UserUpdateManyWithoutManagerNestedInput
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
@@ -52356,6 +52507,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
@@ -52398,6 +52550,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
   }
 
   export type TaskTemplateUpdateWithoutBusinessUnitInput = {

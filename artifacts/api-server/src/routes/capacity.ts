@@ -60,6 +60,13 @@ router.get("/capacity/calendar", async (req, res) => {
         },
         include: { project: true },
       },
+      leaves: {
+        where: {
+          startDate: { lt: end },
+          endDate: { gte: start },
+        },
+        select: { startDate: true, endDate: true, type: true, note: true },
+      },
     },
     orderBy: [{ role: "asc" }, { name: "asc" }],
   });
@@ -73,7 +80,7 @@ router.get("/capacity/calendar", async (req, res) => {
     dayList.push({ date: dayKey(d), isWorkday: dow !== 0 && dow !== 6 });
   }
 
-  type CellStatus = "AVAILABLE" | "ASSIGNED" | "OVERLOADED" | "IDLE" | "WEEKEND";
+  type CellStatus = "AVAILABLE" | "ASSIGNED" | "OVERLOADED" | "IDLE" | "WEEKEND" | "ON_LEAVE";
 
   const principals = new Map<string, string>();
   const specializations = new Set<string>();
@@ -106,9 +113,25 @@ router.get("/capacity/calendar", async (req, res) => {
     for (const a of assignments) principals.set(a.clientId, a.clientName);
     if (u.title) specializations.add(u.title);
 
+    // Build leave-day map
+    const leaveMap = new Map<string, string>();
+    for (const lv of u.leaves) {
+      const lvStart = new Date(lv.startDate);
+      lvStart.setHours(0, 0, 0, 0);
+      const lvEnd = new Date(lv.endDate);
+      lvEnd.setHours(0, 0, 0, 0);
+      for (let t = lvStart.getTime(); t <= lvEnd.getTime(); t += 86400000) {
+        leaveMap.set(dayKey(new Date(t)), String(lv.type));
+      }
+    }
+
     const cells = dayList.map((d) => {
       if (!d.isWorkday) {
-        return { date: d.date, status: "WEEKEND" as CellStatus, hours: 0, projects: [] as string[] };
+        return { date: d.date, status: "WEEKEND" as CellStatus, hours: 0, projects: [] as string[], leaveType: null as string | null };
+      }
+      const leaveType = leaveMap.get(d.date) ?? null;
+      if (leaveType) {
+        return { date: d.date, status: "ON_LEAVE" as CellStatus, hours: 0, projects: [], leaveType };
       }
       const ts = new Date(d.date).getTime();
       const isAssigned = assignments.some(
@@ -120,8 +143,16 @@ router.get("/capacity/calendar", async (req, res) => {
       if (hours > 8) status = "OVERLOADED";
       else if (isAssigned || hours > 0) status = "ASSIGNED";
       else status = "AVAILABLE";
-      return { date: d.date, status, hours, projects };
+      return { date: d.date, status, hours, projects, leaveType: null };
     });
+
+    // Weekly totals (Mon–Sun chunks), warning if >40h
+    const weeklyTotals: { weekStart: string; hours: number; warning: boolean }[] = [];
+    for (let i = 0; i < cells.length; i += 7) {
+      const chunk = cells.slice(i, i + 7);
+      const totalH = chunk.reduce((s, c) => s + (c.hours || 0), 0);
+      weeklyTotals.push({ weekStart: chunk[0]?.date ?? "", hours: totalH, warning: totalH > 40 });
+    }
 
     return {
       userId: u.id,
@@ -131,6 +162,7 @@ router.get("/capacity/calendar", async (req, res) => {
       currentClientId: assignments[0]?.clientId ?? null,
       currentClientName: assignments[0]?.clientName ?? null,
       cells,
+      weeklyTotals,
     };
   });
 

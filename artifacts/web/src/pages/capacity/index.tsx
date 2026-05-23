@@ -12,7 +12,8 @@ import { useAuth } from "@/lib/auth";
 import { exportSheets } from "@/lib/exports";
 import { RoleLabels } from "@/lib/roles";
 
-type Cell = { date: string; status: "AVAILABLE" | "ASSIGNED" | "OVERLOADED" | "WEEKEND"; hours: number; projects: string[] };
+type Cell = { date: string; status: "AVAILABLE" | "ASSIGNED" | "OVERLOADED" | "WEEKEND" | "ON_LEAVE"; hours: number; projects: string[]; leaveType?: string | null };
+type WeeklyTotal = { weekStart: string; hours: number; warning: boolean };
 type Row = {
   userId: string;
   userName: string;
@@ -21,6 +22,7 @@ type Row = {
   currentClientId: string | null;
   currentClientName: string | null;
   cells: Cell[];
+  weeklyTotals: WeeklyTotal[];
 };
 type Summary = { date: string; isWorkday: boolean; available: number; assigned: number; overloaded: number; byRole: Record<string, { available: number; assigned: number; overloaded: number }> };
 type ApiResp = {
@@ -54,6 +56,7 @@ const STATUS_STYLE: Record<Cell["status"], string> = {
   ASSIGNED: "bg-blue-500/15 text-blue-400 border border-blue-500/30",
   OVERLOADED: "bg-destructive/15 text-destructive border border-destructive/40",
   WEEKEND: "bg-muted/40 text-muted-foreground/50",
+  ON_LEAVE: "bg-slate-500/20 text-slate-300 border border-slate-500/40",
 };
 
 export default function CapacityPlanning() {
@@ -181,6 +184,8 @@ export default function CapacityPlanning() {
         <Badge className="bg-emerald-500/15 text-emerald-400 border-emerald-500/30">Available</Badge>
         <Badge className="bg-blue-500/15 text-blue-400 border-blue-500/30">Assigned</Badge>
         <Badge className="bg-destructive/15 text-destructive border-destructive/40">Overloaded</Badge>
+        <Badge className="bg-slate-500/20 text-slate-300 border-slate-500/40">On Leave</Badge>
+        <Badge variant="outline" className="text-amber-500 border-amber-500/40">Week &gt; 40h</Badge>
         <Badge variant="outline" className="text-muted-foreground"><Coffee className="h-3 w-3 mr-1" /> Weekend</Badge>
         <span className="text-sm text-muted-foreground ml-2">
           Range: {monthLabel(data.start)} · starting {shortDate(data.start)}
@@ -265,6 +270,7 @@ export default function CapacityPlanning() {
                       {shortDate(s.date)}
                     </th>
                   ))}
+                  <th className="p-2 text-center min-w-[80px] bg-muted/60">Week h</th>
                 </tr>
                 <tr className="text-[10px] text-muted-foreground border-t border-border">
                   <th className="text-left p-2 sticky left-0 bg-muted/40 z-10">Available slots</th>
@@ -273,12 +279,13 @@ export default function CapacityPlanning() {
                       {s.isWorkday ? <span className="text-emerald-400">{s.available}</span> : "—"}
                     </th>
                   ))}
+                  <th className="p-1 text-center font-normal bg-muted/60">—</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredRows.length === 0 && (
                   <tr>
-                    <td colSpan={1 + data.summary.length} className="p-6 text-center text-muted-foreground">
+                    <td colSpan={2 + data.summary.length} className="p-6 text-center text-muted-foreground">
                       No resources match the current filters.
                     </td>
                   </tr>
@@ -297,17 +304,23 @@ export default function CapacityPlanning() {
                       const label =
                         c.status === "WEEKEND"
                           ? "Weekend"
-                          : c.status === "AVAILABLE"
-                            ? "Available"
-                            : c.status === "OVERLOADED"
-                              ? `Overloaded · ${c.hours}h`
-                              : `Assigned · ${c.hours}h`;
+                          : c.status === "ON_LEAVE"
+                            ? `On leave${c.leaveType ? ` · ${c.leaveType}` : ""}`
+                            : c.status === "AVAILABLE"
+                              ? "Available"
+                              : c.status === "OVERLOADED"
+                                ? `Overloaded · ${c.hours}h`
+                                : `Assigned · ${c.hours}h`;
+                      const label_short =
+                        c.status === "WEEKEND" ? "—"
+                          : c.status === "ON_LEAVE" ? "L"
+                            : c.hours > 0 ? `${c.hours}h` : "·";
                       return (
                         <td key={c.date} className="p-1 text-center">
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <div className={`mx-auto h-7 w-12 rounded text-[10px] flex items-center justify-center ${cls}`}>
-                                {c.status === "WEEKEND" ? "—" : c.hours > 0 ? `${c.hours}h` : "·"}
+                                {label_short}
                               </div>
                             </TooltipTrigger>
                             <TooltipContent>
@@ -322,6 +335,33 @@ export default function CapacityPlanning() {
                         </td>
                       );
                     })}
+                    <td className="p-1 text-center bg-muted/30">
+                      <div className="flex flex-col items-center gap-0.5">
+                        {(row.weeklyTotals ?? []).map((w) => (
+                          <Tooltip key={w.weekStart}>
+                            <TooltipTrigger asChild>
+                              <div
+                                className={`h-7 w-14 rounded text-[10px] flex items-center justify-center font-medium ${
+                                  w.warning
+                                    ? "bg-amber-500/20 text-amber-400 border border-amber-500/40"
+                                    : "bg-muted text-muted-foreground"
+                                }`}
+                              >
+                                {w.hours}h
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <div className="text-xs">
+                                <div className="font-medium">Minggu {w.weekStart}</div>
+                                <div className={w.warning ? "text-amber-400" : "text-muted-foreground"}>
+                                  Total {w.hours}h{w.warning ? " · melebihi 40h/minggu" : ""}
+                                </div>
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        ))}
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>

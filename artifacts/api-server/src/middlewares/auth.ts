@@ -26,6 +26,17 @@ export async function requireAuth(
     res.status(401).json({ error: "Invalid token" });
     return;
   }
+  // Reject non-session tokens (e.g. calendar ICS subscription tokens) from
+  // being replayed as session credentials. Session tokens carry email+role.
+  const anyPayload = payload as unknown as { kind?: string; email?: string; role?: string };
+  if (anyPayload.kind && anyPayload.kind !== "session") {
+    res.status(401).json({ error: "Invalid token" });
+    return;
+  }
+  if (!anyPayload.email || !anyPayload.role) {
+    res.status(401).json({ error: "Invalid token" });
+    return;
+  }
   const user = await prisma.user.findUnique({
     where: { id: payload.sub },
     select: { id: true, isActive: true, role: true, deletedAt: true },
