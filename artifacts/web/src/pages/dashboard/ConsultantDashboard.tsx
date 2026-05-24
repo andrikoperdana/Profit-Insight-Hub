@@ -37,6 +37,7 @@ import {
   Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, Cell,
 } from "recharts";
 import WelcomeBanner from "@/components/dashboard/WelcomeBanner";
+import WeeklyEntryDialog from "@/pages/timesheets/WeeklyEntryDialog";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
@@ -198,16 +199,25 @@ function QuickLogCard({ loggedToday }: { loggedToday: number }) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { data: projects } = useListProjects({ status: "ACTIVE" });
+  const { data: myTasks } = useListMyTasks({ query: { queryKey: getListMyTasksQueryKey() } });
   const [projectId, setProjectId] = useState<string>("");
+  const [taskId, setTaskId] = useState<string>("");
   const [hours, setHours] = useState<number>(8);
   const [description, setDescription] = useState("");
+
+  const tasksForProject = useMemo(
+    () => (myTasks ?? []).filter((t) => t.projectId === projectId && t.status !== "DONE"),
+    [myTasks, projectId],
+  );
 
   const createTs = useCreateTimesheet({
     mutation: {
       onSuccess: () => {
         toast({ title: "Timesheet submitted", description: "Awaiting PM approval." });
         queryClient.invalidateQueries({ queryKey: getListTimesheetsQueryKey({ scope: "mine" }) });
+        queryClient.invalidateQueries({ queryKey: getListMyTasksQueryKey() });
         setDescription("");
+        setTaskId("");
       },
       onError: (err: any) => {
         toast({
@@ -249,23 +259,26 @@ function QuickLogCard({ loggedToday }: { loggedToday: number }) {
                 : "Daily target reached. Great work!"}
             </p>
           </div>
-          <div className="text-right">
-            <div className="relative h-2 w-32 sm:w-40 rounded-full bg-muted overflow-hidden">
-              <div
-                className="absolute inset-y-0 left-0 bg-primary transition-all duration-500"
-                style={{ width: `${target8}%` }}
-              />
+          <div className="flex items-center gap-3">
+            <div className="text-right">
+              <div className="relative h-2 w-32 sm:w-40 rounded-full bg-muted overflow-hidden">
+                <div
+                  className="absolute inset-y-0 left-0 bg-primary transition-all duration-500"
+                  style={{ width: `${target8}%` }}
+                />
+              </div>
+              <p className="text-[11px] text-muted-foreground mt-1">{target8.toFixed(0)}% of 8h</p>
             </div>
-            <p className="text-[11px] text-muted-foreground mt-1">{target8.toFixed(0)}% of 8h</p>
+            <WeeklyEntryDialog isAutoApprove={false} />
           </div>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-[1fr_auto] items-end">
+        <div className="grid gap-3 sm:grid-cols-2">
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
               Project
             </label>
-            <Select value={projectId} onValueChange={setProjectId}>
+            <Select value={projectId} onValueChange={(v) => { setProjectId(v); setTaskId(""); }}>
               <SelectTrigger className="h-12 text-base bg-background" data-testid="select-quicklog-project">
                 <SelectValue placeholder="Select an active project" />
               </SelectTrigger>
@@ -278,6 +291,35 @@ function QuickLogCard({ loggedToday }: { loggedToday: number }) {
               </SelectContent>
             </Select>
           </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              Task <span className="text-muted-foreground/70 normal-case">(optional)</span>
+            </label>
+            <Select
+              value={taskId || "__none__"}
+              onValueChange={(v) => setTaskId(v === "__none__" ? "" : v)}
+              disabled={!projectId}
+            >
+              <SelectTrigger className="h-12 text-base bg-background" data-testid="select-quicklog-task">
+                <SelectValue placeholder={projectId ? "No task (general project work)" : "Select a project first"} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__none__">No task (general project work)</SelectItem>
+                {tasksForProject.map((t) => (
+                  <SelectItem key={t.id} value={t.id}>
+                    {t.title}
+                  </SelectItem>
+                ))}
+                {projectId && tasksForProject.length === 0 && (
+                  <div className="px-2 py-2 text-xs text-muted-foreground">No open tasks assigned to you on this project.</div>
+                )}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-[1fr_auto] items-end">
+          <div />
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
               Hours
@@ -325,7 +367,13 @@ function QuickLogCard({ loggedToday }: { loggedToday: number }) {
             disabled={!canSubmit || createTs.isPending}
             onClick={() =>
               createTs.mutate({
-                data: { projectId, workDate, hours, description: description.trim() },
+                data: {
+                  projectId,
+                  workDate,
+                  hours,
+                  description: description.trim(),
+                  ...(taskId ? { taskId } : {}),
+                },
               })
             }
             className="h-12 text-base font-semibold shadow-sm"
