@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { prisma, type UserRole } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
+import { canViewDailyRate } from "../lib/serializers.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -56,7 +57,7 @@ router.get("/projects/:id/resources", async (req, res) => {
     res.status(404).json({ error: "Project not found" });
     return;
   }
-  const broad = role === "MANAGEMENT" || role === "ADMIN_PROJECT" || (role && role.startsWith("PRINCIPAL_"));
+  const broad = role === "MANAGEMENT" || role === "ADMIN_PROJECT" || role === "FINANCE" || (role && role.startsWith("PRINCIPAL_"));
   let allowed = !!broad;
   if (!allowed && role === "PROJECT_MANAGER" && project.pmId === userId) allowed = true;
   if (!allowed && role === "SALES" && project.salesId === userId) allowed = true;
@@ -96,7 +97,7 @@ router.get("/projects/:id/resources", async (req, res) => {
       roleInProject: r.roleInProject,
       plannedMandays: r.plannedMandays,
       actualMandays: actualMap.get(r.userId) ?? 0,
-      dailyRate: r.dailyRate,
+      dailyRate: canViewDailyRate(role) ? r.dailyRate : 0,
       proposedById: r.proposedById ?? null,
       proposedByName: r.proposedBy?.name ?? null,
       proposedAt: r.proposedAt?.toISOString() ?? null,
@@ -211,7 +212,7 @@ async function upsertResource(req: any, res: any, opts: { propose: boolean }) {
     roleInProject: r.roleInProject,
     plannedMandays: r.plannedMandays,
     actualMandays: 0,
-    dailyRate: r.dailyRate,
+    dailyRate: canViewDailyRate(req.user?.role) ? r.dailyRate : 0,
     proposedById: r.proposedById ?? null,
     proposedByName: r.proposedBy?.name ?? null,
     proposedAt: r.proposedAt?.toISOString() ?? null,

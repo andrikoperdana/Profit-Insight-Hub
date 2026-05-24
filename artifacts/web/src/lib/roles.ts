@@ -69,3 +69,14 @@ export function canViewProjectFinancials(role?: UserRole): boolean {
   if (isPrincipalRole(role)) return false;
   return true;
 }
+
+// Daily rate on project resources is restricted to MGMT, PM, Finance, HR only.
+// Mirrors `canViewDailyRate` on the server.
+export function canViewDailyRate(role?: UserRole): boolean {
+  return (
+    role === UserRole.MANAGEMENT ||
+    role === UserRole.PROJECT_MANAGER ||
+    role === UserRole.FINANCE ||
+    role === UserRole.HR
+  );
+}

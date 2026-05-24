@@ -6,6 +6,7 @@ import {
   projectInclude,
   computeMetrics,
   canViewProjectFinancials,
+  canViewDailyRate,
 } from "../lib/serializers.js";
 import { recordAudit } from "../lib/audit.js";
 import { issueSurveyTokenIfMissing } from "../lib/surveyDefaults.js";
@@ -112,6 +113,7 @@ router.get("/projects/:id", async (req, res) => {
   }
   const base = serializeProject(p, req.user?.role);
   const showFinancials = canViewProjectFinancials(req.user?.role);
+  const showDailyRate = canViewDailyRate(req.user?.role);
   res.json({
     ...base,
     client: {
@@ -141,7 +143,7 @@ router.get("/projects/:id", async (req, res) => {
         roleInProject: r.roleInProject,
         plannedMandays: r.plannedMandays,
         actualMandays,
-        dailyRate: showFinancials ? r.dailyRate : 0,
+        dailyRate: showDailyRate ? r.dailyRate : 0,
       };
     });
     })(),

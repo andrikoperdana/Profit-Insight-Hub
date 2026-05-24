@@ -60,7 +60,7 @@ import { LoadingPage } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
 import { PdfUploadField, type PdfFileData } from "@/components/common/PdfUploadField";
 import { useAuth } from "@/lib/auth";
-import { RoleLabels, canViewProjectFinancials } from "@/lib/roles";
+import { RoleLabels, canViewProjectFinancials, canViewDailyRate } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
 
 import { Button } from "@/components/ui/button";
@@ -83,6 +83,8 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
   const canEdit =
     user?.role === "MANAGEMENT" ||
     (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id);
+  // Daily Rate / Est. Cost columns only visible to MGMT, PM, Finance, HR.
+  const showRate = canViewDailyRate(user?.role as any);
   // Principal can propose/manage rows whose system role matches the role they
   // supervise; the server further restricts to their direct supervisees.
   const principalSupervises: string | null =
@@ -384,8 +386,8 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                     <th className="py-2 pr-3 font-medium">System Role</th>
                     <th className="py-2 pr-3 font-medium text-right">Planned (md)</th>
                     <th className="py-2 pr-3 font-medium text-right">Actual (md)</th>
-                    <th className="py-2 pr-3 font-medium text-right">Daily Rate</th>
-                    <th className="py-2 pr-3 font-medium text-right">Est. Cost</th>
+                    {showRate && <th className="py-2 pr-3 font-medium text-right">Daily Rate</th>}
+                    {showRate && <th className="py-2 pr-3 font-medium text-right">Est. Cost</th>}
                     {canEdit && <th className="py-2 pr-3 font-medium text-right w-12"></th>}
                   </tr>
                 </thead>
@@ -408,8 +410,8 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                             </span>
                           )}
                         </td>
-                        <td className="py-2 pr-3 text-right font-mono">{formatIDR(r.dailyRate ?? 0)}</td>
-                        <td className="py-2 pr-3 text-right font-mono">{formatIDR(planned * (r.dailyRate ?? 0))}</td>
+                        {showRate && <td className="py-2 pr-3 text-right font-mono">{formatIDR(r.dailyRate ?? 0)}</td>}
+                        {showRate && <td className="py-2 pr-3 text-right font-mono">{formatIDR(planned * (r.dailyRate ?? 0))}</td>}
                         {(canEdit || canPrincipalManageRow(r)) && (
                           <td className="py-2 pr-3 text-right">
                             <Button
@@ -437,8 +439,8 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                     <td colSpan={3} className="py-2 pr-3 text-muted-foreground">Total ({list.length} {list.length === 1 ? "person" : "people"})</td>
                     <td className="py-2 pr-3 text-right font-mono">{totalPlanned.toFixed(1)}</td>
                     <td className="py-2 pr-3 text-right font-mono">{totalActual.toFixed(1)}</td>
-                    <td className="py-2 pr-3"></td>
-                    <td className="py-2 pr-3 text-right font-mono text-primary">{formatIDR(estCost)}</td>
+                    {showRate && <td className="py-2 pr-3"></td>}
+                    {showRate && <td className="py-2 pr-3 text-right font-mono text-primary">{formatIDR(estCost)}</td>}
                     {canEdit && <td></td>}
                   </tr>
                 </tfoot>
@@ -499,8 +501,8 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                     <th className="py-2 pr-3 font-medium">System Role</th>
                     <th className="py-2 pr-3 font-medium text-right">Planned (md)</th>
                     <th className="py-2 pr-3 font-medium text-right">Actual (md)</th>
-                    <th className="py-2 pr-3 font-medium text-right">Daily Rate</th>
-                    <th className="py-2 pr-3 font-medium text-right">Est. Cost</th>
+                    {showRate && <th className="py-2 pr-3 font-medium text-right">Daily Rate</th>}
+                    {showRate && <th className="py-2 pr-3 font-medium text-right">Est. Cost</th>}
                     {(canEdit || canPrincipalProposeTw) && <th className="py-2 pr-3 font-medium text-right w-12"></th>}
                   </tr>
                 </thead>
@@ -523,8 +525,8 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                             </span>
                           )}
                         </td>
-                        <td className="py-2 pr-3 text-right font-mono">{formatIDR(r.dailyRate ?? 0)}</td>
-                        <td className="py-2 pr-3 text-right font-mono">{formatIDR(planned * (r.dailyRate ?? 0))}</td>
+                        {showRate && <td className="py-2 pr-3 text-right font-mono">{formatIDR(r.dailyRate ?? 0)}</td>}
+                        {showRate && <td className="py-2 pr-3 text-right font-mono">{formatIDR(planned * (r.dailyRate ?? 0))}</td>}
                         {(canEdit || canPrincipalManageRow(r)) && (
                           <td className="py-2 pr-3 text-right">
                             <Button
@@ -552,8 +554,8 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                     <td colSpan={3} className="py-2 pr-3 text-muted-foreground">Total ({twList.length} {twList.length === 1 ? "person" : "people"})</td>
                     <td className="py-2 pr-3 text-right font-mono">{twTotalPlanned.toFixed(1)}</td>
                     <td className="py-2 pr-3 text-right font-mono">{twTotalActual.toFixed(1)}</td>
-                    <td className="py-2 pr-3"></td>
-                    <td className="py-2 pr-3 text-right font-mono text-primary">{formatIDR(twEstCost)}</td>
+                    {showRate && <td className="py-2 pr-3"></td>}
+                    {showRate && <td className="py-2 pr-3 text-right font-mono text-primary">{formatIDR(twEstCost)}</td>}
                     {(canEdit || canPrincipalProposeTw) && <td></td>}
                   </tr>
                 </tfoot>
@@ -603,8 +605,8 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                     <th className="py-2 pr-3 font-medium">System Role</th>
                     <th className="py-2 pr-3 font-medium text-right">Planned (md)</th>
                     <th className="py-2 pr-3 font-medium text-right">Actual (md)</th>
-                    <th className="py-2 pr-3 font-medium text-right">Daily Rate</th>
-                    <th className="py-2 pr-3 font-medium text-right">Est. Cost</th>
+                    {showRate && <th className="py-2 pr-3 font-medium text-right">Daily Rate</th>}
+                    {showRate && <th className="py-2 pr-3 font-medium text-right">Est. Cost</th>}
                     {canEdit && <th className="py-2 pr-3 font-medium text-right w-12"></th>}
                   </tr>
                 </thead>
@@ -625,10 +627,12 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                         </td>
                         <td className="py-2 pr-3 text-right font-mono">{planned.toFixed(1)}</td>
                         <td className="py-2 pr-3 text-right font-mono">{actual.toFixed(1)}</td>
-                        <td className="py-2 pr-3 text-right font-mono">{formatIDR(r.dailyRate ?? 0)}</td>
-                        <td className="py-2 pr-3 text-right font-mono">
-                          {formatIDR(planned * (r.dailyRate ?? 0))}
-                        </td>
+                        {showRate && <td className="py-2 pr-3 text-right font-mono">{formatIDR(r.dailyRate ?? 0)}</td>}
+                        {showRate && (
+                          <td className="py-2 pr-3 text-right font-mono">
+                            {formatIDR(planned * (r.dailyRate ?? 0))}
+                          </td>
+                        )}
                         {canEdit && (
                           <td className="py-2 pr-3 text-right">
                             <Button
@@ -658,8 +662,8 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                     </td>
                     <td className="py-2 pr-3 text-right font-mono">{otherTotalPlanned.toFixed(1)}</td>
                     <td className="py-2 pr-3 text-right font-mono">{otherTotalActual.toFixed(1)}</td>
-                    <td className="py-2 pr-3"></td>
-                    <td className="py-2 pr-3 text-right font-mono text-primary">{formatIDR(otherEstCost)}</td>
+                    {showRate && <td className="py-2 pr-3"></td>}
+                    {showRate && <td className="py-2 pr-3 text-right font-mono text-primary">{formatIDR(otherEstCost)}</td>}
                     {canEdit && <td></td>}
                   </tr>
                 </tfoot>

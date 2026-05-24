@@ -179,6 +179,22 @@ export function canViewProjectFinancials(role: string | null | undefined): boole
   return !!role && !FINANCIALS_BLOCKED_ROLES.has(role);
 }
 
+/**
+ * Daily rate visibility on project resources is strictly limited to:
+ * Management, Project Manager, Finance, HR. Everyone else (Sales, Admin Project,
+ * Site Admin, Principals, Consultants, Technical Writers) sees 0.
+ */
+const DAILY_RATE_ALLOWED_ROLES = new Set<string>([
+  "MANAGEMENT",
+  "PROJECT_MANAGER",
+  "FINANCE",
+  "HR",
+]);
+
+export function canViewDailyRate(role: string | null | undefined): boolean {
+  return !!role && DAILY_RATE_ALLOWED_ROLES.has(role);
+}
+
 export function serializeProject(project: ProjectWithRelations, callerRole?: string | null) {
   const m = computeMetrics(project);
   const includeFinancials = canViewProjectFinancials(callerRole ?? "MANAGEMENT");
