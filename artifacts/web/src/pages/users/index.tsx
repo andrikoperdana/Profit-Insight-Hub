@@ -381,7 +381,11 @@ export default function UsersList() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground">Personnel</h1>
-          <p className="text-muted-foreground">Manage user accounts and role assignments.</p>
+          <p className="text-muted-foreground">
+            Manage user accounts and role assignments. This list covers personnel who
+            participate in project delivery (PMs, consultants, sales, principals, admins,
+            and supporting ops) — not the full company headcount.
+          </p>
         </div>
         
         <div className="flex items-center gap-2">
