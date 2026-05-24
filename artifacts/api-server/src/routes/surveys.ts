@@ -447,6 +447,124 @@ router.get("/survey/summary", requireAuth, requireRole("MANAGEMENT", "PROJECT_MA
   });
 });
 
+// Annual survey list — paginated client feedback across all projects (MGMT only).
+// Returns: paginated responses with per-response avg score + per-question
+// ratings + free-text comments, plus year-wide aggregates.
+router.get("/survey/responses", requireAuth, requireRole("MANAGEMENT"), async (req, res) => {
+  const year = Number(req.query.year) || new Date().getFullYear();
+  const page = Math.max(1, Number(req.query.page) || 1);
+  const pageSize = Math.min(100, Math.max(5, Number(req.query.pageSize) || 20));
+  const start = new Date(Date.UTC(year, 0, 1));
+  const end = new Date(Date.UTC(year + 1, 0, 1));
+
+  const where = { createdAt: { gte: start, lt: end } };
+  const [total, allForYear, paged] = await Promise.all([
+    prisma.surveyResponse.count({ where }),
+    prisma.surveyResponse.findMany({
+      where,
+      select: { answers: true, questionsSnapshot: true },
+    }),
+    prisma.surveyResponse.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      include: {
+        project: {
+          select: {
+            id: true, code: true, name: true,
+            client: { select: { id: true, name: true } },
+            pm: { select: { id: true, name: true } },
+          },
+        },
+      },
+    }),
+  ]);
+
+  // Compute per-response average + ratings/comments breakdown using the
+  // questions snapshot stored on each response (preserves history).
+  function buildResponseRow(r: typeof paged[number]) {
+    const snap = Array.isArray(r.questionsSnapshot)
+      ? (r.questionsSnapshot as StoredQuestion[])
+      : [];
+    const answers = (r.answers ?? {}) as Record<string, { rating?: number; comment?: string; text?: string }>;
+    const ratings: { key: string; text: string; rating: number; comment: string | null }[] = [];
+    const textAnswers: { key: string; text: string; answer: string }[] = [];
+    for (const q of snap) {
+      const a = answers[q.key];
+      if (!a) continue;
+      if (q.type === "RATING") {
+        const rating = typeof a.rating === "number" ? a.rating : null;
+        if (rating !== null && rating > 0) {
+          ratings.push({
+            key: q.key,
+            text: q.text,
+            rating,
+            comment: a.comment?.trim() ? a.comment : null,
+          });
+        }
+      } else if (q.type === "TEXT") {
+        const txt = (a.text ?? "").trim();
+        if (txt) textAnswers.push({ key: q.key, text: q.text, answer: txt });
+      }
+    }
+    const avg = ratings.length > 0
+      ? ratings.reduce((s, x) => s + x.rating, 0) / ratings.length
+      : 0;
+    return {
+      id: r.id,
+      projectId: r.project.id,
+      projectCode: r.project.code,
+      projectName: r.project.name,
+      clientName: r.project.client.name,
+      pmName: r.project.pm?.name ?? null,
+      submitterName: r.submitterName,
+      submitterEmail: r.submitterEmail,
+      lessonLearned: r.lessonLearned,
+      submittedAt: r.createdAt.toISOString(),
+      scoreAvg: avg,
+      ratingCount: ratings.length,
+      ratings,
+      textAnswers,
+    };
+  }
+
+  // Year-wide aggregates over every response (not just current page).
+  let yearSum = 0;
+  let yearCount = 0;
+  for (const r of allForYear) {
+    const snap = Array.isArray(r.questionsSnapshot)
+      ? (r.questionsSnapshot as StoredQuestion[])
+      : [];
+    const answers = (r.answers ?? {}) as Record<string, { rating?: number }>;
+    let respSum = 0;
+    let respN = 0;
+    for (const q of snap) {
+      if (q.type !== "RATING") continue;
+      const v = answers[q.key]?.rating;
+      if (typeof v === "number" && v > 0) {
+        respSum += v;
+        respN += 1;
+      }
+    }
+    if (respN > 0) {
+      yearSum += respSum / respN;
+      yearCount += 1;
+    }
+  }
+  const yearAverage = yearCount > 0 ? yearSum / yearCount : 0;
+
+  res.json({
+    year,
+    page,
+    pageSize,
+    total,
+    yearAverage,
+    yearResponseCount: yearCount,
+    items: paged.map(buildResponseRow),
+  });
+});
+
 // =====================================================================
 // EXPORT ROUTES — Excel & PDF
 // =====================================================================

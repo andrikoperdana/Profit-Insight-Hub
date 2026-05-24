@@ -93,6 +93,7 @@ export default function Sidebar() {
       ? [{ href: "/top-performers", label: "Top Performers", icon: Trophy }]
       : []),
     ...(user?.role === "MANAGEMENT" || isFinance ? [{ href: "/vat-recap", label: "VAT Recap", icon: Receipt }] : []),
+    ...(user?.role === "MANAGEMENT" ? [{ href: "/survey-results", label: "Survey Results", icon: ClipboardList }] : []),
     ...(user?.role === "MANAGEMENT" ? [{ href: "/settings/survey-template", label: "Survey Template", icon: ClipboardList }] : []),
     ...(canViewAuditLogs(user?.role) ? [{ href: "/audit-logs", label: "Audit Log", icon: ScrollText }] : []),
   ];
