@@ -1,6 +1,6 @@
 import app from "./app";
 import { logger } from "./lib/logger";
-import { runSeed } from "@workspace/db";
+import { runSeed, ensureCoreAccountsAndTaxonomy } from "@workspace/db";
 
 const rawPort = process.env["PORT"];
 
@@ -32,9 +32,12 @@ if (!isProd || seedOptIn) {
     .then(() => logger.info("Auto-seed complete"))
     .catch((err) => logger.error({ err }, "Auto-seed failed (continuing)"));
 } else {
-  logger.info(
-    "Auto-seed skipped in production (set SEED_ON_BOOT=true to override)",
-  );
+  // Production: skip demo dataset, but always ensure core accounts
+  // (Principals, Site Admin, Finance, HR) + BU/Skills exist. These are
+  // idempotent upserts of a small known list — safe to re-run.
+  ensureCoreAccountsAndTaxonomy()
+    .then(() => logger.info("Core accounts + taxonomy ensured (production)"))
+    .catch((err) => logger.error({ err }, "Core account ensure failed (continuing)"));
 }
 
 app.listen(port, (err?: Error) => {

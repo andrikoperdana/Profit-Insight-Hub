@@ -125,6 +125,16 @@ async function ensureBusinessUnitsAndSkills() {
   }
 }
 
+// Production-safe boot step: upserts the known short list of core accounts
+// (Principals, Site Admin, Finance, HR) + business units + skills + role
+// hierarchy links. Does NOT seed demo projects, clients, timesheets, or
+// `[sample]` report data. Safe to run on every boot in any environment.
+export async function ensureCoreAccountsAndTaxonomy() {
+  const passwordDefault = await bcrypt.hash("password123", 10);
+  await ensurePrincipals(passwordDefault);
+  await ensureBusinessUnitsAndSkills();
+}
+
 export async function runSeed() {
   const hash = (p: string) => bcrypt.hash(p, 10);
   const passwordDefault = await hash("password123");
