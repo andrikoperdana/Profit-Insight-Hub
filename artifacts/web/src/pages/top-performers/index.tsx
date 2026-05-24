@@ -14,7 +14,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Trophy, Medal, Award, ChevronLeft, ChevronRight, Info } from "lucide-react";
+import {
+  Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger,
+} from "@/components/ui/dialog";
+import { Trophy, Medal, Award, ChevronLeft, ChevronRight, Info, BookOpen, ScrollText } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { formatIDR } from "@/lib/format";
 import { LoadingPage } from "@/components/common/Loading";
@@ -38,6 +41,138 @@ function formatMetric(value: number, format?: string): string {
     case "currency": return formatIDR(value);
     default:         return value.toFixed(value % 1 === 0 ? 0 : 1);
   }
+}
+
+const ROLE_RULES: Record<RoleValue, { tagline: string; metrics: { label: string; weight: number; how: string }[] }> = {
+  PROJECT_MANAGER: {
+    tagline: "Rewards PMs who deliver profitable projects on time with healthy billing discipline.",
+    metrics: [
+      { label: "Average Margin",       weight: 30, how: "Mean profit margin (%) across all projects you managed that were active in the year." },
+      { label: "Total Revenue",        weight: 20, how: "Sum of contract value (IDR) for projects under your management." },
+      { label: "On-Time Delivery",     weight: 20, how: "Share of COMPLETE/CLOSED projects that finished on or before their planned end date." },
+      { label: "Billing On-Time",      weight: 15, how: "Share of billing milestones invoiced on or before their due date." },
+      { label: "Approval Speed",       weight: 15, how: "Average days from timesheet submission to approval. Lower is better (inverted)." },
+    ],
+  },
+  KONSULTAN: {
+    tagline: "Rewards consultants with strong billable utilisation, completion, and acceptance.",
+    metrics: [
+      { label: "Billable Utilisation", weight: 35, how: "Approved billable hours ÷ leave-adjusted annual capacity (230×8h)." },
+      { label: "Approved Hours",       weight: 20, how: "Total approved timesheet hours during the year." },
+      { label: "Task Completion",      weight: 15, how: "Share of assigned tasks marked DONE." },
+      { label: "Acceptance Rate",      weight: 15, how: "Approved timesheet hours ÷ all submitted hours (excludes drafts/rejections)." },
+      { label: "Project Variety",      weight: 10, how: "Number of distinct projects worked on. Encourages cross-engagement contribution." },
+      { label: "Discipline",           weight: 5,  how: "Share of work-weeks with at least 32 logged hours." },
+    ],
+  },
+  TECHNICAL_WRITER: {
+    tagline: "Rewards writers who ship reports/BAST consistently with quality.",
+    metrics: [
+      { label: "Deliverables",         weight: 30, how: "Number of BAST documents uploaded during the year." },
+      { label: "Billable Utilisation", weight: 25, how: "Approved billable hours ÷ leave-adjusted annual capacity." },
+      { label: "Task Completion",      weight: 15, how: "Share of assigned tasks marked DONE." },
+      { label: "Acceptance Rate",      weight: 15, how: "Approved hours ÷ all submitted hours." },
+      { label: "Approved Hours",       weight: 10, how: "Total approved timesheet hours." },
+      { label: "Project Variety",      weight: 5,  how: "Number of distinct projects supported." },
+    ],
+  },
+  ADMIN_PROJECT: {
+    tagline: "Rewards admin who close projects fast with complete documentation.",
+    metrics: [
+      { label: "Closing Documents",    weight: 35, how: "Count of BAST + INVOICE + CONTRACT documents uploaded." },
+      { label: "Time-to-Close",        weight: 25, how: "Average days between project COMPLETE and the closing document upload. Lower is better (inverted)." },
+      { label: "Project Coverage",     weight: 20, how: "Number of distinct projects you uploaded documents for." },
+      { label: "Invoicing Velocity",   weight: 10, how: "Number of INVOICE documents uploaded — measures cash-flow contribution." },
+      { label: "Discipline",           weight: 10, how: "Share of work-weeks with at least 32 logged hours." },
+    ],
+  },
+};
+
+function RulesDialog({ role }: { role: RoleValue }) {
+  const def = ROLE_RULES[role];
+  const roleLabel = ROLES.find((r) => r.value === role)?.label ?? role;
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm" className="h-9 gap-1.5" data-testid="button-scoring-rules">
+          <BookOpen className="h-4 w-4" /> Scoring Rules
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <ScrollText className="h-5 w-5 text-primary" /> Scoring Rules — {roleLabel}
+          </DialogTitle>
+          <DialogDescription>{def.tagline}</DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-5 mt-2 text-sm">
+          <section className="space-y-2">
+            <h3 className="font-semibold text-foreground">How the score is computed</h3>
+            <ol className="list-decimal pl-5 space-y-1 text-muted-foreground">
+              <li>Each raw metric is collected from approved data within the selected calendar year (Jan–Dec).</li>
+              <li>Values are <span className="font-medium text-foreground">min–max normalised</span> across the role's eligible peer group to a 0–100 scale.</li>
+              <li>Metrics flagged <span className="font-medium text-foreground">(lower is better)</span> are inverted before normalisation.</li>
+              <li>Each normalised value is multiplied by its weight; the sum is the final score (0–100).</li>
+              <li>Ties are broken by the highest-weighted metric.</li>
+            </ol>
+          </section>
+
+          <section className="space-y-2">
+            <h3 className="font-semibold text-foreground">Eligibility</h3>
+            <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
+              <li>Active in <span className="font-medium text-foreground">at least 3 distinct months</span> within the year.</li>
+              <li>"Active" means the user logged approved time, uploaded a document, or owned a project that progressed.</li>
+              <li>Users below the threshold still appear in the list but are flagged <span className="font-medium text-foreground">Not eligible</span> and excluded from the ranking.</li>
+              <li>Inactive accounts (deactivated users) are filtered out entirely.</li>
+            </ul>
+          </section>
+
+          <section className="space-y-2">
+            <h3 className="font-semibold text-foreground">Metrics & Weights ({roleLabel})</h3>
+            <div className="rounded-lg border border-border overflow-hidden">
+              <table className="w-full text-xs">
+                <thead className="bg-muted/40">
+                  <tr>
+                    <th className="text-left p-2 font-medium">Metric</th>
+                    <th className="text-right p-2 font-medium w-20">Weight</th>
+                    <th className="text-left p-2 font-medium">How it's measured</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {def.metrics.map((m) => (
+                    <tr key={m.label} className="border-t border-border">
+                      <td className="p-2 font-medium">{m.label}</td>
+                      <td className="p-2 text-right font-mono text-primary">{m.weight}%</td>
+                      <td className="p-2 text-muted-foreground">{m.how}</td>
+                    </tr>
+                  ))}
+                  <tr className="border-t border-border bg-muted/30">
+                    <td className="p-2 font-semibold">Total</td>
+                    <td className="p-2 text-right font-mono font-semibold">
+                      {def.metrics.reduce((s, m) => s + m.weight, 0)}%
+                    </td>
+                    <td className="p-2" />
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section className="space-y-2">
+            <h3 className="font-semibold text-foreground">Notes & Fair-play</h3>
+            <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
+              <li>Leave days (annual, sick, training) reduce the capacity denominator so utilisation isn't penalised.</li>
+              <li>Only <span className="font-medium text-foreground">APPROVED</span> timesheets and expenses count — drafts and rejections are ignored.</li>
+              <li>Non-billable tasks don't roll into revenue or utilisation.</li>
+              <li>Scores are relative to the peer group for the selected year and Business Unit filter — they are not absolute.</li>
+              <li>The ranking is an aid, not a verdict. Combine it with qualitative review.</li>
+            </ul>
+          </section>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
 }
 
 function rankBadge(rank: number) {
@@ -302,6 +437,7 @@ export default function TopPerformersPage() {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          <RulesDialog role={tab} />
           <Select value={String(year)} onValueChange={(v) => setYear(Number(v))}>
             <SelectTrigger className="w-[110px] h-9" data-testid="select-year">
               <SelectValue />
