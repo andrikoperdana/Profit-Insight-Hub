@@ -157,7 +157,9 @@ export default function LeavesPage() {
             <CalendarOff className="h-7 w-7 text-primary" /> Leave Management
           </h1>
           <p className="text-muted-foreground">
-            Read-only view of all leaves logged by employees.
+            Read-only view of leaves logged by employees who are assigned to projects.
+            This is not a company-wide attendance record — only people actively staffed on
+            engagements appear here, so PMs can see when their team will be away.
           </p>
         </div>
         <Button
