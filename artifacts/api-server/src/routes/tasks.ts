@@ -16,6 +16,7 @@ import {
   canManageProjectTasks,
   canViewProject,
 } from "../lib/taskHelpers.js";
+import { parsePagination, setTotalCount } from "../lib/pagination.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -36,12 +37,22 @@ router.get("/projects/:id/tasks", async (req, res) => {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
-  const tasks = await prisma.task.findMany({
-    where: { projectId },
-    include: taskInclude,
-    orderBy: [{ status: "asc" }, { endDate: "asc" }, { createdAt: "desc" }],
-    take: 1000,
+  const { limit, offset, requested } = parsePagination(req.query, {
+    defaultLimit: 1000,
+    maxLimit: 1000,
   });
+  const where = { projectId };
+  const [tasks, total] = await Promise.all([
+    prisma.task.findMany({
+      where,
+      include: taskInclude,
+      orderBy: [{ status: "asc" }, { endDate: "asc" }, { createdAt: "desc" }],
+      skip: offset,
+      take: limit,
+    }),
+    requested ? prisma.task.count({ where }) : Promise.resolve(0),
+  ]);
+  if (requested) setTotalCount(res, total);
   res.json(tasks.map(serializeTask));
 });
 

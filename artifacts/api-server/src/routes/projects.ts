@@ -18,6 +18,7 @@ import {
   sanitizeFileName,
   parseSafeDate,
 } from "../lib/projectValidators.js";
+import { parsePagination, setTotalCount } from "../lib/pagination.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -80,12 +81,21 @@ router.get("/projects", async (req, res) => {
     return;
   }
   // FINANCE, MANAGEMENT, SITE_ADMIN: no scoping — see all projects.
-  const projects = await prisma.project.findMany({
-    where,
-    include: projectInclude,
-    orderBy: { createdAt: "desc" },
-    take: 500,
+  const { limit, offset, requested } = parsePagination(req.query, {
+    defaultLimit: 500,
+    maxLimit: 500,
   });
+  const [projects, total] = await Promise.all([
+    prisma.project.findMany({
+      where,
+      include: projectInclude,
+      orderBy: { createdAt: "desc" },
+      skip: offset,
+      take: limit,
+    }),
+    requested ? prisma.project.count({ where }) : Promise.resolve(0),
+  ]);
+  if (requested) setTotalCount(res, total);
   res.json(projects.map((p) => serializeProject(p, req.user?.role)));
 });
 

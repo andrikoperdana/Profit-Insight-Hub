@@ -4,6 +4,7 @@ import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { hashPassword } from "../lib/auth.js";
 import { serializeUser } from "../lib/serializers.js";
 import { recordAudit } from "../lib/audit.js";
+import { parsePagination, setTotalCount } from "../lib/pagination.js";
 
 const router: IRouter = Router();
 
@@ -71,12 +72,29 @@ router.get("/users", async (req, res) => {
     return;
   }
   const includeDeleted = req.query.includeDeleted === "true" && role === "SITE_ADMIN";
-  const users = await prisma.user.findMany({
-    where: includeDeleted ? {} : { deletedAt: null },
-    orderBy: { name: "asc" },
-    include: userInclude,
-    take: 500,
+  const q = typeof req.query.q === "string" ? req.query.q.trim() : "";
+  const where: import("@workspace/db").Prisma.UserWhereInput = includeDeleted ? {} : { deletedAt: null };
+  if (q) {
+    where.OR = [
+      { name: { contains: q, mode: "insensitive" } },
+      { email: { contains: q, mode: "insensitive" } },
+    ];
+  }
+  const { limit, offset, requested } = parsePagination(req.query, {
+    defaultLimit: 500,
+    maxLimit: 500,
   });
+  const [users, total] = await Promise.all([
+    prisma.user.findMany({
+      where,
+      orderBy: { name: "asc" },
+      include: userInclude,
+      skip: offset,
+      take: limit,
+    }),
+    requested ? prisma.user.count({ where }) : Promise.resolve(0),
+  ]);
+  if (requested) setTotalCount(res, total);
   res.json(users.map(serializeUser));
 });
 
@@ -89,11 +107,18 @@ router.get("/users/under-supervision", async (req, res) => {
     res.status(403).json({ error: "Only Principal roles can list supervisees" });
     return;
   }
-  const users = await prisma.user.findMany({
-    where: { principalId: callerId, deletedAt: null },
-    orderBy: { name: "asc" },
-    include: userInclude,
-  });
+  const supWhere = { principalId: callerId, deletedAt: null };
+  const supPg = parsePagination(req.query, { defaultLimit: 500, maxLimit: 500 });
+  const [users, supTotal] = await Promise.all([
+    prisma.user.findMany({
+      where: supWhere,
+      orderBy: { name: "asc" },
+      include: userInclude,
+      ...(supPg.requested ? { skip: supPg.offset, take: supPg.limit } : {}),
+    }),
+    supPg.requested ? prisma.user.count({ where: supWhere }) : Promise.resolve(0),
+  ]);
+  if (supPg.requested) setTotalCount(res, supTotal);
   res.json(users.map(serializeUser));
 });
 
@@ -103,10 +128,17 @@ router.get("/users/active-all", async (req, res) => {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
-  const users = await prisma.user.findMany({
-    where: { deletedAt: null, isActive: true },
-    orderBy: [{ role: "asc" }, { name: "asc" }],
-  });
+  const aaWhere = { deletedAt: null, isActive: true };
+  const aaPg = parsePagination(req.query, { defaultLimit: 500, maxLimit: 500 });
+  const [users, aaTotal] = await Promise.all([
+    prisma.user.findMany({
+      where: aaWhere,
+      orderBy: [{ role: "asc" }, { name: "asc" }],
+      ...(aaPg.requested ? { skip: aaPg.offset, take: aaPg.limit } : {}),
+    }),
+    aaPg.requested ? prisma.user.count({ where: aaWhere }) : Promise.resolve(0),
+  ]);
+  if (aaPg.requested) setTotalCount(res, aaTotal);
   res.json(
     users.map((u) => ({
       id: u.id,
