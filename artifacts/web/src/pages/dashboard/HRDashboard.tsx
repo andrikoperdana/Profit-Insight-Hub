@@ -182,7 +182,11 @@ export default function HRDashboard() {
                 <BarChart data={headcountByBu} margin={{ top: 10, right: 10, bottom: 10, left: 0 }}>
                   <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} />
                   <YAxis stroke="#94a3b8" fontSize={11} allowDecimals={false} />
-                  <Tooltip contentStyle={{ background: "rgb(15,23,42)", border: "1px solid rgb(51,65,85)" }} />
+                  <Tooltip
+                    contentStyle={{ background: "rgb(15,23,42)", border: "1px solid rgb(51,65,85)", color: "#e2e8f0" }}
+                    itemStyle={{ color: "#e2e8f0" }}
+                    labelStyle={{ color: "#e2e8f0" }}
+                  />
                   <Bar dataKey="count" radius={[4, 4, 0, 0]}>
                     {headcountByBu.map((_, i) => (
                       <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
@@ -211,7 +215,11 @@ export default function HRDashboard() {
                     ))}
                   </Pie>
                   <Legend wrapperStyle={{ fontSize: 11 }} />
-                  <Tooltip contentStyle={{ background: "rgb(15,23,42)", border: "1px solid rgb(51,65,85)" }} />
+                  <Tooltip
+                    contentStyle={{ background: "rgb(15,23,42)", border: "1px solid rgb(51,65,85)", color: "#e2e8f0" }}
+                    itemStyle={{ color: "#e2e8f0" }}
+                    labelStyle={{ color: "#e2e8f0" }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             )}
@@ -232,7 +240,11 @@ export default function HRDashboard() {
               <LineChart data={utilizationTrend}>
                 <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} />
                 <YAxis stroke="#94a3b8" fontSize={11} unit="%" domain={[0, 100]} />
-                <Tooltip contentStyle={{ background: "rgb(15,23,42)", border: "1px solid rgb(51,65,85)" }} />
+                <Tooltip
+                  contentStyle={{ background: "rgb(15,23,42)", border: "1px solid rgb(51,65,85)", color: "#e2e8f0" }}
+                  itemStyle={{ color: "#e2e8f0" }}
+                  labelStyle={{ color: "#e2e8f0" }}
+                />
                 <Line type="monotone" dataKey="utilization" stroke="#10b981" strokeWidth={2} dot={false} />
               </LineChart>
             </ResponsiveContainer>
@@ -395,7 +407,11 @@ export default function HRDashboard() {
               <BarChart data={seniorityCounts} layout="vertical" margin={{ top: 10, right: 10, bottom: 10, left: 40 }}>
                 <XAxis type="number" stroke="#94a3b8" fontSize={11} allowDecimals={false} />
                 <YAxis type="category" dataKey="name" stroke="#94a3b8" fontSize={11} />
-                <Tooltip contentStyle={{ background: "rgb(15,23,42)", border: "1px solid rgb(51,65,85)" }} />
+                <Tooltip
+                  contentStyle={{ background: "rgb(15,23,42)", border: "1px solid rgb(51,65,85)", color: "#e2e8f0" }}
+                  itemStyle={{ color: "#e2e8f0" }}
+                  labelStyle={{ color: "#e2e8f0" }}
+                />
                 <Bar dataKey="value" fill="#3b82f6" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
