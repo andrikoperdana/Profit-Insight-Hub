@@ -251,3 +251,9 @@ id = "ngHNqN2WV9nhYBvRvMZqT"
 uri = "file://scripts/exports/SecureProfitHub_vs_PSOHub_FitGap.docx"
 type = "word_document"
 title = "Fit-Gap Analysis: SecureProfit Hub vs PSOHub (.docx)"
+
+[[outputs]]
+id = "PJfUDnmdwdPu7CFP3EghI"
+uri = "file://scripts/exports/PDD_LeadToCash_vs_SecureProfitHub_FitGap.docx"
+type = "word_document"
+title = "Fit-Gap Analysis: PDD Lead-to-Cash vs SecureProfit Hub (.docx)"
