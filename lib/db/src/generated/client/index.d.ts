@@ -3583,6 +3583,7 @@ export namespace Prisma {
     dailyRate: number | null
     seniority: $Enums.Seniority | null
     isActive: boolean | null
+    avatarDataUrl: string | null
     deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -3602,6 +3603,7 @@ export namespace Prisma {
     dailyRate: number | null
     seniority: $Enums.Seniority | null
     isActive: boolean | null
+    avatarDataUrl: string | null
     deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -3621,6 +3623,7 @@ export namespace Prisma {
     dailyRate: number
     seniority: number
     isActive: number
+    avatarDataUrl: number
     deletedAt: number
     createdAt: number
     updatedAt: number
@@ -3652,6 +3655,7 @@ export namespace Prisma {
     dailyRate?: true
     seniority?: true
     isActive?: true
+    avatarDataUrl?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -3671,6 +3675,7 @@ export namespace Prisma {
     dailyRate?: true
     seniority?: true
     isActive?: true
+    avatarDataUrl?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -3690,6 +3695,7 @@ export namespace Prisma {
     dailyRate?: true
     seniority?: true
     isActive?: true
+    avatarDataUrl?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -3796,6 +3802,7 @@ export namespace Prisma {
     dailyRate: number | null
     seniority: $Enums.Seniority | null
     isActive: boolean
+    avatarDataUrl: string | null
     deletedAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -3834,6 +3841,7 @@ export namespace Prisma {
     dailyRate?: boolean
     seniority?: boolean
     isActive?: boolean
+    avatarDataUrl?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -3882,6 +3890,7 @@ export namespace Prisma {
     dailyRate?: boolean
     seniority?: boolean
     isActive?: boolean
+    avatarDataUrl?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -3904,6 +3913,7 @@ export namespace Prisma {
     dailyRate?: boolean
     seniority?: boolean
     isActive?: boolean
+    avatarDataUrl?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -3992,6 +4002,7 @@ export namespace Prisma {
       dailyRate: number | null
       seniority: $Enums.Seniority | null
       isActive: boolean
+      avatarDataUrl: string | null
       deletedAt: Date | null
       createdAt: Date
       updatedAt: Date
@@ -4429,6 +4440,7 @@ export namespace Prisma {
     readonly dailyRate: FieldRef<"User", 'Float'>
     readonly seniority: FieldRef<"User", 'Seniority'>
     readonly isActive: FieldRef<"User", 'Boolean'>
+    readonly avatarDataUrl: FieldRef<"User", 'String'>
     readonly deletedAt: FieldRef<"User", 'DateTime'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
@@ -29454,6 +29466,7 @@ export namespace Prisma {
     dailyRate: 'dailyRate',
     seniority: 'seniority',
     isActive: 'isActive',
+    avatarDataUrl: 'avatarDataUrl',
     deletedAt: 'deletedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -30134,6 +30147,7 @@ export namespace Prisma {
     dailyRate?: FloatNullableFilter<"User"> | number | null
     seniority?: EnumSeniorityNullableFilter<"User"> | $Enums.Seniority | null
     isActive?: BoolFilter<"User"> | boolean
+    avatarDataUrl?: StringNullableFilter<"User"> | string | null
     deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
@@ -30181,6 +30195,7 @@ export namespace Prisma {
     dailyRate?: SortOrderInput | SortOrder
     seniority?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    avatarDataUrl?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -30231,6 +30246,7 @@ export namespace Prisma {
     dailyRate?: FloatNullableFilter<"User"> | number | null
     seniority?: EnumSeniorityNullableFilter<"User"> | $Enums.Seniority | null
     isActive?: BoolFilter<"User"> | boolean
+    avatarDataUrl?: StringNullableFilter<"User"> | string | null
     deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
@@ -30278,6 +30294,7 @@ export namespace Prisma {
     dailyRate?: SortOrderInput | SortOrder
     seniority?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    avatarDataUrl?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -30305,6 +30322,7 @@ export namespace Prisma {
     dailyRate?: FloatNullableWithAggregatesFilter<"User"> | number | null
     seniority?: EnumSeniorityNullableWithAggregatesFilter<"User"> | $Enums.Seniority | null
     isActive?: BoolWithAggregatesFilter<"User"> | boolean
+    avatarDataUrl?: StringNullableWithAggregatesFilter<"User"> | string | null
     deletedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -32342,6 +32360,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -32386,6 +32405,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -32430,6 +32450,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32474,6 +32495,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32518,6 +32540,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -32537,6 +32560,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32553,6 +32577,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35030,6 +35055,7 @@ export namespace Prisma {
     dailyRate?: SortOrder
     seniority?: SortOrder
     isActive?: SortOrder
+    avatarDataUrl?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -35054,6 +35080,7 @@ export namespace Prisma {
     dailyRate?: SortOrder
     seniority?: SortOrder
     isActive?: SortOrder
+    avatarDataUrl?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -35073,6 +35100,7 @@ export namespace Prisma {
     dailyRate?: SortOrder
     seniority?: SortOrder
     isActive?: SortOrder
+    avatarDataUrl?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -39723,6 +39751,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -39766,6 +39795,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -39814,6 +39844,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -39857,6 +39888,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -39910,6 +39942,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -39953,6 +39986,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -40001,6 +40035,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -40044,6 +40079,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -41193,6 +41229,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41236,6 +41273,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41298,6 +41336,7 @@ export namespace Prisma {
     dailyRate?: FloatNullableFilter<"User"> | number | null
     seniority?: EnumSeniorityNullableFilter<"User"> | $Enums.Seniority | null
     isActive?: BoolFilter<"User"> | boolean
+    avatarDataUrl?: StringNullableFilter<"User"> | string | null
     deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
@@ -41328,6 +41367,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41371,6 +41411,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42287,6 +42328,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -42330,6 +42372,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -42378,6 +42421,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -42421,6 +42465,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -42469,6 +42514,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -42512,6 +42558,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -42560,6 +42607,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -42603,6 +42651,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -43003,6 +43052,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43046,6 +43096,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43100,6 +43151,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43143,6 +43195,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43197,6 +43250,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43240,6 +43294,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43294,6 +43349,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43337,6 +43393,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43714,6 +43771,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -43757,6 +43815,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -43816,6 +43875,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43859,6 +43919,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43985,6 +44046,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -44028,6 +44090,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -44076,6 +44139,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -44119,6 +44183,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -44267,6 +44332,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44310,6 +44376,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44364,6 +44431,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44407,6 +44475,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44533,6 +44602,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -44576,6 +44646,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -44673,6 +44744,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -44716,6 +44788,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -44864,6 +44937,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44907,6 +44981,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -45016,6 +45091,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -45059,6 +45135,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -45185,6 +45262,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -45228,6 +45306,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -45376,6 +45455,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -45419,6 +45499,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -45545,6 +45626,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -45588,6 +45670,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -45636,6 +45719,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -45679,6 +45763,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -45827,6 +45912,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -45870,6 +45956,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -45924,6 +46011,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -45967,6 +46055,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -46010,6 +46099,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -46053,6 +46143,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -46210,6 +46301,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -46253,6 +46345,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -46335,6 +46428,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -46378,6 +46472,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -46450,6 +46545,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -46493,6 +46589,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -46635,6 +46732,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -46678,6 +46776,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -46893,6 +46992,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -46936,6 +47036,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -46984,6 +47085,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -47027,6 +47129,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -47412,6 +47515,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47455,6 +47559,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47509,6 +47614,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47552,6 +47658,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -48185,6 +48292,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -48228,6 +48336,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -48342,6 +48451,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -48385,6 +48495,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -48477,6 +48588,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -48520,6 +48632,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -48634,6 +48747,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -48677,6 +48791,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -48749,6 +48864,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -48792,6 +48908,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -48918,6 +49035,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -48961,6 +49079,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -49077,6 +49196,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -49120,6 +49240,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -49242,6 +49363,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -49285,6 +49407,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -49328,6 +49451,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -49371,6 +49495,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -49430,6 +49555,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -49473,6 +49599,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -49541,6 +49668,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -49584,6 +49712,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -49674,6 +49803,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -49717,6 +49847,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -49760,6 +49891,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -49803,6 +49935,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -49862,6 +49995,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -49905,6 +50039,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -49948,6 +50083,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -49966,6 +50102,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -50351,6 +50488,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -50394,6 +50532,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -50437,6 +50576,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -50455,6 +50595,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -50498,6 +50639,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -50541,6 +50683,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -52432,6 +52575,7 @@ export namespace Prisma {
     dailyRate?: number | null
     seniority?: $Enums.Seniority | null
     isActive?: boolean
+    avatarDataUrl?: string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -52461,6 +52605,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -52504,6 +52649,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -52547,6 +52693,7 @@ export namespace Prisma {
     dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
     seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

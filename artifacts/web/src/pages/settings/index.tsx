@@ -1,16 +1,19 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useAuth } from "@/lib/auth";
-import { useGetMe, customFetch } from "@workspace/api-client-react";
+import { useGetMe, customFetch, type User } from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { RoleLabels } from "@/lib/roles";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LoadingPage } from "@/components/common/Loading";
-import { Calendar, Copy, RefreshCw, Check, KeyRound } from "lucide-react";
+import { Calendar, Copy, RefreshCw, Check, KeyRound, Upload, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+
+const AVATAR_MAX_BYTES = 300 * 1024;
 
 function CalendarFeedCard() {
   const { toast } = useToast();
@@ -213,6 +216,110 @@ function ChangePasswordCard() {
   );
 }
 
+function readFileAsDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ""));
+    reader.onerror = () => reject(reader.error ?? new Error("Failed to read file"));
+    reader.readAsDataURL(file);
+  });
+}
+
+function AvatarBlock({ profile }: { profile: User }) {
+  const { toast } = useToast();
+  const { updateUser, user } = useAuth();
+  const qc = useQueryClient();
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [busy, setBusy] = useState(false);
+
+  const initials = profile.name.split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2);
+
+  const onPick = () => fileRef.current?.click();
+
+  const onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    if (!/^image\/(png|jpe?g|webp|gif)$/i.test(file.type)) {
+      toast({ title: "Unsupported file", description: "Please choose a PNG, JPEG, WebP, or GIF image.", variant: "destructive" });
+      return;
+    }
+    if (file.size > AVATAR_MAX_BYTES) {
+      toast({
+        title: "Image too large",
+        description: `Max ${Math.round(AVATAR_MAX_BYTES / 1024)} KB. Your file is ${(file.size / 1024).toFixed(0)} KB.`,
+        variant: "destructive",
+      });
+      return;
+    }
+    setBusy(true);
+    try {
+      const dataUrl = await readFileAsDataUrl(file);
+      const updated = await customFetch<User>("/api/auth/avatar", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ dataUrl }),
+      });
+      if (user) updateUser({ ...user, avatarDataUrl: updated.avatarDataUrl });
+      qc.invalidateQueries({ queryKey: ["me"] });
+      toast({ title: "Photo updated" });
+    } catch (err: any) {
+      toast({ title: "Upload failed", description: err?.message ?? "Unknown error", variant: "destructive" });
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const onRemove = async () => {
+    setBusy(true);
+    try {
+      const updated = await customFetch<User>("/api/auth/avatar", { method: "DELETE" });
+      if (user) updateUser({ ...user, avatarDataUrl: updated.avatarDataUrl });
+      qc.invalidateQueries({ queryKey: ["me"] });
+      toast({ title: "Photo removed" });
+    } catch (err: any) {
+      toast({ title: "Failed to remove photo", description: err?.message ?? "Unknown error", variant: "destructive" });
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="flex items-center space-x-4">
+      <Avatar className="h-20 w-20 border-2 border-border">
+        {profile.avatarDataUrl ? <AvatarImage src={profile.avatarDataUrl} alt={profile.name} /> : null}
+        <AvatarFallback className="bg-primary/10 text-primary text-xl font-bold">{initials}</AvatarFallback>
+      </Avatar>
+      <div className="flex-1">
+        <h3 className="text-xl font-medium">{profile.name}</h3>
+        <p className="text-muted-foreground">{profile.email}</p>
+        <div className="flex items-center gap-2 mt-2">
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/png,image/jpeg,image/webp,image/gif"
+            className="hidden"
+            onChange={onChange}
+            data-testid="input-avatar-file"
+          />
+          <Button type="button" size="sm" variant="outline" onClick={onPick} disabled={busy} data-testid="button-upload-avatar">
+            <Upload className="h-3.5 w-3.5 mr-1.5" />
+            {profile.avatarDataUrl ? "Change Photo" : "Upload Photo"}
+          </Button>
+          {profile.avatarDataUrl && (
+            <Button type="button" size="sm" variant="ghost" onClick={onRemove} disabled={busy} data-testid="button-remove-avatar">
+              <Trash2 className="h-3.5 w-3.5 mr-1.5" /> Remove
+            </Button>
+          )}
+          <span className="text-xs text-muted-foreground">
+            Optional · PNG/JPEG/WebP/GIF · max {Math.round(AVATAR_MAX_BYTES / 1024)} KB
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Settings() {
   const { user } = useAuth();
   const { data: profile, isLoading } = useGetMe({
@@ -220,8 +327,6 @@ export default function Settings() {
   });
 
   if (isLoading || !profile) return <LoadingPage />;
-
-  const initials = profile.name.split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2);
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -236,15 +341,7 @@ export default function Settings() {
           <CardDescription>Your personal details and role assignment</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="flex items-center space-x-4">
-            <Avatar className="h-20 w-20 border-2 border-border">
-              <AvatarFallback className="bg-primary/10 text-primary text-xl font-bold">{initials}</AvatarFallback>
-            </Avatar>
-            <div>
-              <h3 className="text-xl font-medium">{profile.name}</h3>
-              <p className="text-muted-foreground">{profile.email}</p>
-            </div>
-          </div>
+          <AvatarBlock profile={profile} />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-border">
             <div className="space-y-1">

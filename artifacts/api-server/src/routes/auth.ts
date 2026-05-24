@@ -3,6 +3,7 @@ import { prisma } from "@workspace/db";
 import { signToken, verifyPassword, hashPassword } from "../lib/auth.js";
 import { requireAuth } from "../middlewares/auth.js";
 import { serializeUser } from "../lib/serializers.js";
+// avatar endpoints below use serializeUser
 import { recordAuditAnon } from "../lib/audit.js";
 
 const router: IRouter = Router();
@@ -178,6 +179,40 @@ router.post("/auth/change-password", requireAuth, async (req, res) => {
     description: `${user.email} changed their password`,
   });
   res.json({ success: true });
+});
+
+// Avatar upload — JSON body { dataUrl: "data:image/png;base64,..." }
+// Max 300 KB encoded (~225 KB raw image). Stored on User.avatarDataUrl.
+const AVATAR_MAX_BYTES = 300 * 1024;
+const AVATAR_MIME_RE = /^data:image\/(png|jpe?g|webp|gif);base64,/i;
+
+router.post("/auth/avatar", requireAuth, async (req, res) => {
+  const dataUrl = String(req.body?.dataUrl || "");
+  if (!dataUrl) {
+    res.status(400).json({ error: "dataUrl is required" });
+    return;
+  }
+  if (!AVATAR_MIME_RE.test(dataUrl)) {
+    res.status(400).json({ error: "Only PNG, JPEG, WebP, or GIF images are allowed" });
+    return;
+  }
+  if (dataUrl.length > AVATAR_MAX_BYTES * 1.4) {
+    res.status(413).json({ error: `Image is too large. Max ~${Math.round(AVATAR_MAX_BYTES / 1024)} KB.` });
+    return;
+  }
+  const updated = await prisma.user.update({
+    where: { id: req.user!.sub },
+    data: { avatarDataUrl: dataUrl },
+  });
+  res.json(serializeUser(updated));
+});
+
+router.delete("/auth/avatar", requireAuth, async (req, res) => {
+  const updated = await prisma.user.update({
+    where: { id: req.user!.sub },
+    data: { avatarDataUrl: null },
+  });
+  res.json(serializeUser(updated));
 });
 
 export default router;

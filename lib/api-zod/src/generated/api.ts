@@ -396,6 +396,7 @@ export const LoginResponse = zod.object({
       )
       .optional(),
     isActive: zod.boolean(),
+    avatarDataUrl: zod.string().nullish(),
     managerId: zod.string().nullish(),
     principalId: zod.string().nullish(),
     createdAt: zod.string(),
@@ -444,6 +445,7 @@ export const GetMeResponse = zod.object({
     )
     .optional(),
   isActive: zod.boolean(),
+  avatarDataUrl: zod.string().nullish(),
   managerId: zod.string().nullish(),
   principalId: zod.string().nullish(),
   createdAt: zod.string(),
@@ -496,6 +498,7 @@ export const ListUsersResponseItem = zod.object({
     )
     .optional(),
   isActive: zod.boolean(),
+  avatarDataUrl: zod.string().nullish(),
   managerId: zod.string().nullish(),
   principalId: zod.string().nullish(),
   createdAt: zod.string(),
@@ -583,6 +586,7 @@ export const GetUserResponse = zod.object({
     )
     .optional(),
   isActive: zod.boolean(),
+  avatarDataUrl: zod.string().nullish(),
   managerId: zod.string().nullish(),
   principalId: zod.string().nullish(),
   createdAt: zod.string(),
@@ -671,6 +675,7 @@ export const UpdateUserResponse = zod.object({
     )
     .optional(),
   isActive: zod.boolean(),
+  avatarDataUrl: zod.string().nullish(),
   managerId: zod.string().nullish(),
   principalId: zod.string().nullish(),
   createdAt: zod.string(),
@@ -1552,6 +1557,7 @@ export const ListUsersUnderSupervisionResponseItem = zod.object({
     )
     .optional(),
   isActive: zod.boolean(),
+  avatarDataUrl: zod.string().nullish(),
   managerId: zod.string().nullish(),
   principalId: zod.string().nullish(),
   createdAt: zod.string(),

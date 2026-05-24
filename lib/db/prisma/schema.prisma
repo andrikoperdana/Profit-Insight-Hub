@@ -85,6 +85,7 @@ model User {
   dailyRate    Float?
   seniority    Seniority?
   isActive     Boolean  @default(true)
+  avatarDataUrl String?
   deletedAt    DateTime?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

@@ -290,6 +290,7 @@ export interface User {
   businessUnitName?: string | null;
   skills?: UserSkillInfo[];
   isActive: boolean;
+  avatarDataUrl?: string | null;
   managerId?: string | null;
   principalId?: string | null;
   createdAt: string;

@@ -155,6 +155,7 @@ export function serializeUser(u: UserBasic) {
         proficiency: s.proficiency,
       })) ?? [],
     isActive: u.isActive,
+    avatarDataUrl: (u as any).avatarDataUrl ?? null,
     managerId: (u as any).managerId ?? null,
     principalId: (u as any).principalId ?? null,
     createdAt: u.createdAt.toISOString(),
