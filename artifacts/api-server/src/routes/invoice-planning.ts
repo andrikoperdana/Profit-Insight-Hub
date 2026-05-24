@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
+import { canViewAllProjects } from "../lib/roles.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -54,13 +55,11 @@ function splitVat(gross: number, vatPct: number, includesVat: boolean) {
 router.get("/invoice-planning", async (req, res) => {
   const role = req.user!.role;
   const userId = req.user!.sub;
-  if (
-    role !== "MANAGEMENT" &&
-    role !== "FINANCE" &&
-    role !== "PROJECT_MANAGER" &&
-    role !== "ADMIN_PROJECT" &&
-    role !== "SALES"
-  ) {
+  // MANAGEMENT + FINANCE (canViewAllProjects, minus SITE_ADMIN which has no
+  // billing visibility) plus the per-scope owners (PM/ADMIN_PROJECT/SALES).
+  const isOwnerRole =
+    role === "PROJECT_MANAGER" || role === "ADMIN_PROJECT" || role === "SALES";
+  if (!(canViewAllProjects(role) && role !== "SITE_ADMIN") && !isOwnerRole) {
     res.status(403).json({ error: "Forbidden" });
     return;
   }

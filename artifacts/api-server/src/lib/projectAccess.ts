@@ -1,4 +1,5 @@
 import { prisma } from "@workspace/db";
+import { canViewAllProjects, canWriteAnyProject } from "./roles.js";
 
 // Mirror of the role-based scoping in `GET /projects` for per-project endpoints.
 // Returns true if the caller is allowed to see the given project (so callers
@@ -11,7 +12,7 @@ export async function userCanAccessProject(
   user: { sub: string; role: string },
 ): Promise<boolean> {
   const role = user.role;
-  if (role === "MANAGEMENT" || role === "SITE_ADMIN" || role === "FINANCE") return true;
+  if (canViewAllProjects(role)) return true;
   const userId = user.sub;
   const where: { id: string; deletedAt: null; [key: string]: unknown } = {
     id: projectId,
@@ -62,15 +63,17 @@ export async function userCanAccessProject(
   return !!found;
 }
 
-// Stricter check for write operations on a project's children (documents,
-// expenses, etc). Only the assigned PM, MGMT, or the project's Admin Project
-// may mutate. Returns true if allowed.
+// Per-project ownership check for write operations on a project's children.
+// Returns true only for: MGMT (full), the assigned PM, or the project's
+// Admin Project. FINANCE is intentionally NOT short-circuited here — their
+// cross-project document write right is narrow (INVOICE/CONTRACT only) and
+// must be enforced explicitly at the call site (see `routes/documents.ts`).
 export async function userCanWriteProject(
   projectId: string,
   user: { sub: string; role: string },
 ): Promise<boolean> {
   const role = user.role;
-  if (role === "MANAGEMENT" || role === "FINANCE") return true;
+  if (canWriteAnyProject(role)) return true;
   const project = await prisma.project.findUnique({
     where: { id: projectId },
     select: { pmId: true, adminProjectId: true, deletedAt: true },

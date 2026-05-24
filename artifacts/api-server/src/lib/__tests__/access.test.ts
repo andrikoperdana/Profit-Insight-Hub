@@ -14,11 +14,19 @@ vi.mock("@workspace/db", () => ({
 }));
 
 // Import after mock.
-const { userCanAccessProject } = await import("../projectAccess.js");
+const { userCanAccessProject, userCanWriteProject } = await import("../projectAccess.js");
 const { canViewDailyRate } = await import("../serializers.js");
+
+// Separate mock for the write helper — it uses findUnique, not findFirst.
+const findUniqueMock = vi.fn();
+// Patch the prisma proxy to add project.findUnique. Vi.mock above only created
+// findFirst; extend it now by reaching into the mocked module.
+const dbModule = await import("@workspace/db");
+(dbModule.prisma as any).project.findUnique = (...args: unknown[]) => findUniqueMock(...args);
 
 beforeEach(() => {
   findFirstMock.mockReset();
+  findUniqueMock.mockReset();
 });
 
 // ─── canViewDailyRate ───────────────────────────────────────────────────────
@@ -157,5 +165,67 @@ describe("userCanAccessProject", () => {
     findFirstMock.mockResolvedValueOnce(null);
     const ok = await userCanAccessProject("p1", { sub: "pm-x", role: "PROJECT_MANAGER" });
     expect(ok).toBe(false);
+  });
+});
+
+// ─── userCanWriteProject (FINANCE no longer short-circuits) ─────────────────
+
+describe("userCanWriteProject", () => {
+  it("MANAGEMENT short-circuits to true without hitting Prisma", async () => {
+    const ok = await userCanWriteProject("p1", { sub: "u1", role: "MANAGEMENT" });
+    expect(ok).toBe(true);
+    expect(findUniqueMock).not.toHaveBeenCalled();
+  });
+
+  it("FINANCE is NOT a project owner — must fall through and be denied", async () => {
+    // After cleanup, FINANCE no longer has blanket write power on every project.
+    // Their narrow INVOICE/CONTRACT right is enforced explicitly in documents.ts.
+    findUniqueMock.mockResolvedValueOnce({
+      pmId: "pm-1",
+      adminProjectId: "ap-1",
+      deletedAt: null,
+    });
+    const ok = await userCanWriteProject("p1", { sub: "finance-1", role: "FINANCE" });
+    expect(ok).toBe(false);
+  });
+
+  it("PROJECT_MANAGER allowed only when they lead the project", async () => {
+    findUniqueMock.mockResolvedValueOnce({ pmId: "pm-1", adminProjectId: null, deletedAt: null });
+    expect(await userCanWriteProject("p1", { sub: "pm-1", role: "PROJECT_MANAGER" })).toBe(true);
+    findUniqueMock.mockResolvedValueOnce({ pmId: "pm-other", adminProjectId: null, deletedAt: null });
+    expect(await userCanWriteProject("p1", { sub: "pm-1", role: "PROJECT_MANAGER" })).toBe(false);
+  });
+
+  it("ADMIN_PROJECT allowed only when they are the project's Admin Project", async () => {
+    findUniqueMock.mockResolvedValueOnce({ pmId: null, adminProjectId: "ap-1", deletedAt: null });
+    expect(await userCanWriteProject("p1", { sub: "ap-1", role: "ADMIN_PROJECT" })).toBe(true);
+    findUniqueMock.mockResolvedValueOnce({ pmId: null, adminProjectId: "ap-other", deletedAt: null });
+    expect(await userCanWriteProject("p1", { sub: "ap-1", role: "ADMIN_PROJECT" })).toBe(false);
+  });
+
+  it("soft-deleted projects deny all roles except MGMT short-circuit", async () => {
+    findUniqueMock.mockResolvedValueOnce({ pmId: "pm-1", adminProjectId: null, deletedAt: new Date() });
+    expect(await userCanWriteProject("p1", { sub: "pm-1", role: "PROJECT_MANAGER" })).toBe(false);
+  });
+
+  it("missing project denies all non-MGMT roles", async () => {
+    findUniqueMock.mockResolvedValueOnce(null);
+    expect(await userCanWriteProject("p1", { sub: "pm-1", role: "PROJECT_MANAGER" })).toBe(false);
+  });
+
+  it("SALES, KONSULTAN, TECHNICAL_WRITER, HR, SITE_ADMIN, Principals all denied", async () => {
+    for (const role of [
+      "SALES",
+      "KONSULTAN",
+      "TECHNICAL_WRITER",
+      "HR",
+      "SITE_ADMIN",
+      "PRINCIPAL_KONSULTAN",
+      "PRINCIPAL_TECHNICAL_WRITER",
+      "PRINCIPAL_ADMIN_PROJECT",
+    ]) {
+      findUniqueMock.mockResolvedValueOnce({ pmId: "pm-x", adminProjectId: "ap-x", deletedAt: null });
+      expect(await userCanWriteProject("p1", { sub: "u1", role }), `role=${role}`).toBe(false);
+    }
   });
 });

@@ -30,7 +30,9 @@ router.get("/clients", async (_req, res) => {
   res.json(clients.map(serialize));
 });
 
-const writeRoles = ["SALES"] as const;
+// Local to this router — distinct from `lib/projectValidators.ts` `writeRoles`
+// which governs project mutations. Only SALES creates/edits clients.
+const clientWriteRoles = ["SALES"] as const;
 
 // Loose but enough to reject obvious garbage like "abc" or "no-at-sign.com".
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -56,7 +58,7 @@ function validateClientFields(b: Record<string, unknown>, partial: boolean): str
   return null;
 }
 
-router.post("/clients", requireRole(...writeRoles), async (req, res) => {
+router.post("/clients", requireRole(...clientWriteRoles), async (req, res) => {
   const body = req.body || {};
   const err = validateClientFields(body, false);
   if (err) {
@@ -76,7 +78,7 @@ router.post("/clients", requireRole(...writeRoles), async (req, res) => {
   res.status(201).json(serialize(c));
 });
 
-router.patch("/clients/:id", requireRole(...writeRoles), async (req, res) => {
+router.patch("/clients/:id", requireRole(...clientWriteRoles), async (req, res) => {
   const body = req.body || {};
   const err = validateClientFields(body, true);
   if (err) {

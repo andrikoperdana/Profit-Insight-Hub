@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
+import { canViewAllProjects } from "../lib/roles.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -26,7 +27,13 @@ async function canViewProject(
   userId: string | undefined,
   project: { pmId: string | null; salesId: string | null; id: string },
 ): Promise<boolean> {
-  if (role === "MANAGEMENT" || role === "ADMIN_PROJECT" || role === "SITE_ADMIN" || role === "FINANCE") return true;
+  // Commercial-data policy: SITE_ADMIN is excluded (mirrors VAT recap and
+  // invoice-planning gates). MANAGEMENT + FINANCE see everything for
+  // reconciliation; ADMIN_PROJECT needs cross-project visibility into
+  // closing documents/invoices.
+  if (role === "MANAGEMENT" || role === "FINANCE" || role === "ADMIN_PROJECT") return true;
+  // canViewAllProjects intentionally NOT used here — see comment above.
+  void canViewAllProjects;
   if (role === "PROJECT_MANAGER" && project.pmId === userId) return true;
   if (role === "SALES" && project.salesId === userId) return true;
   if (role === "KONSULTAN" || role === "TECHNICAL_WRITER") {
@@ -78,6 +85,8 @@ function serialize(m: any) {
  */
 router.get("/billing-milestones/vat-recap", async (req, res) => {
   if (req.user?.role !== "MANAGEMENT" && req.user?.role !== "FINANCE") {
+    // Kept as an explicit two-role gate (not `canViewAllProjects`) because
+    // SITE_ADMIN must not see commercial VAT figures.
     res.status(403).json({ error: "Only Management or Finance can view VAT recap" });
     return;
   }

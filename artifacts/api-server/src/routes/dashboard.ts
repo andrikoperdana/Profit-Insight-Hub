@@ -7,6 +7,7 @@ import {
   computeMetrics,
   canViewProjectFinancials,
 } from "../lib/serializers.js";
+import { isPrincipalRole } from "../lib/roles.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -265,7 +266,7 @@ router.get("/dashboard/utilization-trend", async (req, res) => {
 
 router.get("/dashboard/resource-utilization-detail", async (req, res) => {
   const role = req.user!.role;
-  const isPrincipal = role.startsWith("PRINCIPAL_");
+  const isPrincipal = isPrincipalRole(role);
   if (
     role !== "MANAGEMENT" &&
     role !== "PROJECT_MANAGER" &&
