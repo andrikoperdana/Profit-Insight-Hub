@@ -37,8 +37,17 @@ export async function userCanAccessProject(
       { adminProjectId: userId },
       { status: { in: ["COMPLETE", "CLOSED"] } },
     ];
-  } else if (role.startsWith("PRINCIPAL_")) {
-    where["resources"] = { some: { user: { principalId: userId } } };
+  } else if (role === "PRINCIPAL_KONSULTAN") {
+    // Mirror of GET /projects: only ACTIVE projects where the principal is
+    // a resource themselves or one of their direct supervisees is assigned.
+    where["status"] = "ACTIVE";
+    where["OR"] = [
+      { resources: { some: { userId } } },
+      { resources: { some: { user: { principalId: userId } } } },
+    ];
+  } else if (role === "PRINCIPAL_TECHNICAL_WRITER" || role === "PRINCIPAL_ADMIN_PROJECT") {
+    // Mirror of GET /projects: ACTIVE projects only, no involvement filter.
+    where["status"] = "ACTIVE";
   } else {
     // HR and any future unrecognized role have no project access by default.
     return false;

@@ -51,6 +51,20 @@ router.get("/projects", async (req, res) => {
       { adminProjectId: userId },
       { status: { in: ["COMPLETE", "CLOSED"] } },
     ];
+  } else if (role === "PRINCIPAL_KONSULTAN") {
+    // Principal Consultant: ACTIVE projects only, and only when the principal
+    // is involved (themselves on the resource list) or one of their direct
+    // supervisees is assigned. Other statuses are hidden entirely.
+    where.status = "ACTIVE";
+    where.OR = [
+      { resources: { some: { userId } } },
+      { resources: { some: { user: { principalId: userId } } } },
+    ];
+  } else if (role === "PRINCIPAL_TECHNICAL_WRITER" || role === "PRINCIPAL_ADMIN_PROJECT") {
+    // Principal TW / Principal AP: ACTIVE projects only (no involvement
+    // filter — they need visibility across all active engagements to plan
+    // staffing). DRAFT/OBSERVATION/PAUSE/COMPLETE/CLOSED are hidden.
+    where.status = "ACTIVE";
   } else if (role === "HR") {
     // HR has no project visibility. Return empty without leaking existence.
     res.json([]);
@@ -318,9 +332,12 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
       });
       return;
     }
-    if (!["OBSERVATION", "ACTIVE"].includes(beforeProj.status as string)) {
+    // Aligned with the new visibility rule: Principals only see ACTIVE
+    // projects, so they may only assign on ACTIVE — never on hidden
+    // OBSERVATION/PAUSE/etc.
+    if (beforeProj.status !== "ACTIVE") {
       res.status(403).json({
-        error: "Principal can only assign on OBSERVATION or ACTIVE projects",
+        error: "Principal can only assign on ACTIVE projects",
       });
       return;
     }

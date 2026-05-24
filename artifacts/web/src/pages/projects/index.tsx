@@ -23,7 +23,12 @@ import { ProjectStatus } from "@workspace/api-client-react";
 export default function ProjectsList() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const isPrincipal = !!user?.role && user.role.startsWith("PRINCIPAL_");
+  // Principals only see ACTIVE projects (server-enforced), so lock the
+  // status filter and hide the other status tabs.
+  const [statusFilter, setStatusFilter] = useState<string>(
+    isPrincipal ? ProjectStatus.ACTIVE : "all",
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [seeding, setSeeding] = useState(false);
 
@@ -126,14 +131,14 @@ export default function ProjectsList() {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
-        <Tabs defaultValue="all" onValueChange={setStatusFilter} className="w-full sm:w-auto">
+        <Tabs value={statusFilter} onValueChange={setStatusFilter} className="w-full sm:w-auto">
           <TabsList className="bg-muted w-full sm:w-auto overflow-x-auto justify-start">
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value={ProjectStatus.OBSERVATION}>Observation</TabsTrigger>
+            {!isPrincipal && <TabsTrigger value="all">All</TabsTrigger>}
+            {!isPrincipal && <TabsTrigger value={ProjectStatus.OBSERVATION}>Observation</TabsTrigger>}
             <TabsTrigger value={ProjectStatus.ACTIVE}>Active</TabsTrigger>
-            <TabsTrigger value={ProjectStatus.PAUSE}>Pause</TabsTrigger>
-            <TabsTrigger value={ProjectStatus.COMPLETE}>Complete</TabsTrigger>
-            <TabsTrigger value={ProjectStatus.CLOSED}>Closed</TabsTrigger>
+            {!isPrincipal && <TabsTrigger value={ProjectStatus.PAUSE}>Pause</TabsTrigger>}
+            {!isPrincipal && <TabsTrigger value={ProjectStatus.COMPLETE}>Complete</TabsTrigger>}
+            {!isPrincipal && <TabsTrigger value={ProjectStatus.CLOSED}>Closed</TabsTrigger>}
           </TabsList>
         </Tabs>
 
