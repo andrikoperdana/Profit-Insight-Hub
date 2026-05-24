@@ -1,0 +1,161 @@
+import { describe, it, expect, vi, beforeEach } from "vitest";
+
+// ─── Mock Prisma ────────────────────────────────────────────────────────────
+// projectAccess.userCanAccessProject calls `prisma.project.findFirst({ where })`.
+// We capture the `where` arg and return a row only when the where matches a
+// fixed scenario, so we can assert that each role builds the right filter.
+
+const findFirstMock = vi.fn();
+
+vi.mock("@workspace/db", () => ({
+  prisma: {
+    project: { findFirst: (...args: unknown[]) => findFirstMock(...args) },
+  },
+}));
+
+// Import after mock.
+const { userCanAccessProject } = await import("../projectAccess.js");
+const { canViewDailyRate } = await import("../serializers.js");
+
+beforeEach(() => {
+  findFirstMock.mockReset();
+});
+
+// ─── canViewDailyRate ───────────────────────────────────────────────────────
+
+describe("canViewDailyRate", () => {
+  it("allows MANAGEMENT and PROJECT_MANAGER only", () => {
+    expect(canViewDailyRate("MANAGEMENT")).toBe(true);
+    expect(canViewDailyRate("PROJECT_MANAGER")).toBe(true);
+  });
+  it("denies FINANCE, HR, SALES, ADMIN_PROJECT, SITE_ADMIN, Principals, delivery roles, and unknown", () => {
+    for (const r of [
+      "FINANCE",
+      "HR",
+      "SALES",
+      "ADMIN_PROJECT",
+      "SITE_ADMIN",
+      "PRINCIPAL_KONSULTAN",
+      "PRINCIPAL_TECHNICAL_WRITER",
+      "PRINCIPAL_ADMIN_PROJECT",
+      "KONSULTAN",
+      "TECHNICAL_WRITER",
+      "WHO_KNOWS",
+      "",
+    ]) {
+      expect(canViewDailyRate(r)).toBe(false);
+    }
+    expect(canViewDailyRate(null)).toBe(false);
+    expect(canViewDailyRate(undefined)).toBe(false);
+  });
+});
+
+// ─── userCanAccessProject: list/per-id parity ───────────────────────────────
+
+describe("userCanAccessProject", () => {
+  it("MANAGEMENT, SITE_ADMIN, FINANCE short-circuit to true without hitting Prisma", async () => {
+    for (const role of ["MANAGEMENT", "SITE_ADMIN", "FINANCE"]) {
+      const ok = await userCanAccessProject("p1", { sub: "u1", role });
+      expect(ok).toBe(true);
+    }
+    expect(findFirstMock).not.toHaveBeenCalled();
+  });
+
+  it("HR has no project access and skips Prisma", async () => {
+    const ok = await userCanAccessProject("p1", { sub: "hr-1", role: "HR" });
+    expect(ok).toBe(false);
+    expect(findFirstMock).not.toHaveBeenCalled();
+  });
+
+  it("Unknown roles are denied without hitting Prisma", async () => {
+    const ok = await userCanAccessProject("p1", { sub: "x", role: "WHO_KNOWS" });
+    expect(ok).toBe(false);
+    expect(findFirstMock).not.toHaveBeenCalled();
+  });
+
+  it("PROJECT_MANAGER filter is pmId only (no resource OR clause)", async () => {
+    findFirstMock.mockResolvedValueOnce({ id: "p1" });
+    const ok = await userCanAccessProject("p1", { sub: "pm-1", role: "PROJECT_MANAGER" });
+    expect(ok).toBe(true);
+    const where = findFirstMock.mock.calls[0][0].where;
+    expect(where).toEqual({
+      id: "p1",
+      deletedAt: null,
+      pmId: "pm-1",
+    });
+    expect(where.OR).toBeUndefined();
+    expect(where.resources).toBeUndefined();
+  });
+
+  it("SALES filter is salesId only (no resource OR clause)", async () => {
+    findFirstMock.mockResolvedValueOnce({ id: "p1" });
+    const ok = await userCanAccessProject("p1", { sub: "sales-1", role: "SALES" });
+    expect(ok).toBe(true);
+    const where = findFirstMock.mock.calls[0][0].where;
+    expect(where).toEqual({
+      id: "p1",
+      deletedAt: null,
+      salesId: "sales-1",
+    });
+    expect(where.OR).toBeUndefined();
+    expect(where.resources).toBeUndefined();
+  });
+
+  it("KONSULTAN filter requires assignment OR timesheet", async () => {
+    findFirstMock.mockResolvedValueOnce(null);
+    await userCanAccessProject("p1", { sub: "k-1", role: "KONSULTAN" });
+    const where = findFirstMock.mock.calls[0][0].where;
+    expect(where.OR).toEqual([
+      { resources: { some: { userId: "k-1" } } },
+      { timesheets: { some: { userId: "k-1" } } },
+    ]);
+  });
+
+  it("TECHNICAL_WRITER filter includes technicalWriterId branch", async () => {
+    findFirstMock.mockResolvedValueOnce(null);
+    await userCanAccessProject("p1", { sub: "tw-1", role: "TECHNICAL_WRITER" });
+    const where = findFirstMock.mock.calls[0][0].where;
+    expect(where.OR).toEqual([
+      { resources: { some: { userId: "tw-1" } } },
+      { timesheets: { some: { userId: "tw-1" } } },
+      { technicalWriterId: "tw-1" },
+    ]);
+  });
+
+  it("ADMIN_PROJECT filter is adminProjectId OR resources", async () => {
+    findFirstMock.mockResolvedValueOnce(null);
+    await userCanAccessProject("p1", { sub: "ap-1", role: "ADMIN_PROJECT" });
+    const where = findFirstMock.mock.calls[0][0].where;
+    expect(where.OR).toEqual([
+      { adminProjectId: "ap-1" },
+      { resources: { some: { userId: "ap-1" } } },
+    ]);
+  });
+
+  it("PRINCIPAL_KONSULTAN scoped to ACTIVE and supervisee/self resources", async () => {
+    findFirstMock.mockResolvedValueOnce(null);
+    await userCanAccessProject("p1", { sub: "pk-1", role: "PRINCIPAL_KONSULTAN" });
+    const where = findFirstMock.mock.calls[0][0].where;
+    expect(where.status).toBe("ACTIVE");
+    expect(where.OR).toEqual([
+      { resources: { some: { userId: "pk-1" } } },
+      { resources: { some: { user: { principalId: "pk-1" } } } },
+    ]);
+  });
+
+  it("PRINCIPAL_TECHNICAL_WRITER / PRINCIPAL_ADMIN_PROJECT scoped to ACTIVE only (no involvement filter)", async () => {
+    for (const role of ["PRINCIPAL_TECHNICAL_WRITER", "PRINCIPAL_ADMIN_PROJECT"]) {
+      findFirstMock.mockResolvedValueOnce(null);
+      await userCanAccessProject("p1", { sub: "pp-1", role });
+      const where = findFirstMock.mock.calls.at(-1)![0].where;
+      expect(where.status).toBe("ACTIVE");
+      expect(where.OR).toBeUndefined();
+    }
+  });
+
+  it("returns false when Prisma yields no row (project not in scope)", async () => {
+    findFirstMock.mockResolvedValueOnce(null);
+    const ok = await userCanAccessProject("p1", { sub: "pm-x", role: "PROJECT_MANAGER" });
+    expect(ok).toBe(false);
+  });
+});
