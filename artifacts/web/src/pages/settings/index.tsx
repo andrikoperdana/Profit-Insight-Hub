@@ -2,14 +2,14 @@ import { useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { useGetMe, customFetch } from "@workspace/api-client-react";
 import { RoleLabels } from "@/lib/roles";
-import { formatIDR } from "@/lib/format";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { LoadingPage } from "@/components/common/Loading";
-import { Calendar, Copy, RefreshCw, Check } from "lucide-react";
+import { Calendar, Copy, RefreshCw, Check, KeyRound } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 function CalendarFeedCard() {
@@ -99,6 +99,120 @@ function CalendarFeedCard() {
   );
 }
 
+function ChangePasswordCard() {
+  const { toast } = useToast();
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  const reset = () => {
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+  };
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (submitting) return;
+    if (newPassword.length < 8) {
+      toast({ title: "Password too short", description: "New password must be at least 8 characters.", variant: "destructive" });
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast({ title: "Passwords do not match", description: "New password and confirmation must be identical.", variant: "destructive" });
+      return;
+    }
+    if (newPassword === currentPassword) {
+      toast({ title: "Choose a different password", description: "New password must differ from the current one.", variant: "destructive" });
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await customFetch("/api/auth/change-password", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ currentPassword, newPassword }),
+      });
+      toast({ title: "Password updated", description: "Use the new password on your next login." });
+      reset();
+    } catch (e: any) {
+      toast({
+        title: "Failed to change password",
+        description: e?.message ?? "Unknown error",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <Card className="border-border shadow-sm">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <KeyRound className="h-5 w-5 text-primary" /> Change Password
+        </CardTitle>
+        <CardDescription>
+          Update your account password. Minimum 8 characters. You will stay signed in on this device after the change.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form className="space-y-4 max-w-md" onSubmit={submit}>
+          <div className="space-y-1.5">
+            <Label htmlFor="current-password">Current password</Label>
+            <Input
+              id="current-password"
+              type="password"
+              autoComplete="current-password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              required
+              data-testid="input-current-password"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="new-password">New password</Label>
+            <Input
+              id="new-password"
+              type="password"
+              autoComplete="new-password"
+              minLength={8}
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+              data-testid="input-new-password"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="confirm-password">Confirm new password</Label>
+            <Input
+              id="confirm-password"
+              type="password"
+              autoComplete="new-password"
+              minLength={8}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              data-testid="input-confirm-password"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <Button type="submit" disabled={submitting || !currentPassword || !newPassword || !confirmPassword} data-testid="button-change-password">
+              {submitting ? "Updating…" : "Update Password"}
+            </Button>
+            {(currentPassword || newPassword || confirmPassword) && (
+              <Button type="button" variant="ghost" onClick={reset} disabled={submitting}>
+                Cancel
+              </Button>
+            )}
+          </div>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function Settings() {
   const { user } = useAuth();
   const { data: profile, isLoading } = useGetMe({
@@ -139,7 +253,7 @@ export default function Settings() {
                 {RoleLabels[profile.role]}
               </Badge>
             </div>
-            
+
             <div className="space-y-1">
               <p className="text-sm font-medium text-muted-foreground">Job Title</p>
               <p className="font-medium">{profile.title || "Not specified"}</p>
@@ -152,16 +266,11 @@ export default function Settings() {
                 <p className="font-medium">{profile.isActive ? "Active" : "Inactive"}</p>
               </div>
             </div>
-
-            {(profile.role === "KONSULTAN" || profile.role === "TECHNICAL_WRITER" || profile.role === "PROJECT_MANAGER") && (
-              <div className="space-y-1">
-                <p className="text-sm font-medium text-muted-foreground">Daily Rate</p>
-                <p className="font-medium font-mono">{formatIDR(profile.dailyRate)}</p>
-              </div>
-            )}
           </div>
         </CardContent>
       </Card>
+
+      <ChangePasswordCard />
 
       <CalendarFeedCard />
     </div>

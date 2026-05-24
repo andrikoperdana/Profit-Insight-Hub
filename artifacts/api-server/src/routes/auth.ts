@@ -1,6 +1,6 @@
 import { Router, type IRouter, type Request } from "express";
 import { prisma } from "@workspace/db";
-import { signToken, verifyPassword } from "../lib/auth.js";
+import { signToken, verifyPassword, hashPassword } from "../lib/auth.js";
 import { requireAuth } from "../middlewares/auth.js";
 import { serializeUser } from "../lib/serializers.js";
 import { recordAuditAnon } from "../lib/audit.js";
@@ -137,6 +137,46 @@ router.get("/auth/me", requireAuth, async (req, res) => {
 });
 
 router.post("/auth/logout", requireAuth, (_req, res) => {
+  res.json({ success: true });
+});
+
+router.post("/auth/change-password", requireAuth, async (req, res) => {
+  const currentPassword = String(req.body?.currentPassword || "");
+  const newPassword = String(req.body?.newPassword || "");
+  if (!currentPassword || !newPassword) {
+    res.status(400).json({ error: "currentPassword and newPassword are required" });
+    return;
+  }
+  if (newPassword.length < 8) {
+    res.status(400).json({ error: "New password must be at least 8 characters" });
+    return;
+  }
+  if (newPassword === currentPassword) {
+    res.status(400).json({ error: "New password must be different from the current password" });
+    return;
+  }
+  const user = await prisma.user.findUnique({ where: { id: req.user!.sub } });
+  if (!user || !user.isActive) {
+    res.status(404).json({ error: "User not found" });
+    return;
+  }
+  const ok = await verifyPassword(currentPassword, user.passwordHash);
+  if (!ok) {
+    req.log.warn({ userId: user.id }, "change-password: wrong current password");
+    res.status(401).json({ error: "Current password is incorrect" });
+    return;
+  }
+  const passwordHash = await hashPassword(newPassword);
+  await prisma.user.update({ where: { id: user.id }, data: { passwordHash } });
+  await recordAuditAnon({
+    action: "user.updated",
+    entityType: "User",
+    entityId: user.id,
+    userId: user.id,
+    userName: user.name,
+    userRole: user.role,
+    description: `${user.email} changed their password`,
+  });
   res.json({ success: true });
 });
 
