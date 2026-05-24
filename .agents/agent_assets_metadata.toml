@@ -245,3 +245,9 @@ id = "keE_5ULltT9o-g_ODUmgF"
 uri = "file://scripts/exports/role-features.docx"
 type = "word_document"
 title = "Dokumentasi Fitur per Role - SecureProfit Hub"
+
+[[outputs]]
+id = "ngHNqN2WV9nhYBvRvMZqT"
+uri = "file://scripts/exports/SecureProfitHub_vs_PSOHub_FitGap.docx"
+type = "word_document"
+title = "Fit-Gap Analysis: SecureProfit Hub vs PSOHub (.docx)"
