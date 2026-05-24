@@ -117,7 +117,9 @@ export default function OrgChartPage() {
           <GitBranch className="h-7 w-7 text-primary" /> Org Chart
         </h1>
         <p className="text-muted-foreground">
-          Reporting hierarchy: Project Managers → PMO Director, delivery staff → Principal supervisors.
+          Reporting hierarchy for the project delivery team only: Project Managers → PMO
+          Director, delivery staff → Principal supervisors. This is not the full company
+          org chart — it covers personnel involved in project execution.
         </p>
       </div>
 
