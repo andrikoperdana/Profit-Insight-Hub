@@ -140,7 +140,7 @@ export default function Dashboard() {
         )}
       </div>
 
-      {pendingAssignment.length > 0 && (
+      {!isFinance && pendingAssignment.length > 0 && (
         <PendingAssignmentSection projects={pendingAssignment} />
       )}
 
@@ -229,7 +229,7 @@ export default function Dashboard() {
       <SatisfactionWidget />
 
       {/* PM Reminder: pending timesheet aging */}
-      {aging && (aging.buckets.gt48h > 0 || aging.buckets.gt72h > 0 || aging.buckets.h24to48 > 0) && (
+      {!isFinance && aging && (aging.buckets.gt48h > 0 || aging.buckets.gt72h > 0 || aging.buckets.h24to48 > 0) && (
         <Card className={`shadow-sm ${aging.buckets.gt48h + aging.buckets.gt72h > 0 ? "border-destructive/40 bg-destructive/5" : "border-amber-500/40 bg-amber-500/5"}`}>
           <CardHeader className="flex flex-row items-center gap-2 space-y-0">
             <AlarmClock className={`h-5 w-5 ${aging.buckets.gt48h + aging.buckets.gt72h > 0 ? "text-destructive" : "text-amber-400"}`} />
