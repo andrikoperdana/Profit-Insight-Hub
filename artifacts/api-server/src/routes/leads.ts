@@ -1,8 +1,59 @@
-import { Router, type IRouter } from "express";
-import { prisma } from "@workspace/db";
+import { Router, type IRouter, type Request, type Response } from "express";
+import { prisma, type Prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { notifyOnceDailyForLead } from "../lib/leadNotifications.js";
 import { validatePdfDataUrl, sanitizeFileName } from "../lib/projectValidators.js";
+
+// Local input shapes for serialize helpers. They mirror the Prisma `include`
+// shape used at each call site rather than reaching for full Prisma payload
+// types (which would require generic juggling for each variant).
+type LeadForSerialize = {
+  id: string;
+  title: string;
+  contactName: string | null;
+  contactEmail: string | null;
+  contactPhone: string | null;
+  clientId: string | null;
+  client?: { name: string } | null;
+  prospectiveClientName: string | null;
+  industry: string | null;
+  source: string | null;
+  stage: string;
+  estimatedValue: number;
+  probability: number;
+  expectedCloseDate: Date | null;
+  ownerId: string;
+  owner?: { name: string } | null;
+  notes: string | null;
+  lostReason: string | null;
+  competitorWon: string | null;
+  convertedProjectId: string | null;
+  wonAt: Date | null;
+  lostAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+type ActivityForSerialize = {
+  id: string;
+  leadId: string;
+  type: string;
+  occurredAt: Date;
+  outcome: string | null;
+  nextActionAt: Date | null;
+  nextActionNote: string | null;
+  createdById: string;
+  createdBy?: { name: string } | null;
+  createdAt: Date;
+};
+
+// Narrow `req.user` to non-null. All routes here are mounted under
+// `requireAuth`, so this is always defined inside handlers.
+type AuthedRequest = Request & { user: NonNullable<Request["user"]> };
+
+function errorMessage(e: unknown): string {
+  return e instanceof Error ? e.message : String(e);
+}
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -13,7 +64,7 @@ const LOST_REASONS = ["PRICE", "TIMELINE", "COMPETITOR", "NO_BUDGET", "NO_DECISI
 const ACTIVITY_TYPES = ["CALL", "EMAIL", "MEETING", "NOTE"] as const;
 type ActivityType = (typeof ACTIVITY_TYPES)[number];
 
-function serialize(l: any) {
+function serialize(l: LeadForSerialize) {
   return {
     id: l.id,
     title: l.title,
@@ -42,7 +93,7 @@ function serialize(l: any) {
   };
 }
 
-function serializeActivity(a: any) {
+function serializeActivity(a: ActivityForSerialize) {
   return {
     id: a.id,
     leadId: a.leadId,
@@ -61,19 +112,19 @@ function serializeActivity(a: any) {
  * Returns Prisma `where` scope clause, or `null` if forbidden.
  * SALES: own leads only. MANAGEMENT: read-only, sees all.
  */
-function scope(req: any): Record<string, unknown> | null {
+function scope(req: AuthedRequest): Record<string, unknown> | null {
   const role = req.user.role;
   if (role === "SALES") return { ownerId: req.user.sub };
   if (role === "MANAGEMENT") return {};
   return null;
 }
 
-function canMutate(req: any, lead: { ownerId: string }): boolean {
+function canMutate(req: AuthedRequest, lead: { ownerId: string }): boolean {
   if (req.user.role === "SALES") return lead.ownerId === req.user.sub;
   return false;
 }
 
-router.get("/leads", async (req: any, res) => {
+router.get("/leads", async (req: AuthedRequest, res: Response) => {
   const s = scope(req);
   if (s === null) {
     res.status(403).json({ error: "Forbidden" });
@@ -105,7 +156,7 @@ router.get("/leads", async (req: any, res) => {
   );
 });
 
-router.get("/leads/analytics", async (req: any, res) => {
+router.get("/leads/analytics", async (req: AuthedRequest, res: Response) => {
   const role = req.user.role;
   if (role !== "SALES" && role !== "MANAGEMENT") {
     res.status(403).json({ error: "Forbidden" });
@@ -185,13 +236,13 @@ router.get("/leads/analytics", async (req: any, res) => {
   });
 });
 
-function validate(b: any, partial: boolean): string | null {
+function validate(b: Record<string, unknown>, partial: boolean): string | null {
   if (!partial || b.title !== undefined) {
     const t = typeof b.title === "string" ? b.title.trim() : "";
     if (!t) return "title required";
     if (t.length > 200) return "title too long";
   }
-  if (b.stage !== undefined && !STAGES.includes(b.stage)) return "invalid stage";
+  if (b.stage !== undefined && !STAGES.includes(b.stage as Stage)) return "invalid stage";
   if (b.estimatedValue !== undefined && (typeof b.estimatedValue !== "number" || b.estimatedValue < 0)) return "estimatedValue must be a non-negative number";
   if (b.probability !== undefined) {
     if (typeof b.probability !== "number" || b.probability < 0 || b.probability > 100) return "probability must be 0–100";
@@ -256,7 +307,7 @@ function parseCsv(text: string): string[][] {
   return rows.filter((r) => r.some((cell) => cell.trim() !== ""));
 }
 
-router.post("/leads/import", requireRole("SALES", "MANAGEMENT"), async (req: any, res) => {
+router.post("/leads/import", requireRole("SALES", "MANAGEMENT"), async (req: AuthedRequest, res: Response) => {
   const body = req.body || {};
   const csv = typeof body.csv === "string" ? body.csv : "";
   if (!csv.trim()) {
@@ -288,7 +339,7 @@ router.post("/leads/import", requireRole("SALES", "MANAGEMENT"), async (req: any
   }
 
   const errors: { row: number; message: string }[] = [];
-  const toCreate: any[] = [];
+  const toCreate: Prisma.LeadCreateManyInput[] = [];
 
   for (let r = 1; r < rows.length; r++) {
     const cells = rows[r];
@@ -365,7 +416,7 @@ router.post("/leads/import", requireRole("SALES", "MANAGEMENT"), async (req: any
   });
 });
 
-router.post("/leads", requireRole("SALES"), async (req: any, res) => {
+router.post("/leads", requireRole("SALES"), async (req: AuthedRequest, res: Response) => {
   const body = req.body || {};
   const err = validate(body, false);
   if (err) {
@@ -395,7 +446,7 @@ router.post("/leads", requireRole("SALES"), async (req: any, res) => {
   res.status(201).json(serialize(lead));
 });
 
-router.patch("/leads/:id", requireRole("SALES"), async (req: any, res) => {
+router.patch("/leads/:id", requireRole("SALES"), async (req: AuthedRequest, res: Response) => {
   const body = req.body || {};
   const err = validate(body, true);
   if (err) {
@@ -420,7 +471,7 @@ router.patch("/leads/:id", requireRole("SALES"), async (req: any, res) => {
       return;
     }
   }
-  const data: any = {
+  const data: Prisma.LeadUpdateInput = {
     ...(body.title !== undefined ? { title: String(body.title).trim() } : {}),
     ...(body.contactName !== undefined ? { contactName: body.contactName || null } : {}),
     ...(body.contactEmail !== undefined ? { contactEmail: body.contactEmail || null } : {}),
@@ -449,7 +500,7 @@ router.patch("/leads/:id", requireRole("SALES"), async (req: any, res) => {
   res.json(serialize(lead));
 });
 
-router.delete("/leads/:id", requireRole("SALES"), async (req: any, res) => {
+router.delete("/leads/:id", requireRole("SALES"), async (req: AuthedRequest, res: Response) => {
   const existing = await prisma.lead.findUnique({ where: { id: String(req.params.id) } });
   if (!existing || existing.deletedAt) {
     res.status(404).json({ error: "Lead not found" });
@@ -463,7 +514,7 @@ router.delete("/leads/:id", requireRole("SALES"), async (req: any, res) => {
   res.json({ success: true });
 });
 
-router.post("/leads/:id/convert", requireRole("SALES"), async (req: any, res) => {
+router.post("/leads/:id/convert", requireRole("SALES"), async (req: AuthedRequest, res: Response) => {
   const body = req.body || {};
   const lead = await prisma.lead.findUnique({ where: { id: String(req.params.id) } });
   if (!lead || lead.deletedAt) {
@@ -510,8 +561,8 @@ router.post("/leads/:id/convert", requireRole("SALES"), async (req: any, res) =>
     if (body.contractFileUrl !== undefined) {
       validatedContractUrl = validatePdfDataUrl(body.contractFileUrl, "contractFileUrl") ?? null;
     }
-  } catch (e: any) {
-    res.status(400).json({ error: e?.message || "Invalid PDF file" });
+  } catch (e: unknown) {
+    res.status(400).json({ error: errorMessage(e) || "Invalid PDF file" });
     return;
   }
 
@@ -587,20 +638,21 @@ router.post("/leads/:id/convert", requireRole("SALES"), async (req: any, res) =>
       return { projectId: project.id, projectCode: project.code };
     });
     res.status(201).json(result);
-  } catch (e: any) {
-    if (e?.message === "ALREADY_CONVERTED") {
+  } catch (e: unknown) {
+    const msg = errorMessage(e);
+    if (msg === "ALREADY_CONVERTED") {
       res.status(409).json({ error: "Lead already converted" });
       return;
     }
-    if (e?.message === "CODE_EXISTS") {
+    if (msg === "CODE_EXISTS") {
       res.status(409).json({ error: "Project code already exists" });
       return;
     }
-    if (e?.message === "LEAD_NOT_FOUND") {
+    if (msg === "LEAD_NOT_FOUND") {
       res.status(404).json({ error: "Lead not found" });
       return;
     }
-    if (e?.message === "CLIENT_NOT_FOUND") {
+    if (msg === "CLIENT_NOT_FOUND") {
       res.status(404).json({ error: "Client not found" });
       return;
     }
@@ -610,7 +662,8 @@ router.post("/leads/:id/convert", requireRole("SALES"), async (req: any, res) =>
 
 // ─── Activities ──────────────────────────────────────────────────────────────
 
-async function loadLeadForActivity(req: any, res: any): Promise<any | null> {
+type LeadRow = Awaited<ReturnType<typeof prisma.lead.findUnique>>;
+async function loadLeadForActivity(req: AuthedRequest, res: Response): Promise<NonNullable<LeadRow> | null> {
   const lead = await prisma.lead.findUnique({ where: { id: String(req.params.id) } });
   if (!lead || lead.deletedAt) {
     res.status(404).json({ error: "Lead not found" });
@@ -629,7 +682,7 @@ async function loadLeadForActivity(req: any, res: any): Promise<any | null> {
   return lead;
 }
 
-router.get("/leads/:id/activities", async (req: any, res) => {
+router.get("/leads/:id/activities", async (req: AuthedRequest, res: Response) => {
   const lead = await loadLeadForActivity(req, res);
   if (!lead) return;
   const activities = await prisma.leadActivity.findMany({
@@ -645,7 +698,7 @@ router.get("/leads/:id/activities", async (req: any, res) => {
   res.json(activities.map(serializeActivity));
 });
 
-router.post("/leads/:id/activities", async (req: any, res) => {
+router.post("/leads/:id/activities", async (req: AuthedRequest, res: Response) => {
   const lead = await loadLeadForActivity(req, res);
   if (!lead) return;
   if (req.user.role !== "SALES" || lead.ownerId !== req.user.sub) {
@@ -673,7 +726,7 @@ router.post("/leads/:id/activities", async (req: any, res) => {
   res.status(201).json(serializeActivity(activity));
 });
 
-router.patch("/leads/:id/activities/:activityId", async (req: any, res) => {
+router.patch("/leads/:id/activities/:activityId", async (req: AuthedRequest, res: Response) => {
   const lead = await loadLeadForActivity(req, res);
   if (!lead) return;
   if (req.user.role !== "SALES" || lead.ownerId !== req.user.sub) {
@@ -704,7 +757,7 @@ router.patch("/leads/:id/activities/:activityId", async (req: any, res) => {
   res.json(serializeActivity(activity));
 });
 
-router.delete("/leads/:id/activities/:activityId", async (req: any, res) => {
+router.delete("/leads/:id/activities/:activityId", async (req: AuthedRequest, res: Response) => {
   const lead = await loadLeadForActivity(req, res);
   if (!lead) return;
   if (req.user.role !== "SALES" || lead.ownerId !== req.user.sub) {
