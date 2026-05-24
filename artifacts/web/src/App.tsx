@@ -66,12 +66,27 @@ function PageFallback() {
   );
 }
 
-function ProtectedRoute({ component: Component }: { component: any }) {
-  const { isAuthenticated } = useAuth();
+function ProtectedRoute({
+  component: Component,
+  denyRoles,
+}: {
+  component: any;
+  denyRoles?: string[];
+}) {
+  const { isAuthenticated, user } = useAuth();
   const [, setLocation] = useLocation();
 
   if (!isAuthenticated) {
     setLocation("/login");
+    return null;
+  }
+
+  // Hard-deny: redirect users whose role is explicitly disallowed for this
+  // route to the dashboard (their landing page). Mirrors server-side gating
+  // so URL bar / bookmarks can't reach a forbidden page even if the API
+  // returns empty/404.
+  if (denyRoles && user?.role && denyRoles.includes(user.role)) {
+    setLocation("/");
     return null;
   }
 
@@ -90,9 +105,9 @@ function Router() {
         <Route path="/survey/:token" component={PublicSurveyPage} />
         <Route path="/settings/survey-template" component={() => <ProtectedRoute component={SurveyTemplateEditor} />} />
         <Route path="/" component={() => <ProtectedRoute component={Dashboard} />} />
-        <Route path="/projects" component={() => <ProtectedRoute component={ProjectsList} />} />
-        <Route path="/projects/new" component={() => <ProtectedRoute component={NewProject} />} />
-        <Route path="/projects/:id" component={() => <ProtectedRoute component={ProjectDetail} />} />
+        <Route path="/projects" component={() => <ProtectedRoute component={ProjectsList} denyRoles={["HR"]} />} />
+        <Route path="/projects/new" component={() => <ProtectedRoute component={NewProject} denyRoles={["HR"]} />} />
+        <Route path="/projects/:id" component={() => <ProtectedRoute component={ProjectDetail} denyRoles={["HR"]} />} />
         <Route path="/timesheets" component={() => <ProtectedRoute component={TimesheetsList} />} />
         <Route path="/approvals" component={() => <ProtectedRoute component={ApprovalInbox} />} />
         <Route path="/resources" component={() => <ProtectedRoute component={Resources} />} />
