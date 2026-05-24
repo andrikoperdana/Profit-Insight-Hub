@@ -113,17 +113,32 @@ export default function Dashboard() {
     <div className="space-y-6">
       <WelcomeBanner subtitle={isFinance ? "Executive snapshot: portfolio health & profitability." : "Executive snapshot: portfolio health, profitability, and team utilization."} />
 
-      <a href="/reports">
-        <Card className="cursor-pointer border-primary/30 bg-primary/5 hover:border-primary/60 transition" data-testid="card-reports-shortcut">
-          <CardContent className="flex items-center justify-between gap-3 py-4">
-            <div>
-              <div className="text-sm font-medium text-primary">Reports</div>
-              <CardDescription className="text-xs">10 ready-to-use reports: profitability, utilization, cash inflow, billing aging, VAT. Export CSV / Excel / PDF.</CardDescription>
-            </div>
-            <Button size="sm" variant="outline" className="border-primary/40 text-primary hover:bg-primary/10">Open</Button>
-          </CardContent>
-        </Card>
-      </a>
+      <div className={isFinance ? "grid gap-3 md:grid-cols-2" : ""}>
+        <a href="/reports">
+          <Card className="cursor-pointer border-primary/30 bg-primary/5 hover:border-primary/60 transition h-full" data-testid="card-reports-shortcut">
+            <CardContent className="flex items-center justify-between gap-3 py-4">
+              <div>
+                <div className="text-sm font-medium text-primary">Reports</div>
+                <CardDescription className="text-xs">10 ready-to-use reports: profitability, utilization, cash inflow, billing aging, VAT. Export CSV / Excel / PDF.</CardDescription>
+              </div>
+              <Button size="sm" variant="outline" className="border-primary/40 text-primary hover:bg-primary/10">Open</Button>
+            </CardContent>
+          </Card>
+        </a>
+        {isFinance && (
+          <a href="/invoice-planning">
+            <Card className="cursor-pointer border-amber-500/30 bg-amber-500/5 hover:border-amber-500/60 transition h-full" data-testid="card-invoice-planning-shortcut">
+              <CardContent className="flex items-center justify-between gap-3 py-4">
+                <div>
+                  <div className="text-sm font-medium text-amber-300">Invoice Planning</div>
+                  <CardDescription className="text-xs">Read-only weekly/monthly billing milestone matrix per project. Drill into Planned, Invoiced, and Paid amounts.</CardDescription>
+                </div>
+                <Button size="sm" variant="outline" className="border-amber-500/40 text-amber-300 hover:bg-amber-500/10">Open</Button>
+              </CardContent>
+            </Card>
+          </a>
+        )}
+      </div>
 
       {pendingAssignment.length > 0 && (
         <PendingAssignmentSection projects={pendingAssignment} />

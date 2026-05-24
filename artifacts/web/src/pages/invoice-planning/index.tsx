@@ -54,6 +54,7 @@ export default function InvoicePlanningPage() {
 
   const allowed =
     user?.role === "MANAGEMENT" ||
+    user?.role === "FINANCE" ||
     user?.role === "PROJECT_MANAGER" ||
     user?.role === "ADMIN_PROJECT" ||
     user?.role === "SALES";

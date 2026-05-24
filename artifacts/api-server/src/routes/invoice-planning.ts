@@ -45,6 +45,7 @@ function splitVat(gross: number, vatPct: number, includesVat: boolean) {
  *
  * Access:
  *   MANAGEMENT      — all projects
+ *   FINANCE         — all projects (read-only consumer)
  *   PROJECT_MANAGER — projects where pmId === user
  *   ADMIN_PROJECT   — projects where adminProjectId === user
  *   SALES           — projects where salesId === user
@@ -53,7 +54,13 @@ function splitVat(gross: number, vatPct: number, includesVat: boolean) {
 router.get("/invoice-planning", async (req, res) => {
   const role = req.user!.role;
   const userId = req.user!.sub;
-  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER" && role !== "ADMIN_PROJECT" && role !== "SALES") {
+  if (
+    role !== "MANAGEMENT" &&
+    role !== "FINANCE" &&
+    role !== "PROJECT_MANAGER" &&
+    role !== "ADMIN_PROJECT" &&
+    role !== "SALES"
+  ) {
     res.status(403).json({ error: "Forbidden" });
     return;
   }

@@ -65,7 +65,7 @@ export default function Sidebar() {
     ...(isPM || isHr ? [{ href: "/bench", label: "Bench Report", icon: UserCog }] : []),
     ...(isPM || isHr ? [{ href: "/skill-matrix", label: "Skill Matrix", icon: Award }] : []),
     ...(isPM ? [{ href: "/task-templates", label: "Task Templates", icon: ListChecks }] : []),
-    ...(isPM || user?.role === "ADMIN_PROJECT" || user?.role === "SALES" ? [{ href: "/invoice-planning", label: "Invoice Planning", icon: Wallet }] : []),
+    ...(isPM || isFinance || user?.role === "ADMIN_PROJECT" || user?.role === "SALES" ? [{ href: "/invoice-planning", label: "Invoice Planning", icon: Wallet }] : []),
     ...(isPM || isFinance ? [{ href: "/reports", label: "Reports", icon: FileBarChart }] : []),
   ];
 
