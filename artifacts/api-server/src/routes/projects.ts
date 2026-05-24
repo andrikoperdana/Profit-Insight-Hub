@@ -34,7 +34,13 @@ router.get("/projects", async (req, res) => {
   if (role === "PROJECT_MANAGER") {
     where.pmId = userId;
   } else if (role === "SALES") {
-    where.salesId = userId;
+    // Sales sees projects they initiated OR are involved in (listed as a
+    // resource — e.g. "Other Resources"). They cannot see other Sales'
+    // projects unless they are on the resource list.
+    where.OR = [
+      { salesId: userId },
+      { resources: { some: { userId } } },
+    ];
   } else if (role === "KONSULTAN") {
     where.OR = [
       { resources: { some: { userId } } },

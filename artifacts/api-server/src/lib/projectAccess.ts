@@ -20,7 +20,11 @@ export async function userCanAccessProject(
   if (role === "PROJECT_MANAGER") {
     where["pmId"] = userId;
   } else if (role === "SALES") {
-    where["salesId"] = userId;
+    // Mirror of GET /projects: initiator OR involved as a resource.
+    where["OR"] = [
+      { salesId: userId },
+      { resources: { some: { userId } } },
+    ];
   } else if (role === "KONSULTAN") {
     where["OR"] = [
       { resources: { some: { userId } } },
