@@ -18,17 +18,11 @@ export async function userCanAccessProject(
     deletedAt: null,
   };
   if (role === "PROJECT_MANAGER") {
-    // Mirror of GET /projects: led OR involved as a resource.
-    where["OR"] = [
-      { pmId: userId },
-      { resources: { some: { userId } } },
-    ];
+    // Mirror of GET /projects: PM only sees projects they lead.
+    where["pmId"] = userId;
   } else if (role === "SALES") {
-    // Mirror of GET /projects: initiator OR involved as a resource.
-    where["OR"] = [
-      { salesId: userId },
-      { resources: { some: { userId } } },
-    ];
+    // Mirror of GET /projects: Sales only sees projects they initiated.
+    where["salesId"] = userId;
   } else if (role === "KONSULTAN") {
     where["OR"] = [
       { resources: { some: { userId } } },

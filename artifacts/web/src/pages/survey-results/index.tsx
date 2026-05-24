@@ -171,10 +171,10 @@ export default function SurveyResultsPage() {
     queryFn: () => customFetch<ApiResponse>(
       `/api/survey/responses?year=${year}&page=${page}&pageSize=${pageSize}`,
     ),
-    enabled: user?.role === "MANAGEMENT",
+    enabled: user?.role === "MANAGEMENT" || user?.role === "SALES",
   });
 
-  if (user && user.role !== "MANAGEMENT") {
+  if (user && user.role !== "MANAGEMENT" && user.role !== "SALES") {
     setLocation("/");
     return null;
   }

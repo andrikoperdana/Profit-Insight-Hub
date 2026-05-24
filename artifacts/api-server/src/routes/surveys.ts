@@ -450,7 +450,7 @@ router.get("/survey/summary", requireAuth, requireRole("MANAGEMENT", "PROJECT_MA
 // Annual survey list — paginated client feedback across all projects (MGMT only).
 // Returns: paginated responses with per-response avg score + per-question
 // ratings + free-text comments, plus year-wide aggregates.
-router.get("/survey/responses", requireAuth, requireRole("MANAGEMENT"), async (req, res) => {
+router.get("/survey/responses", requireAuth, requireRole("MANAGEMENT", "SALES"), async (req, res) => {
   const year = Number(req.query.year) || new Date().getFullYear();
   const page = Math.max(1, Number(req.query.page) || 1);
   const pageSize = Math.min(100, Math.max(5, Number(req.query.pageSize) || 20));

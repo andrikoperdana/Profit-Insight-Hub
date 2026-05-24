@@ -180,15 +180,15 @@ export function canViewProjectFinancials(role: string | null | undefined): boole
 }
 
 /**
- * Daily rate visibility on project resources is strictly limited to:
- * Management, Project Manager, Finance, HR. Everyone else (Sales, Admin Project,
- * Site Admin, Principals, Consultants, Technical Writers) sees 0.
+ * Daily rate visibility on project resources is strictly limited to
+ * Management and Project Manager. Everyone else (Finance, HR, Sales,
+ * Admin Project, Site Admin, Principals, Consultants, Technical Writers)
+ * sees 0. Finance reconciles invoices via aggregate financials, not per-
+ * person rates; HR manages rates only in the Employees directory.
  */
 const DAILY_RATE_ALLOWED_ROLES = new Set<string>([
   "MANAGEMENT",
   "PROJECT_MANAGER",
-  "FINANCE",
-  "HR",
 ]);
 
 export function canViewDailyRate(role: string | null | undefined): boolean {

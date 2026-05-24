@@ -33,20 +33,14 @@ router.get("/projects", async (req, res) => {
   // Konsultan/TW see projects they are assigned to OR have logged time on.
   // Management/Admin Project see all.
   if (role === "PROJECT_MANAGER") {
-    // PM sees projects they lead OR are involved in as a resource. They
-    // cannot see other PMs' projects unless they are explicitly assigned.
-    where.OR = [
-      { pmId: userId },
-      { resources: { some: { userId } } },
-    ];
+    // PM only sees the projects they lead. PMs are never staffed as a
+    // delivery resource in this organization.
+    where.pmId = userId;
   } else if (role === "SALES") {
-    // Sales sees projects they initiated OR are involved in (listed as a
-    // resource — e.g. "Other Resources"). They cannot see other Sales'
-    // projects unless they are on the resource list.
-    where.OR = [
-      { salesId: userId },
-      { resources: { some: { userId } } },
-    ];
+    // Sales only sees the projects they initiated. They are not staffed as
+    // delivery resources, so resource-based visibility is intentionally
+    // omitted to keep account ownership clean across the Sales team.
+    where.salesId = userId;
   } else if (role === "KONSULTAN") {
     where.OR = [
       { resources: { some: { userId } } },

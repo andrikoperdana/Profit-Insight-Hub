@@ -57,7 +57,7 @@ router.get("/projects/:id/resources", async (req, res) => {
     res.status(404).json({ error: "Project not found" });
     return;
   }
-  const broad = role === "MANAGEMENT" || role === "ADMIN_PROJECT" || role === "FINANCE" || (role && role.startsWith("PRINCIPAL_"));
+  const broad = role === "MANAGEMENT" || role === "ADMIN_PROJECT" || (role && role.startsWith("PRINCIPAL_"));
   let allowed = !!broad;
   if (!allowed && role === "PROJECT_MANAGER" && project.pmId === userId) allowed = true;
   if (!allowed && role === "SALES" && project.salesId === userId) allowed = true;
