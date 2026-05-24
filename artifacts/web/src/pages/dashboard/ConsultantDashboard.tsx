@@ -324,8 +324,8 @@ function QuickLogCard({ loggedToday }: { loggedToday: number }) {
             <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
               Hours
             </label>
-            <div className="flex gap-1.5">
-              {[2, 4, 6, 8].map((h) => (
+            <div className="flex flex-wrap gap-1.5">
+              {[2, 4, 6, 8, 10, 12].map((h) => (
                 <button
                   key={h}
                   type="button"
@@ -341,7 +341,23 @@ function QuickLogCard({ loggedToday }: { loggedToday: number }) {
                   {h}h
                 </button>
               ))}
+              <Input
+                type="number"
+                min={1}
+                max={12}
+                step={0.5}
+                value={hours}
+                onChange={(e) => {
+                  const v = Number(e.target.value);
+                  if (!isFinite(v)) return;
+                  setHours(Math.max(1, Math.min(12, v)));
+                }}
+                className="h-12 w-20 bg-background text-base font-bold text-center"
+                data-testid="input-hours-custom"
+                aria-label="Custom hours (1-12)"
+              />
             </div>
+            <p className="text-[11px] text-muted-foreground">Overtime allowed up to 12h.</p>
           </div>
         </div>
 
