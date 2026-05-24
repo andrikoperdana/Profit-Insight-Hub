@@ -265,7 +265,14 @@ router.get("/dashboard/utilization-trend", async (req, res) => {
 
 router.get("/dashboard/resource-utilization-detail", async (req, res) => {
   const role = req.user!.role;
-  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER" && role !== "FINANCE" && role !== "HR") {
+  const isPrincipal = role.startsWith("PRINCIPAL_");
+  if (
+    role !== "MANAGEMENT" &&
+    role !== "PROJECT_MANAGER" &&
+    role !== "FINANCE" &&
+    role !== "HR" &&
+    !isPrincipal
+  ) {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
@@ -293,8 +300,12 @@ router.get("/dashboard/resource-utilization-detail", async (req, res) => {
   const userWhere: any = {
     isActive: true,
     deletedAt: null,
-    role: { in: ["KONSULTAN", "TECHNICAL_WRITER", "PROJECT_MANAGER"] },
+    role: { in: ["KONSULTAN", "TECHNICAL_WRITER", "PROJECT_MANAGER", "ADMIN_PROJECT"] },
   };
+  // Principal sees only their direct supervisees (User.principalId = me).
+  if (isPrincipal) {
+    userWhere.principalId = req.user!.sub;
+  }
   if (pmProjectIdSet) {
     const ids = Array.from(pmProjectIdSet);
     userWhere.OR = [
