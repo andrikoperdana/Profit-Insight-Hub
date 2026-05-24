@@ -32,7 +32,12 @@ router.get("/projects", async (req, res) => {
   // Konsultan/TW see projects they are assigned to OR have logged time on.
   // Management/Admin Project see all.
   if (role === "PROJECT_MANAGER") {
-    where.pmId = userId;
+    // PM sees projects they lead OR are involved in as a resource. They
+    // cannot see other PMs' projects unless they are explicitly assigned.
+    where.OR = [
+      { pmId: userId },
+      { resources: { some: { userId } } },
+    ];
   } else if (role === "SALES") {
     // Sales sees projects they initiated OR are involved in (listed as a
     // resource — e.g. "Other Resources"). They cannot see other Sales'
