@@ -337,9 +337,9 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
       <Card className="border-border shadow-sm">
         <CardHeader className="flex flex-row items-start justify-between gap-4">
           <div>
-            <CardTitle className="text-base">Konsultan Team</CardTitle>
+            <CardTitle className="text-base">Consultant Team</CardTitle>
             <CardDescription>
-              Konsultan assigned to {project?.code ?? "this project"}. Multiple Konsultans can be assigned per project; the active-project count is shown for awareness only.
+              Consultants assigned to {project?.code ?? "this project"}. Multiple consultants can be assigned per project; the active-project count is shown for awareness only.
             </CardDescription>
           </div>
           {canEdit ? (
@@ -353,12 +353,12 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                 <Sparkles className="h-4 w-4 mr-1" /> Suggest
               </Button>
               <Button size="sm" onClick={() => setAddingRole("KONSULTAN")} data-testid="button-add-konsultan">
-                + Add Konsultan
+                + Add Consultant
               </Button>
             </div>
           ) : canPrincipalProposeKonsultan ? (
             <Button size="sm" onClick={() => setAddingRole("KONSULTAN")} className="shrink-0" data-testid="button-propose-konsultan">
-              + Propose Konsultan
+              + Propose Consultant
             </Button>
           ) : null}
         </CardHeader>

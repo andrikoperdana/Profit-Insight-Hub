@@ -92,10 +92,23 @@ const WEIGHTS: Record<RoleKey, MetricDef[]> = {
   ],
 };
 
+// Principals can only view performers for their directly supervised delivery
+// role (and only users whose `principalId` points to them).
+const PRINCIPAL_TO_REPORT: Record<string, RoleKey> = {
+  PRINCIPAL_KONSULTAN: "KONSULTAN",
+  PRINCIPAL_TECHNICAL_WRITER: "TECHNICAL_WRITER",
+  PRINCIPAL_ADMIN_PROJECT: "ADMIN_PROJECT",
+};
+
 router.get(
   "/top-performers",
   requireAuth,
-  requireRole("MANAGEMENT"),
+  requireRole(
+    "MANAGEMENT",
+    "PRINCIPAL_KONSULTAN",
+    "PRINCIPAL_TECHNICAL_WRITER",
+    "PRINCIPAL_ADMIN_PROJECT",
+  ),
   async (req, res) => {
     const year = Number(req.query.year) || new Date().getFullYear();
     const role = String(req.query.role || "") as RoleKey;
@@ -108,14 +121,26 @@ router.get(
       return;
     }
 
+    const callerRole = req.user!.role as string;
+    const supervisedRole = PRINCIPAL_TO_REPORT[callerRole];
+    const isPrincipal = Boolean(supervisedRole);
+    if (isPrincipal && supervisedRole !== role) {
+      res.status(403).json({
+        error: `As ${callerRole}, you can only view the '${supervisedRole}' ranking.`,
+      });
+      return;
+    }
+
     const { start, end } = yearRange(year);
 
     // Candidate users for this role (active + matching BU filter if any).
+    // Principals: further restrict to users they directly supervise.
     const users = await prisma.user.findMany({
       where: {
         role,
         deletedAt: null,
         ...(businessUnitId ? { businessUnitId } : {}),
+        ...(isPrincipal ? { principalId: req.user!.sub } : {}),
       },
       select: {
         id: true, name: true, email: true, isActive: true,

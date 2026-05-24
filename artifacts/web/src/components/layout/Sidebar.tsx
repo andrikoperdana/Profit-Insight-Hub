@@ -86,7 +86,12 @@ export default function Sidebar() {
     ...(canManageUsers(user?.role) ? [{ href: "/business-units", label: "Business Units", icon: Network }] : []),
     ...(canManageUsers(user?.role) ? [{ href: "/skills", label: "Skills", icon: Award }] : []),
     ...(user?.role === "MANAGEMENT" ? [{ href: "/business-intelligence", label: "Business Intelligence", icon: TrendingUp }] : []),
-    ...(user?.role === "MANAGEMENT" ? [{ href: "/top-performers", label: "Top Performers", icon: Trophy }] : []),
+    ...(user?.role === "MANAGEMENT" ||
+        user?.role === "PRINCIPAL_KONSULTAN" ||
+        user?.role === "PRINCIPAL_TECHNICAL_WRITER" ||
+        user?.role === "PRINCIPAL_ADMIN_PROJECT"
+      ? [{ href: "/top-performers", label: "Top Performers", icon: Trophy }]
+      : []),
     ...(user?.role === "MANAGEMENT" || isFinance ? [{ href: "/vat-recap", label: "VAT Recap", icon: Receipt }] : []),
     ...(user?.role === "MANAGEMENT" ? [{ href: "/settings/survey-template", label: "Survey Template", icon: ClipboardList }] : []),
     ...(canViewAuditLogs(user?.role) ? [{ href: "/audit-logs", label: "Audit Log", icon: ScrollText }] : []),

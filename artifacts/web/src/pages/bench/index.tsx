@@ -190,7 +190,7 @@ export default function BenchPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All roles</SelectItem>
-                  <SelectItem value="KONSULTAN">Konsultan</SelectItem>
+                  <SelectItem value="KONSULTAN">Consultant</SelectItem>
                   <SelectItem value="TECHNICAL_WRITER">
                     Technical Writer
                   </SelectItem>

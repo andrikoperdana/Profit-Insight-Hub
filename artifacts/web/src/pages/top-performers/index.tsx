@@ -33,6 +33,13 @@ const ROLES = [
 
 type RoleValue = typeof ROLES[number]["value"];
 
+// Principal roles can only view their directly supervised delivery role.
+const PRINCIPAL_SUPERVISES: Record<string, RoleValue> = {
+  PRINCIPAL_KONSULTAN: "KONSULTAN",
+  PRINCIPAL_TECHNICAL_WRITER: "TECHNICAL_WRITER",
+  PRINCIPAL_ADMIN_PROJECT: "ADMIN_PROJECT",
+};
+
 function formatMetric(value: number, format?: string): string {
   if (!isFinite(value)) return "—";
   switch (format) {
@@ -412,13 +419,22 @@ export default function TopPerformersPage() {
   const { user } = useAuth();
   const [, setLocation] = useLocation();
   const currentYear = new Date().getFullYear();
+
+  const supervisedRole = user?.role ? PRINCIPAL_SUPERVISES[user.role] : undefined;
+  const isPrincipal = Boolean(supervisedRole);
+  // Principals see only the tab for the delivery role they supervise.
+  const visibleRoles = isPrincipal
+    ? ROLES.filter((r) => r.value === supervisedRole)
+    : ROLES;
+  const initialTab: RoleValue = supervisedRole ?? "PROJECT_MANAGER";
+
   const [year, setYear] = useState(currentYear);
   const [businessUnitId, setBusinessUnitId] = useState<string>("__all__");
-  const [tab, setTab] = useState<RoleValue>("PROJECT_MANAGER");
+  const [tab, setTab] = useState<RoleValue>(initialTab);
 
   const { data: businessUnits } = useListBusinessUnits();
 
-  if (user?.role !== "MANAGEMENT") {
+  if (user && user.role !== "MANAGEMENT" && !isPrincipal) {
     setLocation("/");
     return null;
   }
@@ -434,6 +450,7 @@ export default function TopPerformersPage() {
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
             Annual performance ranking per role (Jan–Dec). Scores normalised across each role's peer group.
+            {isPrincipal ? " Showing only members you directly supervise." : ""}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -463,14 +480,21 @@ export default function TopPerformersPage() {
       </div>
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as RoleValue)}>
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
-          {ROLES.map((r) => (
+        <TabsList
+          className={cn(
+            "grid w-full",
+            visibleRoles.length === 1
+              ? "grid-cols-1"
+              : "grid-cols-2 sm:grid-cols-4",
+          )}
+        >
+          {visibleRoles.map((r) => (
             <TabsTrigger key={r.value} value={r.value} data-testid={`tab-${r.value}`}>
               {r.label}
             </TabsTrigger>
           ))}
         </TabsList>
-        {ROLES.map((r) => (
+        {visibleRoles.map((r) => (
           <TabsContent key={r.value} value={r.value} className="mt-4">
             <RoleTabPanel
               role={r.value}
