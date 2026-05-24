@@ -41,9 +41,10 @@ export async function userCanAccessProject(
       { technicalWriterId: userId },
     ];
   } else if (role === "ADMIN_PROJECT") {
+    // Mirror of GET /projects: assigned as adminProjectId or on resources.
     where["OR"] = [
       { adminProjectId: userId },
-      { status: { in: ["COMPLETE", "CLOSED"] } },
+      { resources: { some: { userId } } },
     ];
   } else if (role === "PRINCIPAL_KONSULTAN") {
     // Mirror of GET /projects: only ACTIVE projects where the principal is

@@ -58,9 +58,12 @@ router.get("/projects", async (req, res) => {
       { technicalWriterId: userId },
     ];
   } else if (role === "ADMIN_PROJECT") {
+    // Admin Project only sees projects they are assigned to (as the project's
+    // adminProjectId or listed on the resource roster). They cannot browse
+    // other projects, including COMPLETE/CLOSED ones outside their scope.
     where.OR = [
       { adminProjectId: userId },
-      { status: { in: ["COMPLETE", "CLOSED"] } },
+      { resources: { some: { userId } } },
     ];
   } else if (role === "PRINCIPAL_KONSULTAN") {
     // Principal Consultant: ACTIVE projects only, and only when the principal
