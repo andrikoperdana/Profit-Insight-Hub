@@ -116,6 +116,60 @@ export interface VatRecapTotals {
   outstandingVat: number;
 }
 
+export type TopPerformerMetricDefFormat =
+  (typeof TopPerformerMetricDefFormat)[keyof typeof TopPerformerMetricDefFormat];
+
+export const TopPerformerMetricDefFormat = {
+  pct: "pct",
+  number: "number",
+  hours: "hours",
+  currency: "currency",
+} as const;
+
+export interface TopPerformerMetricDef {
+  key: string;
+  label: string;
+  weight: number;
+  invert?: boolean;
+  format?: TopPerformerMetricDefFormat;
+}
+
+export interface TopPerformerBreakdownEntry {
+  raw: number;
+  normalized: number;
+  weighted: number;
+}
+
+export type TopPerformerItemBreakdown = {
+  [key: string]: TopPerformerBreakdownEntry;
+};
+
+export interface TopPerformerItem {
+  userId: string;
+  name: string;
+  email: string;
+  avatarDataUrl?: string | null;
+  seniority?: string | null;
+  businessUnitId?: string | null;
+  businessUnitName?: string | null;
+  isActive?: boolean;
+  activeMonths: number;
+  eligible: boolean;
+  rank?: number;
+  score: number;
+  breakdown: TopPerformerItemBreakdown;
+}
+
+export interface TopPerformersResponse {
+  year: number;
+  role: string;
+  page: number;
+  pageSize: number;
+  total: number;
+  weights: TopPerformerMetricDef[];
+  items: TopPerformerItem[];
+}
+
 export interface VatRecap {
   year: number;
   months: VatRecapMonth[];
@@ -1489,6 +1543,35 @@ export type ListLeavesParams = {
   startDate?: string;
   endDate?: string;
 };
+
+export type GetTopPerformersParams = {
+  /**
+   * @minimum 2000
+   * @maximum 2100
+   */
+  year?: number;
+  role: GetTopPerformersRole;
+  businessUnitId?: string;
+  /**
+   * @minimum 1
+   */
+  page?: number;
+  /**
+   * @minimum 5
+   * @maximum 100
+   */
+  pageSize?: number;
+};
+
+export type GetTopPerformersRole =
+  (typeof GetTopPerformersRole)[keyof typeof GetTopPerformersRole];
+
+export const GetTopPerformersRole = {
+  PROJECT_MANAGER: "PROJECT_MANAGER",
+  KONSULTAN: "KONSULTAN",
+  TECHNICAL_WRITER: "TECHNICAL_WRITER",
+  ADMIN_PROJECT: "ADMIN_PROJECT",
+} as const;
 
 export type GetVatRecapParams = {
   /**

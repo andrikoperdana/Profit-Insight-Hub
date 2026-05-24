@@ -1304,6 +1304,25 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/TaskTimeLog" }
 
+  /top-performers:
+    get:
+      operationId: getTopPerformers
+      summary: Ranked top performers per role (MANAGEMENT only)
+      tags: [TopPerformers]
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { in: query, name: year,           required: false, schema: { type: integer, minimum: 2000, maximum: 2100 } }
+        - { in: query, name: role,           required: true,  schema: { type: string, enum: [PROJECT_MANAGER, KONSULTAN, TECHNICAL_WRITER, ADMIN_PROJECT] } }
+        - { in: query, name: businessUnitId, required: false, schema: { type: string } }
+        - { in: query, name: page,           required: false, schema: { type: integer, minimum: 1 } }
+        - { in: query, name: pageSize,       required: false, schema: { type: integer, minimum: 5, maximum: 100 } }
+      responses:
+        "200":
+          description: Paginated ranking
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TopPerformersResponse" }
+
   /billing-milestones/vat-recap:
     get:
       operationId: getVatRecap
@@ -1545,6 +1564,56 @@ components:
         paidVat: { type: number }
         outstandingVat: { type: number }
 
+    TopPerformerMetricDef:
+      type: object
+      required: [key, label, weight]
+      properties:
+        key: { type: string }
+        label: { type: string }
+        weight: { type: number }
+        invert: { type: boolean }
+        format: { type: string, enum: [pct, number, hours, currency] }
+    TopPerformerBreakdownEntry:
+      type: object
+      required: [raw, normalized, weighted]
+      properties:
+        raw: { type: number }
+        normalized: { type: number }
+        weighted: { type: number }
+    TopPerformerItem:
+      type: object
+      required: [userId, name, email, score, eligible, breakdown, activeMonths]
+      properties:
+        userId: { type: string }
+        name: { type: string }
+        email: { type: string }
+        avatarDataUrl: { type: string, nullable: true }
+        seniority: { type: string, nullable: true }
+        businessUnitId: { type: string, nullable: true }
+        businessUnitName: { type: string, nullable: true }
+        isActive: { type: boolean }
+        activeMonths: { type: integer }
+        eligible: { type: boolean }
+        rank: { type: integer }
+        score: { type: number }
+        breakdown:
+          type: object
+          additionalProperties: { $ref: "#/components/schemas/TopPerformerBreakdownEntry" }
+    TopPerformersResponse:
+      type: object
+      required: [year, role, page, pageSize, total, weights, items]
+      properties:
+        year: { type: integer }
+        role: { type: string }
+        page: { type: integer }
+        pageSize: { type: integer }
+        total: { type: integer }
+        weights:
+          type: array
+          items: { $ref: "#/components/schemas/TopPerformerMetricDef" }
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/TopPerformerItem" }
     VatRecap:
       type: object
       required: [year, months, totals]

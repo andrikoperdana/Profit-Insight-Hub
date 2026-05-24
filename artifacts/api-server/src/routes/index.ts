@@ -32,6 +32,7 @@ import leadsRouter from "./leads.js";
 import skillMatrixRouter from "./skill-matrix.js";
 import taskTemplatesRouter from "./task-templates.js";
 import leavesRouter from "./leaves.js";
+import topPerformersRouter from "./top-performers.js";
 
 const router: IRouter = Router();
 
@@ -68,5 +69,6 @@ router.use(leadsRouter);
 router.use(skillMatrixRouter);
 router.use(taskTemplatesRouter);
 router.use(leavesRouter);
+router.use(topPerformersRouter);
 
 export default router;

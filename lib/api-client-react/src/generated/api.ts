@@ -51,6 +51,7 @@ import type {
   GetLeadsAnalyticsParams,
   GetReportOptionsParams,
   GetResourcePlanningParams,
+  GetTopPerformersParams,
   GetVatRecapParams,
   HealthStatus,
   ImportLeadsBody,
@@ -88,6 +89,7 @@ import type {
   TaskTemplate,
   TaskTimeLog,
   Timesheet,
+  TopPerformersResponse,
   UpdateBillingMilestoneBody,
   UpdateBusinessUnitBody,
   UpdateLeadActivityBody,
@@ -7024,6 +7026,103 @@ export const useLogTaskTime = <
 > => {
   return useMutation(getLogTaskTimeMutationOptions(options));
 };
+
+/**
+ * @summary Ranked top performers per role (MANAGEMENT only)
+ */
+export const getGetTopPerformersUrl = (params: GetTopPerformersParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/top-performers?${stringifiedParams}`
+    : `/api/top-performers`;
+};
+
+export const getTopPerformers = async (
+  params: GetTopPerformersParams,
+  options?: RequestInit,
+): Promise<TopPerformersResponse> => {
+  return customFetch<TopPerformersResponse>(getGetTopPerformersUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetTopPerformersQueryKey = (
+  params?: GetTopPerformersParams,
+) => {
+  return [`/api/top-performers`, ...(params ? [params] : [])] as const;
+};
+
+export const getGetTopPerformersQueryOptions = <
+  TData = Awaited<ReturnType<typeof getTopPerformers>>,
+  TError = ErrorType<unknown>,
+>(
+  params: GetTopPerformersParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getTopPerformers>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetTopPerformersQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getTopPerformers>>
+  > = ({ signal }) => getTopPerformers(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getTopPerformers>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetTopPerformersQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getTopPerformers>>
+>;
+export type GetTopPerformersQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Ranked top performers per role (MANAGEMENT only)
+ */
+
+export function useGetTopPerformers<
+  TData = Awaited<ReturnType<typeof getTopPerformers>>,
+  TError = ErrorType<unknown>,
+>(
+  params: GetTopPerformersParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getTopPerformers>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetTopPerformersQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
 
 /**
  * @summary Monthly PPN/VAT recap across all projects (MANAGEMENT only)

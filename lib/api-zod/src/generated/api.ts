@@ -2558,6 +2558,77 @@ export const LogTaskTimeBody = zod.object({
 });
 
 /**
+ * @summary Ranked top performers per role (MANAGEMENT only)
+ */
+export const getTopPerformersQueryYearMin = 2000;
+export const getTopPerformersQueryYearMax = 2100;
+
+export const getTopPerformersQueryPageSizeMin = 5;
+export const getTopPerformersQueryPageSizeMax = 100;
+
+export const GetTopPerformersQueryParams = zod.object({
+  year: zod.coerce
+    .number()
+    .min(getTopPerformersQueryYearMin)
+    .max(getTopPerformersQueryYearMax)
+    .optional(),
+  role: zod.enum([
+    "PROJECT_MANAGER",
+    "KONSULTAN",
+    "TECHNICAL_WRITER",
+    "ADMIN_PROJECT",
+  ]),
+  businessUnitId: zod.coerce.string().optional(),
+  page: zod.coerce.number().min(1).optional(),
+  pageSize: zod.coerce
+    .number()
+    .min(getTopPerformersQueryPageSizeMin)
+    .max(getTopPerformersQueryPageSizeMax)
+    .optional(),
+});
+
+export const GetTopPerformersResponse = zod.object({
+  year: zod.number(),
+  role: zod.string(),
+  page: zod.number(),
+  pageSize: zod.number(),
+  total: zod.number(),
+  weights: zod.array(
+    zod.object({
+      key: zod.string(),
+      label: zod.string(),
+      weight: zod.number(),
+      invert: zod.boolean().optional(),
+      format: zod.enum(["pct", "number", "hours", "currency"]).optional(),
+    }),
+  ),
+  items: zod.array(
+    zod.object({
+      userId: zod.string(),
+      name: zod.string(),
+      email: zod.string(),
+      avatarDataUrl: zod.string().nullish(),
+      seniority: zod.string().nullish(),
+      businessUnitId: zod.string().nullish(),
+      businessUnitName: zod.string().nullish(),
+      isActive: zod.boolean().optional(),
+      activeMonths: zod.number(),
+      eligible: zod.boolean(),
+      rank: zod.number().optional(),
+      score: zod.number(),
+      breakdown: zod.record(
+        zod.string(),
+        zod.object({
+          raw: zod.number(),
+          normalized: zod.number(),
+          weighted: zod.number(),
+        }),
+      ),
+    }),
+  ),
+});
+
+/**
  * @summary Monthly PPN/VAT recap across all projects (MANAGEMENT only)
  */
 export const getVatRecapQueryYearMin = 2000;
