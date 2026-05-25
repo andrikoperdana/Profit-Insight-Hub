@@ -263,3 +263,9 @@ id = "A2sR16HuQr2PSIerJcNmX"
 uri = "file://dist/secureprofit-hub.tar.gz"
 type = "unspecified"
 title = "SecureProfit Hub - Source Code"
+
+[[outputs]]
+id = "Mh0ivtu1XdulxtZE-bJGr"
+uri = "file://dist/secureprofit-hub-source.tar.gz"
+type = "unspecified"
+title = "SecureProfit Hub - Source Code (13MB)"
