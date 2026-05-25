@@ -737,6 +737,208 @@ export interface AddProjectExpenseBody {
   evidenceFileName?: string | null;
 }
 
+export type RaidType = (typeof RaidType)[keyof typeof RaidType];
+
+export const RaidType = {
+  RISK: "RISK",
+  ASSUMPTION: "ASSUMPTION",
+  ISSUE: "ISSUE",
+  DEPENDENCY: "DEPENDENCY",
+} as const;
+
+export type RaidImpact = (typeof RaidImpact)[keyof typeof RaidImpact];
+
+export const RaidImpact = {
+  LOW: "LOW",
+  MEDIUM: "MEDIUM",
+  HIGH: "HIGH",
+  CRITICAL: "CRITICAL",
+} as const;
+
+export type RaidLikelihood =
+  (typeof RaidLikelihood)[keyof typeof RaidLikelihood];
+
+export const RaidLikelihood = {
+  LOW: "LOW",
+  MEDIUM: "MEDIUM",
+  HIGH: "HIGH",
+} as const;
+
+export type RaidStatus = (typeof RaidStatus)[keyof typeof RaidStatus];
+
+export const RaidStatus = {
+  OPEN: "OPEN",
+  MITIGATING: "MITIGATING",
+  CLOSED: "CLOSED",
+} as const;
+
+export interface ProjectRaidItem {
+  id: string;
+  projectId: string;
+  type: RaidType;
+  title: string;
+  description?: string | null;
+  impact: RaidImpact;
+  likelihood: RaidLikelihood;
+  status: RaidStatus;
+  ownerId?: string | null;
+  ownerName?: string | null;
+  mitigation?: string | null;
+  dueDate?: string | null;
+  closedAt?: string | null;
+  createdById?: string | null;
+  createdByName?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateProjectRaidItemBody {
+  type: RaidType;
+  title: string;
+  description?: string | null;
+  impact?: RaidImpact;
+  likelihood?: RaidLikelihood;
+  status?: RaidStatus;
+  ownerId?: string | null;
+  mitigation?: string | null;
+  dueDate?: string | null;
+}
+
+export interface UpdateProjectRaidItemBody {
+  type?: RaidType;
+  title?: string;
+  description?: string | null;
+  impact?: RaidImpact;
+  likelihood?: RaidLikelihood;
+  status?: RaidStatus;
+  ownerId?: string | null;
+  mitigation?: string | null;
+  dueDate?: string | null;
+}
+
+export type PerformanceReviewPeriod =
+  (typeof PerformanceReviewPeriod)[keyof typeof PerformanceReviewPeriod];
+
+export const PerformanceReviewPeriod = {
+  Q1: "Q1",
+  Q2: "Q2",
+  Q3: "Q3",
+  Q4: "Q4",
+  ANNUAL: "ANNUAL",
+} as const;
+
+export type PerformanceReviewStatus =
+  (typeof PerformanceReviewStatus)[keyof typeof PerformanceReviewStatus];
+
+export const PerformanceReviewStatus = {
+  DRAFT: "DRAFT",
+  SUBMITTED: "SUBMITTED",
+  ACKNOWLEDGED: "ACKNOWLEDGED",
+} as const;
+
+export interface PerformanceReviewProjectRating {
+  id: string;
+  reviewId: string;
+  projectId: string;
+  projectCode?: string | null;
+  projectName?: string | null;
+  /**
+   * @minimum 1
+   * @maximum 5
+   */
+  rating: number;
+  comment?: string | null;
+  ratedById: string;
+  ratedByName?: string | null;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export type PerformanceReviewMetricsProjectsItem = {
+  projectId: string;
+  projectCode: string;
+  projectName: string;
+  hours: number;
+};
+
+export type PerformanceReviewMetricsSkillsItem = {
+  skillId: string;
+  skillName: string;
+  proficiency: number;
+};
+
+export interface PerformanceReviewMetrics {
+  billableHours: number;
+  totalHours: number;
+  utilizationPct: number;
+  projectCount: number;
+  skillCount: number;
+  avgProjectRating: number | null;
+  projects?: PerformanceReviewMetricsProjectsItem[];
+  skills?: PerformanceReviewMetricsSkillsItem[];
+}
+
+export interface PerformanceReview {
+  id: string;
+  userId: string;
+  userName?: string | null;
+  userRole?: string | null;
+  userTitle?: string | null;
+  reviewerId: string;
+  reviewerName?: string | null;
+  period: PerformanceReviewPeriod;
+  periodYear: number;
+  periodStart: string;
+  periodEnd: string;
+  status: PerformanceReviewStatus;
+  overallRating?: number | null;
+  summary?: string | null;
+  strengths?: string | null;
+  improvements?: string | null;
+  goals?: string | null;
+  acknowledgement?: string | null;
+  submittedAt?: string | null;
+  acknowledgedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type PerformanceReviewDetail = PerformanceReview & {
+  projectRatings?: PerformanceReviewProjectRating[];
+  metrics?: PerformanceReviewMetrics;
+};
+
+export interface CreatePerformanceReviewBody {
+  userId: string;
+  period: PerformanceReviewPeriod;
+  periodYear: number;
+  /** Defaults to caller */
+  reviewerId?: string | null;
+}
+
+export interface UpdatePerformanceReviewBody {
+  /**
+   * @minimum 1
+   * @maximum 5
+   */
+  overallRating?: number | null;
+  summary?: string | null;
+  strengths?: string | null;
+  improvements?: string | null;
+  goals?: string | null;
+  acknowledgement?: string | null;
+}
+
+export interface UpsertProjectRatingBody {
+  projectId: string;
+  /**
+   * @minimum 1
+   * @maximum 5
+   */
+  rating: number;
+  comment?: string | null;
+}
+
 export interface ProjectResource {
   id: string;
   projectId: string;
@@ -1501,6 +1703,17 @@ export type GetLeadsAnalyticsParams = {
 
 export type ListProjectsParams = {
   status?: string;
+};
+
+export type ListPerformanceReviewsParams = {
+  userId?: string;
+  reviewerId?: string;
+  status?: PerformanceReviewStatus;
+  year?: number;
+};
+
+export type AcknowledgePerformanceReviewBody = {
+  acknowledgement?: string | null;
 };
 
 export type RejectProjectExpenseBody = {

@@ -27,6 +27,7 @@ import {
   ListChecks,
   CalendarOff,
   GitBranch,
+  ClipboardCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -68,6 +69,12 @@ export default function Sidebar() {
     ...(isPM ? [{ href: "/task-templates", label: "Task Templates", icon: ListChecks }] : []),
     ...(isPM || isFinance || user?.role === "ADMIN_PROJECT" || user?.role === "SALES" ? [{ href: "/invoice-planning", label: "Invoice Planning", icon: Wallet }] : []),
     ...(isPM || isFinance ? [{ href: "/reports", label: "Reports", icon: FileBarChart }] : []),
+    ...(isPM || isHr ||
+      user?.role === "PRINCIPAL_KONSULTAN" ||
+      user?.role === "PRINCIPAL_TECHNICAL_WRITER" ||
+      user?.role === "PRINCIPAL_ADMIN_PROJECT" ||
+      user?.role === "KONSULTAN" || user?.role === "TECHNICAL_WRITER" || user?.role === "ADMIN_PROJECT"
+      ? [{ href: "/performance-reviews", label: "Performance Reviews", icon: ClipboardCheck }] : []),
   ];
 
   const peopleOps: NavLink[] = isHr

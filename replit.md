@@ -44,6 +44,7 @@ Intake: Sales fills 4-field form at `/projects/new` (server forces `status=DRAFT
 - **Timeline** — drag-and-drop Gantt (`TaskGanttChart` + `GanttBar`): bar body drags whole task, 8-px edge handles resize. PATCH on pointer-up via `useUpdateTask`. `DependencyArrows` SVG draws elbow paths between predecessor and dependent bars; recomputes on drag/resize/scroll. Server doesn't enforce dep timing — toast warns instead.
 - **Tasks** — MGMT/PM-of-project create/edit/delete; assignees only change `status` and log hours. Endpoints in `routes/tasks.ts`. Multi-assignee via `assigneeIds[]` (canonical) — omitted = preserved, `[]`/null = clear, non-array = 400. WBS `parentTaskId` (manager-only, ancestor-BFS cycle check). Dependencies `dependencyTaskIds[]` (forward-BFS cycle check). Pickers exclude self+descendants. `Task.billable` defaults true; non-billable time logs don't roll into revenue/margin. `Timesheet.taskId` validates project + assignee. Audit: `task.{created,updated,deleted,time_logged}`.
 - **Resources** — 4 sections: Admin Project (single-pick `Project.adminProjectId`), Konsultan team (`ProjectResource` role=KONSULTAN), Technical Writer team (role=TECHNICAL_WRITER), Other Resources (any active user with free-text `roleInProject`, backed by `GET /api/users/active-all` MGMT+PM only).
+- **RAID** — `ProjectRaidItem` (type RISK/ASSUMPTION/ISSUE/DEPENDENCY, impact LOW–CRITICAL, likelihood LOW/MEDIUM/HIGH, status OPEN/MITIGATING/CLOSED, owner, mitigation, dueDate). Endpoints in `routes/raid.ts`: `GET/POST /api/projects/:id/raid`, `PATCH/DELETE /api/raid/:itemId`. Read = anyone with project visibility; write = MGMT or assigned PM. Status → CLOSED auto-stamps `closedAt`. UI tab `pages/projects/tabs/RaidTab.tsx` groups by type with 4 KPI cards.
 - **Expenses** — `routes/expenses.ts`. Anyone with project visibility can submit; MGMT auto-APPROVED. Approve/reject by PM-of-project or MGMT. **Only APPROVED count toward `actualCost`/margin.** PMDashboard shows pending-expense alert.
 - **Billing** — `BillingMilestone` table with %, DPP, VAT (vatPercent%), Total, due date, status, invoice #. Status→INVOICED auto-stamps `invoicedAt`; →PAID auto-stamps `paidAt`. DPP/VAT split via `splitVat()` honoring `Project.contractValueIncludesVat`. Banner when total % ≠ 100. Writes restricted to MGMT/assigned PM. Component: `pages/projects/BillingTab.tsx`.
 
@@ -123,6 +124,21 @@ Shared `WelcomeBanner` shows time-aware greeting + role label.
 ## Pages
 
 `/login`, `/` (dashboard), `/projects`, `/projects/new`, `/projects/:id`, `/timesheets`, `/clients`, `/users` (SITE_ADMIN + HR view/edit-limited), `/skills` (SITE_ADMIN + HR), `/business-units` (SITE_ADMIN + HR), `/resource-planning` (PM/MGMT/HR), `/skill-matrix` (PM/MGMT/HR), `/bench` (PM/MGMT/HR), `/capacity` (PM/MGMT/HR), `/task-templates` (PM/MGMT), `/leaves` (HR/MGMT/PM read-only), `/org-chart` (HR/MGMT/SITE_ADMIN), `/reports` (MGMT/PM), `/vat-recap` (MGMT), `/settings`.
+
+## Performance Reviews (`/performance-reviews`, MGMT/HR/PM/Principal/Konsultan/TW/Admin)
+
+`PerformanceReview` (period Q1–Q4/ANNUAL × periodYear, unique per user+period+year) → DRAFT → SUBMITTED → ACKNOWLEDGED. Reviewer fills `overallRating` (1–5), `summary`, `strengths`, `improvements`, `goals`; subject acknowledges (optional note). `PerformanceReviewProjectRating` (1–5 per project, comment, unique reviewId+projectId) rated by MGMT/HR or `userCanWriteProject`.
+
+Endpoints in `routes/performance-reviews.ts`:
+- `GET/POST /api/performance-reviews` (filter status/year/userId/reviewerId)
+- `GET /api/performance-reviews/:id` returns review + projectRatings + computed `metrics` (billableHours, totalHours, utilizationPct vs ~21d×8h/month capacity, projectCount, skillCount, per-project hours, user skills with proficiency, avgProjectRating)
+- `PATCH /api/performance-reviews/:id` (reviewer or HR/MGMT, not after ACKNOWLEDGED)
+- `POST /api/performance-reviews/:id/submit` (requires overallRating; DRAFT→SUBMITTED)
+- `POST /api/performance-reviews/:id/acknowledge` (subject only, SUBMITTED→ACKNOWLEDGED)
+- `POST /api/performance-reviews/:id/project-ratings` (upsert per project), `DELETE /api/performance-reviews/:id/project-ratings/:ratingId`
+- `DELETE /api/performance-reviews/:id` (HR/MGMT only)
+
+Access scope: HR+MGMT see all. PM/Principal can create+view reviews for their direct reports (`managerId`/`principalId`). Subject can view+acknowledge own. Pages: `pages/performance-reviews/index.tsx` (filterable list + create dialog) and `pages/performance-reviews/[id].tsx` (metric KPIs, scoring form, project-ratings panel, hours-per-project + skill profile).
 
 ## Phase-2 features
 

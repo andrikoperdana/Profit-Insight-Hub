@@ -40,6 +40,8 @@ const ReportsIndex = lazy(() => import("@/pages/reports"));
 const ReportRunner = lazy(() => import("@/pages/reports/[id]"));
 const LeavesPage = lazy(() => import("@/pages/leaves"));
 const OrgChartPage = lazy(() => import("@/pages/org-chart"));
+const PerformanceReviewsListPage = lazy(() => import("@/pages/performance-reviews"));
+const PerformanceReviewDetailPage = lazy(() => import("@/pages/performance-reviews/[id]"));
 const SurveyTemplateEditor = lazy(() => import("@/pages/settings/SurveyTemplate"));
 const PublicSurveyPage = lazy(() => import("@/pages/survey/[token]"));
 import { ThemeProvider } from "@/lib/theme";
@@ -133,6 +135,8 @@ function Router() {
         <Route path="/task-templates" component={() => <ProtectedRoute component={TaskTemplatesPage} />} />
         <Route path="/leaves" component={() => <ProtectedRoute component={LeavesPage} />} />
         <Route path="/org-chart" component={() => <ProtectedRoute component={OrgChartPage} />} />
+        <Route path="/performance-reviews" component={() => <ProtectedRoute component={PerformanceReviewsListPage} />} />
+        <Route path="/performance-reviews/:id" component={() => <ProtectedRoute component={PerformanceReviewDetailPage} />} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>

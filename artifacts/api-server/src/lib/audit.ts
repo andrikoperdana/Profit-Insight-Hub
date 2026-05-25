@@ -57,7 +57,17 @@ export type AuditAction =
   | "billing_milestone.deleted"
   | "project.report_updated"
   | "admin.sample_data_seeded"
-  | "admin.emails_renamed";
+  | "admin.emails_renamed"
+  | "raid.created"
+  | "raid.updated"
+  | "raid.deleted"
+  | "performance_review.created"
+  | "performance_review.updated"
+  | "performance_review.submitted"
+  | "performance_review.acknowledged"
+  | "performance_review.deleted"
+  | "performance_review.project_rated"
+  | "performance_review.project_rating_removed";
 
 export type EntityType =
   | "User"
@@ -76,6 +86,9 @@ export type EntityType =
   | "Skill"
   | "BusinessUnit"
   | "BillingMilestone"
+  | "ProjectRaidItem"
+  | "PerformanceReview"
+  | "PerformanceReviewProjectRating"
   | "System";
 
 interface AuditInput {

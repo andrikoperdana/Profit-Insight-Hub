@@ -21,6 +21,8 @@ tags:
   - name: notifications
   - name: report
   - name: reports
+  - name: raid
+  - name: performance-reviews
 
 paths:
   /reports:
@@ -725,6 +727,204 @@ paths:
       tags: [expenses]
       parameters:
         - { name: expenseId, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /projects/{id}/raid:
+    get:
+      operationId: listProjectRaidItems
+      tags: [raid]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ProjectRaidItem" }
+    post:
+      operationId: createProjectRaidItem
+      tags: [raid]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateProjectRaidItemBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ProjectRaidItem" }
+
+  /raid/{itemId}:
+    patch:
+      operationId: updateRaidItem
+      tags: [raid]
+      parameters:
+        - { name: itemId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpdateProjectRaidItemBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ProjectRaidItem" }
+    delete:
+      operationId: deleteRaidItem
+      tags: [raid]
+      parameters:
+        - { name: itemId, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /performance-reviews:
+    get:
+      operationId: listPerformanceReviews
+      tags: [performance-reviews]
+      parameters:
+        - { name: userId, in: query, required: false, schema: { type: string } }
+        - { name: reviewerId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { $ref: "#/components/schemas/PerformanceReviewStatus" } }
+        - { name: year, in: query, required: false, schema: { type: integer } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/PerformanceReview" }
+    post:
+      operationId: createPerformanceReview
+      tags: [performance-reviews]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreatePerformanceReviewBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PerformanceReview" }
+
+  /performance-reviews/{id}:
+    get:
+      operationId: getPerformanceReview
+      tags: [performance-reviews]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PerformanceReviewDetail" }
+    patch:
+      operationId: updatePerformanceReview
+      tags: [performance-reviews]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpdatePerformanceReviewBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PerformanceReviewDetail" }
+    delete:
+      operationId: deletePerformanceReview
+      tags: [performance-reviews]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /performance-reviews/{id}/submit:
+    post:
+      operationId: submitPerformanceReview
+      tags: [performance-reviews]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PerformanceReviewDetail" }
+
+  /performance-reviews/{id}/acknowledge:
+    post:
+      operationId: acknowledgePerformanceReview
+      tags: [performance-reviews]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                acknowledgement: { type: string, nullable: true }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PerformanceReviewDetail" }
+
+  /performance-reviews/{id}/project-ratings:
+    post:
+      operationId: upsertPerformanceReviewProjectRating
+      tags: [performance-reviews]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpsertProjectRatingBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PerformanceReviewProjectRating" }
+
+  /performance-reviews/{id}/project-ratings/{ratingId}:
+    delete:
+      operationId: removePerformanceReviewProjectRating
+      tags: [performance-reviews]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+        - { name: ratingId, in: path, required: true, schema: { type: string } }
       responses:
         "200":
           description: OK
@@ -2178,6 +2378,173 @@ components:
         spentAt: { type: string }
         evidenceUrl: { type: string, nullable: true, description: "Base64 data URL of supporting invoice/receipt PDF or image" }
         evidenceFileName: { type: string, nullable: true }
+
+    RaidType: { type: string, enum: [RISK, ASSUMPTION, ISSUE, DEPENDENCY] }
+    RaidImpact: { type: string, enum: [LOW, MEDIUM, HIGH, CRITICAL] }
+    RaidLikelihood: { type: string, enum: [LOW, MEDIUM, HIGH] }
+    RaidStatus: { type: string, enum: [OPEN, MITIGATING, CLOSED] }
+
+    ProjectRaidItem:
+      type: object
+      required: [id, projectId, type, title, impact, likelihood, status, createdAt, updatedAt]
+      properties:
+        id: { type: string }
+        projectId: { type: string }
+        type: { $ref: "#/components/schemas/RaidType" }
+        title: { type: string }
+        description: { type: string, nullable: true }
+        impact: { $ref: "#/components/schemas/RaidImpact" }
+        likelihood: { $ref: "#/components/schemas/RaidLikelihood" }
+        status: { $ref: "#/components/schemas/RaidStatus" }
+        ownerId: { type: string, nullable: true }
+        ownerName: { type: string, nullable: true }
+        mitigation: { type: string, nullable: true }
+        dueDate: { type: string, nullable: true }
+        closedAt: { type: string, nullable: true }
+        createdById: { type: string, nullable: true }
+        createdByName: { type: string, nullable: true }
+        createdAt: { type: string }
+        updatedAt: { type: string }
+
+    CreateProjectRaidItemBody:
+      type: object
+      required: [type, title]
+      properties:
+        type: { $ref: "#/components/schemas/RaidType" }
+        title: { type: string }
+        description: { type: string, nullable: true }
+        impact: { $ref: "#/components/schemas/RaidImpact" }
+        likelihood: { $ref: "#/components/schemas/RaidLikelihood" }
+        status: { $ref: "#/components/schemas/RaidStatus" }
+        ownerId: { type: string, nullable: true }
+        mitigation: { type: string, nullable: true }
+        dueDate: { type: string, nullable: true }
+
+    UpdateProjectRaidItemBody:
+      type: object
+      properties:
+        type: { $ref: "#/components/schemas/RaidType" }
+        title: { type: string }
+        description: { type: string, nullable: true }
+        impact: { $ref: "#/components/schemas/RaidImpact" }
+        likelihood: { $ref: "#/components/schemas/RaidLikelihood" }
+        status: { $ref: "#/components/schemas/RaidStatus" }
+        ownerId: { type: string, nullable: true }
+        mitigation: { type: string, nullable: true }
+        dueDate: { type: string, nullable: true }
+
+    PerformanceReviewPeriod: { type: string, enum: [Q1, Q2, Q3, Q4, ANNUAL] }
+    PerformanceReviewStatus: { type: string, enum: [DRAFT, SUBMITTED, ACKNOWLEDGED] }
+
+    PerformanceReviewProjectRating:
+      type: object
+      required: [id, reviewId, projectId, rating, ratedById, createdAt]
+      properties:
+        id: { type: string }
+        reviewId: { type: string }
+        projectId: { type: string }
+        projectCode: { type: string, nullable: true }
+        projectName: { type: string, nullable: true }
+        rating: { type: integer, minimum: 1, maximum: 5 }
+        comment: { type: string, nullable: true }
+        ratedById: { type: string }
+        ratedByName: { type: string, nullable: true }
+        createdAt: { type: string }
+        updatedAt: { type: string }
+
+    PerformanceReviewMetrics:
+      type: object
+      required: [billableHours, totalHours, utilizationPct, projectCount, skillCount, avgProjectRating]
+      properties:
+        billableHours: { type: number }
+        totalHours: { type: number }
+        utilizationPct: { type: number }
+        projectCount: { type: integer }
+        skillCount: { type: integer }
+        avgProjectRating: { type: number, nullable: true }
+        projects:
+          type: array
+          items:
+            type: object
+            required: [projectId, projectCode, projectName, hours]
+            properties:
+              projectId: { type: string }
+              projectCode: { type: string }
+              projectName: { type: string }
+              hours: { type: number }
+        skills:
+          type: array
+          items:
+            type: object
+            required: [skillId, skillName, proficiency]
+            properties:
+              skillId: { type: string }
+              skillName: { type: string }
+              proficiency: { type: integer }
+
+    PerformanceReview:
+      type: object
+      required: [id, userId, reviewerId, period, periodYear, periodStart, periodEnd, status, createdAt, updatedAt]
+      properties:
+        id: { type: string }
+        userId: { type: string }
+        userName: { type: string, nullable: true }
+        userRole: { type: string, nullable: true }
+        userTitle: { type: string, nullable: true }
+        reviewerId: { type: string }
+        reviewerName: { type: string, nullable: true }
+        period: { $ref: "#/components/schemas/PerformanceReviewPeriod" }
+        periodYear: { type: integer }
+        periodStart: { type: string }
+        periodEnd: { type: string }
+        status: { $ref: "#/components/schemas/PerformanceReviewStatus" }
+        overallRating: { type: integer, nullable: true }
+        summary: { type: string, nullable: true }
+        strengths: { type: string, nullable: true }
+        improvements: { type: string, nullable: true }
+        goals: { type: string, nullable: true }
+        acknowledgement: { type: string, nullable: true }
+        submittedAt: { type: string, nullable: true }
+        acknowledgedAt: { type: string, nullable: true }
+        createdAt: { type: string }
+        updatedAt: { type: string }
+
+    PerformanceReviewDetail:
+      allOf:
+        - $ref: "#/components/schemas/PerformanceReview"
+        - type: object
+          properties:
+            projectRatings:
+              type: array
+              items: { $ref: "#/components/schemas/PerformanceReviewProjectRating" }
+            metrics: { $ref: "#/components/schemas/PerformanceReviewMetrics" }
+
+    CreatePerformanceReviewBody:
+      type: object
+      required: [userId, period, periodYear]
+      properties:
+        userId: { type: string }
+        period: { $ref: "#/components/schemas/PerformanceReviewPeriod" }
+        periodYear: { type: integer }
+        reviewerId: { type: string, nullable: true, description: "Defaults to caller" }
+
+    UpdatePerformanceReviewBody:
+      type: object
+      properties:
+        overallRating: { type: integer, minimum: 1, maximum: 5, nullable: true }
+        summary: { type: string, nullable: true }
+        strengths: { type: string, nullable: true }
+        improvements: { type: string, nullable: true }
+        goals: { type: string, nullable: true }
+        acknowledgement: { type: string, nullable: true }
+
+    UpsertProjectRatingBody:
+      type: object
+      required: [projectId, rating]
+      properties:
+        projectId: { type: string }
+        rating: { type: integer, minimum: 1, maximum: 5 }
+        comment: { type: string, nullable: true }
 
     ProjectDetail:
       allOf:

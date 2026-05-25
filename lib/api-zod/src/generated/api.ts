@@ -1690,6 +1690,554 @@ export const RemoveProjectExpenseResponse = zod.object({
   message: zod.string().optional(),
 });
 
+export const ListProjectRaidItemsParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const ListProjectRaidItemsResponseItem = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  type: zod.enum(["RISK", "ASSUMPTION", "ISSUE", "DEPENDENCY"]),
+  title: zod.string(),
+  description: zod.string().nullish(),
+  impact: zod.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]),
+  likelihood: zod.enum(["LOW", "MEDIUM", "HIGH"]),
+  status: zod.enum(["OPEN", "MITIGATING", "CLOSED"]),
+  ownerId: zod.string().nullish(),
+  ownerName: zod.string().nullish(),
+  mitigation: zod.string().nullish(),
+  dueDate: zod.string().nullish(),
+  closedAt: zod.string().nullish(),
+  createdById: zod.string().nullish(),
+  createdByName: zod.string().nullish(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+export const ListProjectRaidItemsResponse = zod.array(
+  ListProjectRaidItemsResponseItem,
+);
+
+export const CreateProjectRaidItemParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const CreateProjectRaidItemBody = zod.object({
+  type: zod.enum(["RISK", "ASSUMPTION", "ISSUE", "DEPENDENCY"]),
+  title: zod.string(),
+  description: zod.string().nullish(),
+  impact: zod.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).optional(),
+  likelihood: zod.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
+  status: zod.enum(["OPEN", "MITIGATING", "CLOSED"]).optional(),
+  ownerId: zod.string().nullish(),
+  mitigation: zod.string().nullish(),
+  dueDate: zod.string().nullish(),
+});
+
+export const UpdateRaidItemParams = zod.object({
+  itemId: zod.coerce.string(),
+});
+
+export const UpdateRaidItemBody = zod.object({
+  type: zod.enum(["RISK", "ASSUMPTION", "ISSUE", "DEPENDENCY"]).optional(),
+  title: zod.string().optional(),
+  description: zod.string().nullish(),
+  impact: zod.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).optional(),
+  likelihood: zod.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
+  status: zod.enum(["OPEN", "MITIGATING", "CLOSED"]).optional(),
+  ownerId: zod.string().nullish(),
+  mitigation: zod.string().nullish(),
+  dueDate: zod.string().nullish(),
+});
+
+export const UpdateRaidItemResponse = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  type: zod.enum(["RISK", "ASSUMPTION", "ISSUE", "DEPENDENCY"]),
+  title: zod.string(),
+  description: zod.string().nullish(),
+  impact: zod.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]),
+  likelihood: zod.enum(["LOW", "MEDIUM", "HIGH"]),
+  status: zod.enum(["OPEN", "MITIGATING", "CLOSED"]),
+  ownerId: zod.string().nullish(),
+  ownerName: zod.string().nullish(),
+  mitigation: zod.string().nullish(),
+  dueDate: zod.string().nullish(),
+  closedAt: zod.string().nullish(),
+  createdById: zod.string().nullish(),
+  createdByName: zod.string().nullish(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+export const DeleteRaidItemParams = zod.object({
+  itemId: zod.coerce.string(),
+});
+
+export const DeleteRaidItemResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+export const ListPerformanceReviewsQueryParams = zod.object({
+  userId: zod.coerce.string().optional(),
+  reviewerId: zod.coerce.string().optional(),
+  status: zod.enum(["DRAFT", "SUBMITTED", "ACKNOWLEDGED"]).optional(),
+  year: zod.coerce.number().optional(),
+});
+
+export const ListPerformanceReviewsResponseItem = zod.object({
+  id: zod.string(),
+  userId: zod.string(),
+  userName: zod.string().nullish(),
+  userRole: zod.string().nullish(),
+  userTitle: zod.string().nullish(),
+  reviewerId: zod.string(),
+  reviewerName: zod.string().nullish(),
+  period: zod.enum(["Q1", "Q2", "Q3", "Q4", "ANNUAL"]),
+  periodYear: zod.number(),
+  periodStart: zod.string(),
+  periodEnd: zod.string(),
+  status: zod.enum(["DRAFT", "SUBMITTED", "ACKNOWLEDGED"]),
+  overallRating: zod.number().nullish(),
+  summary: zod.string().nullish(),
+  strengths: zod.string().nullish(),
+  improvements: zod.string().nullish(),
+  goals: zod.string().nullish(),
+  acknowledgement: zod.string().nullish(),
+  submittedAt: zod.string().nullish(),
+  acknowledgedAt: zod.string().nullish(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+export const ListPerformanceReviewsResponse = zod.array(
+  ListPerformanceReviewsResponseItem,
+);
+
+export const CreatePerformanceReviewBody = zod.object({
+  userId: zod.string(),
+  period: zod.enum(["Q1", "Q2", "Q3", "Q4", "ANNUAL"]),
+  periodYear: zod.number(),
+  reviewerId: zod.string().nullish().describe("Defaults to caller"),
+});
+
+export const GetPerformanceReviewParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const getPerformanceReviewResponseTwoProjectRatingsItemRatingMax = 5;
+
+export const GetPerformanceReviewResponse = zod
+  .object({
+    id: zod.string(),
+    userId: zod.string(),
+    userName: zod.string().nullish(),
+    userRole: zod.string().nullish(),
+    userTitle: zod.string().nullish(),
+    reviewerId: zod.string(),
+    reviewerName: zod.string().nullish(),
+    period: zod.enum(["Q1", "Q2", "Q3", "Q4", "ANNUAL"]),
+    periodYear: zod.number(),
+    periodStart: zod.string(),
+    periodEnd: zod.string(),
+    status: zod.enum(["DRAFT", "SUBMITTED", "ACKNOWLEDGED"]),
+    overallRating: zod.number().nullish(),
+    summary: zod.string().nullish(),
+    strengths: zod.string().nullish(),
+    improvements: zod.string().nullish(),
+    goals: zod.string().nullish(),
+    acknowledgement: zod.string().nullish(),
+    submittedAt: zod.string().nullish(),
+    acknowledgedAt: zod.string().nullish(),
+    createdAt: zod.string(),
+    updatedAt: zod.string(),
+  })
+  .and(
+    zod.object({
+      projectRatings: zod
+        .array(
+          zod.object({
+            id: zod.string(),
+            reviewId: zod.string(),
+            projectId: zod.string(),
+            projectCode: zod.string().nullish(),
+            projectName: zod.string().nullish(),
+            rating: zod
+              .number()
+              .min(1)
+              .max(getPerformanceReviewResponseTwoProjectRatingsItemRatingMax),
+            comment: zod.string().nullish(),
+            ratedById: zod.string(),
+            ratedByName: zod.string().nullish(),
+            createdAt: zod.string(),
+            updatedAt: zod.string().optional(),
+          }),
+        )
+        .optional(),
+      metrics: zod
+        .object({
+          billableHours: zod.number(),
+          totalHours: zod.number(),
+          utilizationPct: zod.number(),
+          projectCount: zod.number(),
+          skillCount: zod.number(),
+          avgProjectRating: zod.number().nullable(),
+          projects: zod
+            .array(
+              zod.object({
+                projectId: zod.string(),
+                projectCode: zod.string(),
+                projectName: zod.string(),
+                hours: zod.number(),
+              }),
+            )
+            .optional(),
+          skills: zod
+            .array(
+              zod.object({
+                skillId: zod.string(),
+                skillName: zod.string(),
+                proficiency: zod.number(),
+              }),
+            )
+            .optional(),
+        })
+        .optional(),
+    }),
+  );
+
+export const UpdatePerformanceReviewParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const updatePerformanceReviewBodyOverallRatingMax = 5;
+
+export const UpdatePerformanceReviewBody = zod.object({
+  overallRating: zod
+    .number()
+    .min(1)
+    .max(updatePerformanceReviewBodyOverallRatingMax)
+    .nullish(),
+  summary: zod.string().nullish(),
+  strengths: zod.string().nullish(),
+  improvements: zod.string().nullish(),
+  goals: zod.string().nullish(),
+  acknowledgement: zod.string().nullish(),
+});
+
+export const updatePerformanceReviewResponseTwoProjectRatingsItemRatingMax = 5;
+
+export const UpdatePerformanceReviewResponse = zod
+  .object({
+    id: zod.string(),
+    userId: zod.string(),
+    userName: zod.string().nullish(),
+    userRole: zod.string().nullish(),
+    userTitle: zod.string().nullish(),
+    reviewerId: zod.string(),
+    reviewerName: zod.string().nullish(),
+    period: zod.enum(["Q1", "Q2", "Q3", "Q4", "ANNUAL"]),
+    periodYear: zod.number(),
+    periodStart: zod.string(),
+    periodEnd: zod.string(),
+    status: zod.enum(["DRAFT", "SUBMITTED", "ACKNOWLEDGED"]),
+    overallRating: zod.number().nullish(),
+    summary: zod.string().nullish(),
+    strengths: zod.string().nullish(),
+    improvements: zod.string().nullish(),
+    goals: zod.string().nullish(),
+    acknowledgement: zod.string().nullish(),
+    submittedAt: zod.string().nullish(),
+    acknowledgedAt: zod.string().nullish(),
+    createdAt: zod.string(),
+    updatedAt: zod.string(),
+  })
+  .and(
+    zod.object({
+      projectRatings: zod
+        .array(
+          zod.object({
+            id: zod.string(),
+            reviewId: zod.string(),
+            projectId: zod.string(),
+            projectCode: zod.string().nullish(),
+            projectName: zod.string().nullish(),
+            rating: zod
+              .number()
+              .min(1)
+              .max(
+                updatePerformanceReviewResponseTwoProjectRatingsItemRatingMax,
+              ),
+            comment: zod.string().nullish(),
+            ratedById: zod.string(),
+            ratedByName: zod.string().nullish(),
+            createdAt: zod.string(),
+            updatedAt: zod.string().optional(),
+          }),
+        )
+        .optional(),
+      metrics: zod
+        .object({
+          billableHours: zod.number(),
+          totalHours: zod.number(),
+          utilizationPct: zod.number(),
+          projectCount: zod.number(),
+          skillCount: zod.number(),
+          avgProjectRating: zod.number().nullable(),
+          projects: zod
+            .array(
+              zod.object({
+                projectId: zod.string(),
+                projectCode: zod.string(),
+                projectName: zod.string(),
+                hours: zod.number(),
+              }),
+            )
+            .optional(),
+          skills: zod
+            .array(
+              zod.object({
+                skillId: zod.string(),
+                skillName: zod.string(),
+                proficiency: zod.number(),
+              }),
+            )
+            .optional(),
+        })
+        .optional(),
+    }),
+  );
+
+export const DeletePerformanceReviewParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const DeletePerformanceReviewResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+export const SubmitPerformanceReviewParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const submitPerformanceReviewResponseTwoProjectRatingsItemRatingMax = 5;
+
+export const SubmitPerformanceReviewResponse = zod
+  .object({
+    id: zod.string(),
+    userId: zod.string(),
+    userName: zod.string().nullish(),
+    userRole: zod.string().nullish(),
+    userTitle: zod.string().nullish(),
+    reviewerId: zod.string(),
+    reviewerName: zod.string().nullish(),
+    period: zod.enum(["Q1", "Q2", "Q3", "Q4", "ANNUAL"]),
+    periodYear: zod.number(),
+    periodStart: zod.string(),
+    periodEnd: zod.string(),
+    status: zod.enum(["DRAFT", "SUBMITTED", "ACKNOWLEDGED"]),
+    overallRating: zod.number().nullish(),
+    summary: zod.string().nullish(),
+    strengths: zod.string().nullish(),
+    improvements: zod.string().nullish(),
+    goals: zod.string().nullish(),
+    acknowledgement: zod.string().nullish(),
+    submittedAt: zod.string().nullish(),
+    acknowledgedAt: zod.string().nullish(),
+    createdAt: zod.string(),
+    updatedAt: zod.string(),
+  })
+  .and(
+    zod.object({
+      projectRatings: zod
+        .array(
+          zod.object({
+            id: zod.string(),
+            reviewId: zod.string(),
+            projectId: zod.string(),
+            projectCode: zod.string().nullish(),
+            projectName: zod.string().nullish(),
+            rating: zod
+              .number()
+              .min(1)
+              .max(
+                submitPerformanceReviewResponseTwoProjectRatingsItemRatingMax,
+              ),
+            comment: zod.string().nullish(),
+            ratedById: zod.string(),
+            ratedByName: zod.string().nullish(),
+            createdAt: zod.string(),
+            updatedAt: zod.string().optional(),
+          }),
+        )
+        .optional(),
+      metrics: zod
+        .object({
+          billableHours: zod.number(),
+          totalHours: zod.number(),
+          utilizationPct: zod.number(),
+          projectCount: zod.number(),
+          skillCount: zod.number(),
+          avgProjectRating: zod.number().nullable(),
+          projects: zod
+            .array(
+              zod.object({
+                projectId: zod.string(),
+                projectCode: zod.string(),
+                projectName: zod.string(),
+                hours: zod.number(),
+              }),
+            )
+            .optional(),
+          skills: zod
+            .array(
+              zod.object({
+                skillId: zod.string(),
+                skillName: zod.string(),
+                proficiency: zod.number(),
+              }),
+            )
+            .optional(),
+        })
+        .optional(),
+    }),
+  );
+
+export const AcknowledgePerformanceReviewParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const AcknowledgePerformanceReviewBody = zod.object({
+  acknowledgement: zod.string().nullish(),
+});
+
+export const acknowledgePerformanceReviewResponseTwoProjectRatingsItemRatingMax = 5;
+
+export const AcknowledgePerformanceReviewResponse = zod
+  .object({
+    id: zod.string(),
+    userId: zod.string(),
+    userName: zod.string().nullish(),
+    userRole: zod.string().nullish(),
+    userTitle: zod.string().nullish(),
+    reviewerId: zod.string(),
+    reviewerName: zod.string().nullish(),
+    period: zod.enum(["Q1", "Q2", "Q3", "Q4", "ANNUAL"]),
+    periodYear: zod.number(),
+    periodStart: zod.string(),
+    periodEnd: zod.string(),
+    status: zod.enum(["DRAFT", "SUBMITTED", "ACKNOWLEDGED"]),
+    overallRating: zod.number().nullish(),
+    summary: zod.string().nullish(),
+    strengths: zod.string().nullish(),
+    improvements: zod.string().nullish(),
+    goals: zod.string().nullish(),
+    acknowledgement: zod.string().nullish(),
+    submittedAt: zod.string().nullish(),
+    acknowledgedAt: zod.string().nullish(),
+    createdAt: zod.string(),
+    updatedAt: zod.string(),
+  })
+  .and(
+    zod.object({
+      projectRatings: zod
+        .array(
+          zod.object({
+            id: zod.string(),
+            reviewId: zod.string(),
+            projectId: zod.string(),
+            projectCode: zod.string().nullish(),
+            projectName: zod.string().nullish(),
+            rating: zod
+              .number()
+              .min(1)
+              .max(
+                acknowledgePerformanceReviewResponseTwoProjectRatingsItemRatingMax,
+              ),
+            comment: zod.string().nullish(),
+            ratedById: zod.string(),
+            ratedByName: zod.string().nullish(),
+            createdAt: zod.string(),
+            updatedAt: zod.string().optional(),
+          }),
+        )
+        .optional(),
+      metrics: zod
+        .object({
+          billableHours: zod.number(),
+          totalHours: zod.number(),
+          utilizationPct: zod.number(),
+          projectCount: zod.number(),
+          skillCount: zod.number(),
+          avgProjectRating: zod.number().nullable(),
+          projects: zod
+            .array(
+              zod.object({
+                projectId: zod.string(),
+                projectCode: zod.string(),
+                projectName: zod.string(),
+                hours: zod.number(),
+              }),
+            )
+            .optional(),
+          skills: zod
+            .array(
+              zod.object({
+                skillId: zod.string(),
+                skillName: zod.string(),
+                proficiency: zod.number(),
+              }),
+            )
+            .optional(),
+        })
+        .optional(),
+    }),
+  );
+
+export const UpsertPerformanceReviewProjectRatingParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const upsertPerformanceReviewProjectRatingBodyRatingMax = 5;
+
+export const UpsertPerformanceReviewProjectRatingBody = zod.object({
+  projectId: zod.string(),
+  rating: zod
+    .number()
+    .min(1)
+    .max(upsertPerformanceReviewProjectRatingBodyRatingMax),
+  comment: zod.string().nullish(),
+});
+
+export const upsertPerformanceReviewProjectRatingResponseRatingMax = 5;
+
+export const UpsertPerformanceReviewProjectRatingResponse = zod.object({
+  id: zod.string(),
+  reviewId: zod.string(),
+  projectId: zod.string(),
+  projectCode: zod.string().nullish(),
+  projectName: zod.string().nullish(),
+  rating: zod
+    .number()
+    .min(1)
+    .max(upsertPerformanceReviewProjectRatingResponseRatingMax),
+  comment: zod.string().nullish(),
+  ratedById: zod.string(),
+  ratedByName: zod.string().nullish(),
+  createdAt: zod.string(),
+  updatedAt: zod.string().optional(),
+});
+
+export const RemovePerformanceReviewProjectRatingParams = zod.object({
+  id: zod.coerce.string(),
+  ratingId: zod.coerce.string(),
+});
+
+export const RemovePerformanceReviewProjectRatingResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
 /**
  * PM-of-project or MANAGEMENT approves a PENDING expense. APPROVED expenses count toward project actualCost.
  */

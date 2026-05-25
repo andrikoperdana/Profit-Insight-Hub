@@ -17,6 +17,7 @@ import type {
 } from "@tanstack/react-query";
 
 import type {
+  AcknowledgePerformanceReviewBody,
   ActiveUser,
   ActivityItem,
   AddProjectExpenseBody,
@@ -40,7 +41,9 @@ import type {
   CreateLeadActivityBody,
   CreateLeadBody,
   CreateLeaveBody,
+  CreatePerformanceReviewBody,
   CreateProjectBody,
+  CreateProjectRaidItemBody,
   CreateSkillBody,
   CreateTaskBody,
   CreateTaskTemplateBody,
@@ -64,17 +67,22 @@ import type {
   LeadAnalytics,
   ListAvailableUsersParams,
   ListLeavesParams,
+  ListPerformanceReviewsParams,
   ListProjectsParams,
   ListTaskTemplatesParams,
   ListTimesheetsParams,
   LogTaskTimeBody,
   LoginBody,
   Notification,
+  PerformanceReview,
+  PerformanceReviewDetail,
+  PerformanceReviewProjectRating,
   ProfitTrendPoint,
   Project,
   ProjectDetail,
   ProjectExpense,
   ProjectFinancials,
+  ProjectRaidItem,
   ProjectResource,
   RejectProjectExpenseBody,
   RejectTimesheetBody,
@@ -96,11 +104,14 @@ import type {
   UpdateBusinessUnitBody,
   UpdateLeadActivityBody,
   UpdateLeadBody,
+  UpdatePerformanceReviewBody,
   UpdateProjectBody,
+  UpdateProjectRaidItemBody,
   UpdateProjectReportBody,
   UpdateSkillBody,
   UpdateTaskBody,
   UpdateUserBody,
+  UpsertProjectRatingBody,
   User,
   UserLeave,
   UtilizationRow,
@@ -3977,6 +3988,1091 @@ export const useRemoveProjectExpense = <
   TContext
 > => {
   return useMutation(getRemoveProjectExpenseMutationOptions(options));
+};
+
+export const getListProjectRaidItemsUrl = (id: string) => {
+  return `/api/projects/${id}/raid`;
+};
+
+export const listProjectRaidItems = async (
+  id: string,
+  options?: RequestInit,
+): Promise<ProjectRaidItem[]> => {
+  return customFetch<ProjectRaidItem[]>(getListProjectRaidItemsUrl(id), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListProjectRaidItemsQueryKey = (id: string) => {
+  return [`/api/projects/${id}/raid`] as const;
+};
+
+export const getListProjectRaidItemsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listProjectRaidItems>>,
+  TError = ErrorType<unknown>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listProjectRaidItems>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getListProjectRaidItemsQueryKey(id);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listProjectRaidItems>>
+  > = ({ signal }) => listProjectRaidItems(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof listProjectRaidItems>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListProjectRaidItemsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listProjectRaidItems>>
+>;
+export type ListProjectRaidItemsQueryError = ErrorType<unknown>;
+
+export function useListProjectRaidItems<
+  TData = Awaited<ReturnType<typeof listProjectRaidItems>>,
+  TError = ErrorType<unknown>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listProjectRaidItems>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListProjectRaidItemsQueryOptions(id, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getCreateProjectRaidItemUrl = (id: string) => {
+  return `/api/projects/${id}/raid`;
+};
+
+export const createProjectRaidItem = async (
+  id: string,
+  createProjectRaidItemBody: CreateProjectRaidItemBody,
+  options?: RequestInit,
+): Promise<ProjectRaidItem> => {
+  return customFetch<ProjectRaidItem>(getCreateProjectRaidItemUrl(id), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createProjectRaidItemBody),
+  });
+};
+
+export const getCreateProjectRaidItemMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createProjectRaidItem>>,
+    TError,
+    { id: string; data: BodyType<CreateProjectRaidItemBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createProjectRaidItem>>,
+  TError,
+  { id: string; data: BodyType<CreateProjectRaidItemBody> },
+  TContext
+> => {
+  const mutationKey = ["createProjectRaidItem"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createProjectRaidItem>>,
+    { id: string; data: BodyType<CreateProjectRaidItemBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return createProjectRaidItem(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateProjectRaidItemMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createProjectRaidItem>>
+>;
+export type CreateProjectRaidItemMutationBody =
+  BodyType<CreateProjectRaidItemBody>;
+export type CreateProjectRaidItemMutationError = ErrorType<unknown>;
+
+export const useCreateProjectRaidItem = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createProjectRaidItem>>,
+    TError,
+    { id: string; data: BodyType<CreateProjectRaidItemBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createProjectRaidItem>>,
+  TError,
+  { id: string; data: BodyType<CreateProjectRaidItemBody> },
+  TContext
+> => {
+  return useMutation(getCreateProjectRaidItemMutationOptions(options));
+};
+
+export const getUpdateRaidItemUrl = (itemId: string) => {
+  return `/api/raid/${itemId}`;
+};
+
+export const updateRaidItem = async (
+  itemId: string,
+  updateProjectRaidItemBody: UpdateProjectRaidItemBody,
+  options?: RequestInit,
+): Promise<ProjectRaidItem> => {
+  return customFetch<ProjectRaidItem>(getUpdateRaidItemUrl(itemId), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateProjectRaidItemBody),
+  });
+};
+
+export const getUpdateRaidItemMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateRaidItem>>,
+    TError,
+    { itemId: string; data: BodyType<UpdateProjectRaidItemBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateRaidItem>>,
+  TError,
+  { itemId: string; data: BodyType<UpdateProjectRaidItemBody> },
+  TContext
+> => {
+  const mutationKey = ["updateRaidItem"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateRaidItem>>,
+    { itemId: string; data: BodyType<UpdateProjectRaidItemBody> }
+  > = (props) => {
+    const { itemId, data } = props ?? {};
+
+    return updateRaidItem(itemId, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateRaidItemMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateRaidItem>>
+>;
+export type UpdateRaidItemMutationBody = BodyType<UpdateProjectRaidItemBody>;
+export type UpdateRaidItemMutationError = ErrorType<unknown>;
+
+export const useUpdateRaidItem = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateRaidItem>>,
+    TError,
+    { itemId: string; data: BodyType<UpdateProjectRaidItemBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateRaidItem>>,
+  TError,
+  { itemId: string; data: BodyType<UpdateProjectRaidItemBody> },
+  TContext
+> => {
+  return useMutation(getUpdateRaidItemMutationOptions(options));
+};
+
+export const getDeleteRaidItemUrl = (itemId: string) => {
+  return `/api/raid/${itemId}`;
+};
+
+export const deleteRaidItem = async (
+  itemId: string,
+  options?: RequestInit,
+): Promise<SuccessMessage> => {
+  return customFetch<SuccessMessage>(getDeleteRaidItemUrl(itemId), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getDeleteRaidItemMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteRaidItem>>,
+    TError,
+    { itemId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteRaidItem>>,
+  TError,
+  { itemId: string },
+  TContext
+> => {
+  const mutationKey = ["deleteRaidItem"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteRaidItem>>,
+    { itemId: string }
+  > = (props) => {
+    const { itemId } = props ?? {};
+
+    return deleteRaidItem(itemId, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteRaidItemMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteRaidItem>>
+>;
+
+export type DeleteRaidItemMutationError = ErrorType<unknown>;
+
+export const useDeleteRaidItem = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteRaidItem>>,
+    TError,
+    { itemId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteRaidItem>>,
+  TError,
+  { itemId: string },
+  TContext
+> => {
+  return useMutation(getDeleteRaidItemMutationOptions(options));
+};
+
+export const getListPerformanceReviewsUrl = (
+  params?: ListPerformanceReviewsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/performance-reviews?${stringifiedParams}`
+    : `/api/performance-reviews`;
+};
+
+export const listPerformanceReviews = async (
+  params?: ListPerformanceReviewsParams,
+  options?: RequestInit,
+): Promise<PerformanceReview[]> => {
+  return customFetch<PerformanceReview[]>(
+    getListPerformanceReviewsUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getListPerformanceReviewsQueryKey = (
+  params?: ListPerformanceReviewsParams,
+) => {
+  return [`/api/performance-reviews`, ...(params ? [params] : [])] as const;
+};
+
+export const getListPerformanceReviewsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listPerformanceReviews>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListPerformanceReviewsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listPerformanceReviews>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getListPerformanceReviewsQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listPerformanceReviews>>
+  > = ({ signal }) =>
+    listPerformanceReviews(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listPerformanceReviews>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListPerformanceReviewsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listPerformanceReviews>>
+>;
+export type ListPerformanceReviewsQueryError = ErrorType<unknown>;
+
+export function useListPerformanceReviews<
+  TData = Awaited<ReturnType<typeof listPerformanceReviews>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListPerformanceReviewsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listPerformanceReviews>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListPerformanceReviewsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getCreatePerformanceReviewUrl = () => {
+  return `/api/performance-reviews`;
+};
+
+export const createPerformanceReview = async (
+  createPerformanceReviewBody: CreatePerformanceReviewBody,
+  options?: RequestInit,
+): Promise<PerformanceReview> => {
+  return customFetch<PerformanceReview>(getCreatePerformanceReviewUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createPerformanceReviewBody),
+  });
+};
+
+export const getCreatePerformanceReviewMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createPerformanceReview>>,
+    TError,
+    { data: BodyType<CreatePerformanceReviewBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createPerformanceReview>>,
+  TError,
+  { data: BodyType<CreatePerformanceReviewBody> },
+  TContext
+> => {
+  const mutationKey = ["createPerformanceReview"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createPerformanceReview>>,
+    { data: BodyType<CreatePerformanceReviewBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createPerformanceReview(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreatePerformanceReviewMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createPerformanceReview>>
+>;
+export type CreatePerformanceReviewMutationBody =
+  BodyType<CreatePerformanceReviewBody>;
+export type CreatePerformanceReviewMutationError = ErrorType<unknown>;
+
+export const useCreatePerformanceReview = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createPerformanceReview>>,
+    TError,
+    { data: BodyType<CreatePerformanceReviewBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createPerformanceReview>>,
+  TError,
+  { data: BodyType<CreatePerformanceReviewBody> },
+  TContext
+> => {
+  return useMutation(getCreatePerformanceReviewMutationOptions(options));
+};
+
+export const getGetPerformanceReviewUrl = (id: string) => {
+  return `/api/performance-reviews/${id}`;
+};
+
+export const getPerformanceReview = async (
+  id: string,
+  options?: RequestInit,
+): Promise<PerformanceReviewDetail> => {
+  return customFetch<PerformanceReviewDetail>(getGetPerformanceReviewUrl(id), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetPerformanceReviewQueryKey = (id: string) => {
+  return [`/api/performance-reviews/${id}`] as const;
+};
+
+export const getGetPerformanceReviewQueryOptions = <
+  TData = Awaited<ReturnType<typeof getPerformanceReview>>,
+  TError = ErrorType<unknown>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getPerformanceReview>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetPerformanceReviewQueryKey(id);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getPerformanceReview>>
+  > = ({ signal }) => getPerformanceReview(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getPerformanceReview>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetPerformanceReviewQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPerformanceReview>>
+>;
+export type GetPerformanceReviewQueryError = ErrorType<unknown>;
+
+export function useGetPerformanceReview<
+  TData = Awaited<ReturnType<typeof getPerformanceReview>>,
+  TError = ErrorType<unknown>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getPerformanceReview>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetPerformanceReviewQueryOptions(id, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getUpdatePerformanceReviewUrl = (id: string) => {
+  return `/api/performance-reviews/${id}`;
+};
+
+export const updatePerformanceReview = async (
+  id: string,
+  updatePerformanceReviewBody: UpdatePerformanceReviewBody,
+  options?: RequestInit,
+): Promise<PerformanceReviewDetail> => {
+  return customFetch<PerformanceReviewDetail>(
+    getUpdatePerformanceReviewUrl(id),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(updatePerformanceReviewBody),
+    },
+  );
+};
+
+export const getUpdatePerformanceReviewMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updatePerformanceReview>>,
+    TError,
+    { id: string; data: BodyType<UpdatePerformanceReviewBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updatePerformanceReview>>,
+  TError,
+  { id: string; data: BodyType<UpdatePerformanceReviewBody> },
+  TContext
+> => {
+  const mutationKey = ["updatePerformanceReview"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updatePerformanceReview>>,
+    { id: string; data: BodyType<UpdatePerformanceReviewBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return updatePerformanceReview(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdatePerformanceReviewMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updatePerformanceReview>>
+>;
+export type UpdatePerformanceReviewMutationBody =
+  BodyType<UpdatePerformanceReviewBody>;
+export type UpdatePerformanceReviewMutationError = ErrorType<unknown>;
+
+export const useUpdatePerformanceReview = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updatePerformanceReview>>,
+    TError,
+    { id: string; data: BodyType<UpdatePerformanceReviewBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updatePerformanceReview>>,
+  TError,
+  { id: string; data: BodyType<UpdatePerformanceReviewBody> },
+  TContext
+> => {
+  return useMutation(getUpdatePerformanceReviewMutationOptions(options));
+};
+
+export const getDeletePerformanceReviewUrl = (id: string) => {
+  return `/api/performance-reviews/${id}`;
+};
+
+export const deletePerformanceReview = async (
+  id: string,
+  options?: RequestInit,
+): Promise<SuccessMessage> => {
+  return customFetch<SuccessMessage>(getDeletePerformanceReviewUrl(id), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getDeletePerformanceReviewMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deletePerformanceReview>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deletePerformanceReview>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["deletePerformanceReview"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deletePerformanceReview>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return deletePerformanceReview(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeletePerformanceReviewMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deletePerformanceReview>>
+>;
+
+export type DeletePerformanceReviewMutationError = ErrorType<unknown>;
+
+export const useDeletePerformanceReview = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deletePerformanceReview>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deletePerformanceReview>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getDeletePerformanceReviewMutationOptions(options));
+};
+
+export const getSubmitPerformanceReviewUrl = (id: string) => {
+  return `/api/performance-reviews/${id}/submit`;
+};
+
+export const submitPerformanceReview = async (
+  id: string,
+  options?: RequestInit,
+): Promise<PerformanceReviewDetail> => {
+  return customFetch<PerformanceReviewDetail>(
+    getSubmitPerformanceReviewUrl(id),
+    {
+      ...options,
+      method: "POST",
+    },
+  );
+};
+
+export const getSubmitPerformanceReviewMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof submitPerformanceReview>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof submitPerformanceReview>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["submitPerformanceReview"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof submitPerformanceReview>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return submitPerformanceReview(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SubmitPerformanceReviewMutationResult = NonNullable<
+  Awaited<ReturnType<typeof submitPerformanceReview>>
+>;
+
+export type SubmitPerformanceReviewMutationError = ErrorType<unknown>;
+
+export const useSubmitPerformanceReview = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof submitPerformanceReview>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof submitPerformanceReview>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getSubmitPerformanceReviewMutationOptions(options));
+};
+
+export const getAcknowledgePerformanceReviewUrl = (id: string) => {
+  return `/api/performance-reviews/${id}/acknowledge`;
+};
+
+export const acknowledgePerformanceReview = async (
+  id: string,
+  acknowledgePerformanceReviewBody?: AcknowledgePerformanceReviewBody,
+  options?: RequestInit,
+): Promise<PerformanceReviewDetail> => {
+  return customFetch<PerformanceReviewDetail>(
+    getAcknowledgePerformanceReviewUrl(id),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(acknowledgePerformanceReviewBody),
+    },
+  );
+};
+
+export const getAcknowledgePerformanceReviewMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof acknowledgePerformanceReview>>,
+    TError,
+    { id: string; data: BodyType<AcknowledgePerformanceReviewBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof acknowledgePerformanceReview>>,
+  TError,
+  { id: string; data: BodyType<AcknowledgePerformanceReviewBody> },
+  TContext
+> => {
+  const mutationKey = ["acknowledgePerformanceReview"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof acknowledgePerformanceReview>>,
+    { id: string; data: BodyType<AcknowledgePerformanceReviewBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return acknowledgePerformanceReview(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type AcknowledgePerformanceReviewMutationResult = NonNullable<
+  Awaited<ReturnType<typeof acknowledgePerformanceReview>>
+>;
+export type AcknowledgePerformanceReviewMutationBody =
+  BodyType<AcknowledgePerformanceReviewBody>;
+export type AcknowledgePerformanceReviewMutationError = ErrorType<unknown>;
+
+export const useAcknowledgePerformanceReview = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof acknowledgePerformanceReview>>,
+    TError,
+    { id: string; data: BodyType<AcknowledgePerformanceReviewBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof acknowledgePerformanceReview>>,
+  TError,
+  { id: string; data: BodyType<AcknowledgePerformanceReviewBody> },
+  TContext
+> => {
+  return useMutation(getAcknowledgePerformanceReviewMutationOptions(options));
+};
+
+export const getUpsertPerformanceReviewProjectRatingUrl = (id: string) => {
+  return `/api/performance-reviews/${id}/project-ratings`;
+};
+
+export const upsertPerformanceReviewProjectRating = async (
+  id: string,
+  upsertProjectRatingBody: UpsertProjectRatingBody,
+  options?: RequestInit,
+): Promise<PerformanceReviewProjectRating> => {
+  return customFetch<PerformanceReviewProjectRating>(
+    getUpsertPerformanceReviewProjectRatingUrl(id),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(upsertProjectRatingBody),
+    },
+  );
+};
+
+export const getUpsertPerformanceReviewProjectRatingMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof upsertPerformanceReviewProjectRating>>,
+    TError,
+    { id: string; data: BodyType<UpsertProjectRatingBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof upsertPerformanceReviewProjectRating>>,
+  TError,
+  { id: string; data: BodyType<UpsertProjectRatingBody> },
+  TContext
+> => {
+  const mutationKey = ["upsertPerformanceReviewProjectRating"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof upsertPerformanceReviewProjectRating>>,
+    { id: string; data: BodyType<UpsertProjectRatingBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return upsertPerformanceReviewProjectRating(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpsertPerformanceReviewProjectRatingMutationResult = NonNullable<
+  Awaited<ReturnType<typeof upsertPerformanceReviewProjectRating>>
+>;
+export type UpsertPerformanceReviewProjectRatingMutationBody =
+  BodyType<UpsertProjectRatingBody>;
+export type UpsertPerformanceReviewProjectRatingMutationError =
+  ErrorType<unknown>;
+
+export const useUpsertPerformanceReviewProjectRating = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof upsertPerformanceReviewProjectRating>>,
+    TError,
+    { id: string; data: BodyType<UpsertProjectRatingBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof upsertPerformanceReviewProjectRating>>,
+  TError,
+  { id: string; data: BodyType<UpsertProjectRatingBody> },
+  TContext
+> => {
+  return useMutation(
+    getUpsertPerformanceReviewProjectRatingMutationOptions(options),
+  );
+};
+
+export const getRemovePerformanceReviewProjectRatingUrl = (
+  id: string,
+  ratingId: string,
+) => {
+  return `/api/performance-reviews/${id}/project-ratings/${ratingId}`;
+};
+
+export const removePerformanceReviewProjectRating = async (
+  id: string,
+  ratingId: string,
+  options?: RequestInit,
+): Promise<SuccessMessage> => {
+  return customFetch<SuccessMessage>(
+    getRemovePerformanceReviewProjectRatingUrl(id, ratingId),
+    {
+      ...options,
+      method: "DELETE",
+    },
+  );
+};
+
+export const getRemovePerformanceReviewProjectRatingMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof removePerformanceReviewProjectRating>>,
+    TError,
+    { id: string; ratingId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof removePerformanceReviewProjectRating>>,
+  TError,
+  { id: string; ratingId: string },
+  TContext
+> => {
+  const mutationKey = ["removePerformanceReviewProjectRating"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof removePerformanceReviewProjectRating>>,
+    { id: string; ratingId: string }
+  > = (props) => {
+    const { id, ratingId } = props ?? {};
+
+    return removePerformanceReviewProjectRating(id, ratingId, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RemovePerformanceReviewProjectRatingMutationResult = NonNullable<
+  Awaited<ReturnType<typeof removePerformanceReviewProjectRating>>
+>;
+
+export type RemovePerformanceReviewProjectRatingMutationError =
+  ErrorType<unknown>;
+
+export const useRemovePerformanceReviewProjectRating = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof removePerformanceReviewProjectRating>>,
+    TError,
+    { id: string; ratingId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof removePerformanceReviewProjectRating>>,
+  TError,
+  { id: string; ratingId: string },
+  TContext
+> => {
+  return useMutation(
+    getRemovePerformanceReviewProjectRatingMutationOptions(options),
+  );
 };
 
 /**

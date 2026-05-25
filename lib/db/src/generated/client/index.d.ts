@@ -133,6 +133,21 @@ export type TaskTemplate = $Result.DefaultSelection<Prisma.$TaskTemplatePayload>
  * 
  */
 export type Notification = $Result.DefaultSelection<Prisma.$NotificationPayload>
+/**
+ * Model ProjectRaidItem
+ * 
+ */
+export type ProjectRaidItem = $Result.DefaultSelection<Prisma.$ProjectRaidItemPayload>
+/**
+ * Model PerformanceReview
+ * 
+ */
+export type PerformanceReview = $Result.DefaultSelection<Prisma.$PerformanceReviewPayload>
+/**
+ * Model PerformanceReviewProjectRating
+ * 
+ */
+export type PerformanceReviewProjectRating = $Result.DefaultSelection<Prisma.$PerformanceReviewProjectRatingPayload>
 
 /**
  * Enums
@@ -270,6 +285,64 @@ export const LeaveType: {
 
 export type LeaveType = (typeof LeaveType)[keyof typeof LeaveType]
 
+
+export const RaidType: {
+  RISK: 'RISK',
+  ASSUMPTION: 'ASSUMPTION',
+  ISSUE: 'ISSUE',
+  DEPENDENCY: 'DEPENDENCY'
+};
+
+export type RaidType = (typeof RaidType)[keyof typeof RaidType]
+
+
+export const RaidImpact: {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  CRITICAL: 'CRITICAL'
+};
+
+export type RaidImpact = (typeof RaidImpact)[keyof typeof RaidImpact]
+
+
+export const RaidLikelihood: {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH'
+};
+
+export type RaidLikelihood = (typeof RaidLikelihood)[keyof typeof RaidLikelihood]
+
+
+export const RaidStatus: {
+  OPEN: 'OPEN',
+  MITIGATING: 'MITIGATING',
+  CLOSED: 'CLOSED'
+};
+
+export type RaidStatus = (typeof RaidStatus)[keyof typeof RaidStatus]
+
+
+export const PerformanceReviewPeriod: {
+  Q1: 'Q1',
+  Q2: 'Q2',
+  Q3: 'Q3',
+  Q4: 'Q4',
+  ANNUAL: 'ANNUAL'
+};
+
+export type PerformanceReviewPeriod = (typeof PerformanceReviewPeriod)[keyof typeof PerformanceReviewPeriod]
+
+
+export const PerformanceReviewStatus: {
+  DRAFT: 'DRAFT',
+  SUBMITTED: 'SUBMITTED',
+  ACKNOWLEDGED: 'ACKNOWLEDGED'
+};
+
+export type PerformanceReviewStatus = (typeof PerformanceReviewStatus)[keyof typeof PerformanceReviewStatus]
+
 }
 
 export type UserRole = $Enums.UserRole
@@ -319,6 +392,30 @@ export const LeadActivityType: typeof $Enums.LeadActivityType
 export type LeaveType = $Enums.LeaveType
 
 export const LeaveType: typeof $Enums.LeaveType
+
+export type RaidType = $Enums.RaidType
+
+export const RaidType: typeof $Enums.RaidType
+
+export type RaidImpact = $Enums.RaidImpact
+
+export const RaidImpact: typeof $Enums.RaidImpact
+
+export type RaidLikelihood = $Enums.RaidLikelihood
+
+export const RaidLikelihood: typeof $Enums.RaidLikelihood
+
+export type RaidStatus = $Enums.RaidStatus
+
+export const RaidStatus: typeof $Enums.RaidStatus
+
+export type PerformanceReviewPeriod = $Enums.PerformanceReviewPeriod
+
+export const PerformanceReviewPeriod: typeof $Enums.PerformanceReviewPeriod
+
+export type PerformanceReviewStatus = $Enums.PerformanceReviewStatus
+
+export const PerformanceReviewStatus: typeof $Enums.PerformanceReviewStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -682,6 +779,36 @@ export class PrismaClient<
     * ```
     */
   get notification(): Prisma.NotificationDelegate<ExtArgs>;
+
+  /**
+   * `prisma.projectRaidItem`: Exposes CRUD operations for the **ProjectRaidItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProjectRaidItems
+    * const projectRaidItems = await prisma.projectRaidItem.findMany()
+    * ```
+    */
+  get projectRaidItem(): Prisma.ProjectRaidItemDelegate<ExtArgs>;
+
+  /**
+   * `prisma.performanceReview`: Exposes CRUD operations for the **PerformanceReview** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PerformanceReviews
+    * const performanceReviews = await prisma.performanceReview.findMany()
+    * ```
+    */
+  get performanceReview(): Prisma.PerformanceReviewDelegate<ExtArgs>;
+
+  /**
+   * `prisma.performanceReviewProjectRating`: Exposes CRUD operations for the **PerformanceReviewProjectRating** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PerformanceReviewProjectRatings
+    * const performanceReviewProjectRatings = await prisma.performanceReviewProjectRating.findMany()
+    * ```
+    */
+  get performanceReviewProjectRating(): Prisma.PerformanceReviewProjectRatingDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -1146,7 +1273,10 @@ export namespace Prisma {
     LeadActivity: 'LeadActivity',
     UserLeave: 'UserLeave',
     TaskTemplate: 'TaskTemplate',
-    Notification: 'Notification'
+    Notification: 'Notification',
+    ProjectRaidItem: 'ProjectRaidItem',
+    PerformanceReview: 'PerformanceReview',
+    PerformanceReviewProjectRating: 'PerformanceReviewProjectRating'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1162,7 +1292,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "client" | "project" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "notification"
+      modelProps: "user" | "client" | "project" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "notification" | "projectRaidItem" | "performanceReview" | "performanceReviewProjectRating"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2846,6 +2976,216 @@ export namespace Prisma {
           }
         }
       }
+      ProjectRaidItem: {
+        payload: Prisma.$ProjectRaidItemPayload<ExtArgs>
+        fields: Prisma.ProjectRaidItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProjectRaidItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectRaidItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProjectRaidItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectRaidItemPayload>
+          }
+          findFirst: {
+            args: Prisma.ProjectRaidItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectRaidItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProjectRaidItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectRaidItemPayload>
+          }
+          findMany: {
+            args: Prisma.ProjectRaidItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectRaidItemPayload>[]
+          }
+          create: {
+            args: Prisma.ProjectRaidItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectRaidItemPayload>
+          }
+          createMany: {
+            args: Prisma.ProjectRaidItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProjectRaidItemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectRaidItemPayload>[]
+          }
+          delete: {
+            args: Prisma.ProjectRaidItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectRaidItemPayload>
+          }
+          update: {
+            args: Prisma.ProjectRaidItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectRaidItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.ProjectRaidItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProjectRaidItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ProjectRaidItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectRaidItemPayload>
+          }
+          aggregate: {
+            args: Prisma.ProjectRaidItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProjectRaidItem>
+          }
+          groupBy: {
+            args: Prisma.ProjectRaidItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProjectRaidItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProjectRaidItemCountArgs<ExtArgs>
+            result: $Utils.Optional<ProjectRaidItemCountAggregateOutputType> | number
+          }
+        }
+      }
+      PerformanceReview: {
+        payload: Prisma.$PerformanceReviewPayload<ExtArgs>
+        fields: Prisma.PerformanceReviewFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PerformanceReviewFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PerformanceReviewPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PerformanceReviewFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PerformanceReviewPayload>
+          }
+          findFirst: {
+            args: Prisma.PerformanceReviewFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PerformanceReviewPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PerformanceReviewFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PerformanceReviewPayload>
+          }
+          findMany: {
+            args: Prisma.PerformanceReviewFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PerformanceReviewPayload>[]
+          }
+          create: {
+            args: Prisma.PerformanceReviewCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PerformanceReviewPayload>
+          }
+          createMany: {
+            args: Prisma.PerformanceReviewCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PerformanceReviewCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PerformanceReviewPayload>[]
+          }
+          delete: {
+            args: Prisma.PerformanceReviewDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PerformanceReviewPayload>
+          }
+          update: {
+            args: Prisma.PerformanceReviewUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PerformanceReviewPayload>
+          }
+          deleteMany: {
+            args: Prisma.PerformanceReviewDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PerformanceReviewUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PerformanceReviewUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PerformanceReviewPayload>
+          }
+          aggregate: {
+            args: Prisma.PerformanceReviewAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePerformanceReview>
+          }
+          groupBy: {
+            args: Prisma.PerformanceReviewGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PerformanceReviewGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PerformanceReviewCountArgs<ExtArgs>
+            result: $Utils.Optional<PerformanceReviewCountAggregateOutputType> | number
+          }
+        }
+      }
+      PerformanceReviewProjectRating: {
+        payload: Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>
+        fields: Prisma.PerformanceReviewProjectRatingFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PerformanceReviewProjectRatingFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PerformanceReviewProjectRatingPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PerformanceReviewProjectRatingFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PerformanceReviewProjectRatingPayload>
+          }
+          findFirst: {
+            args: Prisma.PerformanceReviewProjectRatingFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PerformanceReviewProjectRatingPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PerformanceReviewProjectRatingFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PerformanceReviewProjectRatingPayload>
+          }
+          findMany: {
+            args: Prisma.PerformanceReviewProjectRatingFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PerformanceReviewProjectRatingPayload>[]
+          }
+          create: {
+            args: Prisma.PerformanceReviewProjectRatingCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PerformanceReviewProjectRatingPayload>
+          }
+          createMany: {
+            args: Prisma.PerformanceReviewProjectRatingCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PerformanceReviewProjectRatingCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PerformanceReviewProjectRatingPayload>[]
+          }
+          delete: {
+            args: Prisma.PerformanceReviewProjectRatingDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PerformanceReviewProjectRatingPayload>
+          }
+          update: {
+            args: Prisma.PerformanceReviewProjectRatingUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PerformanceReviewProjectRatingPayload>
+          }
+          deleteMany: {
+            args: Prisma.PerformanceReviewProjectRatingDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PerformanceReviewProjectRatingUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PerformanceReviewProjectRatingUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PerformanceReviewProjectRatingPayload>
+          }
+          aggregate: {
+            args: Prisma.PerformanceReviewProjectRatingAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePerformanceReviewProjectRating>
+          }
+          groupBy: {
+            args: Prisma.PerformanceReviewProjectRatingGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PerformanceReviewProjectRatingGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PerformanceReviewProjectRatingCountArgs<ExtArgs>
+            result: $Utils.Optional<PerformanceReviewProjectRatingCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3032,6 +3372,11 @@ export namespace Prisma {
     leadActivities: number
     leaves: number
     taskTemplatesCreated: number
+    raidItemsOwned: number
+    raidItemsCreated: number
+    perfReviewsSubject: number
+    perfReviewsAuthored: number
+    perfProjectRatingsGiven: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3060,6 +3405,11 @@ export namespace Prisma {
     leadActivities?: boolean | UserCountOutputTypeCountLeadActivitiesArgs
     leaves?: boolean | UserCountOutputTypeCountLeavesArgs
     taskTemplatesCreated?: boolean | UserCountOutputTypeCountTaskTemplatesCreatedArgs
+    raidItemsOwned?: boolean | UserCountOutputTypeCountRaidItemsOwnedArgs
+    raidItemsCreated?: boolean | UserCountOutputTypeCountRaidItemsCreatedArgs
+    perfReviewsSubject?: boolean | UserCountOutputTypeCountPerfReviewsSubjectArgs
+    perfReviewsAuthored?: boolean | UserCountOutputTypeCountPerfReviewsAuthoredArgs
+    perfProjectRatingsGiven?: boolean | UserCountOutputTypeCountPerfProjectRatingsGivenArgs
   }
 
   // Custom InputTypes
@@ -3248,6 +3598,41 @@ export namespace Prisma {
     where?: TaskTemplateWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountRaidItemsOwnedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectRaidItemWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountRaidItemsCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectRaidItemWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPerfReviewsSubjectArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PerformanceReviewWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPerfReviewsAuthoredArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PerformanceReviewWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPerfProjectRatingsGivenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PerformanceReviewProjectRatingWhereInput
+  }
+
 
   /**
    * Count Type ClientCountOutputType
@@ -3302,6 +3687,8 @@ export namespace Prisma {
     expenses: number
     tasks: number
     billingMilestones: number
+    raidItems: number
+    perfProjectRatings: number
   }
 
   export type ProjectCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3313,6 +3700,8 @@ export namespace Prisma {
     expenses?: boolean | ProjectCountOutputTypeCountExpensesArgs
     tasks?: boolean | ProjectCountOutputTypeCountTasksArgs
     billingMilestones?: boolean | ProjectCountOutputTypeCountBillingMilestonesArgs
+    raidItems?: boolean | ProjectCountOutputTypeCountRaidItemsArgs
+    perfProjectRatings?: boolean | ProjectCountOutputTypeCountPerfProjectRatingsArgs
   }
 
   // Custom InputTypes
@@ -3380,6 +3769,20 @@ export namespace Prisma {
    */
   export type ProjectCountOutputTypeCountBillingMilestonesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: BillingMilestoneWhereInput
+  }
+
+  /**
+   * ProjectCountOutputType without action
+   */
+  export type ProjectCountOutputTypeCountRaidItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectRaidItemWhereInput
+  }
+
+  /**
+   * ProjectCountOutputType without action
+   */
+  export type ProjectCountOutputTypeCountPerfProjectRatingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PerformanceReviewProjectRatingWhereInput
   }
 
 
@@ -3558,6 +3961,37 @@ export namespace Prisma {
    */
   export type LeadCountOutputTypeCountActivitiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: LeadActivityWhereInput
+  }
+
+
+  /**
+   * Count Type PerformanceReviewCountOutputType
+   */
+
+  export type PerformanceReviewCountOutputType = {
+    projectRatings: number
+  }
+
+  export type PerformanceReviewCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    projectRatings?: boolean | PerformanceReviewCountOutputTypeCountProjectRatingsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PerformanceReviewCountOutputType without action
+   */
+  export type PerformanceReviewCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReviewCountOutputType
+     */
+    select?: PerformanceReviewCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PerformanceReviewCountOutputType without action
+   */
+  export type PerformanceReviewCountOutputTypeCountProjectRatingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PerformanceReviewProjectRatingWhereInput
   }
 
 
@@ -3891,6 +4325,11 @@ export namespace Prisma {
     leadActivities?: boolean | User$leadActivitiesArgs<ExtArgs>
     leaves?: boolean | User$leavesArgs<ExtArgs>
     taskTemplatesCreated?: boolean | User$taskTemplatesCreatedArgs<ExtArgs>
+    raidItemsOwned?: boolean | User$raidItemsOwnedArgs<ExtArgs>
+    raidItemsCreated?: boolean | User$raidItemsCreatedArgs<ExtArgs>
+    perfReviewsSubject?: boolean | User$perfReviewsSubjectArgs<ExtArgs>
+    perfReviewsAuthored?: boolean | User$perfReviewsAuthoredArgs<ExtArgs>
+    perfProjectRatingsGiven?: boolean | User$perfProjectRatingsGivenArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3966,6 +4405,11 @@ export namespace Prisma {
     leadActivities?: boolean | User$leadActivitiesArgs<ExtArgs>
     leaves?: boolean | User$leavesArgs<ExtArgs>
     taskTemplatesCreated?: boolean | User$taskTemplatesCreatedArgs<ExtArgs>
+    raidItemsOwned?: boolean | User$raidItemsOwnedArgs<ExtArgs>
+    raidItemsCreated?: boolean | User$raidItemsCreatedArgs<ExtArgs>
+    perfReviewsSubject?: boolean | User$perfReviewsSubjectArgs<ExtArgs>
+    perfReviewsAuthored?: boolean | User$perfReviewsAuthoredArgs<ExtArgs>
+    perfProjectRatingsGiven?: boolean | User$perfProjectRatingsGivenArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4005,6 +4449,11 @@ export namespace Prisma {
       leadActivities: Prisma.$LeadActivityPayload<ExtArgs>[]
       leaves: Prisma.$UserLeavePayload<ExtArgs>[]
       taskTemplatesCreated: Prisma.$TaskTemplatePayload<ExtArgs>[]
+      raidItemsOwned: Prisma.$ProjectRaidItemPayload<ExtArgs>[]
+      raidItemsCreated: Prisma.$ProjectRaidItemPayload<ExtArgs>[]
+      perfReviewsSubject: Prisma.$PerformanceReviewPayload<ExtArgs>[]
+      perfReviewsAuthored: Prisma.$PerformanceReviewPayload<ExtArgs>[]
+      perfProjectRatingsGiven: Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4416,6 +4865,11 @@ export namespace Prisma {
     leadActivities<T extends User$leadActivitiesArgs<ExtArgs> = {}>(args?: Subset<T, User$leadActivitiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadActivityPayload<ExtArgs>, T, "findMany"> | Null>
     leaves<T extends User$leavesArgs<ExtArgs> = {}>(args?: Subset<T, User$leavesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserLeavePayload<ExtArgs>, T, "findMany"> | Null>
     taskTemplatesCreated<T extends User$taskTemplatesCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$taskTemplatesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskTemplatePayload<ExtArgs>, T, "findMany"> | Null>
+    raidItemsOwned<T extends User$raidItemsOwnedArgs<ExtArgs> = {}>(args?: Subset<T, User$raidItemsOwnedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectRaidItemPayload<ExtArgs>, T, "findMany"> | Null>
+    raidItemsCreated<T extends User$raidItemsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$raidItemsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectRaidItemPayload<ExtArgs>, T, "findMany"> | Null>
+    perfReviewsSubject<T extends User$perfReviewsSubjectArgs<ExtArgs> = {}>(args?: Subset<T, User$perfReviewsSubjectArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PerformanceReviewPayload<ExtArgs>, T, "findMany"> | Null>
+    perfReviewsAuthored<T extends User$perfReviewsAuthoredArgs<ExtArgs> = {}>(args?: Subset<T, User$perfReviewsAuthoredArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PerformanceReviewPayload<ExtArgs>, T, "findMany"> | Null>
+    perfProjectRatingsGiven<T extends User$perfProjectRatingsGivenArgs<ExtArgs> = {}>(args?: Subset<T, User$perfProjectRatingsGivenArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5322,6 +5776,106 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TaskTemplateScalarFieldEnum | TaskTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * User.raidItemsOwned
+   */
+  export type User$raidItemsOwnedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectRaidItem
+     */
+    select?: ProjectRaidItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectRaidItemInclude<ExtArgs> | null
+    where?: ProjectRaidItemWhereInput
+    orderBy?: ProjectRaidItemOrderByWithRelationInput | ProjectRaidItemOrderByWithRelationInput[]
+    cursor?: ProjectRaidItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectRaidItemScalarFieldEnum | ProjectRaidItemScalarFieldEnum[]
+  }
+
+  /**
+   * User.raidItemsCreated
+   */
+  export type User$raidItemsCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectRaidItem
+     */
+    select?: ProjectRaidItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectRaidItemInclude<ExtArgs> | null
+    where?: ProjectRaidItemWhereInput
+    orderBy?: ProjectRaidItemOrderByWithRelationInput | ProjectRaidItemOrderByWithRelationInput[]
+    cursor?: ProjectRaidItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectRaidItemScalarFieldEnum | ProjectRaidItemScalarFieldEnum[]
+  }
+
+  /**
+   * User.perfReviewsSubject
+   */
+  export type User$perfReviewsSubjectArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReview
+     */
+    select?: PerformanceReviewSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewInclude<ExtArgs> | null
+    where?: PerformanceReviewWhereInput
+    orderBy?: PerformanceReviewOrderByWithRelationInput | PerformanceReviewOrderByWithRelationInput[]
+    cursor?: PerformanceReviewWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PerformanceReviewScalarFieldEnum | PerformanceReviewScalarFieldEnum[]
+  }
+
+  /**
+   * User.perfReviewsAuthored
+   */
+  export type User$perfReviewsAuthoredArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReview
+     */
+    select?: PerformanceReviewSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewInclude<ExtArgs> | null
+    where?: PerformanceReviewWhereInput
+    orderBy?: PerformanceReviewOrderByWithRelationInput | PerformanceReviewOrderByWithRelationInput[]
+    cursor?: PerformanceReviewWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PerformanceReviewScalarFieldEnum | PerformanceReviewScalarFieldEnum[]
+  }
+
+  /**
+   * User.perfProjectRatingsGiven
+   */
+  export type User$perfProjectRatingsGivenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReviewProjectRating
+     */
+    select?: PerformanceReviewProjectRatingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewProjectRatingInclude<ExtArgs> | null
+    where?: PerformanceReviewProjectRatingWhereInput
+    orderBy?: PerformanceReviewProjectRatingOrderByWithRelationInput | PerformanceReviewProjectRatingOrderByWithRelationInput[]
+    cursor?: PerformanceReviewProjectRatingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PerformanceReviewProjectRatingScalarFieldEnum | PerformanceReviewProjectRatingScalarFieldEnum[]
   }
 
   /**
@@ -6770,6 +7324,8 @@ export namespace Prisma {
     expenses?: boolean | Project$expensesArgs<ExtArgs>
     tasks?: boolean | Project$tasksArgs<ExtArgs>
     billingMilestones?: boolean | Project$billingMilestonesArgs<ExtArgs>
+    raidItems?: boolean | Project$raidItemsArgs<ExtArgs>
+    perfProjectRatings?: boolean | Project$perfProjectRatingsArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
 
@@ -6858,6 +7414,8 @@ export namespace Prisma {
     expenses?: boolean | Project$expensesArgs<ExtArgs>
     tasks?: boolean | Project$tasksArgs<ExtArgs>
     billingMilestones?: boolean | Project$billingMilestonesArgs<ExtArgs>
+    raidItems?: boolean | Project$raidItemsArgs<ExtArgs>
+    perfProjectRatings?: boolean | Project$perfProjectRatingsArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6884,6 +7442,8 @@ export namespace Prisma {
       expenses: Prisma.$ProjectExpensePayload<ExtArgs>[]
       tasks: Prisma.$TaskPayload<ExtArgs>[]
       billingMilestones: Prisma.$BillingMilestonePayload<ExtArgs>[]
+      raidItems: Prisma.$ProjectRaidItemPayload<ExtArgs>[]
+      perfProjectRatings: Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -7293,6 +7853,8 @@ export namespace Prisma {
     expenses<T extends Project$expensesArgs<ExtArgs> = {}>(args?: Subset<T, Project$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectExpensePayload<ExtArgs>, T, "findMany"> | Null>
     tasks<T extends Project$tasksArgs<ExtArgs> = {}>(args?: Subset<T, Project$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany"> | Null>
     billingMilestones<T extends Project$billingMilestonesArgs<ExtArgs> = {}>(args?: Subset<T, Project$billingMilestonesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BillingMilestonePayload<ExtArgs>, T, "findMany"> | Null>
+    raidItems<T extends Project$raidItemsArgs<ExtArgs> = {}>(args?: Subset<T, Project$raidItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectRaidItemPayload<ExtArgs>, T, "findMany"> | Null>
+    perfProjectRatings<T extends Project$perfProjectRatingsArgs<ExtArgs> = {}>(args?: Subset<T, Project$perfProjectRatingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7887,6 +8449,46 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: BillingMilestoneScalarFieldEnum | BillingMilestoneScalarFieldEnum[]
+  }
+
+  /**
+   * Project.raidItems
+   */
+  export type Project$raidItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectRaidItem
+     */
+    select?: ProjectRaidItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectRaidItemInclude<ExtArgs> | null
+    where?: ProjectRaidItemWhereInput
+    orderBy?: ProjectRaidItemOrderByWithRelationInput | ProjectRaidItemOrderByWithRelationInput[]
+    cursor?: ProjectRaidItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectRaidItemScalarFieldEnum | ProjectRaidItemScalarFieldEnum[]
+  }
+
+  /**
+   * Project.perfProjectRatings
+   */
+  export type Project$perfProjectRatingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReviewProjectRating
+     */
+    select?: PerformanceReviewProjectRatingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewProjectRatingInclude<ExtArgs> | null
+    where?: PerformanceReviewProjectRatingWhereInput
+    orderBy?: PerformanceReviewProjectRatingOrderByWithRelationInput | PerformanceReviewProjectRatingOrderByWithRelationInput[]
+    cursor?: PerformanceReviewProjectRatingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PerformanceReviewProjectRatingScalarFieldEnum | PerformanceReviewProjectRatingScalarFieldEnum[]
   }
 
   /**
@@ -29469,6 +30071,3275 @@ export namespace Prisma {
 
 
   /**
+   * Model ProjectRaidItem
+   */
+
+  export type AggregateProjectRaidItem = {
+    _count: ProjectRaidItemCountAggregateOutputType | null
+    _min: ProjectRaidItemMinAggregateOutputType | null
+    _max: ProjectRaidItemMaxAggregateOutputType | null
+  }
+
+  export type ProjectRaidItemMinAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    type: $Enums.RaidType | null
+    title: string | null
+    description: string | null
+    impact: $Enums.RaidImpact | null
+    likelihood: $Enums.RaidLikelihood | null
+    status: $Enums.RaidStatus | null
+    ownerId: string | null
+    mitigation: string | null
+    dueDate: Date | null
+    closedAt: Date | null
+    createdById: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProjectRaidItemMaxAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    type: $Enums.RaidType | null
+    title: string | null
+    description: string | null
+    impact: $Enums.RaidImpact | null
+    likelihood: $Enums.RaidLikelihood | null
+    status: $Enums.RaidStatus | null
+    ownerId: string | null
+    mitigation: string | null
+    dueDate: Date | null
+    closedAt: Date | null
+    createdById: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProjectRaidItemCountAggregateOutputType = {
+    id: number
+    projectId: number
+    type: number
+    title: number
+    description: number
+    impact: number
+    likelihood: number
+    status: number
+    ownerId: number
+    mitigation: number
+    dueDate: number
+    closedAt: number
+    createdById: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ProjectRaidItemMinAggregateInputType = {
+    id?: true
+    projectId?: true
+    type?: true
+    title?: true
+    description?: true
+    impact?: true
+    likelihood?: true
+    status?: true
+    ownerId?: true
+    mitigation?: true
+    dueDate?: true
+    closedAt?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProjectRaidItemMaxAggregateInputType = {
+    id?: true
+    projectId?: true
+    type?: true
+    title?: true
+    description?: true
+    impact?: true
+    likelihood?: true
+    status?: true
+    ownerId?: true
+    mitigation?: true
+    dueDate?: true
+    closedAt?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProjectRaidItemCountAggregateInputType = {
+    id?: true
+    projectId?: true
+    type?: true
+    title?: true
+    description?: true
+    impact?: true
+    likelihood?: true
+    status?: true
+    ownerId?: true
+    mitigation?: true
+    dueDate?: true
+    closedAt?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ProjectRaidItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProjectRaidItem to aggregate.
+     */
+    where?: ProjectRaidItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectRaidItems to fetch.
+     */
+    orderBy?: ProjectRaidItemOrderByWithRelationInput | ProjectRaidItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProjectRaidItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectRaidItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectRaidItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ProjectRaidItems
+    **/
+    _count?: true | ProjectRaidItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProjectRaidItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProjectRaidItemMaxAggregateInputType
+  }
+
+  export type GetProjectRaidItemAggregateType<T extends ProjectRaidItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateProjectRaidItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProjectRaidItem[P]>
+      : GetScalarType<T[P], AggregateProjectRaidItem[P]>
+  }
+
+
+
+
+  export type ProjectRaidItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectRaidItemWhereInput
+    orderBy?: ProjectRaidItemOrderByWithAggregationInput | ProjectRaidItemOrderByWithAggregationInput[]
+    by: ProjectRaidItemScalarFieldEnum[] | ProjectRaidItemScalarFieldEnum
+    having?: ProjectRaidItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProjectRaidItemCountAggregateInputType | true
+    _min?: ProjectRaidItemMinAggregateInputType
+    _max?: ProjectRaidItemMaxAggregateInputType
+  }
+
+  export type ProjectRaidItemGroupByOutputType = {
+    id: string
+    projectId: string
+    type: $Enums.RaidType
+    title: string
+    description: string | null
+    impact: $Enums.RaidImpact
+    likelihood: $Enums.RaidLikelihood
+    status: $Enums.RaidStatus
+    ownerId: string | null
+    mitigation: string | null
+    dueDate: Date | null
+    closedAt: Date | null
+    createdById: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: ProjectRaidItemCountAggregateOutputType | null
+    _min: ProjectRaidItemMinAggregateOutputType | null
+    _max: ProjectRaidItemMaxAggregateOutputType | null
+  }
+
+  type GetProjectRaidItemGroupByPayload<T extends ProjectRaidItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProjectRaidItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProjectRaidItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProjectRaidItemGroupByOutputType[P]>
+            : GetScalarType<T[P], ProjectRaidItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProjectRaidItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    type?: boolean
+    title?: boolean
+    description?: boolean
+    impact?: boolean
+    likelihood?: boolean
+    status?: boolean
+    ownerId?: boolean
+    mitigation?: boolean
+    dueDate?: boolean
+    closedAt?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    owner?: boolean | ProjectRaidItem$ownerArgs<ExtArgs>
+    createdBy?: boolean | ProjectRaidItem$createdByArgs<ExtArgs>
+  }, ExtArgs["result"]["projectRaidItem"]>
+
+  export type ProjectRaidItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    type?: boolean
+    title?: boolean
+    description?: boolean
+    impact?: boolean
+    likelihood?: boolean
+    status?: boolean
+    ownerId?: boolean
+    mitigation?: boolean
+    dueDate?: boolean
+    closedAt?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    owner?: boolean | ProjectRaidItem$ownerArgs<ExtArgs>
+    createdBy?: boolean | ProjectRaidItem$createdByArgs<ExtArgs>
+  }, ExtArgs["result"]["projectRaidItem"]>
+
+  export type ProjectRaidItemSelectScalar = {
+    id?: boolean
+    projectId?: boolean
+    type?: boolean
+    title?: boolean
+    description?: boolean
+    impact?: boolean
+    likelihood?: boolean
+    status?: boolean
+    ownerId?: boolean
+    mitigation?: boolean
+    dueDate?: boolean
+    closedAt?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ProjectRaidItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    owner?: boolean | ProjectRaidItem$ownerArgs<ExtArgs>
+    createdBy?: boolean | ProjectRaidItem$createdByArgs<ExtArgs>
+  }
+  export type ProjectRaidItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    owner?: boolean | ProjectRaidItem$ownerArgs<ExtArgs>
+    createdBy?: boolean | ProjectRaidItem$createdByArgs<ExtArgs>
+  }
+
+  export type $ProjectRaidItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ProjectRaidItem"
+    objects: {
+      project: Prisma.$ProjectPayload<ExtArgs>
+      owner: Prisma.$UserPayload<ExtArgs> | null
+      createdBy: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      projectId: string
+      type: $Enums.RaidType
+      title: string
+      description: string | null
+      impact: $Enums.RaidImpact
+      likelihood: $Enums.RaidLikelihood
+      status: $Enums.RaidStatus
+      ownerId: string | null
+      mitigation: string | null
+      dueDate: Date | null
+      closedAt: Date | null
+      createdById: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["projectRaidItem"]>
+    composites: {}
+  }
+
+  type ProjectRaidItemGetPayload<S extends boolean | null | undefined | ProjectRaidItemDefaultArgs> = $Result.GetResult<Prisma.$ProjectRaidItemPayload, S>
+
+  type ProjectRaidItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ProjectRaidItemFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ProjectRaidItemCountAggregateInputType | true
+    }
+
+  export interface ProjectRaidItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProjectRaidItem'], meta: { name: 'ProjectRaidItem' } }
+    /**
+     * Find zero or one ProjectRaidItem that matches the filter.
+     * @param {ProjectRaidItemFindUniqueArgs} args - Arguments to find a ProjectRaidItem
+     * @example
+     * // Get one ProjectRaidItem
+     * const projectRaidItem = await prisma.projectRaidItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProjectRaidItemFindUniqueArgs>(args: SelectSubset<T, ProjectRaidItemFindUniqueArgs<ExtArgs>>): Prisma__ProjectRaidItemClient<$Result.GetResult<Prisma.$ProjectRaidItemPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one ProjectRaidItem that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ProjectRaidItemFindUniqueOrThrowArgs} args - Arguments to find a ProjectRaidItem
+     * @example
+     * // Get one ProjectRaidItem
+     * const projectRaidItem = await prisma.projectRaidItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProjectRaidItemFindUniqueOrThrowArgs>(args: SelectSubset<T, ProjectRaidItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProjectRaidItemClient<$Result.GetResult<Prisma.$ProjectRaidItemPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first ProjectRaidItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectRaidItemFindFirstArgs} args - Arguments to find a ProjectRaidItem
+     * @example
+     * // Get one ProjectRaidItem
+     * const projectRaidItem = await prisma.projectRaidItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProjectRaidItemFindFirstArgs>(args?: SelectSubset<T, ProjectRaidItemFindFirstArgs<ExtArgs>>): Prisma__ProjectRaidItemClient<$Result.GetResult<Prisma.$ProjectRaidItemPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first ProjectRaidItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectRaidItemFindFirstOrThrowArgs} args - Arguments to find a ProjectRaidItem
+     * @example
+     * // Get one ProjectRaidItem
+     * const projectRaidItem = await prisma.projectRaidItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProjectRaidItemFindFirstOrThrowArgs>(args?: SelectSubset<T, ProjectRaidItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProjectRaidItemClient<$Result.GetResult<Prisma.$ProjectRaidItemPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more ProjectRaidItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectRaidItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProjectRaidItems
+     * const projectRaidItems = await prisma.projectRaidItem.findMany()
+     * 
+     * // Get first 10 ProjectRaidItems
+     * const projectRaidItems = await prisma.projectRaidItem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const projectRaidItemWithIdOnly = await prisma.projectRaidItem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProjectRaidItemFindManyArgs>(args?: SelectSubset<T, ProjectRaidItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectRaidItemPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a ProjectRaidItem.
+     * @param {ProjectRaidItemCreateArgs} args - Arguments to create a ProjectRaidItem.
+     * @example
+     * // Create one ProjectRaidItem
+     * const ProjectRaidItem = await prisma.projectRaidItem.create({
+     *   data: {
+     *     // ... data to create a ProjectRaidItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProjectRaidItemCreateArgs>(args: SelectSubset<T, ProjectRaidItemCreateArgs<ExtArgs>>): Prisma__ProjectRaidItemClient<$Result.GetResult<Prisma.$ProjectRaidItemPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many ProjectRaidItems.
+     * @param {ProjectRaidItemCreateManyArgs} args - Arguments to create many ProjectRaidItems.
+     * @example
+     * // Create many ProjectRaidItems
+     * const projectRaidItem = await prisma.projectRaidItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProjectRaidItemCreateManyArgs>(args?: SelectSubset<T, ProjectRaidItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ProjectRaidItems and returns the data saved in the database.
+     * @param {ProjectRaidItemCreateManyAndReturnArgs} args - Arguments to create many ProjectRaidItems.
+     * @example
+     * // Create many ProjectRaidItems
+     * const projectRaidItem = await prisma.projectRaidItem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ProjectRaidItems and only return the `id`
+     * const projectRaidItemWithIdOnly = await prisma.projectRaidItem.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProjectRaidItemCreateManyAndReturnArgs>(args?: SelectSubset<T, ProjectRaidItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectRaidItemPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a ProjectRaidItem.
+     * @param {ProjectRaidItemDeleteArgs} args - Arguments to delete one ProjectRaidItem.
+     * @example
+     * // Delete one ProjectRaidItem
+     * const ProjectRaidItem = await prisma.projectRaidItem.delete({
+     *   where: {
+     *     // ... filter to delete one ProjectRaidItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProjectRaidItemDeleteArgs>(args: SelectSubset<T, ProjectRaidItemDeleteArgs<ExtArgs>>): Prisma__ProjectRaidItemClient<$Result.GetResult<Prisma.$ProjectRaidItemPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one ProjectRaidItem.
+     * @param {ProjectRaidItemUpdateArgs} args - Arguments to update one ProjectRaidItem.
+     * @example
+     * // Update one ProjectRaidItem
+     * const projectRaidItem = await prisma.projectRaidItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProjectRaidItemUpdateArgs>(args: SelectSubset<T, ProjectRaidItemUpdateArgs<ExtArgs>>): Prisma__ProjectRaidItemClient<$Result.GetResult<Prisma.$ProjectRaidItemPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more ProjectRaidItems.
+     * @param {ProjectRaidItemDeleteManyArgs} args - Arguments to filter ProjectRaidItems to delete.
+     * @example
+     * // Delete a few ProjectRaidItems
+     * const { count } = await prisma.projectRaidItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProjectRaidItemDeleteManyArgs>(args?: SelectSubset<T, ProjectRaidItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProjectRaidItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectRaidItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProjectRaidItems
+     * const projectRaidItem = await prisma.projectRaidItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProjectRaidItemUpdateManyArgs>(args: SelectSubset<T, ProjectRaidItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ProjectRaidItem.
+     * @param {ProjectRaidItemUpsertArgs} args - Arguments to update or create a ProjectRaidItem.
+     * @example
+     * // Update or create a ProjectRaidItem
+     * const projectRaidItem = await prisma.projectRaidItem.upsert({
+     *   create: {
+     *     // ... data to create a ProjectRaidItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProjectRaidItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProjectRaidItemUpsertArgs>(args: SelectSubset<T, ProjectRaidItemUpsertArgs<ExtArgs>>): Prisma__ProjectRaidItemClient<$Result.GetResult<Prisma.$ProjectRaidItemPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of ProjectRaidItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectRaidItemCountArgs} args - Arguments to filter ProjectRaidItems to count.
+     * @example
+     * // Count the number of ProjectRaidItems
+     * const count = await prisma.projectRaidItem.count({
+     *   where: {
+     *     // ... the filter for the ProjectRaidItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProjectRaidItemCountArgs>(
+      args?: Subset<T, ProjectRaidItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProjectRaidItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProjectRaidItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectRaidItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProjectRaidItemAggregateArgs>(args: Subset<T, ProjectRaidItemAggregateArgs>): Prisma.PrismaPromise<GetProjectRaidItemAggregateType<T>>
+
+    /**
+     * Group by ProjectRaidItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectRaidItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProjectRaidItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProjectRaidItemGroupByArgs['orderBy'] }
+        : { orderBy?: ProjectRaidItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProjectRaidItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProjectRaidItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ProjectRaidItem model
+   */
+  readonly fields: ProjectRaidItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProjectRaidItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProjectRaidItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    owner<T extends ProjectRaidItem$ownerArgs<ExtArgs> = {}>(args?: Subset<T, ProjectRaidItem$ownerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    createdBy<T extends ProjectRaidItem$createdByArgs<ExtArgs> = {}>(args?: Subset<T, ProjectRaidItem$createdByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ProjectRaidItem model
+   */ 
+  interface ProjectRaidItemFieldRefs {
+    readonly id: FieldRef<"ProjectRaidItem", 'String'>
+    readonly projectId: FieldRef<"ProjectRaidItem", 'String'>
+    readonly type: FieldRef<"ProjectRaidItem", 'RaidType'>
+    readonly title: FieldRef<"ProjectRaidItem", 'String'>
+    readonly description: FieldRef<"ProjectRaidItem", 'String'>
+    readonly impact: FieldRef<"ProjectRaidItem", 'RaidImpact'>
+    readonly likelihood: FieldRef<"ProjectRaidItem", 'RaidLikelihood'>
+    readonly status: FieldRef<"ProjectRaidItem", 'RaidStatus'>
+    readonly ownerId: FieldRef<"ProjectRaidItem", 'String'>
+    readonly mitigation: FieldRef<"ProjectRaidItem", 'String'>
+    readonly dueDate: FieldRef<"ProjectRaidItem", 'DateTime'>
+    readonly closedAt: FieldRef<"ProjectRaidItem", 'DateTime'>
+    readonly createdById: FieldRef<"ProjectRaidItem", 'String'>
+    readonly createdAt: FieldRef<"ProjectRaidItem", 'DateTime'>
+    readonly updatedAt: FieldRef<"ProjectRaidItem", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ProjectRaidItem findUnique
+   */
+  export type ProjectRaidItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectRaidItem
+     */
+    select?: ProjectRaidItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectRaidItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectRaidItem to fetch.
+     */
+    where: ProjectRaidItemWhereUniqueInput
+  }
+
+  /**
+   * ProjectRaidItem findUniqueOrThrow
+   */
+  export type ProjectRaidItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectRaidItem
+     */
+    select?: ProjectRaidItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectRaidItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectRaidItem to fetch.
+     */
+    where: ProjectRaidItemWhereUniqueInput
+  }
+
+  /**
+   * ProjectRaidItem findFirst
+   */
+  export type ProjectRaidItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectRaidItem
+     */
+    select?: ProjectRaidItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectRaidItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectRaidItem to fetch.
+     */
+    where?: ProjectRaidItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectRaidItems to fetch.
+     */
+    orderBy?: ProjectRaidItemOrderByWithRelationInput | ProjectRaidItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProjectRaidItems.
+     */
+    cursor?: ProjectRaidItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectRaidItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectRaidItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProjectRaidItems.
+     */
+    distinct?: ProjectRaidItemScalarFieldEnum | ProjectRaidItemScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectRaidItem findFirstOrThrow
+   */
+  export type ProjectRaidItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectRaidItem
+     */
+    select?: ProjectRaidItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectRaidItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectRaidItem to fetch.
+     */
+    where?: ProjectRaidItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectRaidItems to fetch.
+     */
+    orderBy?: ProjectRaidItemOrderByWithRelationInput | ProjectRaidItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProjectRaidItems.
+     */
+    cursor?: ProjectRaidItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectRaidItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectRaidItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProjectRaidItems.
+     */
+    distinct?: ProjectRaidItemScalarFieldEnum | ProjectRaidItemScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectRaidItem findMany
+   */
+  export type ProjectRaidItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectRaidItem
+     */
+    select?: ProjectRaidItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectRaidItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectRaidItems to fetch.
+     */
+    where?: ProjectRaidItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectRaidItems to fetch.
+     */
+    orderBy?: ProjectRaidItemOrderByWithRelationInput | ProjectRaidItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ProjectRaidItems.
+     */
+    cursor?: ProjectRaidItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectRaidItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectRaidItems.
+     */
+    skip?: number
+    distinct?: ProjectRaidItemScalarFieldEnum | ProjectRaidItemScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectRaidItem create
+   */
+  export type ProjectRaidItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectRaidItem
+     */
+    select?: ProjectRaidItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectRaidItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ProjectRaidItem.
+     */
+    data: XOR<ProjectRaidItemCreateInput, ProjectRaidItemUncheckedCreateInput>
+  }
+
+  /**
+   * ProjectRaidItem createMany
+   */
+  export type ProjectRaidItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ProjectRaidItems.
+     */
+    data: ProjectRaidItemCreateManyInput | ProjectRaidItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ProjectRaidItem createManyAndReturn
+   */
+  export type ProjectRaidItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectRaidItem
+     */
+    select?: ProjectRaidItemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many ProjectRaidItems.
+     */
+    data: ProjectRaidItemCreateManyInput | ProjectRaidItemCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectRaidItemIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProjectRaidItem update
+   */
+  export type ProjectRaidItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectRaidItem
+     */
+    select?: ProjectRaidItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectRaidItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ProjectRaidItem.
+     */
+    data: XOR<ProjectRaidItemUpdateInput, ProjectRaidItemUncheckedUpdateInput>
+    /**
+     * Choose, which ProjectRaidItem to update.
+     */
+    where: ProjectRaidItemWhereUniqueInput
+  }
+
+  /**
+   * ProjectRaidItem updateMany
+   */
+  export type ProjectRaidItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ProjectRaidItems.
+     */
+    data: XOR<ProjectRaidItemUpdateManyMutationInput, ProjectRaidItemUncheckedUpdateManyInput>
+    /**
+     * Filter which ProjectRaidItems to update
+     */
+    where?: ProjectRaidItemWhereInput
+  }
+
+  /**
+   * ProjectRaidItem upsert
+   */
+  export type ProjectRaidItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectRaidItem
+     */
+    select?: ProjectRaidItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectRaidItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ProjectRaidItem to update in case it exists.
+     */
+    where: ProjectRaidItemWhereUniqueInput
+    /**
+     * In case the ProjectRaidItem found by the `where` argument doesn't exist, create a new ProjectRaidItem with this data.
+     */
+    create: XOR<ProjectRaidItemCreateInput, ProjectRaidItemUncheckedCreateInput>
+    /**
+     * In case the ProjectRaidItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProjectRaidItemUpdateInput, ProjectRaidItemUncheckedUpdateInput>
+  }
+
+  /**
+   * ProjectRaidItem delete
+   */
+  export type ProjectRaidItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectRaidItem
+     */
+    select?: ProjectRaidItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectRaidItemInclude<ExtArgs> | null
+    /**
+     * Filter which ProjectRaidItem to delete.
+     */
+    where: ProjectRaidItemWhereUniqueInput
+  }
+
+  /**
+   * ProjectRaidItem deleteMany
+   */
+  export type ProjectRaidItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProjectRaidItems to delete
+     */
+    where?: ProjectRaidItemWhereInput
+  }
+
+  /**
+   * ProjectRaidItem.owner
+   */
+  export type ProjectRaidItem$ownerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * ProjectRaidItem.createdBy
+   */
+  export type ProjectRaidItem$createdByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * ProjectRaidItem without action
+   */
+  export type ProjectRaidItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectRaidItem
+     */
+    select?: ProjectRaidItemSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectRaidItemInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PerformanceReview
+   */
+
+  export type AggregatePerformanceReview = {
+    _count: PerformanceReviewCountAggregateOutputType | null
+    _avg: PerformanceReviewAvgAggregateOutputType | null
+    _sum: PerformanceReviewSumAggregateOutputType | null
+    _min: PerformanceReviewMinAggregateOutputType | null
+    _max: PerformanceReviewMaxAggregateOutputType | null
+  }
+
+  export type PerformanceReviewAvgAggregateOutputType = {
+    periodYear: number | null
+    overallRating: number | null
+  }
+
+  export type PerformanceReviewSumAggregateOutputType = {
+    periodYear: number | null
+    overallRating: number | null
+  }
+
+  export type PerformanceReviewMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    reviewerId: string | null
+    period: $Enums.PerformanceReviewPeriod | null
+    periodYear: number | null
+    periodStart: Date | null
+    periodEnd: Date | null
+    status: $Enums.PerformanceReviewStatus | null
+    overallRating: number | null
+    summary: string | null
+    strengths: string | null
+    improvements: string | null
+    goals: string | null
+    acknowledgement: string | null
+    submittedAt: Date | null
+    acknowledgedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PerformanceReviewMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    reviewerId: string | null
+    period: $Enums.PerformanceReviewPeriod | null
+    periodYear: number | null
+    periodStart: Date | null
+    periodEnd: Date | null
+    status: $Enums.PerformanceReviewStatus | null
+    overallRating: number | null
+    summary: string | null
+    strengths: string | null
+    improvements: string | null
+    goals: string | null
+    acknowledgement: string | null
+    submittedAt: Date | null
+    acknowledgedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PerformanceReviewCountAggregateOutputType = {
+    id: number
+    userId: number
+    reviewerId: number
+    period: number
+    periodYear: number
+    periodStart: number
+    periodEnd: number
+    status: number
+    overallRating: number
+    summary: number
+    strengths: number
+    improvements: number
+    goals: number
+    acknowledgement: number
+    submittedAt: number
+    acknowledgedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PerformanceReviewAvgAggregateInputType = {
+    periodYear?: true
+    overallRating?: true
+  }
+
+  export type PerformanceReviewSumAggregateInputType = {
+    periodYear?: true
+    overallRating?: true
+  }
+
+  export type PerformanceReviewMinAggregateInputType = {
+    id?: true
+    userId?: true
+    reviewerId?: true
+    period?: true
+    periodYear?: true
+    periodStart?: true
+    periodEnd?: true
+    status?: true
+    overallRating?: true
+    summary?: true
+    strengths?: true
+    improvements?: true
+    goals?: true
+    acknowledgement?: true
+    submittedAt?: true
+    acknowledgedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PerformanceReviewMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    reviewerId?: true
+    period?: true
+    periodYear?: true
+    periodStart?: true
+    periodEnd?: true
+    status?: true
+    overallRating?: true
+    summary?: true
+    strengths?: true
+    improvements?: true
+    goals?: true
+    acknowledgement?: true
+    submittedAt?: true
+    acknowledgedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PerformanceReviewCountAggregateInputType = {
+    id?: true
+    userId?: true
+    reviewerId?: true
+    period?: true
+    periodYear?: true
+    periodStart?: true
+    periodEnd?: true
+    status?: true
+    overallRating?: true
+    summary?: true
+    strengths?: true
+    improvements?: true
+    goals?: true
+    acknowledgement?: true
+    submittedAt?: true
+    acknowledgedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PerformanceReviewAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PerformanceReview to aggregate.
+     */
+    where?: PerformanceReviewWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PerformanceReviews to fetch.
+     */
+    orderBy?: PerformanceReviewOrderByWithRelationInput | PerformanceReviewOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PerformanceReviewWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PerformanceReviews from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PerformanceReviews.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PerformanceReviews
+    **/
+    _count?: true | PerformanceReviewCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PerformanceReviewAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PerformanceReviewSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PerformanceReviewMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PerformanceReviewMaxAggregateInputType
+  }
+
+  export type GetPerformanceReviewAggregateType<T extends PerformanceReviewAggregateArgs> = {
+        [P in keyof T & keyof AggregatePerformanceReview]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePerformanceReview[P]>
+      : GetScalarType<T[P], AggregatePerformanceReview[P]>
+  }
+
+
+
+
+  export type PerformanceReviewGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PerformanceReviewWhereInput
+    orderBy?: PerformanceReviewOrderByWithAggregationInput | PerformanceReviewOrderByWithAggregationInput[]
+    by: PerformanceReviewScalarFieldEnum[] | PerformanceReviewScalarFieldEnum
+    having?: PerformanceReviewScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PerformanceReviewCountAggregateInputType | true
+    _avg?: PerformanceReviewAvgAggregateInputType
+    _sum?: PerformanceReviewSumAggregateInputType
+    _min?: PerformanceReviewMinAggregateInputType
+    _max?: PerformanceReviewMaxAggregateInputType
+  }
+
+  export type PerformanceReviewGroupByOutputType = {
+    id: string
+    userId: string
+    reviewerId: string
+    period: $Enums.PerformanceReviewPeriod
+    periodYear: number
+    periodStart: Date
+    periodEnd: Date
+    status: $Enums.PerformanceReviewStatus
+    overallRating: number | null
+    summary: string | null
+    strengths: string | null
+    improvements: string | null
+    goals: string | null
+    acknowledgement: string | null
+    submittedAt: Date | null
+    acknowledgedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: PerformanceReviewCountAggregateOutputType | null
+    _avg: PerformanceReviewAvgAggregateOutputType | null
+    _sum: PerformanceReviewSumAggregateOutputType | null
+    _min: PerformanceReviewMinAggregateOutputType | null
+    _max: PerformanceReviewMaxAggregateOutputType | null
+  }
+
+  type GetPerformanceReviewGroupByPayload<T extends PerformanceReviewGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PerformanceReviewGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PerformanceReviewGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PerformanceReviewGroupByOutputType[P]>
+            : GetScalarType<T[P], PerformanceReviewGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PerformanceReviewSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    reviewerId?: boolean
+    period?: boolean
+    periodYear?: boolean
+    periodStart?: boolean
+    periodEnd?: boolean
+    status?: boolean
+    overallRating?: boolean
+    summary?: boolean
+    strengths?: boolean
+    improvements?: boolean
+    goals?: boolean
+    acknowledgement?: boolean
+    submittedAt?: boolean
+    acknowledgedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    reviewer?: boolean | UserDefaultArgs<ExtArgs>
+    projectRatings?: boolean | PerformanceReview$projectRatingsArgs<ExtArgs>
+    _count?: boolean | PerformanceReviewCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["performanceReview"]>
+
+  export type PerformanceReviewSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    reviewerId?: boolean
+    period?: boolean
+    periodYear?: boolean
+    periodStart?: boolean
+    periodEnd?: boolean
+    status?: boolean
+    overallRating?: boolean
+    summary?: boolean
+    strengths?: boolean
+    improvements?: boolean
+    goals?: boolean
+    acknowledgement?: boolean
+    submittedAt?: boolean
+    acknowledgedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    reviewer?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["performanceReview"]>
+
+  export type PerformanceReviewSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    reviewerId?: boolean
+    period?: boolean
+    periodYear?: boolean
+    periodStart?: boolean
+    periodEnd?: boolean
+    status?: boolean
+    overallRating?: boolean
+    summary?: boolean
+    strengths?: boolean
+    improvements?: boolean
+    goals?: boolean
+    acknowledgement?: boolean
+    submittedAt?: boolean
+    acknowledgedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PerformanceReviewInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    reviewer?: boolean | UserDefaultArgs<ExtArgs>
+    projectRatings?: boolean | PerformanceReview$projectRatingsArgs<ExtArgs>
+    _count?: boolean | PerformanceReviewCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type PerformanceReviewIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    reviewer?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $PerformanceReviewPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PerformanceReview"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      reviewer: Prisma.$UserPayload<ExtArgs>
+      projectRatings: Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      reviewerId: string
+      period: $Enums.PerformanceReviewPeriod
+      periodYear: number
+      periodStart: Date
+      periodEnd: Date
+      status: $Enums.PerformanceReviewStatus
+      overallRating: number | null
+      summary: string | null
+      strengths: string | null
+      improvements: string | null
+      goals: string | null
+      acknowledgement: string | null
+      submittedAt: Date | null
+      acknowledgedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["performanceReview"]>
+    composites: {}
+  }
+
+  type PerformanceReviewGetPayload<S extends boolean | null | undefined | PerformanceReviewDefaultArgs> = $Result.GetResult<Prisma.$PerformanceReviewPayload, S>
+
+  type PerformanceReviewCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<PerformanceReviewFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: PerformanceReviewCountAggregateInputType | true
+    }
+
+  export interface PerformanceReviewDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PerformanceReview'], meta: { name: 'PerformanceReview' } }
+    /**
+     * Find zero or one PerformanceReview that matches the filter.
+     * @param {PerformanceReviewFindUniqueArgs} args - Arguments to find a PerformanceReview
+     * @example
+     * // Get one PerformanceReview
+     * const performanceReview = await prisma.performanceReview.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PerformanceReviewFindUniqueArgs>(args: SelectSubset<T, PerformanceReviewFindUniqueArgs<ExtArgs>>): Prisma__PerformanceReviewClient<$Result.GetResult<Prisma.$PerformanceReviewPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one PerformanceReview that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {PerformanceReviewFindUniqueOrThrowArgs} args - Arguments to find a PerformanceReview
+     * @example
+     * // Get one PerformanceReview
+     * const performanceReview = await prisma.performanceReview.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PerformanceReviewFindUniqueOrThrowArgs>(args: SelectSubset<T, PerformanceReviewFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PerformanceReviewClient<$Result.GetResult<Prisma.$PerformanceReviewPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first PerformanceReview that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PerformanceReviewFindFirstArgs} args - Arguments to find a PerformanceReview
+     * @example
+     * // Get one PerformanceReview
+     * const performanceReview = await prisma.performanceReview.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PerformanceReviewFindFirstArgs>(args?: SelectSubset<T, PerformanceReviewFindFirstArgs<ExtArgs>>): Prisma__PerformanceReviewClient<$Result.GetResult<Prisma.$PerformanceReviewPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first PerformanceReview that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PerformanceReviewFindFirstOrThrowArgs} args - Arguments to find a PerformanceReview
+     * @example
+     * // Get one PerformanceReview
+     * const performanceReview = await prisma.performanceReview.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PerformanceReviewFindFirstOrThrowArgs>(args?: SelectSubset<T, PerformanceReviewFindFirstOrThrowArgs<ExtArgs>>): Prisma__PerformanceReviewClient<$Result.GetResult<Prisma.$PerformanceReviewPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more PerformanceReviews that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PerformanceReviewFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PerformanceReviews
+     * const performanceReviews = await prisma.performanceReview.findMany()
+     * 
+     * // Get first 10 PerformanceReviews
+     * const performanceReviews = await prisma.performanceReview.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const performanceReviewWithIdOnly = await prisma.performanceReview.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PerformanceReviewFindManyArgs>(args?: SelectSubset<T, PerformanceReviewFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PerformanceReviewPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a PerformanceReview.
+     * @param {PerformanceReviewCreateArgs} args - Arguments to create a PerformanceReview.
+     * @example
+     * // Create one PerformanceReview
+     * const PerformanceReview = await prisma.performanceReview.create({
+     *   data: {
+     *     // ... data to create a PerformanceReview
+     *   }
+     * })
+     * 
+     */
+    create<T extends PerformanceReviewCreateArgs>(args: SelectSubset<T, PerformanceReviewCreateArgs<ExtArgs>>): Prisma__PerformanceReviewClient<$Result.GetResult<Prisma.$PerformanceReviewPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many PerformanceReviews.
+     * @param {PerformanceReviewCreateManyArgs} args - Arguments to create many PerformanceReviews.
+     * @example
+     * // Create many PerformanceReviews
+     * const performanceReview = await prisma.performanceReview.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PerformanceReviewCreateManyArgs>(args?: SelectSubset<T, PerformanceReviewCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PerformanceReviews and returns the data saved in the database.
+     * @param {PerformanceReviewCreateManyAndReturnArgs} args - Arguments to create many PerformanceReviews.
+     * @example
+     * // Create many PerformanceReviews
+     * const performanceReview = await prisma.performanceReview.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PerformanceReviews and only return the `id`
+     * const performanceReviewWithIdOnly = await prisma.performanceReview.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PerformanceReviewCreateManyAndReturnArgs>(args?: SelectSubset<T, PerformanceReviewCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PerformanceReviewPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a PerformanceReview.
+     * @param {PerformanceReviewDeleteArgs} args - Arguments to delete one PerformanceReview.
+     * @example
+     * // Delete one PerformanceReview
+     * const PerformanceReview = await prisma.performanceReview.delete({
+     *   where: {
+     *     // ... filter to delete one PerformanceReview
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PerformanceReviewDeleteArgs>(args: SelectSubset<T, PerformanceReviewDeleteArgs<ExtArgs>>): Prisma__PerformanceReviewClient<$Result.GetResult<Prisma.$PerformanceReviewPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one PerformanceReview.
+     * @param {PerformanceReviewUpdateArgs} args - Arguments to update one PerformanceReview.
+     * @example
+     * // Update one PerformanceReview
+     * const performanceReview = await prisma.performanceReview.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PerformanceReviewUpdateArgs>(args: SelectSubset<T, PerformanceReviewUpdateArgs<ExtArgs>>): Prisma__PerformanceReviewClient<$Result.GetResult<Prisma.$PerformanceReviewPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more PerformanceReviews.
+     * @param {PerformanceReviewDeleteManyArgs} args - Arguments to filter PerformanceReviews to delete.
+     * @example
+     * // Delete a few PerformanceReviews
+     * const { count } = await prisma.performanceReview.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PerformanceReviewDeleteManyArgs>(args?: SelectSubset<T, PerformanceReviewDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PerformanceReviews.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PerformanceReviewUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PerformanceReviews
+     * const performanceReview = await prisma.performanceReview.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PerformanceReviewUpdateManyArgs>(args: SelectSubset<T, PerformanceReviewUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PerformanceReview.
+     * @param {PerformanceReviewUpsertArgs} args - Arguments to update or create a PerformanceReview.
+     * @example
+     * // Update or create a PerformanceReview
+     * const performanceReview = await prisma.performanceReview.upsert({
+     *   create: {
+     *     // ... data to create a PerformanceReview
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PerformanceReview we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PerformanceReviewUpsertArgs>(args: SelectSubset<T, PerformanceReviewUpsertArgs<ExtArgs>>): Prisma__PerformanceReviewClient<$Result.GetResult<Prisma.$PerformanceReviewPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of PerformanceReviews.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PerformanceReviewCountArgs} args - Arguments to filter PerformanceReviews to count.
+     * @example
+     * // Count the number of PerformanceReviews
+     * const count = await prisma.performanceReview.count({
+     *   where: {
+     *     // ... the filter for the PerformanceReviews we want to count
+     *   }
+     * })
+    **/
+    count<T extends PerformanceReviewCountArgs>(
+      args?: Subset<T, PerformanceReviewCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PerformanceReviewCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PerformanceReview.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PerformanceReviewAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PerformanceReviewAggregateArgs>(args: Subset<T, PerformanceReviewAggregateArgs>): Prisma.PrismaPromise<GetPerformanceReviewAggregateType<T>>
+
+    /**
+     * Group by PerformanceReview.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PerformanceReviewGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PerformanceReviewGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PerformanceReviewGroupByArgs['orderBy'] }
+        : { orderBy?: PerformanceReviewGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PerformanceReviewGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPerformanceReviewGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PerformanceReview model
+   */
+  readonly fields: PerformanceReviewFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PerformanceReview.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PerformanceReviewClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    reviewer<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    projectRatings<T extends PerformanceReview$projectRatingsArgs<ExtArgs> = {}>(args?: Subset<T, PerformanceReview$projectRatingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PerformanceReview model
+   */ 
+  interface PerformanceReviewFieldRefs {
+    readonly id: FieldRef<"PerformanceReview", 'String'>
+    readonly userId: FieldRef<"PerformanceReview", 'String'>
+    readonly reviewerId: FieldRef<"PerformanceReview", 'String'>
+    readonly period: FieldRef<"PerformanceReview", 'PerformanceReviewPeriod'>
+    readonly periodYear: FieldRef<"PerformanceReview", 'Int'>
+    readonly periodStart: FieldRef<"PerformanceReview", 'DateTime'>
+    readonly periodEnd: FieldRef<"PerformanceReview", 'DateTime'>
+    readonly status: FieldRef<"PerformanceReview", 'PerformanceReviewStatus'>
+    readonly overallRating: FieldRef<"PerformanceReview", 'Int'>
+    readonly summary: FieldRef<"PerformanceReview", 'String'>
+    readonly strengths: FieldRef<"PerformanceReview", 'String'>
+    readonly improvements: FieldRef<"PerformanceReview", 'String'>
+    readonly goals: FieldRef<"PerformanceReview", 'String'>
+    readonly acknowledgement: FieldRef<"PerformanceReview", 'String'>
+    readonly submittedAt: FieldRef<"PerformanceReview", 'DateTime'>
+    readonly acknowledgedAt: FieldRef<"PerformanceReview", 'DateTime'>
+    readonly createdAt: FieldRef<"PerformanceReview", 'DateTime'>
+    readonly updatedAt: FieldRef<"PerformanceReview", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PerformanceReview findUnique
+   */
+  export type PerformanceReviewFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReview
+     */
+    select?: PerformanceReviewSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewInclude<ExtArgs> | null
+    /**
+     * Filter, which PerformanceReview to fetch.
+     */
+    where: PerformanceReviewWhereUniqueInput
+  }
+
+  /**
+   * PerformanceReview findUniqueOrThrow
+   */
+  export type PerformanceReviewFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReview
+     */
+    select?: PerformanceReviewSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewInclude<ExtArgs> | null
+    /**
+     * Filter, which PerformanceReview to fetch.
+     */
+    where: PerformanceReviewWhereUniqueInput
+  }
+
+  /**
+   * PerformanceReview findFirst
+   */
+  export type PerformanceReviewFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReview
+     */
+    select?: PerformanceReviewSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewInclude<ExtArgs> | null
+    /**
+     * Filter, which PerformanceReview to fetch.
+     */
+    where?: PerformanceReviewWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PerformanceReviews to fetch.
+     */
+    orderBy?: PerformanceReviewOrderByWithRelationInput | PerformanceReviewOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PerformanceReviews.
+     */
+    cursor?: PerformanceReviewWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PerformanceReviews from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PerformanceReviews.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PerformanceReviews.
+     */
+    distinct?: PerformanceReviewScalarFieldEnum | PerformanceReviewScalarFieldEnum[]
+  }
+
+  /**
+   * PerformanceReview findFirstOrThrow
+   */
+  export type PerformanceReviewFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReview
+     */
+    select?: PerformanceReviewSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewInclude<ExtArgs> | null
+    /**
+     * Filter, which PerformanceReview to fetch.
+     */
+    where?: PerformanceReviewWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PerformanceReviews to fetch.
+     */
+    orderBy?: PerformanceReviewOrderByWithRelationInput | PerformanceReviewOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PerformanceReviews.
+     */
+    cursor?: PerformanceReviewWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PerformanceReviews from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PerformanceReviews.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PerformanceReviews.
+     */
+    distinct?: PerformanceReviewScalarFieldEnum | PerformanceReviewScalarFieldEnum[]
+  }
+
+  /**
+   * PerformanceReview findMany
+   */
+  export type PerformanceReviewFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReview
+     */
+    select?: PerformanceReviewSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewInclude<ExtArgs> | null
+    /**
+     * Filter, which PerformanceReviews to fetch.
+     */
+    where?: PerformanceReviewWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PerformanceReviews to fetch.
+     */
+    orderBy?: PerformanceReviewOrderByWithRelationInput | PerformanceReviewOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PerformanceReviews.
+     */
+    cursor?: PerformanceReviewWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PerformanceReviews from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PerformanceReviews.
+     */
+    skip?: number
+    distinct?: PerformanceReviewScalarFieldEnum | PerformanceReviewScalarFieldEnum[]
+  }
+
+  /**
+   * PerformanceReview create
+   */
+  export type PerformanceReviewCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReview
+     */
+    select?: PerformanceReviewSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PerformanceReview.
+     */
+    data: XOR<PerformanceReviewCreateInput, PerformanceReviewUncheckedCreateInput>
+  }
+
+  /**
+   * PerformanceReview createMany
+   */
+  export type PerformanceReviewCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PerformanceReviews.
+     */
+    data: PerformanceReviewCreateManyInput | PerformanceReviewCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PerformanceReview createManyAndReturn
+   */
+  export type PerformanceReviewCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReview
+     */
+    select?: PerformanceReviewSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many PerformanceReviews.
+     */
+    data: PerformanceReviewCreateManyInput | PerformanceReviewCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PerformanceReview update
+   */
+  export type PerformanceReviewUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReview
+     */
+    select?: PerformanceReviewSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PerformanceReview.
+     */
+    data: XOR<PerformanceReviewUpdateInput, PerformanceReviewUncheckedUpdateInput>
+    /**
+     * Choose, which PerformanceReview to update.
+     */
+    where: PerformanceReviewWhereUniqueInput
+  }
+
+  /**
+   * PerformanceReview updateMany
+   */
+  export type PerformanceReviewUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PerformanceReviews.
+     */
+    data: XOR<PerformanceReviewUpdateManyMutationInput, PerformanceReviewUncheckedUpdateManyInput>
+    /**
+     * Filter which PerformanceReviews to update
+     */
+    where?: PerformanceReviewWhereInput
+  }
+
+  /**
+   * PerformanceReview upsert
+   */
+  export type PerformanceReviewUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReview
+     */
+    select?: PerformanceReviewSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PerformanceReview to update in case it exists.
+     */
+    where: PerformanceReviewWhereUniqueInput
+    /**
+     * In case the PerformanceReview found by the `where` argument doesn't exist, create a new PerformanceReview with this data.
+     */
+    create: XOR<PerformanceReviewCreateInput, PerformanceReviewUncheckedCreateInput>
+    /**
+     * In case the PerformanceReview was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PerformanceReviewUpdateInput, PerformanceReviewUncheckedUpdateInput>
+  }
+
+  /**
+   * PerformanceReview delete
+   */
+  export type PerformanceReviewDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReview
+     */
+    select?: PerformanceReviewSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewInclude<ExtArgs> | null
+    /**
+     * Filter which PerformanceReview to delete.
+     */
+    where: PerformanceReviewWhereUniqueInput
+  }
+
+  /**
+   * PerformanceReview deleteMany
+   */
+  export type PerformanceReviewDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PerformanceReviews to delete
+     */
+    where?: PerformanceReviewWhereInput
+  }
+
+  /**
+   * PerformanceReview.projectRatings
+   */
+  export type PerformanceReview$projectRatingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReviewProjectRating
+     */
+    select?: PerformanceReviewProjectRatingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewProjectRatingInclude<ExtArgs> | null
+    where?: PerformanceReviewProjectRatingWhereInput
+    orderBy?: PerformanceReviewProjectRatingOrderByWithRelationInput | PerformanceReviewProjectRatingOrderByWithRelationInput[]
+    cursor?: PerformanceReviewProjectRatingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PerformanceReviewProjectRatingScalarFieldEnum | PerformanceReviewProjectRatingScalarFieldEnum[]
+  }
+
+  /**
+   * PerformanceReview without action
+   */
+  export type PerformanceReviewDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReview
+     */
+    select?: PerformanceReviewSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PerformanceReviewProjectRating
+   */
+
+  export type AggregatePerformanceReviewProjectRating = {
+    _count: PerformanceReviewProjectRatingCountAggregateOutputType | null
+    _avg: PerformanceReviewProjectRatingAvgAggregateOutputType | null
+    _sum: PerformanceReviewProjectRatingSumAggregateOutputType | null
+    _min: PerformanceReviewProjectRatingMinAggregateOutputType | null
+    _max: PerformanceReviewProjectRatingMaxAggregateOutputType | null
+  }
+
+  export type PerformanceReviewProjectRatingAvgAggregateOutputType = {
+    rating: number | null
+  }
+
+  export type PerformanceReviewProjectRatingSumAggregateOutputType = {
+    rating: number | null
+  }
+
+  export type PerformanceReviewProjectRatingMinAggregateOutputType = {
+    id: string | null
+    reviewId: string | null
+    projectId: string | null
+    ratedById: string | null
+    rating: number | null
+    comment: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PerformanceReviewProjectRatingMaxAggregateOutputType = {
+    id: string | null
+    reviewId: string | null
+    projectId: string | null
+    ratedById: string | null
+    rating: number | null
+    comment: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PerformanceReviewProjectRatingCountAggregateOutputType = {
+    id: number
+    reviewId: number
+    projectId: number
+    ratedById: number
+    rating: number
+    comment: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PerformanceReviewProjectRatingAvgAggregateInputType = {
+    rating?: true
+  }
+
+  export type PerformanceReviewProjectRatingSumAggregateInputType = {
+    rating?: true
+  }
+
+  export type PerformanceReviewProjectRatingMinAggregateInputType = {
+    id?: true
+    reviewId?: true
+    projectId?: true
+    ratedById?: true
+    rating?: true
+    comment?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PerformanceReviewProjectRatingMaxAggregateInputType = {
+    id?: true
+    reviewId?: true
+    projectId?: true
+    ratedById?: true
+    rating?: true
+    comment?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PerformanceReviewProjectRatingCountAggregateInputType = {
+    id?: true
+    reviewId?: true
+    projectId?: true
+    ratedById?: true
+    rating?: true
+    comment?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PerformanceReviewProjectRatingAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PerformanceReviewProjectRating to aggregate.
+     */
+    where?: PerformanceReviewProjectRatingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PerformanceReviewProjectRatings to fetch.
+     */
+    orderBy?: PerformanceReviewProjectRatingOrderByWithRelationInput | PerformanceReviewProjectRatingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PerformanceReviewProjectRatingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PerformanceReviewProjectRatings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PerformanceReviewProjectRatings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PerformanceReviewProjectRatings
+    **/
+    _count?: true | PerformanceReviewProjectRatingCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PerformanceReviewProjectRatingAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PerformanceReviewProjectRatingSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PerformanceReviewProjectRatingMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PerformanceReviewProjectRatingMaxAggregateInputType
+  }
+
+  export type GetPerformanceReviewProjectRatingAggregateType<T extends PerformanceReviewProjectRatingAggregateArgs> = {
+        [P in keyof T & keyof AggregatePerformanceReviewProjectRating]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePerformanceReviewProjectRating[P]>
+      : GetScalarType<T[P], AggregatePerformanceReviewProjectRating[P]>
+  }
+
+
+
+
+  export type PerformanceReviewProjectRatingGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PerformanceReviewProjectRatingWhereInput
+    orderBy?: PerformanceReviewProjectRatingOrderByWithAggregationInput | PerformanceReviewProjectRatingOrderByWithAggregationInput[]
+    by: PerformanceReviewProjectRatingScalarFieldEnum[] | PerformanceReviewProjectRatingScalarFieldEnum
+    having?: PerformanceReviewProjectRatingScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PerformanceReviewProjectRatingCountAggregateInputType | true
+    _avg?: PerformanceReviewProjectRatingAvgAggregateInputType
+    _sum?: PerformanceReviewProjectRatingSumAggregateInputType
+    _min?: PerformanceReviewProjectRatingMinAggregateInputType
+    _max?: PerformanceReviewProjectRatingMaxAggregateInputType
+  }
+
+  export type PerformanceReviewProjectRatingGroupByOutputType = {
+    id: string
+    reviewId: string
+    projectId: string
+    ratedById: string
+    rating: number
+    comment: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: PerformanceReviewProjectRatingCountAggregateOutputType | null
+    _avg: PerformanceReviewProjectRatingAvgAggregateOutputType | null
+    _sum: PerformanceReviewProjectRatingSumAggregateOutputType | null
+    _min: PerformanceReviewProjectRatingMinAggregateOutputType | null
+    _max: PerformanceReviewProjectRatingMaxAggregateOutputType | null
+  }
+
+  type GetPerformanceReviewProjectRatingGroupByPayload<T extends PerformanceReviewProjectRatingGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PerformanceReviewProjectRatingGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PerformanceReviewProjectRatingGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PerformanceReviewProjectRatingGroupByOutputType[P]>
+            : GetScalarType<T[P], PerformanceReviewProjectRatingGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PerformanceReviewProjectRatingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reviewId?: boolean
+    projectId?: boolean
+    ratedById?: boolean
+    rating?: boolean
+    comment?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    review?: boolean | PerformanceReviewDefaultArgs<ExtArgs>
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    ratedBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["performanceReviewProjectRating"]>
+
+  export type PerformanceReviewProjectRatingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reviewId?: boolean
+    projectId?: boolean
+    ratedById?: boolean
+    rating?: boolean
+    comment?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    review?: boolean | PerformanceReviewDefaultArgs<ExtArgs>
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    ratedBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["performanceReviewProjectRating"]>
+
+  export type PerformanceReviewProjectRatingSelectScalar = {
+    id?: boolean
+    reviewId?: boolean
+    projectId?: boolean
+    ratedById?: boolean
+    rating?: boolean
+    comment?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PerformanceReviewProjectRatingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    review?: boolean | PerformanceReviewDefaultArgs<ExtArgs>
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    ratedBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type PerformanceReviewProjectRatingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    review?: boolean | PerformanceReviewDefaultArgs<ExtArgs>
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    ratedBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $PerformanceReviewProjectRatingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PerformanceReviewProjectRating"
+    objects: {
+      review: Prisma.$PerformanceReviewPayload<ExtArgs>
+      project: Prisma.$ProjectPayload<ExtArgs>
+      ratedBy: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      reviewId: string
+      projectId: string
+      ratedById: string
+      rating: number
+      comment: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["performanceReviewProjectRating"]>
+    composites: {}
+  }
+
+  type PerformanceReviewProjectRatingGetPayload<S extends boolean | null | undefined | PerformanceReviewProjectRatingDefaultArgs> = $Result.GetResult<Prisma.$PerformanceReviewProjectRatingPayload, S>
+
+  type PerformanceReviewProjectRatingCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<PerformanceReviewProjectRatingFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: PerformanceReviewProjectRatingCountAggregateInputType | true
+    }
+
+  export interface PerformanceReviewProjectRatingDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PerformanceReviewProjectRating'], meta: { name: 'PerformanceReviewProjectRating' } }
+    /**
+     * Find zero or one PerformanceReviewProjectRating that matches the filter.
+     * @param {PerformanceReviewProjectRatingFindUniqueArgs} args - Arguments to find a PerformanceReviewProjectRating
+     * @example
+     * // Get one PerformanceReviewProjectRating
+     * const performanceReviewProjectRating = await prisma.performanceReviewProjectRating.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PerformanceReviewProjectRatingFindUniqueArgs>(args: SelectSubset<T, PerformanceReviewProjectRatingFindUniqueArgs<ExtArgs>>): Prisma__PerformanceReviewProjectRatingClient<$Result.GetResult<Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one PerformanceReviewProjectRating that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {PerformanceReviewProjectRatingFindUniqueOrThrowArgs} args - Arguments to find a PerformanceReviewProjectRating
+     * @example
+     * // Get one PerformanceReviewProjectRating
+     * const performanceReviewProjectRating = await prisma.performanceReviewProjectRating.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PerformanceReviewProjectRatingFindUniqueOrThrowArgs>(args: SelectSubset<T, PerformanceReviewProjectRatingFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PerformanceReviewProjectRatingClient<$Result.GetResult<Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first PerformanceReviewProjectRating that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PerformanceReviewProjectRatingFindFirstArgs} args - Arguments to find a PerformanceReviewProjectRating
+     * @example
+     * // Get one PerformanceReviewProjectRating
+     * const performanceReviewProjectRating = await prisma.performanceReviewProjectRating.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PerformanceReviewProjectRatingFindFirstArgs>(args?: SelectSubset<T, PerformanceReviewProjectRatingFindFirstArgs<ExtArgs>>): Prisma__PerformanceReviewProjectRatingClient<$Result.GetResult<Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first PerformanceReviewProjectRating that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PerformanceReviewProjectRatingFindFirstOrThrowArgs} args - Arguments to find a PerformanceReviewProjectRating
+     * @example
+     * // Get one PerformanceReviewProjectRating
+     * const performanceReviewProjectRating = await prisma.performanceReviewProjectRating.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PerformanceReviewProjectRatingFindFirstOrThrowArgs>(args?: SelectSubset<T, PerformanceReviewProjectRatingFindFirstOrThrowArgs<ExtArgs>>): Prisma__PerformanceReviewProjectRatingClient<$Result.GetResult<Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more PerformanceReviewProjectRatings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PerformanceReviewProjectRatingFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PerformanceReviewProjectRatings
+     * const performanceReviewProjectRatings = await prisma.performanceReviewProjectRating.findMany()
+     * 
+     * // Get first 10 PerformanceReviewProjectRatings
+     * const performanceReviewProjectRatings = await prisma.performanceReviewProjectRating.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const performanceReviewProjectRatingWithIdOnly = await prisma.performanceReviewProjectRating.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PerformanceReviewProjectRatingFindManyArgs>(args?: SelectSubset<T, PerformanceReviewProjectRatingFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a PerformanceReviewProjectRating.
+     * @param {PerformanceReviewProjectRatingCreateArgs} args - Arguments to create a PerformanceReviewProjectRating.
+     * @example
+     * // Create one PerformanceReviewProjectRating
+     * const PerformanceReviewProjectRating = await prisma.performanceReviewProjectRating.create({
+     *   data: {
+     *     // ... data to create a PerformanceReviewProjectRating
+     *   }
+     * })
+     * 
+     */
+    create<T extends PerformanceReviewProjectRatingCreateArgs>(args: SelectSubset<T, PerformanceReviewProjectRatingCreateArgs<ExtArgs>>): Prisma__PerformanceReviewProjectRatingClient<$Result.GetResult<Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many PerformanceReviewProjectRatings.
+     * @param {PerformanceReviewProjectRatingCreateManyArgs} args - Arguments to create many PerformanceReviewProjectRatings.
+     * @example
+     * // Create many PerformanceReviewProjectRatings
+     * const performanceReviewProjectRating = await prisma.performanceReviewProjectRating.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PerformanceReviewProjectRatingCreateManyArgs>(args?: SelectSubset<T, PerformanceReviewProjectRatingCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PerformanceReviewProjectRatings and returns the data saved in the database.
+     * @param {PerformanceReviewProjectRatingCreateManyAndReturnArgs} args - Arguments to create many PerformanceReviewProjectRatings.
+     * @example
+     * // Create many PerformanceReviewProjectRatings
+     * const performanceReviewProjectRating = await prisma.performanceReviewProjectRating.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PerformanceReviewProjectRatings and only return the `id`
+     * const performanceReviewProjectRatingWithIdOnly = await prisma.performanceReviewProjectRating.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PerformanceReviewProjectRatingCreateManyAndReturnArgs>(args?: SelectSubset<T, PerformanceReviewProjectRatingCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a PerformanceReviewProjectRating.
+     * @param {PerformanceReviewProjectRatingDeleteArgs} args - Arguments to delete one PerformanceReviewProjectRating.
+     * @example
+     * // Delete one PerformanceReviewProjectRating
+     * const PerformanceReviewProjectRating = await prisma.performanceReviewProjectRating.delete({
+     *   where: {
+     *     // ... filter to delete one PerformanceReviewProjectRating
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PerformanceReviewProjectRatingDeleteArgs>(args: SelectSubset<T, PerformanceReviewProjectRatingDeleteArgs<ExtArgs>>): Prisma__PerformanceReviewProjectRatingClient<$Result.GetResult<Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one PerformanceReviewProjectRating.
+     * @param {PerformanceReviewProjectRatingUpdateArgs} args - Arguments to update one PerformanceReviewProjectRating.
+     * @example
+     * // Update one PerformanceReviewProjectRating
+     * const performanceReviewProjectRating = await prisma.performanceReviewProjectRating.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PerformanceReviewProjectRatingUpdateArgs>(args: SelectSubset<T, PerformanceReviewProjectRatingUpdateArgs<ExtArgs>>): Prisma__PerformanceReviewProjectRatingClient<$Result.GetResult<Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more PerformanceReviewProjectRatings.
+     * @param {PerformanceReviewProjectRatingDeleteManyArgs} args - Arguments to filter PerformanceReviewProjectRatings to delete.
+     * @example
+     * // Delete a few PerformanceReviewProjectRatings
+     * const { count } = await prisma.performanceReviewProjectRating.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PerformanceReviewProjectRatingDeleteManyArgs>(args?: SelectSubset<T, PerformanceReviewProjectRatingDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PerformanceReviewProjectRatings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PerformanceReviewProjectRatingUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PerformanceReviewProjectRatings
+     * const performanceReviewProjectRating = await prisma.performanceReviewProjectRating.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PerformanceReviewProjectRatingUpdateManyArgs>(args: SelectSubset<T, PerformanceReviewProjectRatingUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PerformanceReviewProjectRating.
+     * @param {PerformanceReviewProjectRatingUpsertArgs} args - Arguments to update or create a PerformanceReviewProjectRating.
+     * @example
+     * // Update or create a PerformanceReviewProjectRating
+     * const performanceReviewProjectRating = await prisma.performanceReviewProjectRating.upsert({
+     *   create: {
+     *     // ... data to create a PerformanceReviewProjectRating
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PerformanceReviewProjectRating we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PerformanceReviewProjectRatingUpsertArgs>(args: SelectSubset<T, PerformanceReviewProjectRatingUpsertArgs<ExtArgs>>): Prisma__PerformanceReviewProjectRatingClient<$Result.GetResult<Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of PerformanceReviewProjectRatings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PerformanceReviewProjectRatingCountArgs} args - Arguments to filter PerformanceReviewProjectRatings to count.
+     * @example
+     * // Count the number of PerformanceReviewProjectRatings
+     * const count = await prisma.performanceReviewProjectRating.count({
+     *   where: {
+     *     // ... the filter for the PerformanceReviewProjectRatings we want to count
+     *   }
+     * })
+    **/
+    count<T extends PerformanceReviewProjectRatingCountArgs>(
+      args?: Subset<T, PerformanceReviewProjectRatingCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PerformanceReviewProjectRatingCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PerformanceReviewProjectRating.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PerformanceReviewProjectRatingAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PerformanceReviewProjectRatingAggregateArgs>(args: Subset<T, PerformanceReviewProjectRatingAggregateArgs>): Prisma.PrismaPromise<GetPerformanceReviewProjectRatingAggregateType<T>>
+
+    /**
+     * Group by PerformanceReviewProjectRating.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PerformanceReviewProjectRatingGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PerformanceReviewProjectRatingGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PerformanceReviewProjectRatingGroupByArgs['orderBy'] }
+        : { orderBy?: PerformanceReviewProjectRatingGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PerformanceReviewProjectRatingGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPerformanceReviewProjectRatingGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PerformanceReviewProjectRating model
+   */
+  readonly fields: PerformanceReviewProjectRatingFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PerformanceReviewProjectRating.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PerformanceReviewProjectRatingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    review<T extends PerformanceReviewDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PerformanceReviewDefaultArgs<ExtArgs>>): Prisma__PerformanceReviewClient<$Result.GetResult<Prisma.$PerformanceReviewPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    ratedBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PerformanceReviewProjectRating model
+   */ 
+  interface PerformanceReviewProjectRatingFieldRefs {
+    readonly id: FieldRef<"PerformanceReviewProjectRating", 'String'>
+    readonly reviewId: FieldRef<"PerformanceReviewProjectRating", 'String'>
+    readonly projectId: FieldRef<"PerformanceReviewProjectRating", 'String'>
+    readonly ratedById: FieldRef<"PerformanceReviewProjectRating", 'String'>
+    readonly rating: FieldRef<"PerformanceReviewProjectRating", 'Int'>
+    readonly comment: FieldRef<"PerformanceReviewProjectRating", 'String'>
+    readonly createdAt: FieldRef<"PerformanceReviewProjectRating", 'DateTime'>
+    readonly updatedAt: FieldRef<"PerformanceReviewProjectRating", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PerformanceReviewProjectRating findUnique
+   */
+  export type PerformanceReviewProjectRatingFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReviewProjectRating
+     */
+    select?: PerformanceReviewProjectRatingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewProjectRatingInclude<ExtArgs> | null
+    /**
+     * Filter, which PerformanceReviewProjectRating to fetch.
+     */
+    where: PerformanceReviewProjectRatingWhereUniqueInput
+  }
+
+  /**
+   * PerformanceReviewProjectRating findUniqueOrThrow
+   */
+  export type PerformanceReviewProjectRatingFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReviewProjectRating
+     */
+    select?: PerformanceReviewProjectRatingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewProjectRatingInclude<ExtArgs> | null
+    /**
+     * Filter, which PerformanceReviewProjectRating to fetch.
+     */
+    where: PerformanceReviewProjectRatingWhereUniqueInput
+  }
+
+  /**
+   * PerformanceReviewProjectRating findFirst
+   */
+  export type PerformanceReviewProjectRatingFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReviewProjectRating
+     */
+    select?: PerformanceReviewProjectRatingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewProjectRatingInclude<ExtArgs> | null
+    /**
+     * Filter, which PerformanceReviewProjectRating to fetch.
+     */
+    where?: PerformanceReviewProjectRatingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PerformanceReviewProjectRatings to fetch.
+     */
+    orderBy?: PerformanceReviewProjectRatingOrderByWithRelationInput | PerformanceReviewProjectRatingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PerformanceReviewProjectRatings.
+     */
+    cursor?: PerformanceReviewProjectRatingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PerformanceReviewProjectRatings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PerformanceReviewProjectRatings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PerformanceReviewProjectRatings.
+     */
+    distinct?: PerformanceReviewProjectRatingScalarFieldEnum | PerformanceReviewProjectRatingScalarFieldEnum[]
+  }
+
+  /**
+   * PerformanceReviewProjectRating findFirstOrThrow
+   */
+  export type PerformanceReviewProjectRatingFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReviewProjectRating
+     */
+    select?: PerformanceReviewProjectRatingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewProjectRatingInclude<ExtArgs> | null
+    /**
+     * Filter, which PerformanceReviewProjectRating to fetch.
+     */
+    where?: PerformanceReviewProjectRatingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PerformanceReviewProjectRatings to fetch.
+     */
+    orderBy?: PerformanceReviewProjectRatingOrderByWithRelationInput | PerformanceReviewProjectRatingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PerformanceReviewProjectRatings.
+     */
+    cursor?: PerformanceReviewProjectRatingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PerformanceReviewProjectRatings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PerformanceReviewProjectRatings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PerformanceReviewProjectRatings.
+     */
+    distinct?: PerformanceReviewProjectRatingScalarFieldEnum | PerformanceReviewProjectRatingScalarFieldEnum[]
+  }
+
+  /**
+   * PerformanceReviewProjectRating findMany
+   */
+  export type PerformanceReviewProjectRatingFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReviewProjectRating
+     */
+    select?: PerformanceReviewProjectRatingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewProjectRatingInclude<ExtArgs> | null
+    /**
+     * Filter, which PerformanceReviewProjectRatings to fetch.
+     */
+    where?: PerformanceReviewProjectRatingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PerformanceReviewProjectRatings to fetch.
+     */
+    orderBy?: PerformanceReviewProjectRatingOrderByWithRelationInput | PerformanceReviewProjectRatingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PerformanceReviewProjectRatings.
+     */
+    cursor?: PerformanceReviewProjectRatingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PerformanceReviewProjectRatings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PerformanceReviewProjectRatings.
+     */
+    skip?: number
+    distinct?: PerformanceReviewProjectRatingScalarFieldEnum | PerformanceReviewProjectRatingScalarFieldEnum[]
+  }
+
+  /**
+   * PerformanceReviewProjectRating create
+   */
+  export type PerformanceReviewProjectRatingCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReviewProjectRating
+     */
+    select?: PerformanceReviewProjectRatingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewProjectRatingInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PerformanceReviewProjectRating.
+     */
+    data: XOR<PerformanceReviewProjectRatingCreateInput, PerformanceReviewProjectRatingUncheckedCreateInput>
+  }
+
+  /**
+   * PerformanceReviewProjectRating createMany
+   */
+  export type PerformanceReviewProjectRatingCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PerformanceReviewProjectRatings.
+     */
+    data: PerformanceReviewProjectRatingCreateManyInput | PerformanceReviewProjectRatingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PerformanceReviewProjectRating createManyAndReturn
+   */
+  export type PerformanceReviewProjectRatingCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReviewProjectRating
+     */
+    select?: PerformanceReviewProjectRatingSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many PerformanceReviewProjectRatings.
+     */
+    data: PerformanceReviewProjectRatingCreateManyInput | PerformanceReviewProjectRatingCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewProjectRatingIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PerformanceReviewProjectRating update
+   */
+  export type PerformanceReviewProjectRatingUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReviewProjectRating
+     */
+    select?: PerformanceReviewProjectRatingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewProjectRatingInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PerformanceReviewProjectRating.
+     */
+    data: XOR<PerformanceReviewProjectRatingUpdateInput, PerformanceReviewProjectRatingUncheckedUpdateInput>
+    /**
+     * Choose, which PerformanceReviewProjectRating to update.
+     */
+    where: PerformanceReviewProjectRatingWhereUniqueInput
+  }
+
+  /**
+   * PerformanceReviewProjectRating updateMany
+   */
+  export type PerformanceReviewProjectRatingUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PerformanceReviewProjectRatings.
+     */
+    data: XOR<PerformanceReviewProjectRatingUpdateManyMutationInput, PerformanceReviewProjectRatingUncheckedUpdateManyInput>
+    /**
+     * Filter which PerformanceReviewProjectRatings to update
+     */
+    where?: PerformanceReviewProjectRatingWhereInput
+  }
+
+  /**
+   * PerformanceReviewProjectRating upsert
+   */
+  export type PerformanceReviewProjectRatingUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReviewProjectRating
+     */
+    select?: PerformanceReviewProjectRatingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewProjectRatingInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PerformanceReviewProjectRating to update in case it exists.
+     */
+    where: PerformanceReviewProjectRatingWhereUniqueInput
+    /**
+     * In case the PerformanceReviewProjectRating found by the `where` argument doesn't exist, create a new PerformanceReviewProjectRating with this data.
+     */
+    create: XOR<PerformanceReviewProjectRatingCreateInput, PerformanceReviewProjectRatingUncheckedCreateInput>
+    /**
+     * In case the PerformanceReviewProjectRating was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PerformanceReviewProjectRatingUpdateInput, PerformanceReviewProjectRatingUncheckedUpdateInput>
+  }
+
+  /**
+   * PerformanceReviewProjectRating delete
+   */
+  export type PerformanceReviewProjectRatingDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReviewProjectRating
+     */
+    select?: PerformanceReviewProjectRatingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewProjectRatingInclude<ExtArgs> | null
+    /**
+     * Filter which PerformanceReviewProjectRating to delete.
+     */
+    where: PerformanceReviewProjectRatingWhereUniqueInput
+  }
+
+  /**
+   * PerformanceReviewProjectRating deleteMany
+   */
+  export type PerformanceReviewProjectRatingDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PerformanceReviewProjectRatings to delete
+     */
+    where?: PerformanceReviewProjectRatingWhereInput
+  }
+
+  /**
+   * PerformanceReviewProjectRating without action
+   */
+  export type PerformanceReviewProjectRatingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PerformanceReviewProjectRating
+     */
+    select?: PerformanceReviewProjectRatingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PerformanceReviewProjectRatingInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -29881,6 +33752,65 @@ export namespace Prisma {
   export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
 
 
+  export const ProjectRaidItemScalarFieldEnum: {
+    id: 'id',
+    projectId: 'projectId',
+    type: 'type',
+    title: 'title',
+    description: 'description',
+    impact: 'impact',
+    likelihood: 'likelihood',
+    status: 'status',
+    ownerId: 'ownerId',
+    mitigation: 'mitigation',
+    dueDate: 'dueDate',
+    closedAt: 'closedAt',
+    createdById: 'createdById',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ProjectRaidItemScalarFieldEnum = (typeof ProjectRaidItemScalarFieldEnum)[keyof typeof ProjectRaidItemScalarFieldEnum]
+
+
+  export const PerformanceReviewScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    reviewerId: 'reviewerId',
+    period: 'period',
+    periodYear: 'periodYear',
+    periodStart: 'periodStart',
+    periodEnd: 'periodEnd',
+    status: 'status',
+    overallRating: 'overallRating',
+    summary: 'summary',
+    strengths: 'strengths',
+    improvements: 'improvements',
+    goals: 'goals',
+    acknowledgement: 'acknowledgement',
+    submittedAt: 'submittedAt',
+    acknowledgedAt: 'acknowledgedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PerformanceReviewScalarFieldEnum = (typeof PerformanceReviewScalarFieldEnum)[keyof typeof PerformanceReviewScalarFieldEnum]
+
+
+  export const PerformanceReviewProjectRatingScalarFieldEnum: {
+    id: 'id',
+    reviewId: 'reviewId',
+    projectId: 'projectId',
+    ratedById: 'ratedById',
+    rating: 'rating',
+    comment: 'comment',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PerformanceReviewProjectRatingScalarFieldEnum = (typeof PerformanceReviewProjectRatingScalarFieldEnum)[keyof typeof PerformanceReviewProjectRatingScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -30170,6 +34100,90 @@ export namespace Prisma {
    */
   export type ListEnumLeaveTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeaveType[]'>
     
+
+
+  /**
+   * Reference to a field of type 'RaidType'
+   */
+  export type EnumRaidTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RaidType'>
+    
+
+
+  /**
+   * Reference to a field of type 'RaidType[]'
+   */
+  export type ListEnumRaidTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RaidType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'RaidImpact'
+   */
+  export type EnumRaidImpactFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RaidImpact'>
+    
+
+
+  /**
+   * Reference to a field of type 'RaidImpact[]'
+   */
+  export type ListEnumRaidImpactFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RaidImpact[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'RaidLikelihood'
+   */
+  export type EnumRaidLikelihoodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RaidLikelihood'>
+    
+
+
+  /**
+   * Reference to a field of type 'RaidLikelihood[]'
+   */
+  export type ListEnumRaidLikelihoodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RaidLikelihood[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'RaidStatus'
+   */
+  export type EnumRaidStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RaidStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'RaidStatus[]'
+   */
+  export type ListEnumRaidStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RaidStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PerformanceReviewPeriod'
+   */
+  export type EnumPerformanceReviewPeriodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PerformanceReviewPeriod'>
+    
+
+
+  /**
+   * Reference to a field of type 'PerformanceReviewPeriod[]'
+   */
+  export type ListEnumPerformanceReviewPeriodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PerformanceReviewPeriod[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PerformanceReviewStatus'
+   */
+  export type EnumPerformanceReviewStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PerformanceReviewStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'PerformanceReviewStatus[]'
+   */
+  export type ListEnumPerformanceReviewStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PerformanceReviewStatus[]'>
+    
   /**
    * Deep Input Types
    */
@@ -30224,6 +34238,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityListRelationFilter
     leaves?: UserLeaveListRelationFilter
     taskTemplatesCreated?: TaskTemplateListRelationFilter
+    raidItemsOwned?: ProjectRaidItemListRelationFilter
+    raidItemsCreated?: ProjectRaidItemListRelationFilter
+    perfReviewsSubject?: PerformanceReviewListRelationFilter
+    perfReviewsAuthored?: PerformanceReviewListRelationFilter
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -30272,6 +34291,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityOrderByRelationAggregateInput
     leaves?: UserLeaveOrderByRelationAggregateInput
     taskTemplatesCreated?: TaskTemplateOrderByRelationAggregateInput
+    raidItemsOwned?: ProjectRaidItemOrderByRelationAggregateInput
+    raidItemsCreated?: ProjectRaidItemOrderByRelationAggregateInput
+    perfReviewsSubject?: PerformanceReviewOrderByRelationAggregateInput
+    perfReviewsAuthored?: PerformanceReviewOrderByRelationAggregateInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -30323,6 +34347,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityListRelationFilter
     leaves?: UserLeaveListRelationFilter
     taskTemplatesCreated?: TaskTemplateListRelationFilter
+    raidItemsOwned?: ProjectRaidItemListRelationFilter
+    raidItemsCreated?: ProjectRaidItemListRelationFilter
+    perfReviewsSubject?: PerformanceReviewListRelationFilter
+    perfReviewsAuthored?: PerformanceReviewListRelationFilter
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -30493,6 +34522,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseListRelationFilter
     tasks?: TaskListRelationFilter
     billingMilestones?: BillingMilestoneListRelationFilter
+    raidItems?: ProjectRaidItemListRelationFilter
+    perfProjectRatings?: PerformanceReviewProjectRatingListRelationFilter
   }
 
   export type ProjectOrderByWithRelationInput = {
@@ -30539,6 +34570,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseOrderByRelationAggregateInput
     tasks?: TaskOrderByRelationAggregateInput
     billingMilestones?: BillingMilestoneOrderByRelationAggregateInput
+    raidItems?: ProjectRaidItemOrderByRelationAggregateInput
+    perfProjectRatings?: PerformanceReviewProjectRatingOrderByRelationAggregateInput
   }
 
   export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -30588,6 +34621,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseListRelationFilter
     tasks?: TaskListRelationFilter
     billingMilestones?: BillingMilestoneListRelationFilter
+    raidItems?: ProjectRaidItemListRelationFilter
+    perfProjectRatings?: PerformanceReviewProjectRatingListRelationFilter
   }, "id" | "code" | "surveyToken">
 
   export type ProjectOrderByWithAggregationInput = {
@@ -32396,6 +36431,325 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Notification"> | Date | string
   }
 
+  export type ProjectRaidItemWhereInput = {
+    AND?: ProjectRaidItemWhereInput | ProjectRaidItemWhereInput[]
+    OR?: ProjectRaidItemWhereInput[]
+    NOT?: ProjectRaidItemWhereInput | ProjectRaidItemWhereInput[]
+    id?: StringFilter<"ProjectRaidItem"> | string
+    projectId?: StringFilter<"ProjectRaidItem"> | string
+    type?: EnumRaidTypeFilter<"ProjectRaidItem"> | $Enums.RaidType
+    title?: StringFilter<"ProjectRaidItem"> | string
+    description?: StringNullableFilter<"ProjectRaidItem"> | string | null
+    impact?: EnumRaidImpactFilter<"ProjectRaidItem"> | $Enums.RaidImpact
+    likelihood?: EnumRaidLikelihoodFilter<"ProjectRaidItem"> | $Enums.RaidLikelihood
+    status?: EnumRaidStatusFilter<"ProjectRaidItem"> | $Enums.RaidStatus
+    ownerId?: StringNullableFilter<"ProjectRaidItem"> | string | null
+    mitigation?: StringNullableFilter<"ProjectRaidItem"> | string | null
+    dueDate?: DateTimeNullableFilter<"ProjectRaidItem"> | Date | string | null
+    closedAt?: DateTimeNullableFilter<"ProjectRaidItem"> | Date | string | null
+    createdById?: StringNullableFilter<"ProjectRaidItem"> | string | null
+    createdAt?: DateTimeFilter<"ProjectRaidItem"> | Date | string
+    updatedAt?: DateTimeFilter<"ProjectRaidItem"> | Date | string
+    project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    owner?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+  }
+
+  export type ProjectRaidItemOrderByWithRelationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    impact?: SortOrder
+    likelihood?: SortOrder
+    status?: SortOrder
+    ownerId?: SortOrderInput | SortOrder
+    mitigation?: SortOrderInput | SortOrder
+    dueDate?: SortOrderInput | SortOrder
+    closedAt?: SortOrderInput | SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    project?: ProjectOrderByWithRelationInput
+    owner?: UserOrderByWithRelationInput
+    createdBy?: UserOrderByWithRelationInput
+  }
+
+  export type ProjectRaidItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ProjectRaidItemWhereInput | ProjectRaidItemWhereInput[]
+    OR?: ProjectRaidItemWhereInput[]
+    NOT?: ProjectRaidItemWhereInput | ProjectRaidItemWhereInput[]
+    projectId?: StringFilter<"ProjectRaidItem"> | string
+    type?: EnumRaidTypeFilter<"ProjectRaidItem"> | $Enums.RaidType
+    title?: StringFilter<"ProjectRaidItem"> | string
+    description?: StringNullableFilter<"ProjectRaidItem"> | string | null
+    impact?: EnumRaidImpactFilter<"ProjectRaidItem"> | $Enums.RaidImpact
+    likelihood?: EnumRaidLikelihoodFilter<"ProjectRaidItem"> | $Enums.RaidLikelihood
+    status?: EnumRaidStatusFilter<"ProjectRaidItem"> | $Enums.RaidStatus
+    ownerId?: StringNullableFilter<"ProjectRaidItem"> | string | null
+    mitigation?: StringNullableFilter<"ProjectRaidItem"> | string | null
+    dueDate?: DateTimeNullableFilter<"ProjectRaidItem"> | Date | string | null
+    closedAt?: DateTimeNullableFilter<"ProjectRaidItem"> | Date | string | null
+    createdById?: StringNullableFilter<"ProjectRaidItem"> | string | null
+    createdAt?: DateTimeFilter<"ProjectRaidItem"> | Date | string
+    updatedAt?: DateTimeFilter<"ProjectRaidItem"> | Date | string
+    project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    owner?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+  }, "id">
+
+  export type ProjectRaidItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    impact?: SortOrder
+    likelihood?: SortOrder
+    status?: SortOrder
+    ownerId?: SortOrderInput | SortOrder
+    mitigation?: SortOrderInput | SortOrder
+    dueDate?: SortOrderInput | SortOrder
+    closedAt?: SortOrderInput | SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ProjectRaidItemCountOrderByAggregateInput
+    _max?: ProjectRaidItemMaxOrderByAggregateInput
+    _min?: ProjectRaidItemMinOrderByAggregateInput
+  }
+
+  export type ProjectRaidItemScalarWhereWithAggregatesInput = {
+    AND?: ProjectRaidItemScalarWhereWithAggregatesInput | ProjectRaidItemScalarWhereWithAggregatesInput[]
+    OR?: ProjectRaidItemScalarWhereWithAggregatesInput[]
+    NOT?: ProjectRaidItemScalarWhereWithAggregatesInput | ProjectRaidItemScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ProjectRaidItem"> | string
+    projectId?: StringWithAggregatesFilter<"ProjectRaidItem"> | string
+    type?: EnumRaidTypeWithAggregatesFilter<"ProjectRaidItem"> | $Enums.RaidType
+    title?: StringWithAggregatesFilter<"ProjectRaidItem"> | string
+    description?: StringNullableWithAggregatesFilter<"ProjectRaidItem"> | string | null
+    impact?: EnumRaidImpactWithAggregatesFilter<"ProjectRaidItem"> | $Enums.RaidImpact
+    likelihood?: EnumRaidLikelihoodWithAggregatesFilter<"ProjectRaidItem"> | $Enums.RaidLikelihood
+    status?: EnumRaidStatusWithAggregatesFilter<"ProjectRaidItem"> | $Enums.RaidStatus
+    ownerId?: StringNullableWithAggregatesFilter<"ProjectRaidItem"> | string | null
+    mitigation?: StringNullableWithAggregatesFilter<"ProjectRaidItem"> | string | null
+    dueDate?: DateTimeNullableWithAggregatesFilter<"ProjectRaidItem"> | Date | string | null
+    closedAt?: DateTimeNullableWithAggregatesFilter<"ProjectRaidItem"> | Date | string | null
+    createdById?: StringNullableWithAggregatesFilter<"ProjectRaidItem"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ProjectRaidItem"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ProjectRaidItem"> | Date | string
+  }
+
+  export type PerformanceReviewWhereInput = {
+    AND?: PerformanceReviewWhereInput | PerformanceReviewWhereInput[]
+    OR?: PerformanceReviewWhereInput[]
+    NOT?: PerformanceReviewWhereInput | PerformanceReviewWhereInput[]
+    id?: StringFilter<"PerformanceReview"> | string
+    userId?: StringFilter<"PerformanceReview"> | string
+    reviewerId?: StringFilter<"PerformanceReview"> | string
+    period?: EnumPerformanceReviewPeriodFilter<"PerformanceReview"> | $Enums.PerformanceReviewPeriod
+    periodYear?: IntFilter<"PerformanceReview"> | number
+    periodStart?: DateTimeFilter<"PerformanceReview"> | Date | string
+    periodEnd?: DateTimeFilter<"PerformanceReview"> | Date | string
+    status?: EnumPerformanceReviewStatusFilter<"PerformanceReview"> | $Enums.PerformanceReviewStatus
+    overallRating?: IntNullableFilter<"PerformanceReview"> | number | null
+    summary?: StringNullableFilter<"PerformanceReview"> | string | null
+    strengths?: StringNullableFilter<"PerformanceReview"> | string | null
+    improvements?: StringNullableFilter<"PerformanceReview"> | string | null
+    goals?: StringNullableFilter<"PerformanceReview"> | string | null
+    acknowledgement?: StringNullableFilter<"PerformanceReview"> | string | null
+    submittedAt?: DateTimeNullableFilter<"PerformanceReview"> | Date | string | null
+    acknowledgedAt?: DateTimeNullableFilter<"PerformanceReview"> | Date | string | null
+    createdAt?: DateTimeFilter<"PerformanceReview"> | Date | string
+    updatedAt?: DateTimeFilter<"PerformanceReview"> | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
+    reviewer?: XOR<UserRelationFilter, UserWhereInput>
+    projectRatings?: PerformanceReviewProjectRatingListRelationFilter
+  }
+
+  export type PerformanceReviewOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    reviewerId?: SortOrder
+    period?: SortOrder
+    periodYear?: SortOrder
+    periodStart?: SortOrder
+    periodEnd?: SortOrder
+    status?: SortOrder
+    overallRating?: SortOrderInput | SortOrder
+    summary?: SortOrderInput | SortOrder
+    strengths?: SortOrderInput | SortOrder
+    improvements?: SortOrderInput | SortOrder
+    goals?: SortOrderInput | SortOrder
+    acknowledgement?: SortOrderInput | SortOrder
+    submittedAt?: SortOrderInput | SortOrder
+    acknowledgedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    reviewer?: UserOrderByWithRelationInput
+    projectRatings?: PerformanceReviewProjectRatingOrderByRelationAggregateInput
+  }
+
+  export type PerformanceReviewWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_period_periodYear?: PerformanceReviewUserIdPeriodPeriodYearCompoundUniqueInput
+    AND?: PerformanceReviewWhereInput | PerformanceReviewWhereInput[]
+    OR?: PerformanceReviewWhereInput[]
+    NOT?: PerformanceReviewWhereInput | PerformanceReviewWhereInput[]
+    userId?: StringFilter<"PerformanceReview"> | string
+    reviewerId?: StringFilter<"PerformanceReview"> | string
+    period?: EnumPerformanceReviewPeriodFilter<"PerformanceReview"> | $Enums.PerformanceReviewPeriod
+    periodYear?: IntFilter<"PerformanceReview"> | number
+    periodStart?: DateTimeFilter<"PerformanceReview"> | Date | string
+    periodEnd?: DateTimeFilter<"PerformanceReview"> | Date | string
+    status?: EnumPerformanceReviewStatusFilter<"PerformanceReview"> | $Enums.PerformanceReviewStatus
+    overallRating?: IntNullableFilter<"PerformanceReview"> | number | null
+    summary?: StringNullableFilter<"PerformanceReview"> | string | null
+    strengths?: StringNullableFilter<"PerformanceReview"> | string | null
+    improvements?: StringNullableFilter<"PerformanceReview"> | string | null
+    goals?: StringNullableFilter<"PerformanceReview"> | string | null
+    acknowledgement?: StringNullableFilter<"PerformanceReview"> | string | null
+    submittedAt?: DateTimeNullableFilter<"PerformanceReview"> | Date | string | null
+    acknowledgedAt?: DateTimeNullableFilter<"PerformanceReview"> | Date | string | null
+    createdAt?: DateTimeFilter<"PerformanceReview"> | Date | string
+    updatedAt?: DateTimeFilter<"PerformanceReview"> | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
+    reviewer?: XOR<UserRelationFilter, UserWhereInput>
+    projectRatings?: PerformanceReviewProjectRatingListRelationFilter
+  }, "id" | "userId_period_periodYear">
+
+  export type PerformanceReviewOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    reviewerId?: SortOrder
+    period?: SortOrder
+    periodYear?: SortOrder
+    periodStart?: SortOrder
+    periodEnd?: SortOrder
+    status?: SortOrder
+    overallRating?: SortOrderInput | SortOrder
+    summary?: SortOrderInput | SortOrder
+    strengths?: SortOrderInput | SortOrder
+    improvements?: SortOrderInput | SortOrder
+    goals?: SortOrderInput | SortOrder
+    acknowledgement?: SortOrderInput | SortOrder
+    submittedAt?: SortOrderInput | SortOrder
+    acknowledgedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PerformanceReviewCountOrderByAggregateInput
+    _avg?: PerformanceReviewAvgOrderByAggregateInput
+    _max?: PerformanceReviewMaxOrderByAggregateInput
+    _min?: PerformanceReviewMinOrderByAggregateInput
+    _sum?: PerformanceReviewSumOrderByAggregateInput
+  }
+
+  export type PerformanceReviewScalarWhereWithAggregatesInput = {
+    AND?: PerformanceReviewScalarWhereWithAggregatesInput | PerformanceReviewScalarWhereWithAggregatesInput[]
+    OR?: PerformanceReviewScalarWhereWithAggregatesInput[]
+    NOT?: PerformanceReviewScalarWhereWithAggregatesInput | PerformanceReviewScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PerformanceReview"> | string
+    userId?: StringWithAggregatesFilter<"PerformanceReview"> | string
+    reviewerId?: StringWithAggregatesFilter<"PerformanceReview"> | string
+    period?: EnumPerformanceReviewPeriodWithAggregatesFilter<"PerformanceReview"> | $Enums.PerformanceReviewPeriod
+    periodYear?: IntWithAggregatesFilter<"PerformanceReview"> | number
+    periodStart?: DateTimeWithAggregatesFilter<"PerformanceReview"> | Date | string
+    periodEnd?: DateTimeWithAggregatesFilter<"PerformanceReview"> | Date | string
+    status?: EnumPerformanceReviewStatusWithAggregatesFilter<"PerformanceReview"> | $Enums.PerformanceReviewStatus
+    overallRating?: IntNullableWithAggregatesFilter<"PerformanceReview"> | number | null
+    summary?: StringNullableWithAggregatesFilter<"PerformanceReview"> | string | null
+    strengths?: StringNullableWithAggregatesFilter<"PerformanceReview"> | string | null
+    improvements?: StringNullableWithAggregatesFilter<"PerformanceReview"> | string | null
+    goals?: StringNullableWithAggregatesFilter<"PerformanceReview"> | string | null
+    acknowledgement?: StringNullableWithAggregatesFilter<"PerformanceReview"> | string | null
+    submittedAt?: DateTimeNullableWithAggregatesFilter<"PerformanceReview"> | Date | string | null
+    acknowledgedAt?: DateTimeNullableWithAggregatesFilter<"PerformanceReview"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"PerformanceReview"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PerformanceReview"> | Date | string
+  }
+
+  export type PerformanceReviewProjectRatingWhereInput = {
+    AND?: PerformanceReviewProjectRatingWhereInput | PerformanceReviewProjectRatingWhereInput[]
+    OR?: PerformanceReviewProjectRatingWhereInput[]
+    NOT?: PerformanceReviewProjectRatingWhereInput | PerformanceReviewProjectRatingWhereInput[]
+    id?: StringFilter<"PerformanceReviewProjectRating"> | string
+    reviewId?: StringFilter<"PerformanceReviewProjectRating"> | string
+    projectId?: StringFilter<"PerformanceReviewProjectRating"> | string
+    ratedById?: StringFilter<"PerformanceReviewProjectRating"> | string
+    rating?: IntFilter<"PerformanceReviewProjectRating"> | number
+    comment?: StringNullableFilter<"PerformanceReviewProjectRating"> | string | null
+    createdAt?: DateTimeFilter<"PerformanceReviewProjectRating"> | Date | string
+    updatedAt?: DateTimeFilter<"PerformanceReviewProjectRating"> | Date | string
+    review?: XOR<PerformanceReviewRelationFilter, PerformanceReviewWhereInput>
+    project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    ratedBy?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type PerformanceReviewProjectRatingOrderByWithRelationInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    projectId?: SortOrder
+    ratedById?: SortOrder
+    rating?: SortOrder
+    comment?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    review?: PerformanceReviewOrderByWithRelationInput
+    project?: ProjectOrderByWithRelationInput
+    ratedBy?: UserOrderByWithRelationInput
+  }
+
+  export type PerformanceReviewProjectRatingWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    reviewId_projectId?: PerformanceReviewProjectRatingReviewIdProjectIdCompoundUniqueInput
+    AND?: PerformanceReviewProjectRatingWhereInput | PerformanceReviewProjectRatingWhereInput[]
+    OR?: PerformanceReviewProjectRatingWhereInput[]
+    NOT?: PerformanceReviewProjectRatingWhereInput | PerformanceReviewProjectRatingWhereInput[]
+    reviewId?: StringFilter<"PerformanceReviewProjectRating"> | string
+    projectId?: StringFilter<"PerformanceReviewProjectRating"> | string
+    ratedById?: StringFilter<"PerformanceReviewProjectRating"> | string
+    rating?: IntFilter<"PerformanceReviewProjectRating"> | number
+    comment?: StringNullableFilter<"PerformanceReviewProjectRating"> | string | null
+    createdAt?: DateTimeFilter<"PerformanceReviewProjectRating"> | Date | string
+    updatedAt?: DateTimeFilter<"PerformanceReviewProjectRating"> | Date | string
+    review?: XOR<PerformanceReviewRelationFilter, PerformanceReviewWhereInput>
+    project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    ratedBy?: XOR<UserRelationFilter, UserWhereInput>
+  }, "id" | "reviewId_projectId">
+
+  export type PerformanceReviewProjectRatingOrderByWithAggregationInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    projectId?: SortOrder
+    ratedById?: SortOrder
+    rating?: SortOrder
+    comment?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PerformanceReviewProjectRatingCountOrderByAggregateInput
+    _avg?: PerformanceReviewProjectRatingAvgOrderByAggregateInput
+    _max?: PerformanceReviewProjectRatingMaxOrderByAggregateInput
+    _min?: PerformanceReviewProjectRatingMinOrderByAggregateInput
+    _sum?: PerformanceReviewProjectRatingSumOrderByAggregateInput
+  }
+
+  export type PerformanceReviewProjectRatingScalarWhereWithAggregatesInput = {
+    AND?: PerformanceReviewProjectRatingScalarWhereWithAggregatesInput | PerformanceReviewProjectRatingScalarWhereWithAggregatesInput[]
+    OR?: PerformanceReviewProjectRatingScalarWhereWithAggregatesInput[]
+    NOT?: PerformanceReviewProjectRatingScalarWhereWithAggregatesInput | PerformanceReviewProjectRatingScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PerformanceReviewProjectRating"> | string
+    reviewId?: StringWithAggregatesFilter<"PerformanceReviewProjectRating"> | string
+    projectId?: StringWithAggregatesFilter<"PerformanceReviewProjectRating"> | string
+    ratedById?: StringWithAggregatesFilter<"PerformanceReviewProjectRating"> | string
+    rating?: IntWithAggregatesFilter<"PerformanceReviewProjectRating"> | number
+    comment?: StringNullableWithAggregatesFilter<"PerformanceReviewProjectRating"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"PerformanceReviewProjectRating"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PerformanceReviewProjectRating"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -32439,6 +36793,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -32484,6 +36843,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUpdateInput = {
@@ -32529,6 +36893,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -32574,6 +36943,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -32757,6 +37131,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateInput = {
@@ -32798,6 +37174,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUpdateInput = {
@@ -32839,6 +37217,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateInput = {
@@ -32880,6 +37260,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectCreateManyInput = {
@@ -34820,6 +39202,352 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ProjectRaidItemCreateInput = {
+    id?: string
+    type: $Enums.RaidType
+    title: string
+    description?: string | null
+    impact?: $Enums.RaidImpact
+    likelihood?: $Enums.RaidLikelihood
+    status?: $Enums.RaidStatus
+    mitigation?: string | null
+    dueDate?: Date | string | null
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutRaidItemsInput
+    owner?: UserCreateNestedOneWithoutRaidItemsOwnedInput
+    createdBy?: UserCreateNestedOneWithoutRaidItemsCreatedInput
+  }
+
+  export type ProjectRaidItemUncheckedCreateInput = {
+    id?: string
+    projectId: string
+    type: $Enums.RaidType
+    title: string
+    description?: string | null
+    impact?: $Enums.RaidImpact
+    likelihood?: $Enums.RaidLikelihood
+    status?: $Enums.RaidStatus
+    ownerId?: string | null
+    mitigation?: string | null
+    dueDate?: Date | string | null
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectRaidItemUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumRaidTypeFieldUpdateOperationsInput | $Enums.RaidType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impact?: EnumRaidImpactFieldUpdateOperationsInput | $Enums.RaidImpact
+    likelihood?: EnumRaidLikelihoodFieldUpdateOperationsInput | $Enums.RaidLikelihood
+    status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
+    mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutRaidItemsNestedInput
+    owner?: UserUpdateOneWithoutRaidItemsOwnedNestedInput
+    createdBy?: UserUpdateOneWithoutRaidItemsCreatedNestedInput
+  }
+
+  export type ProjectRaidItemUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    type?: EnumRaidTypeFieldUpdateOperationsInput | $Enums.RaidType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impact?: EnumRaidImpactFieldUpdateOperationsInput | $Enums.RaidImpact
+    likelihood?: EnumRaidLikelihoodFieldUpdateOperationsInput | $Enums.RaidLikelihood
+    status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectRaidItemCreateManyInput = {
+    id?: string
+    projectId: string
+    type: $Enums.RaidType
+    title: string
+    description?: string | null
+    impact?: $Enums.RaidImpact
+    likelihood?: $Enums.RaidLikelihood
+    status?: $Enums.RaidStatus
+    ownerId?: string | null
+    mitigation?: string | null
+    dueDate?: Date | string | null
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectRaidItemUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumRaidTypeFieldUpdateOperationsInput | $Enums.RaidType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impact?: EnumRaidImpactFieldUpdateOperationsInput | $Enums.RaidImpact
+    likelihood?: EnumRaidLikelihoodFieldUpdateOperationsInput | $Enums.RaidLikelihood
+    status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
+    mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectRaidItemUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    type?: EnumRaidTypeFieldUpdateOperationsInput | $Enums.RaidType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impact?: EnumRaidImpactFieldUpdateOperationsInput | $Enums.RaidImpact
+    likelihood?: EnumRaidLikelihoodFieldUpdateOperationsInput | $Enums.RaidLikelihood
+    status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PerformanceReviewCreateInput = {
+    id?: string
+    period: $Enums.PerformanceReviewPeriod
+    periodYear: number
+    periodStart: Date | string
+    periodEnd: Date | string
+    status?: $Enums.PerformanceReviewStatus
+    overallRating?: number | null
+    summary?: string | null
+    strengths?: string | null
+    improvements?: string | null
+    goals?: string | null
+    acknowledgement?: string | null
+    submittedAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutPerfReviewsSubjectInput
+    reviewer: UserCreateNestedOneWithoutPerfReviewsAuthoredInput
+    projectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutReviewInput
+  }
+
+  export type PerformanceReviewUncheckedCreateInput = {
+    id?: string
+    userId: string
+    reviewerId: string
+    period: $Enums.PerformanceReviewPeriod
+    periodYear: number
+    periodStart: Date | string
+    periodEnd: Date | string
+    status?: $Enums.PerformanceReviewStatus
+    overallRating?: number | null
+    summary?: string | null
+    strengths?: string | null
+    improvements?: string | null
+    goals?: string | null
+    acknowledgement?: string | null
+    submittedAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutReviewInput
+  }
+
+  export type PerformanceReviewUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    period?: EnumPerformanceReviewPeriodFieldUpdateOperationsInput | $Enums.PerformanceReviewPeriod
+    periodYear?: IntFieldUpdateOperationsInput | number
+    periodStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    periodEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPerformanceReviewStatusFieldUpdateOperationsInput | $Enums.PerformanceReviewStatus
+    overallRating?: NullableIntFieldUpdateOperationsInput | number | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvements?: NullableStringFieldUpdateOperationsInput | string | null
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPerfReviewsSubjectNestedInput
+    reviewer?: UserUpdateOneRequiredWithoutPerfReviewsAuthoredNestedInput
+    projectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutReviewNestedInput
+  }
+
+  export type PerformanceReviewUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    reviewerId?: StringFieldUpdateOperationsInput | string
+    period?: EnumPerformanceReviewPeriodFieldUpdateOperationsInput | $Enums.PerformanceReviewPeriod
+    periodYear?: IntFieldUpdateOperationsInput | number
+    periodStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    periodEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPerformanceReviewStatusFieldUpdateOperationsInput | $Enums.PerformanceReviewStatus
+    overallRating?: NullableIntFieldUpdateOperationsInput | number | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvements?: NullableStringFieldUpdateOperationsInput | string | null
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutReviewNestedInput
+  }
+
+  export type PerformanceReviewCreateManyInput = {
+    id?: string
+    userId: string
+    reviewerId: string
+    period: $Enums.PerformanceReviewPeriod
+    periodYear: number
+    periodStart: Date | string
+    periodEnd: Date | string
+    status?: $Enums.PerformanceReviewStatus
+    overallRating?: number | null
+    summary?: string | null
+    strengths?: string | null
+    improvements?: string | null
+    goals?: string | null
+    acknowledgement?: string | null
+    submittedAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PerformanceReviewUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    period?: EnumPerformanceReviewPeriodFieldUpdateOperationsInput | $Enums.PerformanceReviewPeriod
+    periodYear?: IntFieldUpdateOperationsInput | number
+    periodStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    periodEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPerformanceReviewStatusFieldUpdateOperationsInput | $Enums.PerformanceReviewStatus
+    overallRating?: NullableIntFieldUpdateOperationsInput | number | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvements?: NullableStringFieldUpdateOperationsInput | string | null
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PerformanceReviewUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    reviewerId?: StringFieldUpdateOperationsInput | string
+    period?: EnumPerformanceReviewPeriodFieldUpdateOperationsInput | $Enums.PerformanceReviewPeriod
+    periodYear?: IntFieldUpdateOperationsInput | number
+    periodStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    periodEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPerformanceReviewStatusFieldUpdateOperationsInput | $Enums.PerformanceReviewStatus
+    overallRating?: NullableIntFieldUpdateOperationsInput | number | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvements?: NullableStringFieldUpdateOperationsInput | string | null
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PerformanceReviewProjectRatingCreateInput = {
+    id?: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    review: PerformanceReviewCreateNestedOneWithoutProjectRatingsInput
+    project: ProjectCreateNestedOneWithoutPerfProjectRatingsInput
+    ratedBy: UserCreateNestedOneWithoutPerfProjectRatingsGivenInput
+  }
+
+  export type PerformanceReviewProjectRatingUncheckedCreateInput = {
+    id?: string
+    reviewId: string
+    projectId: string
+    ratedById: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PerformanceReviewProjectRatingUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    review?: PerformanceReviewUpdateOneRequiredWithoutProjectRatingsNestedInput
+    project?: ProjectUpdateOneRequiredWithoutPerfProjectRatingsNestedInput
+    ratedBy?: UserUpdateOneRequiredWithoutPerfProjectRatingsGivenNestedInput
+  }
+
+  export type PerformanceReviewProjectRatingUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    ratedById?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PerformanceReviewProjectRatingCreateManyInput = {
+    id?: string
+    reviewId: string
+    projectId: string
+    ratedById: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PerformanceReviewProjectRatingUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PerformanceReviewProjectRatingUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    ratedById?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -35025,6 +39753,24 @@ export namespace Prisma {
     none?: TaskTemplateWhereInput
   }
 
+  export type ProjectRaidItemListRelationFilter = {
+    every?: ProjectRaidItemWhereInput
+    some?: ProjectRaidItemWhereInput
+    none?: ProjectRaidItemWhereInput
+  }
+
+  export type PerformanceReviewListRelationFilter = {
+    every?: PerformanceReviewWhereInput
+    some?: PerformanceReviewWhereInput
+    none?: PerformanceReviewWhereInput
+  }
+
+  export type PerformanceReviewProjectRatingListRelationFilter = {
+    every?: PerformanceReviewProjectRatingWhereInput
+    some?: PerformanceReviewProjectRatingWhereInput
+    none?: PerformanceReviewProjectRatingWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -35095,6 +39841,18 @@ export namespace Prisma {
   }
 
   export type TaskTemplateOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProjectRaidItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PerformanceReviewOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PerformanceReviewProjectRatingOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -36691,6 +41449,319 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type EnumRaidTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaidType | EnumRaidTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.RaidType[] | ListEnumRaidTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaidType[] | ListEnumRaidTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaidTypeFilter<$PrismaModel> | $Enums.RaidType
+  }
+
+  export type EnumRaidImpactFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaidImpact | EnumRaidImpactFieldRefInput<$PrismaModel>
+    in?: $Enums.RaidImpact[] | ListEnumRaidImpactFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaidImpact[] | ListEnumRaidImpactFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaidImpactFilter<$PrismaModel> | $Enums.RaidImpact
+  }
+
+  export type EnumRaidLikelihoodFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaidLikelihood | EnumRaidLikelihoodFieldRefInput<$PrismaModel>
+    in?: $Enums.RaidLikelihood[] | ListEnumRaidLikelihoodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaidLikelihood[] | ListEnumRaidLikelihoodFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaidLikelihoodFilter<$PrismaModel> | $Enums.RaidLikelihood
+  }
+
+  export type EnumRaidStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaidStatus | EnumRaidStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.RaidStatus[] | ListEnumRaidStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaidStatus[] | ListEnumRaidStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaidStatusFilter<$PrismaModel> | $Enums.RaidStatus
+  }
+
+  export type ProjectRaidItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    impact?: SortOrder
+    likelihood?: SortOrder
+    status?: SortOrder
+    ownerId?: SortOrder
+    mitigation?: SortOrder
+    dueDate?: SortOrder
+    closedAt?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProjectRaidItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    impact?: SortOrder
+    likelihood?: SortOrder
+    status?: SortOrder
+    ownerId?: SortOrder
+    mitigation?: SortOrder
+    dueDate?: SortOrder
+    closedAt?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProjectRaidItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    impact?: SortOrder
+    likelihood?: SortOrder
+    status?: SortOrder
+    ownerId?: SortOrder
+    mitigation?: SortOrder
+    dueDate?: SortOrder
+    closedAt?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumRaidTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaidType | EnumRaidTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.RaidType[] | ListEnumRaidTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaidType[] | ListEnumRaidTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaidTypeWithAggregatesFilter<$PrismaModel> | $Enums.RaidType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRaidTypeFilter<$PrismaModel>
+    _max?: NestedEnumRaidTypeFilter<$PrismaModel>
+  }
+
+  export type EnumRaidImpactWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaidImpact | EnumRaidImpactFieldRefInput<$PrismaModel>
+    in?: $Enums.RaidImpact[] | ListEnumRaidImpactFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaidImpact[] | ListEnumRaidImpactFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaidImpactWithAggregatesFilter<$PrismaModel> | $Enums.RaidImpact
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRaidImpactFilter<$PrismaModel>
+    _max?: NestedEnumRaidImpactFilter<$PrismaModel>
+  }
+
+  export type EnumRaidLikelihoodWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaidLikelihood | EnumRaidLikelihoodFieldRefInput<$PrismaModel>
+    in?: $Enums.RaidLikelihood[] | ListEnumRaidLikelihoodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaidLikelihood[] | ListEnumRaidLikelihoodFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaidLikelihoodWithAggregatesFilter<$PrismaModel> | $Enums.RaidLikelihood
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRaidLikelihoodFilter<$PrismaModel>
+    _max?: NestedEnumRaidLikelihoodFilter<$PrismaModel>
+  }
+
+  export type EnumRaidStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaidStatus | EnumRaidStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.RaidStatus[] | ListEnumRaidStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaidStatus[] | ListEnumRaidStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaidStatusWithAggregatesFilter<$PrismaModel> | $Enums.RaidStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRaidStatusFilter<$PrismaModel>
+    _max?: NestedEnumRaidStatusFilter<$PrismaModel>
+  }
+
+  export type EnumPerformanceReviewPeriodFilter<$PrismaModel = never> = {
+    equals?: $Enums.PerformanceReviewPeriod | EnumPerformanceReviewPeriodFieldRefInput<$PrismaModel>
+    in?: $Enums.PerformanceReviewPeriod[] | ListEnumPerformanceReviewPeriodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PerformanceReviewPeriod[] | ListEnumPerformanceReviewPeriodFieldRefInput<$PrismaModel>
+    not?: NestedEnumPerformanceReviewPeriodFilter<$PrismaModel> | $Enums.PerformanceReviewPeriod
+  }
+
+  export type EnumPerformanceReviewStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PerformanceReviewStatus | EnumPerformanceReviewStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PerformanceReviewStatus[] | ListEnumPerformanceReviewStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PerformanceReviewStatus[] | ListEnumPerformanceReviewStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPerformanceReviewStatusFilter<$PrismaModel> | $Enums.PerformanceReviewStatus
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type PerformanceReviewUserIdPeriodPeriodYearCompoundUniqueInput = {
+    userId: string
+    period: $Enums.PerformanceReviewPeriod
+    periodYear: number
+  }
+
+  export type PerformanceReviewCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    reviewerId?: SortOrder
+    period?: SortOrder
+    periodYear?: SortOrder
+    periodStart?: SortOrder
+    periodEnd?: SortOrder
+    status?: SortOrder
+    overallRating?: SortOrder
+    summary?: SortOrder
+    strengths?: SortOrder
+    improvements?: SortOrder
+    goals?: SortOrder
+    acknowledgement?: SortOrder
+    submittedAt?: SortOrder
+    acknowledgedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PerformanceReviewAvgOrderByAggregateInput = {
+    periodYear?: SortOrder
+    overallRating?: SortOrder
+  }
+
+  export type PerformanceReviewMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    reviewerId?: SortOrder
+    period?: SortOrder
+    periodYear?: SortOrder
+    periodStart?: SortOrder
+    periodEnd?: SortOrder
+    status?: SortOrder
+    overallRating?: SortOrder
+    summary?: SortOrder
+    strengths?: SortOrder
+    improvements?: SortOrder
+    goals?: SortOrder
+    acknowledgement?: SortOrder
+    submittedAt?: SortOrder
+    acknowledgedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PerformanceReviewMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    reviewerId?: SortOrder
+    period?: SortOrder
+    periodYear?: SortOrder
+    periodStart?: SortOrder
+    periodEnd?: SortOrder
+    status?: SortOrder
+    overallRating?: SortOrder
+    summary?: SortOrder
+    strengths?: SortOrder
+    improvements?: SortOrder
+    goals?: SortOrder
+    acknowledgement?: SortOrder
+    submittedAt?: SortOrder
+    acknowledgedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PerformanceReviewSumOrderByAggregateInput = {
+    periodYear?: SortOrder
+    overallRating?: SortOrder
+  }
+
+  export type EnumPerformanceReviewPeriodWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PerformanceReviewPeriod | EnumPerformanceReviewPeriodFieldRefInput<$PrismaModel>
+    in?: $Enums.PerformanceReviewPeriod[] | ListEnumPerformanceReviewPeriodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PerformanceReviewPeriod[] | ListEnumPerformanceReviewPeriodFieldRefInput<$PrismaModel>
+    not?: NestedEnumPerformanceReviewPeriodWithAggregatesFilter<$PrismaModel> | $Enums.PerformanceReviewPeriod
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPerformanceReviewPeriodFilter<$PrismaModel>
+    _max?: NestedEnumPerformanceReviewPeriodFilter<$PrismaModel>
+  }
+
+  export type EnumPerformanceReviewStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PerformanceReviewStatus | EnumPerformanceReviewStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PerformanceReviewStatus[] | ListEnumPerformanceReviewStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PerformanceReviewStatus[] | ListEnumPerformanceReviewStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPerformanceReviewStatusWithAggregatesFilter<$PrismaModel> | $Enums.PerformanceReviewStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPerformanceReviewStatusFilter<$PrismaModel>
+    _max?: NestedEnumPerformanceReviewStatusFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type PerformanceReviewRelationFilter = {
+    is?: PerformanceReviewWhereInput
+    isNot?: PerformanceReviewWhereInput
+  }
+
+  export type PerformanceReviewProjectRatingReviewIdProjectIdCompoundUniqueInput = {
+    reviewId: string
+    projectId: string
+  }
+
+  export type PerformanceReviewProjectRatingCountOrderByAggregateInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    projectId?: SortOrder
+    ratedById?: SortOrder
+    rating?: SortOrder
+    comment?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PerformanceReviewProjectRatingAvgOrderByAggregateInput = {
+    rating?: SortOrder
+  }
+
+  export type PerformanceReviewProjectRatingMaxOrderByAggregateInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    projectId?: SortOrder
+    ratedById?: SortOrder
+    rating?: SortOrder
+    comment?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PerformanceReviewProjectRatingMinOrderByAggregateInput = {
+    id?: SortOrder
+    reviewId?: SortOrder
+    projectId?: SortOrder
+    ratedById?: SortOrder
+    rating?: SortOrder
+    comment?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PerformanceReviewProjectRatingSumOrderByAggregateInput = {
+    rating?: SortOrder
+  }
+
   export type BusinessUnitCreateNestedOneWithoutUsersInput = {
     create?: XOR<BusinessUnitCreateWithoutUsersInput, BusinessUnitUncheckedCreateWithoutUsersInput>
     connectOrCreate?: BusinessUnitCreateOrConnectWithoutUsersInput
@@ -36884,6 +41955,41 @@ export namespace Prisma {
     connect?: TaskTemplateWhereUniqueInput | TaskTemplateWhereUniqueInput[]
   }
 
+  export type ProjectRaidItemCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<ProjectRaidItemCreateWithoutOwnerInput, ProjectRaidItemUncheckedCreateWithoutOwnerInput> | ProjectRaidItemCreateWithoutOwnerInput[] | ProjectRaidItemUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: ProjectRaidItemCreateOrConnectWithoutOwnerInput | ProjectRaidItemCreateOrConnectWithoutOwnerInput[]
+    createMany?: ProjectRaidItemCreateManyOwnerInputEnvelope
+    connect?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+  }
+
+  export type ProjectRaidItemCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<ProjectRaidItemCreateWithoutCreatedByInput, ProjectRaidItemUncheckedCreateWithoutCreatedByInput> | ProjectRaidItemCreateWithoutCreatedByInput[] | ProjectRaidItemUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: ProjectRaidItemCreateOrConnectWithoutCreatedByInput | ProjectRaidItemCreateOrConnectWithoutCreatedByInput[]
+    createMany?: ProjectRaidItemCreateManyCreatedByInputEnvelope
+    connect?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+  }
+
+  export type PerformanceReviewCreateNestedManyWithoutUserInput = {
+    create?: XOR<PerformanceReviewCreateWithoutUserInput, PerformanceReviewUncheckedCreateWithoutUserInput> | PerformanceReviewCreateWithoutUserInput[] | PerformanceReviewUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PerformanceReviewCreateOrConnectWithoutUserInput | PerformanceReviewCreateOrConnectWithoutUserInput[]
+    createMany?: PerformanceReviewCreateManyUserInputEnvelope
+    connect?: PerformanceReviewWhereUniqueInput | PerformanceReviewWhereUniqueInput[]
+  }
+
+  export type PerformanceReviewCreateNestedManyWithoutReviewerInput = {
+    create?: XOR<PerformanceReviewCreateWithoutReviewerInput, PerformanceReviewUncheckedCreateWithoutReviewerInput> | PerformanceReviewCreateWithoutReviewerInput[] | PerformanceReviewUncheckedCreateWithoutReviewerInput[]
+    connectOrCreate?: PerformanceReviewCreateOrConnectWithoutReviewerInput | PerformanceReviewCreateOrConnectWithoutReviewerInput[]
+    createMany?: PerformanceReviewCreateManyReviewerInputEnvelope
+    connect?: PerformanceReviewWhereUniqueInput | PerformanceReviewWhereUniqueInput[]
+  }
+
+  export type PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput = {
+    create?: XOR<PerformanceReviewProjectRatingCreateWithoutRatedByInput, PerformanceReviewProjectRatingUncheckedCreateWithoutRatedByInput> | PerformanceReviewProjectRatingCreateWithoutRatedByInput[] | PerformanceReviewProjectRatingUncheckedCreateWithoutRatedByInput[]
+    connectOrCreate?: PerformanceReviewProjectRatingCreateOrConnectWithoutRatedByInput | PerformanceReviewProjectRatingCreateOrConnectWithoutRatedByInput[]
+    createMany?: PerformanceReviewProjectRatingCreateManyRatedByInputEnvelope
+    connect?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutManagerInput = {
     create?: XOR<UserCreateWithoutManagerInput, UserUncheckedCreateWithoutManagerInput> | UserCreateWithoutManagerInput[] | UserUncheckedCreateWithoutManagerInput[]
     connectOrCreate?: UserCreateOrConnectWithoutManagerInput | UserCreateOrConnectWithoutManagerInput[]
@@ -37057,6 +42163,41 @@ export namespace Prisma {
     connectOrCreate?: TaskTemplateCreateOrConnectWithoutCreatedByInput | TaskTemplateCreateOrConnectWithoutCreatedByInput[]
     createMany?: TaskTemplateCreateManyCreatedByInputEnvelope
     connect?: TaskTemplateWhereUniqueInput | TaskTemplateWhereUniqueInput[]
+  }
+
+  export type ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<ProjectRaidItemCreateWithoutOwnerInput, ProjectRaidItemUncheckedCreateWithoutOwnerInput> | ProjectRaidItemCreateWithoutOwnerInput[] | ProjectRaidItemUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: ProjectRaidItemCreateOrConnectWithoutOwnerInput | ProjectRaidItemCreateOrConnectWithoutOwnerInput[]
+    createMany?: ProjectRaidItemCreateManyOwnerInputEnvelope
+    connect?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+  }
+
+  export type ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<ProjectRaidItemCreateWithoutCreatedByInput, ProjectRaidItemUncheckedCreateWithoutCreatedByInput> | ProjectRaidItemCreateWithoutCreatedByInput[] | ProjectRaidItemUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: ProjectRaidItemCreateOrConnectWithoutCreatedByInput | ProjectRaidItemCreateOrConnectWithoutCreatedByInput[]
+    createMany?: ProjectRaidItemCreateManyCreatedByInputEnvelope
+    connect?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+  }
+
+  export type PerformanceReviewUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<PerformanceReviewCreateWithoutUserInput, PerformanceReviewUncheckedCreateWithoutUserInput> | PerformanceReviewCreateWithoutUserInput[] | PerformanceReviewUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PerformanceReviewCreateOrConnectWithoutUserInput | PerformanceReviewCreateOrConnectWithoutUserInput[]
+    createMany?: PerformanceReviewCreateManyUserInputEnvelope
+    connect?: PerformanceReviewWhereUniqueInput | PerformanceReviewWhereUniqueInput[]
+  }
+
+  export type PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput = {
+    create?: XOR<PerformanceReviewCreateWithoutReviewerInput, PerformanceReviewUncheckedCreateWithoutReviewerInput> | PerformanceReviewCreateWithoutReviewerInput[] | PerformanceReviewUncheckedCreateWithoutReviewerInput[]
+    connectOrCreate?: PerformanceReviewCreateOrConnectWithoutReviewerInput | PerformanceReviewCreateOrConnectWithoutReviewerInput[]
+    createMany?: PerformanceReviewCreateManyReviewerInputEnvelope
+    connect?: PerformanceReviewWhereUniqueInput | PerformanceReviewWhereUniqueInput[]
+  }
+
+  export type PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput = {
+    create?: XOR<PerformanceReviewProjectRatingCreateWithoutRatedByInput, PerformanceReviewProjectRatingUncheckedCreateWithoutRatedByInput> | PerformanceReviewProjectRatingCreateWithoutRatedByInput[] | PerformanceReviewProjectRatingUncheckedCreateWithoutRatedByInput[]
+    connectOrCreate?: PerformanceReviewProjectRatingCreateOrConnectWithoutRatedByInput | PerformanceReviewProjectRatingCreateOrConnectWithoutRatedByInput[]
+    createMany?: PerformanceReviewProjectRatingCreateManyRatedByInputEnvelope
+    connect?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -37483,6 +42624,76 @@ export namespace Prisma {
     deleteMany?: TaskTemplateScalarWhereInput | TaskTemplateScalarWhereInput[]
   }
 
+  export type ProjectRaidItemUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<ProjectRaidItemCreateWithoutOwnerInput, ProjectRaidItemUncheckedCreateWithoutOwnerInput> | ProjectRaidItemCreateWithoutOwnerInput[] | ProjectRaidItemUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: ProjectRaidItemCreateOrConnectWithoutOwnerInput | ProjectRaidItemCreateOrConnectWithoutOwnerInput[]
+    upsert?: ProjectRaidItemUpsertWithWhereUniqueWithoutOwnerInput | ProjectRaidItemUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: ProjectRaidItemCreateManyOwnerInputEnvelope
+    set?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    disconnect?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    delete?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    connect?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    update?: ProjectRaidItemUpdateWithWhereUniqueWithoutOwnerInput | ProjectRaidItemUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: ProjectRaidItemUpdateManyWithWhereWithoutOwnerInput | ProjectRaidItemUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: ProjectRaidItemScalarWhereInput | ProjectRaidItemScalarWhereInput[]
+  }
+
+  export type ProjectRaidItemUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<ProjectRaidItemCreateWithoutCreatedByInput, ProjectRaidItemUncheckedCreateWithoutCreatedByInput> | ProjectRaidItemCreateWithoutCreatedByInput[] | ProjectRaidItemUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: ProjectRaidItemCreateOrConnectWithoutCreatedByInput | ProjectRaidItemCreateOrConnectWithoutCreatedByInput[]
+    upsert?: ProjectRaidItemUpsertWithWhereUniqueWithoutCreatedByInput | ProjectRaidItemUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: ProjectRaidItemCreateManyCreatedByInputEnvelope
+    set?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    disconnect?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    delete?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    connect?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    update?: ProjectRaidItemUpdateWithWhereUniqueWithoutCreatedByInput | ProjectRaidItemUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: ProjectRaidItemUpdateManyWithWhereWithoutCreatedByInput | ProjectRaidItemUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: ProjectRaidItemScalarWhereInput | ProjectRaidItemScalarWhereInput[]
+  }
+
+  export type PerformanceReviewUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PerformanceReviewCreateWithoutUserInput, PerformanceReviewUncheckedCreateWithoutUserInput> | PerformanceReviewCreateWithoutUserInput[] | PerformanceReviewUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PerformanceReviewCreateOrConnectWithoutUserInput | PerformanceReviewCreateOrConnectWithoutUserInput[]
+    upsert?: PerformanceReviewUpsertWithWhereUniqueWithoutUserInput | PerformanceReviewUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PerformanceReviewCreateManyUserInputEnvelope
+    set?: PerformanceReviewWhereUniqueInput | PerformanceReviewWhereUniqueInput[]
+    disconnect?: PerformanceReviewWhereUniqueInput | PerformanceReviewWhereUniqueInput[]
+    delete?: PerformanceReviewWhereUniqueInput | PerformanceReviewWhereUniqueInput[]
+    connect?: PerformanceReviewWhereUniqueInput | PerformanceReviewWhereUniqueInput[]
+    update?: PerformanceReviewUpdateWithWhereUniqueWithoutUserInput | PerformanceReviewUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PerformanceReviewUpdateManyWithWhereWithoutUserInput | PerformanceReviewUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PerformanceReviewScalarWhereInput | PerformanceReviewScalarWhereInput[]
+  }
+
+  export type PerformanceReviewUpdateManyWithoutReviewerNestedInput = {
+    create?: XOR<PerformanceReviewCreateWithoutReviewerInput, PerformanceReviewUncheckedCreateWithoutReviewerInput> | PerformanceReviewCreateWithoutReviewerInput[] | PerformanceReviewUncheckedCreateWithoutReviewerInput[]
+    connectOrCreate?: PerformanceReviewCreateOrConnectWithoutReviewerInput | PerformanceReviewCreateOrConnectWithoutReviewerInput[]
+    upsert?: PerformanceReviewUpsertWithWhereUniqueWithoutReviewerInput | PerformanceReviewUpsertWithWhereUniqueWithoutReviewerInput[]
+    createMany?: PerformanceReviewCreateManyReviewerInputEnvelope
+    set?: PerformanceReviewWhereUniqueInput | PerformanceReviewWhereUniqueInput[]
+    disconnect?: PerformanceReviewWhereUniqueInput | PerformanceReviewWhereUniqueInput[]
+    delete?: PerformanceReviewWhereUniqueInput | PerformanceReviewWhereUniqueInput[]
+    connect?: PerformanceReviewWhereUniqueInput | PerformanceReviewWhereUniqueInput[]
+    update?: PerformanceReviewUpdateWithWhereUniqueWithoutReviewerInput | PerformanceReviewUpdateWithWhereUniqueWithoutReviewerInput[]
+    updateMany?: PerformanceReviewUpdateManyWithWhereWithoutReviewerInput | PerformanceReviewUpdateManyWithWhereWithoutReviewerInput[]
+    deleteMany?: PerformanceReviewScalarWhereInput | PerformanceReviewScalarWhereInput[]
+  }
+
+  export type PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput = {
+    create?: XOR<PerformanceReviewProjectRatingCreateWithoutRatedByInput, PerformanceReviewProjectRatingUncheckedCreateWithoutRatedByInput> | PerformanceReviewProjectRatingCreateWithoutRatedByInput[] | PerformanceReviewProjectRatingUncheckedCreateWithoutRatedByInput[]
+    connectOrCreate?: PerformanceReviewProjectRatingCreateOrConnectWithoutRatedByInput | PerformanceReviewProjectRatingCreateOrConnectWithoutRatedByInput[]
+    upsert?: PerformanceReviewProjectRatingUpsertWithWhereUniqueWithoutRatedByInput | PerformanceReviewProjectRatingUpsertWithWhereUniqueWithoutRatedByInput[]
+    createMany?: PerformanceReviewProjectRatingCreateManyRatedByInputEnvelope
+    set?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    disconnect?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    delete?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    connect?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    update?: PerformanceReviewProjectRatingUpdateWithWhereUniqueWithoutRatedByInput | PerformanceReviewProjectRatingUpdateWithWhereUniqueWithoutRatedByInput[]
+    updateMany?: PerformanceReviewProjectRatingUpdateManyWithWhereWithoutRatedByInput | PerformanceReviewProjectRatingUpdateManyWithWhereWithoutRatedByInput[]
+    deleteMany?: PerformanceReviewProjectRatingScalarWhereInput | PerformanceReviewProjectRatingScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutManagerNestedInput = {
     create?: XOR<UserCreateWithoutManagerInput, UserUncheckedCreateWithoutManagerInput> | UserCreateWithoutManagerInput[] | UserUncheckedCreateWithoutManagerInput[]
     connectOrCreate?: UserCreateOrConnectWithoutManagerInput | UserCreateOrConnectWithoutManagerInput[]
@@ -37833,6 +43044,76 @@ export namespace Prisma {
     deleteMany?: TaskTemplateScalarWhereInput | TaskTemplateScalarWhereInput[]
   }
 
+  export type ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<ProjectRaidItemCreateWithoutOwnerInput, ProjectRaidItemUncheckedCreateWithoutOwnerInput> | ProjectRaidItemCreateWithoutOwnerInput[] | ProjectRaidItemUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: ProjectRaidItemCreateOrConnectWithoutOwnerInput | ProjectRaidItemCreateOrConnectWithoutOwnerInput[]
+    upsert?: ProjectRaidItemUpsertWithWhereUniqueWithoutOwnerInput | ProjectRaidItemUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: ProjectRaidItemCreateManyOwnerInputEnvelope
+    set?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    disconnect?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    delete?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    connect?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    update?: ProjectRaidItemUpdateWithWhereUniqueWithoutOwnerInput | ProjectRaidItemUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: ProjectRaidItemUpdateManyWithWhereWithoutOwnerInput | ProjectRaidItemUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: ProjectRaidItemScalarWhereInput | ProjectRaidItemScalarWhereInput[]
+  }
+
+  export type ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<ProjectRaidItemCreateWithoutCreatedByInput, ProjectRaidItemUncheckedCreateWithoutCreatedByInput> | ProjectRaidItemCreateWithoutCreatedByInput[] | ProjectRaidItemUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: ProjectRaidItemCreateOrConnectWithoutCreatedByInput | ProjectRaidItemCreateOrConnectWithoutCreatedByInput[]
+    upsert?: ProjectRaidItemUpsertWithWhereUniqueWithoutCreatedByInput | ProjectRaidItemUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: ProjectRaidItemCreateManyCreatedByInputEnvelope
+    set?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    disconnect?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    delete?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    connect?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    update?: ProjectRaidItemUpdateWithWhereUniqueWithoutCreatedByInput | ProjectRaidItemUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: ProjectRaidItemUpdateManyWithWhereWithoutCreatedByInput | ProjectRaidItemUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: ProjectRaidItemScalarWhereInput | ProjectRaidItemScalarWhereInput[]
+  }
+
+  export type PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PerformanceReviewCreateWithoutUserInput, PerformanceReviewUncheckedCreateWithoutUserInput> | PerformanceReviewCreateWithoutUserInput[] | PerformanceReviewUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PerformanceReviewCreateOrConnectWithoutUserInput | PerformanceReviewCreateOrConnectWithoutUserInput[]
+    upsert?: PerformanceReviewUpsertWithWhereUniqueWithoutUserInput | PerformanceReviewUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PerformanceReviewCreateManyUserInputEnvelope
+    set?: PerformanceReviewWhereUniqueInput | PerformanceReviewWhereUniqueInput[]
+    disconnect?: PerformanceReviewWhereUniqueInput | PerformanceReviewWhereUniqueInput[]
+    delete?: PerformanceReviewWhereUniqueInput | PerformanceReviewWhereUniqueInput[]
+    connect?: PerformanceReviewWhereUniqueInput | PerformanceReviewWhereUniqueInput[]
+    update?: PerformanceReviewUpdateWithWhereUniqueWithoutUserInput | PerformanceReviewUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PerformanceReviewUpdateManyWithWhereWithoutUserInput | PerformanceReviewUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PerformanceReviewScalarWhereInput | PerformanceReviewScalarWhereInput[]
+  }
+
+  export type PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput = {
+    create?: XOR<PerformanceReviewCreateWithoutReviewerInput, PerformanceReviewUncheckedCreateWithoutReviewerInput> | PerformanceReviewCreateWithoutReviewerInput[] | PerformanceReviewUncheckedCreateWithoutReviewerInput[]
+    connectOrCreate?: PerformanceReviewCreateOrConnectWithoutReviewerInput | PerformanceReviewCreateOrConnectWithoutReviewerInput[]
+    upsert?: PerformanceReviewUpsertWithWhereUniqueWithoutReviewerInput | PerformanceReviewUpsertWithWhereUniqueWithoutReviewerInput[]
+    createMany?: PerformanceReviewCreateManyReviewerInputEnvelope
+    set?: PerformanceReviewWhereUniqueInput | PerformanceReviewWhereUniqueInput[]
+    disconnect?: PerformanceReviewWhereUniqueInput | PerformanceReviewWhereUniqueInput[]
+    delete?: PerformanceReviewWhereUniqueInput | PerformanceReviewWhereUniqueInput[]
+    connect?: PerformanceReviewWhereUniqueInput | PerformanceReviewWhereUniqueInput[]
+    update?: PerformanceReviewUpdateWithWhereUniqueWithoutReviewerInput | PerformanceReviewUpdateWithWhereUniqueWithoutReviewerInput[]
+    updateMany?: PerformanceReviewUpdateManyWithWhereWithoutReviewerInput | PerformanceReviewUpdateManyWithWhereWithoutReviewerInput[]
+    deleteMany?: PerformanceReviewScalarWhereInput | PerformanceReviewScalarWhereInput[]
+  }
+
+  export type PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput = {
+    create?: XOR<PerformanceReviewProjectRatingCreateWithoutRatedByInput, PerformanceReviewProjectRatingUncheckedCreateWithoutRatedByInput> | PerformanceReviewProjectRatingCreateWithoutRatedByInput[] | PerformanceReviewProjectRatingUncheckedCreateWithoutRatedByInput[]
+    connectOrCreate?: PerformanceReviewProjectRatingCreateOrConnectWithoutRatedByInput | PerformanceReviewProjectRatingCreateOrConnectWithoutRatedByInput[]
+    upsert?: PerformanceReviewProjectRatingUpsertWithWhereUniqueWithoutRatedByInput | PerformanceReviewProjectRatingUpsertWithWhereUniqueWithoutRatedByInput[]
+    createMany?: PerformanceReviewProjectRatingCreateManyRatedByInputEnvelope
+    set?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    disconnect?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    delete?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    connect?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    update?: PerformanceReviewProjectRatingUpdateWithWhereUniqueWithoutRatedByInput | PerformanceReviewProjectRatingUpdateWithWhereUniqueWithoutRatedByInput[]
+    updateMany?: PerformanceReviewProjectRatingUpdateManyWithWhereWithoutRatedByInput | PerformanceReviewProjectRatingUpdateManyWithWhereWithoutRatedByInput[]
+    deleteMany?: PerformanceReviewProjectRatingScalarWhereInput | PerformanceReviewProjectRatingScalarWhereInput[]
+  }
+
   export type ProjectCreateNestedManyWithoutClientInput = {
     create?: XOR<ProjectCreateWithoutClientInput, ProjectUncheckedCreateWithoutClientInput> | ProjectCreateWithoutClientInput[] | ProjectUncheckedCreateWithoutClientInput[]
     connectOrCreate?: ProjectCreateOrConnectWithoutClientInput | ProjectCreateOrConnectWithoutClientInput[]
@@ -38003,6 +43284,20 @@ export namespace Prisma {
     connect?: BillingMilestoneWhereUniqueInput | BillingMilestoneWhereUniqueInput[]
   }
 
+  export type ProjectRaidItemCreateNestedManyWithoutProjectInput = {
+    create?: XOR<ProjectRaidItemCreateWithoutProjectInput, ProjectRaidItemUncheckedCreateWithoutProjectInput> | ProjectRaidItemCreateWithoutProjectInput[] | ProjectRaidItemUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectRaidItemCreateOrConnectWithoutProjectInput | ProjectRaidItemCreateOrConnectWithoutProjectInput[]
+    createMany?: ProjectRaidItemCreateManyProjectInputEnvelope
+    connect?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+  }
+
+  export type PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput = {
+    create?: XOR<PerformanceReviewProjectRatingCreateWithoutProjectInput, PerformanceReviewProjectRatingUncheckedCreateWithoutProjectInput> | PerformanceReviewProjectRatingCreateWithoutProjectInput[] | PerformanceReviewProjectRatingUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: PerformanceReviewProjectRatingCreateOrConnectWithoutProjectInput | PerformanceReviewProjectRatingCreateOrConnectWithoutProjectInput[]
+    createMany?: PerformanceReviewProjectRatingCreateManyProjectInputEnvelope
+    connect?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+  }
+
   export type ProjectResourceUncheckedCreateNestedManyWithoutProjectInput = {
     create?: XOR<ProjectResourceCreateWithoutProjectInput, ProjectResourceUncheckedCreateWithoutProjectInput> | ProjectResourceCreateWithoutProjectInput[] | ProjectResourceUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: ProjectResourceCreateOrConnectWithoutProjectInput | ProjectResourceCreateOrConnectWithoutProjectInput[]
@@ -38057,6 +43352,20 @@ export namespace Prisma {
     connectOrCreate?: BillingMilestoneCreateOrConnectWithoutProjectInput | BillingMilestoneCreateOrConnectWithoutProjectInput[]
     createMany?: BillingMilestoneCreateManyProjectInputEnvelope
     connect?: BillingMilestoneWhereUniqueInput | BillingMilestoneWhereUniqueInput[]
+  }
+
+  export type ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput = {
+    create?: XOR<ProjectRaidItemCreateWithoutProjectInput, ProjectRaidItemUncheckedCreateWithoutProjectInput> | ProjectRaidItemCreateWithoutProjectInput[] | ProjectRaidItemUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectRaidItemCreateOrConnectWithoutProjectInput | ProjectRaidItemCreateOrConnectWithoutProjectInput[]
+    createMany?: ProjectRaidItemCreateManyProjectInputEnvelope
+    connect?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+  }
+
+  export type PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput = {
+    create?: XOR<PerformanceReviewProjectRatingCreateWithoutProjectInput, PerformanceReviewProjectRatingUncheckedCreateWithoutProjectInput> | PerformanceReviewProjectRatingCreateWithoutProjectInput[] | PerformanceReviewProjectRatingUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: PerformanceReviewProjectRatingCreateOrConnectWithoutProjectInput | PerformanceReviewProjectRatingCreateOrConnectWithoutProjectInput[]
+    createMany?: PerformanceReviewProjectRatingCreateManyProjectInputEnvelope
+    connect?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
   }
 
   export type EnumProjectStatusFieldUpdateOperationsInput = {
@@ -38235,6 +43544,34 @@ export namespace Prisma {
     deleteMany?: BillingMilestoneScalarWhereInput | BillingMilestoneScalarWhereInput[]
   }
 
+  export type ProjectRaidItemUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<ProjectRaidItemCreateWithoutProjectInput, ProjectRaidItemUncheckedCreateWithoutProjectInput> | ProjectRaidItemCreateWithoutProjectInput[] | ProjectRaidItemUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectRaidItemCreateOrConnectWithoutProjectInput | ProjectRaidItemCreateOrConnectWithoutProjectInput[]
+    upsert?: ProjectRaidItemUpsertWithWhereUniqueWithoutProjectInput | ProjectRaidItemUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: ProjectRaidItemCreateManyProjectInputEnvelope
+    set?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    disconnect?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    delete?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    connect?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    update?: ProjectRaidItemUpdateWithWhereUniqueWithoutProjectInput | ProjectRaidItemUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: ProjectRaidItemUpdateManyWithWhereWithoutProjectInput | ProjectRaidItemUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: ProjectRaidItemScalarWhereInput | ProjectRaidItemScalarWhereInput[]
+  }
+
+  export type PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<PerformanceReviewProjectRatingCreateWithoutProjectInput, PerformanceReviewProjectRatingUncheckedCreateWithoutProjectInput> | PerformanceReviewProjectRatingCreateWithoutProjectInput[] | PerformanceReviewProjectRatingUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: PerformanceReviewProjectRatingCreateOrConnectWithoutProjectInput | PerformanceReviewProjectRatingCreateOrConnectWithoutProjectInput[]
+    upsert?: PerformanceReviewProjectRatingUpsertWithWhereUniqueWithoutProjectInput | PerformanceReviewProjectRatingUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: PerformanceReviewProjectRatingCreateManyProjectInputEnvelope
+    set?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    disconnect?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    delete?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    connect?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    update?: PerformanceReviewProjectRatingUpdateWithWhereUniqueWithoutProjectInput | PerformanceReviewProjectRatingUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: PerformanceReviewProjectRatingUpdateManyWithWhereWithoutProjectInput | PerformanceReviewProjectRatingUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: PerformanceReviewProjectRatingScalarWhereInput | PerformanceReviewProjectRatingScalarWhereInput[]
+  }
+
   export type ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput = {
     create?: XOR<ProjectResourceCreateWithoutProjectInput, ProjectResourceUncheckedCreateWithoutProjectInput> | ProjectResourceCreateWithoutProjectInput[] | ProjectResourceUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: ProjectResourceCreateOrConnectWithoutProjectInput | ProjectResourceCreateOrConnectWithoutProjectInput[]
@@ -38345,6 +43682,34 @@ export namespace Prisma {
     update?: BillingMilestoneUpdateWithWhereUniqueWithoutProjectInput | BillingMilestoneUpdateWithWhereUniqueWithoutProjectInput[]
     updateMany?: BillingMilestoneUpdateManyWithWhereWithoutProjectInput | BillingMilestoneUpdateManyWithWhereWithoutProjectInput[]
     deleteMany?: BillingMilestoneScalarWhereInput | BillingMilestoneScalarWhereInput[]
+  }
+
+  export type ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<ProjectRaidItemCreateWithoutProjectInput, ProjectRaidItemUncheckedCreateWithoutProjectInput> | ProjectRaidItemCreateWithoutProjectInput[] | ProjectRaidItemUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectRaidItemCreateOrConnectWithoutProjectInput | ProjectRaidItemCreateOrConnectWithoutProjectInput[]
+    upsert?: ProjectRaidItemUpsertWithWhereUniqueWithoutProjectInput | ProjectRaidItemUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: ProjectRaidItemCreateManyProjectInputEnvelope
+    set?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    disconnect?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    delete?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    connect?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+    update?: ProjectRaidItemUpdateWithWhereUniqueWithoutProjectInput | ProjectRaidItemUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: ProjectRaidItemUpdateManyWithWhereWithoutProjectInput | ProjectRaidItemUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: ProjectRaidItemScalarWhereInput | ProjectRaidItemScalarWhereInput[]
+  }
+
+  export type PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<PerformanceReviewProjectRatingCreateWithoutProjectInput, PerformanceReviewProjectRatingUncheckedCreateWithoutProjectInput> | PerformanceReviewProjectRatingCreateWithoutProjectInput[] | PerformanceReviewProjectRatingUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: PerformanceReviewProjectRatingCreateOrConnectWithoutProjectInput | PerformanceReviewProjectRatingCreateOrConnectWithoutProjectInput[]
+    upsert?: PerformanceReviewProjectRatingUpsertWithWhereUniqueWithoutProjectInput | PerformanceReviewProjectRatingUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: PerformanceReviewProjectRatingCreateManyProjectInputEnvelope
+    set?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    disconnect?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    delete?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    connect?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    update?: PerformanceReviewProjectRatingUpdateWithWhereUniqueWithoutProjectInput | PerformanceReviewProjectRatingUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: PerformanceReviewProjectRatingUpdateManyWithWhereWithoutProjectInput | PerformanceReviewProjectRatingUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: PerformanceReviewProjectRatingScalarWhereInput | PerformanceReviewProjectRatingScalarWhereInput[]
   }
 
   export type ProjectCreateNestedOneWithoutSurveyResponsesInput = {
@@ -39345,6 +44710,196 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutNotificationsInput, UserUpdateWithoutNotificationsInput>, UserUncheckedUpdateWithoutNotificationsInput>
   }
 
+  export type ProjectCreateNestedOneWithoutRaidItemsInput = {
+    create?: XOR<ProjectCreateWithoutRaidItemsInput, ProjectUncheckedCreateWithoutRaidItemsInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutRaidItemsInput
+    connect?: ProjectWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutRaidItemsOwnedInput = {
+    create?: XOR<UserCreateWithoutRaidItemsOwnedInput, UserUncheckedCreateWithoutRaidItemsOwnedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutRaidItemsOwnedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutRaidItemsCreatedInput = {
+    create?: XOR<UserCreateWithoutRaidItemsCreatedInput, UserUncheckedCreateWithoutRaidItemsCreatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutRaidItemsCreatedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumRaidTypeFieldUpdateOperationsInput = {
+    set?: $Enums.RaidType
+  }
+
+  export type EnumRaidImpactFieldUpdateOperationsInput = {
+    set?: $Enums.RaidImpact
+  }
+
+  export type EnumRaidLikelihoodFieldUpdateOperationsInput = {
+    set?: $Enums.RaidLikelihood
+  }
+
+  export type EnumRaidStatusFieldUpdateOperationsInput = {
+    set?: $Enums.RaidStatus
+  }
+
+  export type ProjectUpdateOneRequiredWithoutRaidItemsNestedInput = {
+    create?: XOR<ProjectCreateWithoutRaidItemsInput, ProjectUncheckedCreateWithoutRaidItemsInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutRaidItemsInput
+    upsert?: ProjectUpsertWithoutRaidItemsInput
+    connect?: ProjectWhereUniqueInput
+    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutRaidItemsInput, ProjectUpdateWithoutRaidItemsInput>, ProjectUncheckedUpdateWithoutRaidItemsInput>
+  }
+
+  export type UserUpdateOneWithoutRaidItemsOwnedNestedInput = {
+    create?: XOR<UserCreateWithoutRaidItemsOwnedInput, UserUncheckedCreateWithoutRaidItemsOwnedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutRaidItemsOwnedInput
+    upsert?: UserUpsertWithoutRaidItemsOwnedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutRaidItemsOwnedInput, UserUpdateWithoutRaidItemsOwnedInput>, UserUncheckedUpdateWithoutRaidItemsOwnedInput>
+  }
+
+  export type UserUpdateOneWithoutRaidItemsCreatedNestedInput = {
+    create?: XOR<UserCreateWithoutRaidItemsCreatedInput, UserUncheckedCreateWithoutRaidItemsCreatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutRaidItemsCreatedInput
+    upsert?: UserUpsertWithoutRaidItemsCreatedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutRaidItemsCreatedInput, UserUpdateWithoutRaidItemsCreatedInput>, UserUncheckedUpdateWithoutRaidItemsCreatedInput>
+  }
+
+  export type UserCreateNestedOneWithoutPerfReviewsSubjectInput = {
+    create?: XOR<UserCreateWithoutPerfReviewsSubjectInput, UserUncheckedCreateWithoutPerfReviewsSubjectInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPerfReviewsSubjectInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutPerfReviewsAuthoredInput = {
+    create?: XOR<UserCreateWithoutPerfReviewsAuthoredInput, UserUncheckedCreateWithoutPerfReviewsAuthoredInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPerfReviewsAuthoredInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type PerformanceReviewProjectRatingCreateNestedManyWithoutReviewInput = {
+    create?: XOR<PerformanceReviewProjectRatingCreateWithoutReviewInput, PerformanceReviewProjectRatingUncheckedCreateWithoutReviewInput> | PerformanceReviewProjectRatingCreateWithoutReviewInput[] | PerformanceReviewProjectRatingUncheckedCreateWithoutReviewInput[]
+    connectOrCreate?: PerformanceReviewProjectRatingCreateOrConnectWithoutReviewInput | PerformanceReviewProjectRatingCreateOrConnectWithoutReviewInput[]
+    createMany?: PerformanceReviewProjectRatingCreateManyReviewInputEnvelope
+    connect?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+  }
+
+  export type PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutReviewInput = {
+    create?: XOR<PerformanceReviewProjectRatingCreateWithoutReviewInput, PerformanceReviewProjectRatingUncheckedCreateWithoutReviewInput> | PerformanceReviewProjectRatingCreateWithoutReviewInput[] | PerformanceReviewProjectRatingUncheckedCreateWithoutReviewInput[]
+    connectOrCreate?: PerformanceReviewProjectRatingCreateOrConnectWithoutReviewInput | PerformanceReviewProjectRatingCreateOrConnectWithoutReviewInput[]
+    createMany?: PerformanceReviewProjectRatingCreateManyReviewInputEnvelope
+    connect?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+  }
+
+  export type EnumPerformanceReviewPeriodFieldUpdateOperationsInput = {
+    set?: $Enums.PerformanceReviewPeriod
+  }
+
+  export type EnumPerformanceReviewStatusFieldUpdateOperationsInput = {
+    set?: $Enums.PerformanceReviewStatus
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type UserUpdateOneRequiredWithoutPerfReviewsSubjectNestedInput = {
+    create?: XOR<UserCreateWithoutPerfReviewsSubjectInput, UserUncheckedCreateWithoutPerfReviewsSubjectInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPerfReviewsSubjectInput
+    upsert?: UserUpsertWithoutPerfReviewsSubjectInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPerfReviewsSubjectInput, UserUpdateWithoutPerfReviewsSubjectInput>, UserUncheckedUpdateWithoutPerfReviewsSubjectInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutPerfReviewsAuthoredNestedInput = {
+    create?: XOR<UserCreateWithoutPerfReviewsAuthoredInput, UserUncheckedCreateWithoutPerfReviewsAuthoredInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPerfReviewsAuthoredInput
+    upsert?: UserUpsertWithoutPerfReviewsAuthoredInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPerfReviewsAuthoredInput, UserUpdateWithoutPerfReviewsAuthoredInput>, UserUncheckedUpdateWithoutPerfReviewsAuthoredInput>
+  }
+
+  export type PerformanceReviewProjectRatingUpdateManyWithoutReviewNestedInput = {
+    create?: XOR<PerformanceReviewProjectRatingCreateWithoutReviewInput, PerformanceReviewProjectRatingUncheckedCreateWithoutReviewInput> | PerformanceReviewProjectRatingCreateWithoutReviewInput[] | PerformanceReviewProjectRatingUncheckedCreateWithoutReviewInput[]
+    connectOrCreate?: PerformanceReviewProjectRatingCreateOrConnectWithoutReviewInput | PerformanceReviewProjectRatingCreateOrConnectWithoutReviewInput[]
+    upsert?: PerformanceReviewProjectRatingUpsertWithWhereUniqueWithoutReviewInput | PerformanceReviewProjectRatingUpsertWithWhereUniqueWithoutReviewInput[]
+    createMany?: PerformanceReviewProjectRatingCreateManyReviewInputEnvelope
+    set?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    disconnect?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    delete?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    connect?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    update?: PerformanceReviewProjectRatingUpdateWithWhereUniqueWithoutReviewInput | PerformanceReviewProjectRatingUpdateWithWhereUniqueWithoutReviewInput[]
+    updateMany?: PerformanceReviewProjectRatingUpdateManyWithWhereWithoutReviewInput | PerformanceReviewProjectRatingUpdateManyWithWhereWithoutReviewInput[]
+    deleteMany?: PerformanceReviewProjectRatingScalarWhereInput | PerformanceReviewProjectRatingScalarWhereInput[]
+  }
+
+  export type PerformanceReviewProjectRatingUncheckedUpdateManyWithoutReviewNestedInput = {
+    create?: XOR<PerformanceReviewProjectRatingCreateWithoutReviewInput, PerformanceReviewProjectRatingUncheckedCreateWithoutReviewInput> | PerformanceReviewProjectRatingCreateWithoutReviewInput[] | PerformanceReviewProjectRatingUncheckedCreateWithoutReviewInput[]
+    connectOrCreate?: PerformanceReviewProjectRatingCreateOrConnectWithoutReviewInput | PerformanceReviewProjectRatingCreateOrConnectWithoutReviewInput[]
+    upsert?: PerformanceReviewProjectRatingUpsertWithWhereUniqueWithoutReviewInput | PerformanceReviewProjectRatingUpsertWithWhereUniqueWithoutReviewInput[]
+    createMany?: PerformanceReviewProjectRatingCreateManyReviewInputEnvelope
+    set?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    disconnect?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    delete?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    connect?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+    update?: PerformanceReviewProjectRatingUpdateWithWhereUniqueWithoutReviewInput | PerformanceReviewProjectRatingUpdateWithWhereUniqueWithoutReviewInput[]
+    updateMany?: PerformanceReviewProjectRatingUpdateManyWithWhereWithoutReviewInput | PerformanceReviewProjectRatingUpdateManyWithWhereWithoutReviewInput[]
+    deleteMany?: PerformanceReviewProjectRatingScalarWhereInput | PerformanceReviewProjectRatingScalarWhereInput[]
+  }
+
+  export type PerformanceReviewCreateNestedOneWithoutProjectRatingsInput = {
+    create?: XOR<PerformanceReviewCreateWithoutProjectRatingsInput, PerformanceReviewUncheckedCreateWithoutProjectRatingsInput>
+    connectOrCreate?: PerformanceReviewCreateOrConnectWithoutProjectRatingsInput
+    connect?: PerformanceReviewWhereUniqueInput
+  }
+
+  export type ProjectCreateNestedOneWithoutPerfProjectRatingsInput = {
+    create?: XOR<ProjectCreateWithoutPerfProjectRatingsInput, ProjectUncheckedCreateWithoutPerfProjectRatingsInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutPerfProjectRatingsInput
+    connect?: ProjectWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutPerfProjectRatingsGivenInput = {
+    create?: XOR<UserCreateWithoutPerfProjectRatingsGivenInput, UserUncheckedCreateWithoutPerfProjectRatingsGivenInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPerfProjectRatingsGivenInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type PerformanceReviewUpdateOneRequiredWithoutProjectRatingsNestedInput = {
+    create?: XOR<PerformanceReviewCreateWithoutProjectRatingsInput, PerformanceReviewUncheckedCreateWithoutProjectRatingsInput>
+    connectOrCreate?: PerformanceReviewCreateOrConnectWithoutProjectRatingsInput
+    upsert?: PerformanceReviewUpsertWithoutProjectRatingsInput
+    connect?: PerformanceReviewWhereUniqueInput
+    update?: XOR<XOR<PerformanceReviewUpdateToOneWithWhereWithoutProjectRatingsInput, PerformanceReviewUpdateWithoutProjectRatingsInput>, PerformanceReviewUncheckedUpdateWithoutProjectRatingsInput>
+  }
+
+  export type ProjectUpdateOneRequiredWithoutPerfProjectRatingsNestedInput = {
+    create?: XOR<ProjectCreateWithoutPerfProjectRatingsInput, ProjectUncheckedCreateWithoutPerfProjectRatingsInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutPerfProjectRatingsInput
+    upsert?: ProjectUpsertWithoutPerfProjectRatingsInput
+    connect?: ProjectWhereUniqueInput
+    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutPerfProjectRatingsInput, ProjectUpdateWithoutPerfProjectRatingsInput>, ProjectUncheckedUpdateWithoutPerfProjectRatingsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutPerfProjectRatingsGivenNestedInput = {
+    create?: XOR<UserCreateWithoutPerfProjectRatingsGivenInput, UserUncheckedCreateWithoutPerfProjectRatingsGivenInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPerfProjectRatingsGivenInput
+    upsert?: UserUpsertWithoutPerfProjectRatingsGivenInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPerfProjectRatingsGivenInput, UserUpdateWithoutPerfProjectRatingsGivenInput>, UserUncheckedUpdateWithoutPerfProjectRatingsGivenInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -39810,6 +45365,124 @@ export namespace Prisma {
     _max?: NestedEnumLeaveTypeFilter<$PrismaModel>
   }
 
+  export type NestedEnumRaidTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaidType | EnumRaidTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.RaidType[] | ListEnumRaidTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaidType[] | ListEnumRaidTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaidTypeFilter<$PrismaModel> | $Enums.RaidType
+  }
+
+  export type NestedEnumRaidImpactFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaidImpact | EnumRaidImpactFieldRefInput<$PrismaModel>
+    in?: $Enums.RaidImpact[] | ListEnumRaidImpactFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaidImpact[] | ListEnumRaidImpactFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaidImpactFilter<$PrismaModel> | $Enums.RaidImpact
+  }
+
+  export type NestedEnumRaidLikelihoodFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaidLikelihood | EnumRaidLikelihoodFieldRefInput<$PrismaModel>
+    in?: $Enums.RaidLikelihood[] | ListEnumRaidLikelihoodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaidLikelihood[] | ListEnumRaidLikelihoodFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaidLikelihoodFilter<$PrismaModel> | $Enums.RaidLikelihood
+  }
+
+  export type NestedEnumRaidStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaidStatus | EnumRaidStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.RaidStatus[] | ListEnumRaidStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaidStatus[] | ListEnumRaidStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaidStatusFilter<$PrismaModel> | $Enums.RaidStatus
+  }
+
+  export type NestedEnumRaidTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaidType | EnumRaidTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.RaidType[] | ListEnumRaidTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaidType[] | ListEnumRaidTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaidTypeWithAggregatesFilter<$PrismaModel> | $Enums.RaidType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRaidTypeFilter<$PrismaModel>
+    _max?: NestedEnumRaidTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumRaidImpactWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaidImpact | EnumRaidImpactFieldRefInput<$PrismaModel>
+    in?: $Enums.RaidImpact[] | ListEnumRaidImpactFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaidImpact[] | ListEnumRaidImpactFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaidImpactWithAggregatesFilter<$PrismaModel> | $Enums.RaidImpact
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRaidImpactFilter<$PrismaModel>
+    _max?: NestedEnumRaidImpactFilter<$PrismaModel>
+  }
+
+  export type NestedEnumRaidLikelihoodWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaidLikelihood | EnumRaidLikelihoodFieldRefInput<$PrismaModel>
+    in?: $Enums.RaidLikelihood[] | ListEnumRaidLikelihoodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaidLikelihood[] | ListEnumRaidLikelihoodFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaidLikelihoodWithAggregatesFilter<$PrismaModel> | $Enums.RaidLikelihood
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRaidLikelihoodFilter<$PrismaModel>
+    _max?: NestedEnumRaidLikelihoodFilter<$PrismaModel>
+  }
+
+  export type NestedEnumRaidStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaidStatus | EnumRaidStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.RaidStatus[] | ListEnumRaidStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RaidStatus[] | ListEnumRaidStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumRaidStatusWithAggregatesFilter<$PrismaModel> | $Enums.RaidStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRaidStatusFilter<$PrismaModel>
+    _max?: NestedEnumRaidStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPerformanceReviewPeriodFilter<$PrismaModel = never> = {
+    equals?: $Enums.PerformanceReviewPeriod | EnumPerformanceReviewPeriodFieldRefInput<$PrismaModel>
+    in?: $Enums.PerformanceReviewPeriod[] | ListEnumPerformanceReviewPeriodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PerformanceReviewPeriod[] | ListEnumPerformanceReviewPeriodFieldRefInput<$PrismaModel>
+    not?: NestedEnumPerformanceReviewPeriodFilter<$PrismaModel> | $Enums.PerformanceReviewPeriod
+  }
+
+  export type NestedEnumPerformanceReviewStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PerformanceReviewStatus | EnumPerformanceReviewStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PerformanceReviewStatus[] | ListEnumPerformanceReviewStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PerformanceReviewStatus[] | ListEnumPerformanceReviewStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPerformanceReviewStatusFilter<$PrismaModel> | $Enums.PerformanceReviewStatus
+  }
+
+  export type NestedEnumPerformanceReviewPeriodWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PerformanceReviewPeriod | EnumPerformanceReviewPeriodFieldRefInput<$PrismaModel>
+    in?: $Enums.PerformanceReviewPeriod[] | ListEnumPerformanceReviewPeriodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PerformanceReviewPeriod[] | ListEnumPerformanceReviewPeriodFieldRefInput<$PrismaModel>
+    not?: NestedEnumPerformanceReviewPeriodWithAggregatesFilter<$PrismaModel> | $Enums.PerformanceReviewPeriod
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPerformanceReviewPeriodFilter<$PrismaModel>
+    _max?: NestedEnumPerformanceReviewPeriodFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPerformanceReviewStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PerformanceReviewStatus | EnumPerformanceReviewStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PerformanceReviewStatus[] | ListEnumPerformanceReviewStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PerformanceReviewStatus[] | ListEnumPerformanceReviewStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPerformanceReviewStatusWithAggregatesFilter<$PrismaModel> | $Enums.PerformanceReviewStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPerformanceReviewStatusFilter<$PrismaModel>
+    _max?: NestedEnumPerformanceReviewStatusFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
   export type BusinessUnitCreateWithoutUsersInput = {
     id?: string
     name: string
@@ -39877,6 +45550,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutReportsInput = {
@@ -39921,6 +45599,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutReportsInput = {
@@ -39970,6 +45653,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutManagerInput = {
@@ -40014,6 +45702,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutManagerInput = {
@@ -40068,6 +45761,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutSuperviseesInput = {
@@ -40112,6 +45810,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutSuperviseesInput = {
@@ -40161,6 +45864,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutPrincipalInput = {
@@ -40205,6 +45913,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutPrincipalInput = {
@@ -40323,6 +46036,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutSalesInput = {
@@ -40363,6 +46078,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutSalesInput = {
@@ -40413,6 +46130,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutPmInput = {
@@ -40453,6 +46172,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutPmInput = {
@@ -40503,6 +46224,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutTechnicalWriterInput = {
@@ -40543,6 +46266,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutTechnicalWriterInput = {
@@ -40593,6 +46318,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutAdminProjectInput = {
@@ -40633,6 +46360,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutAdminProjectInput = {
@@ -41279,6 +47008,228 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProjectRaidItemCreateWithoutOwnerInput = {
+    id?: string
+    type: $Enums.RaidType
+    title: string
+    description?: string | null
+    impact?: $Enums.RaidImpact
+    likelihood?: $Enums.RaidLikelihood
+    status?: $Enums.RaidStatus
+    mitigation?: string | null
+    dueDate?: Date | string | null
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutRaidItemsInput
+    createdBy?: UserCreateNestedOneWithoutRaidItemsCreatedInput
+  }
+
+  export type ProjectRaidItemUncheckedCreateWithoutOwnerInput = {
+    id?: string
+    projectId: string
+    type: $Enums.RaidType
+    title: string
+    description?: string | null
+    impact?: $Enums.RaidImpact
+    likelihood?: $Enums.RaidLikelihood
+    status?: $Enums.RaidStatus
+    mitigation?: string | null
+    dueDate?: Date | string | null
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectRaidItemCreateOrConnectWithoutOwnerInput = {
+    where: ProjectRaidItemWhereUniqueInput
+    create: XOR<ProjectRaidItemCreateWithoutOwnerInput, ProjectRaidItemUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type ProjectRaidItemCreateManyOwnerInputEnvelope = {
+    data: ProjectRaidItemCreateManyOwnerInput | ProjectRaidItemCreateManyOwnerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProjectRaidItemCreateWithoutCreatedByInput = {
+    id?: string
+    type: $Enums.RaidType
+    title: string
+    description?: string | null
+    impact?: $Enums.RaidImpact
+    likelihood?: $Enums.RaidLikelihood
+    status?: $Enums.RaidStatus
+    mitigation?: string | null
+    dueDate?: Date | string | null
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutRaidItemsInput
+    owner?: UserCreateNestedOneWithoutRaidItemsOwnedInput
+  }
+
+  export type ProjectRaidItemUncheckedCreateWithoutCreatedByInput = {
+    id?: string
+    projectId: string
+    type: $Enums.RaidType
+    title: string
+    description?: string | null
+    impact?: $Enums.RaidImpact
+    likelihood?: $Enums.RaidLikelihood
+    status?: $Enums.RaidStatus
+    ownerId?: string | null
+    mitigation?: string | null
+    dueDate?: Date | string | null
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectRaidItemCreateOrConnectWithoutCreatedByInput = {
+    where: ProjectRaidItemWhereUniqueInput
+    create: XOR<ProjectRaidItemCreateWithoutCreatedByInput, ProjectRaidItemUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type ProjectRaidItemCreateManyCreatedByInputEnvelope = {
+    data: ProjectRaidItemCreateManyCreatedByInput | ProjectRaidItemCreateManyCreatedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PerformanceReviewCreateWithoutUserInput = {
+    id?: string
+    period: $Enums.PerformanceReviewPeriod
+    periodYear: number
+    periodStart: Date | string
+    periodEnd: Date | string
+    status?: $Enums.PerformanceReviewStatus
+    overallRating?: number | null
+    summary?: string | null
+    strengths?: string | null
+    improvements?: string | null
+    goals?: string | null
+    acknowledgement?: string | null
+    submittedAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviewer: UserCreateNestedOneWithoutPerfReviewsAuthoredInput
+    projectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutReviewInput
+  }
+
+  export type PerformanceReviewUncheckedCreateWithoutUserInput = {
+    id?: string
+    reviewerId: string
+    period: $Enums.PerformanceReviewPeriod
+    periodYear: number
+    periodStart: Date | string
+    periodEnd: Date | string
+    status?: $Enums.PerformanceReviewStatus
+    overallRating?: number | null
+    summary?: string | null
+    strengths?: string | null
+    improvements?: string | null
+    goals?: string | null
+    acknowledgement?: string | null
+    submittedAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutReviewInput
+  }
+
+  export type PerformanceReviewCreateOrConnectWithoutUserInput = {
+    where: PerformanceReviewWhereUniqueInput
+    create: XOR<PerformanceReviewCreateWithoutUserInput, PerformanceReviewUncheckedCreateWithoutUserInput>
+  }
+
+  export type PerformanceReviewCreateManyUserInputEnvelope = {
+    data: PerformanceReviewCreateManyUserInput | PerformanceReviewCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PerformanceReviewCreateWithoutReviewerInput = {
+    id?: string
+    period: $Enums.PerformanceReviewPeriod
+    periodYear: number
+    periodStart: Date | string
+    periodEnd: Date | string
+    status?: $Enums.PerformanceReviewStatus
+    overallRating?: number | null
+    summary?: string | null
+    strengths?: string | null
+    improvements?: string | null
+    goals?: string | null
+    acknowledgement?: string | null
+    submittedAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutPerfReviewsSubjectInput
+    projectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutReviewInput
+  }
+
+  export type PerformanceReviewUncheckedCreateWithoutReviewerInput = {
+    id?: string
+    userId: string
+    period: $Enums.PerformanceReviewPeriod
+    periodYear: number
+    periodStart: Date | string
+    periodEnd: Date | string
+    status?: $Enums.PerformanceReviewStatus
+    overallRating?: number | null
+    summary?: string | null
+    strengths?: string | null
+    improvements?: string | null
+    goals?: string | null
+    acknowledgement?: string | null
+    submittedAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutReviewInput
+  }
+
+  export type PerformanceReviewCreateOrConnectWithoutReviewerInput = {
+    where: PerformanceReviewWhereUniqueInput
+    create: XOR<PerformanceReviewCreateWithoutReviewerInput, PerformanceReviewUncheckedCreateWithoutReviewerInput>
+  }
+
+  export type PerformanceReviewCreateManyReviewerInputEnvelope = {
+    data: PerformanceReviewCreateManyReviewerInput | PerformanceReviewCreateManyReviewerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PerformanceReviewProjectRatingCreateWithoutRatedByInput = {
+    id?: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    review: PerformanceReviewCreateNestedOneWithoutProjectRatingsInput
+    project: ProjectCreateNestedOneWithoutPerfProjectRatingsInput
+  }
+
+  export type PerformanceReviewProjectRatingUncheckedCreateWithoutRatedByInput = {
+    id?: string
+    reviewId: string
+    projectId: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PerformanceReviewProjectRatingCreateOrConnectWithoutRatedByInput = {
+    where: PerformanceReviewProjectRatingWhereUniqueInput
+    create: XOR<PerformanceReviewProjectRatingCreateWithoutRatedByInput, PerformanceReviewProjectRatingUncheckedCreateWithoutRatedByInput>
+  }
+
+  export type PerformanceReviewProjectRatingCreateManyRatedByInputEnvelope = {
+    data: PerformanceReviewProjectRatingCreateManyRatedByInput | PerformanceReviewProjectRatingCreateManyRatedByInput[]
+    skipDuplicates?: boolean
+  }
+
   export type BusinessUnitUpsertWithoutUsersInput = {
     update: XOR<BusinessUnitUpdateWithoutUsersInput, BusinessUnitUncheckedUpdateWithoutUsersInput>
     create: XOR<BusinessUnitCreateWithoutUsersInput, BusinessUnitUncheckedCreateWithoutUsersInput>
@@ -41363,6 +47314,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReportsInput = {
@@ -41407,6 +47363,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutManagerInput = {
@@ -41501,6 +47462,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSuperviseesInput = {
@@ -41545,6 +47511,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutPrincipalInput = {
@@ -42210,6 +48181,145 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"TaskTemplate"> | Date | string
   }
 
+  export type ProjectRaidItemUpsertWithWhereUniqueWithoutOwnerInput = {
+    where: ProjectRaidItemWhereUniqueInput
+    update: XOR<ProjectRaidItemUpdateWithoutOwnerInput, ProjectRaidItemUncheckedUpdateWithoutOwnerInput>
+    create: XOR<ProjectRaidItemCreateWithoutOwnerInput, ProjectRaidItemUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type ProjectRaidItemUpdateWithWhereUniqueWithoutOwnerInput = {
+    where: ProjectRaidItemWhereUniqueInput
+    data: XOR<ProjectRaidItemUpdateWithoutOwnerInput, ProjectRaidItemUncheckedUpdateWithoutOwnerInput>
+  }
+
+  export type ProjectRaidItemUpdateManyWithWhereWithoutOwnerInput = {
+    where: ProjectRaidItemScalarWhereInput
+    data: XOR<ProjectRaidItemUpdateManyMutationInput, ProjectRaidItemUncheckedUpdateManyWithoutOwnerInput>
+  }
+
+  export type ProjectRaidItemScalarWhereInput = {
+    AND?: ProjectRaidItemScalarWhereInput | ProjectRaidItemScalarWhereInput[]
+    OR?: ProjectRaidItemScalarWhereInput[]
+    NOT?: ProjectRaidItemScalarWhereInput | ProjectRaidItemScalarWhereInput[]
+    id?: StringFilter<"ProjectRaidItem"> | string
+    projectId?: StringFilter<"ProjectRaidItem"> | string
+    type?: EnumRaidTypeFilter<"ProjectRaidItem"> | $Enums.RaidType
+    title?: StringFilter<"ProjectRaidItem"> | string
+    description?: StringNullableFilter<"ProjectRaidItem"> | string | null
+    impact?: EnumRaidImpactFilter<"ProjectRaidItem"> | $Enums.RaidImpact
+    likelihood?: EnumRaidLikelihoodFilter<"ProjectRaidItem"> | $Enums.RaidLikelihood
+    status?: EnumRaidStatusFilter<"ProjectRaidItem"> | $Enums.RaidStatus
+    ownerId?: StringNullableFilter<"ProjectRaidItem"> | string | null
+    mitigation?: StringNullableFilter<"ProjectRaidItem"> | string | null
+    dueDate?: DateTimeNullableFilter<"ProjectRaidItem"> | Date | string | null
+    closedAt?: DateTimeNullableFilter<"ProjectRaidItem"> | Date | string | null
+    createdById?: StringNullableFilter<"ProjectRaidItem"> | string | null
+    createdAt?: DateTimeFilter<"ProjectRaidItem"> | Date | string
+    updatedAt?: DateTimeFilter<"ProjectRaidItem"> | Date | string
+  }
+
+  export type ProjectRaidItemUpsertWithWhereUniqueWithoutCreatedByInput = {
+    where: ProjectRaidItemWhereUniqueInput
+    update: XOR<ProjectRaidItemUpdateWithoutCreatedByInput, ProjectRaidItemUncheckedUpdateWithoutCreatedByInput>
+    create: XOR<ProjectRaidItemCreateWithoutCreatedByInput, ProjectRaidItemUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type ProjectRaidItemUpdateWithWhereUniqueWithoutCreatedByInput = {
+    where: ProjectRaidItemWhereUniqueInput
+    data: XOR<ProjectRaidItemUpdateWithoutCreatedByInput, ProjectRaidItemUncheckedUpdateWithoutCreatedByInput>
+  }
+
+  export type ProjectRaidItemUpdateManyWithWhereWithoutCreatedByInput = {
+    where: ProjectRaidItemScalarWhereInput
+    data: XOR<ProjectRaidItemUpdateManyMutationInput, ProjectRaidItemUncheckedUpdateManyWithoutCreatedByInput>
+  }
+
+  export type PerformanceReviewUpsertWithWhereUniqueWithoutUserInput = {
+    where: PerformanceReviewWhereUniqueInput
+    update: XOR<PerformanceReviewUpdateWithoutUserInput, PerformanceReviewUncheckedUpdateWithoutUserInput>
+    create: XOR<PerformanceReviewCreateWithoutUserInput, PerformanceReviewUncheckedCreateWithoutUserInput>
+  }
+
+  export type PerformanceReviewUpdateWithWhereUniqueWithoutUserInput = {
+    where: PerformanceReviewWhereUniqueInput
+    data: XOR<PerformanceReviewUpdateWithoutUserInput, PerformanceReviewUncheckedUpdateWithoutUserInput>
+  }
+
+  export type PerformanceReviewUpdateManyWithWhereWithoutUserInput = {
+    where: PerformanceReviewScalarWhereInput
+    data: XOR<PerformanceReviewUpdateManyMutationInput, PerformanceReviewUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type PerformanceReviewScalarWhereInput = {
+    AND?: PerformanceReviewScalarWhereInput | PerformanceReviewScalarWhereInput[]
+    OR?: PerformanceReviewScalarWhereInput[]
+    NOT?: PerformanceReviewScalarWhereInput | PerformanceReviewScalarWhereInput[]
+    id?: StringFilter<"PerformanceReview"> | string
+    userId?: StringFilter<"PerformanceReview"> | string
+    reviewerId?: StringFilter<"PerformanceReview"> | string
+    period?: EnumPerformanceReviewPeriodFilter<"PerformanceReview"> | $Enums.PerformanceReviewPeriod
+    periodYear?: IntFilter<"PerformanceReview"> | number
+    periodStart?: DateTimeFilter<"PerformanceReview"> | Date | string
+    periodEnd?: DateTimeFilter<"PerformanceReview"> | Date | string
+    status?: EnumPerformanceReviewStatusFilter<"PerformanceReview"> | $Enums.PerformanceReviewStatus
+    overallRating?: IntNullableFilter<"PerformanceReview"> | number | null
+    summary?: StringNullableFilter<"PerformanceReview"> | string | null
+    strengths?: StringNullableFilter<"PerformanceReview"> | string | null
+    improvements?: StringNullableFilter<"PerformanceReview"> | string | null
+    goals?: StringNullableFilter<"PerformanceReview"> | string | null
+    acknowledgement?: StringNullableFilter<"PerformanceReview"> | string | null
+    submittedAt?: DateTimeNullableFilter<"PerformanceReview"> | Date | string | null
+    acknowledgedAt?: DateTimeNullableFilter<"PerformanceReview"> | Date | string | null
+    createdAt?: DateTimeFilter<"PerformanceReview"> | Date | string
+    updatedAt?: DateTimeFilter<"PerformanceReview"> | Date | string
+  }
+
+  export type PerformanceReviewUpsertWithWhereUniqueWithoutReviewerInput = {
+    where: PerformanceReviewWhereUniqueInput
+    update: XOR<PerformanceReviewUpdateWithoutReviewerInput, PerformanceReviewUncheckedUpdateWithoutReviewerInput>
+    create: XOR<PerformanceReviewCreateWithoutReviewerInput, PerformanceReviewUncheckedCreateWithoutReviewerInput>
+  }
+
+  export type PerformanceReviewUpdateWithWhereUniqueWithoutReviewerInput = {
+    where: PerformanceReviewWhereUniqueInput
+    data: XOR<PerformanceReviewUpdateWithoutReviewerInput, PerformanceReviewUncheckedUpdateWithoutReviewerInput>
+  }
+
+  export type PerformanceReviewUpdateManyWithWhereWithoutReviewerInput = {
+    where: PerformanceReviewScalarWhereInput
+    data: XOR<PerformanceReviewUpdateManyMutationInput, PerformanceReviewUncheckedUpdateManyWithoutReviewerInput>
+  }
+
+  export type PerformanceReviewProjectRatingUpsertWithWhereUniqueWithoutRatedByInput = {
+    where: PerformanceReviewProjectRatingWhereUniqueInput
+    update: XOR<PerformanceReviewProjectRatingUpdateWithoutRatedByInput, PerformanceReviewProjectRatingUncheckedUpdateWithoutRatedByInput>
+    create: XOR<PerformanceReviewProjectRatingCreateWithoutRatedByInput, PerformanceReviewProjectRatingUncheckedCreateWithoutRatedByInput>
+  }
+
+  export type PerformanceReviewProjectRatingUpdateWithWhereUniqueWithoutRatedByInput = {
+    where: PerformanceReviewProjectRatingWhereUniqueInput
+    data: XOR<PerformanceReviewProjectRatingUpdateWithoutRatedByInput, PerformanceReviewProjectRatingUncheckedUpdateWithoutRatedByInput>
+  }
+
+  export type PerformanceReviewProjectRatingUpdateManyWithWhereWithoutRatedByInput = {
+    where: PerformanceReviewProjectRatingScalarWhereInput
+    data: XOR<PerformanceReviewProjectRatingUpdateManyMutationInput, PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByInput>
+  }
+
+  export type PerformanceReviewProjectRatingScalarWhereInput = {
+    AND?: PerformanceReviewProjectRatingScalarWhereInput | PerformanceReviewProjectRatingScalarWhereInput[]
+    OR?: PerformanceReviewProjectRatingScalarWhereInput[]
+    NOT?: PerformanceReviewProjectRatingScalarWhereInput | PerformanceReviewProjectRatingScalarWhereInput[]
+    id?: StringFilter<"PerformanceReviewProjectRating"> | string
+    reviewId?: StringFilter<"PerformanceReviewProjectRating"> | string
+    projectId?: StringFilter<"PerformanceReviewProjectRating"> | string
+    ratedById?: StringFilter<"PerformanceReviewProjectRating"> | string
+    rating?: IntFilter<"PerformanceReviewProjectRating"> | number
+    comment?: StringNullableFilter<"PerformanceReviewProjectRating"> | string | null
+    createdAt?: DateTimeFilter<"PerformanceReviewProjectRating"> | Date | string
+    updatedAt?: DateTimeFilter<"PerformanceReviewProjectRating"> | Date | string
+  }
+
   export type ProjectCreateWithoutClientInput = {
     id?: string
     code: string
@@ -42248,6 +48358,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutClientInput = {
@@ -42288,6 +48400,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutClientInput = {
@@ -42465,6 +48579,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutProjectsAsSalesInput = {
@@ -42509,6 +48628,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutProjectsAsSalesInput = {
@@ -42558,6 +48682,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutProjectsAsPmInput = {
@@ -42602,6 +48731,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutProjectsAsPmInput = {
@@ -42651,6 +48785,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutProjectsAsTwInput = {
@@ -42695,6 +48834,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutProjectsAsTwInput = {
@@ -42744,6 +48888,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutProjectsAsAdminInput = {
@@ -42788,6 +48937,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutProjectsAsAdminInput = {
@@ -43101,6 +49255,80 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProjectRaidItemCreateWithoutProjectInput = {
+    id?: string
+    type: $Enums.RaidType
+    title: string
+    description?: string | null
+    impact?: $Enums.RaidImpact
+    likelihood?: $Enums.RaidLikelihood
+    status?: $Enums.RaidStatus
+    mitigation?: string | null
+    dueDate?: Date | string | null
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner?: UserCreateNestedOneWithoutRaidItemsOwnedInput
+    createdBy?: UserCreateNestedOneWithoutRaidItemsCreatedInput
+  }
+
+  export type ProjectRaidItemUncheckedCreateWithoutProjectInput = {
+    id?: string
+    type: $Enums.RaidType
+    title: string
+    description?: string | null
+    impact?: $Enums.RaidImpact
+    likelihood?: $Enums.RaidLikelihood
+    status?: $Enums.RaidStatus
+    ownerId?: string | null
+    mitigation?: string | null
+    dueDate?: Date | string | null
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectRaidItemCreateOrConnectWithoutProjectInput = {
+    where: ProjectRaidItemWhereUniqueInput
+    create: XOR<ProjectRaidItemCreateWithoutProjectInput, ProjectRaidItemUncheckedCreateWithoutProjectInput>
+  }
+
+  export type ProjectRaidItemCreateManyProjectInputEnvelope = {
+    data: ProjectRaidItemCreateManyProjectInput | ProjectRaidItemCreateManyProjectInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PerformanceReviewProjectRatingCreateWithoutProjectInput = {
+    id?: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    review: PerformanceReviewCreateNestedOneWithoutProjectRatingsInput
+    ratedBy: UserCreateNestedOneWithoutPerfProjectRatingsGivenInput
+  }
+
+  export type PerformanceReviewProjectRatingUncheckedCreateWithoutProjectInput = {
+    id?: string
+    reviewId: string
+    ratedById: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PerformanceReviewProjectRatingCreateOrConnectWithoutProjectInput = {
+    where: PerformanceReviewProjectRatingWhereUniqueInput
+    create: XOR<PerformanceReviewProjectRatingCreateWithoutProjectInput, PerformanceReviewProjectRatingUncheckedCreateWithoutProjectInput>
+  }
+
+  export type PerformanceReviewProjectRatingCreateManyProjectInputEnvelope = {
+    data: PerformanceReviewProjectRatingCreateManyProjectInput | PerformanceReviewProjectRatingCreateManyProjectInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ClientUpsertWithoutProjectsInput = {
     update: XOR<ClientUpdateWithoutProjectsInput, ClientUncheckedUpdateWithoutProjectsInput>
     create: XOR<ClientCreateWithoutProjectsInput, ClientUncheckedCreateWithoutProjectsInput>
@@ -43189,6 +49417,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsAsSalesInput = {
@@ -43233,6 +49466,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUpsertWithoutProjectsAsPmInput = {
@@ -43288,6 +49526,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsAsPmInput = {
@@ -43332,6 +49575,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUpsertWithoutProjectsAsTwInput = {
@@ -43387,6 +49635,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsAsTwInput = {
@@ -43431,6 +49684,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUpsertWithoutProjectsAsAdminInput = {
@@ -43486,6 +49744,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsAsAdminInput = {
@@ -43530,6 +49793,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type ProjectResourceUpsertWithWhereUniqueWithoutProjectInput = {
@@ -43694,6 +49962,38 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"BillingMilestone"> | Date | string
   }
 
+  export type ProjectRaidItemUpsertWithWhereUniqueWithoutProjectInput = {
+    where: ProjectRaidItemWhereUniqueInput
+    update: XOR<ProjectRaidItemUpdateWithoutProjectInput, ProjectRaidItemUncheckedUpdateWithoutProjectInput>
+    create: XOR<ProjectRaidItemCreateWithoutProjectInput, ProjectRaidItemUncheckedCreateWithoutProjectInput>
+  }
+
+  export type ProjectRaidItemUpdateWithWhereUniqueWithoutProjectInput = {
+    where: ProjectRaidItemWhereUniqueInput
+    data: XOR<ProjectRaidItemUpdateWithoutProjectInput, ProjectRaidItemUncheckedUpdateWithoutProjectInput>
+  }
+
+  export type ProjectRaidItemUpdateManyWithWhereWithoutProjectInput = {
+    where: ProjectRaidItemScalarWhereInput
+    data: XOR<ProjectRaidItemUpdateManyMutationInput, ProjectRaidItemUncheckedUpdateManyWithoutProjectInput>
+  }
+
+  export type PerformanceReviewProjectRatingUpsertWithWhereUniqueWithoutProjectInput = {
+    where: PerformanceReviewProjectRatingWhereUniqueInput
+    update: XOR<PerformanceReviewProjectRatingUpdateWithoutProjectInput, PerformanceReviewProjectRatingUncheckedUpdateWithoutProjectInput>
+    create: XOR<PerformanceReviewProjectRatingCreateWithoutProjectInput, PerformanceReviewProjectRatingUncheckedCreateWithoutProjectInput>
+  }
+
+  export type PerformanceReviewProjectRatingUpdateWithWhereUniqueWithoutProjectInput = {
+    where: PerformanceReviewProjectRatingWhereUniqueInput
+    data: XOR<PerformanceReviewProjectRatingUpdateWithoutProjectInput, PerformanceReviewProjectRatingUncheckedUpdateWithoutProjectInput>
+  }
+
+  export type PerformanceReviewProjectRatingUpdateManyWithWhereWithoutProjectInput = {
+    where: PerformanceReviewProjectRatingScalarWhereInput
+    data: XOR<PerformanceReviewProjectRatingUpdateManyMutationInput, PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectInput>
+  }
+
   export type ProjectCreateWithoutSurveyResponsesInput = {
     id?: string
     code: string
@@ -43732,6 +50032,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutSurveyResponsesInput = {
@@ -43772,6 +50074,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutSurveyResponsesInput = {
@@ -43828,6 +50132,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutSurveyResponsesInput = {
@@ -43868,6 +50174,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserCreateWithoutAuditLogsInput = {
@@ -43912,6 +50220,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -43956,6 +50269,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -44016,6 +50334,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -44060,6 +50383,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type ProjectCreateWithoutResourcesInput = {
@@ -44100,6 +50428,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutResourcesInput = {
@@ -44140,6 +50470,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutResourcesInput = {
@@ -44189,6 +50521,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutResourcesInput = {
@@ -44233,6 +50570,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutResourcesInput = {
@@ -44282,6 +50624,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutProposedResourcesInput = {
@@ -44326,6 +50673,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutProposedResourcesInput = {
@@ -44382,6 +50734,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutResourcesInput = {
@@ -44422,6 +50776,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutResourcesInput = {
@@ -44477,6 +50833,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutResourcesInput = {
@@ -44521,6 +50882,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUpsertWithoutProposedResourcesInput = {
@@ -44576,6 +50942,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProposedResourcesInput = {
@@ -44620,6 +50991,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type ProjectCreateWithoutTimesheetsInput = {
@@ -44660,6 +51036,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutTimesheetsInput = {
@@ -44700,6 +51078,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutTimesheetsInput = {
@@ -44749,6 +51129,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutTimesheetsInput = {
@@ -44793,6 +51178,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutTimesheetsInput = {
@@ -44891,6 +51281,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutApprovedTimesheetsInput = {
@@ -44935,6 +51330,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutApprovedTimesheetsInput = {
@@ -44991,6 +51391,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutTimesheetsInput = {
@@ -45031,6 +51433,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutTimesheetsInput = {
@@ -45086,6 +51490,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTimesheetsInput = {
@@ -45130,6 +51539,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type TaskUpsertWithoutTimesheetsInput = {
@@ -45240,6 +51654,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutApprovedTimesheetsInput = {
@@ -45284,6 +51703,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type ProjectCreateWithoutDocumentsInput = {
@@ -45324,6 +51748,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutDocumentsInput = {
@@ -45364,6 +51790,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutDocumentsInput = {
@@ -45413,6 +51841,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutDocumentsUploadedInput = {
@@ -45457,6 +51890,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutDocumentsUploadedInput = {
@@ -45513,6 +51951,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutDocumentsInput = {
@@ -45553,6 +51993,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutDocumentsUploadedInput = {
@@ -45608,6 +52050,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDocumentsUploadedInput = {
@@ -45652,6 +52099,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type ProjectCreateWithoutExpensesInput = {
@@ -45692,6 +52144,8 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutExpensesInput = {
@@ -45732,6 +52186,8 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutExpensesInput = {
@@ -45781,6 +52237,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutApprovedExpensesInput = {
@@ -45825,6 +52286,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutApprovedExpensesInput = {
@@ -45874,6 +52340,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutProjectExpensesInput = {
@@ -45918,6 +52389,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutProjectExpensesInput = {
@@ -45974,6 +52450,8 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutExpensesInput = {
@@ -46014,6 +52492,8 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutApprovedExpensesInput = {
@@ -46069,6 +52549,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutApprovedExpensesInput = {
@@ -46113,6 +52598,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUpsertWithoutProjectExpensesInput = {
@@ -46168,6 +52658,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectExpensesInput = {
@@ -46212,6 +52707,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserCreateWithoutBusinessUnitInput = {
@@ -46256,6 +52756,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutBusinessUnitInput = {
@@ -46300,6 +52805,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutBusinessUnitInput = {
@@ -46458,6 +52968,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutSkillsInput = {
@@ -46502,6 +53017,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutSkillsInput = {
@@ -46585,6 +53105,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSkillsInput = {
@@ -46629,6 +53154,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type SkillUpsertWithoutUsersInput = {
@@ -46702,6 +53232,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutActivitiesInput = {
@@ -46746,6 +53281,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutActivitiesInput = {
@@ -46791,6 +53331,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutActivitiesInput = {
@@ -46831,6 +53373,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutActivitiesInput = {
@@ -46891,6 +53435,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutActivitiesInput = {
@@ -46935,6 +53484,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type ProjectUpsertWithoutActivitiesInput = {
@@ -46986,6 +53540,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutActivitiesInput = {
@@ -47026,6 +53582,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectCreateWithoutTasksInput = {
@@ -47066,6 +53624,8 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutTasksInput = {
@@ -47106,6 +53666,8 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutTasksInput = {
@@ -47155,6 +53717,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutTasksAssignedInput = {
@@ -47199,6 +53766,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutTasksAssignedInput = {
@@ -47248,6 +53820,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutTasksCreatedInput = {
@@ -47292,6 +53869,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutTasksCreatedInput = {
@@ -47585,6 +54167,8 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutTasksInput = {
@@ -47625,6 +54209,8 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutTasksAssignedInput = {
@@ -47680,6 +54266,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTasksAssignedInput = {
@@ -47724,6 +54315,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUpsertWithoutTasksCreatedInput = {
@@ -47779,6 +54375,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTasksCreatedInput = {
@@ -47823,6 +54424,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type TaskUpsertWithoutSubtasksInput = {
@@ -48232,6 +54838,8 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
     tasks?: TaskCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutBillingMilestonesInput = {
@@ -48272,6 +54880,8 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
     tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutBillingMilestonesInput = {
@@ -48328,6 +54938,8 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutBillingMilestonesInput = {
@@ -48368,6 +54980,8 @@ export namespace Prisma {
     surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type TaskCreateWithoutAssigneesInput = {
@@ -48461,6 +55075,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutTaskAssignmentsInput = {
@@ -48505,6 +55124,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutTaskAssignmentsInput = {
@@ -48620,6 +55244,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTaskAssignmentsInput = {
@@ -48664,6 +55293,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type TaskCreateWithoutTimeLogsInput = {
@@ -48757,6 +55391,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutTaskTimeLogsInput = {
@@ -48801,6 +55440,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutTaskTimeLogsInput = {
@@ -48916,6 +55560,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTaskTimeLogsInput = {
@@ -48960,6 +55609,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type ClientCreateWithoutLeadsInput = {
@@ -49033,6 +55687,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutLeadsOwnedInput = {
@@ -49077,6 +55736,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutLeadsOwnedInput = {
@@ -49204,6 +55868,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLeadsOwnedInput = {
@@ -49248,6 +55917,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type LeadActivityUpsertWithWhereUniqueWithoutLeadInput = {
@@ -49365,6 +56039,11 @@ export namespace Prisma {
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutLeadActivitiesInput = {
@@ -49409,6 +56088,11 @@ export namespace Prisma {
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutLeadActivitiesInput = {
@@ -49532,6 +56216,11 @@ export namespace Prisma {
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLeadActivitiesInput = {
@@ -49576,6 +56265,11 @@ export namespace Prisma {
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserCreateWithoutLeavesInput = {
@@ -49620,6 +56314,11 @@ export namespace Prisma {
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutLeavesInput = {
@@ -49664,6 +56363,11 @@ export namespace Prisma {
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutLeavesInput = {
@@ -49724,6 +56428,11 @@ export namespace Prisma {
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLeavesInput = {
@@ -49768,6 +56477,11 @@ export namespace Prisma {
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type BusinessUnitCreateWithoutTaskTemplatesInput = {
@@ -49837,6 +56551,11 @@ export namespace Prisma {
     leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutTaskTemplatesCreatedInput = {
@@ -49881,6 +56600,11 @@ export namespace Prisma {
     leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutTaskTemplatesCreatedInput = {
@@ -49972,6 +56696,11 @@ export namespace Prisma {
     leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTaskTemplatesCreatedInput = {
@@ -50016,6 +56745,11 @@ export namespace Prisma {
     leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserCreateWithoutNotificationsInput = {
@@ -50060,6 +56794,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
 
   export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -50104,6 +56843,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -50164,6 +56908,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -50208,6 +56957,1585 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type ProjectCreateWithoutRaidItemsInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    surveyToken?: string | null
+    client: ClientCreateNestedOneWithoutProjectsInput
+    sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
+    pm?: UserCreateNestedOneWithoutProjectsAsPmInput
+    technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
+    adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    resources?: ProjectResourceCreateNestedManyWithoutProjectInput
+    timesheets?: TimesheetCreateNestedManyWithoutProjectInput
+    documents?: DocumentCreateNestedManyWithoutProjectInput
+    activities?: ActivityCreateNestedManyWithoutProjectInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
+    expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
+    tasks?: TaskCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectUncheckedCreateWithoutRaidItemsInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
+    clientId: string
+    salesId?: string | null
+    pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    surveyToken?: string | null
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutProjectInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
+    expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutRaidItemsInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutRaidItemsInput, ProjectUncheckedCreateWithoutRaidItemsInput>
+  }
+
+  export type UserCreateWithoutRaidItemsOwnedInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    calendarTokenVersion?: number
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserUncheckedCreateWithoutRaidItemsOwnedInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnitId?: string | null
+    managerId?: string | null
+    principalId?: string | null
+    calendarTokenVersion?: number
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserCreateOrConnectWithoutRaidItemsOwnedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutRaidItemsOwnedInput, UserUncheckedCreateWithoutRaidItemsOwnedInput>
+  }
+
+  export type UserCreateWithoutRaidItemsCreatedInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    calendarTokenVersion?: number
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserUncheckedCreateWithoutRaidItemsCreatedInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnitId?: string | null
+    managerId?: string | null
+    principalId?: string | null
+    calendarTokenVersion?: number
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserCreateOrConnectWithoutRaidItemsCreatedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutRaidItemsCreatedInput, UserUncheckedCreateWithoutRaidItemsCreatedInput>
+  }
+
+  export type ProjectUpsertWithoutRaidItemsInput = {
+    update: XOR<ProjectUpdateWithoutRaidItemsInput, ProjectUncheckedUpdateWithoutRaidItemsInput>
+    create: XOR<ProjectCreateWithoutRaidItemsInput, ProjectUncheckedCreateWithoutRaidItemsInput>
+    where?: ProjectWhereInput
+  }
+
+  export type ProjectUpdateToOneWithWhereWithoutRaidItemsInput = {
+    where?: ProjectWhereInput
+    data: XOR<ProjectUpdateWithoutRaidItemsInput, ProjectUncheckedUpdateWithoutRaidItemsInput>
+  }
+
+  export type ProjectUpdateWithoutRaidItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
+    sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
+    pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
+    technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
+    adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
+    timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUpdateManyWithoutProjectNestedInput
+    activities?: ActivityUpdateManyWithoutProjectNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
+    expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutRaidItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
+    clientId?: StringFieldUpdateOperationsInput | string
+    salesId?: NullableStringFieldUpdateOperationsInput | string | null
+    pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutProjectNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
+    expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type UserUpsertWithoutRaidItemsOwnedInput = {
+    update: XOR<UserUpdateWithoutRaidItemsOwnedInput, UserUncheckedUpdateWithoutRaidItemsOwnedInput>
+    create: XOR<UserCreateWithoutRaidItemsOwnedInput, UserUncheckedCreateWithoutRaidItemsOwnedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutRaidItemsOwnedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutRaidItemsOwnedInput, UserUncheckedUpdateWithoutRaidItemsOwnedInput>
+  }
+
+  export type UserUpdateWithoutRaidItemsOwnedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutRaidItemsOwnedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type UserUpsertWithoutRaidItemsCreatedInput = {
+    update: XOR<UserUpdateWithoutRaidItemsCreatedInput, UserUncheckedUpdateWithoutRaidItemsCreatedInput>
+    create: XOR<UserCreateWithoutRaidItemsCreatedInput, UserUncheckedCreateWithoutRaidItemsCreatedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutRaidItemsCreatedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutRaidItemsCreatedInput, UserUncheckedUpdateWithoutRaidItemsCreatedInput>
+  }
+
+  export type UserUpdateWithoutRaidItemsCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutRaidItemsCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type UserCreateWithoutPerfReviewsSubjectInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    calendarTokenVersion?: number
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserUncheckedCreateWithoutPerfReviewsSubjectInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnitId?: string | null
+    managerId?: string | null
+    principalId?: string | null
+    calendarTokenVersion?: number
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserCreateOrConnectWithoutPerfReviewsSubjectInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPerfReviewsSubjectInput, UserUncheckedCreateWithoutPerfReviewsSubjectInput>
+  }
+
+  export type UserCreateWithoutPerfReviewsAuthoredInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    calendarTokenVersion?: number
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserUncheckedCreateWithoutPerfReviewsAuthoredInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnitId?: string | null
+    managerId?: string | null
+    principalId?: string | null
+    calendarTokenVersion?: number
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserCreateOrConnectWithoutPerfReviewsAuthoredInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPerfReviewsAuthoredInput, UserUncheckedCreateWithoutPerfReviewsAuthoredInput>
+  }
+
+  export type PerformanceReviewProjectRatingCreateWithoutReviewInput = {
+    id?: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutPerfProjectRatingsInput
+    ratedBy: UserCreateNestedOneWithoutPerfProjectRatingsGivenInput
+  }
+
+  export type PerformanceReviewProjectRatingUncheckedCreateWithoutReviewInput = {
+    id?: string
+    projectId: string
+    ratedById: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PerformanceReviewProjectRatingCreateOrConnectWithoutReviewInput = {
+    where: PerformanceReviewProjectRatingWhereUniqueInput
+    create: XOR<PerformanceReviewProjectRatingCreateWithoutReviewInput, PerformanceReviewProjectRatingUncheckedCreateWithoutReviewInput>
+  }
+
+  export type PerformanceReviewProjectRatingCreateManyReviewInputEnvelope = {
+    data: PerformanceReviewProjectRatingCreateManyReviewInput | PerformanceReviewProjectRatingCreateManyReviewInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutPerfReviewsSubjectInput = {
+    update: XOR<UserUpdateWithoutPerfReviewsSubjectInput, UserUncheckedUpdateWithoutPerfReviewsSubjectInput>
+    create: XOR<UserCreateWithoutPerfReviewsSubjectInput, UserUncheckedCreateWithoutPerfReviewsSubjectInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPerfReviewsSubjectInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPerfReviewsSubjectInput, UserUncheckedUpdateWithoutPerfReviewsSubjectInput>
+  }
+
+  export type UserUpdateWithoutPerfReviewsSubjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPerfReviewsSubjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type UserUpsertWithoutPerfReviewsAuthoredInput = {
+    update: XOR<UserUpdateWithoutPerfReviewsAuthoredInput, UserUncheckedUpdateWithoutPerfReviewsAuthoredInput>
+    create: XOR<UserCreateWithoutPerfReviewsAuthoredInput, UserUncheckedCreateWithoutPerfReviewsAuthoredInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPerfReviewsAuthoredInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPerfReviewsAuthoredInput, UserUncheckedUpdateWithoutPerfReviewsAuthoredInput>
+  }
+
+  export type UserUpdateWithoutPerfReviewsAuthoredInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPerfReviewsAuthoredInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type PerformanceReviewProjectRatingUpsertWithWhereUniqueWithoutReviewInput = {
+    where: PerformanceReviewProjectRatingWhereUniqueInput
+    update: XOR<PerformanceReviewProjectRatingUpdateWithoutReviewInput, PerformanceReviewProjectRatingUncheckedUpdateWithoutReviewInput>
+    create: XOR<PerformanceReviewProjectRatingCreateWithoutReviewInput, PerformanceReviewProjectRatingUncheckedCreateWithoutReviewInput>
+  }
+
+  export type PerformanceReviewProjectRatingUpdateWithWhereUniqueWithoutReviewInput = {
+    where: PerformanceReviewProjectRatingWhereUniqueInput
+    data: XOR<PerformanceReviewProjectRatingUpdateWithoutReviewInput, PerformanceReviewProjectRatingUncheckedUpdateWithoutReviewInput>
+  }
+
+  export type PerformanceReviewProjectRatingUpdateManyWithWhereWithoutReviewInput = {
+    where: PerformanceReviewProjectRatingScalarWhereInput
+    data: XOR<PerformanceReviewProjectRatingUpdateManyMutationInput, PerformanceReviewProjectRatingUncheckedUpdateManyWithoutReviewInput>
+  }
+
+  export type PerformanceReviewCreateWithoutProjectRatingsInput = {
+    id?: string
+    period: $Enums.PerformanceReviewPeriod
+    periodYear: number
+    periodStart: Date | string
+    periodEnd: Date | string
+    status?: $Enums.PerformanceReviewStatus
+    overallRating?: number | null
+    summary?: string | null
+    strengths?: string | null
+    improvements?: string | null
+    goals?: string | null
+    acknowledgement?: string | null
+    submittedAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutPerfReviewsSubjectInput
+    reviewer: UserCreateNestedOneWithoutPerfReviewsAuthoredInput
+  }
+
+  export type PerformanceReviewUncheckedCreateWithoutProjectRatingsInput = {
+    id?: string
+    userId: string
+    reviewerId: string
+    period: $Enums.PerformanceReviewPeriod
+    periodYear: number
+    periodStart: Date | string
+    periodEnd: Date | string
+    status?: $Enums.PerformanceReviewStatus
+    overallRating?: number | null
+    summary?: string | null
+    strengths?: string | null
+    improvements?: string | null
+    goals?: string | null
+    acknowledgement?: string | null
+    submittedAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PerformanceReviewCreateOrConnectWithoutProjectRatingsInput = {
+    where: PerformanceReviewWhereUniqueInput
+    create: XOR<PerformanceReviewCreateWithoutProjectRatingsInput, PerformanceReviewUncheckedCreateWithoutProjectRatingsInput>
+  }
+
+  export type ProjectCreateWithoutPerfProjectRatingsInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    surveyToken?: string | null
+    client: ClientCreateNestedOneWithoutProjectsInput
+    sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
+    pm?: UserCreateNestedOneWithoutProjectsAsPmInput
+    technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
+    adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    resources?: ProjectResourceCreateNestedManyWithoutProjectInput
+    timesheets?: TimesheetCreateNestedManyWithoutProjectInput
+    documents?: DocumentCreateNestedManyWithoutProjectInput
+    activities?: ActivityCreateNestedManyWithoutProjectInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
+    expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
+    tasks?: TaskCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectUncheckedCreateWithoutPerfProjectRatingsInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
+    clientId: string
+    salesId?: string | null
+    pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    surveyToken?: string | null
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutProjectInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
+    expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutPerfProjectRatingsInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutPerfProjectRatingsInput, ProjectUncheckedCreateWithoutPerfProjectRatingsInput>
+  }
+
+  export type UserCreateWithoutPerfProjectRatingsGivenInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    calendarTokenVersion?: number
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+  }
+
+  export type UserUncheckedCreateWithoutPerfProjectRatingsGivenInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnitId?: string | null
+    managerId?: string | null
+    principalId?: string | null
+    calendarTokenVersion?: number
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+  }
+
+  export type UserCreateOrConnectWithoutPerfProjectRatingsGivenInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPerfProjectRatingsGivenInput, UserUncheckedCreateWithoutPerfProjectRatingsGivenInput>
+  }
+
+  export type PerformanceReviewUpsertWithoutProjectRatingsInput = {
+    update: XOR<PerformanceReviewUpdateWithoutProjectRatingsInput, PerformanceReviewUncheckedUpdateWithoutProjectRatingsInput>
+    create: XOR<PerformanceReviewCreateWithoutProjectRatingsInput, PerformanceReviewUncheckedCreateWithoutProjectRatingsInput>
+    where?: PerformanceReviewWhereInput
+  }
+
+  export type PerformanceReviewUpdateToOneWithWhereWithoutProjectRatingsInput = {
+    where?: PerformanceReviewWhereInput
+    data: XOR<PerformanceReviewUpdateWithoutProjectRatingsInput, PerformanceReviewUncheckedUpdateWithoutProjectRatingsInput>
+  }
+
+  export type PerformanceReviewUpdateWithoutProjectRatingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    period?: EnumPerformanceReviewPeriodFieldUpdateOperationsInput | $Enums.PerformanceReviewPeriod
+    periodYear?: IntFieldUpdateOperationsInput | number
+    periodStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    periodEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPerformanceReviewStatusFieldUpdateOperationsInput | $Enums.PerformanceReviewStatus
+    overallRating?: NullableIntFieldUpdateOperationsInput | number | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvements?: NullableStringFieldUpdateOperationsInput | string | null
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPerfReviewsSubjectNestedInput
+    reviewer?: UserUpdateOneRequiredWithoutPerfReviewsAuthoredNestedInput
+  }
+
+  export type PerformanceReviewUncheckedUpdateWithoutProjectRatingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    reviewerId?: StringFieldUpdateOperationsInput | string
+    period?: EnumPerformanceReviewPeriodFieldUpdateOperationsInput | $Enums.PerformanceReviewPeriod
+    periodYear?: IntFieldUpdateOperationsInput | number
+    periodStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    periodEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPerformanceReviewStatusFieldUpdateOperationsInput | $Enums.PerformanceReviewStatus
+    overallRating?: NullableIntFieldUpdateOperationsInput | number | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvements?: NullableStringFieldUpdateOperationsInput | string | null
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectUpsertWithoutPerfProjectRatingsInput = {
+    update: XOR<ProjectUpdateWithoutPerfProjectRatingsInput, ProjectUncheckedUpdateWithoutPerfProjectRatingsInput>
+    create: XOR<ProjectCreateWithoutPerfProjectRatingsInput, ProjectUncheckedCreateWithoutPerfProjectRatingsInput>
+    where?: ProjectWhereInput
+  }
+
+  export type ProjectUpdateToOneWithWhereWithoutPerfProjectRatingsInput = {
+    where?: ProjectWhereInput
+    data: XOR<ProjectUpdateWithoutPerfProjectRatingsInput, ProjectUncheckedUpdateWithoutPerfProjectRatingsInput>
+  }
+
+  export type ProjectUpdateWithoutPerfProjectRatingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
+    sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
+    pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
+    technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
+    adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
+    timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUpdateManyWithoutProjectNestedInput
+    activities?: ActivityUpdateManyWithoutProjectNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
+    expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutPerfProjectRatingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
+    clientId?: StringFieldUpdateOperationsInput | string
+    salesId?: NullableStringFieldUpdateOperationsInput | string | null
+    pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutProjectNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
+    expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type UserUpsertWithoutPerfProjectRatingsGivenInput = {
+    update: XOR<UserUpdateWithoutPerfProjectRatingsGivenInput, UserUncheckedUpdateWithoutPerfProjectRatingsGivenInput>
+    create: XOR<UserCreateWithoutPerfProjectRatingsGivenInput, UserUncheckedCreateWithoutPerfProjectRatingsGivenInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPerfProjectRatingsGivenInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPerfProjectRatingsGivenInput, UserUncheckedUpdateWithoutPerfProjectRatingsGivenInput>
+  }
+
+  export type UserUpdateWithoutPerfProjectRatingsGivenInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPerfProjectRatingsGivenInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   }
 
   export type UserCreateManyManagerInput = {
@@ -50619,6 +58947,90 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type ProjectRaidItemCreateManyOwnerInput = {
+    id?: string
+    projectId: string
+    type: $Enums.RaidType
+    title: string
+    description?: string | null
+    impact?: $Enums.RaidImpact
+    likelihood?: $Enums.RaidLikelihood
+    status?: $Enums.RaidStatus
+    mitigation?: string | null
+    dueDate?: Date | string | null
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectRaidItemCreateManyCreatedByInput = {
+    id?: string
+    projectId: string
+    type: $Enums.RaidType
+    title: string
+    description?: string | null
+    impact?: $Enums.RaidImpact
+    likelihood?: $Enums.RaidLikelihood
+    status?: $Enums.RaidStatus
+    ownerId?: string | null
+    mitigation?: string | null
+    dueDate?: Date | string | null
+    closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PerformanceReviewCreateManyUserInput = {
+    id?: string
+    reviewerId: string
+    period: $Enums.PerformanceReviewPeriod
+    periodYear: number
+    periodStart: Date | string
+    periodEnd: Date | string
+    status?: $Enums.PerformanceReviewStatus
+    overallRating?: number | null
+    summary?: string | null
+    strengths?: string | null
+    improvements?: string | null
+    goals?: string | null
+    acknowledgement?: string | null
+    submittedAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PerformanceReviewCreateManyReviewerInput = {
+    id?: string
+    userId: string
+    period: $Enums.PerformanceReviewPeriod
+    periodYear: number
+    periodStart: Date | string
+    periodEnd: Date | string
+    status?: $Enums.PerformanceReviewStatus
+    overallRating?: number | null
+    summary?: string | null
+    strengths?: string | null
+    improvements?: string | null
+    goals?: string | null
+    acknowledgement?: string | null
+    submittedAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PerformanceReviewProjectRatingCreateManyRatedByInput = {
+    id?: string
+    reviewId: string
+    projectId: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type UserUpdateWithoutManagerInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
@@ -50661,6 +59073,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutManagerInput = {
@@ -50705,6 +59122,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutManagerInput = {
@@ -50768,6 +59190,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPrincipalInput = {
@@ -50812,6 +59239,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutPrincipalInput = {
@@ -50943,6 +59375,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutSalesInput = {
@@ -50983,6 +59417,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutSalesInput = {
@@ -51055,6 +59491,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutPmInput = {
@@ -51095,6 +59533,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutPmInput = {
@@ -51167,6 +59607,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutTechnicalWriterInput = {
@@ -51207,6 +59649,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutTechnicalWriterInput = {
@@ -51279,6 +59723,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutAdminProjectInput = {
@@ -51319,6 +59765,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutAdminProjectInput = {
@@ -52036,6 +60484,262 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ProjectRaidItemUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumRaidTypeFieldUpdateOperationsInput | $Enums.RaidType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impact?: EnumRaidImpactFieldUpdateOperationsInput | $Enums.RaidImpact
+    likelihood?: EnumRaidLikelihoodFieldUpdateOperationsInput | $Enums.RaidLikelihood
+    status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
+    mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutRaidItemsNestedInput
+    createdBy?: UserUpdateOneWithoutRaidItemsCreatedNestedInput
+  }
+
+  export type ProjectRaidItemUncheckedUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    type?: EnumRaidTypeFieldUpdateOperationsInput | $Enums.RaidType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impact?: EnumRaidImpactFieldUpdateOperationsInput | $Enums.RaidImpact
+    likelihood?: EnumRaidLikelihoodFieldUpdateOperationsInput | $Enums.RaidLikelihood
+    status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
+    mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectRaidItemUncheckedUpdateManyWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    type?: EnumRaidTypeFieldUpdateOperationsInput | $Enums.RaidType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impact?: EnumRaidImpactFieldUpdateOperationsInput | $Enums.RaidImpact
+    likelihood?: EnumRaidLikelihoodFieldUpdateOperationsInput | $Enums.RaidLikelihood
+    status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
+    mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectRaidItemUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumRaidTypeFieldUpdateOperationsInput | $Enums.RaidType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impact?: EnumRaidImpactFieldUpdateOperationsInput | $Enums.RaidImpact
+    likelihood?: EnumRaidLikelihoodFieldUpdateOperationsInput | $Enums.RaidLikelihood
+    status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
+    mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutRaidItemsNestedInput
+    owner?: UserUpdateOneWithoutRaidItemsOwnedNestedInput
+  }
+
+  export type ProjectRaidItemUncheckedUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    type?: EnumRaidTypeFieldUpdateOperationsInput | $Enums.RaidType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impact?: EnumRaidImpactFieldUpdateOperationsInput | $Enums.RaidImpact
+    likelihood?: EnumRaidLikelihoodFieldUpdateOperationsInput | $Enums.RaidLikelihood
+    status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectRaidItemUncheckedUpdateManyWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    type?: EnumRaidTypeFieldUpdateOperationsInput | $Enums.RaidType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impact?: EnumRaidImpactFieldUpdateOperationsInput | $Enums.RaidImpact
+    likelihood?: EnumRaidLikelihoodFieldUpdateOperationsInput | $Enums.RaidLikelihood
+    status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PerformanceReviewUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    period?: EnumPerformanceReviewPeriodFieldUpdateOperationsInput | $Enums.PerformanceReviewPeriod
+    periodYear?: IntFieldUpdateOperationsInput | number
+    periodStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    periodEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPerformanceReviewStatusFieldUpdateOperationsInput | $Enums.PerformanceReviewStatus
+    overallRating?: NullableIntFieldUpdateOperationsInput | number | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvements?: NullableStringFieldUpdateOperationsInput | string | null
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewer?: UserUpdateOneRequiredWithoutPerfReviewsAuthoredNestedInput
+    projectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutReviewNestedInput
+  }
+
+  export type PerformanceReviewUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewerId?: StringFieldUpdateOperationsInput | string
+    period?: EnumPerformanceReviewPeriodFieldUpdateOperationsInput | $Enums.PerformanceReviewPeriod
+    periodYear?: IntFieldUpdateOperationsInput | number
+    periodStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    periodEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPerformanceReviewStatusFieldUpdateOperationsInput | $Enums.PerformanceReviewStatus
+    overallRating?: NullableIntFieldUpdateOperationsInput | number | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvements?: NullableStringFieldUpdateOperationsInput | string | null
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutReviewNestedInput
+  }
+
+  export type PerformanceReviewUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewerId?: StringFieldUpdateOperationsInput | string
+    period?: EnumPerformanceReviewPeriodFieldUpdateOperationsInput | $Enums.PerformanceReviewPeriod
+    periodYear?: IntFieldUpdateOperationsInput | number
+    periodStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    periodEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPerformanceReviewStatusFieldUpdateOperationsInput | $Enums.PerformanceReviewStatus
+    overallRating?: NullableIntFieldUpdateOperationsInput | number | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvements?: NullableStringFieldUpdateOperationsInput | string | null
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PerformanceReviewUpdateWithoutReviewerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    period?: EnumPerformanceReviewPeriodFieldUpdateOperationsInput | $Enums.PerformanceReviewPeriod
+    periodYear?: IntFieldUpdateOperationsInput | number
+    periodStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    periodEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPerformanceReviewStatusFieldUpdateOperationsInput | $Enums.PerformanceReviewStatus
+    overallRating?: NullableIntFieldUpdateOperationsInput | number | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvements?: NullableStringFieldUpdateOperationsInput | string | null
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPerfReviewsSubjectNestedInput
+    projectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutReviewNestedInput
+  }
+
+  export type PerformanceReviewUncheckedUpdateWithoutReviewerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    period?: EnumPerformanceReviewPeriodFieldUpdateOperationsInput | $Enums.PerformanceReviewPeriod
+    periodYear?: IntFieldUpdateOperationsInput | number
+    periodStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    periodEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPerformanceReviewStatusFieldUpdateOperationsInput | $Enums.PerformanceReviewStatus
+    overallRating?: NullableIntFieldUpdateOperationsInput | number | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvements?: NullableStringFieldUpdateOperationsInput | string | null
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutReviewNestedInput
+  }
+
+  export type PerformanceReviewUncheckedUpdateManyWithoutReviewerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    period?: EnumPerformanceReviewPeriodFieldUpdateOperationsInput | $Enums.PerformanceReviewPeriod
+    periodYear?: IntFieldUpdateOperationsInput | number
+    periodStart?: DateTimeFieldUpdateOperationsInput | Date | string
+    periodEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPerformanceReviewStatusFieldUpdateOperationsInput | $Enums.PerformanceReviewStatus
+    overallRating?: NullableIntFieldUpdateOperationsInput | number | null
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvements?: NullableStringFieldUpdateOperationsInput | string | null
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    acknowledgement?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PerformanceReviewProjectRatingUpdateWithoutRatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    review?: PerformanceReviewUpdateOneRequiredWithoutProjectRatingsNestedInput
+    project?: ProjectUpdateOneRequiredWithoutPerfProjectRatingsNestedInput
+  }
+
+  export type PerformanceReviewProjectRatingUncheckedUpdateWithoutRatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ProjectCreateManyClientInput = {
     id?: string
     code: string
@@ -52131,6 +60835,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
     tasks?: TaskUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutClientInput = {
@@ -52171,6 +60877,8 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutClientInput = {
@@ -52385,6 +61093,33 @@ export namespace Prisma {
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectRaidItemCreateManyProjectInput = {
+    id?: string
+    type: $Enums.RaidType
+    title: string
+    description?: string | null
+    impact?: $Enums.RaidImpact
+    likelihood?: $Enums.RaidLikelihood
+    status?: $Enums.RaidStatus
+    ownerId?: string | null
+    mitigation?: string | null
+    dueDate?: Date | string | null
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PerformanceReviewProjectRatingCreateManyProjectInput = {
+    id?: string
+    reviewId: string
+    ratedById: string
+    rating: number
+    comment?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -52722,6 +61457,87 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ProjectRaidItemUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumRaidTypeFieldUpdateOperationsInput | $Enums.RaidType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impact?: EnumRaidImpactFieldUpdateOperationsInput | $Enums.RaidImpact
+    likelihood?: EnumRaidLikelihoodFieldUpdateOperationsInput | $Enums.RaidLikelihood
+    status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
+    mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneWithoutRaidItemsOwnedNestedInput
+    createdBy?: UserUpdateOneWithoutRaidItemsCreatedNestedInput
+  }
+
+  export type ProjectRaidItemUncheckedUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumRaidTypeFieldUpdateOperationsInput | $Enums.RaidType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impact?: EnumRaidImpactFieldUpdateOperationsInput | $Enums.RaidImpact
+    likelihood?: EnumRaidLikelihoodFieldUpdateOperationsInput | $Enums.RaidLikelihood
+    status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectRaidItemUncheckedUpdateManyWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumRaidTypeFieldUpdateOperationsInput | $Enums.RaidType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impact?: EnumRaidImpactFieldUpdateOperationsInput | $Enums.RaidImpact
+    likelihood?: EnumRaidLikelihoodFieldUpdateOperationsInput | $Enums.RaidLikelihood
+    status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PerformanceReviewProjectRatingUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    review?: PerformanceReviewUpdateOneRequiredWithoutProjectRatingsNestedInput
+    ratedBy?: UserUpdateOneRequiredWithoutPerfProjectRatingsGivenNestedInput
+  }
+
+  export type PerformanceReviewProjectRatingUncheckedUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    ratedById?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewId?: StringFieldUpdateOperationsInput | string
+    ratedById?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserCreateManyBusinessUnitInput = {
     id?: string
     email: string
@@ -52794,6 +61610,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBusinessUnitInput = {
@@ -52838,6 +61659,11 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutBusinessUnitInput = {
@@ -53208,6 +62034,46 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PerformanceReviewProjectRatingCreateManyReviewInput = {
+    id?: string
+    projectId: string
+    ratedById: string
+    rating: number
+    comment?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PerformanceReviewProjectRatingUpdateWithoutReviewInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutPerfProjectRatingsNestedInput
+    ratedBy?: UserUpdateOneRequiredWithoutPerfProjectRatingsGivenNestedInput
+  }
+
+  export type PerformanceReviewProjectRatingUncheckedUpdateWithoutReviewInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    ratedById?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PerformanceReviewProjectRatingUncheckedUpdateManyWithoutReviewInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    ratedById?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
 
 
   /**
@@ -53241,6 +62107,10 @@ export namespace Prisma {
      * @deprecated Use LeadCountOutputTypeDefaultArgs instead
      */
     export type LeadCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = LeadCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use PerformanceReviewCountOutputTypeDefaultArgs instead
+     */
+    export type PerformanceReviewCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PerformanceReviewCountOutputTypeDefaultArgs<ExtArgs>
     /**
      * @deprecated Use UserDefaultArgs instead
      */
@@ -53337,6 +62207,18 @@ export namespace Prisma {
      * @deprecated Use NotificationDefaultArgs instead
      */
     export type NotificationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = NotificationDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ProjectRaidItemDefaultArgs instead
+     */
+    export type ProjectRaidItemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProjectRaidItemDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use PerformanceReviewDefaultArgs instead
+     */
+    export type PerformanceReviewArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PerformanceReviewDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use PerformanceReviewProjectRatingDefaultArgs instead
+     */
+    export type PerformanceReviewProjectRatingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PerformanceReviewProjectRatingDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

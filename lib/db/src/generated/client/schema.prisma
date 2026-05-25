@@ -132,6 +132,12 @@ model User {
   leaves               UserLeave[]
   taskTemplatesCreated TaskTemplate[]    @relation("TaskTemplateCreator")
 
+  raidItemsOwned          ProjectRaidItem[]                @relation("RaidOwner")
+  raidItemsCreated        ProjectRaidItem[]                @relation("RaidCreator")
+  perfReviewsSubject      PerformanceReview[]              @relation("PerfReviewSubject")
+  perfReviewsAuthored     PerformanceReview[]              @relation("PerfReviewReviewer")
+  perfProjectRatingsGiven PerformanceReviewProjectRating[] @relation("PerfProjRater")
+
   calendarTokenVersion Int @default(0)
 }
 
@@ -185,15 +191,17 @@ model Project {
   createdAt                DateTime      @default(now())
   updatedAt                DateTime      @updatedAt
 
-  surveyToken       String?            @unique
-  resources         ProjectResource[]
-  timesheets        Timesheet[]
-  documents         Document[]
-  activities        Activity[]
-  surveyResponses   SurveyResponse[]
-  expenses          ProjectExpense[]
-  tasks             Task[]
-  billingMilestones BillingMilestone[]
+  surveyToken        String?                          @unique
+  resources          ProjectResource[]
+  timesheets         Timesheet[]
+  documents          Document[]
+  activities         Activity[]
+  surveyResponses    SurveyResponse[]
+  expenses           ProjectExpense[]
+  tasks              Task[]
+  billingMilestones  BillingMilestone[]
+  raidItems          ProjectRaidItem[]
+  perfProjectRatings PerformanceReviewProjectRating[]
 }
 
 model SurveyQuestion {
@@ -590,4 +598,115 @@ model Notification {
 
   @@index([userId, readAt])
   @@index([userId, createdAt])
+}
+
+enum RaidType {
+  RISK
+  ASSUMPTION
+  ISSUE
+  DEPENDENCY
+}
+
+enum RaidImpact {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum RaidLikelihood {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum RaidStatus {
+  OPEN
+  MITIGATING
+  CLOSED
+}
+
+model ProjectRaidItem {
+  id          String         @id @default(cuid())
+  projectId   String
+  project     Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  type        RaidType
+  title       String
+  description String?        @db.Text
+  impact      RaidImpact     @default(MEDIUM)
+  likelihood  RaidLikelihood @default(MEDIUM)
+  status      RaidStatus     @default(OPEN)
+  ownerId     String?
+  owner       User?          @relation("RaidOwner", fields: [ownerId], references: [id])
+  mitigation  String?        @db.Text
+  dueDate     DateTime?
+  closedAt    DateTime?
+  createdById String?
+  createdBy   User?          @relation("RaidCreator", fields: [createdById], references: [id])
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([projectId])
+  @@index([type])
+  @@index([status])
+}
+
+enum PerformanceReviewPeriod {
+  Q1
+  Q2
+  Q3
+  Q4
+  ANNUAL
+}
+
+enum PerformanceReviewStatus {
+  DRAFT
+  SUBMITTED
+  ACKNOWLEDGED
+}
+
+model PerformanceReview {
+  id              String                  @id @default(cuid())
+  userId          String
+  user            User                    @relation("PerfReviewSubject", fields: [userId], references: [id])
+  reviewerId      String
+  reviewer        User                    @relation("PerfReviewReviewer", fields: [reviewerId], references: [id])
+  period          PerformanceReviewPeriod
+  periodYear      Int
+  periodStart     DateTime
+  periodEnd       DateTime
+  status          PerformanceReviewStatus @default(DRAFT)
+  overallRating   Int?
+  summary         String?                 @db.Text
+  strengths       String?                 @db.Text
+  improvements    String?                 @db.Text
+  goals           String?                 @db.Text
+  acknowledgement String?                 @db.Text
+  submittedAt     DateTime?
+  acknowledgedAt  DateTime?
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+
+  projectRatings PerformanceReviewProjectRating[]
+
+  @@unique([userId, period, periodYear])
+  @@index([reviewerId])
+  @@index([status])
+}
+
+model PerformanceReviewProjectRating {
+  id        String            @id @default(cuid())
+  reviewId  String
+  review    PerformanceReview @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  projectId String
+  project   Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  ratedById String
+  ratedBy   User              @relation("PerfProjRater", fields: [ratedById], references: [id])
+  rating    Int
+  comment   String?           @db.Text
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  @@unique([reviewId, projectId])
+  @@index([projectId])
 }
