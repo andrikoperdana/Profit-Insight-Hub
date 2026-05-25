@@ -36,6 +36,8 @@ const LeadsPage = lazy(() => import("@/pages/leads"));
 const BenchPage = lazy(() => import("@/pages/bench"));
 const SkillMatrixPage = lazy(() => import("@/pages/skill-matrix"));
 const TaskTemplatesPage = lazy(() => import("@/pages/task-templates"));
+const ProjectTemplatesPage = lazy(() => import("@/pages/project-templates"));
+const SkillDevelopmentPage = lazy(() => import("@/pages/skill-development"));
 const ReportsIndex = lazy(() => import("@/pages/reports"));
 const ReportRunner = lazy(() => import("@/pages/reports/[id]"));
 const LeavesPage = lazy(() => import("@/pages/leaves"));
@@ -133,6 +135,8 @@ function Router() {
         <Route path="/bench" component={() => <ProtectedRoute component={BenchPage} />} />
         <Route path="/skill-matrix" component={() => <ProtectedRoute component={SkillMatrixPage} />} />
         <Route path="/task-templates" component={() => <ProtectedRoute component={TaskTemplatesPage} />} />
+        <Route path="/project-templates" component={() => <ProtectedRoute component={ProjectTemplatesPage} />} />
+        <Route path="/skill-development" component={() => <ProtectedRoute component={SkillDevelopmentPage} />} />
         <Route path="/leaves" component={() => <ProtectedRoute component={LeavesPage} />} />
         <Route path="/org-chart" component={() => <ProtectedRoute component={OrgChartPage} />} />
         <Route path="/performance-reviews" component={() => <ProtectedRoute component={PerformanceReviewsListPage} />} />

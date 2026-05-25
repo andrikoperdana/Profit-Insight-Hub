@@ -110,27 +110,33 @@ model User {
   skills           UserSkill[]
   approvedExpenses ProjectExpense[] @relation("ExpenseApprover")
 
-  projectsAsSales      Project[]         @relation("ProjectSales")
-  projectsAsPm         Project[]         @relation("ProjectPm")
-  projectsAsTw         Project[]         @relation("ProjectTechWriter")
-  projectsAsAdmin      Project[]         @relation("ProjectAdmin")
-  resources            ProjectResource[]
-  proposedResources    ProjectResource[] @relation("ResourceProposer")
-  timesheets           Timesheet[]
-  approvedTimesheets   Timesheet[]       @relation("TimesheetApprover")
-  documentsUploaded    Document[]
-  activities           Activity[]
-  auditLogs            AuditLog[]
-  projectExpenses      ProjectExpense[]
-  tasksAssigned        Task[]            @relation("TaskAssignee")
-  tasksCreated         Task[]            @relation("TaskCreator")
-  taskAssignments      TaskAssignee[]
-  taskTimeLogs         TaskTimeLog[]
-  notifications        Notification[]
-  leadsOwned           Lead[]            @relation("LeadOwner")
-  leadActivities       LeadActivity[]    @relation("LeadActivityCreator")
-  leaves               UserLeave[]
-  taskTemplatesCreated TaskTemplate[]    @relation("TaskTemplateCreator")
+  projectsAsSales            Project[]                     @relation("ProjectSales")
+  projectsAsPm               Project[]                     @relation("ProjectPm")
+  projectsAsTw               Project[]                     @relation("ProjectTechWriter")
+  projectsAsAdmin            Project[]                     @relation("ProjectAdmin")
+  resources                  ProjectResource[]
+  proposedResources          ProjectResource[]             @relation("ResourceProposer")
+  timesheets                 Timesheet[]
+  approvedTimesheets         Timesheet[]                   @relation("TimesheetApprover")
+  documentsUploaded          Document[]
+  activities                 Activity[]
+  auditLogs                  AuditLog[]
+  projectExpenses            ProjectExpense[]
+  tasksAssigned              Task[]                        @relation("TaskAssignee")
+  tasksCreated               Task[]                        @relation("TaskCreator")
+  taskAssignments            TaskAssignee[]
+  taskTimeLogs               TaskTimeLog[]
+  notifications              Notification[]
+  leadsOwned                 Lead[]                        @relation("LeadOwner")
+  leadActivities             LeadActivity[]                @relation("LeadActivityCreator")
+  leaves                     UserLeave[]
+  taskTemplatesCreated       TaskTemplate[]                @relation("TaskTemplateCreator")
+  projectTemplatesCreated    ProjectTemplate[]             @relation("ProjectTemplateCreator")
+  closingChecklistsCompleted ProjectClosingChecklistItem[] @relation("ClosingChecklistCompleter")
+  skillGoalsAsSubject        SkillDevelopmentGoal[]        @relation("SkillGoalSubject")
+  skillGoalsCreated          SkillDevelopmentGoal[]        @relation("SkillGoalCreator")
+  skillProgressionsAsSubject SkillProgressionLog[]         @relation("SkillProgressionSubject")
+  skillProgressionsLogged    SkillProgressionLog[]         @relation("SkillProgressionChanger")
 
   raidItemsOwned          ProjectRaidItem[]                @relation("RaidOwner")
   raidItemsCreated        ProjectRaidItem[]                @relation("RaidCreator")
@@ -175,6 +181,8 @@ model Project {
   startDate                DateTime?
   endDate                  DateTime?
   contractValue            Float         @default(0)
+  currency                 String        @default("IDR")
+  exchangeRate             Float         @default(1)
   vatPercent               Float         @default(11)
   contractValueIncludesVat Boolean       @default(true)
   estimatedCost            Float         @default(0)
@@ -202,6 +210,7 @@ model Project {
   billingMilestones  BillingMilestone[]
   raidItems          ProjectRaidItem[]
   perfProjectRatings PerformanceReviewProjectRating[]
+  closingChecklist   ProjectClosingChecklistItem[]
 }
 
 model SurveyQuestion {
@@ -296,19 +305,45 @@ model Timesheet {
 }
 
 model Document {
-  id            String       @id @default(cuid())
+  id               String       @id @default(cuid())
+  projectId        String
+  project          Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  type             DocumentType
+  fileName         String
+  fileUrl          String       @db.Text
+  invoiceNumber    String?
+  invoiceAmount    Float?
+  invoiceStatus    String?
+  notes            String?
+  uploadedById     String?
+  uploadedBy       User?        @relation(fields: [uploadedById], references: [id])
+  uploadedAt       DateTime     @default(now())
+  version          Int          @default(1)
+  parentDocumentId String?
+  parentDocument   Document?    @relation("DocumentVersions", fields: [parentDocumentId], references: [id], onDelete: SetNull)
+  versions         Document[]   @relation("DocumentVersions")
+  isLatest         Boolean      @default(true)
+
+  @@index([projectId, type, isLatest])
+}
+
+model ProjectClosingChecklistItem {
+  id            String    @id @default(cuid())
   projectId     String
-  project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  type          DocumentType
-  fileName      String
-  fileUrl       String       @db.Text
-  invoiceNumber String?
-  invoiceAmount Float?
-  invoiceStatus String?
-  notes         String?
-  uploadedById  String?
-  uploadedBy    User?        @relation(fields: [uploadedById], references: [id])
-  uploadedAt    DateTime     @default(now())
+  project       Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  key           String
+  label         String
+  status        String    @default("PENDING")
+  note          String?   @db.Text
+  completedAt   DateTime?
+  completedById String?
+  completedBy   User?     @relation("ClosingChecklistCompleter", fields: [completedById], references: [id])
+  sortOrder     Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([projectId, key])
+  @@index([projectId])
 }
 
 model ProjectExpense {
@@ -344,8 +379,9 @@ model BusinessUnit {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  users         User[]
-  taskTemplates TaskTemplate[]
+  users            User[]
+  taskTemplates    TaskTemplate[]
+  projectTemplates ProjectTemplate[]
 }
 
 model Skill {
@@ -356,7 +392,9 @@ model Skill {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  users UserSkill[]
+  users            UserSkill[]
+  developmentGoals SkillDevelopmentGoal[]
+  progressionLogs  SkillProgressionLog[]
 }
 
 model UserSkill {
@@ -369,6 +407,45 @@ model UserSkill {
   createdAt   DateTime @default(now())
 
   @@unique([userId, skillId])
+  @@index([userId])
+  @@index([skillId])
+}
+
+model SkillDevelopmentGoal {
+  id           String    @id @default(cuid())
+  userId       String
+  user         User      @relation("SkillGoalSubject", fields: [userId], references: [id], onDelete: Cascade)
+  skillId      String
+  skill        Skill     @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  currentLevel Int       @default(1)
+  targetLevel  Int       @default(3)
+  targetDate   DateTime?
+  status       String    @default("ACTIVE")
+  notes        String?   @db.Text
+  createdById  String?
+  createdBy    User?     @relation("SkillGoalCreator", fields: [createdById], references: [id])
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  completedAt  DateTime?
+
+  @@unique([userId, skillId])
+  @@index([userId])
+  @@index([status])
+}
+
+model SkillProgressionLog {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation("SkillProgressionSubject", fields: [userId], references: [id], onDelete: Cascade)
+  skillId     String
+  skill       Skill    @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  fromLevel   Int?
+  toLevel     Int
+  changedById String?
+  changedBy   User?    @relation("SkillProgressionChanger", fields: [changedById], references: [id])
+  note        String?
+  createdAt   DateTime @default(now())
+
   @@index([userId])
   @@index([skillId])
 }
@@ -582,7 +659,79 @@ model TaskTemplate {
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
+  projectTemplates ProjectTemplate[]
+
   @@index([businessUnitId, isActive])
+}
+
+model ProjectTemplate {
+  id                       String        @id @default(cuid())
+  name                     String
+  description              String?       @db.Text
+  businessUnitId           String?
+  businessUnit             BusinessUnit? @relation(fields: [businessUnitId], references: [id])
+  kind                     ProjectKind   @default(CLIENT)
+  defaultDurationDays      Int           @default(30)
+  estimatedContractValue   Float         @default(0)
+  estimatedCost            Float         @default(0)
+  plannedMandays           Float         @default(0)
+  vatPercent               Float         @default(11)
+  contractValueIncludesVat Boolean       @default(true)
+  taskTemplateId           String?
+  taskTemplate             TaskTemplate? @relation(fields: [taskTemplateId], references: [id])
+  isActive                 Boolean       @default(true)
+  createdById              String
+  createdBy                User          @relation("ProjectTemplateCreator", fields: [createdById], references: [id])
+  createdAt                DateTime      @default(now())
+  updatedAt                DateTime      @updatedAt
+
+  resources  ProjectTemplateResource[]
+  milestones ProjectTemplateMilestone[]
+  raidItems  ProjectTemplateRaidItem[]
+
+  @@index([businessUnitId, isActive])
+}
+
+model ProjectTemplateResource {
+  id             String          @id @default(cuid())
+  templateId     String
+  template       ProjectTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  role           String
+  count          Int             @default(1)
+  plannedMandays Float           @default(0)
+  dailyRate      Float           @default(0)
+  note           String?
+  createdAt      DateTime        @default(now())
+
+  @@index([templateId])
+}
+
+model ProjectTemplateMilestone {
+  id         String          @id @default(cuid())
+  templateId String
+  template   ProjectTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  name       String
+  percentage Float           @default(0)
+  offsetDays Int             @default(0)
+  order      Int             @default(0)
+  createdAt  DateTime        @default(now())
+
+  @@index([templateId])
+}
+
+model ProjectTemplateRaidItem {
+  id          String          @id @default(cuid())
+  templateId  String
+  template    ProjectTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  type        RaidType
+  title       String
+  description String?         @db.Text
+  impact      RaidImpact      @default(MEDIUM)
+  likelihood  RaidLikelihood  @default(MEDIUM)
+  mitigation  String?         @db.Text
+  createdAt   DateTime        @default(now())
+
+  @@index([templateId])
 }
 
 model Notification {

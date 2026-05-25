@@ -39,7 +39,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoadingPage } from "@/components/common/Loading";
 import { PdfUploadField } from "@/components/common/PdfUploadField";
-import { formatIDR } from "@/lib/format";
+import { formatIDR, SUPPORTED_CURRENCIES } from "@/lib/format";
 import NewClientDialog from "@/components/clients/NewClientDialog";
 
 const ROLE_RATES: Record<string, { label: string; rate: number }> = {
@@ -459,6 +459,8 @@ const createProjectSchema = z.object({
   startDate: z.string().optional(),
   endDate: z.string().optional(),
   contractValue: z.coerce.number().min(0, "Revenue must be >= 0"),
+  currency: z.string().default("IDR"),
+  exchangeRate: z.coerce.number().min(0.0001).default(1),
   vatPercent: z.coerce.number().min(0).max(100),
   contractValueIncludesVat: z.boolean(),
   resources: z.array(resourceRowSchema).min(1, "Add at least one resource requirement"),
@@ -498,6 +500,8 @@ function FullProjectForm() {
       startDate: "",
       endDate: "",
       contractValue: 0,
+      currency: "IDR",
+      exchangeRate: 1,
       vatPercent: 11,
       contractValueIncludesVat: true,
       resources: [{ role: "KONSULTAN", headcount: 1, mandaysPerPerson: 10, dailyRate: ROLE_RATES.KONSULTAN.rate }],
@@ -566,6 +570,8 @@ function FullProjectForm() {
         startDate: data.startDate || undefined,
         endDate: data.endDate || undefined,
         contractValue: data.contractValue,
+        currency: isInternal ? "IDR" : (data.currency || "IDR"),
+        exchangeRate: isInternal ? 1 : Number(data.exchangeRate || 1),
         vatPercent: isInternal ? 0 : data.vatPercent,
         contractValueIncludesVat: isInternal ? false : data.contractValueIncludesVat,
         estimatedCost: totals.cost,
@@ -661,7 +667,7 @@ function FullProjectForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      {isInternal ? "Internal Budget (IDR) *" : "Selling Price to Client / Revenue (IDR) *"}
+                      {isInternal ? "Internal Budget *" : "Selling Price to Client / Revenue *"}
                     </FormLabel>
                     <FormControl><Input type="number" placeholder="0" {...field} /></FormControl>
                     <FormMessage />
@@ -670,6 +676,37 @@ function FullProjectForm() {
               />
               {!isInternal && (
                 <>
+                  <FormField
+                    control={form.control}
+                    name="currency"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Currency</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                          <SelectContent>
+                            {SUPPORTED_CURRENCIES.map((c) => (
+                              <SelectItem key={c} value={c}>{c}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {form.watch("currency") !== "IDR" && (
+                    <FormField
+                      control={form.control}
+                      name="exchangeRate"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Kurs ke IDR *</FormLabel>
+                          <FormControl><Input type="number" step="0.01" placeholder="contoh: 16500" {...field} /></FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
                   <FormField
                     control={form.control}
                     name="vatPercent"

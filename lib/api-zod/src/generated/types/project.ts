@@ -5,6 +5,8 @@
  * SecureProfit Hub API
  * OpenAPI spec version: 0.1.0
  */
+import type { ProjectHealthComponents } from "./projectHealthComponents";
+import type { ProjectHealthLabel } from "./projectHealthLabel";
 import type { ProjectKind } from "./projectKind";
 import type { ProjectStatus } from "./projectStatus";
 
@@ -28,6 +30,8 @@ export interface Project {
   startDate?: string | null;
   endDate?: string | null;
   contractValue: number;
+  currency?: string | null;
+  exchangeRate?: number | null;
   vatPercent?: number;
   contractValueIncludesVat?: boolean;
   revenueNet?: number;
@@ -52,6 +56,11 @@ export interface Project {
   reportLink?: string | null;
   reportSubmittedAt?: string | null;
   lastStatusReason?: string | null;
+  /** 0-100 composite health score. Null for DRAFT/CLOSED projects or callers without financial visibility. */
+  healthScore?: number | null;
+  healthLabel?: ProjectHealthLabel;
+  healthComponents?: ProjectHealthComponents;
+  healthReasons?: string[] | null;
   spkFileUrl?: string | null;
   spkFileName?: string | null;
   contractFileUrl?: string | null;

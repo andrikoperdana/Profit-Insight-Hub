@@ -632,6 +632,24 @@ export interface CreateClientBody {
   industry?: string;
 }
 
+export type ProjectHealthLabel =
+  | (typeof ProjectHealthLabel)[keyof typeof ProjectHealthLabel]
+  | null;
+
+export const ProjectHealthLabel = {
+  HEALTHY: "HEALTHY",
+  AT_RISK: "AT_RISK",
+  CRITICAL: "CRITICAL",
+} as const;
+
+export type ProjectHealthComponents = {
+  margin?: number;
+  raid?: number;
+  expenses?: number;
+  billing?: number;
+  schedule?: number;
+} | null;
+
 export interface Project {
   id: string;
   code: string;
@@ -652,6 +670,8 @@ export interface Project {
   startDate?: string | null;
   endDate?: string | null;
   contractValue: number;
+  currency?: string | null;
+  exchangeRate?: number | null;
   vatPercent?: number;
   contractValueIncludesVat?: boolean;
   revenueNet?: number;
@@ -676,6 +696,11 @@ export interface Project {
   reportLink?: string | null;
   reportSubmittedAt?: string | null;
   lastStatusReason?: string | null;
+  /** 0-100 composite health score. Null for DRAFT/CLOSED projects or callers without financial visibility. */
+  healthScore?: number | null;
+  healthLabel?: ProjectHealthLabel;
+  healthComponents?: ProjectHealthComponents;
+  healthReasons?: string[] | null;
   spkFileUrl?: string | null;
   spkFileName?: string | null;
   contractFileUrl?: string | null;
@@ -968,6 +993,9 @@ export interface Document {
   uploadedById?: string | null;
   uploadedByName?: string | null;
   uploadedAt: string;
+  version: number;
+  parentDocumentId?: string | null;
+  isLatest: boolean;
 }
 
 export type ProjectDetail = Project & {
@@ -988,6 +1016,10 @@ export interface CreateProjectBody {
   startDate?: string;
   endDate?: string;
   contractValue?: number;
+  /** ISO 4217 code, default IDR */
+  currency?: string;
+  /** Rate to IDR (default 1 for IDR) */
+  exchangeRate?: number;
   /** PPN percent (default 11) */
   vatPercent?: number;
   /** If true, contractValue is gross including PPN; otherwise net (DPP) */
@@ -1015,6 +1047,10 @@ export interface UpdateProjectBody {
   startDate?: string;
   endDate?: string;
   contractValue?: number;
+  /** ISO 4217. Editable only while project is DRAFT. */
+  currency?: string;
+  /** Rate to IDR. Editable only while project is DRAFT. */
+  exchangeRate?: number;
   vatPercent?: number;
   contractValueIncludesVat?: boolean;
   estimatedCost?: number;
@@ -1097,6 +1133,117 @@ export interface CreateTimesheetBody {
 
 export interface RejectTimesheetBody {
   reason: string;
+}
+
+export type ClosingChecklistItemStatus =
+  (typeof ClosingChecklistItemStatus)[keyof typeof ClosingChecklistItemStatus];
+
+export const ClosingChecklistItemStatus = {
+  PENDING: "PENDING",
+  DONE: "DONE",
+  NA: "NA",
+} as const;
+
+export interface ClosingChecklistItem {
+  id: string;
+  projectId: string;
+  key: string;
+  label: string;
+  status: ClosingChecklistItemStatus;
+  note?: string | null;
+  completedAt?: string | null;
+  completedById?: string | null;
+  sortOrder: number;
+}
+
+export type SkillDevelopmentGoalStatus =
+  (typeof SkillDevelopmentGoalStatus)[keyof typeof SkillDevelopmentGoalStatus];
+
+export const SkillDevelopmentGoalStatus = {
+  ACTIVE: "ACTIVE",
+  COMPLETED: "COMPLETED",
+  PAUSED: "PAUSED",
+  CANCELLED: "CANCELLED",
+} as const;
+
+export interface SkillDevelopmentGoal {
+  id: string;
+  userId: string;
+  userName?: string | null;
+  skillId: string;
+  skillName?: string | null;
+  currentLevel: number;
+  targetLevel: number;
+  targetDate?: string | null;
+  status: SkillDevelopmentGoalStatus;
+  notes?: string | null;
+  createdById?: string | null;
+  createdByName?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  completedAt?: string | null;
+}
+
+export interface CreateSkillDevelopmentGoalBody {
+  userId?: string;
+  skillId: string;
+  currentLevel?: number;
+  targetLevel: number;
+  targetDate?: string | null;
+  notes?: string | null;
+}
+
+export type UpdateSkillDevelopmentGoalBodyStatus =
+  (typeof UpdateSkillDevelopmentGoalBodyStatus)[keyof typeof UpdateSkillDevelopmentGoalBodyStatus];
+
+export const UpdateSkillDevelopmentGoalBodyStatus = {
+  ACTIVE: "ACTIVE",
+  COMPLETED: "COMPLETED",
+  PAUSED: "PAUSED",
+  CANCELLED: "CANCELLED",
+} as const;
+
+export interface UpdateSkillDevelopmentGoalBody {
+  currentLevel?: number;
+  targetLevel?: number;
+  targetDate?: string | null;
+  notes?: string | null;
+  status?: UpdateSkillDevelopmentGoalBodyStatus;
+}
+
+export interface SkillProgressionLog {
+  id: string;
+  userId: string;
+  userName?: string | null;
+  skillId: string;
+  skillName?: string | null;
+  fromLevel?: number | null;
+  toLevel: number;
+  changedById?: string | null;
+  changedByName?: string | null;
+  note?: string | null;
+  createdAt: string;
+}
+
+export interface LogSkillProgressionBody {
+  userId?: string;
+  skillId: string;
+  toLevel: number;
+  note?: string | null;
+}
+
+export type UpdateClosingChecklistItemBodyStatus =
+  (typeof UpdateClosingChecklistItemBodyStatus)[keyof typeof UpdateClosingChecklistItemBodyStatus];
+
+export const UpdateClosingChecklistItemBodyStatus = {
+  PENDING: "PENDING",
+  DONE: "DONE",
+  NA: "NA",
+} as const;
+
+export interface UpdateClosingChecklistItemBody {
+  status?: UpdateClosingChecklistItemBodyStatus;
+  note?: string | null;
 }
 
 export interface CreateDocumentBody {
@@ -1648,6 +1795,124 @@ export interface CreateTaskTemplateBody {
   tasks: TaskTemplateItem[];
 }
 
+export interface ProjectTemplateResource {
+  id?: string | null;
+  role: string;
+  count: number;
+  plannedMandays: number;
+  dailyRate: number;
+  note?: string | null;
+}
+
+export interface ProjectTemplateMilestone {
+  id?: string | null;
+  name: string;
+  percentage: number;
+  offsetDays: number;
+  order?: number | null;
+}
+
+export type ProjectTemplateRaidItemType =
+  (typeof ProjectTemplateRaidItemType)[keyof typeof ProjectTemplateRaidItemType];
+
+export const ProjectTemplateRaidItemType = {
+  RISK: "RISK",
+  ASSUMPTION: "ASSUMPTION",
+  ISSUE: "ISSUE",
+  DEPENDENCY: "DEPENDENCY",
+} as const;
+
+export type ProjectTemplateRaidItemImpact =
+  | (typeof ProjectTemplateRaidItemImpact)[keyof typeof ProjectTemplateRaidItemImpact]
+  | null;
+
+export const ProjectTemplateRaidItemImpact = {
+  LOW: "LOW",
+  MEDIUM: "MEDIUM",
+  HIGH: "HIGH",
+  CRITICAL: "CRITICAL",
+} as const;
+
+export type ProjectTemplateRaidItemLikelihood =
+  | (typeof ProjectTemplateRaidItemLikelihood)[keyof typeof ProjectTemplateRaidItemLikelihood]
+  | null;
+
+export const ProjectTemplateRaidItemLikelihood = {
+  LOW: "LOW",
+  MEDIUM: "MEDIUM",
+  HIGH: "HIGH",
+} as const;
+
+export interface ProjectTemplateRaidItem {
+  id?: string | null;
+  type: ProjectTemplateRaidItemType;
+  title: string;
+  description?: string | null;
+  impact?: ProjectTemplateRaidItemImpact;
+  likelihood?: ProjectTemplateRaidItemLikelihood;
+  mitigation?: string | null;
+}
+
+export type ProjectTemplateKind =
+  (typeof ProjectTemplateKind)[keyof typeof ProjectTemplateKind];
+
+export const ProjectTemplateKind = {
+  CLIENT: "CLIENT",
+  INTERNAL: "INTERNAL",
+} as const;
+
+export interface ProjectTemplate {
+  id: string;
+  name: string;
+  description?: string | null;
+  businessUnitId?: string | null;
+  businessUnitName?: string | null;
+  kind: ProjectTemplateKind;
+  defaultDurationDays: number;
+  estimatedContractValue: number;
+  estimatedCost: number;
+  plannedMandays: number;
+  vatPercent: number;
+  contractValueIncludesVat: boolean;
+  taskTemplateId?: string | null;
+  taskTemplateName?: string | null;
+  isActive: boolean;
+  createdById: string;
+  createdByName: string;
+  createdAt: string;
+  updatedAt: string;
+  resources: ProjectTemplateResource[];
+  milestones: ProjectTemplateMilestone[];
+  raidItems: ProjectTemplateRaidItem[];
+}
+
+export type CreateProjectTemplateBodyKind =
+  | (typeof CreateProjectTemplateBodyKind)[keyof typeof CreateProjectTemplateBodyKind]
+  | null;
+
+export const CreateProjectTemplateBodyKind = {
+  CLIENT: "CLIENT",
+  INTERNAL: "INTERNAL",
+} as const;
+
+export interface CreateProjectTemplateBody {
+  name: string;
+  description?: string | null;
+  businessUnitId?: string | null;
+  kind?: CreateProjectTemplateBodyKind;
+  defaultDurationDays?: number | null;
+  estimatedContractValue?: number | null;
+  estimatedCost?: number | null;
+  plannedMandays?: number | null;
+  vatPercent?: number | null;
+  contractValueIncludesVat?: boolean | null;
+  taskTemplateId?: string | null;
+  isActive?: boolean | null;
+  resources?: ProjectTemplateResource[] | null;
+  milestones?: ProjectTemplateMilestone[] | null;
+  raidItems?: ProjectTemplateRaidItem[] | null;
+}
+
 export type UserLeaveType = (typeof UserLeaveType)[keyof typeof UserLeaveType];
 
 export const UserLeaveType = {
@@ -1773,6 +2038,15 @@ export const ListTimesheetsScope = {
   all: "all",
 } as const;
 
+export type ListSkillDevelopmentGoalsParams = {
+  userId?: string;
+  status?: string;
+};
+
+export type ListSkillProgressionLogsParams = {
+  userId?: string;
+};
+
 export type ListTaskTemplatesParams = {
   businessUnitId?: string;
 };
@@ -1787,10 +2061,28 @@ export type ApplyTaskTemplate201 = {
   created?: number;
 };
 
+export type ApplyProjectTemplateBody = {
+  code: string;
+  name: string;
+  clientId: string;
+  salesId?: string | null;
+  description?: string | null;
+  contractValue?: number | null;
+  startDate?: string | null;
+};
+
+export type ApplyProjectTemplate201 = {
+  projectId: string;
+};
+
 export type ListLeavesParams = {
   userId?: string;
   startDate?: string;
   endDate?: string;
+};
+
+export type ListProjectDocumentsParams = {
+  includeHistory?: boolean;
 };
 
 export type GetTopPerformersParams = {

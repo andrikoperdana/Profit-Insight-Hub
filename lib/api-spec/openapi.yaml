@@ -1159,6 +1159,94 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/CreateBulkTimesheetsResponse" }
 
+  /skill-development/goals:
+    get:
+      operationId: listSkillDevelopmentGoals
+      tags: [skills]
+      parameters:
+        - { name: userId, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/SkillDevelopmentGoal" }
+    post:
+      operationId: createSkillDevelopmentGoal
+      tags: [skills]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateSkillDevelopmentGoalBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SkillDevelopmentGoal" }
+
+  /skill-development/goals/{id}:
+    patch:
+      operationId: updateSkillDevelopmentGoal
+      tags: [skills]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpdateSkillDevelopmentGoalBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SkillDevelopmentGoal" }
+    delete:
+      operationId: deleteSkillDevelopmentGoal
+      tags: [skills]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /skill-development/progression:
+    get:
+      operationId: listSkillProgressionLogs
+      tags: [skills]
+      parameters:
+        - { name: userId, in: query, required: false, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/SkillProgressionLog" }
+    post:
+      operationId: logSkillProgression
+      tags: [skills]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LogSkillProgressionBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SkillProgressionLog" }
+
   /skill-matrix:
     get:
       operationId: getSkillMatrix
@@ -1254,6 +1342,105 @@ paths:
                 type: object
                 properties:
                   created: { type: integer }
+
+  /project-templates:
+    get:
+      operationId: listProjectTemplates
+      tags: [project-templates]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ProjectTemplate" }
+    post:
+      operationId: createProjectTemplate
+      tags: [project-templates]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateProjectTemplateBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ProjectTemplate" }
+
+  /project-templates/{id}:
+    get:
+      operationId: getProjectTemplate
+      tags: [project-templates]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ProjectTemplate" }
+    patch:
+      operationId: updateProjectTemplate
+      tags: [project-templates]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateProjectTemplateBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ProjectTemplate" }
+    delete:
+      operationId: deleteProjectTemplate
+      tags: [project-templates]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /project-templates/{id}/apply:
+    post:
+      operationId: applyProjectTemplate
+      tags: [project-templates]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code, name, clientId]
+              properties:
+                code: { type: string }
+                name: { type: string }
+                clientId: { type: string }
+                salesId: { type: string, nullable: true }
+                description: { type: string, nullable: true }
+                contractValue: { type: number, nullable: true }
+                startDate: { type: string, nullable: true }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [projectId]
+                properties:
+                  projectId: { type: string }
 
   /leaves:
     get:
@@ -1362,6 +1549,7 @@ paths:
       tags: [documents]
       parameters:
         - { name: id, in: path, required: true, schema: { type: string } }
+        - { name: includeHistory, in: query, required: false, schema: { type: boolean } }
       responses:
         "200":
           description: OK
@@ -1386,6 +1574,55 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Document" }
+
+  /documents/{id}/versions:
+    get:
+      operationId: listDocumentVersions
+      tags: [documents]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Document" }
+
+  /projects/{id}/closing-checklist:
+    get:
+      operationId: getProjectClosingChecklist
+      tags: [projects]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ClosingChecklistItem" }
+
+  /projects/{id}/closing-checklist/{itemId}:
+    patch:
+      operationId: updateProjectClosingChecklistItem
+      tags: [projects]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+        - { name: itemId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpdateClosingChecklistItemBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ClosingChecklistItem" }
 
   /documents/{id}:
     delete:
@@ -2314,6 +2551,8 @@ components:
         startDate: { type: string, nullable: true }
         endDate: { type: string, nullable: true }
         contractValue: { type: number }
+        currency: { type: string, nullable: true }
+        exchangeRate: { type: number, nullable: true }
         vatPercent: { type: number }
         contractValueIncludesVat: { type: boolean }
         revenueNet: { type: number }
@@ -2338,6 +2577,27 @@ components:
         reportLink: { type: string, nullable: true }
         reportSubmittedAt: { type: string, nullable: true }
         lastStatusReason: { type: string, nullable: true }
+        healthScore:
+          type: integer
+          nullable: true
+          description: 0-100 composite health score. Null for DRAFT/CLOSED projects or callers without financial visibility.
+        healthLabel:
+          type: string
+          nullable: true
+          enum: [HEALTHY, AT_RISK, CRITICAL]
+        healthComponents:
+          type: object
+          nullable: true
+          properties:
+            margin: { type: integer }
+            raid: { type: integer }
+            expenses: { type: integer }
+            billing: { type: integer }
+            schedule: { type: integer }
+        healthReasons:
+          type: array
+          nullable: true
+          items: { type: string }
         spkFileUrl: { type: string, nullable: true }
         spkFileName: { type: string, nullable: true }
         contractFileUrl: { type: string, nullable: true }
@@ -2574,6 +2834,8 @@ components:
         startDate: { type: string }
         endDate: { type: string }
         contractValue: { type: number }
+        currency: { type: string, description: "ISO 4217 code, default IDR" }
+        exchangeRate: { type: number, description: "Rate to IDR (default 1 for IDR)" }
         vatPercent: { type: number, description: "PPN percent (default 11)" }
         contractValueIncludesVat: { type: boolean, description: "If true, contractValue is gross including PPN; otherwise net (DPP)" }
         estimatedCost: { type: number }
@@ -2600,6 +2862,8 @@ components:
         startDate: { type: string }
         endDate: { type: string }
         contractValue: { type: number }
+        currency: { type: string, description: "ISO 4217. Editable only while project is DRAFT." }
+        exchangeRate: { type: number, description: "Rate to IDR. Editable only while project is DRAFT." }
         vatPercent: { type: number }
         contractValueIncludesVat: { type: boolean }
         estimatedCost: { type: number }
@@ -2718,7 +2982,7 @@ components:
 
     Document:
       type: object
-      required: [id, projectId, type, fileName, fileUrl, uploadedAt]
+      required: [id, projectId, type, fileName, fileUrl, uploadedAt, version, isLatest]
       properties:
         id: { type: string }
         projectId: { type: string }
@@ -2732,6 +2996,94 @@ components:
         uploadedById: { type: string, nullable: true }
         uploadedByName: { type: string, nullable: true }
         uploadedAt: { type: string }
+        version: { type: integer }
+        parentDocumentId: { type: string, nullable: true }
+        isLatest: { type: boolean }
+
+    ClosingChecklistItem:
+      type: object
+      required: [id, projectId, key, label, status, sortOrder]
+      properties:
+        id: { type: string }
+        projectId: { type: string }
+        key: { type: string }
+        label: { type: string }
+        status: { type: string, enum: [PENDING, DONE, NA] }
+        note: { type: string, nullable: true }
+        completedAt: { type: string, nullable: true }
+        completedById: { type: string, nullable: true }
+        sortOrder: { type: integer }
+
+    SkillDevelopmentGoal:
+      type: object
+      required: [id, userId, skillId, currentLevel, targetLevel, status, createdAt, updatedAt]
+      properties:
+        id: { type: string }
+        userId: { type: string }
+        userName: { type: string, nullable: true }
+        skillId: { type: string }
+        skillName: { type: string, nullable: true }
+        currentLevel: { type: integer }
+        targetLevel: { type: integer }
+        targetDate: { type: string, nullable: true }
+        status: { type: string, enum: [ACTIVE, COMPLETED, PAUSED, CANCELLED] }
+        notes: { type: string, nullable: true }
+        createdById: { type: string, nullable: true }
+        createdByName: { type: string, nullable: true }
+        createdAt: { type: string }
+        updatedAt: { type: string }
+        completedAt: { type: string, nullable: true }
+
+    CreateSkillDevelopmentGoalBody:
+      type: object
+      required: [skillId, targetLevel]
+      properties:
+        userId: { type: string }
+        skillId: { type: string }
+        currentLevel: { type: integer }
+        targetLevel: { type: integer }
+        targetDate: { type: string, nullable: true }
+        notes: { type: string, nullable: true }
+
+    UpdateSkillDevelopmentGoalBody:
+      type: object
+      properties:
+        currentLevel: { type: integer }
+        targetLevel: { type: integer }
+        targetDate: { type: string, nullable: true }
+        notes: { type: string, nullable: true }
+        status: { type: string, enum: [ACTIVE, COMPLETED, PAUSED, CANCELLED] }
+
+    SkillProgressionLog:
+      type: object
+      required: [id, userId, skillId, toLevel, createdAt]
+      properties:
+        id: { type: string }
+        userId: { type: string }
+        userName: { type: string, nullable: true }
+        skillId: { type: string }
+        skillName: { type: string, nullable: true }
+        fromLevel: { type: integer, nullable: true }
+        toLevel: { type: integer }
+        changedById: { type: string, nullable: true }
+        changedByName: { type: string, nullable: true }
+        note: { type: string, nullable: true }
+        createdAt: { type: string }
+
+    LogSkillProgressionBody:
+      type: object
+      required: [skillId, toLevel]
+      properties:
+        userId: { type: string }
+        skillId: { type: string }
+        toLevel: { type: integer }
+        note: { type: string, nullable: true }
+
+    UpdateClosingChecklistItemBody:
+      type: object
+      properties:
+        status: { type: string, enum: [PENDING, DONE, NA] }
+        note: { type: string, nullable: true }
 
     CreateDocumentBody:
       type: object
@@ -3358,6 +3710,101 @@ components:
         tasks:
           type: array
           items: { $ref: "#/components/schemas/TaskTemplateItem" }
+
+    ProjectTemplateResource:
+      type: object
+      required: [role, count, plannedMandays, dailyRate]
+      properties:
+        id: { type: string, nullable: true }
+        role: { type: string }
+        count: { type: integer }
+        plannedMandays: { type: number }
+        dailyRate: { type: number }
+        note: { type: string, nullable: true }
+
+    ProjectTemplateMilestone:
+      type: object
+      required: [name, percentage, offsetDays]
+      properties:
+        id: { type: string, nullable: true }
+        name: { type: string }
+        percentage: { type: number }
+        offsetDays: { type: integer }
+        order: { type: integer, nullable: true }
+
+    ProjectTemplateRaidItem:
+      type: object
+      required: [type, title]
+      properties:
+        id: { type: string, nullable: true }
+        type: { type: string, enum: [RISK, ASSUMPTION, ISSUE, DEPENDENCY] }
+        title: { type: string }
+        description: { type: string, nullable: true }
+        impact: { type: string, enum: [LOW, MEDIUM, HIGH, CRITICAL], nullable: true }
+        likelihood: { type: string, enum: [LOW, MEDIUM, HIGH], nullable: true }
+        mitigation: { type: string, nullable: true }
+
+    ProjectTemplate:
+      type: object
+      required: [id, name, kind, defaultDurationDays, estimatedContractValue, estimatedCost, plannedMandays, vatPercent, contractValueIncludesVat, isActive, createdById, createdByName, createdAt, updatedAt, resources, milestones, raidItems]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        businessUnitId: { type: string, nullable: true }
+        businessUnitName: { type: string, nullable: true }
+        kind: { type: string, enum: [CLIENT, INTERNAL] }
+        defaultDurationDays: { type: integer }
+        estimatedContractValue: { type: number }
+        estimatedCost: { type: number }
+        plannedMandays: { type: number }
+        vatPercent: { type: number }
+        contractValueIncludesVat: { type: boolean }
+        taskTemplateId: { type: string, nullable: true }
+        taskTemplateName: { type: string, nullable: true }
+        isActive: { type: boolean }
+        createdById: { type: string }
+        createdByName: { type: string }
+        createdAt: { type: string }
+        updatedAt: { type: string }
+        resources:
+          type: array
+          items: { $ref: "#/components/schemas/ProjectTemplateResource" }
+        milestones:
+          type: array
+          items: { $ref: "#/components/schemas/ProjectTemplateMilestone" }
+        raidItems:
+          type: array
+          items: { $ref: "#/components/schemas/ProjectTemplateRaidItem" }
+
+    CreateProjectTemplateBody:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string }
+        description: { type: string, nullable: true }
+        businessUnitId: { type: string, nullable: true }
+        kind: { type: string, enum: [CLIENT, INTERNAL], nullable: true }
+        defaultDurationDays: { type: integer, nullable: true }
+        estimatedContractValue: { type: number, nullable: true }
+        estimatedCost: { type: number, nullable: true }
+        plannedMandays: { type: number, nullable: true }
+        vatPercent: { type: number, nullable: true }
+        contractValueIncludesVat: { type: boolean, nullable: true }
+        taskTemplateId: { type: string, nullable: true }
+        isActive: { type: boolean, nullable: true }
+        resources:
+          type: array
+          nullable: true
+          items: { $ref: "#/components/schemas/ProjectTemplateResource" }
+        milestones:
+          type: array
+          nullable: true
+          items: { $ref: "#/components/schemas/ProjectTemplateMilestone" }
+        raidItems:
+          type: array
+          nullable: true
+          items: { $ref: "#/components/schemas/ProjectTemplateRaidItem" }
 
     UserLeave:
       type: object

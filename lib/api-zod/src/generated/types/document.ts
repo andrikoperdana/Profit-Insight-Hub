@@ -20,4 +20,7 @@ export interface Document {
   uploadedById?: string | null;
   uploadedByName?: string | null;
   uploadedAt: string;
+  version: number;
+  parentDocumentId?: string | null;
+  isLatest: boolean;
 }

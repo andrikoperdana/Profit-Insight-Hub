@@ -39,6 +39,32 @@ export function TimesheetStatusBadge({ status, className }: { status: TimesheetS
   );
 }
 
+export function HealthBadge({
+  score,
+  label,
+  reasons,
+  className,
+}: {
+  score: number | null | undefined;
+  label?: "HEALTHY" | "AT_RISK" | "CRITICAL" | null;
+  reasons?: string[] | null;
+  className?: string;
+}) {
+  if (score == null) return <span className="text-muted-foreground">-</span>;
+  const colorClass =
+    label === "HEALTHY"
+      ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/30"
+      : label === "AT_RISK"
+        ? "bg-amber-500/10 text-amber-500 border-amber-500/30"
+        : "bg-red-500/10 text-red-500 border-red-500/30";
+  const title = reasons && reasons.length > 0 ? reasons.join(" · ") : "Project health composite score";
+  return (
+    <Badge variant="outline" className={cn("font-bold tabular-nums", colorClass, className)} title={title}>
+      {score}
+    </Badge>
+  );
+}
+
 export function MarginBadge({ marginPct, className }: { marginPct: number | undefined | null; className?: string }) {
   if (marginPct == null) return <span className="text-muted-foreground">-</span>;
   

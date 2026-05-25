@@ -11,6 +11,8 @@ type ProjectWithRelations = Prisma.ProjectGetPayload<{
     resources: { include: { user: true } };
     timesheets: { include: { user: true } };
     expenses: true;
+    raidItems: true;
+    billingMilestones: true;
   };
 }>;
 
@@ -40,6 +42,8 @@ export interface ProjectMetrics {
   contractValueIncludesVat: boolean;
   revenueNet: number;
   vatAmount: number;
+  currency: string;
+  exchangeRate: number;
 }
 
 export function computeMetrics(project: ProjectWithRelations): ProjectMetrics {
@@ -127,6 +131,8 @@ export function computeMetrics(project: ProjectWithRelations): ProjectMetrics {
     contractValueIncludesVat,
     revenueNet,
     vatAmount,
+    currency: (project as any).currency ?? "IDR",
+    exchangeRate: (project as any).exchangeRate ?? 1,
   };
 }
 
@@ -198,6 +204,7 @@ export function canViewDailyRate(role: string | null | undefined): boolean {
 export function serializeProject(project: ProjectWithRelations, callerRole?: string | null) {
   const m = computeMetrics(project);
   const includeFinancials = canViewProjectFinancials(callerRole ?? "MANAGEMENT");
+  const health = includeFinancials ? computeHealthScore(project, m) : null;
   const financials = includeFinancials
     ? {
         contractValue: project.contractValue,
@@ -210,6 +217,8 @@ export function serializeProject(project: ProjectWithRelations, callerRole?: str
         marginPct: m.marginPct,
         vatPercent: m.vatPercent,
         contractValueIncludesVat: m.contractValueIncludesVat,
+        currency: m.currency,
+        exchangeRate: m.exchangeRate,
         revenueNet: m.revenueNet,
         vatAmount: m.vatAmount,
         recognizedRevenue: m.recognizedRevenue,
@@ -270,6 +279,10 @@ export function serializeProject(project: ProjectWithRelations, callerRole?: str
     plannedMandays: project.plannedMandays,
     actualMandays: m.actualMandays,
     ...financials,
+    healthScore: health?.score ?? null,
+    healthLabel: health?.label ?? null,
+    healthComponents: health?.components ?? null,
+    healthReasons: health?.reasons ?? null,
     lastStatusReason: project.lastStatusReason ?? null,
     createdAt: project.createdAt.toISOString(),
   };
@@ -284,4 +297,116 @@ export const projectInclude = {
   resources: { include: { user: true } },
   timesheets: { include: { user: true } },
   expenses: true,
+  raidItems: true,
+  billingMilestones: true,
 } as const;
+
+/**
+ * Project Health Score (0-100). Operational + financial composite signal.
+ *
+ * Components (max points):
+ *   - Margin (30): how actual margin tracks vs estimated margin
+ *   - RAID (20): penalty per OPEN/MITIGATING CRITICAL or HIGH-impact item
+ *   - Expenses (15): penalty per PENDING expense awaiting decision
+ *   - Billing (20): penalty per overdue milestone (past due, not PAID/CANCELLED)
+ *   - Schedule (15): penalty when endDate has passed and project is not
+ *     COMPLETE/CLOSED, scaled by days overdue (capped)
+ *
+ * Score is only meaningful for ACTIVE / OBSERVATION / PAUSE / COMPLETE.
+ * DRAFT and CLOSED return null (caller should hide the badge).
+ */
+export interface HealthScore {
+  score: number;
+  label: "HEALTHY" | "AT_RISK" | "CRITICAL";
+  components: {
+    margin: number;
+    raid: number;
+    expenses: number;
+    billing: number;
+    schedule: number;
+  };
+  reasons: string[];
+}
+
+export function computeHealthScore(
+  project: ProjectWithRelations,
+  metrics: ProjectMetrics,
+): HealthScore | null {
+  if (project.status === "DRAFT" || project.status === "CLOSED") return null;
+  const reasons: string[] = [];
+  const now = Date.now();
+
+  // --- Margin (30 pts) -------------------------------------------------------
+  // If we have no estimated cost, treat margin component as full (no signal).
+  // Otherwise compare actual margin to estimated margin; penalize proportionally
+  // for each percentage point of margin erosion, up to 30 pts.
+  let marginPts = 30;
+  if (project.contractValue > 0 && project.estimatedCost > 0) {
+    const estimatedMarginPct =
+      ((project.contractValue - project.estimatedCost) / project.contractValue) * 100;
+    const drop = estimatedMarginPct - metrics.marginPct;
+    if (drop > 0) {
+      marginPts = Math.max(0, 30 - Math.round(drop * 1.5));
+      if (drop >= 5) reasons.push(`Margin ${metrics.marginPct.toFixed(1)}% vs estimated ${estimatedMarginPct.toFixed(1)}%`);
+    }
+  }
+
+  // --- RAID (20 pts) ---------------------------------------------------------
+  let raidPts = 20;
+  let raidCritical = 0;
+  let raidHigh = 0;
+  for (const r of project.raidItems ?? []) {
+    if (r.status === "CLOSED") continue;
+    if (r.impact === "CRITICAL") raidCritical++;
+    else if (r.impact === "HIGH") raidHigh++;
+  }
+  const raidPenalty = raidCritical * 5 + raidHigh * 2;
+  raidPts = Math.max(0, 20 - raidPenalty);
+  if (raidCritical > 0) reasons.push(`${raidCritical} critical RAID item${raidCritical > 1 ? "s" : ""} open`);
+  if (raidHigh > 0) reasons.push(`${raidHigh} high-impact RAID item${raidHigh > 1 ? "s" : ""} open`);
+
+  // --- Expenses (15 pts) -----------------------------------------------------
+  const pendingExpenses = (project.expenses ?? []).filter(
+    (e) => (e as any).status === "PENDING",
+  ).length;
+  const expensesPts = Math.max(0, 15 - pendingExpenses * 3);
+  if (pendingExpenses > 0) reasons.push(`${pendingExpenses} pending expense${pendingExpenses > 1 ? "s" : ""} awaiting approval`);
+
+  // --- Billing (20 pts) ------------------------------------------------------
+  let overdueMilestones = 0;
+  for (const m of project.billingMilestones ?? []) {
+    if (m.status === "PAID" || m.status === "CANCELLED") continue;
+    if (m.dueDate && m.dueDate.getTime() < now) overdueMilestones++;
+  }
+  const billingPts = Math.max(0, 20 - overdueMilestones * 5);
+  if (overdueMilestones > 0) reasons.push(`${overdueMilestones} overdue billing milestone${overdueMilestones > 1 ? "s" : ""}`);
+
+  // --- Schedule (15 pts) -----------------------------------------------------
+  let schedulePts = 15;
+  if (
+    project.endDate &&
+    project.endDate.getTime() < now &&
+    project.status !== "COMPLETE"
+  ) {
+    const daysOverdue = Math.floor((now - project.endDate.getTime()) / 86400_000);
+    schedulePts = Math.max(0, 15 - Math.min(15, daysOverdue));
+    if (daysOverdue > 0) reasons.push(`${daysOverdue} day${daysOverdue > 1 ? "s" : ""} past end date`);
+  }
+
+  const score = marginPts + raidPts + expensesPts + billingPts + schedulePts;
+  const label: HealthScore["label"] =
+    score >= 80 ? "HEALTHY" : score >= 60 ? "AT_RISK" : "CRITICAL";
+
+  return {
+    score,
+    label,
+    components: {
+      margin: marginPts,
+      raid: raidPts,
+      expenses: expensesPts,
+      billing: billingPts,
+      schedule: schedulePts,
+    },
+    reasons,
+  };
+}

@@ -27,23 +27,69 @@ function serialize(
     uploadedById: d.uploadedById,
     uploadedByName: d.uploadedBy?.name ?? null,
     uploadedAt: d.uploadedAt.toISOString(),
+    version: d.version,
+    parentDocumentId: d.parentDocumentId,
+    isLatest: d.isLatest,
   };
 }
 
 router.get("/projects/:id/documents", async (req, res) => {
-  // Documents may contain BAST/Invoice PDFs with confidential client data.
-  // Require the same project visibility as the project detail endpoint to
-  // prevent IDOR enumeration across projects.
   if (!(await userCanAccessProject(String(req.params.id), req.user!))) {
     res.status(404).json({ error: "Not found" });
     return;
   }
+  const includeHistory = req.query.includeHistory === "true" || req.query.includeHistory === "1";
   const docs = await prisma.document.findMany({
-    where: { projectId: String(req.params.id) },
+    where: {
+      projectId: String(req.params.id),
+      ...(includeHistory ? {} : { isLatest: true }),
+    },
     include: { uploadedBy: true },
-    orderBy: { uploadedAt: "desc" },
+    orderBy: [{ uploadedAt: "desc" }],
   });
   res.json(docs.map(serialize));
+});
+
+router.get("/documents/:id/versions", async (req, res) => {
+  const doc = await prisma.document.findUnique({ where: { id: String(req.params.id) } });
+  if (!doc) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  if (!(await userCanAccessProject(doc.projectId, req.user!))) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  // walk to the root parent then collect the entire chain by descending children
+  let rootId = doc.id;
+  let cursor: { id: string; parentDocumentId: string | null } | null = doc;
+  while (cursor?.parentDocumentId) {
+    rootId = cursor.parentDocumentId;
+    cursor = await prisma.document.findUnique({
+      where: { id: cursor.parentDocumentId },
+      select: { id: true, parentDocumentId: true },
+    });
+  }
+  const collected: any[] = [];
+  const toVisit: string[] = [rootId];
+  const seen = new Set<string>();
+  while (toVisit.length) {
+    const ids = toVisit.splice(0).filter((id) => !seen.has(id));
+    ids.forEach((id) => seen.add(id));
+    if (!ids.length) break;
+    const batch = await prisma.document.findMany({
+      where: { id: { in: ids }, projectId: doc.projectId },
+      include: { uploadedBy: true },
+    });
+    collected.push(...batch);
+    const children = await prisma.document.findMany({
+      where: { parentDocumentId: { in: ids }, projectId: doc.projectId },
+      select: { id: true },
+    });
+    for (const c of children) if (!seen.has(c.id)) toVisit.push(c.id);
+  }
+  collected.sort((a, b) => b.version - a.version);
+  res.json(collected.map(serialize));
 });
 
 router.post(
@@ -72,19 +118,42 @@ router.post(
       res.status(403).json({ error: "Forbidden" });
       return;
     }
-    const d = await prisma.document.create({
-      data: {
-        projectId: String(req.params.id),
-        type: type as DocumentType,
-        fileName: String(fileName),
-        fileUrl: String(fileUrl),
-        invoiceNumber: invoiceNumber || null,
-        invoiceAmount: invoiceAmount != null ? Number(invoiceAmount) : null,
-        invoiceStatus: invoiceStatus || null,
-        notes: notes || null,
-        uploadedById: req.user!.sub,
-      },
-      include: { uploadedBy: true },
+    // Versioning: if a previous latest doc of same type exists for this project,
+    // mark it as historical and link the new one as next version. INVOICE is
+    // excluded (each invoice document is unique by invoiceNumber).
+    const VERSIONED_TYPES: DocumentType[] = ["BAST", "CONTRACT", "OTHER"];
+    const isVersioned = VERSIONED_TYPES.includes(type as DocumentType);
+    const d = await prisma.$transaction(async (tx) => {
+      let parentDocumentId: string | null = null;
+      let nextVersion = 1;
+      if (isVersioned) {
+        const prev = await tx.document.findFirst({
+          where: { projectId: String(req.params.id), type: type as DocumentType, isLatest: true },
+          orderBy: { version: "desc" },
+        });
+        if (prev) {
+          parentDocumentId = prev.id;
+          nextVersion = prev.version + 1;
+          await tx.document.update({ where: { id: prev.id }, data: { isLatest: false } });
+        }
+      }
+      return tx.document.create({
+        data: {
+          projectId: String(req.params.id),
+          type: type as DocumentType,
+          fileName: String(fileName),
+          fileUrl: String(fileUrl),
+          invoiceNumber: invoiceNumber || null,
+          invoiceAmount: invoiceAmount != null ? Number(invoiceAmount) : null,
+          invoiceStatus: invoiceStatus || null,
+          notes: notes || null,
+          uploadedById: req.user!.sub,
+          version: nextVersion,
+          parentDocumentId,
+          isLatest: true,
+        },
+        include: { uploadedBy: true },
+      });
     });
     await prisma.activity.create({
       data: {
@@ -163,6 +232,16 @@ router.delete(
       return;
     }
     await prisma.document.delete({ where: { id: String(req.params.id) } });
+    // If we deleted the latest version, promote the most recent prior version (if any) to latest
+    if (before.isLatest && before.parentDocumentId) {
+      const prior = await prisma.document.findFirst({
+        where: { projectId: before.projectId, type: before.type },
+        orderBy: { version: "desc" },
+      });
+      if (prior) {
+        await prisma.document.update({ where: { id: prior.id }, data: { isLatest: true } });
+      }
+    }
     await recordAudit(req, {
       action: "document.deleted",
       entityType: "Document",

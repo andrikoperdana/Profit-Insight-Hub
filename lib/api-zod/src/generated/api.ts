@@ -318,6 +318,8 @@ export const UpdateProjectReportResponse = zod.object({
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   contractValue: zod.number(),
+  currency: zod.string().nullish(),
+  exchangeRate: zod.number().nullish(),
   vatPercent: zod.number().optional(),
   contractValueIncludesVat: zod.boolean().optional(),
   revenueNet: zod.number().optional(),
@@ -342,6 +344,23 @@ export const UpdateProjectReportResponse = zod.object({
   reportLink: zod.string().nullish(),
   reportSubmittedAt: zod.string().nullish(),
   lastStatusReason: zod.string().nullish(),
+  healthScore: zod
+    .number()
+    .nullish()
+    .describe(
+      "0-100 composite health score. Null for DRAFT\/CLOSED projects or callers without financial visibility.",
+    ),
+  healthLabel: zod.enum(["HEALTHY", "AT_RISK", "CRITICAL"]).nullish(),
+  healthComponents: zod
+    .object({
+      margin: zod.number().optional(),
+      raid: zod.number().optional(),
+      expenses: zod.number().optional(),
+      billing: zod.number().optional(),
+      schedule: zod.number().optional(),
+    })
+    .nullish(),
+  healthReasons: zod.array(zod.string()).nullish(),
   spkFileUrl: zod.string().nullish(),
   spkFileName: zod.string().nullish(),
   contractFileUrl: zod.string().nullish(),
@@ -1046,6 +1065,8 @@ export const ListProjectsResponseItem = zod.object({
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   contractValue: zod.number(),
+  currency: zod.string().nullish(),
+  exchangeRate: zod.number().nullish(),
   vatPercent: zod.number().optional(),
   contractValueIncludesVat: zod.boolean().optional(),
   revenueNet: zod.number().optional(),
@@ -1070,6 +1091,23 @@ export const ListProjectsResponseItem = zod.object({
   reportLink: zod.string().nullish(),
   reportSubmittedAt: zod.string().nullish(),
   lastStatusReason: zod.string().nullish(),
+  healthScore: zod
+    .number()
+    .nullish()
+    .describe(
+      "0-100 composite health score. Null for DRAFT\/CLOSED projects or callers without financial visibility.",
+    ),
+  healthLabel: zod.enum(["HEALTHY", "AT_RISK", "CRITICAL"]).nullish(),
+  healthComponents: zod
+    .object({
+      margin: zod.number().optional(),
+      raid: zod.number().optional(),
+      expenses: zod.number().optional(),
+      billing: zod.number().optional(),
+      schedule: zod.number().optional(),
+    })
+    .nullish(),
+  healthReasons: zod.array(zod.string()).nullish(),
   spkFileUrl: zod.string().nullish(),
   spkFileName: zod.string().nullish(),
   contractFileUrl: zod.string().nullish(),
@@ -1105,6 +1143,11 @@ export const CreateProjectBody = zod.object({
   startDate: zod.string().optional(),
   endDate: zod.string().optional(),
   contractValue: zod.number().optional(),
+  currency: zod.string().optional().describe("ISO 4217 code, default IDR"),
+  exchangeRate: zod
+    .number()
+    .optional()
+    .describe("Rate to IDR (default 1 for IDR)"),
   vatPercent: zod.number().optional().describe("PPN percent (default 11)"),
   contractValueIncludesVat: zod
     .boolean()
@@ -1158,6 +1201,8 @@ export const GetProjectResponse = zod
     startDate: zod.string().nullish(),
     endDate: zod.string().nullish(),
     contractValue: zod.number(),
+    currency: zod.string().nullish(),
+    exchangeRate: zod.number().nullish(),
     vatPercent: zod.number().optional(),
     contractValueIncludesVat: zod.boolean().optional(),
     revenueNet: zod.number().optional(),
@@ -1182,6 +1227,23 @@ export const GetProjectResponse = zod
     reportLink: zod.string().nullish(),
     reportSubmittedAt: zod.string().nullish(),
     lastStatusReason: zod.string().nullish(),
+    healthScore: zod
+      .number()
+      .nullish()
+      .describe(
+        "0-100 composite health score. Null for DRAFT\/CLOSED projects or callers without financial visibility.",
+      ),
+    healthLabel: zod.enum(["HEALTHY", "AT_RISK", "CRITICAL"]).nullish(),
+    healthComponents: zod
+      .object({
+        margin: zod.number().optional(),
+        raid: zod.number().optional(),
+        expenses: zod.number().optional(),
+        billing: zod.number().optional(),
+        schedule: zod.number().optional(),
+      })
+      .nullish(),
+    healthReasons: zod.array(zod.string()).nullish(),
     spkFileUrl: zod.string().nullish(),
     spkFileName: zod.string().nullish(),
     contractFileUrl: zod.string().nullish(),
@@ -1250,6 +1312,9 @@ export const GetProjectResponse = zod
             uploadedById: zod.string().nullish(),
             uploadedByName: zod.string().nullish(),
             uploadedAt: zod.string(),
+            version: zod.number(),
+            parentDocumentId: zod.string().nullish(),
+            isLatest: zod.boolean(),
           }),
         )
         .optional(),
@@ -1290,6 +1355,14 @@ export const UpdateProjectBody = zod.object({
   startDate: zod.string().optional(),
   endDate: zod.string().optional(),
   contractValue: zod.number().optional(),
+  currency: zod
+    .string()
+    .optional()
+    .describe("ISO 4217. Editable only while project is DRAFT."),
+  exchangeRate: zod
+    .number()
+    .optional()
+    .describe("Rate to IDR. Editable only while project is DRAFT."),
   vatPercent: zod.number().optional(),
   contractValueIncludesVat: zod.boolean().optional(),
   estimatedCost: zod.number().optional(),
@@ -1333,6 +1406,8 @@ export const UpdateProjectResponse = zod.object({
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   contractValue: zod.number(),
+  currency: zod.string().nullish(),
+  exchangeRate: zod.number().nullish(),
   vatPercent: zod.number().optional(),
   contractValueIncludesVat: zod.boolean().optional(),
   revenueNet: zod.number().optional(),
@@ -1357,6 +1432,23 @@ export const UpdateProjectResponse = zod.object({
   reportLink: zod.string().nullish(),
   reportSubmittedAt: zod.string().nullish(),
   lastStatusReason: zod.string().nullish(),
+  healthScore: zod
+    .number()
+    .nullish()
+    .describe(
+      "0-100 composite health score. Null for DRAFT\/CLOSED projects or callers without financial visibility.",
+    ),
+  healthLabel: zod.enum(["HEALTHY", "AT_RISK", "CRITICAL"]).nullish(),
+  healthComponents: zod
+    .object({
+      margin: zod.number().optional(),
+      raid: zod.number().optional(),
+      expenses: zod.number().optional(),
+      billing: zod.number().optional(),
+      schedule: zod.number().optional(),
+    })
+    .nullish(),
+  healthReasons: zod.array(zod.string()).nullish(),
   spkFileUrl: zod.string().nullish(),
   spkFileName: zod.string().nullish(),
   contractFileUrl: zod.string().nullish(),
@@ -1523,6 +1615,8 @@ export const ListProjectsNeedingResourceResponseItem = zod.object({
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   contractValue: zod.number(),
+  currency: zod.string().nullish(),
+  exchangeRate: zod.number().nullish(),
   vatPercent: zod.number().optional(),
   contractValueIncludesVat: zod.boolean().optional(),
   revenueNet: zod.number().optional(),
@@ -1547,6 +1641,23 @@ export const ListProjectsNeedingResourceResponseItem = zod.object({
   reportLink: zod.string().nullish(),
   reportSubmittedAt: zod.string().nullish(),
   lastStatusReason: zod.string().nullish(),
+  healthScore: zod
+    .number()
+    .nullish()
+    .describe(
+      "0-100 composite health score. Null for DRAFT\/CLOSED projects or callers without financial visibility.",
+    ),
+  healthLabel: zod.enum(["HEALTHY", "AT_RISK", "CRITICAL"]).nullish(),
+  healthComponents: zod
+    .object({
+      margin: zod.number().optional(),
+      raid: zod.number().optional(),
+      expenses: zod.number().optional(),
+      billing: zod.number().optional(),
+      schedule: zod.number().optional(),
+    })
+    .nullish(),
+  healthReasons: zod.array(zod.string()).nullish(),
   spkFileUrl: zod.string().nullish(),
   spkFileName: zod.string().nullish(),
   contractFileUrl: zod.string().nullish(),
@@ -2592,6 +2703,108 @@ export const CreateBulkTimesheetsBody = zod.object({
   ),
 });
 
+export const ListSkillDevelopmentGoalsQueryParams = zod.object({
+  userId: zod.coerce.string().optional(),
+  status: zod.coerce.string().optional(),
+});
+
+export const ListSkillDevelopmentGoalsResponseItem = zod.object({
+  id: zod.string(),
+  userId: zod.string(),
+  userName: zod.string().nullish(),
+  skillId: zod.string(),
+  skillName: zod.string().nullish(),
+  currentLevel: zod.number(),
+  targetLevel: zod.number(),
+  targetDate: zod.string().nullish(),
+  status: zod.enum(["ACTIVE", "COMPLETED", "PAUSED", "CANCELLED"]),
+  notes: zod.string().nullish(),
+  createdById: zod.string().nullish(),
+  createdByName: zod.string().nullish(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+  completedAt: zod.string().nullish(),
+});
+export const ListSkillDevelopmentGoalsResponse = zod.array(
+  ListSkillDevelopmentGoalsResponseItem,
+);
+
+export const CreateSkillDevelopmentGoalBody = zod.object({
+  userId: zod.string().optional(),
+  skillId: zod.string(),
+  currentLevel: zod.number().optional(),
+  targetLevel: zod.number(),
+  targetDate: zod.string().nullish(),
+  notes: zod.string().nullish(),
+});
+
+export const UpdateSkillDevelopmentGoalParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const UpdateSkillDevelopmentGoalBody = zod.object({
+  currentLevel: zod.number().optional(),
+  targetLevel: zod.number().optional(),
+  targetDate: zod.string().nullish(),
+  notes: zod.string().nullish(),
+  status: zod.enum(["ACTIVE", "COMPLETED", "PAUSED", "CANCELLED"]).optional(),
+});
+
+export const UpdateSkillDevelopmentGoalResponse = zod.object({
+  id: zod.string(),
+  userId: zod.string(),
+  userName: zod.string().nullish(),
+  skillId: zod.string(),
+  skillName: zod.string().nullish(),
+  currentLevel: zod.number(),
+  targetLevel: zod.number(),
+  targetDate: zod.string().nullish(),
+  status: zod.enum(["ACTIVE", "COMPLETED", "PAUSED", "CANCELLED"]),
+  notes: zod.string().nullish(),
+  createdById: zod.string().nullish(),
+  createdByName: zod.string().nullish(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+  completedAt: zod.string().nullish(),
+});
+
+export const DeleteSkillDevelopmentGoalParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const DeleteSkillDevelopmentGoalResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+export const ListSkillProgressionLogsQueryParams = zod.object({
+  userId: zod.coerce.string().optional(),
+});
+
+export const ListSkillProgressionLogsResponseItem = zod.object({
+  id: zod.string(),
+  userId: zod.string(),
+  userName: zod.string().nullish(),
+  skillId: zod.string(),
+  skillName: zod.string().nullish(),
+  fromLevel: zod.number().nullish(),
+  toLevel: zod.number(),
+  changedById: zod.string().nullish(),
+  changedByName: zod.string().nullish(),
+  note: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+export const ListSkillProgressionLogsResponse = zod.array(
+  ListSkillProgressionLogsResponseItem,
+);
+
+export const LogSkillProgressionBody = zod.object({
+  userId: zod.string().optional(),
+  skillId: zod.string(),
+  toLevel: zod.number(),
+  note: zod.string().nullish(),
+});
+
 /**
  * Returns skill coverage matrix across users (Konsultan/Technical Writer/Principal) with gap analysis. MGMT/PM only.
  */
@@ -2762,6 +2975,298 @@ export const ApplyTaskTemplateBody = zod.object({
     .describe("ISO date YYYY-MM-DD; defaults to today"),
 });
 
+export const ListProjectTemplatesResponseItem = zod.object({
+  id: zod.string(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  businessUnitId: zod.string().nullish(),
+  businessUnitName: zod.string().nullish(),
+  kind: zod.enum(["CLIENT", "INTERNAL"]),
+  defaultDurationDays: zod.number(),
+  estimatedContractValue: zod.number(),
+  estimatedCost: zod.number(),
+  plannedMandays: zod.number(),
+  vatPercent: zod.number(),
+  contractValueIncludesVat: zod.boolean(),
+  taskTemplateId: zod.string().nullish(),
+  taskTemplateName: zod.string().nullish(),
+  isActive: zod.boolean(),
+  createdById: zod.string(),
+  createdByName: zod.string(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+  resources: zod.array(
+    zod.object({
+      id: zod.string().nullish(),
+      role: zod.string(),
+      count: zod.number(),
+      plannedMandays: zod.number(),
+      dailyRate: zod.number(),
+      note: zod.string().nullish(),
+    }),
+  ),
+  milestones: zod.array(
+    zod.object({
+      id: zod.string().nullish(),
+      name: zod.string(),
+      percentage: zod.number(),
+      offsetDays: zod.number(),
+      order: zod.number().nullish(),
+    }),
+  ),
+  raidItems: zod.array(
+    zod.object({
+      id: zod.string().nullish(),
+      type: zod.enum(["RISK", "ASSUMPTION", "ISSUE", "DEPENDENCY"]),
+      title: zod.string(),
+      description: zod.string().nullish(),
+      impact: zod.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).nullish(),
+      likelihood: zod.enum(["LOW", "MEDIUM", "HIGH"]).nullish(),
+      mitigation: zod.string().nullish(),
+    }),
+  ),
+});
+export const ListProjectTemplatesResponse = zod.array(
+  ListProjectTemplatesResponseItem,
+);
+
+export const CreateProjectTemplateBody = zod.object({
+  name: zod.string(),
+  description: zod.string().nullish(),
+  businessUnitId: zod.string().nullish(),
+  kind: zod.enum(["CLIENT", "INTERNAL"]).nullish(),
+  defaultDurationDays: zod.number().nullish(),
+  estimatedContractValue: zod.number().nullish(),
+  estimatedCost: zod.number().nullish(),
+  plannedMandays: zod.number().nullish(),
+  vatPercent: zod.number().nullish(),
+  contractValueIncludesVat: zod.boolean().nullish(),
+  taskTemplateId: zod.string().nullish(),
+  isActive: zod.boolean().nullish(),
+  resources: zod
+    .array(
+      zod.object({
+        id: zod.string().nullish(),
+        role: zod.string(),
+        count: zod.number(),
+        plannedMandays: zod.number(),
+        dailyRate: zod.number(),
+        note: zod.string().nullish(),
+      }),
+    )
+    .nullish(),
+  milestones: zod
+    .array(
+      zod.object({
+        id: zod.string().nullish(),
+        name: zod.string(),
+        percentage: zod.number(),
+        offsetDays: zod.number(),
+        order: zod.number().nullish(),
+      }),
+    )
+    .nullish(),
+  raidItems: zod
+    .array(
+      zod.object({
+        id: zod.string().nullish(),
+        type: zod.enum(["RISK", "ASSUMPTION", "ISSUE", "DEPENDENCY"]),
+        title: zod.string(),
+        description: zod.string().nullish(),
+        impact: zod.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).nullish(),
+        likelihood: zod.enum(["LOW", "MEDIUM", "HIGH"]).nullish(),
+        mitigation: zod.string().nullish(),
+      }),
+    )
+    .nullish(),
+});
+
+export const GetProjectTemplateParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const GetProjectTemplateResponse = zod.object({
+  id: zod.string(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  businessUnitId: zod.string().nullish(),
+  businessUnitName: zod.string().nullish(),
+  kind: zod.enum(["CLIENT", "INTERNAL"]),
+  defaultDurationDays: zod.number(),
+  estimatedContractValue: zod.number(),
+  estimatedCost: zod.number(),
+  plannedMandays: zod.number(),
+  vatPercent: zod.number(),
+  contractValueIncludesVat: zod.boolean(),
+  taskTemplateId: zod.string().nullish(),
+  taskTemplateName: zod.string().nullish(),
+  isActive: zod.boolean(),
+  createdById: zod.string(),
+  createdByName: zod.string(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+  resources: zod.array(
+    zod.object({
+      id: zod.string().nullish(),
+      role: zod.string(),
+      count: zod.number(),
+      plannedMandays: zod.number(),
+      dailyRate: zod.number(),
+      note: zod.string().nullish(),
+    }),
+  ),
+  milestones: zod.array(
+    zod.object({
+      id: zod.string().nullish(),
+      name: zod.string(),
+      percentage: zod.number(),
+      offsetDays: zod.number(),
+      order: zod.number().nullish(),
+    }),
+  ),
+  raidItems: zod.array(
+    zod.object({
+      id: zod.string().nullish(),
+      type: zod.enum(["RISK", "ASSUMPTION", "ISSUE", "DEPENDENCY"]),
+      title: zod.string(),
+      description: zod.string().nullish(),
+      impact: zod.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).nullish(),
+      likelihood: zod.enum(["LOW", "MEDIUM", "HIGH"]).nullish(),
+      mitigation: zod.string().nullish(),
+    }),
+  ),
+});
+
+export const UpdateProjectTemplateParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const UpdateProjectTemplateBody = zod.object({
+  name: zod.string(),
+  description: zod.string().nullish(),
+  businessUnitId: zod.string().nullish(),
+  kind: zod.enum(["CLIENT", "INTERNAL"]).nullish(),
+  defaultDurationDays: zod.number().nullish(),
+  estimatedContractValue: zod.number().nullish(),
+  estimatedCost: zod.number().nullish(),
+  plannedMandays: zod.number().nullish(),
+  vatPercent: zod.number().nullish(),
+  contractValueIncludesVat: zod.boolean().nullish(),
+  taskTemplateId: zod.string().nullish(),
+  isActive: zod.boolean().nullish(),
+  resources: zod
+    .array(
+      zod.object({
+        id: zod.string().nullish(),
+        role: zod.string(),
+        count: zod.number(),
+        plannedMandays: zod.number(),
+        dailyRate: zod.number(),
+        note: zod.string().nullish(),
+      }),
+    )
+    .nullish(),
+  milestones: zod
+    .array(
+      zod.object({
+        id: zod.string().nullish(),
+        name: zod.string(),
+        percentage: zod.number(),
+        offsetDays: zod.number(),
+        order: zod.number().nullish(),
+      }),
+    )
+    .nullish(),
+  raidItems: zod
+    .array(
+      zod.object({
+        id: zod.string().nullish(),
+        type: zod.enum(["RISK", "ASSUMPTION", "ISSUE", "DEPENDENCY"]),
+        title: zod.string(),
+        description: zod.string().nullish(),
+        impact: zod.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).nullish(),
+        likelihood: zod.enum(["LOW", "MEDIUM", "HIGH"]).nullish(),
+        mitigation: zod.string().nullish(),
+      }),
+    )
+    .nullish(),
+});
+
+export const UpdateProjectTemplateResponse = zod.object({
+  id: zod.string(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  businessUnitId: zod.string().nullish(),
+  businessUnitName: zod.string().nullish(),
+  kind: zod.enum(["CLIENT", "INTERNAL"]),
+  defaultDurationDays: zod.number(),
+  estimatedContractValue: zod.number(),
+  estimatedCost: zod.number(),
+  plannedMandays: zod.number(),
+  vatPercent: zod.number(),
+  contractValueIncludesVat: zod.boolean(),
+  taskTemplateId: zod.string().nullish(),
+  taskTemplateName: zod.string().nullish(),
+  isActive: zod.boolean(),
+  createdById: zod.string(),
+  createdByName: zod.string(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+  resources: zod.array(
+    zod.object({
+      id: zod.string().nullish(),
+      role: zod.string(),
+      count: zod.number(),
+      plannedMandays: zod.number(),
+      dailyRate: zod.number(),
+      note: zod.string().nullish(),
+    }),
+  ),
+  milestones: zod.array(
+    zod.object({
+      id: zod.string().nullish(),
+      name: zod.string(),
+      percentage: zod.number(),
+      offsetDays: zod.number(),
+      order: zod.number().nullish(),
+    }),
+  ),
+  raidItems: zod.array(
+    zod.object({
+      id: zod.string().nullish(),
+      type: zod.enum(["RISK", "ASSUMPTION", "ISSUE", "DEPENDENCY"]),
+      title: zod.string(),
+      description: zod.string().nullish(),
+      impact: zod.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).nullish(),
+      likelihood: zod.enum(["LOW", "MEDIUM", "HIGH"]).nullish(),
+      mitigation: zod.string().nullish(),
+    }),
+  ),
+});
+
+export const DeleteProjectTemplateParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const DeleteProjectTemplateResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+export const ApplyProjectTemplateParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const ApplyProjectTemplateBody = zod.object({
+  code: zod.string(),
+  name: zod.string(),
+  clientId: zod.string(),
+  salesId: zod.string().nullish(),
+  description: zod.string().nullish(),
+  contractValue: zod.number().nullish(),
+  startDate: zod.string().nullish(),
+});
+
 export const ListLeavesQueryParams = zod.object({
   userId: zod.coerce.string().optional(),
   startDate: zod.coerce.string().optional(),
@@ -2883,6 +3388,10 @@ export const ListProjectDocumentsParams = zod.object({
   id: zod.coerce.string(),
 });
 
+export const ListProjectDocumentsQueryParams = zod.object({
+  includeHistory: zod.coerce.boolean().optional(),
+});
+
 export const ListProjectDocumentsResponseItem = zod.object({
   id: zod.string(),
   projectId: zod.string(),
@@ -2896,6 +3405,9 @@ export const ListProjectDocumentsResponseItem = zod.object({
   uploadedById: zod.string().nullish(),
   uploadedByName: zod.string().nullish(),
   uploadedAt: zod.string(),
+  version: zod.number(),
+  parentDocumentId: zod.string().nullish(),
+  isLatest: zod.boolean(),
 });
 export const ListProjectDocumentsResponse = zod.array(
   ListProjectDocumentsResponseItem,
@@ -2913,6 +3425,72 @@ export const CreateProjectDocumentBody = zod.object({
   invoiceAmount: zod.number().optional(),
   invoiceStatus: zod.string().optional(),
   notes: zod.string().optional(),
+});
+
+export const ListDocumentVersionsParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const ListDocumentVersionsResponseItem = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  type: zod.enum(["BAST", "INVOICE", "CONTRACT", "OTHER"]),
+  fileName: zod.string(),
+  fileUrl: zod.string(),
+  invoiceNumber: zod.string().nullish(),
+  invoiceAmount: zod.number().nullish(),
+  invoiceStatus: zod.string().nullish(),
+  notes: zod.string().nullish(),
+  uploadedById: zod.string().nullish(),
+  uploadedByName: zod.string().nullish(),
+  uploadedAt: zod.string(),
+  version: zod.number(),
+  parentDocumentId: zod.string().nullish(),
+  isLatest: zod.boolean(),
+});
+export const ListDocumentVersionsResponse = zod.array(
+  ListDocumentVersionsResponseItem,
+);
+
+export const GetProjectClosingChecklistParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const GetProjectClosingChecklistResponseItem = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  key: zod.string(),
+  label: zod.string(),
+  status: zod.enum(["PENDING", "DONE", "NA"]),
+  note: zod.string().nullish(),
+  completedAt: zod.string().nullish(),
+  completedById: zod.string().nullish(),
+  sortOrder: zod.number(),
+});
+export const GetProjectClosingChecklistResponse = zod.array(
+  GetProjectClosingChecklistResponseItem,
+);
+
+export const UpdateProjectClosingChecklistItemParams = zod.object({
+  id: zod.coerce.string(),
+  itemId: zod.coerce.string(),
+});
+
+export const UpdateProjectClosingChecklistItemBody = zod.object({
+  status: zod.enum(["PENDING", "DONE", "NA"]).optional(),
+  note: zod.string().nullish(),
+});
+
+export const UpdateProjectClosingChecklistItemResponse = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  key: zod.string(),
+  label: zod.string(),
+  status: zod.enum(["PENDING", "DONE", "NA"]),
+  note: zod.string().nullish(),
+  completedAt: zod.string().nullish(),
+  completedById: zod.string().nullish(),
+  sortOrder: zod.number(),
 });
 
 export const DeleteDocumentParams = zod.object({
@@ -3425,6 +4003,8 @@ export const GetTopProjectsResponseItem = zod.object({
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   contractValue: zod.number(),
+  currency: zod.string().nullish(),
+  exchangeRate: zod.number().nullish(),
   vatPercent: zod.number().optional(),
   contractValueIncludesVat: zod.boolean().optional(),
   revenueNet: zod.number().optional(),
@@ -3449,6 +4029,23 @@ export const GetTopProjectsResponseItem = zod.object({
   reportLink: zod.string().nullish(),
   reportSubmittedAt: zod.string().nullish(),
   lastStatusReason: zod.string().nullish(),
+  healthScore: zod
+    .number()
+    .nullish()
+    .describe(
+      "0-100 composite health score. Null for DRAFT\/CLOSED projects or callers without financial visibility.",
+    ),
+  healthLabel: zod.enum(["HEALTHY", "AT_RISK", "CRITICAL"]).nullish(),
+  healthComponents: zod
+    .object({
+      margin: zod.number().optional(),
+      raid: zod.number().optional(),
+      expenses: zod.number().optional(),
+      billing: zod.number().optional(),
+      schedule: zod.number().optional(),
+    })
+    .nullish(),
+  healthReasons: zod.array(zod.string()).nullish(),
   spkFileUrl: zod.string().nullish(),
   spkFileName: zod.string().nullish(),
   contractFileUrl: zod.string().nullish(),

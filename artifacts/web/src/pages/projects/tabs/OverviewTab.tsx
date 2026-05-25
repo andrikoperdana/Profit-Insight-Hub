@@ -55,7 +55,7 @@ import {
   Pencil, AlertTriangle, Paperclip, X,
 } from "lucide-react";
 import { formatIDR, formatDate, formatPct } from "@/lib/format";
-import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
+import { HealthBadge, MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
 import { LoadingPage } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
 import { PdfUploadField, type PdfFileData } from "@/components/common/PdfUploadField";
@@ -443,6 +443,21 @@ function OverviewTab({ project }: { project: any }) {
                       <p className="text-xs text-muted-foreground uppercase tracking-wide">Margin</p>
                       <MarginBadge marginPct={project.marginPct} />
                     </div>
+                    {project.healthScore != null && (
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs text-muted-foreground uppercase tracking-wide">Health</p>
+                        <HealthBadge
+                          score={project.healthScore}
+                          label={project.healthLabel ?? null}
+                          reasons={project.healthReasons ?? null}
+                        />
+                      </div>
+                    )}
+                    {project.healthReasons && project.healthReasons.length > 0 && (
+                      <ul className="text-[11px] text-muted-foreground space-y-0.5 list-disc list-inside pl-1">
+                        {project.healthReasons.slice(0, 4).map((r: string, i: number) => <li key={i}>{r}</li>)}
+                      </ul>
+                    )}
                   </>
                 ) : null}
                 <div className="flex items-center justify-between">

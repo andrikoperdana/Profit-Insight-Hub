@@ -256,6 +256,8 @@ router.post("/projects", requireRole(...writeRoles), async (req, res) => {
       startDate,
       endDate,
       contractValue: Number(b.contractValue || 0),
+      currency: (b.currency ? String(b.currency).toUpperCase() : "IDR").slice(0, 8),
+      exchangeRate: Number(b.exchangeRate ?? 1) > 0 ? Number(b.exchangeRate ?? 1) : 1,
       vatPercent: finalVatPercent,
       contractValueIncludesVat: finalIncludesVat,
       estimatedCost: Number(b.estimatedCost || 0),
@@ -437,6 +439,28 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
     }
   }
 
+  // CLOSED transition gate: enforce closing checklist completion. All checklist
+  // items must be DONE or NA (no PENDING) before a project can be closed manually.
+  // This does NOT apply when status is already CLOSED, and is bypassed for the
+  // BAST+INVOICE auto-close flow in routes/documents.ts (which writes directly).
+  if (b.status === "CLOSED" && beforeProj.status !== "CLOSED") {
+    const pendingItems = await prisma.projectClosingChecklistItem.count({
+      where: { projectId: String(req.params.id), status: "PENDING" },
+    });
+    // If checklist hasn't been initialized yet, treat as required-but-pending.
+    const totalItems = await prisma.projectClosingChecklistItem.count({
+      where: { projectId: String(req.params.id) },
+    });
+    if (totalItems === 0 || pendingItems > 0) {
+      res.status(400).json({
+        error: "Closing checklist belum lengkap. Selesaikan semua item (DONE/NA) sebelum menutup project.",
+        code: "CLOSING_CHECKLIST_INCOMPLETE",
+        pendingItems,
+      });
+      return;
+    }
+  }
+
   const data: Record<string, unknown> = {};
   if (b.code !== undefined) data.code = String(b.code);
   if (b.name !== undefined) data.name = String(b.name);
@@ -471,6 +495,14 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
     data.endDate = d;
   }
   if (b.contractValue !== undefined) data.contractValue = Number(b.contractValue);
+  // currency / exchangeRate only editable while project is still DRAFT to keep financials stable
+  if (b.currency !== undefined && beforeProj.status === "DRAFT") {
+    data.currency = String(b.currency || "IDR").toUpperCase().slice(0, 8);
+  }
+  if (b.exchangeRate !== undefined && beforeProj.status === "DRAFT") {
+    const r = Number(b.exchangeRate);
+    if (Number.isFinite(r) && r > 0) data.exchangeRate = r;
+  }
   if (b.vatPercent !== undefined && b.vatPercent !== null && b.vatPercent !== "") {
     const v = Number(b.vatPercent);
     if (!Number.isFinite(v) || v < 0 || v > 100) {

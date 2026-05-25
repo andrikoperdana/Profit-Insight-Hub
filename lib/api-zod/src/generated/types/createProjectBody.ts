@@ -20,6 +20,10 @@ export interface CreateProjectBody {
   startDate?: string;
   endDate?: string;
   contractValue?: number;
+  /** ISO 4217 code, default IDR */
+  currency?: string;
+  /** Rate to IDR (default 1 for IDR) */
+  exchangeRate?: number;
   /** PPN percent (default 11) */
   vatPercent?: number;
   /** If true, contractValue is gross including PPN; otherwise net (DPP) */

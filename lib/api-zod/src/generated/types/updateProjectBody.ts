@@ -23,6 +23,10 @@ export interface UpdateProjectBody {
   startDate?: string;
   endDate?: string;
   contractValue?: number;
+  /** ISO 4217. Editable only while project is DRAFT. */
+  currency?: string;
+  /** Rate to IDR. Editable only while project is DRAFT. */
+  exchangeRate?: number;
   vatPercent?: number;
   contractValueIncludesVat?: boolean;
   estimatedCost?: number;

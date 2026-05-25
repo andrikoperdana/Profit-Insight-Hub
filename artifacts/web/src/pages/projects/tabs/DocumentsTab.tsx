@@ -78,7 +78,7 @@ function DocumentsTab({ projectId, projectStatus }: { projectId: string; project
   const { user } = useAuth();
   const qc = useQueryClient();
   const { toast } = useToast();
-  const { data: docs, isLoading } = useListProjectDocuments(projectId, {
+  const { data: docs, isLoading } = useListProjectDocuments(projectId, undefined, {
     query: { queryKey: getListProjectDocumentsQueryKey(projectId), enabled: !!projectId },
   });
 
@@ -193,8 +193,13 @@ function DocumentsTab({ projectId, projectStatus }: { projectId: string; project
                 <li key={d.id} className="flex items-center gap-3 py-3" data-testid={`doc-${d.type}`}>
                   <FileText className="h-5 w-5 text-muted-foreground" />
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <Badge variant="outline" className="text-[10px]">{d.type}</Badge>
+                      {d.version > 1 && (
+                        <Badge variant="outline" className="text-[10px] bg-primary/10 text-primary border-primary/30">
+                          v{d.version}
+                        </Badge>
+                      )}
                       <a
                         href={d.fileUrl}
                         target="_blank"
@@ -206,6 +211,7 @@ function DocumentsTab({ projectId, projectStatus }: { projectId: string; project
                     </div>
                     <p className="text-xs text-muted-foreground mt-0.5">
                       Uploaded by {d.uploadedByName ?? "Unknown"} on {formatDate(d.uploadedAt)}
+                      {d.version > 1 && " • supersedes previous version"}
                     </p>
                   </div>
                   {canUpload && (

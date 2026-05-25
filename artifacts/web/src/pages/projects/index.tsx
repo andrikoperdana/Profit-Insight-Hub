@@ -17,7 +17,7 @@ import { Card } from "@/components/ui/card";
 import { TableSkeleton } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
 import { Pagination, usePagination } from "@/components/common/Pagination";
-import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
+import { HealthBadge, MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
 import { ProjectStatus } from "@workspace/api-client-react";
 
 export default function ProjectsList() {
@@ -172,6 +172,7 @@ export default function ProjectsList() {
                   <>
                     <TableHead className="text-right">Contract Value</TableHead>
                     <TableHead className="text-center">Margin</TableHead>
+                    <TableHead className="text-center">Health</TableHead>
                   </>
                 )}
                 <TableHead className="text-right">PM</TableHead>
@@ -192,6 +193,13 @@ export default function ProjectsList() {
                     <>
                       <TableCell className="text-right font-mono text-sm">{formatIDR(project.contractValue)}</TableCell>
                       <TableCell className="text-center"><MarginBadge marginPct={project.marginPct} /></TableCell>
+                      <TableCell className="text-center">
+                        <HealthBadge
+                          score={project.healthScore ?? null}
+                          label={project.healthLabel ?? null}
+                          reasons={project.healthReasons ?? null}
+                        />
+                      </TableCell>
                     </>
                   )}
                   <TableCell className="text-right text-muted-foreground text-sm">{project.pmName || "-"}</TableCell>
