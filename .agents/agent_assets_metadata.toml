@@ -257,3 +257,9 @@ id = "PJfUDnmdwdPu7CFP3EghI"
 uri = "file://scripts/exports/PDD_LeadToCash_vs_SecureProfitHub_FitGap.docx"
 type = "word_document"
 title = "Fit-Gap Analysis: PDD Lead-to-Cash vs SecureProfit Hub (.docx)"
+
+[[outputs]]
+id = "A2sR16HuQr2PSIerJcNmX"
+uri = "file://dist/secureprofit-hub.tar.gz"
+type = "unspecified"
+title = "SecureProfit Hub - Source Code"
