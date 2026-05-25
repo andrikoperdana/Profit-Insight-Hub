@@ -782,6 +782,7 @@ export interface CreateProjectBody {
   salesId?: string;
   pmId?: string;
   status?: ProjectStatus;
+  kind?: ProjectKind;
   startDate?: string;
   endDate?: string;
   contractValue?: number;
@@ -807,6 +808,7 @@ export interface UpdateProjectBody {
   technicalWriterId?: string | null;
   adminProjectId?: string | null;
   status?: ProjectStatus;
+  kind?: ProjectKind;
   statusChangeReason?: string;
   startDate?: string;
   endDate?: string;

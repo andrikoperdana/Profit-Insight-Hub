@@ -1096,6 +1096,12 @@ export const CreateProjectBody = zod.object({
       "CLOSED",
     ])
     .optional(),
+  kind: zod
+    .enum(["CLIENT", "INTERNAL", "PRESALES", "TRAINING"])
+    .optional()
+    .describe(
+      "Project category. CLIENT = paid engagement (default, all financial\nreports include). INTERNAL\/PRESALES\/TRAINING = non-billable initiatives\nexcluded from VAT recap, billing aging, cash inflow forecast, and\nPPN detail reports.\n",
+    ),
   startDate: zod.string().optional(),
   endDate: zod.string().optional(),
   contractValue: zod.number().optional(),
@@ -1274,6 +1280,12 @@ export const UpdateProjectBody = zod.object({
       "CLOSED",
     ])
     .optional(),
+  kind: zod
+    .enum(["CLIENT", "INTERNAL", "PRESALES", "TRAINING"])
+    .optional()
+    .describe(
+      "Project category. CLIENT = paid engagement (default, all financial\nreports include). INTERNAL\/PRESALES\/TRAINING = non-billable initiatives\nexcluded from VAT recap, billing aging, cash inflow forecast, and\nPPN detail reports.\n",
+    ),
   statusChangeReason: zod.string().optional(),
   startDate: zod.string().optional(),
   endDate: zod.string().optional(),

@@ -220,6 +220,17 @@ router.post("/projects", requireRole(...writeRoles), async (req, res) => {
     res.status(err.status ?? 400).json({ error: err.message });
     return;
   }
+  const kind: "CLIENT" | "INTERNAL" | "PRESALES" | "TRAINING" =
+    (!isSales && (b.kind === "INTERNAL" || b.kind === "PRESALES" || b.kind === "TRAINING"))
+      ? b.kind
+      : "CLIENT";
+  // Non-CLIENT projects don't have commercial VAT, SPK, or contract docs —
+  // enforce server-side so the data stays consistent regardless of caller.
+  const isNonCommercial = kind !== "CLIENT";
+  const finalVatPercent = isNonCommercial ? 0 : vatPercent;
+  const finalIncludesVat = isNonCommercial ? false : contractValueIncludesVat;
+  const finalSpkFileUrl = isNonCommercial ? null : spkFileUrl;
+  const finalContractFileUrl = isNonCommercial ? null : contractFileUrl;
   const created = await prisma.project.create({
     data: {
       code: String(b.code),
@@ -229,22 +240,18 @@ router.post("/projects", requireRole(...writeRoles), async (req, res) => {
       salesId,
       pmId,
       status,
-      // Sales intake is always for client engagements; only MGMT can flag a
-      // project as INTERNAL/PRESALES/TRAINING.
-      kind: (!isSales && (b.kind === "INTERNAL" || b.kind === "PRESALES" || b.kind === "TRAINING"))
-        ? b.kind
-        : "CLIENT",
+      kind,
       startDate,
       endDate,
       contractValue: Number(b.contractValue || 0),
-      vatPercent,
-      contractValueIncludesVat,
+      vatPercent: finalVatPercent,
+      contractValueIncludesVat: finalIncludesVat,
       estimatedCost: Number(b.estimatedCost || 0),
       plannedMandays: Number(b.plannedMandays || 0),
-      spkFileUrl,
-      spkFileName: spkFileUrl ? sanitizeFileName(b.spkFileName) ?? null : null,
-      contractFileUrl,
-      contractFileName: contractFileUrl ? sanitizeFileName(b.contractFileName) ?? null : null,
+      spkFileUrl: finalSpkFileUrl,
+      spkFileName: finalSpkFileUrl ? sanitizeFileName(b.spkFileName) ?? null : null,
+      contractFileUrl: finalContractFileUrl,
+      contractFileName: finalContractFileUrl ? sanitizeFileName(b.contractFileName) ?? null : null,
     },
     include: projectInclude,
   });

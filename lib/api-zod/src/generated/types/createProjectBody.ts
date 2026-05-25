@@ -5,6 +5,7 @@
  * SecureProfit Hub API
  * OpenAPI spec version: 0.1.0
  */
+import type { ProjectKind } from "./projectKind";
 import type { ProjectStatus } from "./projectStatus";
 
 export interface CreateProjectBody {
@@ -15,6 +16,7 @@ export interface CreateProjectBody {
   salesId?: string;
   pmId?: string;
   status?: ProjectStatus;
+  kind?: ProjectKind;
   startDate?: string;
   endDate?: string;
   contractValue?: number;

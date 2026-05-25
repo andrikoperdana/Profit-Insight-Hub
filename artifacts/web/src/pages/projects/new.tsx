@@ -15,7 +15,8 @@ import { useLocation } from "wouter";
 import { ProjectStatus, UserRole } from "@workspace/api-client-react";
 import { ArrowLeft, Save, Plus, Trash2, Send } from "lucide-react";
 import { Link } from "wouter";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { ProjectKind } from "@workspace/api-client-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -451,7 +452,7 @@ const createProjectSchema = z.object({
   name: z.string().min(3, "Project name required"),
   description: z.string().optional(),
   clientId: z.string().min(1, "Client is required"),
-  salesId: z.string().min(1, "Sales is required"),
+  salesId: z.string().optional(),
   pmId: z.string().min(1, "Project Manager is required"),
   startDate: z.string().optional(),
   endDate: z.string().optional(),
@@ -481,6 +482,7 @@ function FullProjectForm() {
       },
     },
   });
+  const { user: currentUser } = useAuth();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(createProjectSchema),
@@ -507,6 +509,30 @@ function FullProjectForm() {
 
   const watchedResources = form.watch("resources");
   const watchedRevenue = Number(form.watch("contractValue") || 0);
+  const watchedClientId = form.watch("clientId");
+
+  const selectedClient = useMemo(
+    () => clients?.find((c) => c.id === watchedClientId) ?? null,
+    [clients, watchedClientId],
+  );
+  const isInternal = (selectedClient?.name ?? "").trim().toLowerCase() === "internal";
+
+  useEffect(() => {
+    if (isInternal) {
+      form.setValue("vatPercent", 0);
+      form.setValue("contractValueIncludesVat", false);
+      if (currentUser?.id && !form.getValues("salesId")) {
+        form.setValue("salesId", currentUser.id);
+      }
+    } else {
+      // restore commercial defaults when switching back to a regular client
+      if (form.getValues("vatPercent") === 0) form.setValue("vatPercent", 11);
+      if (form.getValues("contractValueIncludesVat") === false) {
+        form.setValue("contractValueIncludesVat", true);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isInternal]);
 
   const totals = (watchedResources || []).reduce(
     (acc, r) => {
@@ -531,20 +557,21 @@ function FullProjectForm() {
         name: data.name,
         description: data.description,
         clientId: data.clientId,
-        salesId: data.salesId,
+        salesId: isInternal ? (currentUser?.id ?? data.salesId ?? undefined) : data.salesId,
         pmId: data.pmId,
         status: ProjectStatus.OBSERVATION,
+        kind: isInternal ? ProjectKind.INTERNAL : ProjectKind.CLIENT,
         startDate: data.startDate || undefined,
         endDate: data.endDate || undefined,
         contractValue: data.contractValue,
-        vatPercent: data.vatPercent,
-        contractValueIncludesVat: data.contractValueIncludesVat,
+        vatPercent: isInternal ? 0 : data.vatPercent,
+        contractValueIncludesVat: isInternal ? false : data.contractValueIncludesVat,
         estimatedCost: totals.cost,
         plannedMandays: totals.mandays,
-        spkFileUrl: spkFile?.url ?? null,
-        spkFileName: spkFile?.name ?? null,
-        contractFileUrl: contractFile?.url ?? null,
-        contractFileName: contractFile?.name ?? null,
+        spkFileUrl: isInternal ? null : (spkFile?.url ?? null),
+        spkFileName: isInternal ? null : (spkFile?.name ?? null),
+        contractFileUrl: isInternal ? null : (contractFile?.url ?? null),
+        contractFileName: isInternal ? null : (contractFile?.name ?? null),
       },
     });
   };
@@ -625,40 +652,54 @@ function FullProjectForm() {
                 name="contractValue"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Selling Price to Client / Revenue (IDR) *</FormLabel>
+                    <FormLabel>
+                      {isInternal ? "Budget Internal (IDR) *" : "Selling Price to Client / Revenue (IDR) *"}
+                    </FormLabel>
                     <FormControl><Input type="number" placeholder="0" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="vatPercent"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>VAT (%)</FormLabel>
-                    <FormControl><Input type="number" min={0} max={100} step={0.5} {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="contractValueIncludesVat"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Revenue type</FormLabel>
-                    <Select onValueChange={(v) => field.onChange(v === "incl")} value={field.value ? "incl" : "excl"}>
-                      <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
-                      <SelectContent>
-                        <SelectItem value="incl">Includes VAT (gross)</SelectItem>
-                        <SelectItem value="excl">Excludes VAT (DPP)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {!isInternal && (
+                <>
+                  <FormField
+                    control={form.control}
+                    name="vatPercent"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>VAT (%)</FormLabel>
+                        <FormControl><Input type="number" min={0} max={100} step={0.5} {...field} /></FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="contractValueIncludesVat"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Revenue type</FormLabel>
+                        <Select onValueChange={(v) => field.onChange(v === "incl")} value={field.value ? "incl" : "excl"}>
+                          <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                          <SelectContent>
+                            <SelectItem value="incl">Includes VAT (gross)</SelectItem>
+                            <SelectItem value="excl">Excludes VAT (DPP)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </>
+              )}
+              {isInternal && (
+                <div className="col-span-1 md:col-span-2 rounded-md border border-amber-500/40 bg-amber-500/10 p-3 text-xs text-amber-200">
+                  <p className="font-medium mb-1">Mode Internal Initiative</p>
+                  <p>
+                    Project ini diperlakukan sebagai inisiatif internal: tidak ada VAT, invoice, SPK, atau kontrak. Field "Budget Internal" berfungsi sebagai plafon biaya. Akan otomatis muncul di report <span className="font-mono">Biaya Inisiatif Internal</span> dan dikecualikan dari report profitability/VAT.
+                  </p>
+                </div>
+              )}
               <FormField
                 control={form.control}
                 name="description"
@@ -670,18 +711,22 @@ function FullProjectForm() {
                   </FormItem>
                 )}
               />
-              <PdfUploadField
-                label="SPK / PO File (PDF)"
-                fileName={spkFile?.name ?? null}
-                onChange={setSpkFile}
-                testId="upload-full-spk"
-              />
-              <PdfUploadField
-                label="Contract File (PDF)"
-                fileName={contractFile?.name ?? null}
-                onChange={setContractFile}
-                testId="upload-full-contract"
-              />
+              {!isInternal && (
+                <>
+                  <PdfUploadField
+                    label="SPK / PO File (PDF)"
+                    fileName={spkFile?.name ?? null}
+                    onChange={setSpkFile}
+                    testId="upload-full-spk"
+                  />
+                  <PdfUploadField
+                    label="Contract File (PDF)"
+                    fileName={contractFile?.name ?? null}
+                    onChange={setContractFile}
+                    testId="upload-full-contract"
+                  />
+                </>
+              )}
             </CardContent>
           </Card>
 
@@ -690,26 +735,28 @@ function FullProjectForm() {
               <CardTitle>Team Assignment</CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <FormField
-                control={form.control}
-                name="salesId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Sales *</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger><SelectValue placeholder="Select Sales" /></SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {sales.map((u) => (
-                          <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {!isInternal && (
+                <FormField
+                  control={form.control}
+                  name="salesId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Sales *</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger><SelectValue placeholder="Select Sales" /></SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {sales.map((u) => (
+                            <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
               <FormField
                 control={form.control}
                 name="pmId"

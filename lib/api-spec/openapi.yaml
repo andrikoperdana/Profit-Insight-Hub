@@ -2188,6 +2188,7 @@ components:
         salesId: { type: string }
         pmId: { type: string }
         status: { $ref: "#/components/schemas/ProjectStatus" }
+        kind: { $ref: "#/components/schemas/ProjectKind" }
         startDate: { type: string }
         endDate: { type: string }
         contractValue: { type: number }
@@ -2212,6 +2213,7 @@ components:
         technicalWriterId: { type: string, nullable: true }
         adminProjectId: { type: string, nullable: true }
         status: { $ref: "#/components/schemas/ProjectStatus" }
+        kind: { $ref: "#/components/schemas/ProjectKind" }
         statusChangeReason: { type: string }
         startDate: { type: string }
         endDate: { type: string }
