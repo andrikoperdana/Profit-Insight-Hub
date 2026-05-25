@@ -106,10 +106,10 @@ export default function PerformanceReviewDetailPage() {
         },
       });
       await refresh();
-      toast({ title: "Tersimpan" });
+      toast({ title: "Saved" });
     } catch (err) {
       toast({
-        title: "Gagal menyimpan",
+        title: "Save failed",
         description: err instanceof Error ? err.message : String(err),
         variant: "destructive",
       });
@@ -120,10 +120,10 @@ export default function PerformanceReviewDetailPage() {
     try {
       await submit.mutateAsync({ id });
       await refresh();
-      toast({ title: "Review dikirim ke karyawan untuk acknowledge" });
+      toast({ title: "Review submitted for employee acknowledgement" });
     } catch (err) {
       toast({
-        title: "Gagal submit",
+        title: "Submit failed",
         description: err instanceof Error ? err.message : String(err),
         variant: "destructive",
       });
@@ -137,7 +137,7 @@ export default function PerformanceReviewDetailPage() {
       toast({ title: "Review acknowledged" });
     } catch (err) {
       toast({
-        title: "Gagal acknowledge",
+        title: "Acknowledge failed",
         description: err instanceof Error ? err.message : String(err),
         variant: "destructive",
       });
@@ -145,14 +145,14 @@ export default function PerformanceReviewDetailPage() {
   }
 
   async function handleDelete() {
-    if (!confirm("Hapus review ini?")) return;
+    if (!confirm("Delete this review?")) return;
     try {
       await del.mutateAsync({ id });
-      toast({ title: "Review dihapus" });
+      toast({ title: "Review deleted" });
       window.location.href = (import.meta.env.BASE_URL || "/") + "performance-reviews";
     } catch (err) {
       toast({
-        title: "Gagal menghapus",
+        title: "Delete failed",
         description: err instanceof Error ? err.message : String(err),
         variant: "destructive",
       });
@@ -161,7 +161,7 @@ export default function PerformanceReviewDetailPage() {
 
   async function handleAddRating() {
     if (!ratingForm.projectId) {
-      toast({ title: "Pilih proyek", variant: "destructive" });
+      toast({ title: "Select a project", variant: "destructive" });
       return;
     }
     try {
@@ -176,10 +176,10 @@ export default function PerformanceReviewDetailPage() {
       await refresh();
       setRatingDialog(false);
       setRatingForm({ projectId: "", rating: "5", comment: "" });
-      toast({ title: "Rating disimpan" });
+      toast({ title: "Rating saved" });
     } catch (err) {
       toast({
-        title: "Gagal menyimpan rating",
+        title: "Failed to save rating",
         description: err instanceof Error ? err.message : String(err),
         variant: "destructive",
       });
@@ -187,14 +187,14 @@ export default function PerformanceReviewDetailPage() {
   }
 
   async function handleRemoveRating(ratingId: string) {
-    if (!confirm("Hapus rating ini?")) return;
+    if (!confirm("Delete this rating?")) return;
     try {
       await removeRating.mutateAsync({ id, ratingId });
       await refresh();
-      toast({ title: "Rating dihapus" });
+      toast({ title: "Rating deleted" });
     } catch (err) {
       toast({
-        title: "Gagal hapus",
+        title: "Delete failed",
         description: err instanceof Error ? err.message : String(err),
         variant: "destructive",
       });
@@ -208,7 +208,7 @@ export default function PerformanceReviewDetailPage() {
   return (
     <div className="p-6 space-y-4 max-w-6xl">
       <Link href="/performance-reviews">
-        <Button variant="ghost" size="sm" className="-ml-2"><ArrowLeft className="mr-1 h-4 w-4" /> Kembali</Button>
+        <Button variant="ghost" size="sm" className="-ml-2"><ArrowLeft className="mr-1 h-4 w-4" /> Back</Button>
       </Link>
 
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -222,7 +222,7 @@ export default function PerformanceReviewDetailPage() {
             Reviewer: {review.reviewerName ?? "—"}
           </p>
           <p className="text-xs text-muted-foreground mt-1">
-            Periode {formatDate(review.periodStart)} — {formatDate(review.periodEnd)}
+            Period {formatDate(review.periodStart)} — {formatDate(review.periodEnd)}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -262,7 +262,7 @@ export default function PerformanceReviewDetailPage() {
 
       <div className="grid md:grid-cols-2 gap-4">
         <Card>
-          <CardHeader><CardTitle className="text-base">Penilaian</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-base">Assessment</CardTitle></CardHeader>
           <CardContent className="space-y-3">
             <div>
               <Label>Overall Rating (1–5)</Label>
@@ -278,7 +278,7 @@ export default function PerformanceReviewDetailPage() {
               </Select>
             </div>
             <div>
-              <Label>Ringkasan</Label>
+              <Label>Summary</Label>
               <Textarea
                 rows={3}
                 value={form.summary}
@@ -305,7 +305,7 @@ export default function PerformanceReviewDetailPage() {
               />
             </div>
             <div>
-              <Label>Goals untuk periode berikutnya</Label>
+              <Label>Goals for next period</Label>
               <Textarea
                 rows={2}
                 value={form.goals}
@@ -315,7 +315,7 @@ export default function PerformanceReviewDetailPage() {
             </div>
             <div className="flex flex-wrap gap-2">
               {editable && (
-                <Button onClick={handleSave} disabled={update.isPending}>Simpan</Button>
+                <Button onClick={handleSave} disabled={update.isPending}>Save</Button>
               )}
               {editable && review.status === "DRAFT" && (
                 <Button onClick={handleSubmit} disabled={submit.isPending}>
@@ -325,12 +325,12 @@ export default function PerformanceReviewDetailPage() {
             </div>
             {canAck && (
               <div className="border-t border-border pt-3 space-y-2">
-                <Label>Acknowledgement (catatan dari karyawan)</Label>
+                <Label>Acknowledgement (employee note)</Label>
                 <Textarea
                   rows={2}
                   value={ackText}
                   onChange={(e) => setAckText(e.target.value)}
-                  placeholder="Tulis tanggapan / acknowledgement Anda…"
+                  placeholder="Write your response / acknowledgement…"
                 />
                 <Button onClick={handleAck} disabled={acknowledge.isPending}>
                   <CheckCircle2 className="mr-2 h-4 w-4" /> Acknowledge
@@ -349,7 +349,7 @@ export default function PerformanceReviewDetailPage() {
         <Card>
           <CardHeader>
             <CardTitle className="text-base flex items-center justify-between">
-              <span>Rating per Proyek (oleh PM)</span>
+              <span>Per-Project Rating (by PM)</span>
               {canRate && review.status !== "ACKNOWLEDGED" && (
                 <Dialog open={ratingDialog} onOpenChange={setRatingDialog}>
                   <DialogTrigger asChild>
@@ -357,16 +357,16 @@ export default function PerformanceReviewDetailPage() {
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Tambah Rating Proyek</DialogTitle>
+                      <DialogTitle>Add Project Rating</DialogTitle>
                       <DialogDescription>
-                        Hanya PM proyek (atau HR/MGMT) yang boleh menilai. Rating 1 (kurang) — 5 (sangat baik).
+                        Only the project's PM (or HR/MGMT) can rate. Scale: 1 (poor) — 5 (excellent).
                       </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-3">
                       <div>
-                        <Label>Proyek</Label>
+                        <Label>Project</Label>
                         <Select value={ratingForm.projectId} onValueChange={(v) => setRatingForm((s) => ({ ...s, projectId: v }))}>
-                          <SelectTrigger><SelectValue placeholder="Pilih proyek" /></SelectTrigger>
+                          <SelectTrigger><SelectValue placeholder="Select a project" /></SelectTrigger>
                           <SelectContent>
                             {availableProjects.map((p) => (
                               <SelectItem key={p.id} value={p.id}>{p.code} — {p.name}</SelectItem>
@@ -384,7 +384,7 @@ export default function PerformanceReviewDetailPage() {
                         </Select>
                       </div>
                       <div>
-                        <Label>Komentar</Label>
+                        <Label>Comment</Label>
                         <Textarea
                           rows={3}
                           value={ratingForm.comment}
@@ -393,8 +393,8 @@ export default function PerformanceReviewDetailPage() {
                       </div>
                     </div>
                     <DialogFooter>
-                      <Button variant="outline" onClick={() => setRatingDialog(false)}>Batal</Button>
-                      <Button onClick={handleAddRating} disabled={upsertRating.isPending}>Simpan</Button>
+                      <Button variant="outline" onClick={() => setRatingDialog(false)}>Cancel</Button>
+                      <Button onClick={handleAddRating} disabled={upsertRating.isPending}>Save</Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
@@ -403,7 +403,7 @@ export default function PerformanceReviewDetailPage() {
           </CardHeader>
           <CardContent className="space-y-2">
             {(review.projectRatings ?? []).length === 0 ? (
-              <div className="text-sm text-muted-foreground">Belum ada rating per proyek.</div>
+              <div className="text-sm text-muted-foreground">No project ratings yet.</div>
             ) : (
               (review.projectRatings ?? []).map((pr) => (
                 <div key={pr.id} className="border border-border rounded-md p-2.5 flex flex-col gap-1.5">
@@ -432,12 +432,12 @@ export default function PerformanceReviewDetailPage() {
       </div>
 
       <Card>
-        <CardHeader><CardTitle className="text-base">Aktivitas Proyek &amp; Skills (periode ini)</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">Project Activity &amp; Skills (this period)</CardTitle></CardHeader>
         <CardContent className="grid md:grid-cols-2 gap-4">
           <div>
             <div className="text-sm font-medium mb-2">Hours per Project</div>
             {(metrics?.projects ?? []).length === 0 ? (
-              <div className="text-sm text-muted-foreground">Tidak ada timesheet approved pada periode ini.</div>
+              <div className="text-sm text-muted-foreground">No approved timesheets in this period.</div>
             ) : (
               <div className="space-y-1">
                 {(metrics?.projects ?? []).map((p) => (
@@ -452,7 +452,7 @@ export default function PerformanceReviewDetailPage() {
           <div>
             <div className="text-sm font-medium mb-2">Skill Profile</div>
             {(metrics?.skills ?? []).length === 0 ? (
-              <div className="text-sm text-muted-foreground">Belum ada skill terdaftar.</div>
+              <div className="text-sm text-muted-foreground">No skills registered yet.</div>
             ) : (
               <div className="flex flex-wrap gap-1.5">
                 {(metrics?.skills ?? []).map((s) => (

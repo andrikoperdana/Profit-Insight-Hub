@@ -62,7 +62,7 @@ export default function PerformanceReviewsListPage() {
   const create = useCreatePerformanceReview();
 
   async function handleCreate() {
-    if (!newUserId) { toast({ title: "Pilih karyawan", variant: "destructive" }); return; }
+    if (!newUserId) { toast({ title: "Select an employee", variant: "destructive" }); return; }
     try {
       await create.mutateAsync({
         data: {
@@ -71,13 +71,13 @@ export default function PerformanceReviewsListPage() {
           periodYear: Number(newYear),
         },
       });
-      toast({ title: "Review dibuat" });
+      toast({ title: "Review created" });
       setDialogOpen(false);
       setNewUserId("");
       await refetch();
     } catch (err) {
       toast({
-        title: "Gagal membuat review",
+        title: "Failed to create review",
         description: err instanceof Error ? err.message : String(err),
         variant: "destructive",
       });
@@ -92,7 +92,7 @@ export default function PerformanceReviewsListPage() {
         <div>
           <h1 className="text-2xl font-bold">Performance Reviews</h1>
           <p className="text-sm text-muted-foreground">
-            Quarterly/annual review siklus — terhubung ke skill matrix &amp; billable hours per proyek.
+            Quarterly/annual review cycles — linked to skill matrix &amp; billable hours per project.
           </p>
         </div>
         <div className="flex flex-wrap items-end gap-2">
@@ -101,7 +101,7 @@ export default function PerformanceReviewsListPage() {
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="__all__">Semua</SelectItem>
+                <SelectItem value="__all__">All</SelectItem>
                 <SelectItem value="DRAFT">Draft</SelectItem>
                 <SelectItem value="SUBMITTED">Submitted</SelectItem>
                 <SelectItem value="ACKNOWLEDGED">Acknowledged</SelectItem>
@@ -109,7 +109,7 @@ export default function PerformanceReviewsListPage() {
             </Select>
           </div>
           <div>
-            <Label className="text-xs">Tahun</Label>
+            <Label className="text-xs">Year</Label>
             <Select value={yearFilter} onValueChange={setYearFilter}>
               <SelectTrigger className="w-28"><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -119,22 +119,22 @@ export default function PerformanceReviewsListPage() {
           </div>
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-              <Button data-testid="button-new-review"><Plus className="mr-2 h-4 w-4" /> Review Baru</Button>
+              <Button data-testid="button-new-review"><Plus className="mr-2 h-4 w-4" /> New Review</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Buat Performance Review</DialogTitle>
+                <DialogTitle>Create Performance Review</DialogTitle>
                 <DialogDescription>
                   {isAdmin
-                    ? "Pilih karyawan dan periode."
-                    : "Anda dapat membuat review untuk direct report / supervisee Anda."}
+                    ? "Pick an employee and a period."
+                    : "You can create reviews for your direct reports / supervisees."}
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-3">
                 <div>
-                  <Label>Karyawan</Label>
+                  <Label>Employee</Label>
                   <Select value={newUserId} onValueChange={setNewUserId}>
-                    <SelectTrigger><SelectValue placeholder="Pilih karyawan" /></SelectTrigger>
+                    <SelectTrigger><SelectValue placeholder="Select an employee" /></SelectTrigger>
                     <SelectContent>
                       {allUsers.map((u) => (
                         <SelectItem key={u.id} value={u.id}>
@@ -146,7 +146,7 @@ export default function PerformanceReviewsListPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <Label>Periode</Label>
+                    <Label>Period</Label>
                     <Select value={newPeriod} onValueChange={(v) => setNewPeriod(v as PerformanceReviewPeriod)}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
@@ -155,7 +155,7 @@ export default function PerformanceReviewsListPage() {
                     </Select>
                   </div>
                   <div>
-                    <Label>Tahun</Label>
+                    <Label>Year</Label>
                     <Select value={newYear} onValueChange={setNewYear}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
@@ -166,8 +166,8 @@ export default function PerformanceReviewsListPage() {
                 </div>
               </div>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setDialogOpen(false)}>Batal</Button>
-                <Button onClick={handleCreate} disabled={create.isPending}>Buat</Button>
+                <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
+                <Button onClick={handleCreate} disabled={create.isPending}>Create</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -176,7 +176,7 @@ export default function PerformanceReviewsListPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Daftar Review</CardTitle>
+          <CardTitle className="text-base">Reviews</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -184,19 +184,19 @@ export default function PerformanceReviewsListPage() {
           ) : reviews.length === 0 ? (
             <EmptyState
               icon={<ClipboardCheck className="h-12 w-12 text-muted-foreground/50" />}
-              title="Belum ada review"
-              description="Klik 'Review Baru' untuk membuat siklus pertama."
+              title="No reviews yet"
+              description="Click 'New Review' to start the first cycle."
             />
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Karyawan</TableHead>
-                  <TableHead>Periode</TableHead>
+                  <TableHead>Employee</TableHead>
+                  <TableHead>Period</TableHead>
                   <TableHead>Reviewer</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Rating</TableHead>
-                  <TableHead>Tanggal Submit</TableHead>
+                  <TableHead>Submitted</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
@@ -229,7 +229,7 @@ export default function PerformanceReviewsListPage() {
                     </TableCell>
                     <TableCell>
                       <Link href={`/performance-reviews/${r.id}`}>
-                        <Button variant="outline" size="sm">Buka</Button>
+                        <Button variant="outline" size="sm">Open</Button>
                       </Link>
                     </TableCell>
                   </TableRow>
