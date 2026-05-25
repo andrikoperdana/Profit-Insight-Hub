@@ -25,6 +25,7 @@ import type {
   ApplyTaskTemplateBody,
   AuthResponse,
   AvailableUser,
+  BillableUtilization,
   BillingMilestone,
   BusinessUnit,
   Client,
@@ -47,6 +48,7 @@ import type {
   CreateUserBody,
   DashboardSummary,
   Document,
+  GetBillableUtilizationParams,
   GetInvoicePlanningParams,
   GetLeadsAnalyticsParams,
   GetReportOptionsParams,
@@ -8023,6 +8025,105 @@ export function useGetResourceUtilizationDetail<
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetResourceUtilizationDetailQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getGetBillableUtilizationUrl = (
+  params?: GetBillableUtilizationParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/dashboard/billable-utilization?${stringifiedParams}`
+    : `/api/dashboard/billable-utilization`;
+};
+
+export const getBillableUtilization = async (
+  params?: GetBillableUtilizationParams,
+  options?: RequestInit,
+): Promise<BillableUtilization> => {
+  return customFetch<BillableUtilization>(
+    getGetBillableUtilizationUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getGetBillableUtilizationQueryKey = (
+  params?: GetBillableUtilizationParams,
+) => {
+  return [
+    `/api/dashboard/billable-utilization`,
+    ...(params ? [params] : []),
+  ] as const;
+};
+
+export const getGetBillableUtilizationQueryOptions = <
+  TData = Awaited<ReturnType<typeof getBillableUtilization>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetBillableUtilizationParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getBillableUtilization>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetBillableUtilizationQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getBillableUtilization>>
+  > = ({ signal }) =>
+    getBillableUtilization(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getBillableUtilization>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetBillableUtilizationQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getBillableUtilization>>
+>;
+export type GetBillableUtilizationQueryError = ErrorType<unknown>;
+
+export function useGetBillableUtilization<
+  TData = Awaited<ReturnType<typeof getBillableUtilization>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetBillableUtilizationParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getBillableUtilization>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetBillableUtilizationQueryOptions(params, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

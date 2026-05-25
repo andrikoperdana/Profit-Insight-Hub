@@ -32,6 +32,7 @@ import {
   CalendarRange,
 } from "lucide-react";
 import WelcomeBanner from "@/components/dashboard/WelcomeBanner";
+import BillableUtilizationCard from "@/components/dashboard/BillableUtilizationCard";
 import { RoleLabels } from "@/lib/roles";
 import { formatDate } from "@/lib/format";
 import {
@@ -227,10 +228,12 @@ export default function HRDashboard() {
         </Card>
       </div>
 
+      <BillableUtilizationCard days={30} />
+
       <Card>
         <CardHeader>
           <CardTitle className="text-base">Team Utilization Trend (30 days)</CardTitle>
-          <CardDescription>Average billable utilization across delivery staff.</CardDescription>
+          <CardDescription>Hours logged vs total capacity across delivery staff.</CardDescription>
         </CardHeader>
         <CardContent>
           {utilizationTrend.length === 0 ? (

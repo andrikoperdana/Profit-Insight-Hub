@@ -1060,6 +1060,23 @@ export interface UtilizationRow {
   utilizationPct: number;
 }
 
+export type BillableUtilizationTrendItem = {
+  date: string;
+  billableHours: number;
+  nonBillableHours: number;
+  billablePct: number;
+};
+
+export interface BillableUtilization {
+  days: number;
+  billableHours: number;
+  nonBillableHours: number;
+  totalHours: number;
+  /** billableHours / totalHours × 100 */
+  billablePct: number;
+  trend: BillableUtilizationTrendItem[];
+}
+
 export interface BusinessUnit {
   id: string;
   name: string;
@@ -1598,4 +1615,12 @@ export type GetVatRecapParams = {
    * @maximum 2100
    */
   year?: number;
+};
+
+export type GetBillableUtilizationParams = {
+  /**
+   * @minimum 7
+   * @maximum 90
+   */
+  days?: number;
 };

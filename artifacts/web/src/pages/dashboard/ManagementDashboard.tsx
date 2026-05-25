@@ -15,6 +15,7 @@ import { SkeletonCard, TableSkeleton } from "@/components/common/Loading";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { MarginBadge } from "@/components/common/Badges";
 import ResourceUtilizationSection from "@/components/dashboard/ResourceUtilizationSection";
+import BillableUtilizationCard from "@/components/dashboard/BillableUtilizationCard";
 import CashFlowForecastCard from "./CashFlowForecastCard";
 import { formatDistanceToNow } from "date-fns";
 import { Link } from "wouter";
@@ -226,7 +227,10 @@ export default function Dashboard() {
         )}
       </div>
 
-      <SatisfactionWidget />
+      <div className="grid gap-4 lg:grid-cols-2">
+        <BillableUtilizationCard days={30} />
+        <SatisfactionWidget />
+      </div>
 
       {/* PM Reminder: pending timesheet aging */}
       {!isFinance && aging && (aging.buckets.gt48h > 0 || aging.buckets.gt72h > 0 || aging.buckets.h24to48 > 0) && (

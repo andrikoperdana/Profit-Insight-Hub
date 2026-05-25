@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { prisma } from "@workspace/db";
+import { prisma, Prisma } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
 import {
   serializeProject,
@@ -516,6 +516,100 @@ router.get("/dashboard/resource-utilization-detail", async (req, res) => {
     finishingSoonList: rows.filter((r) => r.finishingSoon),
     idleLongList: rows.filter((r) => r.idleLong),
     overloadedList: rows.filter((r) => r.overloaded),
+  });
+});
+
+/**
+ * Billable Utilization KPI.
+ *
+ * Measures what % of approved working hours are billable (logged against
+ * tasks where Task.billable = true). Timesheets with no taskId or
+ * billable=true count as billable; only explicit billable=false counts as
+ * non-billable.
+ *
+ * Access: MANAGEMENT, FINANCE, HR, PROJECT_MANAGER.
+ */
+router.get("/dashboard/billable-utilization", async (req, res) => {
+  const role = req.user!.role;
+  if (
+    role !== "MANAGEMENT" &&
+    role !== "FINANCE" &&
+    role !== "HR" &&
+    role !== "PROJECT_MANAGER"
+  ) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+
+  const days = Math.min(Math.max(parseInt(String(req.query.days ?? 30), 10) || 30, 7), 90);
+  const today = new Date();
+  const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const since = new Date(startOfDay);
+  since.setDate(since.getDate() - (days - 1));
+
+  const where: Prisma.TimesheetWhereInput = {
+    status: "APPROVED",
+    workDate: { gte: since },
+  };
+  // PMs only see hours logged against their own projects.
+  if (role === "PROJECT_MANAGER") {
+    where.project = { pmId: req.user!.sub };
+  }
+  const ts = await prisma.timesheet.findMany({
+    where,
+    select: {
+      workDate: true,
+      hours: true,
+      task: { select: { billable: true } },
+    },
+  });
+
+  const dailyBillable = new Map<string, number>();
+  const dailyNonBillable = new Map<string, number>();
+  let billableHours = 0;
+  let nonBillableHours = 0;
+  for (const t of ts) {
+    const k = t.workDate.toISOString().slice(0, 10);
+    // No task or task.billable !== false → counted as billable
+    const isBillable = !t.task || t.task.billable !== false;
+    if (isBillable) {
+      dailyBillable.set(k, (dailyBillable.get(k) ?? 0) + t.hours);
+      billableHours += t.hours;
+    } else {
+      dailyNonBillable.set(k, (dailyNonBillable.get(k) ?? 0) + t.hours);
+      nonBillableHours += t.hours;
+    }
+  }
+
+  const trend: {
+    date: string;
+    billableHours: number;
+    nonBillableHours: number;
+    billablePct: number;
+  }[] = [];
+  for (let i = 0; i < days; i += 1) {
+    const d = new Date(since);
+    d.setDate(d.getDate() + i);
+    const k = d.toISOString().slice(0, 10);
+    const b = dailyBillable.get(k) ?? 0;
+    const nb = dailyNonBillable.get(k) ?? 0;
+    const total = b + nb;
+    trend.push({
+      date: k,
+      billableHours: b,
+      nonBillableHours: nb,
+      billablePct: total > 0 ? (b / total) * 100 : 0,
+    });
+  }
+
+  const totalHours = billableHours + nonBillableHours;
+  res.json({
+    days,
+    billableHours,
+    nonBillableHours,
+    totalHours,
+    billablePct: totalHours > 0 ? (billableHours / totalHours) * 100 : 0,
+    trend,
   });
 });
 

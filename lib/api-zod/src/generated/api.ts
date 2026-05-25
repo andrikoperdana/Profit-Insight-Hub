@@ -3067,3 +3067,31 @@ export const GetResourceUtilizationDetailResponse = zod.object({
     }),
   ),
 });
+
+export const getBillableUtilizationQueryDaysDefault = 30;
+export const getBillableUtilizationQueryDaysMin = 7;
+export const getBillableUtilizationQueryDaysMax = 90;
+
+export const GetBillableUtilizationQueryParams = zod.object({
+  days: zod.coerce
+    .number()
+    .min(getBillableUtilizationQueryDaysMin)
+    .max(getBillableUtilizationQueryDaysMax)
+    .default(getBillableUtilizationQueryDaysDefault),
+});
+
+export const GetBillableUtilizationResponse = zod.object({
+  days: zod.number(),
+  billableHours: zod.number(),
+  nonBillableHours: zod.number(),
+  totalHours: zod.number(),
+  billablePct: zod.number().describe("billableHours \/ totalHours × 100"),
+  trend: zod.array(
+    zod.object({
+      date: zod.string(),
+      billableHours: zod.number(),
+      nonBillableHours: zod.number(),
+      billablePct: zod.number(),
+    }),
+  ),
+});

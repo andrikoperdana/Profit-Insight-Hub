@@ -1488,6 +1488,21 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/ResourceUtilizationDetail" }
 
+  /dashboard/billable-utilization:
+    get:
+      operationId: getBillableUtilization
+      tags: [dashboard]
+      parameters:
+        - in: query
+          name: days
+          schema: { type: integer, minimum: 7, maximum: 90, default: 30 }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BillableUtilization" }
+
 components:
   schemas:
     HealthStatus:
@@ -2537,6 +2552,26 @@ components:
         plannedMandays: { type: number }
         actualMandays: { type: number }
         utilizationPct: { type: number }
+
+    BillableUtilization:
+      type: object
+      required: [days, billableHours, nonBillableHours, totalHours, billablePct, trend]
+      properties:
+        days: { type: integer }
+        billableHours: { type: number }
+        nonBillableHours: { type: number }
+        totalHours: { type: number }
+        billablePct: { type: number, description: "billableHours / totalHours × 100" }
+        trend:
+          type: array
+          items:
+            type: object
+            required: [date, billableHours, nonBillableHours, billablePct]
+            properties:
+              date: { type: string }
+              billableHours: { type: number }
+              nonBillableHours: { type: number }
+              billablePct: { type: number }
 
     BusinessUnit:
       type: object

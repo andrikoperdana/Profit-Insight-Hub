@@ -62,6 +62,7 @@ import { PdfUploadField, type PdfFileData } from "@/components/common/PdfUploadF
 import { useAuth } from "@/lib/auth";
 import { RoleLabels, canViewProjectFinancials } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
+import BudgetConsumptionCard from "@/components/projects/BudgetConsumptionCard";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -252,6 +253,14 @@ function OverviewTab({ project }: { project: any }) {
       )}
 
       <DocumentChecklistCard projectId={project.id} projectStatus={project.status} />
+
+      {project.kind && project.kind !== "CLIENT" && canViewProjectFinancials(user?.role) && (
+        <BudgetConsumptionCard
+          budget={project.contractValue ?? 0}
+          actualCost={project.actualCost ?? 0}
+          kind={project.kind}
+        />
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="border-border shadow-sm">
