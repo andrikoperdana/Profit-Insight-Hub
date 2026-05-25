@@ -24,7 +24,8 @@ function requireFinancialView(req: any, res: any): boolean {
 
 router.get("/dashboard/summary", async (req, res) => {
   if (!requireFinancialView(req, res)) return;
-  const projects = await prisma.project.findMany({ where: { deletedAt: null }, include: projectInclude });
+  // Executive KPIs are commercial; exclude non-billable INTERNAL/PRESALES/TRAINING.
+  const projects = await prisma.project.findMany({ where: { deletedAt: null, kind: "CLIENT" }, include: projectInclude });
   const totalProjects = projects.length;
   const activeProjects = projects.filter((p) => p.status === "ACTIVE").length;
   let totalContractValue = 0;
@@ -86,7 +87,8 @@ router.get("/dashboard/summary", async (req, res) => {
 router.get("/dashboard/profit-trend", async (req, res) => {
   if (!requireFinancialView(req, res)) return;
   // Group approved timesheets by month for cost; spread project contract value
-  const projects = await prisma.project.findMany({ where: { deletedAt: null }, include: projectInclude });
+  // Only CLIENT projects contribute to commercial profit trend.
+  const projects = await prisma.project.findMany({ where: { deletedAt: null, kind: "CLIENT" }, include: projectInclude });
   const monthly = new Map<string, { revenue: number; cost: number }>();
 
   for (const p of projects) {

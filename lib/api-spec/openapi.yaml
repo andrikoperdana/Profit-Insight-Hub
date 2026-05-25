@@ -1511,6 +1511,15 @@ components:
       type: string
       enum: [DRAFT, OBSERVATION, ACTIVE, NO_NEED_CONSULTANT, PAUSE, COMPLETE, CLOSED]
 
+    ProjectKind:
+      type: string
+      enum: [CLIENT, INTERNAL, PRESALES, TRAINING]
+      description: |
+        Project category. CLIENT = paid engagement (default, all financial
+        reports include). INTERNAL/PRESALES/TRAINING = non-billable initiatives
+        excluded from VAT recap, billing aging, cash inflow forecast, and
+        PPN detail reports.
+
     TimesheetStatus:
       type: string
       enum: [DRAFT, SUBMITTED, APPROVED, REJECTED]
@@ -2076,6 +2085,7 @@ components:
         name: { type: string }
         description: { type: string, nullable: true }
         status: { $ref: "#/components/schemas/ProjectStatus" }
+        kind: { $ref: "#/components/schemas/ProjectKind" }
         clientId: { type: string }
         clientName: { type: string }
         salesId: { type: string, nullable: true }

@@ -106,6 +106,8 @@ router.get("/billing-milestones/vat-recap", async (req, res) => {
     where: {
       status: { in: ["INVOICED", "PAID"] },
       invoicedAt: { gte: start, lt: end },
+      // Internal/Presales/Training projects do not produce VAT obligations.
+      project: { kind: "CLIENT" },
     },
     include: {
       project: {

@@ -92,6 +92,7 @@ export * from "./projectDetail";
 export * from "./projectExpense";
 export * from "./projectExpenseCategory";
 export * from "./projectFinancials";
+export * from "./projectKind";
 export * from "./projectResource";
 export * from "./projectStatus";
 export * from "./rejectProjectExpenseBody";

@@ -299,6 +299,12 @@ export const UpdateProjectReportResponse = zod.object({
     "COMPLETE",
     "CLOSED",
   ]),
+  kind: zod
+    .enum(["CLIENT", "INTERNAL", "PRESALES", "TRAINING"])
+    .optional()
+    .describe(
+      "Project category. CLIENT = paid engagement (default, all financial\nreports include). INTERNAL\/PRESALES\/TRAINING = non-billable initiatives\nexcluded from VAT recap, billing aging, cash inflow forecast, and\nPPN detail reports.\n",
+    ),
   clientId: zod.string().optional(),
   clientName: zod.string().optional(),
   salesId: zod.string().nullish(),
@@ -1021,6 +1027,12 @@ export const ListProjectsResponseItem = zod.object({
     "COMPLETE",
     "CLOSED",
   ]),
+  kind: zod
+    .enum(["CLIENT", "INTERNAL", "PRESALES", "TRAINING"])
+    .optional()
+    .describe(
+      "Project category. CLIENT = paid engagement (default, all financial\nreports include). INTERNAL\/PRESALES\/TRAINING = non-billable initiatives\nexcluded from VAT recap, billing aging, cash inflow forecast, and\nPPN detail reports.\n",
+    ),
   clientId: zod.string().optional(),
   clientName: zod.string().optional(),
   salesId: zod.string().nullish(),
@@ -1121,6 +1133,12 @@ export const GetProjectResponse = zod
       "COMPLETE",
       "CLOSED",
     ]),
+    kind: zod
+      .enum(["CLIENT", "INTERNAL", "PRESALES", "TRAINING"])
+      .optional()
+      .describe(
+        "Project category. CLIENT = paid engagement (default, all financial\nreports include). INTERNAL\/PRESALES\/TRAINING = non-billable initiatives\nexcluded from VAT recap, billing aging, cash inflow forecast, and\nPPN detail reports.\n",
+      ),
     clientId: zod.string().optional(),
     clientName: zod.string().optional(),
     salesId: zod.string().nullish(),
@@ -1284,6 +1302,12 @@ export const UpdateProjectResponse = zod.object({
     "COMPLETE",
     "CLOSED",
   ]),
+  kind: zod
+    .enum(["CLIENT", "INTERNAL", "PRESALES", "TRAINING"])
+    .optional()
+    .describe(
+      "Project category. CLIENT = paid engagement (default, all financial\nreports include). INTERNAL\/PRESALES\/TRAINING = non-billable initiatives\nexcluded from VAT recap, billing aging, cash inflow forecast, and\nPPN detail reports.\n",
+    ),
   clientId: zod.string().optional(),
   clientName: zod.string().optional(),
   salesId: zod.string().nullish(),
@@ -1468,6 +1492,12 @@ export const ListProjectsNeedingResourceResponseItem = zod.object({
     "COMPLETE",
     "CLOSED",
   ]),
+  kind: zod
+    .enum(["CLIENT", "INTERNAL", "PRESALES", "TRAINING"])
+    .optional()
+    .describe(
+      "Project category. CLIENT = paid engagement (default, all financial\nreports include). INTERNAL\/PRESALES\/TRAINING = non-billable initiatives\nexcluded from VAT recap, billing aging, cash inflow forecast, and\nPPN detail reports.\n",
+    ),
   clientId: zod.string().optional(),
   clientName: zod.string().optional(),
   salesId: zod.string().nullish(),
@@ -2816,6 +2846,12 @@ export const GetTopProjectsResponseItem = zod.object({
     "COMPLETE",
     "CLOSED",
   ]),
+  kind: zod
+    .enum(["CLIENT", "INTERNAL", "PRESALES", "TRAINING"])
+    .optional()
+    .describe(
+      "Project category. CLIENT = paid engagement (default, all financial\nreports include). INTERNAL\/PRESALES\/TRAINING = non-billable initiatives\nexcluded from VAT recap, billing aging, cash inflow forecast, and\nPPN detail reports.\n",
+    ),
   clientId: zod.string().optional(),
   clientName: zod.string().optional(),
   salesId: zod.string().nullish(),

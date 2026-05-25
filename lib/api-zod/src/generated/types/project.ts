@@ -5,6 +5,7 @@
  * SecureProfit Hub API
  * OpenAPI spec version: 0.1.0
  */
+import type { ProjectKind } from "./projectKind";
 import type { ProjectStatus } from "./projectStatus";
 
 export interface Project {
@@ -13,6 +14,7 @@ export interface Project {
   name: string;
   description?: string | null;
   status: ProjectStatus;
+  kind?: ProjectKind;
   clientId?: string;
   clientName?: string;
   salesId?: string | null;

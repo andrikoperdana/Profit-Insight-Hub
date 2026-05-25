@@ -229,6 +229,11 @@ router.post("/projects", requireRole(...writeRoles), async (req, res) => {
       salesId,
       pmId,
       status,
+      // Sales intake is always for client engagements; only MGMT can flag a
+      // project as INTERNAL/PRESALES/TRAINING.
+      kind: (!isSales && (b.kind === "INTERNAL" || b.kind === "PRESALES" || b.kind === "TRAINING"))
+        ? b.kind
+        : "CLIENT",
       startDate,
       endDate,
       contractValue: Number(b.contractValue || 0),
@@ -423,6 +428,13 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
   if (b.technicalWriterId !== undefined) data.technicalWriterId = b.technicalWriterId || null;
   if (b.adminProjectId !== undefined) data.adminProjectId = b.adminProjectId || null;
   if (b.status !== undefined) data.status = b.status as ProjectStatus;
+  if (b.kind !== undefined && role === "MANAGEMENT") {
+    if (b.kind !== "CLIENT" && b.kind !== "INTERNAL" && b.kind !== "PRESALES" && b.kind !== "TRAINING") {
+      res.status(400).json({ error: "kind must be CLIENT, INTERNAL, PRESALES, or TRAINING" });
+      return;
+    }
+    data.kind = b.kind;
+  }
   if (b.startDate !== undefined) {
     const d = parseSafeDate(b.startDate);
     if (b.startDate && d === null) {

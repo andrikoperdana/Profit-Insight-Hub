@@ -42,7 +42,7 @@ router.get("/bi/overview", requireAuth, requireRole("MANAGEMENT"), async (req, r
   const projectTypeFilter = req.query.projectType ? String(req.query.projectType) : null;
 
   const allProjects = await prisma.project.findMany({
-    where: { deletedAt: null },
+    where: { deletedAt: null, kind: "CLIENT" },
     include: projectInclude,
   });
 

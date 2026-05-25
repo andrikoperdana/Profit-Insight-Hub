@@ -43,6 +43,22 @@ export const ProjectStatus = {
   CLOSED: "CLOSED",
 } as const;
 
+/**
+ * Project category. CLIENT = paid engagement (default, all financial
+reports include). INTERNAL/PRESALES/TRAINING = non-billable initiatives
+excluded from VAT recap, billing aging, cash inflow forecast, and
+PPN detail reports.
+
+ */
+export type ProjectKind = (typeof ProjectKind)[keyof typeof ProjectKind];
+
+export const ProjectKind = {
+  CLIENT: "CLIENT",
+  INTERNAL: "INTERNAL",
+  PRESALES: "PRESALES",
+  TRAINING: "TRAINING",
+} as const;
+
 export type TimesheetStatus =
   (typeof TimesheetStatus)[keyof typeof TimesheetStatus];
 
@@ -622,6 +638,7 @@ export interface Project {
   name: string;
   description?: string | null;
   status: ProjectStatus;
+  kind?: ProjectKind;
   clientId?: string;
   clientName?: string;
   salesId?: string | null;

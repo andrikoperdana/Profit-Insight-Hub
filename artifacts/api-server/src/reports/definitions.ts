@@ -77,7 +77,7 @@ const profitabilityPerProject: ReportDefinition = {
     { key: "burnRatePct", label: "Burn %", type: "percent", align: "right", width: 80, fixed: 1 },
   ],
   query: async (ctx) => {
-    const where: any = { deletedAt: null };
+    const where: any = { deletedAt: null, kind: "CLIENT" };
     if (ctx.user.role === "PROJECT_MANAGER") where.pmId = ctx.user.sub;
     if (ctx.filters.status) where.status = ctx.filters.status;
     if (ctx.filters.pmId && ctx.user.role === "MANAGEMENT") where.pmId = ctx.filters.pmId;
@@ -137,7 +137,7 @@ const marginTrendByBu: ReportDefinition = {
     const year = yearOrCurrent(ctx.filters.year);
     const buFilter = ctx.filters.businessUnitId;
     const projects = await prisma.project.findMany({
-      where: { deletedAt: null, status: { not: "DRAFT" } },
+      where: { deletedAt: null, status: { not: "DRAFT" }, kind: "CLIENT" },
       include: { ...projectInclude, pm: { include: { businessUnit: true } } } as any,
     });
     // Map: month-bu -> {revenueNet, cost, profit, count}
@@ -213,7 +213,7 @@ const profitabilityPerClient: ReportDefinition = {
   ],
   chart: { type: "bar", xKey: "clientName", yKey: "totalProfit", yLabel: "Total Profit" },
   query: async (ctx) => {
-    const where: any = { deletedAt: null };
+    const where: any = { deletedAt: null, kind: "CLIENT" };
     if (ctx.filters.status) where.status = ctx.filters.status;
     const from = parseDateOrUndefined(ctx.filters.startFrom);
     const to = parseDateOrUndefined(ctx.filters.startTo);
@@ -516,7 +516,7 @@ const billingAging: ReportDefinition = {
     { key: "invoiceNumber", label: "Invoice #", type: "string", width: 110 },
   ],
   query: async (ctx) => {
-    const projectWhere: any = { deletedAt: null };
+    const projectWhere: any = { deletedAt: null, kind: "CLIENT" };
     if (ctx.user.role === "PROJECT_MANAGER") projectWhere.pmId = ctx.user.sub;
     const projects = await prisma.project.findMany({ where: projectWhere, select: { id: true, code: true, name: true, contractValue: true, vatPercent: true, contractValueIncludesVat: true, client: { select: { name: true } } } });
     const projectMap = new Map(projects.map((p) => [p.id, p]));
@@ -590,7 +590,7 @@ const cashInflowForecast: ReportDefinition = {
   chart: { type: "bar", xKey: "month", yKey: "expectedTotal", yLabel: "Expected Cash Inflow", stacked: false },
   query: async (ctx) => {
     const year = yearOrCurrent(ctx.filters.year);
-    const projectWhere: any = { deletedAt: null };
+    const projectWhere: any = { deletedAt: null, kind: "CLIENT" };
     if (ctx.filters.clientId) projectWhere.clientId = ctx.filters.clientId;
     const projects = await prisma.project.findMany({ where: projectWhere, select: { id: true, contractValue: true, vatPercent: true, contractValueIncludesVat: true } });
     const projectMap = new Map(projects.map((p) => [p.id, p]));
@@ -751,7 +751,7 @@ const ppnDetail: ReportDefinition = {
     const clientFilter = ctx.filters.clientId;
     const yearStart = new Date(year, 0, 1);
     const yearEnd = new Date(year, 11, 31, 23, 59, 59);
-    const projectWhere: any = { deletedAt: null };
+    const projectWhere: any = { deletedAt: null, kind: "CLIENT" };
     if (clientFilter) projectWhere.clientId = clientFilter;
     const projects = await prisma.project.findMany({ where: projectWhere, select: { id: true, code: true, name: true, contractValue: true, vatPercent: true, contractValueIncludesVat: true, client: { select: { name: true } } } });
     const projectMap = new Map(projects.map((p) => [p.id, p]));

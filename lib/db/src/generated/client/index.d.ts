@@ -179,6 +179,16 @@ export const ProjectStatus: {
 export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus]
 
 
+export const ProjectKind: {
+  CLIENT: 'CLIENT',
+  INTERNAL: 'INTERNAL',
+  PRESALES: 'PRESALES',
+  TRAINING: 'TRAINING'
+};
+
+export type ProjectKind = (typeof ProjectKind)[keyof typeof ProjectKind]
+
+
 export const TimesheetStatus: {
   DRAFT: 'DRAFT',
   SUBMITTED: 'SUBMITTED',
@@ -273,6 +283,10 @@ export const Seniority: typeof $Enums.Seniority
 export type ProjectStatus = $Enums.ProjectStatus
 
 export const ProjectStatus: typeof $Enums.ProjectStatus
+
+export type ProjectKind = $Enums.ProjectKind
+
+export const ProjectKind: typeof $Enums.ProjectKind
 
 export type TimesheetStatus = $Enums.TimesheetStatus
 
@@ -6365,6 +6379,7 @@ export namespace Prisma {
     name: string | null
     description: string | null
     status: $Enums.ProjectStatus | null
+    kind: $Enums.ProjectKind | null
     clientId: string | null
     salesId: string | null
     pmId: string | null
@@ -6397,6 +6412,7 @@ export namespace Prisma {
     name: string | null
     description: string | null
     status: $Enums.ProjectStatus | null
+    kind: $Enums.ProjectKind | null
     clientId: string | null
     salesId: string | null
     pmId: string | null
@@ -6429,6 +6445,7 @@ export namespace Prisma {
     name: number
     description: number
     status: number
+    kind: number
     clientId: number
     salesId: number
     pmId: number
@@ -6477,6 +6494,7 @@ export namespace Prisma {
     name?: true
     description?: true
     status?: true
+    kind?: true
     clientId?: true
     salesId?: true
     pmId?: true
@@ -6509,6 +6527,7 @@ export namespace Prisma {
     name?: true
     description?: true
     status?: true
+    kind?: true
     clientId?: true
     salesId?: true
     pmId?: true
@@ -6541,6 +6560,7 @@ export namespace Prisma {
     name?: true
     description?: true
     status?: true
+    kind?: true
     clientId?: true
     salesId?: true
     pmId?: true
@@ -6660,6 +6680,7 @@ export namespace Prisma {
     name: string
     description: string | null
     status: $Enums.ProjectStatus
+    kind: $Enums.ProjectKind
     clientId: string
     salesId: string | null
     pmId: string | null
@@ -6711,6 +6732,7 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     status?: boolean
+    kind?: boolean
     clientId?: boolean
     salesId?: boolean
     pmId?: boolean
@@ -6757,6 +6779,7 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     status?: boolean
+    kind?: boolean
     clientId?: boolean
     salesId?: boolean
     pmId?: boolean
@@ -6794,6 +6817,7 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     status?: boolean
+    kind?: boolean
     clientId?: boolean
     salesId?: boolean
     pmId?: boolean
@@ -6867,6 +6891,7 @@ export namespace Prisma {
       name: string
       description: string | null
       status: $Enums.ProjectStatus
+      kind: $Enums.ProjectKind
       clientId: string
       salesId: string | null
       pmId: string | null
@@ -7302,6 +7327,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Project", 'String'>
     readonly description: FieldRef<"Project", 'String'>
     readonly status: FieldRef<"Project", 'ProjectStatus'>
+    readonly kind: FieldRef<"Project", 'ProjectKind'>
     readonly clientId: FieldRef<"Project", 'String'>
     readonly salesId: FieldRef<"Project", 'String'>
     readonly pmId: FieldRef<"Project", 'String'>
@@ -29499,6 +29525,7 @@ export namespace Prisma {
     name: 'name',
     description: 'description',
     status: 'status',
+    kind: 'kind',
     clientId: 'clientId',
     salesId: 'salesId',
     pmId: 'pmId',
@@ -30013,6 +30040,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'ProjectKind'
+   */
+  export type EnumProjectKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectKind'>
+    
+
+
+  /**
+   * Reference to a field of type 'ProjectKind[]'
+   */
+  export type ListEnumProjectKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectKind[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -30414,6 +30455,7 @@ export namespace Prisma {
     name?: StringFilter<"Project"> | string
     description?: StringNullableFilter<"Project"> | string | null
     status?: EnumProjectStatusFilter<"Project"> | $Enums.ProjectStatus
+    kind?: EnumProjectKindFilter<"Project"> | $Enums.ProjectKind
     clientId?: StringFilter<"Project"> | string
     salesId?: StringNullableFilter<"Project"> | string | null
     pmId?: StringNullableFilter<"Project"> | string | null
@@ -30459,6 +30501,7 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     status?: SortOrder
+    kind?: SortOrder
     clientId?: SortOrder
     salesId?: SortOrderInput | SortOrder
     pmId?: SortOrderInput | SortOrder
@@ -30508,6 +30551,7 @@ export namespace Prisma {
     name?: StringFilter<"Project"> | string
     description?: StringNullableFilter<"Project"> | string | null
     status?: EnumProjectStatusFilter<"Project"> | $Enums.ProjectStatus
+    kind?: EnumProjectKindFilter<"Project"> | $Enums.ProjectKind
     clientId?: StringFilter<"Project"> | string
     salesId?: StringNullableFilter<"Project"> | string | null
     pmId?: StringNullableFilter<"Project"> | string | null
@@ -30552,6 +30596,7 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     status?: SortOrder
+    kind?: SortOrder
     clientId?: SortOrder
     salesId?: SortOrderInput | SortOrder
     pmId?: SortOrderInput | SortOrder
@@ -30592,6 +30637,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Project"> | string
     description?: StringNullableWithAggregatesFilter<"Project"> | string | null
     status?: EnumProjectStatusWithAggregatesFilter<"Project"> | $Enums.ProjectStatus
+    kind?: EnumProjectKindWithAggregatesFilter<"Project"> | $Enums.ProjectKind
     clientId?: StringWithAggregatesFilter<"Project"> | string
     salesId?: StringNullableWithAggregatesFilter<"Project"> | string | null
     pmId?: StringNullableWithAggregatesFilter<"Project"> | string | null
@@ -32678,6 +32724,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
@@ -32718,6 +32765,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     clientId: string
     salesId?: string | null
     pmId?: string | null
@@ -32758,6 +32806,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
@@ -32798,6 +32847,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32838,6 +32888,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     clientId: string
     salesId?: string | null
     pmId?: string | null
@@ -32870,6 +32921,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
@@ -32897,6 +32949,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35279,6 +35332,13 @@ export namespace Prisma {
     not?: NestedEnumProjectStatusFilter<$PrismaModel> | $Enums.ProjectStatus
   }
 
+  export type EnumProjectKindFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjectKind | EnumProjectKindFieldRefInput<$PrismaModel>
+    in?: $Enums.ProjectKind[] | ListEnumProjectKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProjectKind[] | ListEnumProjectKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumProjectKindFilter<$PrismaModel> | $Enums.ProjectKind
+  }
+
   export type FloatFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[] | ListFloatFieldRefInput<$PrismaModel>
@@ -35321,6 +35381,7 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     status?: SortOrder
+    kind?: SortOrder
     clientId?: SortOrder
     salesId?: SortOrder
     pmId?: SortOrder
@@ -35360,6 +35421,7 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     status?: SortOrder
+    kind?: SortOrder
     clientId?: SortOrder
     salesId?: SortOrder
     pmId?: SortOrder
@@ -35392,6 +35454,7 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     status?: SortOrder
+    kind?: SortOrder
     clientId?: SortOrder
     salesId?: SortOrder
     pmId?: SortOrder
@@ -35433,6 +35496,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumProjectStatusFilter<$PrismaModel>
     _max?: NestedEnumProjectStatusFilter<$PrismaModel>
+  }
+
+  export type EnumProjectKindWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjectKind | EnumProjectKindFieldRefInput<$PrismaModel>
+    in?: $Enums.ProjectKind[] | ListEnumProjectKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProjectKind[] | ListEnumProjectKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumProjectKindWithAggregatesFilter<$PrismaModel> | $Enums.ProjectKind
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumProjectKindFilter<$PrismaModel>
+    _max?: NestedEnumProjectKindFilter<$PrismaModel>
   }
 
   export type FloatWithAggregatesFilter<$PrismaModel = never> = {
@@ -37990,6 +38063,10 @@ export namespace Prisma {
     set?: $Enums.ProjectStatus
   }
 
+  export type EnumProjectKindFieldUpdateOperationsInput = {
+    set?: $Enums.ProjectKind
+  }
+
   export type FloatFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -39510,6 +39587,13 @@ export namespace Prisma {
     not?: NestedEnumProjectStatusFilter<$PrismaModel> | $Enums.ProjectStatus
   }
 
+  export type NestedEnumProjectKindFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjectKind | EnumProjectKindFieldRefInput<$PrismaModel>
+    in?: $Enums.ProjectKind[] | ListEnumProjectKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProjectKind[] | ListEnumProjectKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumProjectKindFilter<$PrismaModel> | $Enums.ProjectKind
+  }
+
   export type NestedEnumProjectStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.ProjectStatus | EnumProjectStatusFieldRefInput<$PrismaModel>
     in?: $Enums.ProjectStatus[] | ListEnumProjectStatusFieldRefInput<$PrismaModel>
@@ -39518,6 +39602,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumProjectStatusFilter<$PrismaModel>
     _max?: NestedEnumProjectStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumProjectKindWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjectKind | EnumProjectKindFieldRefInput<$PrismaModel>
+    in?: $Enums.ProjectKind[] | ListEnumProjectKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProjectKind[] | ListEnumProjectKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumProjectKindWithAggregatesFilter<$PrismaModel> | $Enums.ProjectKind
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumProjectKindFilter<$PrismaModel>
+    _max?: NestedEnumProjectKindFilter<$PrismaModel>
   }
 
   export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
@@ -40197,6 +40291,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
@@ -40236,6 +40331,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     clientId: string
     pmId?: string | null
     technicalWriterId?: string | null
@@ -40285,6 +40381,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
@@ -40324,6 +40421,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     clientId: string
     salesId?: string | null
     technicalWriterId?: string | null
@@ -40373,6 +40471,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
@@ -40412,6 +40511,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     clientId: string
     salesId?: string | null
     pmId?: string | null
@@ -40461,6 +40561,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
@@ -40500,6 +40601,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     clientId: string
     salesId?: string | null
     pmId?: string | null
@@ -41550,6 +41652,7 @@ export namespace Prisma {
     name?: StringFilter<"Project"> | string
     description?: StringNullableFilter<"Project"> | string | null
     status?: EnumProjectStatusFilter<"Project"> | $Enums.ProjectStatus
+    kind?: EnumProjectKindFilter<"Project"> | $Enums.ProjectKind
     clientId?: StringFilter<"Project"> | string
     salesId?: StringNullableFilter<"Project"> | string | null
     pmId?: StringNullableFilter<"Project"> | string | null
@@ -42113,6 +42216,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
@@ -42152,6 +42256,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     salesId?: string | null
     pmId?: string | null
     technicalWriterId?: string | null
@@ -43595,6 +43700,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
@@ -43634,6 +43740,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     clientId: string
     salesId?: string | null
     pmId?: string | null
@@ -43689,6 +43796,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
@@ -43728,6 +43836,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43959,6 +44068,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
@@ -43998,6 +44108,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     clientId: string
     salesId?: string | null
     pmId?: string | null
@@ -44239,6 +44350,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
@@ -44278,6 +44390,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -44515,6 +44628,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
@@ -44554,6 +44668,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     clientId: string
     salesId?: string | null
     pmId?: string | null
@@ -44844,6 +44959,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
@@ -44883,6 +44999,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45175,6 +45292,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
@@ -45214,6 +45332,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     clientId: string
     salesId?: string | null
     pmId?: string | null
@@ -45362,6 +45481,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
@@ -45401,6 +45521,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45539,6 +45660,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
@@ -45578,6 +45700,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     clientId: string
     salesId?: string | null
     pmId?: string | null
@@ -45819,6 +45942,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
@@ -45858,6 +45982,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46634,6 +46759,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
@@ -46673,6 +46799,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     clientId: string
     salesId?: string | null
     pmId?: string | null
@@ -46827,6 +46954,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
@@ -46866,6 +46994,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46905,6 +47034,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
@@ -46944,6 +47074,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     clientId: string
     salesId?: string | null
     pmId?: string | null
@@ -47422,6 +47553,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
@@ -47461,6 +47593,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -48067,6 +48200,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     startDate?: Date | string | null
     endDate?: Date | string | null
     contractValue?: number
@@ -48106,6 +48240,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     clientId: string
     salesId?: string | null
     pmId?: string | null
@@ -48161,6 +48296,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
@@ -48200,6 +48336,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50141,6 +50278,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     clientId: string
     pmId?: string | null
     technicalWriterId?: string | null
@@ -50172,6 +50310,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     clientId: string
     salesId?: string | null
     technicalWriterId?: string | null
@@ -50203,6 +50342,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     clientId: string
     salesId?: string | null
     pmId?: string | null
@@ -50234,6 +50374,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     clientId: string
     salesId?: string | null
     pmId?: string | null
@@ -50770,6 +50911,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
@@ -50809,6 +50951,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     clientId?: StringFieldUpdateOperationsInput | string
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
     technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50848,6 +50991,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     clientId?: StringFieldUpdateOperationsInput | string
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
     technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50879,6 +51023,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
@@ -50918,6 +51063,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50957,6 +51103,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50988,6 +51135,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
@@ -51027,6 +51175,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51066,6 +51215,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51097,6 +51247,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
@@ -51136,6 +51287,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51175,6 +51327,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     clientId?: StringFieldUpdateOperationsInput | string
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51889,6 +52042,7 @@ export namespace Prisma {
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
     salesId?: string | null
     pmId?: string | null
     technicalWriterId?: string | null
@@ -51945,6 +52099,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     contractValue?: FloatFieldUpdateOperationsInput | number
@@ -51984,6 +52139,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
     technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52023,6 +52179,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
     salesId?: NullableStringFieldUpdateOperationsInput | string | null
     pmId?: NullableStringFieldUpdateOperationsInput | string | null
     technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null

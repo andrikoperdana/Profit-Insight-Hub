@@ -129,10 +129,28 @@ async function ensureBusinessUnitsAndSkills() {
 // (Principals, Site Admin, Finance, HR) + business units + skills + role
 // hierarchy links. Does NOT seed demo projects, clients, timesheets, or
 // `[sample]` report data. Safe to run on every boot in any environment.
+// Ensures a singleton "Internal" client exists. Used as the default client
+// for non-CLIENT projects (INTERNAL/PRESALES/TRAINING) so the existing
+// required clientId FK stays satisfied without polluting real client data.
+export async function ensureInternalClient() {
+  const existing = await prisma.client.findFirst({ where: { name: "Internal" } });
+  if (existing) return existing;
+  return prisma.client.create({
+    data: {
+      name: "Internal",
+      contactPerson: "Internal",
+      email: "internal@itsecasia.com",
+      phone: "-",
+      industry: "Internal",
+    },
+  });
+}
+
 export async function ensureCoreAccountsAndTaxonomy() {
   const passwordDefault = await bcrypt.hash("password123", 10);
   await ensurePrincipals(passwordDefault);
   await ensureBusinessUnitsAndSkills();
+  await ensureInternalClient();
 }
 
 export async function runSeed() {
@@ -144,8 +162,9 @@ export async function runSeed() {
     console.log(`Existing data — running idempotent Principal hierarchy patch only.`);
     await ensurePrincipals(passwordDefault);
     await ensureBusinessUnitsAndSkills();
+    await ensureInternalClient();
     await ensureSampleReportData();
-    console.log("Principals + hierarchy + BU/Skills + sample report data ensured.");
+    console.log("Principals + hierarchy + BU/Skills + Internal client + sample report data ensured.");
     return;
   }
 
@@ -201,6 +220,7 @@ export async function runSeed() {
   });
 
   console.log("Seeding clients...");
+  await ensureInternalClient();
   const bankNusantara = await prisma.client.create({ data: { name: "Bank Nusantara", contactPerson: "Hendra Kurniawan", email: "hendra@banknusantara.co.id", phone: "+62-21-555-1010", industry: "Banking" } });
   const teleSelaras  = await prisma.client.create({ data: { name: "Tele Selaras",  contactPerson: "Maya Anggraini",   email: "maya@teleselaras.id",      phone: "+62-22-555-2020", industry: "Telecom" } });
   const energiPrima  = await prisma.client.create({ data: { name: "Energi Prima",  contactPerson: "Joko Widodo",      email: "joko@energiprima.co.id",   phone: "+62-21-555-3030", industry: "Energy" } });

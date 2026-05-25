@@ -247,6 +247,7 @@ export function serializeProject(project: ProjectWithRelations, callerRole?: str
     name: project.name,
     description: project.description,
     status: project.status,
+    kind: project.kind,
     clientId: project.clientId,
     clientName: project.client.name,
     salesId: project.salesId,
