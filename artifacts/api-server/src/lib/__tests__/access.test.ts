@@ -140,25 +140,37 @@ describe("userCanAccessProject", () => {
     ]);
   });
 
-  it("PRINCIPAL_KONSULTAN scoped to ACTIVE and supervisee/self resources", async () => {
+  it("PRINCIPAL_KONSULTAN scoped to ACTIVE w/ involvement OR all OBSERVATION", async () => {
     findFirstMock.mockResolvedValueOnce(null);
     await userCanAccessProject("p1", { sub: "pk-1", role: "PRINCIPAL_KONSULTAN" });
     const where = findFirstMock.mock.calls[0][0].where;
-    expect(where.status).toBe("ACTIVE");
+    expect(where.status).toBeUndefined();
     expect(where.OR).toEqual([
-      { resources: { some: { userId: "pk-1" } } },
-      { resources: { some: { user: { principalId: "pk-1" } } } },
+      {
+        status: "ACTIVE",
+        OR: [
+          { resources: { some: { userId: "pk-1" } } },
+          { resources: { some: { user: { principalId: "pk-1" } } } },
+        ],
+      },
+      { status: "OBSERVATION" },
     ]);
   });
 
-  it("PRINCIPAL_TECHNICAL_WRITER / PRINCIPAL_ADMIN_PROJECT scoped to ACTIVE only (no involvement filter)", async () => {
-    for (const role of ["PRINCIPAL_TECHNICAL_WRITER", "PRINCIPAL_ADMIN_PROJECT"]) {
-      findFirstMock.mockResolvedValueOnce(null);
-      await userCanAccessProject("p1", { sub: "pp-1", role });
-      const where = findFirstMock.mock.calls.at(-1)![0].where;
-      expect(where.status).toBe("ACTIVE");
-      expect(where.OR).toBeUndefined();
-    }
+  it("PRINCIPAL_TECHNICAL_WRITER scoped to OBSERVATION + ACTIVE (no involvement filter)", async () => {
+    findFirstMock.mockResolvedValueOnce(null);
+    await userCanAccessProject("p1", { sub: "pp-1", role: "PRINCIPAL_TECHNICAL_WRITER" });
+    const where = findFirstMock.mock.calls.at(-1)![0].where;
+    expect(where.status).toEqual({ in: ["OBSERVATION", "ACTIVE"] });
+    expect(where.OR).toBeUndefined();
+  });
+
+  it("PRINCIPAL_ADMIN_PROJECT scoped to OBSERVATION + ACTIVE + COMPLETE (no involvement filter)", async () => {
+    findFirstMock.mockResolvedValueOnce(null);
+    await userCanAccessProject("p1", { sub: "pp-1", role: "PRINCIPAL_ADMIN_PROJECT" });
+    const where = findFirstMock.mock.calls.at(-1)![0].where;
+    expect(where.status).toEqual({ in: ["OBSERVATION", "ACTIVE", "COMPLETE"] });
+    expect(where.OR).toBeUndefined();
   });
 
   it("returns false when Prisma yields no row (project not in scope)", async () => {

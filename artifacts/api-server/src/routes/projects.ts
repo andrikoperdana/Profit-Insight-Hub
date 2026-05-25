@@ -62,19 +62,28 @@ router.get("/projects", async (req, res) => {
       { resources: { some: { userId } } },
     ];
   } else if (role === "PRINCIPAL_KONSULTAN") {
-    // Principal Consultant: ACTIVE projects only, and only when the principal
-    // is involved (themselves on the resource list) or one of their direct
-    // supervisees is assigned. Other statuses are hidden entirely.
-    where.status = "ACTIVE";
+    // Principal Consultant: ACTIVE projects where the principal is on the
+    // resource list themselves or supervises an assigned resource, plus all
+    // OBSERVATION projects (no involvement filter — they need to see what's
+    // in the pipeline so they can propose supervisees). DRAFT/PAUSE/COMPLETE/
+    // CLOSED are hidden.
     where.OR = [
-      { resources: { some: { userId } } },
-      { resources: { some: { user: { principalId: userId } } } },
+      {
+        status: "ACTIVE",
+        OR: [
+          { resources: { some: { userId } } },
+          { resources: { some: { user: { principalId: userId } } } },
+        ],
+      },
+      { status: "OBSERVATION" },
     ];
-  } else if (role === "PRINCIPAL_TECHNICAL_WRITER" || role === "PRINCIPAL_ADMIN_PROJECT") {
-    // Principal TW / Principal AP: ACTIVE projects only (no involvement
-    // filter — they need visibility across all active engagements to plan
-    // staffing). DRAFT/OBSERVATION/PAUSE/COMPLETE/CLOSED are hidden.
-    where.status = "ACTIVE";
+  } else if (role === "PRINCIPAL_TECHNICAL_WRITER") {
+    // Principal TW: OBSERVATION + ACTIVE engagements (no involvement filter).
+    where.status = { in: ["OBSERVATION", "ACTIVE"] };
+  } else if (role === "PRINCIPAL_ADMIN_PROJECT") {
+    // Principal AP: OBSERVATION + ACTIVE + COMPLETE (COMPLETE projects may
+    // still be missing an assigned Admin Project for closing documents).
+    where.status = { in: ["OBSERVATION", "ACTIVE", "COMPLETE"] };
   } else if (role === "HR") {
     // HR has no project visibility. Return empty without leaking existence.
     res.json([]);

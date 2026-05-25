@@ -42,16 +42,29 @@ export async function userCanAccessProject(
       { resources: { some: { userId } } },
     ];
   } else if (role === "PRINCIPAL_KONSULTAN") {
-    // Mirror of GET /projects: only ACTIVE projects where the principal is
-    // a resource themselves or one of their direct supervisees is assigned.
-    where["status"] = "ACTIVE";
+    // Mirror of GET /projects: ACTIVE projects where the principal is on the
+    // resource list themselves or supervises an assigned resource, PLUS all
+    // OBSERVATION projects (no involvement filter — principals propose
+    // supervisees during observation, so they need visibility before any of
+    // their reports are on the roster).
     where["OR"] = [
-      { resources: { some: { userId } } },
-      { resources: { some: { user: { principalId: userId } } } },
+      {
+        status: "ACTIVE",
+        OR: [
+          { resources: { some: { userId } } },
+          { resources: { some: { user: { principalId: userId } } } },
+        ],
+      },
+      { status: "OBSERVATION" },
     ];
-  } else if (role === "PRINCIPAL_TECHNICAL_WRITER" || role === "PRINCIPAL_ADMIN_PROJECT") {
-    // Mirror of GET /projects: ACTIVE projects only, no involvement filter.
-    where["status"] = "ACTIVE";
+  } else if (role === "PRINCIPAL_TECHNICAL_WRITER") {
+    // Mirror of GET /projects: OBSERVATION + ACTIVE, no involvement filter.
+    where["status"] = { in: ["OBSERVATION", "ACTIVE"] };
+  } else if (role === "PRINCIPAL_ADMIN_PROJECT") {
+    // Mirror of GET /projects: OBSERVATION + ACTIVE + COMPLETE (matches the
+    // projects-needing-resource list, which includes COMPLETE projects still
+    // missing an Admin Project for closing docs).
+    where["status"] = { in: ["OBSERVATION", "ACTIVE", "COMPLETE"] };
   } else {
     // HR and any future unrecognized role have no project access by default.
     return false;
