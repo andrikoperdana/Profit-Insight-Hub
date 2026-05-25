@@ -38,7 +38,7 @@ export default function ProjectsList() {
   );
 
   const nonClosedCount = (projects ?? []).filter(p => p.status !== "CLOSED" && p.status !== "COMPLETE").length;
-  const showSeed = user?.role === "MANAGEMENT" && statusFilter === "all" && nonClosedCount < 3;
+  const showSeed = !import.meta.env.PROD && user?.role === "MANAGEMENT" && statusFilter === "all" && nonClosedCount < 3;
   const onSeed = async () => {
     if (!confirm("Add 9 sample projects (3 OBSERVATION + 3 ACTIVE + 3 PAUSE)?")) return;
     setSeeding(true);

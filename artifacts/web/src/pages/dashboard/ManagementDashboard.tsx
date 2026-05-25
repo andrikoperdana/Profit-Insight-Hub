@@ -629,9 +629,11 @@ function SatisfactionWidget() {
         {data.responseCount === 0 ? (
           <div className="flex items-center justify-between gap-3 flex-wrap">
             <div className="text-sm text-muted-foreground">No survey responses received yet this month.</div>
-            <Button size="sm" variant="outline" onClick={onSeed} disabled={seeding} data-testid="button-seed-csat-demo">
-              {seeding ? "Seeding…" : "Load demo data"}
-            </Button>
+            {!import.meta.env.PROD && (
+              <Button size="sm" variant="outline" onClick={onSeed} disabled={seeding} data-testid="button-seed-csat-demo">
+                {seeding ? "Seeding…" : "Load demo data"}
+              </Button>
+            )}
           </div>
         ) : (
           <div className="flex flex-wrap items-end gap-6">
