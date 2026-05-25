@@ -805,9 +805,9 @@ const ppnDetail: ReportDefinition = {
 // Excluded from all VAT / billing / profitability reports by design.
 const internalInitiativeCost: ReportDefinition = {
   id: "internal-initiative-cost",
-  name: "Biaya Inisiatif Internal",
+  name: "Internal Initiative Cost",
   description:
-    "Project non-komersial (INTERNAL/PRESALES/TRAINING): budget, biaya aktual, % budget terpakai, dan mandays per inisiatif.",
+    "Non-commercial projects (INTERNAL/PRESALES/TRAINING): budget, actual cost, % budget used, and mandays per initiative.",
   category: "operations",
   scope: ["MANAGEMENT", "FINANCE"],
   filters: [
@@ -826,12 +826,12 @@ const internalInitiativeCost: ReportDefinition = {
     { key: "startDate", label: "Start", type: "date", width: 100 },
     { key: "endDate", label: "End", type: "date", width: 100 },
     { key: "budget", label: "Budget", type: "currency", align: "right", width: 140, total: "sum" },
-    { key: "actualCost", label: "Biaya Aktual", type: "currency", align: "right", width: 140, total: "sum" },
-    { key: "budgetUsedPct", label: "Budget %", type: "percent", align: "right", width: 100, fixed: 1 },
-    { key: "plannedMandays", label: "Mandays Plan", type: "number", align: "right", width: 110, total: "sum" },
-    { key: "actualMandays", label: "Mandays Aktual", type: "number", align: "right", width: 130, fixed: 1, total: "sum" },
+    { key: "actualCost", label: "Actual Cost", type: "currency", align: "right", width: 140, total: "sum" },
+    { key: "budgetUsedPct", label: "Budget Used %", type: "percent", align: "right", width: 110, fixed: 1 },
+    { key: "plannedMandays", label: "Planned MD", type: "number", align: "right", width: 110, total: "sum" },
+    { key: "actualMandays", label: "Actual MD", type: "number", align: "right", width: 110, fixed: 1, total: "sum" },
   ],
-  chart: { type: "bar", xKey: "name", yKey: "actualCost", yLabel: "Biaya Aktual" },
+  chart: { type: "bar", xKey: "name", yKey: "actualCost", yLabel: "Actual Cost" },
   query: async (ctx) => {
     const where: any = { deletedAt: null, kind: { in: ["INTERNAL", "PRESALES", "TRAINING"] } };
     if (ctx.filters.kind && ["INTERNAL", "PRESALES", "TRAINING"].includes(ctx.filters.kind)) {

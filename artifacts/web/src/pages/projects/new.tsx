@@ -661,7 +661,7 @@ function FullProjectForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      {isInternal ? "Budget Internal (IDR) *" : "Selling Price to Client / Revenue (IDR) *"}
+                      {isInternal ? "Internal Budget (IDR) *" : "Selling Price to Client / Revenue (IDR) *"}
                     </FormLabel>
                     <FormControl><Input type="number" placeholder="0" {...field} /></FormControl>
                     <FormMessage />
@@ -702,9 +702,9 @@ function FullProjectForm() {
               )}
               {isInternal && (
                 <div className="col-span-1 md:col-span-2 rounded-md border border-amber-500/40 bg-amber-500/10 p-3 text-xs text-amber-200">
-                  <p className="font-medium mb-1">Mode Internal Initiative</p>
+                  <p className="font-medium mb-1">Internal Initiative Mode</p>
                   <p>
-                    Project ini diperlakukan sebagai inisiatif internal: tidak ada VAT, invoice, SPK, atau kontrak. Field "Budget Internal" berfungsi sebagai plafon biaya. Akan otomatis muncul di report <span className="font-mono">Biaya Inisiatif Internal</span> dan dikecualikan dari report profitability/VAT.
+                    This project is treated as an internal initiative: no VAT, invoice, SPK, or contract. The "Internal Budget" field acts as a spending cap. It will automatically appear in the <span className="font-mono">Internal Initiative Cost</span> report and be excluded from profitability/VAT reports.
                   </p>
                 </div>
               )}
