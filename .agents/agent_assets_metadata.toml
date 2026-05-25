@@ -275,3 +275,9 @@ id = "utXCjsBueOMTji1dkhAO_"
 uri = "file://dist/secureprofit-hub-db.sql.gz"
 type = "unspecified"
 title = "SecureProfit Hub - Database Dump (PostgreSQL)"
+
+[[outputs]]
+id = "456gmZCWyEvtwEpwZgvEc"
+uri = "file://dist/Panduan-Instalasi-SecureProfit-Hub.docx"
+type = "word_document"
+title = "Panduan Instalasi SecureProfit Hub (MS Word)"
