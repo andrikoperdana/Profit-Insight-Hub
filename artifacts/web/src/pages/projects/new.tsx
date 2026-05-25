@@ -315,9 +315,11 @@ function SalesIntakeForm() {
                         <SelectTrigger><SelectValue placeholder="Select client" /></SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {clients?.map((c) => (
-                          <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
-                        ))}
+                        {clients
+                          ?.filter((c) => c.name.trim().toLowerCase() !== "internal")
+                          .map((c) => (
+                            <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -638,9 +640,15 @@ function FullProjectForm() {
                         <SelectTrigger><SelectValue placeholder="Select client" /></SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {clients?.map((c) => (
-                          <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
-                        ))}
+                        {clients
+                          ?.filter((c) =>
+                            currentUser?.role === UserRole.MANAGEMENT
+                              ? true
+                              : c.name.trim().toLowerCase() !== "internal",
+                          )
+                          .map((c) => (
+                            <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
                     <FormMessage />

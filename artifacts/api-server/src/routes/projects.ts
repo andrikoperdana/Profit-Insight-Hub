@@ -220,8 +220,11 @@ router.post("/projects", requireRole(...writeRoles), async (req, res) => {
     res.status(err.status ?? 400).json({ error: err.message });
     return;
   }
+  // Only MANAGEMENT can flag a project as non-commercial
+  // (INTERNAL / PRESALES / TRAINING). Sales & PM intake always = CLIENT.
   const kind: "CLIENT" | "INTERNAL" | "PRESALES" | "TRAINING" =
-    (!isSales && (b.kind === "INTERNAL" || b.kind === "PRESALES" || b.kind === "TRAINING"))
+    (req.user!.role === "MANAGEMENT" &&
+      (b.kind === "INTERNAL" || b.kind === "PRESALES" || b.kind === "TRAINING"))
       ? b.kind
       : "CLIENT";
   // Non-CLIENT projects don't have commercial VAT, SPK, or contract docs —
