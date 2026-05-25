@@ -11,6 +11,13 @@ const projectStatusBadgeMap = {
   CLOSED: "secondary",
 } as const;
 
+const projectKindBadgeMap = {
+  CLIENT: "default",
+  INTERNAL: "secondary",
+  PRESALES: "outline",
+  TRAINING: "warning",
+} as const;
+
 const expenseStatusBadgeMap = {
   PENDING: "warning",
   APPROVED: "success",
@@ -790,6 +797,92 @@ const ppnDetail: ReportDefinition = {
   },
 };
 
+// =====================================================================
+// 11. INTERNAL INITIATIVE COST
+// =====================================================================
+// Non-billable projects (INTERNAL / PRESALES / TRAINING): tracks budget vs
+// actual cost and mandays so MGMT can see where internal investment goes.
+// Excluded from all VAT / billing / profitability reports by design.
+const internalInitiativeCost: ReportDefinition = {
+  id: "internal-initiative-cost",
+  name: "Biaya Inisiatif Internal",
+  description:
+    "Project non-komersial (INTERNAL/PRESALES/TRAINING): budget, biaya aktual, % budget terpakai, dan mandays per inisiatif.",
+  category: "operations",
+  scope: ["MANAGEMENT", "FINANCE"],
+  filters: [
+    { key: "kind", label: "Kind", type: "select", optionsSource: "internalProjectKinds" },
+    { key: "status", label: "Status", type: "select", optionsSource: "projectStatuses" },
+    { key: "pmId", label: "PM", type: "select", optionsSource: "pms" },
+    { key: "startFrom", label: "Start From", type: "date" },
+    { key: "startTo", label: "Start To", type: "date" },
+  ],
+  columns: [
+    { key: "code", label: "Code", type: "string", width: 100 },
+    { key: "name", label: "Project", type: "string", width: 220 },
+    { key: "kind", label: "Kind", type: "badge", width: 100, badgeMap: projectKindBadgeMap },
+    { key: "pmName", label: "PM", type: "string", width: 130 },
+    { key: "status", label: "Status", type: "badge", width: 100, badgeMap: projectStatusBadgeMap },
+    { key: "startDate", label: "Start", type: "date", width: 100 },
+    { key: "endDate", label: "End", type: "date", width: 100 },
+    { key: "budget", label: "Budget", type: "currency", align: "right", width: 140, total: "sum" },
+    { key: "actualCost", label: "Biaya Aktual", type: "currency", align: "right", width: 140, total: "sum" },
+    { key: "budgetUsedPct", label: "Budget %", type: "percent", align: "right", width: 100, fixed: 1 },
+    { key: "plannedMandays", label: "Mandays Plan", type: "number", align: "right", width: 110, total: "sum" },
+    { key: "actualMandays", label: "Mandays Aktual", type: "number", align: "right", width: 130, fixed: 1, total: "sum" },
+  ],
+  chart: { type: "bar", xKey: "name", yKey: "actualCost", yLabel: "Biaya Aktual" },
+  query: async (ctx) => {
+    const where: any = { deletedAt: null, kind: { in: ["INTERNAL", "PRESALES", "TRAINING"] } };
+    if (ctx.filters.kind && ["INTERNAL", "PRESALES", "TRAINING"].includes(ctx.filters.kind)) {
+      where.kind = ctx.filters.kind;
+    }
+    if (ctx.filters.status) where.status = ctx.filters.status;
+    if (ctx.filters.pmId) where.pmId = ctx.filters.pmId;
+    const from = parseDateOrUndefined(ctx.filters.startFrom);
+    const to = parseDateOrUndefined(ctx.filters.startTo);
+    if (from || to) {
+      where.startDate = {};
+      if (from) where.startDate.gte = from;
+      if (to) where.startDate.lte = to;
+    }
+    const projects = await prisma.project.findMany({
+      where,
+      include: projectInclude,
+      orderBy: { startDate: "desc" },
+    });
+    const rows: ReportRow[] = projects.map((p) => {
+      const m = computeMetrics(p as any);
+      const budget = p.contractValue || 0;
+      const budgetUsedPct = budget > 0 ? (m.actualCost / budget) * 100 : 0;
+      // Actual mandays = sum of APPROVED timesheet hours / 8
+      let actualMandays = 0;
+      for (const ts of (p as any).timesheets ?? []) {
+        if (ts.status === "APPROVED") actualMandays += (ts.hours ?? 0) / 8;
+      }
+      return {
+        code: p.code,
+        name: p.name,
+        kind: p.kind,
+        pmName: (p as any).pm?.name ?? "Unassigned",
+        status: p.status,
+        startDate: p.startDate ? p.startDate.toISOString() : null,
+        endDate: p.endDate ? p.endDate.toISOString() : null,
+        budget,
+        actualCost: m.actualCost,
+        budgetUsedPct,
+        plannedMandays: p.plannedMandays || 0,
+        actualMandays,
+      };
+    });
+    rows.sort((a, b) => Number(b.actualCost) - Number(a.actualCost));
+    return {
+      rows,
+      totals: sumColumns(rows, ["budget", "actualCost", "plannedMandays", "actualMandays"]),
+    };
+  },
+};
+
 export const REPORT_DEFINITIONS: ReportDefinition[] = [
   profitabilityPerProject,
   marginTrendByBu,
@@ -801,6 +894,7 @@ export const REPORT_DEFINITIONS: ReportDefinition[] = [
   cashInflowForecast,
   expenseReport,
   ppnDetail,
+  internalInitiativeCost,
 ];
 
 export function getReportById(id: string): ReportDefinition | undefined {

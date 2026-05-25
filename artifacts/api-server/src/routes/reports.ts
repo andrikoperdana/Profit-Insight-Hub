@@ -43,6 +43,19 @@ async function loadOptions(source: OptionsSource, viewer: { sub: string; role: s
     }
     case "projectStatuses":
       return ["DRAFT", "OBSERVATION", "ACTIVE", "PAUSE", "COMPLETE", "CLOSED"].map((v) => ({ value: v, label: v }));
+    case "projectKinds":
+      return [
+        { value: "CLIENT", label: "Client" },
+        { value: "INTERNAL", label: "Internal" },
+        { value: "PRESALES", label: "Presales" },
+        { value: "TRAINING", label: "Training" },
+      ];
+    case "internalProjectKinds":
+      return [
+        { value: "INTERNAL", label: "Internal" },
+        { value: "PRESALES", label: "Presales" },
+        { value: "TRAINING", label: "Training" },
+      ];
     case "expenseCategories":
       return ["SOFTWARE", "HARDWARE", "LICENSE", "TRAVEL", "OTHER"].map((v) => ({ value: v, label: v }));
     case "expenseStatuses":
@@ -130,6 +143,7 @@ router.get("/reports/options", async (req, res) => {
     "businessUnits", "pms", "clients", "projects", "projectStatuses",
     "expenseCategories", "expenseStatuses", "billingStatuses", "agingBuckets",
     "seniorities", "users", "roles", "yearList",
+    "projectKinds", "internalProjectKinds",
   ];
   if (!valid.includes(source as OptionsSource)) {
     res.status(400).json({ error: "INVALID_SOURCE" });

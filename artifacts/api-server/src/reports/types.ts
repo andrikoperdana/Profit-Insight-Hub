@@ -21,7 +21,9 @@ export type OptionsSource =
   | "seniorities"
   | "users"
   | "roles"
-  | "yearList";
+  | "yearList"
+  | "projectKinds"
+  | "internalProjectKinds";
 
 export interface FilterOption {
   value: string;
