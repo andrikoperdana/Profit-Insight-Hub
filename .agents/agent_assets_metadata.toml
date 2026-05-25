@@ -269,3 +269,9 @@ id = "Mh0ivtu1XdulxtZE-bJGr"
 uri = "file://dist/secureprofit-hub-source.tar.gz"
 type = "unspecified"
 title = "SecureProfit Hub - Source Code (13MB)"
+
+[[outputs]]
+id = "utXCjsBueOMTji1dkhAO_"
+uri = "file://dist/secureprofit-hub-db.sql.gz"
+type = "unspecified"
+title = "SecureProfit Hub - Database Dump (PostgreSQL)"
