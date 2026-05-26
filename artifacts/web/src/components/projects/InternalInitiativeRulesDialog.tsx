@@ -13,26 +13,36 @@ import {
 
 interface Props {
   trigger?: ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function InternalInitiativeRulesDialog({ trigger }: Props) {
-  const [open, setOpen] = useState(false);
+export function InternalInitiativeRulesDialog({ trigger, open: openProp, onOpenChange }: Props) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = openProp !== undefined;
+  const open = isControlled ? !!openProp : internalOpen;
+  const setOpen = (v: boolean) => {
+    if (!isControlled) setInternalOpen(v);
+    onOpenChange?.(v);
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {trigger ?? (
-          <Button
-            variant="outline"
-            size="sm"
-            className="border-amber-500/40 text-amber-200 hover:bg-amber-500/10"
-            data-testid="button-internal-initiative-rules"
-          >
-            <Info className="h-4 w-4 mr-2" />
-            Internal Initiative Rules
-          </Button>
-        )}
-      </DialogTrigger>
+      {trigger !== null && (
+        <DialogTrigger asChild>
+          {trigger ?? (
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-amber-500/40 text-amber-200 hover:bg-amber-500/10"
+              data-testid="button-internal-initiative-rules"
+            >
+              <Info className="h-4 w-4 mr-2" />
+              Internal Initiative Rules
+            </Button>
+          )}
+        </DialogTrigger>
+      )}
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>Internal Initiative — Rules of the Game</DialogTitle>

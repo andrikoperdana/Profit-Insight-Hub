@@ -523,6 +523,15 @@ function FullProjectForm() {
     [clients, watchedClientId],
   );
   const isInternal = (selectedClient?.name ?? "").trim().toLowerCase() === "internal";
+  const [rulesOpen, setRulesOpen] = useState(false);
+  const [rulesShown, setRulesShown] = useState(false);
+
+  useEffect(() => {
+    if (isInternal && currentUser?.role === UserRole.MANAGEMENT && !rulesShown) {
+      setRulesOpen(true);
+      setRulesShown(true);
+    }
+  }, [isInternal, currentUser?.role, rulesShown]);
 
   useEffect(() => {
     if (isInternal) {
@@ -747,20 +756,22 @@ function FullProjectForm() {
                         This project is treated as an internal initiative: no VAT, invoice, client SPK, or contract. The "Internal Budget" field acts as a spending cap. It will automatically appear in the <span className="font-mono">Internal Initiative Cost</span> report and be excluded from profitability/VAT reports. The internal SPK is issued and signed by HR, while a Project Manager supervises execution and approves resource clocking (timesheet hours).
                       </p>
                     </div>
-                    <InternalInitiativeRulesDialog
-                      trigger={
-                        <button
-                          type="button"
-                          className="shrink-0 underline text-amber-100 hover:text-white"
-                          data-testid="button-internal-rules-from-form"
-                        >
-                          Full rules
-                        </button>
-                      }
-                    />
+                    <button
+                      type="button"
+                      className="shrink-0 underline text-amber-100 hover:text-white"
+                      data-testid="button-internal-rules-from-form"
+                      onClick={() => setRulesOpen(true)}
+                    >
+                      Full rules
+                    </button>
                   </div>
                 </div>
               )}
+              <InternalInitiativeRulesDialog
+                trigger={null}
+                open={rulesOpen}
+                onOpenChange={setRulesOpen}
+              />
               <FormField
                 control={form.control}
                 name="description"

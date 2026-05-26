@@ -18,7 +18,6 @@ import { TableSkeleton } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
 import { Pagination, usePagination } from "@/components/common/Pagination";
 import { HealthBadge, MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
-import { InternalInitiativeRulesDialog } from "@/components/projects/InternalInitiativeRulesDialog";
 import { ProjectStatus } from "@workspace/api-client-react";
 
 export default function ProjectsList() {
@@ -100,7 +99,6 @@ export default function ProjectsList() {
         </div>
         
         <div className="flex gap-2 shrink-0 flex-wrap">
-          <InternalInitiativeRulesDialog />
           <Button
             variant="outline"
             onClick={() => exportCsv("projects", projectExportRows)}
