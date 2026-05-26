@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Plus, Search, Download } from "lucide-react";
-import { formatIDR } from "@/lib/format";
+import { formatMoney } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
 import { canCreateProject, canViewProjectFinancials } from "@/lib/roles";
 import { exportSheets, exportCsv } from "@/lib/exports";
@@ -191,7 +191,12 @@ export default function ProjectsList() {
                   <TableCell><ProjectStatusBadge status={project.status} /></TableCell>
                   {showFinancials && (
                     <>
-                      <TableCell className="text-right font-mono text-sm">{formatIDR(project.contractValue)}</TableCell>
+                      <TableCell className="text-right font-mono text-sm">
+                        {formatMoney(project.contractValue, (project as any).currency)}
+                        {(project as any).currency && (project as any).currency !== "IDR" && (
+                          <span className="ml-1 text-[10px] uppercase text-muted-foreground">{(project as any).currency}</span>
+                        )}
+                      </TableCell>
                       <TableCell className="text-center"><MarginBadge marginPct={project.marginPct} /></TableCell>
                       <TableCell className="text-center">
                         <HealthBadge

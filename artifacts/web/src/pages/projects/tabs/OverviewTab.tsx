@@ -54,7 +54,7 @@ import {
   Activity, Flame, Upload, FileText, Trash2, CheckCircle2, AlertCircle, Plus,
   Pencil, AlertTriangle, Paperclip, X,
 } from "lucide-react";
-import { formatIDR, formatDate, formatPct } from "@/lib/format";
+import { formatIDR, formatMoney, formatDate, formatPct } from "@/lib/format";
 import { HealthBadge, MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
 import { LoadingPage } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
@@ -436,9 +436,25 @@ function OverviewTab({ project }: { project: any }) {
               <>
                 {canViewProjectFinancials(user?.role) ? (
                   <>
-                    <Stat label="Revenue (Selling Price)" value={formatIDR(project.contractValue)} />
-                    <Stat label="Estimated Operational Cost" value={formatIDR(project.estimatedCost)} muted />
-                    <Stat label="Estimated Profit" value={formatIDR(project.estimatedProfit)} highlight />
+                    <Stat
+                      label={`Revenue (Selling Price)${(project as any).currency && (project as any).currency !== "IDR" ? ` · ${(project as any).currency}` : ""}`}
+                      value={formatMoney(project.contractValue, (project as any).currency)}
+                    />
+                    <Stat
+                      label="Estimated Operational Cost"
+                      value={formatMoney(project.estimatedCost, (project as any).currency)}
+                      muted
+                    />
+                    <Stat
+                      label="Estimated Profit"
+                      value={formatMoney(project.estimatedProfit, (project as any).currency)}
+                      highlight
+                    />
+                    {(project as any).currency && (project as any).currency !== "IDR" && (project as any).exchangeRate && (
+                      <p className="text-[11px] text-muted-foreground">
+                        Kurs simpan: 1 {(project as any).currency} ≈ {formatIDR((project as any).exchangeRate)}
+                      </p>
+                    )}
                     <div className="flex items-center justify-between pt-3 border-t border-border">
                       <p className="text-xs text-muted-foreground uppercase tracking-wide">Margin</p>
                       <MarginBadge marginPct={project.marginPct} />
@@ -603,12 +619,12 @@ function OverviewTab({ project }: { project: any }) {
                       ? `${form.startDate ? formatDate(form.startDate) : "?"} → ${form.endDate ? formatDate(form.endDate) : "?"}`
                       : "Not set"
                   } />
-                  <ConfirmRow label="Revenue" value={formatIDR(Number(form.contractValue) || 0)} />
+                  <ConfirmRow label="Revenue" value={formatMoney(Number(form.contractValue) || 0, (project as any).currency)} />
                   <ConfirmRow
                     label="VAT"
                     value={`${Number(form.vatPercent || 0)}% · ${form.contractValueIncludesVat ? "Includes VAT (gross)" : "Excludes VAT (DPP)"}`}
                   />
-                  <ConfirmRow label="Estimated Cost" value={formatIDR(Number(form.estimatedCost) || 0)} />
+                  <ConfirmRow label="Estimated Cost" value={formatMoney(Number(form.estimatedCost) || 0, (project as any).currency)} />
                   <ConfirmRow label="Planned Mandays" value={(Number(form.plannedMandays) || 0).toFixed(1)} />
                   <ConfirmRow label="Description" value={form.description.trim() || "—"} multiline />
                 </div>
