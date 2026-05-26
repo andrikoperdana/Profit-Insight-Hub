@@ -32,7 +32,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { format } from "date-fns";
-import * as XLSX from "xlsx";
+import * as XLSX from "@e965/xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { exportCsv } from "@/lib/exports";

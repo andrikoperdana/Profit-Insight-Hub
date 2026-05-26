@@ -1,4 +1,4 @@
-import * as XLSX from "xlsx";
+import * as XLSX from "@e965/xlsx";
 
 export async function downloadAuthed(url: string, filename: string): Promise<void> {
   const token = localStorage.getItem("auth_token");

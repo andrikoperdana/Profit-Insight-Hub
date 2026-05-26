@@ -75,8 +75,8 @@
     "zod": "catalog:"
   },
   "dependencies": {
+    "@e965/xlsx": "^0.20.3",
     "jspdf": "^4.2.1",
-    "jspdf-autotable": "^5.0.7",
-    "xlsx": "^0.18.5"
+    "jspdf-autotable": "^5.0.7"
   }
 }
