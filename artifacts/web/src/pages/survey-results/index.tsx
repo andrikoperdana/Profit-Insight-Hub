@@ -200,8 +200,8 @@ export default function SurveyResultsPage() {
     ),
     onSuccess: (res) => {
       toast({
-        title: "Demo data berhasil dibuat",
-        description: `${res.responses} response survey ditambahkan di ${res.projectsClosed.length} project.`,
+        title: "Demo data created",
+        description: `${res.responses} survey responses added across ${res.projectsClosed.length} project(s).`,
       });
       queryClient.invalidateQueries({ queryKey: ["/survey/responses"] });
     },
@@ -210,14 +210,14 @@ export default function SurveyResultsPage() {
       if (e?.status === 409) {
         toast({
           variant: "destructive",
-          title: "Sudah ada data survey",
-          description: `Seeder hanya jalan saat database masih kosong (sekarang ada ${e.data?.existingResponses ?? "?"} response).`,
+          title: "Survey data already exists",
+          description: `The seeder only runs when the database is empty (currently ${e.data?.existingResponses ?? "?"} response(s)).`,
         });
       } else {
         toast({
           variant: "destructive",
-          title: "Seeder gagal",
-          description: e?.data?.error ?? "Terjadi kesalahan saat seeding.",
+          title: "Seeder failed",
+          description: e?.data?.error ?? "An error occurred while seeding.",
         });
       }
     },
@@ -319,23 +319,23 @@ export default function SurveyResultsPage() {
       <AlertDialog open={seedDialogOpen} onOpenChange={setSeedDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Buat data demo survey?</AlertDialogTitle>
+            <AlertDialogTitle>Create demo survey data?</AlertDialogTitle>
             <AlertDialogDescription>
-              Ini akan menutup hingga 6 project pertama (status jadi CLOSED) dan
-              menambahkan ~9 response survey contoh dengan rating + komentar realistis
-              di bulan ini. Hanya jalan sekali — jika sudah ada response survey,
-              seeder akan ditolak.
+              This will close up to the first 6 projects (status set to CLOSED) and
+              add ~9 sample survey responses with realistic ratings and comments
+              dated within the current month. Runs only once — if any survey
+              response already exists, the seeder will be rejected.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 setSeedDialogOpen(false);
                 seedMutation.mutate();
               }}
             >
-              Ya, buat data demo
+              Yes, create demo data
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -397,9 +397,9 @@ export default function SurveyResultsPage() {
         <TabsContent value="project" className="mt-4">
           <Card className="rounded-xl">
             <CardHeader className="pb-3">
-              <CardTitle>Hasil Survey per Project</CardTitle>
+              <CardTitle>Survey Results per Project</CardTitle>
               <CardDescription>
-                Rata-rata skor dan jumlah respon untuk setiap project di {year}.
+                Average score and number of responses for each project in {year}.
                 {byProject.isFetching && " · Updating…"}
               </CardDescription>
             </CardHeader>
@@ -408,8 +408,8 @@ export default function SurveyResultsPage() {
                 <div className="p-10 text-center text-muted-foreground">Loading…</div>
               ) : (byProject.data?.items ?? []).length === 0 ? (
                 <EmptyState
-                  title="Belum ada survey per project"
-                  description={`Belum ada response survey di ${year}. Survey baru tersedia setelah project berstatus CLOSED dan link survey dikirim ke klien.`}
+                  title="No survey results per project yet"
+                  description={`No survey responses in ${year} yet. Surveys become available once a project is CLOSED and the survey link is shared with the client.`}
                 />
               ) : (
                 <Table>
@@ -482,7 +482,7 @@ export default function SurveyResultsPage() {
                                   {p.perQuestion.length > 0 && (
                                     <div>
                                       <div className="text-xs uppercase tracking-wide font-semibold text-muted-foreground mb-2">
-                                        Rata-rata Per Pertanyaan
+                                        Average Per Question
                                       </div>
                                       <div className="grid gap-2 md:grid-cols-2">
                                         {p.perQuestion.map((q) => (
@@ -500,7 +500,7 @@ export default function SurveyResultsPage() {
                                   {p.latestComments.length > 0 && (
                                     <div>
                                       <div className="text-xs uppercase tracking-wide font-semibold text-muted-foreground mb-2 flex items-center gap-1.5">
-                                        <MessageSquare className="h-3.5 w-3.5" /> Komentar Terbaru
+                                        <MessageSquare className="h-3.5 w-3.5" /> Latest Comments
                                       </div>
                                       <div className="space-y-2">
                                         {p.latestComments.map((c, i) => (
