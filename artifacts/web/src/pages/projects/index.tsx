@@ -203,6 +203,7 @@ export default function ProjectsList() {
                           score={project.healthScore ?? null}
                           label={project.healthLabel ?? null}
                           reasons={project.healthReasons ?? null}
+                          components={(project as any).healthComponents ?? null}
                         />
                       </TableCell>
                     </>

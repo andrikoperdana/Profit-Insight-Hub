@@ -466,6 +466,7 @@ function OverviewTab({ project }: { project: any }) {
                           score={project.healthScore}
                           label={project.healthLabel ?? null}
                           reasons={project.healthReasons ?? null}
+                          components={(project as any).healthComponents ?? null}
                         />
                       </div>
                     )}
