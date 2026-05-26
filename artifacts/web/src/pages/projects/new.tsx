@@ -41,6 +41,7 @@ import { LoadingPage } from "@/components/common/Loading";
 import { PdfUploadField } from "@/components/common/PdfUploadField";
 import { formatIDR, SUPPORTED_CURRENCIES } from "@/lib/format";
 import NewClientDialog from "@/components/clients/NewClientDialog";
+import { InternalInitiativeRulesDialog } from "@/components/projects/InternalInitiativeRulesDialog";
 
 const ROLE_RATES: Record<string, { label: string; rate: number }> = {
   PROJECT_MANAGER: { label: "Project Manager", rate: 2_500_000 },
@@ -739,10 +740,25 @@ function FullProjectForm() {
               )}
               {isInternal && (
                 <div className="col-span-1 md:col-span-2 rounded-md border border-amber-500/40 bg-amber-500/10 p-3 text-xs text-amber-200">
-                  <p className="font-medium mb-1">Internal Initiative Mode</p>
-                  <p>
-                    This project is treated as an internal initiative: no VAT, invoice, SPK, or contract. The "Internal Budget" field acts as a spending cap. It will automatically appear in the <span className="font-mono">Internal Initiative Cost</span> report and be excluded from profitability/VAT reports.
-                  </p>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-medium mb-1">Internal Initiative Mode</p>
+                      <p>
+                        This project is treated as an internal initiative: no VAT, invoice, client SPK, or contract. The "Internal Budget" field acts as a spending cap. It will automatically appear in the <span className="font-mono">Internal Initiative Cost</span> report and be excluded from profitability/VAT reports. The internal SPK is issued and signed by HR, while a Project Manager supervises execution and approves resource clocking (timesheet hours).
+                      </p>
+                    </div>
+                    <InternalInitiativeRulesDialog
+                      trigger={
+                        <button
+                          type="button"
+                          className="shrink-0 underline text-amber-100 hover:text-white"
+                          data-testid="button-internal-rules-from-form"
+                        >
+                          Full rules
+                        </button>
+                      }
+                    />
+                  </div>
                 </div>
               )}
               <FormField
