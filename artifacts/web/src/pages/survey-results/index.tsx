@@ -1,8 +1,9 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { customFetch } from "@workspace/api-client-react";
 import { useAuth } from "@/lib/auth";
+import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,8 +14,12 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   ClipboardList, ChevronLeft, ChevronRight, ChevronDown, ChevronUp,
-  Star, MessageSquare, Building2, User as UserIcon, Calendar,
+  Star, MessageSquare, Building2, User as UserIcon, Calendar, Sparkles, Loader2,
 } from "lucide-react";
 import { LoadingPage } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
@@ -155,11 +160,44 @@ function ResponseDetail({ item }: { item: ResponseItem }) {
 export default function SurveyResultsPage() {
   const { user } = useAuth();
   const [, setLocation] = useLocation();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
   const currentYear = new Date().getFullYear();
   const [year, setYear] = useState(currentYear);
   const [page, setPage] = useState(1);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const [seedDialogOpen, setSeedDialogOpen] = useState(false);
   const pageSize = 20;
+
+  const seedMutation = useMutation({
+    mutationFn: () => customFetch<{ ok: boolean; projectsClosed: string[]; responses: number }>(
+      "/api/survey/seed-demo",
+      { method: "POST" },
+    ),
+    onSuccess: (res) => {
+      toast({
+        title: "Demo data berhasil dibuat",
+        description: `${res.responses} response survey ditambahkan di ${res.projectsClosed.length} project.`,
+      });
+      queryClient.invalidateQueries({ queryKey: ["/survey/responses"] });
+    },
+    onError: (err: unknown) => {
+      const e = err as { status?: number; data?: { error?: string; existingResponses?: number } };
+      if (e?.status === 409) {
+        toast({
+          variant: "destructive",
+          title: "Sudah ada data survey",
+          description: `Seeder hanya jalan saat database masih kosong (sekarang ada ${e.data?.existingResponses ?? "?"} response).`,
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Seeder gagal",
+          description: e?.data?.error ?? "Terjadi kesalahan saat seeding.",
+        });
+      }
+    },
+  });
 
   useEffect(() => {
     setPage(1);
@@ -218,6 +256,22 @@ export default function SurveyResultsPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          {user?.role === "MANAGEMENT" && total === 0 && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSeedDialogOpen(true)}
+              disabled={seedMutation.isPending}
+              data-testid="button-seed-demo"
+            >
+              {seedMutation.isPending ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Sparkles className="h-4 w-4 mr-2" />
+              )}
+              Seed Demo Data
+            </Button>
+          )}
           <Calendar className="h-4 w-4 text-muted-foreground" />
           <Select value={String(year)} onValueChange={(v) => setYear(Number(v))}>
             <SelectTrigger className="w-[110px] h-9" data-testid="select-year">
@@ -231,6 +285,31 @@ export default function SurveyResultsPage() {
           </Select>
         </div>
       </div>
+
+      <AlertDialog open={seedDialogOpen} onOpenChange={setSeedDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Buat data demo survey?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Ini akan menutup hingga 6 project pertama (status jadi CLOSED) dan
+              menambahkan ~9 response survey contoh dengan rating + komentar realistis
+              di bulan ini. Hanya jalan sekali — jika sudah ada response survey,
+              seeder akan ditolak.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setSeedDialogOpen(false);
+                seedMutation.mutate();
+              }}
+            >
+              Ya, buat data demo
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* KPI cards */}
       <div className="grid gap-4 sm:grid-cols-3">
