@@ -17,9 +17,12 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Link } from "wouter";
 import {
   ClipboardList, ChevronLeft, ChevronRight, ChevronDown, ChevronUp,
   Star, MessageSquare, Building2, User as UserIcon, Calendar, Sparkles, Loader2,
+  FolderKanban, ExternalLink,
 } from "lucide-react";
 import { LoadingPage } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
@@ -60,6 +63,25 @@ interface ApiResponse {
   yearAverage: number;
   yearResponseCount: number;
   items: ResponseItem[];
+}
+
+interface ByProjectItem {
+  projectId: string;
+  projectCode: string;
+  projectName: string;
+  projectStatus: string;
+  clientName: string;
+  pmName: string | null;
+  responseCount: number;
+  avgScore: number;
+  latestResponseAt: string | null;
+  perQuestion: { key: string; text: string; order: number; average: number; responseCount: number }[];
+  latestComments: { submitterName: string | null; lessonLearned: string | null; submittedAt: string }[];
+}
+interface ByProjectResponse {
+  year: number;
+  projectCount: number;
+  items: ByProjectItem[];
 }
 
 function StarRow({ value }: { value: number }) {
@@ -167,6 +189,8 @@ export default function SurveyResultsPage() {
   const [page, setPage] = useState(1);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [seedDialogOpen, setSeedDialogOpen] = useState(false);
+  const [view, setView] = useState<"response" | "project">("project");
+  const [expandedProjects, setExpandedProjects] = useState<Set<string>>(new Set());
   const pageSize = 20;
 
   const seedMutation = useMutation({
@@ -210,6 +234,12 @@ export default function SurveyResultsPage() {
       `/api/survey/responses?year=${year}&page=${page}&pageSize=${pageSize}`,
     ),
     enabled: user?.role === "MANAGEMENT" || user?.role === "SALES",
+  });
+
+  const byProject = useQuery<ByProjectResponse>({
+    queryKey: ["/survey/by-project", year],
+    queryFn: () => customFetch<ByProjectResponse>(`/api/survey/by-project?year=${year}`),
+    enabled: (user?.role === "MANAGEMENT" || user?.role === "SALES") && view === "project",
   });
 
   if (user && user.role !== "MANAGEMENT" && user.role !== "SALES") {
@@ -348,7 +378,160 @@ export default function SurveyResultsPage() {
         </Card>
       </div>
 
-      {/* Table */}
+      <Tabs value={view} onValueChange={(v) => setView(v as "response" | "project")}>
+        <TabsList>
+          <TabsTrigger value="project" data-testid="tab-by-project">
+            <FolderKanban className="h-4 w-4 mr-2" /> Per Project
+            {byProject.data && (
+              <Badge variant="outline" className="ml-2 px-1.5 font-mono text-[10px]">
+                {byProject.data.projectCount}
+              </Badge>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="response" data-testid="tab-by-response">
+            <MessageSquare className="h-4 w-4 mr-2" /> Per Response
+            <Badge variant="outline" className="ml-2 px-1.5 font-mono text-[10px]">{total}</Badge>
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="project" className="mt-4">
+          <Card className="rounded-xl">
+            <CardHeader className="pb-3">
+              <CardTitle>Hasil Survey per Project</CardTitle>
+              <CardDescription>
+                Rata-rata skor dan jumlah respon untuk setiap project di {year}.
+                {byProject.isFetching && " · Updating…"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-0">
+              {byProject.isLoading && !byProject.data ? (
+                <div className="p-10 text-center text-muted-foreground">Loading…</div>
+              ) : (byProject.data?.items ?? []).length === 0 ? (
+                <EmptyState
+                  title="Belum ada survey per project"
+                  description={`Belum ada response survey di ${year}. Survey baru tersedia setelah project berstatus CLOSED dan link survey dikirim ke klien.`}
+                />
+              ) : (
+                <Table>
+                  <TableHeader className="bg-muted/40">
+                    <TableRow>
+                      <TableHead className="w-10" />
+                      <TableHead>Project</TableHead>
+                      <TableHead>Client</TableHead>
+                      <TableHead>PM</TableHead>
+                      <TableHead className="text-center whitespace-nowrap">Responses</TableHead>
+                      <TableHead className="whitespace-nowrap">Latest</TableHead>
+                      <TableHead className="text-right whitespace-nowrap">Avg Score</TableHead>
+                      <TableHead className="w-12" />
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {(byProject.data?.items ?? []).map((p) => {
+                      const isOpen = expandedProjects.has(p.projectId);
+                      return (
+                        <Fragment key={p.projectId}>
+                          <TableRow
+                            className="cursor-pointer hover:bg-muted/30"
+                            onClick={() => {
+                              setExpandedProjects((prev) => {
+                                const next = new Set(prev);
+                                if (next.has(p.projectId)) next.delete(p.projectId);
+                                else next.add(p.projectId);
+                                return next;
+                              });
+                            }}
+                            data-testid={`row-project-${p.projectId}`}
+                          >
+                            <TableCell className="text-muted-foreground">
+                              {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                            </TableCell>
+                            <TableCell>
+                              <div className="font-medium text-sm">{p.projectCode}</div>
+                              <div className="text-xs text-muted-foreground truncate max-w-[260px]">{p.projectName}</div>
+                            </TableCell>
+                            <TableCell className="text-sm">{p.clientName}</TableCell>
+                            <TableCell className="text-sm text-muted-foreground">{p.pmName ?? "—"}</TableCell>
+                            <TableCell className="text-center">
+                              <Badge variant="secondary" className="font-mono">{p.responseCount}</Badge>
+                            </TableCell>
+                            <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
+                              {p.latestResponseAt
+                                ? new Date(p.latestResponseAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
+                                : "—"}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex items-center justify-end gap-2">
+                                <StarRow value={p.avgScore} />
+                                <Badge variant="outline" className={cn("font-mono", scoreBadgeClass(p.avgScore))}>
+                                  {p.avgScore.toFixed(2)}
+                                </Badge>
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
+                              <Button asChild variant="ghost" size="sm" className="h-8 w-8 p-0" title="Open project survey">
+                                <Link href={`/projects/${p.projectId}`}>
+                                  <ExternalLink className="h-4 w-4" />
+                                </Link>
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                          {isOpen && (
+                            <TableRow className="hover:bg-transparent">
+                              <TableCell colSpan={8} className="p-0">
+                                <div className="bg-muted/30 border-t border-border px-4 py-4 space-y-4">
+                                  {p.perQuestion.length > 0 && (
+                                    <div>
+                                      <div className="text-xs uppercase tracking-wide font-semibold text-muted-foreground mb-2">
+                                        Rata-rata Per Pertanyaan
+                                      </div>
+                                      <div className="grid gap-2 md:grid-cols-2">
+                                        {p.perQuestion.map((q) => (
+                                          <div key={q.key} className="rounded-md border border-border bg-card p-3 flex items-center justify-between gap-2">
+                                            <span className="text-sm leading-snug">{q.text}</span>
+                                            <div className="shrink-0 flex items-center gap-1.5">
+                                              <StarRow value={q.average} />
+                                              <span className="font-mono text-xs text-muted-foreground">{q.average.toFixed(2)}/5</span>
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+                                  {p.latestComments.length > 0 && (
+                                    <div>
+                                      <div className="text-xs uppercase tracking-wide font-semibold text-muted-foreground mb-2 flex items-center gap-1.5">
+                                        <MessageSquare className="h-3.5 w-3.5" /> Komentar Terbaru
+                                      </div>
+                                      <div className="space-y-2">
+                                        {p.latestComments.map((c, i) => (
+                                          <div key={i} className="rounded-md border border-border bg-card p-3">
+                                            <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                                              <span>{c.submitterName ?? "Anonymous"}</span>
+                                              <span>{new Date(c.submittedAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</span>
+                                            </div>
+                                            {c.lessonLearned && (
+                                              <div className="text-sm whitespace-pre-wrap">{c.lessonLearned}</div>
+                                            )}
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </Fragment>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="response" className="mt-4">
       <Card className="rounded-xl">
         <CardHeader className="pb-3">
           <CardTitle>Responses</CardTitle>
@@ -461,6 +644,8 @@ export default function SurveyResultsPage() {
           )}
         </CardContent>
       </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

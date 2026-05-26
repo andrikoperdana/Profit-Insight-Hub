@@ -565,6 +565,137 @@ router.get("/survey/responses", requireAuth, requireRole("MANAGEMENT", "SALES"),
   });
 });
 
+// Per-project aggregates — average score per project for a given year (MGMT+SALES).
+router.get("/survey/by-project", requireAuth, requireRole("MANAGEMENT", "SALES"), async (req, res) => {
+  const year = Number(req.query.year) || new Date().getFullYear();
+  const start = new Date(Date.UTC(year, 0, 1));
+  const end = new Date(Date.UTC(year + 1, 0, 1));
+
+  const responses = await prisma.surveyResponse.findMany({
+    where: { createdAt: { gte: start, lt: end } },
+    orderBy: { createdAt: "desc" },
+    include: {
+      project: {
+        select: {
+          id: true, code: true, name: true, status: true,
+          client: { select: { id: true, name: true } },
+          pm: { select: { id: true, name: true } },
+        },
+      },
+    },
+  });
+
+  type PerQAgg = { key: string; text: string; order: number; sum: number; count: number };
+  type ProjectAgg = {
+    projectId: string;
+    projectCode: string;
+    projectName: string;
+    projectStatus: string;
+    clientName: string;
+    pmName: string | null;
+    responseCount: number;
+    avgScore: number;
+    latestResponseAt: string | null;
+    perQuestion: { key: string; text: string; order: number; average: number; responseCount: number }[];
+    latestComments: { submitterName: string | null; lessonLearned: string | null; submittedAt: string }[];
+    _sumOfResponseAvgs: number;
+    _countWithRating: number;
+    _perQ: Map<string, PerQAgg>;
+  };
+
+  const byProject = new Map<string, ProjectAgg>();
+
+  for (const r of responses) {
+    const snap = Array.isArray(r.questionsSnapshot)
+      ? (r.questionsSnapshot as StoredQuestion[])
+      : [];
+    const answers = (r.answers ?? {}) as Record<string, { rating?: number; comment?: string }>;
+
+    let p = byProject.get(r.project.id);
+    if (!p) {
+      p = {
+        projectId: r.project.id,
+        projectCode: r.project.code,
+        projectName: r.project.name,
+        projectStatus: r.project.status,
+        clientName: r.project.client.name,
+        pmName: r.project.pm?.name ?? null,
+        responseCount: 0,
+        avgScore: 0,
+        latestResponseAt: null,
+        perQuestion: [],
+        latestComments: [],
+        _sumOfResponseAvgs: 0,
+        _countWithRating: 0,
+        _perQ: new Map(),
+      };
+      byProject.set(r.project.id, p);
+    }
+
+    p.responseCount += 1;
+    const tsIso = r.createdAt.toISOString();
+    if (!p.latestResponseAt || tsIso > p.latestResponseAt) p.latestResponseAt = tsIso;
+
+    let respSum = 0;
+    let respN = 0;
+    for (const q of snap) {
+      if (q.type !== "RATING") continue;
+      const v = answers[q.key]?.rating;
+      if (typeof v === "number" && v > 0) {
+        respSum += v;
+        respN += 1;
+        const existing = p._perQ.get(q.key);
+        if (existing) {
+          existing.sum += v;
+          existing.count += 1;
+        } else {
+          p._perQ.set(q.key, { key: q.key, text: q.text, order: q.order ?? 0, sum: v, count: 1 });
+        }
+      }
+    }
+    if (respN > 0) {
+      p._sumOfResponseAvgs += respSum / respN;
+      p._countWithRating += 1;
+    }
+
+    if (p.latestComments.length < 3 && (r.lessonLearned || r.submitterName)) {
+      p.latestComments.push({
+        submitterName: r.submitterName,
+        lessonLearned: r.lessonLearned,
+        submittedAt: tsIso,
+      });
+    }
+  }
+
+  const items = [...byProject.values()].map((p) => {
+    const avgScore = p._countWithRating > 0 ? p._sumOfResponseAvgs / p._countWithRating : 0;
+    const perQuestion = [...p._perQ.values()]
+      .sort((a, b) => a.order - b.order)
+      .map((q) => ({
+        key: q.key,
+        text: q.text,
+        order: q.order,
+        average: q.count > 0 ? q.sum / q.count : 0,
+        responseCount: q.count,
+      }));
+    return {
+      projectId: p.projectId,
+      projectCode: p.projectCode,
+      projectName: p.projectName,
+      projectStatus: p.projectStatus,
+      clientName: p.clientName,
+      pmName: p.pmName,
+      responseCount: p.responseCount,
+      avgScore,
+      latestResponseAt: p.latestResponseAt,
+      perQuestion,
+      latestComments: p.latestComments,
+    };
+  }).sort((a, b) => b.avgScore - a.avgScore || b.responseCount - a.responseCount);
+
+  res.json({ year, projectCount: items.length, items });
+});
+
 // =====================================================================
 // EXPORT ROUTES — Excel & PDF
 // =====================================================================
