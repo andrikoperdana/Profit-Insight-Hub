@@ -215,6 +215,126 @@ export async function ensureSampleReportData() {
   }
 
   // ---------------------------------------------------------------------
+  // 3b. Per-submitter sample expenses — gives Konsultan and Principal
+  //     dashboards content for the "Pengajuan Expense Saya" card and the
+  //     PDF receipt download flow. Each submitter gets a PENDING, an
+  //     APPROVED, and a REJECTED row on a project they're staffed on.
+  // ---------------------------------------------------------------------
+  {
+    const SAMPLE_TAG = " [sample]";
+    const pm = sari ?? (await prisma.user.findFirst({ where: { role: "PROJECT_MANAGER" } }));
+
+    type SubmitterCfg = {
+      email: string;
+      label: string;
+      rows: Array<{
+        category: "SOFTWARE" | "HARDWARE" | "LICENSE" | "TRAVEL" | "OTHER";
+        description: string;
+        amount: number;
+        status: "PENDING" | "APPROVED" | "REJECTED";
+        daysAgo: number;
+      }>;
+    };
+
+    const submitters: SubmitterCfg[] = [
+      {
+        email: "konsultan@itsecasia.com",
+        label: "Konsultan",
+        rows: [
+          { category: "TRAVEL",   description: "Taksi ke kantor klien Bank Sentosa", amount: 185000, status: "APPROVED", daysAgo: 6 },
+          { category: "SOFTWARE", description: "Subscription tools recon (1 bulan)",  amount: 750000, status: "APPROVED", daysAgo: 14 },
+          { category: "OTHER",    description: "Voucher training CTF tim",            amount: 1250000, status: "PENDING",  daysAgo: 2 },
+          { category: "HARDWARE", description: "Adapter & kabel USB-C lapangan",      amount: 425000,  status: "REJECTED", daysAgo: 10 },
+        ],
+      },
+      {
+        email: "konsultan2@itsecasia.com",
+        label: "Konsultan",
+        rows: [
+          { category: "TRAVEL",   description: "Tiket KA Jakarta–Bandung onsite",     amount: 320000, status: "APPROVED", daysAgo: 9 },
+          { category: "OTHER",    description: "Print laporan akhir untuk klien",      amount: 175000, status: "APPROVED", daysAgo: 4 },
+          { category: "SOFTWARE", description: "Lisensi tools pentest personal",       amount: 2100000, status: "PENDING", daysAgo: 1 },
+        ],
+      },
+      {
+        email: "principal.kon.h7q4@itsecasia.com",
+        label: "Principal Konsultan",
+        rows: [
+          { category: "TRAVEL",   description: "Travel review proyek di klien",       amount: 1450000, status: "APPROVED", daysAgo: 11 },
+          { category: "OTHER",    description: "Konsumsi workshop internal tim",       amount: 680000,  status: "APPROVED", daysAgo: 5 },
+          { category: "HARDWARE", description: "Hardware token cadangan untuk tim",    amount: 3200000, status: "REJECTED", daysAgo: 16 },
+        ],
+      },
+      {
+        email: "writer@secureprofit.id",
+        label: "Technical Writer",
+        rows: [
+          { category: "SOFTWARE", description: "Lisensi Grammarly Business",          amount: 450000, status: "APPROVED", daysAgo: 7 },
+          { category: "OTHER",    description: "Cetak draft laporan untuk klien",      amount: 220000, status: "PENDING",  daysAgo: 2 },
+        ],
+      },
+    ];
+
+    let created = 0;
+    for (const cfg of submitters) {
+      const user = await prisma.user.findUnique({ where: { email: cfg.email } });
+      if (!user) continue;
+
+      // Pick a project the user is actually staffed on — falls back to any
+      // active project so the seed still works on a half-populated DB.
+      const resource = await prisma.projectResource.findFirst({
+        where: {
+          userId: user.id,
+          project: { deletedAt: null, status: { in: ["ACTIVE", "OBSERVATION", "COMPLETE"] } },
+        },
+        select: { projectId: true, project: { select: { pmId: true } } },
+      });
+      let projectId = resource?.projectId;
+      let projectPmId = resource?.project.pmId ?? null;
+      if (!projectId) {
+        const anyProject = await prisma.project.findFirst({
+          where: { deletedAt: null, status: { in: ["ACTIVE", "OBSERVATION"] } },
+          select: { id: true, pmId: true },
+        });
+        projectId = anyProject?.id;
+        projectPmId = anyProject?.pmId ?? null;
+      }
+      if (!projectId) continue;
+
+      const approverId = projectPmId ?? pm?.id ?? user.id;
+
+      for (const r of cfg.rows) {
+        const description = `${r.description}${SAMPLE_TAG}`;
+        const exists = await prisma.projectExpense.findFirst({
+          where: { projectId, createdById: user.id, description },
+          select: { id: true },
+        });
+        if (exists) continue;
+        await prisma.projectExpense.create({
+          data: {
+            projectId,
+            category: r.category,
+            description,
+            amount: r.amount,
+            spentAt: addDays(today, -r.daysAgo),
+            status: r.status,
+            createdById: user.id,
+            approvedById: r.status !== "PENDING" ? approverId : null,
+            approvedAt: r.status !== "PENDING" ? addDays(today, -Math.max(0, r.daysAgo - 1)) : null,
+            rejectionReason:
+              r.status === "REJECTED"
+                ? "Bukti pendukung kurang lengkap — silakan resubmit dengan kuitansi asli."
+                : null,
+          },
+        });
+        created++;
+      }
+    }
+    if (created > 0) console.log(`Created ${created} per-submitter sample expenses.`);
+    else console.log(`Skipping per-submitter expenses (sample rows already present).`);
+  }
+
+  // ---------------------------------------------------------------------
   // 4. Recent timesheets — per-row dedupe by (userId, projectId, workDate, marker)
   // ---------------------------------------------------------------------
   {
