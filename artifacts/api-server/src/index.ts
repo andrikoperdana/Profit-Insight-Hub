@@ -1,6 +1,11 @@
 import app from "./app";
 import { logger } from "./lib/logger";
-import { runSeed, ensureCoreAccountsAndTaxonomy } from "@workspace/db";
+import {
+  runSeed,
+  ensureCoreAccountsAndTaxonomy,
+  ensureSampleTaskTemplates,
+  ensureSampleProjectTemplates,
+} from "@workspace/db";
 
 const rawPort = process.env["PORT"];
 
@@ -33,11 +38,16 @@ if (!isProd || seedOptIn) {
     .catch((err) => logger.error({ err }, "Auto-seed failed (continuing)"));
 } else {
   // Production: skip demo dataset, but always ensure core accounts
-  // (Principals, Site Admin, Finance, HR) + BU/Skills exist. These are
-  // idempotent upserts of a small known list — safe to re-run.
-  ensureCoreAccountsAndTaxonomy()
-    .then(() => logger.info("Core accounts + taxonomy ensured (production)"))
-    .catch((err) => logger.error({ err }, "Core account ensure failed (continuing)"));
+  // (Principals, Site Admin, Finance, HR) + BU/Skills + reference blueprints
+  // (task templates, project templates) exist. All idempotent upserts of a
+  // small known list — safe to re-run.
+  (async () => {
+    await ensureCoreAccountsAndTaxonomy();
+    await ensureSampleTaskTemplates();
+    await ensureSampleProjectTemplates();
+  })()
+    .then(() => logger.info("Core accounts + taxonomy + templates ensured (production)"))
+    .catch((err) => logger.error({ err }, "Production ensure failed (continuing)"));
 }
 
 app.listen(port, (err?: Error) => {
