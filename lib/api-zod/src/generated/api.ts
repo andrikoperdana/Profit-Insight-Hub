@@ -1707,6 +1707,27 @@ export const RemoveProjectResourceResponse = zod.object({
   message: zod.string().optional(),
 });
 
+export const AddProjectResourcesBulkParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const addProjectResourcesBulkBodyResourcesMax = 100;
+
+export const AddProjectResourcesBulkBody = zod.object({
+  resources: zod
+    .array(
+      zod.object({
+        userId: zod.string(),
+        roleInProject: zod.string().optional(),
+        plannedMandays: zod.number(),
+        dailyRate: zod.number(),
+        workstreamId: zod.string().nullish(),
+      }),
+    )
+    .min(1)
+    .max(addProjectResourcesBulkBodyResourcesMax),
+});
+
 export const ProposeProjectResourceParams = zod.object({
   id: zod.coerce.string(),
 });

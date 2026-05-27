@@ -1,7 +1,8 @@
 import { useParams, Link } from "wouter";
 import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import SkillRecommenderDialog from "../components/SkillRecommenderDialog";
-import { Sparkles } from "lucide-react";
+import BulkAddResourcesDialog from "../components/BulkAddResourcesDialog";
+import { Sparkles, Users } from "lucide-react";
 import {
   useGetProject,
   useUpdateTask,
@@ -126,6 +127,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
   const [form, setForm] = useState({ userId: "", roleInProject: "", plannedMandays: "10", dailyRate: "1500000" });
   const [formWorkstreamId, setFormWorkstreamId] = useState<string | null>(null);
   const [suggestRole, setSuggestRole] = useState<null | "KONSULTAN" | "TECHNICAL_WRITER">(null);
+  const [bulkVariant, setBulkVariant] = useState<null | "KONSULTAN" | "TECHNICAL_WRITER" | "OTHER">(null);
 
   const updateProject = useUpdateProject({
     mutation: {
@@ -389,6 +391,9 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
               >
                 <Sparkles className="h-4 w-4 mr-1" /> Suggest
               </Button>
+              <Button size="sm" variant="outline" onClick={() => setBulkVariant("KONSULTAN")} data-testid="button-bulk-add-konsultan">
+                <Users className="h-4 w-4 mr-1" /> Add Multiple
+              </Button>
               <Button size="sm" onClick={() => setAddingRole("KONSULTAN")} data-testid="button-add-konsultan">
                 + Add Consultant
               </Button>
@@ -504,6 +509,9 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
               >
                 <Sparkles className="h-4 w-4 mr-1" /> Suggest
               </Button>
+              <Button size="sm" variant="outline" onClick={() => setBulkVariant("TECHNICAL_WRITER")} data-testid="button-bulk-add-tw">
+                <Users className="h-4 w-4 mr-1" /> Add Multiple
+              </Button>
               <Button size="sm" onClick={() => setAddingRole("TECHNICAL_WRITER")} data-testid="button-add-tw">
                 + Add Technical Writer
               </Button>
@@ -612,17 +620,26 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
             </CardDescription>
           </div>
           {canEdit && (
-            <Button
-              size="sm"
-              onClick={() => {
-                setForm({ userId: "", roleInProject: "", plannedMandays: "10", dailyRate: "1500000" });
-                setAddingRole("OTHER");
-              }}
-              className="shrink-0"
-              data-testid="button-add-other-resource"
-            >
-              + Add Other Resource
-            </Button>
+            <div className="flex gap-2 shrink-0">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setBulkVariant("OTHER")}
+                data-testid="button-bulk-add-other-resource"
+              >
+                <Users className="h-4 w-4 mr-1" /> Add Multiple
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => {
+                  setForm({ userId: "", roleInProject: "", plannedMandays: "10", dailyRate: "1500000" });
+                  setAddingRole("OTHER");
+                }}
+                data-testid="button-add-other-resource"
+              >
+                + Add Other Resource
+              </Button>
+            </div>
           )}
         </CardHeader>
         <CardContent>
@@ -707,6 +724,23 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
           )}
         </CardContent>
       </Card>
+
+      {bulkVariant && (
+        <BulkAddResourcesDialog
+          open={!!bulkVariant}
+          onOpenChange={(o) => { if (!o) setBulkVariant(null); }}
+          projectId={projectId}
+          variant={bulkVariant}
+          candidates={
+            bulkVariant === "KONSULTAN"
+              ? availableKonsultan
+              : bulkVariant === "TECHNICAL_WRITER"
+                ? availableWriters
+                : otherPool
+          }
+          workstreamId={null}
+        />
+      )}
 
       <Dialog open={!!addingRole} onOpenChange={(o) => !o && setAddingRole(null)}>
         <DialogContent>

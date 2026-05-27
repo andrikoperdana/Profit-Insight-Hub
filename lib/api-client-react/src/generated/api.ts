@@ -30,6 +30,8 @@ import type {
   AvailableUser,
   BillableUtilization,
   BillingMilestone,
+  BulkAddResourcesBody,
+  BulkAddResourcesResponse,
   BusinessUnit,
   Client,
   ClosingChecklistItem,
@@ -3746,6 +3748,91 @@ export const useRemoveProjectResource = <
   TContext
 > => {
   return useMutation(getRemoveProjectResourceMutationOptions(options));
+};
+
+export const getAddProjectResourcesBulkUrl = (id: string) => {
+  return `/api/projects/${id}/resources/bulk`;
+};
+
+export const addProjectResourcesBulk = async (
+  id: string,
+  bulkAddResourcesBody: BulkAddResourcesBody,
+  options?: RequestInit,
+): Promise<BulkAddResourcesResponse> => {
+  return customFetch<BulkAddResourcesResponse>(
+    getAddProjectResourcesBulkUrl(id),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(bulkAddResourcesBody),
+    },
+  );
+};
+
+export const getAddProjectResourcesBulkMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof addProjectResourcesBulk>>,
+    TError,
+    { id: string; data: BodyType<BulkAddResourcesBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof addProjectResourcesBulk>>,
+  TError,
+  { id: string; data: BodyType<BulkAddResourcesBody> },
+  TContext
+> => {
+  const mutationKey = ["addProjectResourcesBulk"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof addProjectResourcesBulk>>,
+    { id: string; data: BodyType<BulkAddResourcesBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return addProjectResourcesBulk(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type AddProjectResourcesBulkMutationResult = NonNullable<
+  Awaited<ReturnType<typeof addProjectResourcesBulk>>
+>;
+export type AddProjectResourcesBulkMutationBody =
+  BodyType<BulkAddResourcesBody>;
+export type AddProjectResourcesBulkMutationError = ErrorType<unknown>;
+
+export const useAddProjectResourcesBulk = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof addProjectResourcesBulk>>,
+    TError,
+    { id: string; data: BodyType<BulkAddResourcesBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof addProjectResourcesBulk>>,
+  TError,
+  { id: string; data: BodyType<BulkAddResourcesBody> },
+  TContext
+> => {
+  return useMutation(getAddProjectResourcesBulkMutationOptions(options));
 };
 
 export const getProposeProjectResourceUrl = (id: string) => {

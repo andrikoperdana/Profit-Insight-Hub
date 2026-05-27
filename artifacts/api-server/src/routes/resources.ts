@@ -240,6 +240,152 @@ router.post(
   async (req, res) => upsertResource(req, res, { propose: false }),
 );
 
+// Bulk add — partial mode: valid rows are created, invalid rows are reported
+// in `errors`. Each row goes through the same validation as POST /resources
+// (userId, non-negative numbers, roleInProject required for non-implied
+// system roles, workstream check, dedupe against existing assignment).
+// PM-of-project / MGMT only — Principal proposals stay single-pick.
+router.post(
+  "/projects/:id/resources/bulk",
+  requireRole("MANAGEMENT", "PROJECT_MANAGER"),
+  async (req, res) => {
+    const projectId = String(req.params.id);
+    const body = (req.body ?? {}) as { resources?: unknown };
+    const items = Array.isArray(body.resources) ? body.resources : [];
+    if (items.length === 0) {
+      res.status(400).json({ error: "resources array required" });
+      return;
+    }
+    if (items.length > 100) {
+      res.status(400).json({ error: "Maximum 100 resources per bulk request" });
+      return;
+    }
+
+    const project = await prisma.project.findUnique({
+      where: { id: projectId },
+      select: { id: true, pmId: true },
+    });
+    if (!project) {
+      res.status(404).json({ error: "Project not found" });
+      return;
+    }
+    const callerRole = req.user!.role as UserRole;
+    if (callerRole === "PROJECT_MANAGER" && project.pmId !== req.user!.sub) {
+      res.status(403).json({ error: "Only the assigned PM may add resources to this project" });
+      return;
+    }
+
+    const IMPLIED_ROLE = new Set<UserRole>(["KONSULTAN", "TECHNICAL_WRITER", "ADMIN_PROJECT"]);
+    const created: Array<Record<string, unknown>> = [];
+    const errors: Array<{ userId: string; userName: string | null; reason: string }> = [];
+    const seen = new Set<string>();
+    const now = new Date();
+
+    for (const raw of items) {
+      const item = (raw ?? {}) as Record<string, unknown>;
+      const userId = typeof item.userId === "string" ? item.userId : "";
+      if (!userId) {
+        errors.push({ userId: String(item.userId ?? ""), userName: null, reason: "userId required" });
+        continue;
+      }
+      if (seen.has(userId)) {
+        errors.push({ userId, userName: null, reason: "Duplicate userId in request" });
+        continue;
+      }
+      seen.add(userId);
+
+      const pm = Number(item.plannedMandays ?? 0);
+      const dr = Number(item.dailyRate ?? 0);
+      if (pm < 0 || dr < 0 || !isFinite(pm) || !isFinite(dr)) {
+        errors.push({ userId, userName: null, reason: "plannedMandays and dailyRate must be non-negative numbers" });
+        continue;
+      }
+
+      const wsCheck = await validateWorkstreamId(projectId, item.workstreamId);
+      if (!wsCheck.ok) {
+        errors.push({ userId, userName: null, reason: wsCheck.error });
+        continue;
+      }
+
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      if (!user) {
+        errors.push({ userId, userName: null, reason: "User not found" });
+        continue;
+      }
+
+      const roleInProjectRaw = typeof item.roleInProject === "string" ? item.roleInProject.trim() : "";
+      if (!IMPLIED_ROLE.has(user.role) && !roleInProjectRaw) {
+        errors.push({
+          userId,
+          userName: user.name,
+          reason: `roleInProject diperlukan untuk ${user.name} (sistem role ${user.role})`,
+        });
+        continue;
+      }
+
+      const existing = await prisma.projectResource.findUnique({
+        where: { projectId_userId: { projectId, userId } },
+      });
+      if (existing) {
+        errors.push({ userId, userName: user.name, reason: `${user.name} sudah terdaftar di project ini` });
+        continue;
+      }
+
+      try {
+        const r = await prisma.projectResource.create({
+          data: {
+            projectId,
+            userId,
+            roleInProject: roleInProjectRaw || null,
+            plannedMandays: pm,
+            dailyRate: dr,
+            workstreamId: wsCheck.workstreamId,
+            acceptedAt: now,
+          },
+          include: { user: true },
+        });
+        await recordAudit(req, {
+          action: "resource.assigned",
+          entityType: "ProjectResource",
+          entityId: r.id,
+          description: `Assigned ${user.name} to project ${projectId} (rate=${r.dailyRate}, mandays=${r.plannedMandays}) [bulk]`,
+          after: {
+            id: r.id, projectId: r.projectId, userId: r.userId,
+            roleInProject: r.roleInProject, plannedMandays: r.plannedMandays,
+            dailyRate: r.dailyRate, acceptedAt: r.acceptedAt,
+          },
+        });
+        created.push({
+          id: r.id,
+          projectId: r.projectId,
+          workstreamId: r.workstreamId ?? null,
+          userId: r.userId,
+          userName: r.user.name,
+          userRole: r.user.role,
+          roleInProject: r.roleInProject,
+          plannedMandays: r.plannedMandays,
+          actualMandays: 0,
+          dailyRate: canViewDailyRate(req.user?.role) ? r.dailyRate : 0,
+          proposedById: null,
+          proposedByName: null,
+          proposedAt: null,
+          acceptedAt: r.acceptedAt?.toISOString() ?? null,
+        });
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : "Database error";
+        errors.push({ userId, userName: user.name, reason: msg });
+      }
+    }
+
+    res.status(201).json({
+      createdCount: created.length,
+      errorCount: errors.length,
+      created,
+      errors,
+    });
+  },
+);
+
 router.post("/projects/:id/resources/propose", requireRole("PRINCIPAL_KONSULTAN", "PRINCIPAL_TECHNICAL_WRITER"), async (req, res) => {
   // Status guard: proposals only allowed on assignable projects.
   const project = await prisma.project.findUnique({

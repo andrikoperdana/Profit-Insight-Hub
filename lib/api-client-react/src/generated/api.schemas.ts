@@ -1208,6 +1208,27 @@ export interface AddResourceBody {
   workstreamId?: string | null;
 }
 
+export interface BulkAddResourcesBody {
+  /**
+   * @minItems 1
+   * @maxItems 100
+   */
+  resources: AddResourceBody[];
+}
+
+export interface BulkAddResourceError {
+  userId: string;
+  userName?: string | null;
+  reason: string;
+}
+
+export interface BulkAddResourcesResponse {
+  createdCount: number;
+  errorCount: number;
+  created: ProjectResource[];
+  errors: BulkAddResourceError[];
+}
+
 export interface Timesheet {
   id: string;
   projectId: string;
