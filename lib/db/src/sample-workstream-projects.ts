@@ -1,6 +1,6 @@
 /**
  * Seed 5 sample projects, each backed by 1 SPK with 3 workstreams:
- * Pentest, GRC, dan Threat Modeling.
+ * Pentest, GRC, and Threat Modeling.
  *
  * Idempotent — re-runs are safe: skips any project whose `code` already
  * exists and skips re-creating workstreams that already exist on a project.
@@ -41,7 +41,7 @@ const PROJECTS: ProjectSpec[] = [
     code: "SPH-WS-2026-101",
     name: "Bank Nusantara — Annual Security Assurance",
     description:
-      "Paket SPK tahunan: penetration testing, compliance audit ISO 27001, dan threat modeling untuk core banking.",
+      "Annual SPK package: penetration testing, ISO 27001 compliance audit, and threat modeling for core banking.",
     clientName: "Bank Nusantara",
     clientIndustry: "Banking",
     contractValue: 1_200_000_000,
@@ -59,7 +59,7 @@ const PROJECTS: ProjectSpec[] = [
     code: "SPH-WS-2026-102",
     name: "Tele Selaras — Security Assessment Bundle",
     description:
-      "Satu SPK gabungan: pentest aplikasi pelanggan, gap analysis ISO 27001, dan threat modeling sistem billing.",
+      "One combined SPK: customer application pentest, ISO 27001 gap analysis, and billing system threat modeling.",
     clientName: "Tele Selaras",
     clientIndustry: "Telecom",
     contractValue: 950_000_000,
@@ -77,7 +77,7 @@ const PROJECTS: ProjectSpec[] = [
     code: "SPH-WS-2026-103",
     name: "Energi Prima — OT Security Program",
     description:
-      "SPK lintas-domain: pentest jaringan OT, audit GRC NIST CSF, dan threat modeling SCADA.",
+      "Cross-domain SPK: OT network pentest, NIST CSF GRC audit, and SCADA threat modeling.",
     clientName: "Energi Prima",
     clientIndustry: "Energy",
     contractValue: 1_500_000_000,
@@ -95,7 +95,7 @@ const PROJECTS: ProjectSpec[] = [
     code: "SPH-WS-2026-104",
     name: "Retail Maju Bersama — E-commerce Security",
     description:
-      "Paket SPK untuk platform e-commerce: pentest checkout, PCI DSS readiness, dan threat modeling payment flow.",
+      "SPK package for e-commerce platform: checkout pentest, PCI DSS readiness, and payment flow threat modeling.",
     clientName: "Retail Maju Bersama",
     clientIndustry: "Retail",
     contractValue: 820_000_000,
@@ -113,7 +113,7 @@ const PROJECTS: ProjectSpec[] = [
     code: "SPH-WS-2026-105",
     name: "Asuransi Sentosa — Digital Trust Program",
     description:
-      "SPK lintas BU: pentest portal nasabah, audit SOC 2 Type II, dan threat modeling fraud engine.",
+      "Cross-BU SPK: customer portal pentest, SOC 2 Type II audit, and fraud engine threat modeling.",
     clientName: "Asuransi Sentosa",
     clientIndustry: "Insurance",
     contractValue: 1_050_000_000,
@@ -122,7 +122,7 @@ const PROJECTS: ProjectSpec[] = [
     monthsFromNowStart: 1,
     monthsFromNowEnd: 7,
     workstreams: [
-      { code: "PT", name: "Pentest Nasabah Portal", buName: "Pentest", allocationPct: 35, plannedMandays: 110, estimatedCost: 220_000_000, resourceRole: "Lead Pentester", taskTitle: "Portal pentest scope", milestoneName: "Pentest Delivery 35%", milestonePct: 35 },
+      { code: "PT", name: "Customer Portal Pentest", buName: "Pentest", allocationPct: 35, plannedMandays: 110, estimatedCost: 220_000_000, resourceRole: "Lead Pentester", taskTitle: "Portal pentest scope", milestoneName: "Pentest Delivery 35%", milestonePct: 35 },
       { code: "GRC", name: "SOC 2 Type II Readiness", buName: "GRC", allocationPct: 40, plannedMandays: 130, estimatedCost: 280_000_000, resourceRole: "SOC 2 Lead", taskTitle: "Trust Service Criteria readiness", milestoneName: "GRC Delivery 40%", milestonePct: 40 },
       { code: "TM", name: "Threat Modeling Fraud Engine", buName: "Threat Hunting", allocationPct: 25, plannedMandays: 80, estimatedCost: 140_000_000, resourceRole: "Threat Modeling Lead", taskTitle: "Fraud engine STRIDE/LINDDUN", milestoneName: "Threat Modeling Delivery 25%", milestonePct: 25 },
     ],
@@ -292,7 +292,7 @@ export async function ensureSampleWorkstreamProjects() {
           projectId: project.id,
           workstreamId: wsIdByCode.get(w.code) ?? null,
           category: w.code === "PT" ? "SOFTWARE" : w.code === "GRC" ? "LICENSE" : "OTHER",
-          description: `[sample-ws] Tool / lisensi awal untuk workstream ${w.code}`,
+          description: `[sample-ws] Initial tool / license for workstream ${w.code}`,
           amount: 5_000_000,
           spentAt: startDate,
           status: "PENDING",

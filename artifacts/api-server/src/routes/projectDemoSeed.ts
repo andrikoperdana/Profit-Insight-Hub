@@ -9,15 +9,15 @@ router.use(requireAuth);
 // One-time demo seed (MANAGEMENT only) — adds 9 sample projects
 // across OBSERVATION/ACTIVE/PAUSE. Idempotent: skips codes that already exist.
 const DEMO_PROJECTS: { status: ProjectStatus; name: string; value: number; mandays: number }[] = [
-  { status: "OBSERVATION", name: "Penilaian Risiko Cyber Awal", value: 320_000_000, mandays: 35 },
+  { status: "OBSERVATION", name: "Initial Cyber Risk Assessment", value: 320_000_000, mandays: 35 },
   { status: "OBSERVATION", name: "Pre-Sales Penetration Test", value: 280_000_000, mandays: 28 },
-  { status: "OBSERVATION", name: "Workshop Awareness Karyawan", value: 180_000_000, mandays: 18 },
-  { status: "ACTIVE",      name: "Implementasi SOC Tier-1", value: 850_000_000, mandays: 90 },
-  { status: "ACTIVE",      name: "Audit ISO 27001 Tahap 2", value: 620_000_000, mandays: 70 },
-  { status: "ACTIVE",      name: "Penetration Test Aplikasi Mobile", value: 480_000_000, mandays: 55 },
-  { status: "PAUSE",       name: "Migrasi SIEM Splunk", value: 920_000_000, mandays: 110 },
-  { status: "PAUSE",       name: "Hardening Infrastruktur Cloud", value: 540_000_000, mandays: 60 },
-  { status: "PAUSE",       name: "Review Kebijakan Keamanan TI", value: 240_000_000, mandays: 28 },
+  { status: "OBSERVATION", name: "Employee Awareness Workshop", value: 180_000_000, mandays: 18 },
+  { status: "ACTIVE",      name: "SOC Tier-1 Implementation", value: 850_000_000, mandays: 90 },
+  { status: "ACTIVE",      name: "ISO 27001 Audit Stage 2", value: 620_000_000, mandays: 70 },
+  { status: "ACTIVE",      name: "Mobile Application Penetration Test", value: 480_000_000, mandays: 55 },
+  { status: "PAUSE",       name: "Splunk SIEM Migration", value: 920_000_000, mandays: 110 },
+  { status: "PAUSE",       name: "Cloud Infrastructure Hardening", value: 540_000_000, mandays: 60 },
+  { status: "PAUSE",       name: "IT Security Policy Review", value: 240_000_000, mandays: 28 },
 ];
 
 router.post("/projects/seed-demo", requireRole("MANAGEMENT"), async (req, res) => {

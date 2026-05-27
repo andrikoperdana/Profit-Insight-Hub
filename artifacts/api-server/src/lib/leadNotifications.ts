@@ -33,8 +33,8 @@ export async function notifyOnceDailyForLead(
   await notifyUser({
     userId: lead.ownerId,
     type,
-    title: `Follow-up tertunda: ${lead.title}`,
-    message: `Next action sudah lewat ${last.nextActionAt.toISOString().slice(0, 10)}.`,
+    title: `Follow-up overdue: ${lead.title}`,
+    message: `Next action was due on ${last.nextActionAt.toISOString().slice(0, 10)}.`,
     link,
   });
   return true;

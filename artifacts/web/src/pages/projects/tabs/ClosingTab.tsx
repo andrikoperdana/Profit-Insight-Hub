@@ -29,17 +29,17 @@ export default function ClosingTab({ projectId, project }: { projectId: string; 
   const updateItem = useUpdateProjectClosingChecklistItem({
     mutation: {
       onSuccess: () => qc.invalidateQueries({ queryKey: getGetProjectClosingChecklistQueryKey(projectId) }),
-      onError: (e: any) => toast({ variant: "destructive", title: "Gagal update", description: e?.message }),
+      onError: (e: any) => toast({ variant: "destructive", title: "Update failed", description: e?.message }),
     },
   });
 
   const updateProject = useUpdateProject({
     mutation: {
       onSuccess: () => {
-        toast({ title: "Project ditutup", description: "Status berubah ke CLOSED." });
+        toast({ title: "Project closed", description: "Status changed to CLOSED." });
         qc.invalidateQueries({ queryKey: getGetProjectQueryKey(projectId) });
       },
-      onError: (e: any) => toast({ variant: "destructive", title: "Gagal menutup project", description: e?.message }),
+      onError: (e: any) => toast({ variant: "destructive", title: "Failed to close project", description: e?.message }),
     },
   });
 
@@ -57,11 +57,11 @@ export default function ClosingTab({ projectId, project }: { projectId: string; 
             <div>
               <CardTitle className="text-base">Closing Checklist</CardTitle>
               <CardDescription>
-                Semua item harus DONE atau NA sebelum project dapat ditutup (CLOSED).
+                All items must be DONE or NA before the project can be closed (CLOSED).
               </CardDescription>
             </div>
             <Badge variant={allComplete ? "default" : "outline"} className={allComplete ? "bg-emerald-500/20 text-emerald-500 border-emerald-500/30" : ""}>
-              {done}/{list.length} selesai
+              {done}/{list.length} done
             </Badge>
           </div>
           <Progress value={pct} className="mt-2 h-2" />
@@ -70,7 +70,7 @@ export default function ClosingTab({ projectId, project }: { projectId: string; 
           {isLoading ? (
             <div className="text-sm text-muted-foreground">Loading…</div>
           ) : list.length === 0 ? (
-            <div className="text-sm text-muted-foreground">Checklist akan otomatis terbentuk.</div>
+            <div className="text-sm text-muted-foreground">The checklist will be generated automatically.</div>
           ) : (
             <ul className="divide-y divide-border">
               {list.map((it) => (
@@ -90,10 +90,10 @@ export default function ClosingTab({ projectId, project }: { projectId: string; 
             <div className="mt-5 flex items-center justify-between gap-3 border-t border-border pt-4">
               <p className="text-xs text-muted-foreground">
                 {project?.status !== "COMPLETE"
-                  ? "Project harus dalam status COMPLETE sebelum dapat ditutup."
+                  ? "Project must be in COMPLETE status before it can be closed."
                   : allComplete
-                    ? "Semua item selesai. Project siap ditutup."
-                    : "Selesaikan semua item untuk membuka tombol Tutup Project."}
+                    ? "All items completed. Project is ready to be closed."
+                    : "Complete all items to unlock the Close Project button."}
               </p>
               <Button
                 disabled={!canClose || updateProject.isPending}
@@ -106,7 +106,7 @@ export default function ClosingTab({ projectId, project }: { projectId: string; 
                 data-testid="button-close-project"
               >
                 <Lock className="h-4 w-4 mr-2" />
-                Tutup Project (CLOSED)
+                Close Project (CLOSED)
               </Button>
             </div>
           )}
@@ -164,7 +164,7 @@ function ChecklistRow({
                     disabled={item.status === "PENDING"}
                   >Reset</Button>
                   <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => setExpanded(!expanded)}>
-                    {expanded ? "Sembunyi" : "Catatan"}
+                    {expanded ? "Hide" : "Note"}
                   </Button>
                 </>
               ) : (
@@ -174,7 +174,7 @@ function ChecklistRow({
           </div>
           {item.completedAt && (
             <p className="text-[10px] text-muted-foreground mt-0.5">
-              {item.status} • {new Date(item.completedAt).toLocaleString("id-ID")}
+              {item.status} • {new Date(item.completedAt).toLocaleString("en-US")}
             </p>
           )}
           {item.note && !expanded && (
@@ -182,8 +182,8 @@ function ChecklistRow({
           )}
           {expanded && canWrite && (
             <div className="mt-2 flex gap-2">
-              <Textarea value={note} onChange={(e) => setNote(e.target.value)} rows={2} className="text-xs" placeholder="Catatan (opsional)" />
-              <Button size="sm" onClick={() => { onChange(item.status, note || null); setExpanded(false); }}>Simpan</Button>
+              <Textarea value={note} onChange={(e) => setNote(e.target.value)} rows={2} className="text-xs" placeholder="Note (optional)" />
+              <Button size="sm" onClick={() => { onChange(item.status, note || null); setExpanded(false); }}>Save</Button>
             </div>
           )}
         </div>

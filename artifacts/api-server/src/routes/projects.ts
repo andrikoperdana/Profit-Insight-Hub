@@ -454,7 +454,7 @@ router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
     });
     if (totalItems === 0 || pendingItems > 0) {
       res.status(400).json({
-        error: "Closing checklist belum lengkap. Selesaikan semua item (DONE/NA) sebelum menutup project.",
+        error: "Closing checklist is incomplete. Resolve all items (DONE/NA) before closing the project.",
         code: "CLOSING_CHECKLIST_INCOMPLETE",
         pendingItems,
       });

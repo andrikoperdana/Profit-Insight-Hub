@@ -41,8 +41,8 @@ async function notifyOnceDaily(opts: {
 }
 
 function formatIDRShort(n: number): string {
-  if (n >= 1_000_000_000) return `Rp ${(n / 1_000_000_000).toFixed(1)} M`;
-  if (n >= 1_000_000) return `Rp ${(n / 1_000_000).toFixed(0)} jt`;
+  if (n >= 1_000_000_000) return `Rp ${(n / 1_000_000_000).toFixed(1)} B`;
+  if (n >= 1_000_000) return `Rp ${(n / 1_000_000).toFixed(0)} M`;
   return `Rp ${n.toFixed(0)}`;
 }
 
@@ -72,8 +72,8 @@ async function checkInvoicesDueSoon(): Promise<number> {
     const due = ms.dueDate.toISOString().slice(0, 10);
     const link = `/projects/${ms.project.id}?tab=billing`;
     const isInvoiced = ms.status === "INVOICED";
-    const title = isInvoiced ? `Invoice jatuh tempo: ${ms.project.name}` : `Termin akan datang: ${ms.project.name}`;
-    const message = `${ms.name} — ${formatIDRShort(gross)} jatuh tempo ${due}.`;
+    const title = isInvoiced ? `Invoice due: ${ms.project.name}` : `Upcoming milestone: ${ms.project.name}`;
+    const message = `${ms.name} — ${formatIDRShort(gross)} due ${due}.`;
     const recipients = [ms.project.pmId, ms.project.adminProjectId].filter((u): u is string => !!u);
     for (const userId of recipients) {
       if (await notifyOnceDaily({ userId, type: "INVOICE_DUE_SOON", title, message, link })) created++;
@@ -128,8 +128,8 @@ async function checkProjectOverrun(): Promise<number> {
     const pct = (actual / p.contractValue) * 100;
     if (pct < 80) continue;
     const link = `/projects/${p.id}`;
-    const title = pct >= 100 ? `Budget terlampaui: ${p.name}` : `Budget mendekati limit: ${p.name}`;
-    const message = `Realisasi biaya sudah ${pct.toFixed(0)}% dari nilai kontrak (${formatIDRShort(actual)} / ${formatIDRShort(p.contractValue)}).`;
+    const title = pct >= 100 ? `Budget exceeded: ${p.name}` : `Budget nearing limit: ${p.name}`;
+    const message = `Actual cost has reached ${pct.toFixed(0)}% of the contract value (${formatIDRShort(actual)} / ${formatIDRShort(p.contractValue)}).`;
     const recipients = new Set<string>([...(p.pmId ? [p.pmId] : []), ...mgmt.map((m) => m.id)]);
     for (const userId of recipients) {
       if (await notifyOnceDaily({ userId, type: "PROJECT_OVERRUN", title, message, link })) created++;
@@ -156,12 +156,12 @@ async function checkLateTimesheets(): Promise<number> {
       select: { id: true },
     });
     if (recent) continue;
-    const title = "Timesheet belum diisi";
-    const message = `Anda belum mengisi timesheet sejak ${cutoff.toISOString().slice(0, 10)}.`;
+    const title = "Timesheet missing";
+    const message = `You have not submitted a timesheet since ${cutoff.toISOString().slice(0, 10)}.`;
     if (await notifyOnceDaily({ userId: u.id, type: "TIMESHEET_LATE", title, message, link: "/timesheets" })) created++;
     if (u.principalId) {
-      const pTitle = `Timesheet terlambat: ${u.name}`;
-      const pMsg = `${u.name} belum submit timesheet dalam 3 hari terakhir.`;
+      const pTitle = `Timesheet overdue: ${u.name}`;
+      const pMsg = `${u.name} has not submitted a timesheet in the last 3 days.`;
       if (await notifyOnceDaily({ userId: u.principalId, type: "TIMESHEET_LATE_REPORT", title: pTitle, message: pMsg, link: `/timesheets?userId=${u.id}` })) created++;
     }
   }
@@ -209,8 +209,8 @@ async function checkLowMargin(): Promise<number> {
     const profit = p.contractValue - actual;
     const marginPct = (profit / p.contractValue) * 100;
     if (marginPct >= 15) continue;
-    const title = marginPct < 0 ? `Margin negatif: ${p.name}` : `Margin tipis: ${p.name}`;
-    const message = `Margin saat ini ${marginPct.toFixed(1)}% (${formatIDRShort(profit)} dari ${formatIDRShort(p.contractValue)}).`;
+    const title = marginPct < 0 ? `Negative margin: ${p.name}` : `Thin margin: ${p.name}`;
+    const message = `Current margin is ${marginPct.toFixed(1)}% (${formatIDRShort(profit)} of ${formatIDRShort(p.contractValue)}).`;
     const link = `/projects/${p.id}`;
     const recipients = new Set<string>([...(p.pmId ? [p.pmId] : []), ...mgmt.map((m) => m.id)]);
     for (const userId of recipients) {

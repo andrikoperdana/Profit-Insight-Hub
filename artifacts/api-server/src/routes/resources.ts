@@ -135,7 +135,7 @@ async function upsertResource(req: any, res: any, opts: { propose: boolean }) {
   }
   // Mirror the UI rule: when assigning a user whose system role doesn't already
   // imply their function on the project (i.e. anyone other than KONSULTAN /
-  // TECHNICAL_WRITER / ADMIN_PROJECT — typically the "Resource Lainnya" flow
+  // TECHNICAL_WRITER / ADMIN_PROJECT — typically the "Other Resource" flow
   // for Sales / SOC Manager / Security Engineer / Junior SE / etc.),
   // `roleInProject` must be filled so the row carries a meaningful position label.
   const IMPLIED_ROLE = new Set<UserRole>([

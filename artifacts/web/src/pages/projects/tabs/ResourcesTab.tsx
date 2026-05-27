@@ -349,10 +349,10 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
             <CardHeader className="pb-3">
               <CardTitle className="text-base flex items-center gap-2">
                 <AlertTriangle className="h-4 w-4 text-amber-500" />
-                Rencana Staffing dari Registrasi
+                Staffing Plan from Registration
               </CardTitle>
               <CardDescription>
-                Saat pembuatan project ini, kebutuhan resource sudah dicatat sebagai estimasi budget. Tugaskan orang yang sebenarnya di bawah ini agar utilization & timesheet bisa di-track.
+                When this project was created, the resource requirements were recorded as a budget estimate. Assign the actual people below so utilization and timesheets can be tracked.
               </CardDescription>
             </CardHeader>
             <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">

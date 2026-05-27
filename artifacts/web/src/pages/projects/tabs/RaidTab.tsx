@@ -164,11 +164,11 @@ export default function RaidTab({ projectId, project }: { projectId: string; pro
   }
 
   async function handleDelete(item: ProjectRaidItem) {
-    if (!confirm(`Hapus item "${item.title}"?`)) return;
+    if (!confirm(`Delete item "${item.title}"?`)) return;
     try {
       await del.mutateAsync({ itemId: item.id });
       qc.invalidateQueries({ queryKey: getListProjectRaidItemsQueryKey(projectId) });
-      toast({ title: "RAID item dihapus" });
+      toast({ title: "RAID item deleted" });
     } catch (err) {
       toast({
         title: "Delete failed",
@@ -198,26 +198,26 @@ export default function RaidTab({ projectId, project }: { projectId: string; pro
         <div>
           <h3 className="text-lg font-semibold">RAID Log</h3>
           <p className="text-sm text-muted-foreground">
-            Risks, Assumptions, Issues, Dependencies — audit-trail untuk proyek.
+            Risks, Assumptions, Issues, Dependencies — audit trail for the project.
           </p>
         </div>
         {canEdit && (
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <Button onClick={openCreate} data-testid="button-add-raid">
-                <Plus className="mr-2 h-4 w-4" /> Tambah Item
+                <Plus className="mr-2 h-4 w-4" /> Add Item
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl">
               <DialogHeader>
-                <DialogTitle>{editing ? "Edit" : "Tambah"} RAID Item</DialogTitle>
+                <DialogTitle>{editing ? "Edit" : "Add"} RAID Item</DialogTitle>
                 <DialogDescription>
-                  Catat risiko, asumsi, issue, atau dependency proyek.
+                  Record a risk, assumption, issue, or dependency for the project.
                 </DialogDescription>
               </DialogHeader>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <Label>Tipe</Label>
+                  <Label>Type</Label>
                   <Select value={form.type} onValueChange={(v) => setForm((s) => ({ ...s, type: v as RaidType }))}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
@@ -239,11 +239,11 @@ export default function RaidTab({ projectId, project }: { projectId: string; pro
                   </Select>
                 </div>
                 <div className="col-span-2 space-y-1.5">
-                  <Label>Judul *</Label>
+                  <Label>Title *</Label>
                   <Input value={form.title} onChange={(e) => setForm((s) => ({ ...s, title: e.target.value }))} />
                 </div>
                 <div className="col-span-2 space-y-1.5">
-                  <Label>Deskripsi</Label>
+                  <Label>Description</Label>
                   <Textarea
                     rows={3}
                     value={form.description}
@@ -276,9 +276,9 @@ export default function RaidTab({ projectId, project }: { projectId: string; pro
                 <div className="space-y-1.5">
                   <Label>Owner</Label>
                   <Select value={form.ownerId} onValueChange={(v) => setForm((s) => ({ ...s, ownerId: v }))}>
-                    <SelectTrigger><SelectValue placeholder="(tidak ditugaskan)" /></SelectTrigger>
+                    <SelectTrigger><SelectValue placeholder="(unassigned)" /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="__none__">— Tanpa Owner —</SelectItem>
+                      <SelectItem value="__none__">— No Owner —</SelectItem>
                       {users.map((u) => (
                         <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>
                       ))}
@@ -294,7 +294,7 @@ export default function RaidTab({ projectId, project }: { projectId: string; pro
                   />
                 </div>
                 <div className="col-span-2 space-y-1.5">
-                  <Label>Mitigasi / Tindakan</Label>
+                  <Label>Mitigation / Action</Label>
                   <Textarea
                     rows={2}
                     value={form.mitigation}
@@ -303,9 +303,9 @@ export default function RaidTab({ projectId, project }: { projectId: string; pro
                 </div>
               </div>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setDialogOpen(false)}>Batal</Button>
+                <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
                 <Button onClick={handleSave} disabled={create.isPending || update.isPending}>
-                  {editing ? "Simpan" : "Tambah"}
+                  {editing ? "Save" : "Add"}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -332,8 +332,8 @@ export default function RaidTab({ projectId, project }: { projectId: string; pro
       {items.length === 0 ? (
         <EmptyState
           icon={<ListChecks className="h-12 w-12 text-muted-foreground/50" />}
-          title="Belum ada RAID item"
-          description={canEdit ? "Mulai catat risiko / asumsi / issue / dependency proyek." : "PM belum mencatat item RAID."}
+          title="No RAID items yet"
+          description={canEdit ? "Start recording risks / assumptions / issues / dependencies for the project." : "The PM has not recorded any RAID items yet."}
         />
       ) : (
         (Object.keys(grouped) as RaidType[]).map((type) => {
@@ -369,7 +369,7 @@ export default function RaidTab({ projectId, project }: { projectId: string; pro
                     </div>
                     {item.mitigation && (
                       <div className="text-sm border-l-2 border-amber-500/40 pl-2 text-muted-foreground">
-                        <span className="text-amber-400 font-medium">Mitigasi:</span> {item.mitigation}
+                        <span className="text-amber-400 font-medium">Mitigation:</span> {item.mitigation}
                       </div>
                     )}
                     <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">

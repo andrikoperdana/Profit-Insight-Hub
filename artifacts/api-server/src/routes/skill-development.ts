@@ -120,7 +120,7 @@ router.post("/skill-development/goals", async (req, res) => {
     res.status(201).json(serializeGoal(goal));
   } catch (e: any) {
     if (e.code === "P2002") {
-      res.status(409).json({ error: "Goal sudah ada untuk skill ini." });
+      res.status(409).json({ error: "A goal already exists for this skill." });
       return;
     }
     throw e;

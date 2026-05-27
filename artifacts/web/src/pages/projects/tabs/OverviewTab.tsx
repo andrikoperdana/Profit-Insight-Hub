@@ -452,7 +452,7 @@ function OverviewTab({ project }: { project: any }) {
                     />
                     {(project as any).currency && (project as any).currency !== "IDR" && (project as any).exchangeRate && (
                       <p className="text-[11px] text-muted-foreground">
-                        Kurs simpan: 1 {(project as any).currency} ≈ {formatIDR((project as any).exchangeRate)}
+                        Stored rate: 1 {(project as any).currency} ≈ {formatIDR((project as any).exchangeRate)}
                       </p>
                     )}
                     <div className="flex items-center justify-between pt-3 border-t border-border">

@@ -867,8 +867,8 @@ function FullProjectForm() {
                       name="exchangeRate"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Kurs ke IDR *</FormLabel>
-                          <FormControl><Input type="number" step="0.01" placeholder="contoh: 16500" {...field} /></FormControl>
+                          <FormLabel>Rate to IDR *</FormLabel>
+                          <FormControl><Input type="number" step="0.01" placeholder="e.g. 16500" {...field} /></FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -1042,7 +1042,7 @@ function FullProjectForm() {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-xs text-muted-foreground">
-                Pilih orang spesifik di kolom <span className="font-medium text-foreground">Assign To</span> agar resource langsung muncul di tab Resources project. Biarkan kosong untuk baris yang sekadar mencatat budget (rencana headcount &gt; 1 atau orang belum ditentukan). Tiap user hanya boleh muncul satu kali per project.
+                Pick a specific person in the <span className="font-medium text-foreground">Assign To</span> column so the resource appears in the project's Resources tab right away. Leave it empty for rows that only record budget (planned headcount &gt; 1 or person not yet decided). Each user can appear only once per project.
               </p>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
@@ -1118,10 +1118,10 @@ function FullProjectForm() {
                                     <SelectValue placeholder="(Budget only)" />
                                   </SelectTrigger>
                                   <SelectContent>
-                                    <SelectItem value="__none__">(Budget only — assign nanti)</SelectItem>
+                                    <SelectItem value="__none__">(Budget only — assign later)</SelectItem>
                                     {candidateUsers.length === 0 ? (
                                       <div className="px-2 py-1.5 text-xs text-muted-foreground">
-                                        Tidak ada user aktif dengan role ini.
+                                        No active user with this role.
                                       </div>
                                     ) : (
                                       candidateUsers.map((u) => (
@@ -1207,9 +1207,9 @@ function FullProjectForm() {
           <Card className="border-border shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between gap-4">
               <div>
-                <CardTitle>Workstreams (opsional)</CardTitle>
+                <CardTitle>Workstreams (optional)</CardTitle>
                 <CardDescription>
-                  Pisahkan project jadi beberapa workstream (mis. Pentest / GRC / Threat Modeling) supaya cost, mandays, billing, dan timesheet bisa di-track per stream. Cocok untuk SPK gabungan lintas Business Unit.
+                  Split the project into multiple workstreams (e.g. Pentest / GRC / Threat Modeling) so cost, mandays, billing, and timesheets can be tracked per stream. Suitable for combined SPK across Business Units.
                 </CardDescription>
               </div>
               <FormField
@@ -1226,7 +1226,7 @@ function FullProjectForm() {
                       }}
                       data-testid="toggle-use-workstreams"
                     />
-                    <span>Pakai Workstreams</span>
+                    <span>Use Workstreams</span>
                   </label>
                 )}
               />
@@ -1255,7 +1255,7 @@ function FullProjectForm() {
                       wsReplace(rows);
                     }}
                   >
-                    <SelectTrigger className="h-8 w-72"><SelectValue placeholder="Pilih template…" /></SelectTrigger>
+                    <SelectTrigger className="h-8 w-72"><SelectValue placeholder="Select template…" /></SelectTrigger>
                     <SelectContent>
                       {Object.entries(WORKSTREAM_TEMPLATES).map(([k, v]) => (
                         <SelectItem key={k} value={k}>{v.label}</SelectItem>
@@ -1287,7 +1287,7 @@ function FullProjectForm() {
                     </thead>
                     <tbody>
                       {wsFields.length === 0 ? (
-                        <tr><td colSpan={7} className="p-4 text-center text-muted-foreground">Pilih template di atas, atau klik "Add Workstream" untuk mulai.</td></tr>
+                        <tr><td colSpan={7} className="p-4 text-center text-muted-foreground">Select a template above, or click "Add Workstream" to start.</td></tr>
                       ) : wsFields.map((f, idx) => (
                         <tr key={f.id} className="border-t border-border">
                           <td className="p-2">
@@ -1353,7 +1353,7 @@ function FullProjectForm() {
                       <div>
                         <div className="text-muted-foreground">Total Allocation %</div>
                         <div className={`text-lg font-semibold font-mono ${pctOk ? "text-emerald-500" : "text-amber-500"}`}>
-                          {totalPct.toFixed(1)}%{!pctOk && " (idealnya 100%)"}
+                          {totalPct.toFixed(1)}%{!pctOk && " (should be 100%)"}
                         </div>
                       </div>
                       <div>

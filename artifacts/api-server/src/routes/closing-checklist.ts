@@ -8,14 +8,14 @@ const router: IRouter = Router();
 router.use(requireAuth);
 
 export const CLOSING_CHECKLIST_DEFAULTS: Array<{ key: string; label: string; sortOrder: number }> = [
-  { key: "BAST_SIGNED", label: "BAST sudah ditandatangani client", sortOrder: 10 },
-  { key: "FINAL_REPORT_DELIVERED", label: "Final report sudah dikirim ke client", sortOrder: 20 },
-  { key: "INVOICE_ISSUED", label: "Invoice sudah diterbitkan", sortOrder: 30 },
-  { key: "PAYMENT_RECEIVED", label: "Pembayaran sudah diterima penuh", sortOrder: 40 },
-  { key: "ALL_TIMESHEETS_APPROVED", label: "Semua timesheet sudah disetujui", sortOrder: 50 },
-  { key: "ALL_EXPENSES_FINALIZED", label: "Semua expense sudah di-approve/reject (tidak pending)", sortOrder: 60 },
-  { key: "SURVEY_SENT", label: "Client satisfaction survey sudah dikirim", sortOrder: 70 },
-  { key: "LESSONS_LEARNED", label: "Lessons learned sudah didokumentasikan", sortOrder: 80 },
+  { key: "BAST_SIGNED", label: "BAST signed by client", sortOrder: 10 },
+  { key: "FINAL_REPORT_DELIVERED", label: "Final report delivered to client", sortOrder: 20 },
+  { key: "INVOICE_ISSUED", label: "Invoice issued", sortOrder: 30 },
+  { key: "PAYMENT_RECEIVED", label: "Payment received in full", sortOrder: 40 },
+  { key: "ALL_TIMESHEETS_APPROVED", label: "All timesheets approved", sortOrder: 50 },
+  { key: "ALL_EXPENSES_FINALIZED", label: "All expenses approved/rejected (none pending)", sortOrder: 60 },
+  { key: "SURVEY_SENT", label: "Client satisfaction survey sent", sortOrder: 70 },
+  { key: "LESSONS_LEARNED", label: "Lessons learned documented", sortOrder: 80 },
 ];
 
 async function ensureChecklist(projectId: string) {

@@ -60,27 +60,27 @@ export default function SkillDevelopmentPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Skill Development Tracker</h1>
           <p className="text-muted-foreground">
-            Pantau target peningkatan skill dan riwayat progression untuk pengembangan kompetensi.
+            Track skill improvement targets and progression history for competency development.
           </p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setLogOpen(true)}>
-            <TrendingUp className="h-4 w-4 mr-2" /> Catat Progression
+            <TrendingUp className="h-4 w-4 mr-2" /> Log Progression
           </Button>
           <Button onClick={() => setNewGoalOpen(true)} data-testid="button-new-goal">
-            <Plus className="h-4 w-4 mr-2" /> Goal Baru
+            <Plus className="h-4 w-4 mr-2" /> New Goal
           </Button>
         </div>
       </div>
 
       {isPrivileged && (
         <div className="flex items-center gap-3 max-w-md">
-          <Label className="shrink-0 text-xs">Lihat untuk:</Label>
+          <Label className="shrink-0 text-xs">View for:</Label>
           <Select value={selectedUserId || "__me"} onValueChange={(v) => setSelectedUserId(v === "__me" ? user?.id ?? "" : v === "__all" ? "" : v)}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="__me">Saya sendiri</SelectItem>
-              <SelectItem value="__all">Semua karyawan</SelectItem>
+              <SelectItem value="__me">Myself</SelectItem>
+              <SelectItem value="__all">All employees</SelectItem>
               {users?.map((u: any) => <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>)}
             </SelectContent>
           </Select>
@@ -88,18 +88,18 @@ export default function SkillDevelopmentPage() {
       )}
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <StatCard label="Goal Aktif" value={active.length} icon={Target} color="text-primary" />
-        <StatCard label="Selesai" value={completed.length} icon={CheckCircle2} color="text-emerald-500" />
+        <StatCard label="Active Goals" value={active.length} icon={Target} color="text-primary" />
+        <StatCard label="Completed" value={completed.length} icon={CheckCircle2} color="text-emerald-500" />
         <StatCard label="Paused" value={paused.length} icon={Pause} color="text-amber-500" />
         <StatCard label="Completion Rate" value={`${completionRate}%`} icon={TrendingUp} color="text-primary" />
       </div>
 
       <Tabs defaultValue="active">
         <TabsList>
-          <TabsTrigger value="active">Aktif ({active.length})</TabsTrigger>
-          <TabsTrigger value="completed">Selesai ({completed.length})</TabsTrigger>
+          <TabsTrigger value="active">Active ({active.length})</TabsTrigger>
+          <TabsTrigger value="completed">Completed ({completed.length})</TabsTrigger>
           <TabsTrigger value="paused">Paused ({paused.length})</TabsTrigger>
-          <TabsTrigger value="history">Riwayat ({logs?.length ?? 0})</TabsTrigger>
+          <TabsTrigger value="history">History ({logs?.length ?? 0})</TabsTrigger>
         </TabsList>
 
         <TabsContent value="active" className="pt-4">
@@ -144,7 +144,7 @@ function GoalsList({ goals, selectedUserId }: { goals: SkillDevelopmentGoal[]; s
   const update = useUpdateSkillDevelopmentGoal({
     mutation: {
       onSuccess: () => {
-        toast({ title: "Goal diupdate" });
+        toast({ title: "Goal updated" });
         qc.invalidateQueries({ queryKey: getListSkillDevelopmentGoalsQueryKey({ userId: selectedUserId || undefined }) });
       },
     },
@@ -152,14 +152,14 @@ function GoalsList({ goals, selectedUserId }: { goals: SkillDevelopmentGoal[]; s
   const del = useDeleteSkillDevelopmentGoal({
     mutation: {
       onSuccess: () => {
-        toast({ title: "Goal dihapus" });
+        toast({ title: "Goal deleted" });
         qc.invalidateQueries({ queryKey: getListSkillDevelopmentGoalsQueryKey({ userId: selectedUserId || undefined }) });
       },
     },
   });
 
   if (goals.length === 0) {
-    return <EmptyState title="Belum ada goal" description="Buat goal baru untuk mulai melacak pengembangan." icon={<Target className="h-10 w-10 text-muted-foreground/50" />} />;
+    return <EmptyState title="No goals yet" description="Create a new goal to start tracking development." icon={<Target className="h-10 w-10 text-muted-foreground/50" />} />;
   }
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -183,12 +183,12 @@ function GoalsList({ goals, selectedUserId }: { goals: SkillDevelopmentGoal[]; s
                     </Button>
                   )}
                   {g.status === "PAUSED" && (
-                    <Button size="icon" variant="ghost" title="Lanjutkan" onClick={() => update.mutate({ id: g.id, data: { status: "ACTIVE" } })}>
+                    <Button size="icon" variant="ghost" title="Resume" onClick={() => update.mutate({ id: g.id, data: { status: "ACTIVE" } })}>
                       <Play className="h-4 w-4" />
                     </Button>
                   )}
                   <Button size="icon" variant="ghost" onClick={() => {
-                    if (confirm(`Hapus goal ${g.skillName}?`)) del.mutate({ id: g.id });
+                    if (confirm(`Delete goal ${g.skillName}?`)) del.mutate({ id: g.id });
                   }}>
                     <Trash2 className="h-4 w-4 text-destructive" />
                   </Button>
@@ -206,9 +206,9 @@ function GoalsList({ goals, selectedUserId }: { goals: SkillDevelopmentGoal[]; s
               <div className="flex justify-between items-center text-xs">
                 {g.targetDate ? (
                   <span className={overdue ? "text-destructive" : "text-muted-foreground"}>
-                    Target: {new Date(g.targetDate).toLocaleDateString("id-ID")} {overdue ? "(terlambat)" : ""}
+                    Target: {new Date(g.targetDate).toLocaleDateString("en-US")} {overdue ? "(overdue)" : ""}
                   </span>
-                ) : <span className="text-muted-foreground">Tanpa deadline</span>}
+                ) : <span className="text-muted-foreground">No deadline</span>}
                 <Badge variant={g.status === "COMPLETED" ? "default" : "outline"} className="text-[10px]">
                   {g.status}
                 </Badge>
@@ -224,7 +224,7 @@ function GoalsList({ goals, selectedUserId }: { goals: SkillDevelopmentGoal[]; s
 
 function ProgressionHistory({ logs }: { logs: any[] }) {
   if (logs.length === 0) {
-    return <EmptyState title="Belum ada riwayat" description="Riwayat perubahan skill akan tampil di sini." icon={<History className="h-10 w-10 text-muted-foreground/50" />} />;
+    return <EmptyState title="No history yet" description="Skill change history will appear here." icon={<History className="h-10 w-10 text-muted-foreground/50" />} />;
   }
   return (
     <Card className="border-border">
@@ -241,7 +241,7 @@ function ProgressionHistory({ logs }: { logs: any[] }) {
                   </Badge>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {new Date(l.createdAt).toLocaleString("id-ID")} • dicatat oleh {l.changedByName ?? "—"}
+                  {new Date(l.createdAt).toLocaleString("en-US")} • logged by {l.changedByName ?? "—"}
                   {l.note && ` — ${l.note}`}
                 </p>
               </div>
@@ -271,11 +271,11 @@ function GoalDialog({ open, onClose, subjectUserId }: { open: boolean; onClose: 
   const create = useCreateSkillDevelopmentGoal({
     mutation: {
       onSuccess: () => {
-        toast({ title: "Goal dibuat" });
+        toast({ title: "Goal created" });
         qc.invalidateQueries({ queryKey: getListSkillDevelopmentGoalsQueryKey({ userId: subjectUserId || undefined }) });
         onClose();
       },
-      onError: (e: any) => toast({ variant: "destructive", title: "Gagal", description: e?.message }),
+      onError: (e: any) => toast({ variant: "destructive", title: "Failed", description: e?.message }),
     },
   });
 
@@ -283,15 +283,15 @@ function GoalDialog({ open, onClose, subjectUserId }: { open: boolean; onClose: 
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Goal Baru</DialogTitle>
-          <DialogDescription>Tentukan target level skill dan deadline pencapaian.</DialogDescription>
+          <DialogTitle>New Goal</DialogTitle>
+          <DialogDescription>Define the target skill level and target completion deadline.</DialogDescription>
         </DialogHeader>
         <div className="space-y-3 pt-2">
           {isPrivileged && (
             <div>
-              <Label>Untuk Karyawan</Label>
+              <Label>For Employee</Label>
               <Select value={userId} onValueChange={setUserId}>
-                <SelectTrigger><SelectValue placeholder="Pilih karyawan" /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Select employee" /></SelectTrigger>
                 <SelectContent>
                   {users?.map((u: any) => <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>)}
                 </SelectContent>
@@ -301,7 +301,7 @@ function GoalDialog({ open, onClose, subjectUserId }: { open: boolean; onClose: 
           <div>
             <Label>Skill *</Label>
             <Select value={skillId} onValueChange={setSkillId}>
-              <SelectTrigger><SelectValue placeholder="Pilih skill" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder="Select skill" /></SelectTrigger>
               <SelectContent>
                 {skills?.map((s) => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
               </SelectContent>
@@ -309,7 +309,7 @@ function GoalDialog({ open, onClose, subjectUserId }: { open: boolean; onClose: 
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label>Level Saat Ini (1-5)</Label>
+              <Label>Current Level (1-5)</Label>
               <Input type="number" min={1} max={5} value={currentLevel} onChange={(e) => setCurrentLevel(e.target.value)} />
             </div>
             <div>
@@ -322,16 +322,16 @@ function GoalDialog({ open, onClose, subjectUserId }: { open: boolean; onClose: 
             <Input type="date" value={targetDate} onChange={(e) => setTargetDate(e.target.value)} />
           </div>
           <div>
-            <Label>Catatan (opsional)</Label>
+            <Label>Notes (optional)</Label>
             <Textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} />
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>Batal</Button>
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
           <Button
             disabled={create.isPending}
             onClick={() => {
-              if (!skillId) { toast({ variant: "destructive", title: "Pilih skill" }); return; }
+              if (!skillId) { toast({ variant: "destructive", title: "Select skill" }); return; }
               create.mutate({
                 data: {
                   userId: isPrivileged ? userId : undefined,
@@ -343,7 +343,7 @@ function GoalDialog({ open, onClose, subjectUserId }: { open: boolean; onClose: 
                 },
               });
             }}
-          >Simpan</Button>
+          >Save</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -366,12 +366,12 @@ function ProgressionDialog({ open, onClose, subjectUserId }: { open: boolean; on
   const log = useLogSkillProgression({
     mutation: {
       onSuccess: () => {
-        toast({ title: "Progression dicatat" });
+        toast({ title: "Progression logged" });
         qc.invalidateQueries({ queryKey: getListSkillProgressionLogsQueryKey({ userId: subjectUserId || undefined }) });
         qc.invalidateQueries({ queryKey: getListSkillDevelopmentGoalsQueryKey({ userId: subjectUserId || undefined }) });
         onClose();
       },
-      onError: (e: any) => toast({ variant: "destructive", title: "Gagal", description: e?.message }),
+      onError: (e: any) => toast({ variant: "destructive", title: "Failed", description: e?.message }),
     },
   });
 
@@ -379,13 +379,13 @@ function ProgressionDialog({ open, onClose, subjectUserId }: { open: boolean; on
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Catat Progression Skill</DialogTitle>
-          <DialogDescription>Update level skill. Jika ada goal aktif yang mencapai target, otomatis ditandai selesai.</DialogDescription>
+          <DialogTitle>Log Skill Progression</DialogTitle>
+          <DialogDescription>Update the skill level. If an active goal reaches its target, it is automatically marked complete.</DialogDescription>
         </DialogHeader>
         <div className="space-y-3 pt-2">
           {isPrivileged && (
             <div>
-              <Label>Karyawan</Label>
+              <Label>Employee</Label>
               <Select value={userId} onValueChange={setUserId}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -397,27 +397,27 @@ function ProgressionDialog({ open, onClose, subjectUserId }: { open: boolean; on
           <div>
             <Label>Skill *</Label>
             <Select value={skillId} onValueChange={setSkillId}>
-              <SelectTrigger><SelectValue placeholder="Pilih skill" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder="Select skill" /></SelectTrigger>
               <SelectContent>
                 {skills?.map((s) => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
           <div>
-            <Label>Level Baru (1-5)</Label>
+            <Label>New Level (1-5)</Label>
             <Input type="number" min={1} max={5} value={toLevel} onChange={(e) => setToLevel(e.target.value)} />
           </div>
           <div>
-            <Label>Catatan</Label>
-            <Textarea value={note} onChange={(e) => setNote(e.target.value)} rows={2} placeholder="Contoh: lulus sertifikasi OSCP" />
+            <Label>Note</Label>
+            <Textarea value={note} onChange={(e) => setNote(e.target.value)} rows={2} placeholder="Example: passed OSCP certification" />
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>Batal</Button>
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
           <Button
             disabled={log.isPending}
             onClick={() => {
-              if (!skillId) { toast({ variant: "destructive", title: "Pilih skill" }); return; }
+              if (!skillId) { toast({ variant: "destructive", title: "Select skill" }); return; }
               log.mutate({
                 data: {
                   userId: isPrivileged ? userId : undefined,
@@ -427,7 +427,7 @@ function ProgressionDialog({ open, onClose, subjectUserId }: { open: boolean; on
                 },
               });
             }}
-          >Catat</Button>
+          >Log</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

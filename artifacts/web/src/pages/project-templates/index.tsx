@@ -66,8 +66,8 @@ export default function ProjectTemplatesPage() {
   if (!canApply) {
     return (
       <EmptyState
-        title="Akses ditolak"
-        description="Project Templates hanya untuk Management, Project Manager, dan Sales."
+        title="Access denied"
+        description="Project Templates are only available to Management, Project Manager, and Sales."
         icon={<ShieldAlert className="h-10 w-10 text-destructive/50" />}
       />
     );
@@ -79,12 +79,12 @@ export default function ProjectTemplatesPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Project Templates</h1>
           <p className="text-muted-foreground">
-            Blueprint proyek yang berisi estimasi resource, milestone billing, dan RAID standar. Pakai untuk membuat DRAFT proyek baru dalam hitungan detik.
+            Project blueprint with resource estimates, billing milestones, and standard RAID. Use it to create new DRAFT projects in seconds.
           </p>
         </div>
         {isMgmt && (
           <Button onClick={() => { setEditing(null); setEditOpen(true); }} data-testid="button-new-project-template">
-            <Plus className="h-4 w-4 mr-2" /> Template Baru
+            <Plus className="h-4 w-4 mr-2" /> New Template
           </Button>
         )}
       </div>
@@ -93,8 +93,8 @@ export default function ProjectTemplatesPage() {
         <div className="text-muted-foreground text-sm">Loading…</div>
       ) : !templates || templates.length === 0 ? (
         <EmptyState
-          title="Belum ada template"
-          description={isMgmt ? "Buat template pertama untuk mempercepat intake proyek." : "Belum ada template yang dibuat."}
+          title="No templates yet"
+          description={isMgmt ? "Create the first template to speed up project intake." : "No templates have been created yet."}
           icon={<LayoutTemplate className="h-10 w-10 text-muted-foreground/50" />}
         />
       ) : (
@@ -107,13 +107,13 @@ export default function ProjectTemplatesPage() {
                     <CardTitle className="text-base truncate">{t.name}</CardTitle>
                     <CardDescription className="truncate">
                       {t.businessUnitName ? `${t.businessUnitName} • ` : ""}
-                      {t.defaultDurationDays} hari • {t.plannedMandays.toFixed(1)} mandays
+                      {t.defaultDurationDays} days • {t.plannedMandays.toFixed(1)} mandays
                     </CardDescription>
                   </div>
                   <div className="flex gap-1 shrink-0">
                     {canApply && (
                       <Button size="sm" variant="default" onClick={() => setApplyTarget(t)} data-testid={`apply-template-${t.id}`}>
-                        <Rocket className="h-3.5 w-3.5 mr-1" /> Gunakan
+                        <Rocket className="h-3.5 w-3.5 mr-1" /> Use
                       </Button>
                     )}
                     {isMgmt && (
@@ -187,14 +187,14 @@ function DeleteButton({ id, name }: { id: string; name: string }) {
   const del = useDeleteProjectTemplate({
     mutation: {
       onSuccess: () => {
-        toast({ title: "Template dihapus" });
+        toast({ title: "Template deleted" });
         qc.invalidateQueries({ queryKey: getListProjectTemplatesQueryKey() });
       },
-      onError: (e: any) => toast({ variant: "destructive", title: "Gagal menghapus", description: e?.message }),
+      onError: (e: any) => toast({ variant: "destructive", title: "Failed to delete", description: e?.message }),
     },
   });
   return (
-    <Button size="icon" variant="ghost" onClick={() => { if (confirm(`Hapus template "${name}"?`)) del.mutate({ id }); }}>
+    <Button size="icon" variant="ghost" onClick={() => { if (confirm(`Delete template "${name}"?`)) del.mutate({ id }); }}>
       <Trash2 className="h-4 w-4 text-destructive" />
     </Button>
   );
@@ -224,8 +224,8 @@ function TemplateDialog({ open, onClose, editing }: { open: boolean; onClose: ()
   );
   const [milestones, setMilestones] = useState<DraftMilestone[]>(
     withKeys(editing?.milestones ?? [
-      { name: "DP 30%", percentage: 30, offsetDays: 0, order: 0 },
-      { name: "Pelunasan 70%", percentage: 70, offsetDays: 30, order: 1 },
+      { name: "Down Payment 30%", percentage: 30, offsetDays: 0, order: 0 },
+      { name: "Final payment 70%", percentage: 70, offsetDays: 30, order: 1 },
     ]) as DraftMilestone[],
   );
   const [raidItems, setRaidItems] = useState<DraftRaid[]>(
@@ -248,20 +248,20 @@ function TemplateDialog({ open, onClose, editing }: { open: boolean; onClose: ()
 
   const create = useCreateProjectTemplate({
     mutation: {
-      onSuccess: () => { toast({ title: "Template dibuat" }); qc.invalidateQueries({ queryKey: getListProjectTemplatesQueryKey() }); onClose(); },
-      onError: (e: any) => toast({ variant: "destructive", title: "Gagal menyimpan", description: e?.message }),
+      onSuccess: () => { toast({ title: "Template created" }); qc.invalidateQueries({ queryKey: getListProjectTemplatesQueryKey() }); onClose(); },
+      onError: (e: any) => toast({ variant: "destructive", title: "Failed to save", description: e?.message }),
     },
   });
   const update = useUpdateProjectTemplate({
     mutation: {
-      onSuccess: () => { toast({ title: "Template diupdate" }); qc.invalidateQueries({ queryKey: getListProjectTemplatesQueryKey() }); onClose(); },
-      onError: (e: any) => toast({ variant: "destructive", title: "Gagal update", description: e?.message }),
+      onSuccess: () => { toast({ title: "Template updated" }); qc.invalidateQueries({ queryKey: getListProjectTemplatesQueryKey() }); onClose(); },
+      onError: (e: any) => toast({ variant: "destructive", title: "Update failed", description: e?.message }),
     },
   });
 
   const submit = () => {
     if (!name.trim()) {
-      toast({ variant: "destructive", title: "Nama template wajib diisi" });
+      toast({ variant: "destructive", title: "Template name is required" });
       return;
     }
     const payload = {
@@ -286,28 +286,28 @@ function TemplateDialog({ open, onClose, editing }: { open: boolean; onClose: ()
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{editing ? "Edit Template" : "Template Baru"}</DialogTitle>
-          <DialogDescription>Definisikan blueprint proyek lengkap dengan estimasi cost, milestone billing, dan RAID standar.</DialogDescription>
+          <DialogTitle>{editing ? "Edit Template" : "New Template"}</DialogTitle>
+          <DialogDescription>Define the full project blueprint with cost estimates, billing milestones, and standard RAID.</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-5 pt-2">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label>Nama Template *</Label>
-              <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Contoh: Standard Web Pentest" data-testid="input-pt-name" />
+              <Label>Template Name *</Label>
+              <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Example: Standard Web Pentest" data-testid="input-pt-name" />
             </div>
             <div>
               <Label>Business Unit</Label>
               <Select value={businessUnitId || "__none"} onValueChange={(v) => setBusinessUnitId(v === "__none" ? "" : v)}>
-                <SelectTrigger><SelectValue placeholder="Opsional" /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="Optional" /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="__none">— Semua BU —</SelectItem>
+                  <SelectItem value="__none">— All BUs —</SelectItem>
                   {bus?.map((b) => <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
             <div>
-              <Label>Jenis</Label>
+              <Label>Kind</Label>
               <Select value={kind} onValueChange={(v) => setKind(v as any)}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -317,13 +317,13 @@ function TemplateDialog({ open, onClose, editing }: { open: boolean; onClose: ()
               </Select>
             </div>
             <div>
-              <Label>Default Durasi (hari)</Label>
+              <Label>Default Duration (days)</Label>
               <Input type="number" min={1} value={defaultDurationDays} onChange={(e) => setDefaultDurationDays(e.target.value)} />
             </div>
           </div>
 
           <div>
-            <Label>Deskripsi</Label>
+            <Label>Description</Label>
             <Textarea value={description ?? ""} onChange={(e) => setDescription(e.target.value)} rows={2} />
           </div>
 
@@ -333,13 +333,13 @@ function TemplateDialog({ open, onClose, editing }: { open: boolean; onClose: ()
               <Input type="number" min={0} value={estimatedContractValue} onChange={(e) => setEstimatedContractValue(e.target.value)} className="font-mono" />
             </div>
             <div>
-              <Label>PPN (%)</Label>
+              <Label>VAT (%)</Label>
               <Input type="number" min={0} max={100} value={vatPercent} onChange={(e) => setVatPercent(e.target.value)} />
             </div>
             <div className="flex items-end">
               <label className="text-xs flex items-center gap-2">
                 <input type="checkbox" checked={contractValueIncludesVat} onChange={(e) => setIncludesVat(e.target.checked)} />
-                Harga termasuk PPN
+                Price includes VAT
               </label>
             </div>
           </div>
@@ -350,7 +350,7 @@ function TemplateDialog({ open, onClose, editing }: { open: boolean; onClose: ()
               <Button type="button" size="sm" variant="outline" onClick={() =>
                 setResources([...resources, { _key: Math.random().toString(36), role: "KONSULTAN", count: 1, plannedMandays: 5, dailyRate: DEFAULT_RATES.KONSULTAN!, note: null }])
               }>
-                <Plus className="h-3 w-3 mr-1" /> Tambah Role
+                <Plus className="h-3 w-3 mr-1" /> Add Role
               </Button>
             </div>
             <div className="space-y-2">
@@ -364,9 +364,9 @@ function TemplateDialog({ open, onClose, editing }: { open: boolean; onClose: ()
                       {ROLE_OPTIONS.map((o) => <SelectItem key={o} value={o}>{o.replace(/_/g, " ")}</SelectItem>)}
                     </SelectContent>
                   </Select>
-                  <Input className="col-span-1" type="number" min={1} value={r.count} title="Jumlah orang"
+                  <Input className="col-span-1" type="number" min={1} value={r.count} title="People count"
                     onChange={(e) => { const c = [...resources]; c[i] = { ...r, count: Number(e.target.value) || 1 }; setResources(c); }} />
-                  <Input className="col-span-2" type="number" min={0} step={0.5} value={r.plannedMandays} title="Mandays per orang"
+                  <Input className="col-span-2" type="number" min={0} step={0.5} value={r.plannedMandays} title="Mandays per person"
                     onChange={(e) => { const c = [...resources]; c[i] = { ...r, plannedMandays: Number(e.target.value) || 0 }; setResources(c); }} />
                   <Input className="col-span-3 font-mono text-xs" type="number" min={0} value={r.dailyRate} title="Daily rate (IDR)"
                     onChange={(e) => { const c = [...resources]; c[i] = { ...r, dailyRate: Number(e.target.value) || 0 }; setResources(c); }} />
@@ -393,17 +393,17 @@ function TemplateDialog({ open, onClose, editing }: { open: boolean; onClose: ()
               <Button type="button" size="sm" variant="outline" onClick={() =>
                 setMilestones([...milestones, { _key: Math.random().toString(36), name: "Milestone", percentage: 0, offsetDays: 0, order: milestones.length }])
               }>
-                <Plus className="h-3 w-3 mr-1" /> Tambah Milestone
+                <Plus className="h-3 w-3 mr-1" /> Add Milestone
               </Button>
             </div>
             <div className="space-y-2">
               {milestones.map((m, i) => (
                 <div key={m._key} className="grid grid-cols-12 gap-2 items-center border border-border/60 rounded p-2 bg-muted/10">
-                  <Input className="col-span-5" placeholder="Nama milestone" value={m.name}
+                  <Input className="col-span-5" placeholder="Milestone name" value={m.name}
                     onChange={(e) => { const c = [...milestones]; c[i] = { ...m, name: e.target.value }; setMilestones(c); }} />
                   <Input className="col-span-2" type="number" min={0} max={100} value={m.percentage} title="%"
                     onChange={(e) => { const c = [...milestones]; c[i] = { ...m, percentage: Number(e.target.value) || 0 }; setMilestones(c); }} />
-                  <Input className="col-span-2" type="number" min={0} value={m.offsetDays} title="Offset hari dari start"
+                  <Input className="col-span-2" type="number" min={0} value={m.offsetDays} title="Offset days from start"
                     onChange={(e) => { const c = [...milestones]; c[i] = { ...m, offsetDays: Number(e.target.value) || 0 }; setMilestones(c); }} />
                   <div className="col-span-2 text-xs text-right font-mono text-muted-foreground">
                     {formatIDR((Number(estimatedContractValue) || 0) * (m.percentage / 100))}
@@ -416,17 +416,17 @@ function TemplateDialog({ open, onClose, editing }: { open: boolean; onClose: ()
               ))}
             </div>
             <p className={`text-xs mt-1 ${Math.abs(milestoneTotal - 100) < 0.1 ? "text-emerald-500" : "text-amber-500"}`}>
-              Total: {milestoneTotal.toFixed(1)}% {Math.abs(milestoneTotal - 100) < 0.1 ? "✓" : "(seharusnya 100%)"}
+              Total: {milestoneTotal.toFixed(1)}% {Math.abs(milestoneTotal - 100) < 0.1 ? "✓" : "(should be 100%)"}
             </p>
           </div>
 
           <div>
             <div className="flex justify-between items-center mb-2">
-              <Label>RAID Standar ({raidItems.length})</Label>
+              <Label>Standard RAID ({raidItems.length})</Label>
               <Button type="button" size="sm" variant="outline" onClick={() =>
                 setRaidItems([...raidItems, { _key: Math.random().toString(36), type: "RISK", title: "", description: null, impact: "MEDIUM", likelihood: "MEDIUM", mitigation: null }])
               }>
-                <Plus className="h-3 w-3 mr-1" /> Tambah Item
+                <Plus className="h-3 w-3 mr-1" /> Add Item
               </Button>
             </div>
             <div className="space-y-2">
@@ -441,7 +441,7 @@ function TemplateDialog({ open, onClose, editing }: { open: boolean; onClose: ()
                       <SelectItem value="DEPENDENCY">DEPENDENCY</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Input className="col-span-6" placeholder="Judul" value={r.title}
+                  <Input className="col-span-6" placeholder="Title" value={r.title}
                     onChange={(e) => { const c = [...raidItems]; c[i] = { ...r, title: e.target.value }; setRaidItems(c); }} />
                   <Select value={r.impact ?? "MEDIUM"} onValueChange={(v) => { const c = [...raidItems]; c[i] = { ...r, impact: v as any }; setRaidItems(c); }}>
                     <SelectTrigger className="col-span-1 text-xs"><SelectValue /></SelectTrigger>
@@ -470,22 +470,22 @@ function TemplateDialog({ open, onClose, editing }: { open: boolean; onClose: ()
           </div>
 
           <div>
-            <Label>Link Task Template (opsional)</Label>
+            <Label>Link Task Template (optional)</Label>
             <Select value={taskTemplateId || "__none"} onValueChange={(v) => setTaskTemplateId(v === "__none" ? "" : v)}>
               <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="__none">— Tidak ada —</SelectItem>
+                <SelectItem value="__none">— None —</SelectItem>
                 {taskTemplates?.map((tt) => <SelectItem key={tt.id} value={tt.id}>{tt.name}</SelectItem>)}
               </SelectContent>
             </Select>
-            <p className="text-[10px] text-muted-foreground mt-1">PM dapat menerapkannya manual dari tab Tasks setelah project dibuat.</p>
+            <p className="text-[10px] text-muted-foreground mt-1">PM can apply it manually from the Tasks tab after the project is created.</p>
           </div>
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>Batal</Button>
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
           <Button onClick={submit} disabled={create.isPending || update.isPending}>
-            {editing ? "Update" : "Simpan"}
+            {editing ? "Update" : "Save"}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -507,18 +507,18 @@ function ApplyDialog({ template, onClose }: { template: ProjectTemplate; onClose
   const apply = useApplyProjectTemplate({
     mutation: {
       onSuccess: (data: any) => {
-        toast({ title: "Project dibuat dari template", description: "Anda akan diarahkan ke halaman proyek." });
+        toast({ title: "Project created from template", description: "You will be redirected to the project page." });
         qc.invalidateQueries({ queryKey: getListProjectTemplatesQueryKey() });
         onClose();
         if (data?.projectId) setLocation(`/projects/${data.projectId}`);
       },
-      onError: (e: any) => toast({ variant: "destructive", title: "Gagal apply template", description: e?.message }),
+      onError: (e: any) => toast({ variant: "destructive", title: "Failed to apply template", description: e?.message }),
     },
   });
 
   const submit = () => {
     if (!code.trim() || !name.trim() || !clientId) {
-      toast({ variant: "destructive", title: "SPK, Nama, dan Client wajib diisi" });
+      toast({ variant: "destructive", title: "SPK, Name, and Client are required" });
       return;
     }
     apply.mutate({
@@ -537,24 +537,24 @@ function ApplyDialog({ template, onClose }: { template: ProjectTemplate; onClose
     <Dialog open onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Gunakan Template: {template.name}</DialogTitle>
+          <DialogTitle>Use Template: {template.name}</DialogTitle>
           <DialogDescription>
-            Akan dibuat project DRAFT dengan {template.milestones.length} milestone billing dan {template.raidItems.length} RAID item dari template.
+            A DRAFT project will be created with {template.milestones.length} billing milestones and {template.raidItems.length} RAID items from the template.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-3 pt-2">
           <div>
             <Label>SPK / PO Number *</Label>
-            <Input value={code} onChange={(e) => setCode(e.target.value)} placeholder="Contoh: SPK-2026-001" data-testid="input-apply-code" />
+            <Input value={code} onChange={(e) => setCode(e.target.value)} placeholder="Example: SPK-2026-001" data-testid="input-apply-code" />
           </div>
           <div>
-            <Label>Nama Project *</Label>
+            <Label>Project Name *</Label>
             <Input value={name} onChange={(e) => setName(e.target.value)} data-testid="input-apply-name" />
           </div>
           <div>
             <Label>Client *</Label>
             <Select value={clientId} onValueChange={setClientId}>
-              <SelectTrigger><SelectValue placeholder="Pilih client" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder="Select client" /></SelectTrigger>
               <SelectContent>
                 {clients?.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
               </SelectContent>
@@ -576,9 +576,9 @@ function ApplyDialog({ template, onClose }: { template: ProjectTemplate; onClose
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>Batal</Button>
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
           <Button onClick={submit} disabled={apply.isPending} data-testid="button-confirm-apply">
-            {apply.isPending ? "Membuat..." : "Buat Project"}
+            {apply.isPending ? "Creating..." : "Create Project"}
           </Button>
         </DialogFooter>
       </DialogContent>
