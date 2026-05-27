@@ -43,7 +43,7 @@ type Props = {
 };
 
 const VARIANT_LABEL: Record<Variant, string> = {
-  KONSULTAN: "Konsultan",
+  KONSULTAN: "Consultant",
   TECHNICAL_WRITER: "Technical Writer",
   OTHER: "Other Resource",
 };
