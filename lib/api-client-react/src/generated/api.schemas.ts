@@ -1078,10 +1078,26 @@ export interface UpdateProjectReportBody {
   reportLink?: string | null;
 }
 
+export type ProjectReportReportType =
+  | (typeof ProjectReportReportType)[keyof typeof ProjectReportReportType]
+  | null;
+
+export const ProjectReportReportType = {
+  DRAFT: "DRAFT",
+  INTERIM: "INTERIM",
+  FINAL: "FINAL",
+} as const;
+
 export interface ProjectReport {
   id: string;
   projectId: string;
   title: string;
+  reportNumber?: string | null;
+  version?: string | null;
+  reportType?: ProjectReportReportType;
+  periodStart?: string | null;
+  periodEnd?: string | null;
+  author?: string | null;
   coverUrl?: string | null;
   link?: string | null;
   note?: string | null;
@@ -1103,18 +1119,50 @@ export interface ProjectReportPage {
   totalPages: number;
 }
 
+export type CreateProjectReportBodyReportType =
+  | (typeof CreateProjectReportBodyReportType)[keyof typeof CreateProjectReportBodyReportType]
+  | null;
+
+export const CreateProjectReportBodyReportType = {
+  DRAFT: "DRAFT",
+  INTERIM: "INTERIM",
+  FINAL: "FINAL",
+} as const;
+
 export interface CreateProjectReportBody {
   /** @minLength 1 */
   title: string;
+  reportNumber?: string | null;
+  version?: string | null;
+  reportType?: CreateProjectReportBodyReportType;
+  periodStart?: string | null;
+  periodEnd?: string | null;
+  author?: string | null;
   coverUrl?: string | null;
   link?: string | null;
   note?: string | null;
   workstreamId?: string | null;
 }
 
+export type UpdateProjectReportItemBodyReportType =
+  | (typeof UpdateProjectReportItemBodyReportType)[keyof typeof UpdateProjectReportItemBodyReportType]
+  | null;
+
+export const UpdateProjectReportItemBodyReportType = {
+  DRAFT: "DRAFT",
+  INTERIM: "INTERIM",
+  FINAL: "FINAL",
+} as const;
+
 export interface UpdateProjectReportItemBody {
   /** @minLength 1 */
   title?: string;
+  reportNumber?: string | null;
+  version?: string | null;
+  reportType?: UpdateProjectReportItemBodyReportType;
+  periodStart?: string | null;
+  periodEnd?: string | null;
+  author?: string | null;
   coverUrl?: string | null;
   link?: string | null;
   note?: string | null;

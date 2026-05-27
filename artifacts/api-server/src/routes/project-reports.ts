@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { prisma } from "@workspace/db";
+import { prisma, type ProjectReportType } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
 import { userCanAccessProject } from "../lib/projectAccess.js";
@@ -12,6 +12,12 @@ type ReportRow = {
   id: string;
   projectId: string;
   title: string;
+  reportNumber: string | null;
+  version: string | null;
+  reportType: ProjectReportType | null;
+  periodStart: Date | null;
+  periodEnd: Date | null;
+  author: string | null;
   coverUrl: string | null;
   link: string | null;
   note: string | null;
@@ -24,11 +30,41 @@ type ReportRow = {
   updatedAt: Date;
 };
 
+const REPORT_TYPES = new Set(["DRAFT", "INTERIM", "FINAL"]);
+
+const DATE_ONLY_RE = /^\d{4}-\d{2}-\d{2}$/;
+const DATE_TIME_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:?\d{2})?$/;
+
+function parseOptionalDate(value: unknown, field: string): Date | null | undefined {
+  if (value === undefined) return undefined;
+  if (value === null || value === "") return null;
+  const s = String(value).trim();
+  if (!DATE_ONLY_RE.test(s) && !DATE_TIME_RE.test(s)) {
+    throw new Error(`${field} must be YYYY-MM-DD or ISO 8601 date-time`);
+  }
+  const d = new Date(s);
+  if (isNaN(d.getTime())) throw new Error(`${field} invalid`);
+  // Strict calendar check for date-only values: reject normalizations like 2026-02-31.
+  if (DATE_ONLY_RE.test(s)) {
+    const [y, m, day] = s.split("-").map(Number);
+    if (d.getUTCFullYear() !== y || d.getUTCMonth() + 1 !== m || d.getUTCDate() !== day) {
+      throw new Error(`${field} is not a valid calendar date`);
+    }
+  }
+  return d;
+}
+
 function serialize(r: ReportRow) {
   return {
     id: r.id,
     projectId: r.projectId,
     title: r.title,
+    reportNumber: r.reportNumber,
+    version: r.version,
+    reportType: r.reportType,
+    periodStart: r.periodStart ? r.periodStart.toISOString() : null,
+    periodEnd: r.periodEnd ? r.periodEnd.toISOString() : null,
+    author: r.author,
     coverUrl: r.coverUrl,
     link: r.link,
     note: r.note,
@@ -118,11 +154,44 @@ router.post("/projects/:id/reports", async (req, res) => {
   const coverUrl = b.coverUrl ? String(b.coverUrl) : null;
   const link = b.link ? String(b.link).trim() || null : null;
   const note = b.note ? String(b.note).trim() || null : null;
+  const reportNumber = b.reportNumber ? String(b.reportNumber).trim() || null : null;
+  const version = b.version ? String(b.version).trim() || null : null;
+  const author = b.author ? String(b.author).trim() || null : null;
+  let reportType: ProjectReportType | null = null;
+  if (b.reportType) {
+    const rt = String(b.reportType).toUpperCase();
+    if (!REPORT_TYPES.has(rt)) {
+      res.status(400).json({ error: `reportType must be one of ${[...REPORT_TYPES].join(", ")}` });
+      return;
+    }
+    reportType = rt as ProjectReportType;
+  }
+  let periodStart: Date | null = null;
+  let periodEnd: Date | null = null;
+  try {
+    const ps = parseOptionalDate(b.periodStart, "periodStart");
+    const pe = parseOptionalDate(b.periodEnd, "periodEnd");
+    if (ps !== undefined) periodStart = ps;
+    if (pe !== undefined) periodEnd = pe;
+  } catch (e: any) {
+    res.status(400).json({ error: e?.message ?? "Invalid date" });
+    return;
+  }
+  if (periodStart && periodEnd && periodEnd < periodStart) {
+    res.status(400).json({ error: "periodEnd must be on or after periodStart" });
+    return;
+  }
   const submittedAt = coverUrl && link ? new Date() : null;
   const created = await prisma.projectReport.create({
     data: {
       projectId,
       title,
+      reportNumber,
+      version,
+      reportType,
+      periodStart,
+      periodEnd,
+      author,
       coverUrl,
       link,
       note,
@@ -178,6 +247,36 @@ router.patch("/project-reports/:reportId", async (req, res) => {
   if (b.coverUrl !== undefined) data.coverUrl = b.coverUrl ? String(b.coverUrl) : null;
   if (b.link !== undefined) data.link = b.link ? String(b.link).trim() || null : null;
   if (b.note !== undefined) data.note = b.note ? String(b.note).trim() || null : null;
+  if (b.reportNumber !== undefined) data.reportNumber = b.reportNumber ? String(b.reportNumber).trim() || null : null;
+  if (b.version !== undefined) data.version = b.version ? String(b.version).trim() || null : null;
+  if (b.author !== undefined) data.author = b.author ? String(b.author).trim() || null : null;
+  if (b.reportType !== undefined) {
+    if (b.reportType === null || b.reportType === "") {
+      data.reportType = null;
+    } else {
+      const rt = String(b.reportType).toUpperCase();
+      if (!REPORT_TYPES.has(rt)) {
+        res.status(400).json({ error: `reportType must be one of ${[...REPORT_TYPES].join(", ")}` });
+        return;
+      }
+      data.reportType = rt as ProjectReportType;
+    }
+  }
+  try {
+    const ps = parseOptionalDate(b.periodStart, "periodStart");
+    const pe = parseOptionalDate(b.periodEnd, "periodEnd");
+    if (ps !== undefined) data.periodStart = ps;
+    if (pe !== undefined) data.periodEnd = pe;
+  } catch (e: any) {
+    res.status(400).json({ error: e?.message ?? "Invalid date" });
+    return;
+  }
+  const nextStart = (data.periodStart !== undefined ? data.periodStart : before.periodStart) as Date | null;
+  const nextEnd = (data.periodEnd !== undefined ? data.periodEnd : before.periodEnd) as Date | null;
+  if (nextStart && nextEnd && nextEnd < nextStart) {
+    res.status(400).json({ error: "periodEnd must be on or after periodStart" });
+    return;
+  }
   if (b.workstreamId !== undefined) {
     if (b.workstreamId === null || b.workstreamId === "") {
       data.workstreamId = null;

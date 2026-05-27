@@ -3113,6 +3113,12 @@ components:
         id: { type: string }
         projectId: { type: string }
         title: { type: string }
+        reportNumber: { type: string, nullable: true }
+        version: { type: string, nullable: true }
+        reportType: { type: string, nullable: true, enum: [DRAFT, INTERIM, FINAL] }
+        periodStart: { type: string, nullable: true }
+        periodEnd: { type: string, nullable: true }
+        author: { type: string, nullable: true }
         coverUrl: { type: string, nullable: true }
         link: { type: string, nullable: true }
         note: { type: string, nullable: true }
@@ -3142,6 +3148,12 @@ components:
       required: [title]
       properties:
         title: { type: string, minLength: 1 }
+        reportNumber: { type: string, nullable: true }
+        version: { type: string, nullable: true }
+        reportType: { type: string, nullable: true, enum: [DRAFT, INTERIM, FINAL] }
+        periodStart: { type: string, nullable: true }
+        periodEnd: { type: string, nullable: true }
+        author: { type: string, nullable: true }
         coverUrl: { type: string, nullable: true }
         link: { type: string, nullable: true }
         note: { type: string, nullable: true }
@@ -3151,6 +3163,12 @@ components:
       type: object
       properties:
         title: { type: string, minLength: 1 }
+        reportNumber: { type: string, nullable: true }
+        version: { type: string, nullable: true }
+        reportType: { type: string, nullable: true, enum: [DRAFT, INTERIM, FINAL] }
+        periodStart: { type: string, nullable: true }
+        periodEnd: { type: string, nullable: true }
+        author: { type: string, nullable: true }
         coverUrl: { type: string, nullable: true }
         link: { type: string, nullable: true }
         note: { type: string, nullable: true }

@@ -36,6 +36,12 @@ import {
 
 type ReportFormState = {
   title: string;
+  reportNumber: string;
+  version: string;
+  reportType: string;
+  periodStart: string;
+  periodEnd: string;
+  author: string;
   coverUrl: string;
   link: string;
   note: string;
@@ -44,6 +50,12 @@ type ReportFormState = {
 
 const EMPTY_FORM: ReportFormState = {
   title: "",
+  reportNumber: "",
+  version: "",
+  reportType: "",
+  periodStart: "",
+  periodEnd: "",
+  author: "",
   coverUrl: "",
   link: "",
   note: "",
@@ -51,6 +63,30 @@ const EMPTY_FORM: ReportFormState = {
 };
 
 const NONE_VALUE = "__none__";
+const REPORT_TYPE_OPTIONS = [
+  { value: "DRAFT", label: "Draft" },
+  { value: "INTERIM", label: "Interim" },
+  { value: "FINAL", label: "Final" },
+];
+
+const REPORT_TYPE_BADGE: Record<string, string> = {
+  DRAFT: "bg-amber-500/10 text-amber-500 border-amber-500/30",
+  INTERIM: "bg-sky-500/10 text-sky-500 border-sky-500/30",
+  FINAL: "bg-emerald-500/10 text-emerald-500 border-emerald-500/30",
+};
+
+function toDateInput(value: string | null | undefined): string {
+  if (!value) return "";
+  const d = new Date(value);
+  if (isNaN(d.getTime())) return "";
+  return d.toISOString().slice(0, 10);
+}
+
+function formatPeriod(start: string | null, end: string | null): string | null {
+  if (!start && !end) return null;
+  if (start && end) return `${formatDate(start)} – ${formatDate(end)}`;
+  return formatDate((start || end) as string);
+}
 
 function ReportTab({ projectId, project }: { projectId: string; project: any }) {
   const { user } = useAuth();
@@ -122,6 +158,12 @@ function ReportTab({ projectId, project }: { projectId: string; project: any }) 
     setEditingId(r.id);
     setForm({
       title: r.title ?? "",
+      reportNumber: r.reportNumber ?? "",
+      version: r.version ?? "",
+      reportType: r.reportType ?? "",
+      periodStart: toDateInput(r.periodStart),
+      periodEnd: toDateInput(r.periodEnd),
+      author: r.author ?? "",
       coverUrl: r.coverUrl ?? "",
       link: r.link ?? "",
       note: r.note ?? "",
@@ -152,8 +194,18 @@ function ReportTab({ projectId, project }: { projectId: string; project: any }) 
       toast({ title: "Title required", variant: "destructive" });
       return;
     }
+    if (form.periodStart && form.periodEnd && form.periodEnd < form.periodStart) {
+      toast({ title: "Invalid period", description: "End date must be on or after start date", variant: "destructive" });
+      return;
+    }
     const payload = {
       title,
+      reportNumber: form.reportNumber.trim() || null,
+      version: form.version.trim() || null,
+      reportType: form.reportType || null,
+      periodStart: form.periodStart || null,
+      periodEnd: form.periodEnd || null,
+      author: form.author.trim() || null,
       coverUrl: form.coverUrl || null,
       link: form.link.trim() || null,
       note: form.note.trim() || null,
@@ -202,82 +254,98 @@ function ReportTab({ projectId, project }: { projectId: string; project: any }) 
             />
           ) : (
             <div className="space-y-3">
-              {items.map((r: any) => (
-                <div
-                  key={r.id}
-                  className="flex flex-col sm:flex-row gap-4 rounded-md border border-border p-3"
-                  data-testid={`report-row-${r.id}`}
-                >
-                  <div className="shrink-0">
-                    {r.coverUrl ? (
-                      <img
-                        src={r.coverUrl}
-                        alt={r.title}
-                        className="w-32 h-20 object-cover rounded border border-border"
-                      />
-                    ) : (
-                      <div className="w-32 h-20 rounded border border-dashed border-border flex items-center justify-center text-muted-foreground">
-                        <FileText className="h-6 w-6" />
+              {items.map((r: any) => {
+                const period = formatPeriod(r.periodStart, r.periodEnd);
+                return (
+                  <div
+                    key={r.id}
+                    className="flex flex-col sm:flex-row gap-4 rounded-md border border-border p-3"
+                    data-testid={`report-row-${r.id}`}
+                  >
+                    <div className="shrink-0">
+                      {r.coverUrl ? (
+                        <img
+                          src={r.coverUrl}
+                          alt={r.title}
+                          className="w-32 h-20 object-cover rounded border border-border"
+                        />
+                      ) : (
+                        <div className="w-32 h-20 rounded border border-dashed border-border flex items-center justify-center text-muted-foreground">
+                          <FileText className="h-6 w-6" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0 space-y-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h4 className="font-medium truncate">{r.title}</h4>
+                        {r.reportType && (
+                          <Badge variant="outline" className={`text-xs ${REPORT_TYPE_BADGE[r.reportType] ?? ""}`}>
+                            {r.reportType}
+                          </Badge>
+                        )}
+                        {r.version && (
+                          <Badge variant="outline" className="text-xs">v{r.version.replace(/^v/i, "")}</Badge>
+                        )}
+                        {r.workstreamCode && (
+                          <Badge variant="outline" className="text-xs">
+                            {r.workstreamCode}{r.workstreamName ? ` · ${r.workstreamName}` : ""}
+                          </Badge>
+                        )}
+                        {r.submittedAt && (
+                          <Badge variant="outline" className="text-xs text-emerald-500 border-emerald-500/30">
+                            <CheckCircle2 className="h-3 w-3 mr-1" />
+                            Submitted {formatDate(r.submittedAt)}
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-muted-foreground">
+                        {r.reportNumber && <span>No: <span className="text-foreground">{r.reportNumber}</span></span>}
+                        {period && <span>Period: <span className="text-foreground">{period}</span></span>}
+                        {r.author && <span>Author: <span className="text-foreground">{r.author}</span></span>}
+                      </div>
+                      {r.link && (
+                        <a
+                          href={r.link}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-xs text-primary underline break-all inline-flex items-center gap-1"
+                        >
+                          <ExternalLink className="h-3 w-3" />
+                          {r.link}
+                        </a>
+                      )}
+                      {r.note && <p className="text-xs text-muted-foreground">{r.note}</p>}
+                      <p className="text-xs text-muted-foreground">
+                        Added {formatDate(r.createdAt)}{r.createdByName ? ` by ${r.createdByName}` : ""}
+                      </p>
+                    </div>
+                    {canEdit && (
+                      <div className="flex sm:flex-col gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => openEdit(r)}
+                          data-testid={`button-edit-report-${r.id}`}
+                        >
+                          <Pencil className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            if (confirm(`Delete report "${r.title}"?`)) {
+                              deleteMut.mutate({ reportId: r.id });
+                            }
+                          }}
+                          data-testid={`button-delete-report-${r.id}`}
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
                       </div>
                     )}
                   </div>
-                  <div className="flex-1 min-w-0 space-y-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h4 className="font-medium truncate">{r.title}</h4>
-                      {r.workstreamCode && (
-                        <Badge variant="outline" className="text-xs">
-                          {r.workstreamCode}{r.workstreamName ? ` · ${r.workstreamName}` : ""}
-                        </Badge>
-                      )}
-                      {r.submittedAt && (
-                        <Badge variant="outline" className="text-xs text-emerald-500 border-emerald-500/30">
-                          <CheckCircle2 className="h-3 w-3 mr-1" />
-                          Submitted {formatDate(r.submittedAt)}
-                        </Badge>
-                      )}
-                    </div>
-                    {r.link && (
-                      <a
-                        href={r.link}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-xs text-primary underline break-all inline-flex items-center gap-1"
-                      >
-                        <ExternalLink className="h-3 w-3" />
-                        {r.link}
-                      </a>
-                    )}
-                    {r.note && <p className="text-xs text-muted-foreground">{r.note}</p>}
-                    <p className="text-xs text-muted-foreground">
-                      Added {formatDate(r.createdAt)}{r.createdByName ? ` by ${r.createdByName}` : ""}
-                    </p>
-                  </div>
-                  {canEdit && (
-                    <div className="flex sm:flex-col gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => openEdit(r)}
-                        data-testid={`button-edit-report-${r.id}`}
-                      >
-                        <Pencil className="h-3 w-3" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => {
-                          if (confirm(`Delete report "${r.title}"?`)) {
-                            deleteMut.mutate({ reportId: r.id });
-                          }
-                        }}
-                        data-testid={`button-delete-report-${r.id}`}
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
 
@@ -315,12 +383,12 @@ function ReportTab({ projectId, project }: { projectId: string; project: any }) 
       </Card>
 
       <Dialog open={dialogOpen} onOpenChange={(open) => (open ? setDialogOpen(true) : closeDialog())}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingId ? "Edit report" : "Add report"}</DialogTitle>
             <DialogDescription>
-              Upload a cover image and paste the link to the report (e.g. Google Drive). Both are optional, but the
-              PM and Admin Project are only notified once both are filled in.
+              Fill in the report metadata. Cover and link are optional, but the PM and Admin Project are only notified
+              once both are filled in.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -332,6 +400,76 @@ function ReportTab({ projectId, project }: { projectId: string; project: any }) 
                 onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
                 data-testid="input-report-title"
               />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label>Report number</Label>
+                <Input
+                  placeholder="RPT-2026-001"
+                  value={form.reportNumber}
+                  onChange={(e) => setForm((f) => ({ ...f, reportNumber: e.target.value }))}
+                  data-testid="input-report-number"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Version</Label>
+                <Input
+                  placeholder="v1.0"
+                  value={form.version}
+                  onChange={(e) => setForm((f) => ({ ...f, version: e.target.value }))}
+                  data-testid="input-report-version"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label>Report type</Label>
+                <Select
+                  value={form.reportType || NONE_VALUE}
+                  onValueChange={(v) =>
+                    setForm((f) => ({ ...f, reportType: v === NONE_VALUE ? "" : v }))
+                  }
+                >
+                  <SelectTrigger data-testid="select-report-type">
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={NONE_VALUE}>None</SelectItem>
+                    {REPORT_TYPE_OPTIONS.map((o) => (
+                      <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Author</Label>
+                <Input
+                  placeholder="Report author"
+                  value={form.author}
+                  onChange={(e) => setForm((f) => ({ ...f, author: e.target.value }))}
+                  data-testid="input-report-author"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label>Period start</Label>
+                <Input
+                  type="date"
+                  value={form.periodStart}
+                  onChange={(e) => setForm((f) => ({ ...f, periodStart: e.target.value }))}
+                  data-testid="input-report-period-start"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Period end</Label>
+                <Input
+                  type="date"
+                  value={form.periodEnd}
+                  onChange={(e) => setForm((f) => ({ ...f, periodEnd: e.target.value }))}
+                  data-testid="input-report-period-end"
+                />
+              </div>
             </div>
             {useWorkstreams && (
               <div className="space-y-2">

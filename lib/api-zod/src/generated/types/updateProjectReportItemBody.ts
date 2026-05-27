@@ -5,10 +5,17 @@
  * SecureProfit Hub API
  * OpenAPI spec version: 0.1.0
  */
+import type { UpdateProjectReportItemBodyReportType } from "./updateProjectReportItemBodyReportType";
 
 export interface UpdateProjectReportItemBody {
   /** @minLength 1 */
   title?: string;
+  reportNumber?: string | null;
+  version?: string | null;
+  reportType?: UpdateProjectReportItemBodyReportType;
+  periodStart?: string | null;
+  periodEnd?: string | null;
+  author?: string | null;
   coverUrl?: string | null;
   link?: string | null;
   note?: string | null;

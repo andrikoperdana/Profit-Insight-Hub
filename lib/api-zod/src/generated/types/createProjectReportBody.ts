@@ -5,10 +5,17 @@
  * SecureProfit Hub API
  * OpenAPI spec version: 0.1.0
  */
+import type { CreateProjectReportBodyReportType } from "./createProjectReportBodyReportType";
 
 export interface CreateProjectReportBody {
   /** @minLength 1 */
   title: string;
+  reportNumber?: string | null;
+  version?: string | null;
+  reportType?: CreateProjectReportBodyReportType;
+  periodStart?: string | null;
+  periodEnd?: string | null;
+  author?: string | null;
   coverUrl?: string | null;
   link?: string | null;
   note?: string | null;

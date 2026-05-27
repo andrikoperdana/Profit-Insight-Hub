@@ -249,6 +249,15 @@ export const ProjectKind: {
 export type ProjectKind = (typeof ProjectKind)[keyof typeof ProjectKind]
 
 
+export const ProjectReportType: {
+  DRAFT: 'DRAFT',
+  INTERIM: 'INTERIM',
+  FINAL: 'FINAL'
+};
+
+export type ProjectReportType = (typeof ProjectReportType)[keyof typeof ProjectReportType]
+
+
 export const TimesheetStatus: {
   DRAFT: 'DRAFT',
   SUBMITTED: 'SUBMITTED',
@@ -405,6 +414,10 @@ export const ProjectStatus: typeof $Enums.ProjectStatus
 export type ProjectKind = $Enums.ProjectKind
 
 export const ProjectKind: typeof $Enums.ProjectKind
+
+export type ProjectReportType = $Enums.ProjectReportType
+
+export const ProjectReportType: typeof $Enums.ProjectReportType
 
 export type TimesheetStatus = $Enums.TimesheetStatus
 
@@ -9887,6 +9900,12 @@ export namespace Prisma {
     id: string | null
     projectId: string | null
     title: string | null
+    reportNumber: string | null
+    version: string | null
+    reportType: $Enums.ProjectReportType | null
+    periodStart: Date | null
+    periodEnd: Date | null
+    author: string | null
     coverUrl: string | null
     link: string | null
     note: string | null
@@ -9901,6 +9920,12 @@ export namespace Prisma {
     id: string | null
     projectId: string | null
     title: string | null
+    reportNumber: string | null
+    version: string | null
+    reportType: $Enums.ProjectReportType | null
+    periodStart: Date | null
+    periodEnd: Date | null
+    author: string | null
     coverUrl: string | null
     link: string | null
     note: string | null
@@ -9915,6 +9940,12 @@ export namespace Prisma {
     id: number
     projectId: number
     title: number
+    reportNumber: number
+    version: number
+    reportType: number
+    periodStart: number
+    periodEnd: number
+    author: number
     coverUrl: number
     link: number
     note: number
@@ -9931,6 +9962,12 @@ export namespace Prisma {
     id?: true
     projectId?: true
     title?: true
+    reportNumber?: true
+    version?: true
+    reportType?: true
+    periodStart?: true
+    periodEnd?: true
+    author?: true
     coverUrl?: true
     link?: true
     note?: true
@@ -9945,6 +9982,12 @@ export namespace Prisma {
     id?: true
     projectId?: true
     title?: true
+    reportNumber?: true
+    version?: true
+    reportType?: true
+    periodStart?: true
+    periodEnd?: true
+    author?: true
     coverUrl?: true
     link?: true
     note?: true
@@ -9959,6 +10002,12 @@ export namespace Prisma {
     id?: true
     projectId?: true
     title?: true
+    reportNumber?: true
+    version?: true
+    reportType?: true
+    periodStart?: true
+    periodEnd?: true
+    author?: true
     coverUrl?: true
     link?: true
     note?: true
@@ -10046,6 +10095,12 @@ export namespace Prisma {
     id: string
     projectId: string
     title: string
+    reportNumber: string | null
+    version: string | null
+    reportType: $Enums.ProjectReportType | null
+    periodStart: Date | null
+    periodEnd: Date | null
+    author: string | null
     coverUrl: string | null
     link: string | null
     note: string | null
@@ -10077,6 +10132,12 @@ export namespace Prisma {
     id?: boolean
     projectId?: boolean
     title?: boolean
+    reportNumber?: boolean
+    version?: boolean
+    reportType?: boolean
+    periodStart?: boolean
+    periodEnd?: boolean
+    author?: boolean
     coverUrl?: boolean
     link?: boolean
     note?: boolean
@@ -10094,6 +10155,12 @@ export namespace Prisma {
     id?: boolean
     projectId?: boolean
     title?: boolean
+    reportNumber?: boolean
+    version?: boolean
+    reportType?: boolean
+    periodStart?: boolean
+    periodEnd?: boolean
+    author?: boolean
     coverUrl?: boolean
     link?: boolean
     note?: boolean
@@ -10111,6 +10178,12 @@ export namespace Prisma {
     id?: boolean
     projectId?: boolean
     title?: boolean
+    reportNumber?: boolean
+    version?: boolean
+    reportType?: boolean
+    periodStart?: boolean
+    periodEnd?: boolean
+    author?: boolean
     coverUrl?: boolean
     link?: boolean
     note?: boolean
@@ -10143,6 +10216,12 @@ export namespace Prisma {
       id: string
       projectId: string
       title: string
+      reportNumber: string | null
+      version: string | null
+      reportType: $Enums.ProjectReportType | null
+      periodStart: Date | null
+      periodEnd: Date | null
+      author: string | null
       coverUrl: string | null
       link: string | null
       note: string | null
@@ -10550,6 +10629,12 @@ export namespace Prisma {
     readonly id: FieldRef<"ProjectReport", 'String'>
     readonly projectId: FieldRef<"ProjectReport", 'String'>
     readonly title: FieldRef<"ProjectReport", 'String'>
+    readonly reportNumber: FieldRef<"ProjectReport", 'String'>
+    readonly version: FieldRef<"ProjectReport", 'String'>
+    readonly reportType: FieldRef<"ProjectReport", 'ProjectReportType'>
+    readonly periodStart: FieldRef<"ProjectReport", 'DateTime'>
+    readonly periodEnd: FieldRef<"ProjectReport", 'DateTime'>
+    readonly author: FieldRef<"ProjectReport", 'String'>
     readonly coverUrl: FieldRef<"ProjectReport", 'String'>
     readonly link: FieldRef<"ProjectReport", 'String'>
     readonly note: FieldRef<"ProjectReport", 'String'>
@@ -44885,6 +44970,12 @@ export namespace Prisma {
     id: 'id',
     projectId: 'projectId',
     title: 'title',
+    reportNumber: 'reportNumber',
+    version: 'version',
+    reportType: 'reportType',
+    periodStart: 'periodStart',
+    periodEnd: 'periodEnd',
+    author: 'author',
     coverUrl: 'coverUrl',
     link: 'link',
     note: 'note',
@@ -45594,6 +45685,20 @@ export namespace Prisma {
    * Reference to a field of type 'ProjectKind[]'
    */
   export type ListEnumProjectKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectKind[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ProjectReportType'
+   */
+  export type EnumProjectReportTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectReportType'>
+    
+
+
+  /**
+   * Reference to a field of type 'ProjectReportType[]'
+   */
+  export type ListEnumProjectReportTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectReportType[]'>
     
 
 
@@ -46365,6 +46470,12 @@ export namespace Prisma {
     id?: StringFilter<"ProjectReport"> | string
     projectId?: StringFilter<"ProjectReport"> | string
     title?: StringFilter<"ProjectReport"> | string
+    reportNumber?: StringNullableFilter<"ProjectReport"> | string | null
+    version?: StringNullableFilter<"ProjectReport"> | string | null
+    reportType?: EnumProjectReportTypeNullableFilter<"ProjectReport"> | $Enums.ProjectReportType | null
+    periodStart?: DateTimeNullableFilter<"ProjectReport"> | Date | string | null
+    periodEnd?: DateTimeNullableFilter<"ProjectReport"> | Date | string | null
+    author?: StringNullableFilter<"ProjectReport"> | string | null
     coverUrl?: StringNullableFilter<"ProjectReport"> | string | null
     link?: StringNullableFilter<"ProjectReport"> | string | null
     note?: StringNullableFilter<"ProjectReport"> | string | null
@@ -46382,6 +46493,12 @@ export namespace Prisma {
     id?: SortOrder
     projectId?: SortOrder
     title?: SortOrder
+    reportNumber?: SortOrderInput | SortOrder
+    version?: SortOrderInput | SortOrder
+    reportType?: SortOrderInput | SortOrder
+    periodStart?: SortOrderInput | SortOrder
+    periodEnd?: SortOrderInput | SortOrder
+    author?: SortOrderInput | SortOrder
     coverUrl?: SortOrderInput | SortOrder
     link?: SortOrderInput | SortOrder
     note?: SortOrderInput | SortOrder
@@ -46402,6 +46519,12 @@ export namespace Prisma {
     NOT?: ProjectReportWhereInput | ProjectReportWhereInput[]
     projectId?: StringFilter<"ProjectReport"> | string
     title?: StringFilter<"ProjectReport"> | string
+    reportNumber?: StringNullableFilter<"ProjectReport"> | string | null
+    version?: StringNullableFilter<"ProjectReport"> | string | null
+    reportType?: EnumProjectReportTypeNullableFilter<"ProjectReport"> | $Enums.ProjectReportType | null
+    periodStart?: DateTimeNullableFilter<"ProjectReport"> | Date | string | null
+    periodEnd?: DateTimeNullableFilter<"ProjectReport"> | Date | string | null
+    author?: StringNullableFilter<"ProjectReport"> | string | null
     coverUrl?: StringNullableFilter<"ProjectReport"> | string | null
     link?: StringNullableFilter<"ProjectReport"> | string | null
     note?: StringNullableFilter<"ProjectReport"> | string | null
@@ -46419,6 +46542,12 @@ export namespace Prisma {
     id?: SortOrder
     projectId?: SortOrder
     title?: SortOrder
+    reportNumber?: SortOrderInput | SortOrder
+    version?: SortOrderInput | SortOrder
+    reportType?: SortOrderInput | SortOrder
+    periodStart?: SortOrderInput | SortOrder
+    periodEnd?: SortOrderInput | SortOrder
+    author?: SortOrderInput | SortOrder
     coverUrl?: SortOrderInput | SortOrder
     link?: SortOrderInput | SortOrder
     note?: SortOrderInput | SortOrder
@@ -46439,6 +46568,12 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"ProjectReport"> | string
     projectId?: StringWithAggregatesFilter<"ProjectReport"> | string
     title?: StringWithAggregatesFilter<"ProjectReport"> | string
+    reportNumber?: StringNullableWithAggregatesFilter<"ProjectReport"> | string | null
+    version?: StringNullableWithAggregatesFilter<"ProjectReport"> | string | null
+    reportType?: EnumProjectReportTypeNullableWithAggregatesFilter<"ProjectReport"> | $Enums.ProjectReportType | null
+    periodStart?: DateTimeNullableWithAggregatesFilter<"ProjectReport"> | Date | string | null
+    periodEnd?: DateTimeNullableWithAggregatesFilter<"ProjectReport"> | Date | string | null
+    author?: StringNullableWithAggregatesFilter<"ProjectReport"> | string | null
     coverUrl?: StringNullableWithAggregatesFilter<"ProjectReport"> | string | null
     link?: StringNullableWithAggregatesFilter<"ProjectReport"> | string | null
     note?: StringNullableWithAggregatesFilter<"ProjectReport"> | string | null
@@ -49986,6 +50121,12 @@ export namespace Prisma {
   export type ProjectReportCreateInput = {
     id?: string
     title: string
+    reportNumber?: string | null
+    version?: string | null
+    reportType?: $Enums.ProjectReportType | null
+    periodStart?: Date | string | null
+    periodEnd?: Date | string | null
+    author?: string | null
     coverUrl?: string | null
     link?: string | null
     note?: string | null
@@ -50001,6 +50142,12 @@ export namespace Prisma {
     id?: string
     projectId: string
     title: string
+    reportNumber?: string | null
+    version?: string | null
+    reportType?: $Enums.ProjectReportType | null
+    periodStart?: Date | string | null
+    periodEnd?: Date | string | null
+    author?: string | null
     coverUrl?: string | null
     link?: string | null
     note?: string | null
@@ -50014,6 +50161,12 @@ export namespace Prisma {
   export type ProjectReportUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    reportNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    reportType?: NullableEnumProjectReportTypeFieldUpdateOperationsInput | $Enums.ProjectReportType | null
+    periodStart?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    periodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    author?: NullableStringFieldUpdateOperationsInput | string | null
     coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     note?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50029,6 +50182,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    reportNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    reportType?: NullableEnumProjectReportTypeFieldUpdateOperationsInput | $Enums.ProjectReportType | null
+    periodStart?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    periodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    author?: NullableStringFieldUpdateOperationsInput | string | null
     coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     note?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50043,6 +50202,12 @@ export namespace Prisma {
     id?: string
     projectId: string
     title: string
+    reportNumber?: string | null
+    version?: string | null
+    reportType?: $Enums.ProjectReportType | null
+    periodStart?: Date | string | null
+    periodEnd?: Date | string | null
+    author?: string | null
     coverUrl?: string | null
     link?: string | null
     note?: string | null
@@ -50056,6 +50221,12 @@ export namespace Prisma {
   export type ProjectReportUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    reportNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    reportType?: NullableEnumProjectReportTypeFieldUpdateOperationsInput | $Enums.ProjectReportType | null
+    periodStart?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    periodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    author?: NullableStringFieldUpdateOperationsInput | string | null
     coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     note?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50068,6 +50239,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    reportNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    reportType?: NullableEnumProjectReportTypeFieldUpdateOperationsInput | $Enums.ProjectReportType | null
+    periodStart?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    periodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    author?: NullableStringFieldUpdateOperationsInput | string | null
     coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     note?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53937,6 +54114,13 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
+  export type EnumProjectReportTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjectReportType | EnumProjectReportTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ProjectReportType[] | ListEnumProjectReportTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ProjectReportType[] | ListEnumProjectReportTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumProjectReportTypeNullableFilter<$PrismaModel> | $Enums.ProjectReportType | null
+  }
+
   export type ProjectRelationFilter = {
     is?: ProjectWhereInput
     isNot?: ProjectWhereInput
@@ -53951,6 +54135,12 @@ export namespace Prisma {
     id?: SortOrder
     projectId?: SortOrder
     title?: SortOrder
+    reportNumber?: SortOrder
+    version?: SortOrder
+    reportType?: SortOrder
+    periodStart?: SortOrder
+    periodEnd?: SortOrder
+    author?: SortOrder
     coverUrl?: SortOrder
     link?: SortOrder
     note?: SortOrder
@@ -53965,6 +54155,12 @@ export namespace Prisma {
     id?: SortOrder
     projectId?: SortOrder
     title?: SortOrder
+    reportNumber?: SortOrder
+    version?: SortOrder
+    reportType?: SortOrder
+    periodStart?: SortOrder
+    periodEnd?: SortOrder
+    author?: SortOrder
     coverUrl?: SortOrder
     link?: SortOrder
     note?: SortOrder
@@ -53979,6 +54175,12 @@ export namespace Prisma {
     id?: SortOrder
     projectId?: SortOrder
     title?: SortOrder
+    reportNumber?: SortOrder
+    version?: SortOrder
+    reportType?: SortOrder
+    periodStart?: SortOrder
+    periodEnd?: SortOrder
+    author?: SortOrder
     coverUrl?: SortOrder
     link?: SortOrder
     note?: SortOrder
@@ -53987,6 +54189,16 @@ export namespace Prisma {
     createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type EnumProjectReportTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjectReportType | EnumProjectReportTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ProjectReportType[] | ListEnumProjectReportTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ProjectReportType[] | ListEnumProjectReportTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumProjectReportTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.ProjectReportType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumProjectReportTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumProjectReportTypeNullableFilter<$PrismaModel>
   }
 
   export type ProjectWorkstreamProjectIdCodeCompoundUniqueInput = {
@@ -58350,6 +58562,10 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type NullableEnumProjectReportTypeFieldUpdateOperationsInput = {
+    set?: $Enums.ProjectReportType | null
+  }
+
   export type ProjectUpdateOneRequiredWithoutReportsNestedInput = {
     create?: XOR<ProjectCreateWithoutReportsInput, ProjectUncheckedCreateWithoutReportsInput>
     connectOrCreate?: ProjectCreateOrConnectWithoutReportsInput
@@ -60812,6 +61028,23 @@ export namespace Prisma {
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
   }
+
+  export type NestedEnumProjectReportTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjectReportType | EnumProjectReportTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ProjectReportType[] | ListEnumProjectReportTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ProjectReportType[] | ListEnumProjectReportTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumProjectReportTypeNullableFilter<$PrismaModel> | $Enums.ProjectReportType | null
+  }
+
+  export type NestedEnumProjectReportTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjectReportType | EnumProjectReportTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ProjectReportType[] | ListEnumProjectReportTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ProjectReportType[] | ListEnumProjectReportTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumProjectReportTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.ProjectReportType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumProjectReportTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumProjectReportTypeNullableFilter<$PrismaModel>
+  }
   export type NestedJsonFilter<$PrismaModel = never> = 
     | PatchUndefined<
         Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
@@ -62825,6 +63058,12 @@ export namespace Prisma {
   export type ProjectReportCreateWithoutCreatedByInput = {
     id?: string
     title: string
+    reportNumber?: string | null
+    version?: string | null
+    reportType?: $Enums.ProjectReportType | null
+    periodStart?: Date | string | null
+    periodEnd?: Date | string | null
+    author?: string | null
     coverUrl?: string | null
     link?: string | null
     note?: string | null
@@ -62839,6 +63078,12 @@ export namespace Prisma {
     id?: string
     projectId: string
     title: string
+    reportNumber?: string | null
+    version?: string | null
+    reportType?: $Enums.ProjectReportType | null
+    periodStart?: Date | string | null
+    periodEnd?: Date | string | null
+    author?: string | null
     coverUrl?: string | null
     link?: string | null
     note?: string | null
@@ -64306,6 +64551,12 @@ export namespace Prisma {
     id?: StringFilter<"ProjectReport"> | string
     projectId?: StringFilter<"ProjectReport"> | string
     title?: StringFilter<"ProjectReport"> | string
+    reportNumber?: StringNullableFilter<"ProjectReport"> | string | null
+    version?: StringNullableFilter<"ProjectReport"> | string | null
+    reportType?: EnumProjectReportTypeNullableFilter<"ProjectReport"> | $Enums.ProjectReportType | null
+    periodStart?: DateTimeNullableFilter<"ProjectReport"> | Date | string | null
+    periodEnd?: DateTimeNullableFilter<"ProjectReport"> | Date | string | null
+    author?: StringNullableFilter<"ProjectReport"> | string | null
     coverUrl?: StringNullableFilter<"ProjectReport"> | string | null
     link?: StringNullableFilter<"ProjectReport"> | string | null
     note?: StringNullableFilter<"ProjectReport"> | string | null
@@ -65774,6 +66025,12 @@ export namespace Prisma {
   export type ProjectReportCreateWithoutProjectInput = {
     id?: string
     title: string
+    reportNumber?: string | null
+    version?: string | null
+    reportType?: $Enums.ProjectReportType | null
+    periodStart?: Date | string | null
+    periodEnd?: Date | string | null
+    author?: string | null
     coverUrl?: string | null
     link?: string | null
     note?: string | null
@@ -65787,6 +66044,12 @@ export namespace Prisma {
   export type ProjectReportUncheckedCreateWithoutProjectInput = {
     id?: string
     title: string
+    reportNumber?: string | null
+    version?: string | null
+    reportType?: $Enums.ProjectReportType | null
+    periodStart?: Date | string | null
+    periodEnd?: Date | string | null
+    author?: string | null
     coverUrl?: string | null
     link?: string | null
     note?: string | null
@@ -67511,6 +67774,12 @@ export namespace Prisma {
   export type ProjectReportCreateWithoutWorkstreamInput = {
     id?: string
     title: string
+    reportNumber?: string | null
+    version?: string | null
+    reportType?: $Enums.ProjectReportType | null
+    periodStart?: Date | string | null
+    periodEnd?: Date | string | null
+    author?: string | null
     coverUrl?: string | null
     link?: string | null
     note?: string | null
@@ -67525,6 +67794,12 @@ export namespace Prisma {
     id?: string
     projectId: string
     title: string
+    reportNumber?: string | null
+    version?: string | null
+    reportType?: $Enums.ProjectReportType | null
+    periodStart?: Date | string | null
+    periodEnd?: Date | string | null
+    author?: string | null
     coverUrl?: string | null
     link?: string | null
     note?: string | null
@@ -81120,6 +81395,12 @@ export namespace Prisma {
     id?: string
     projectId: string
     title: string
+    reportNumber?: string | null
+    version?: string | null
+    reportType?: $Enums.ProjectReportType | null
+    periodStart?: Date | string | null
+    periodEnd?: Date | string | null
+    author?: string | null
     coverUrl?: string | null
     link?: string | null
     note?: string | null
@@ -82915,6 +83196,12 @@ export namespace Prisma {
   export type ProjectReportUpdateWithoutCreatedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    reportNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    reportType?: NullableEnumProjectReportTypeFieldUpdateOperationsInput | $Enums.ProjectReportType | null
+    periodStart?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    periodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    author?: NullableStringFieldUpdateOperationsInput | string | null
     coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     note?: NullableStringFieldUpdateOperationsInput | string | null
@@ -82929,6 +83216,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    reportNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    reportType?: NullableEnumProjectReportTypeFieldUpdateOperationsInput | $Enums.ProjectReportType | null
+    periodStart?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    periodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    author?: NullableStringFieldUpdateOperationsInput | string | null
     coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     note?: NullableStringFieldUpdateOperationsInput | string | null
@@ -82942,6 +83235,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    reportNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    reportType?: NullableEnumProjectReportTypeFieldUpdateOperationsInput | $Enums.ProjectReportType | null
+    periodStart?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    periodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    author?: NullableStringFieldUpdateOperationsInput | string | null
     coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     note?: NullableStringFieldUpdateOperationsInput | string | null
@@ -83833,6 +84132,12 @@ export namespace Prisma {
   export type ProjectReportCreateManyProjectInput = {
     id?: string
     title: string
+    reportNumber?: string | null
+    version?: string | null
+    reportType?: $Enums.ProjectReportType | null
+    periodStart?: Date | string | null
+    periodEnd?: Date | string | null
+    author?: string | null
     coverUrl?: string | null
     link?: string | null
     note?: string | null
@@ -84388,6 +84693,12 @@ export namespace Prisma {
   export type ProjectReportUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    reportNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    reportType?: NullableEnumProjectReportTypeFieldUpdateOperationsInput | $Enums.ProjectReportType | null
+    periodStart?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    periodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    author?: NullableStringFieldUpdateOperationsInput | string | null
     coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     note?: NullableStringFieldUpdateOperationsInput | string | null
@@ -84401,6 +84712,12 @@ export namespace Prisma {
   export type ProjectReportUncheckedUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    reportNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    reportType?: NullableEnumProjectReportTypeFieldUpdateOperationsInput | $Enums.ProjectReportType | null
+    periodStart?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    periodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    author?: NullableStringFieldUpdateOperationsInput | string | null
     coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     note?: NullableStringFieldUpdateOperationsInput | string | null
@@ -84414,6 +84731,12 @@ export namespace Prisma {
   export type ProjectReportUncheckedUpdateManyWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    reportNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    reportType?: NullableEnumProjectReportTypeFieldUpdateOperationsInput | $Enums.ProjectReportType | null
+    periodStart?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    periodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    author?: NullableStringFieldUpdateOperationsInput | string | null
     coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     note?: NullableStringFieldUpdateOperationsInput | string | null
@@ -84509,6 +84832,12 @@ export namespace Prisma {
     id?: string
     projectId: string
     title: string
+    reportNumber?: string | null
+    version?: string | null
+    reportType?: $Enums.ProjectReportType | null
+    periodStart?: Date | string | null
+    periodEnd?: Date | string | null
+    author?: string | null
     coverUrl?: string | null
     link?: string | null
     note?: string | null
@@ -84776,6 +85105,12 @@ export namespace Prisma {
   export type ProjectReportUpdateWithoutWorkstreamInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    reportNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    reportType?: NullableEnumProjectReportTypeFieldUpdateOperationsInput | $Enums.ProjectReportType | null
+    periodStart?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    periodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    author?: NullableStringFieldUpdateOperationsInput | string | null
     coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     note?: NullableStringFieldUpdateOperationsInput | string | null
@@ -84790,6 +85125,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    reportNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    reportType?: NullableEnumProjectReportTypeFieldUpdateOperationsInput | $Enums.ProjectReportType | null
+    periodStart?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    periodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    author?: NullableStringFieldUpdateOperationsInput | string | null
     coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     note?: NullableStringFieldUpdateOperationsInput | string | null
@@ -84803,6 +85144,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    reportNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    reportType?: NullableEnumProjectReportTypeFieldUpdateOperationsInput | $Enums.ProjectReportType | null
+    periodStart?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    periodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    author?: NullableStringFieldUpdateOperationsInput | string | null
     coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     note?: NullableStringFieldUpdateOperationsInput | string | null

@@ -36,5 +36,6 @@ export type {
   ProjectStatus,
   TimesheetStatus,
   DocumentType,
+  ProjectReportType,
   Prisma,
 } from "./generated/client/index.js";
