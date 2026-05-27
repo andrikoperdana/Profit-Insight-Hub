@@ -706,6 +706,58 @@ paths:
                           plannedMandays: { type: number }
                           proposed: { type: boolean }
 
+  /users/{id}/project-assignments:
+    get:
+      operationId: getUserProjectAssignments
+      tags: [users]
+      description: |
+        Returns the target user along with every project they are involved in
+        (as PM, Sales, Technical Writer, Admin Project, or Konsultan/TW
+        resource). Permission: self, MANAGEMENT, HR, SITE_ADMIN, FINANCE, the
+        user's supervising Principal, or a Project Manager who owns at least
+        one of the projects on which the user appears.
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [user, assignments]
+                properties:
+                  user:
+                    type: object
+                    required: [id, name, email, role, isActive]
+                    properties:
+                      id: { type: string }
+                      name: { type: string }
+                      email: { type: string }
+                      role: { type: string }
+                      title: { type: string, nullable: true }
+                      seniority: { type: string, nullable: true }
+                      isActive: { type: boolean }
+                  assignments:
+                    type: array
+                    items:
+                      type: object
+                      required: [projectId, projectCode, projectName, status, roles, plannedMandays, proposed]
+                      properties:
+                        projectId: { type: string }
+                        projectCode: { type: string }
+                        projectName: { type: string }
+                        status: { type: string }
+                        clientName: { type: string, nullable: true }
+                        pmName: { type: string, nullable: true }
+                        startDate: { type: string, nullable: true, format: date-time }
+                        endDate: { type: string, nullable: true, format: date-time }
+                        roles:
+                          type: array
+                          items: { type: string }
+                        plannedMandays: { type: number }
+                        proposed: { type: boolean }
+
   /users/under-supervision:
     get:
       operationId: listUsersUnderSupervision

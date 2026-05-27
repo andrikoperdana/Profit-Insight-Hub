@@ -19,6 +19,7 @@ const TimesheetsList = lazy(() => import("@/pages/timesheets"));
 const ApprovalInbox = lazy(() => import("@/pages/approvals"));
 const ClientsList = lazy(() => import("@/pages/clients"));
 const UsersList = lazy(() => import("@/pages/users"));
+const UserDetail = lazy(() => import("@/pages/users/[id]"));
 const Settings = lazy(() => import("@/pages/settings"));
 const Resources = lazy(() => import("@/pages/resources"));
 const CapacityPlanning = lazy(() => import("@/pages/capacity"));
@@ -118,6 +119,7 @@ function Router() {
         <Route path="/capacity" component={() => <ProtectedRoute component={CapacityPlanning} />} />
         <Route path="/clients" component={() => <ProtectedRoute component={ClientsList} />} />
         <Route path="/users" component={() => <ProtectedRoute component={UsersList} />} />
+        <Route path="/users/:id" component={() => <ProtectedRoute component={UserDetail} />} />
         <Route path="/settings" component={() => <ProtectedRoute component={Settings} />} />
         <Route path="/audit-logs" component={() => <ProtectedRoute component={AuditLogPage} />} />
         <Route path="/business-intelligence" component={() => <ProtectedRoute component={BusinessIntelligence} />} />

@@ -225,6 +225,134 @@ router.get("/users/:id", async (req, res) => {
   res.json(serializeUser(u));
 });
 
+// All projects a single user is involved in — aggregates across every role
+// the user can hold on a project (PM, Sales, Technical Writer, Admin Project,
+// or Konsultan/TW resource via ProjectResource). Returns one row per project
+// with the union of roles the user fills on it.
+router.get("/users/:id/project-assignments", async (req, res) => {
+  const targetId = req.params.id;
+  const callerId = req.user!.sub;
+  const callerRole = req.user!.role;
+
+  // Pre-authorize on role/identity alone where possible to avoid using the
+  // existence (or non-existence) of the target id as an oracle. Only roles
+  // that can plausibly view someone else's assignments proceed past this gate.
+  const isSelf = callerId === targetId;
+  const ALWAYS_ALLOWED = new Set(["MANAGEMENT", "HR", "SITE_ADMIN", "FINANCE"]);
+  const isAlwaysAllowed = ALWAYS_ALLOWED.has(callerRole);
+  const isPrincipalCaller = callerRole.startsWith("PRINCIPAL_");
+  const isPmCaller = callerRole === "PROJECT_MANAGER";
+  if (!isSelf && !isAlwaysAllowed && !isPrincipalCaller && !isPmCaller) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+
+  const target = await prisma.user.findUnique({
+    where: { id: targetId },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      title: true,
+      seniority: true,
+      isActive: true,
+      principalId: true,
+    },
+  });
+  if (!target) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+
+  // Principals can only see their direct supervisees.
+  if (isPrincipalCaller && !isSelf && !isAlwaysAllowed && target.principalId !== callerId) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+
+  // Push PM caller scope into the query so we never load out-of-scope rows.
+  const scopeToPmOwned = isPmCaller && !isSelf && !isAlwaysAllowed;
+  const projects = await prisma.project.findMany({
+    where: {
+      deletedAt: null,
+      ...(scopeToPmOwned ? { pmId: callerId } : {}),
+      OR: [
+        { pmId: targetId },
+        { salesId: targetId },
+        { adminProjectId: targetId },
+        { technicalWriterId: targetId },
+        { resources: { some: { userId: targetId } } },
+      ],
+    },
+    select: {
+      id: true,
+      code: true,
+      name: true,
+      status: true,
+      startDate: true,
+      endDate: true,
+      pmId: true,
+      salesId: true,
+      adminProjectId: true,
+      technicalWriterId: true,
+      pm: { select: { id: true, name: true } },
+      client: { select: { id: true, name: true } },
+      resources: {
+        where: { userId: targetId },
+        select: {
+          roleInProject: true,
+          plannedMandays: true,
+          acceptedAt: true,
+        },
+      },
+    },
+    orderBy: [{ status: "asc" }, { startDate: "desc" }],
+  });
+
+  const items = projects.map((p) => {
+    const roles: string[] = [];
+    if (p.pmId === targetId) roles.push("Project Manager");
+    if (p.salesId === targetId) roles.push("Sales");
+    if (p.adminProjectId === targetId) roles.push("Admin Project");
+    if (p.technicalWriterId === targetId) roles.push("Technical Writer");
+    let plannedMandays = 0;
+    let proposed = false;
+    for (const r of p.resources) {
+      const label = r.roleInProject?.trim();
+      if (label && !roles.includes(label)) roles.push(label);
+      plannedMandays += r.plannedMandays || 0;
+      if (r.acceptedAt == null) proposed = true;
+    }
+    return {
+      projectId: p.id,
+      projectCode: p.code,
+      projectName: p.name,
+      status: p.status,
+      clientName: p.client?.name ?? null,
+      pmName: p.pm?.name ?? null,
+      startDate: p.startDate ? p.startDate.toISOString() : null,
+      endDate: p.endDate ? p.endDate.toISOString() : null,
+      roles,
+      plannedMandays,
+      proposed,
+    };
+  });
+
+  res.json({
+    user: {
+      id: target.id,
+      name: target.name,
+      email: target.email,
+      role: target.role,
+      title: target.title,
+      seniority: target.seniority,
+      isActive: target.isActive,
+    },
+    assignments: items,
+  });
+});
+
 router.post(
   "/users",
   requireRole("SITE_ADMIN"),

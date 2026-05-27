@@ -1738,6 +1738,45 @@ export const ListPrincipalTeamProjectsResponse = zod.array(
   ListPrincipalTeamProjectsResponseItem,
 );
 
+/**
+ * Returns the target user along with every project they are involved in
+(as PM, Sales, Technical Writer, Admin Project, or Konsultan/TW
+resource). Permission: self, MANAGEMENT, HR, SITE_ADMIN, FINANCE, the
+user's supervising Principal, or a Project Manager who owns at least
+one of the projects on which the user appears.
+
+ */
+export const GetUserProjectAssignmentsParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const GetUserProjectAssignmentsResponse = zod.object({
+  user: zod.object({
+    id: zod.string(),
+    name: zod.string(),
+    email: zod.string(),
+    role: zod.string(),
+    title: zod.string().nullish(),
+    seniority: zod.string().nullish(),
+    isActive: zod.boolean(),
+  }),
+  assignments: zod.array(
+    zod.object({
+      projectId: zod.string(),
+      projectCode: zod.string(),
+      projectName: zod.string(),
+      status: zod.string(),
+      clientName: zod.string().nullish(),
+      pmName: zod.string().nullish(),
+      startDate: zod.coerce.date().nullish(),
+      endDate: zod.coerce.date().nullish(),
+      roles: zod.array(zod.string()),
+      plannedMandays: zod.number(),
+      proposed: zod.boolean(),
+    }),
+  ),
+});
+
 export const ListUsersUnderSupervisionResponseItem = zod.object({
   id: zod.string(),
   email: zod.string(),

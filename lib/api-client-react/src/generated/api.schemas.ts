@@ -2068,6 +2068,35 @@ export type ListPrincipalTeamProjects200Item = {
   assignments: ListPrincipalTeamProjects200ItemAssignmentsItem[];
 };
 
+export type GetUserProjectAssignments200User = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  title?: string | null;
+  seniority?: string | null;
+  isActive: boolean;
+};
+
+export type GetUserProjectAssignments200AssignmentsItem = {
+  projectId: string;
+  projectCode: string;
+  projectName: string;
+  status: string;
+  clientName?: string | null;
+  pmName?: string | null;
+  startDate?: string | null;
+  endDate?: string | null;
+  roles: string[];
+  plannedMandays: number;
+  proposed: boolean;
+};
+
+export type GetUserProjectAssignments200 = {
+  user: GetUserProjectAssignments200User;
+  assignments: GetUserProjectAssignments200AssignmentsItem[];
+};
+
 export type ListPerformanceReviewsParams = {
   userId?: string;
   reviewerId?: string;

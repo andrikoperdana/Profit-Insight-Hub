@@ -63,6 +63,7 @@ import type {
   GetReportOptionsParams,
   GetResourcePlanningParams,
   GetTopPerformersParams,
+  GetUserProjectAssignments200,
   GetVatRecapParams,
   HealthStatus,
   ImportLeadsBody,
@@ -3698,6 +3699,99 @@ export function useListPrincipalTeamProjects<
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getListPrincipalTeamProjectsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * Returns the target user along with every project they are involved in
+(as PM, Sales, Technical Writer, Admin Project, or Konsultan/TW
+resource). Permission: self, MANAGEMENT, HR, SITE_ADMIN, FINANCE, the
+user's supervising Principal, or a Project Manager who owns at least
+one of the projects on which the user appears.
+
+ */
+export const getGetUserProjectAssignmentsUrl = (id: string) => {
+  return `/api/users/${id}/project-assignments`;
+};
+
+export const getUserProjectAssignments = async (
+  id: string,
+  options?: RequestInit,
+): Promise<GetUserProjectAssignments200> => {
+  return customFetch<GetUserProjectAssignments200>(
+    getGetUserProjectAssignmentsUrl(id),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getGetUserProjectAssignmentsQueryKey = (id: string) => {
+  return [`/api/users/${id}/project-assignments`] as const;
+};
+
+export const getGetUserProjectAssignmentsQueryOptions = <
+  TData = Awaited<ReturnType<typeof getUserProjectAssignments>>,
+  TError = ErrorType<unknown>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getUserProjectAssignments>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetUserProjectAssignmentsQueryKey(id);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getUserProjectAssignments>>
+  > = ({ signal }) =>
+    getUserProjectAssignments(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getUserProjectAssignments>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetUserProjectAssignmentsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getUserProjectAssignments>>
+>;
+export type GetUserProjectAssignmentsQueryError = ErrorType<unknown>;
+
+export function useGetUserProjectAssignments<
+  TData = Awaited<ReturnType<typeof getUserProjectAssignments>>,
+  TError = ErrorType<unknown>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getUserProjectAssignments>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetUserProjectAssignmentsQueryOptions(id, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

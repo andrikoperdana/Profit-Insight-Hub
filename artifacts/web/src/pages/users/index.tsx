@@ -10,7 +10,8 @@ import {
 } from "@workspace/api-client-react";
 import { getListUsersQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Plus, ShieldAlert, Pencil, Download } from "lucide-react";
+import { Plus, ShieldAlert, Pencil, Download, Briefcase } from "lucide-react";
+import { Link } from "wouter";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -695,6 +696,15 @@ export default function UsersList() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-1">
+                        <Link href={`/users/${u.id}`}>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            data-testid={`button-view-projects-${u.id}`}
+                          >
+                            <Briefcase className="h-3.5 w-3.5 mr-1" /> Projects
+                          </Button>
+                        </Link>
                         <Button
                           variant="ghost"
                           size="sm"
