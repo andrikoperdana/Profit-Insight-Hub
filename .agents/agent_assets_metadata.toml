@@ -287,3 +287,9 @@ id = "XBP07ld6e58INIHGZaXTe"
 uri = "file://scripts/exports/SecureProfitHub-Flow-Proses.docx"
 type = "word_document"
 title = "SecureProfit Hub — Flow Proses End-to-End"
+
+[[outputs]]
+id = "6TfTB6twoUt9FOuZdxCoT"
+uri = "file://docs/USER_MANUAL_ID.md"
+type = "text"
+title = "Buku Panduan Pengguna (Updated)"
