@@ -1,5 +1,49 @@
 import { prisma } from "./index.js";
 import bcrypt from "bcryptjs";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+
+async function makeKuitansiPdfDataUrl(opts: {
+  merchant: string;
+  description: string;
+  amount: number;
+  date: Date;
+}): Promise<string> {
+  const pdf = await PDFDocument.create();
+  const helv = await pdf.embedFont(StandardFonts.Helvetica);
+  const helvBold = await pdf.embedFont(StandardFonts.HelveticaBold);
+  const page = pdf.addPage([420, 595]);
+  const { width, height } = page.getSize();
+  const ink = rgb(0.06, 0.09, 0.16);
+  const accent = rgb(0.13, 0.77, 0.37);
+  const muted = rgb(0.39, 0.45, 0.55);
+
+  page.drawRectangle({ x: 0, y: height - 60, width, height: 60, color: ink });
+  page.drawText(opts.merchant, { x: 24, y: height - 36, size: 16, font: helvBold, color: accent });
+  page.drawText("KUITANSI / RECEIPT", { x: 24, y: height - 52, size: 9, font: helv, color: rgb(0.85, 0.9, 0.95) });
+
+  let y = height - 100;
+  const line = (label: string, value: string) => {
+    page.drawText(label, { x: 24, y, size: 9, font: helvBold, color: muted });
+    page.drawText(value, { x: 24, y: y - 14, size: 12, font: helv, color: ink });
+    y -= 38;
+  };
+  line("TANGGAL", opts.date.toISOString().slice(0, 10));
+  line("KETERANGAN", opts.description.length > 60 ? opts.description.slice(0, 57) + "..." : opts.description);
+  line("METODE PEMBAYARAN", "Tunai / Cashless");
+
+  page.drawRectangle({ x: 24, y: y - 60, width: width - 48, height: 60, borderColor: accent, borderWidth: 1.5 });
+  page.drawText("TOTAL", { x: 36, y: y - 22, size: 9, font: helvBold, color: muted });
+  page.drawText("Rp " + opts.amount.toLocaleString("id-ID"), {
+    x: 36, y: y - 44, size: 18, font: helvBold, color: accent,
+  });
+
+  page.drawText("Dokumen ini di-generate untuk keperluan sample data.", {
+    x: 24, y: 40, size: 8, font: helv, color: muted,
+  });
+
+  const bytes = await pdf.save();
+  return "data:application/pdf;base64," + Buffer.from(bytes).toString("base64");
+}
 
 const addDays = (d: Date, n: number) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
 const addMonths = (d: Date, n: number) => { const x = new Date(d); x.setMonth(x.getMonth() + n); return x; };
@@ -303,20 +347,50 @@ export async function ensureSampleReportData() {
 
       const approverId = projectPmId ?? pm?.id ?? user.id;
 
-      for (const r of cfg.rows) {
+      for (let ri = 0; ri < cfg.rows.length; ri++) {
+        const r = cfg.rows[ri]!;
         const description = `${r.description}${SAMPLE_TAG}`;
-        const exists = await prisma.projectExpense.findFirst({
-          where: { projectId, createdById: user.id, description },
-          select: { id: true },
+        const spentAt = addDays(today, -r.daysAgo);
+
+        // Generate a small kuitansi PDF as evidence for every row so the
+        // merged receipt download has a real second page to copy in. The
+        // image-evidence branch is exercised by real user uploads.
+        const evidenceUrl = await makeKuitansiPdfDataUrl({
+          merchant:
+            r.category === "TRAVEL" ? "Grab Indonesia"
+              : r.category === "SOFTWARE" ? "Tokopedia Digital"
+                : r.category === "LICENSE" ? "Reseller Lisensi"
+                  : r.category === "HARDWARE" ? "Bhinneka.com"
+                    : "Vendor Operasional",
+          description: r.description,
+          amount: r.amount,
+          date: spentAt,
         });
-        if (exists) continue;
+        const evidenceFileName = `kuitansi-${r.category.toLowerCase()}-${ri + 1}.pdf`;
+
+        const existing = await prisma.projectExpense.findFirst({
+          where: { projectId, createdById: user.id, description },
+          select: { id: true, evidenceUrl: true },
+        });
+        if (existing) {
+          // Back-fill evidence on previously seeded rows that had none, so the
+          // PDF receipt now actually has an attached bukti page to merge in.
+          if (!existing.evidenceUrl) {
+            await prisma.projectExpense.update({
+              where: { id: existing.id },
+              data: { evidenceUrl, evidenceFileName },
+            });
+            created++;
+          }
+          continue;
+        }
         await prisma.projectExpense.create({
           data: {
             projectId,
             category: r.category,
             description,
             amount: r.amount,
-            spentAt: addDays(today, -r.daysAgo),
+            spentAt,
             status: r.status,
             createdById: user.id,
             approvedById: r.status !== "PENDING" ? approverId : null,
@@ -325,6 +399,8 @@ export async function ensureSampleReportData() {
               r.status === "REJECTED"
                 ? "Bukti pendukung kurang lengkap — silakan resubmit dengan kuitansi asli."
                 : null,
+            evidenceUrl,
+            evidenceFileName,
           },
         });
         created++;

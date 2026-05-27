@@ -113,10 +113,11 @@ export default function MyExpensesCard() {
                   <TableRow key={e.id} data-testid={`row-my-expense-${e.id}`}>
                     <TableCell className="text-xs text-muted-foreground">{formatDate(e.spentAt)}</TableCell>
                     <TableCell>
-                      <Link href={`/projects/${e.projectId}`}>
-                        <a className="text-xs text-primary hover:underline">
-                          {e.projectCode ?? "—"}
-                        </a>
+                      <Link
+                        href={`/projects/${e.projectId}`}
+                        className="text-xs text-primary hover:underline"
+                      >
+                        {e.projectCode ?? "—"}
                       </Link>
                       <div className="text-[10px] text-muted-foreground max-w-[200px] truncate">
                         {e.projectName ?? ""}
