@@ -74,6 +74,7 @@ import type {
   ListAvailableUsersParams,
   ListLeavesParams,
   ListPerformanceReviewsParams,
+  ListPrincipalTeamProjects200Item,
   ListProjectDocumentsParams,
   ListProjectsParams,
   ListSkillDevelopmentGoalsParams,
@@ -3618,6 +3619,85 @@ export function useListProjectsNeedingResource<
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getListProjectsNeedingResourceQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * Returns each direct supervisee of the calling Principal with the list of
+projects they are currently assigned to (status OBSERVATION / ACTIVE /
+PAUSE / COMPLETE), including project start/end dates so the Principal
+can see when each assignment wraps up.
+
+ */
+export const getListPrincipalTeamProjectsUrl = () => {
+  return `/api/principal/team-projects`;
+};
+
+export const listPrincipalTeamProjects = async (
+  options?: RequestInit,
+): Promise<ListPrincipalTeamProjects200Item[]> => {
+  return customFetch<ListPrincipalTeamProjects200Item[]>(
+    getListPrincipalTeamProjectsUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getListPrincipalTeamProjectsQueryKey = () => {
+  return [`/api/principal/team-projects`] as const;
+};
+
+export const getListPrincipalTeamProjectsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listPrincipalTeamProjects>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listPrincipalTeamProjects>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getListPrincipalTeamProjectsQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listPrincipalTeamProjects>>
+  > = ({ signal }) => listPrincipalTeamProjects({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listPrincipalTeamProjects>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListPrincipalTeamProjectsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listPrincipalTeamProjects>>
+>;
+export type ListPrincipalTeamProjectsQueryError = ErrorType<unknown>;
+
+export function useListPrincipalTeamProjects<
+  TData = Awaited<ReturnType<typeof listPrincipalTeamProjects>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listPrincipalTeamProjects>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListPrincipalTeamProjectsQueryOptions(options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

@@ -2043,6 +2043,31 @@ export type ListProjectsParams = {
   status?: string;
 };
 
+export type ListPrincipalTeamProjects200ItemAssignmentsItem = {
+  projectId: string;
+  projectCode: string;
+  projectName: string;
+  status: string;
+  clientName?: string | null;
+  pmName?: string | null;
+  startDate?: string | null;
+  endDate?: string | null;
+  roleInProject?: string | null;
+  plannedMandays: number;
+  proposed: boolean;
+};
+
+export type ListPrincipalTeamProjects200Item = {
+  userId: string;
+  name: string;
+  email: string;
+  role: string;
+  title?: string | null;
+  seniority?: string | null;
+  isActive?: boolean;
+  assignments: ListPrincipalTeamProjects200ItemAssignmentsItem[];
+};
+
 export type ListPerformanceReviewsParams = {
   userId?: string;
   reviewerId?: string;

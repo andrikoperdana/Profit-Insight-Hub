@@ -33,7 +33,7 @@ async function canWriteResourceFor(opts: {
     return { ok: true };
   }
   if (callerRole === "PRINCIPAL_KONSULTAN" || callerRole === "PRINCIPAL_TECHNICAL_WRITER") {
-    // Konsultan + Technical Writer principals interact with ProjectResource rows
+    // Consultant + Technical Writer principals interact with ProjectResource rows
     // (multi-pick). PRINCIPAL_ADMIN_PROJECT still uses the single-pick adminProjectId
     // field on Project (PATCH /projects/:id) and must not write resource rows here.
     const expectedRole = PRINCIPAL_TO_REPORT_ROLE[callerRole];

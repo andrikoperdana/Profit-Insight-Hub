@@ -31,7 +31,7 @@ router.get("/projects", async (req, res) => {
   const where: any = includeDeleted ? {} : { deletedAt: null };
   if (status) where.status = status;
   // Role-based scoping: PM sees own projects; Sales sees own projects.
-  // Konsultan/TW see projects they are assigned to OR have logged time on.
+  // Consultant/TW see projects they are assigned to OR have logged time on.
   // Management/Admin Project see all.
   if (role === "PROJECT_MANAGER") {
     // PM only sees the projects they lead. PMs are never staffed as a

@@ -177,7 +177,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
 
   if (isLoading) return <LoadingPage />;
   const allList = resources ?? [];
-  // Konsultan team
+  // Consultant team
   const list = allList.filter((r: any) => r.userRole === "KONSULTAN");
   const totalPlanned = list.reduce((s: number, r: any) => s + (r.plannedMandays ?? 0), 0);
   const totalActual = list.reduce((s: number, r: any) => s + (r.actualMandays ?? 0), 0);
@@ -191,7 +191,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
   );
   const konsultanOptions = canEdit ? availableKonsultan : principalKonsultanPool;
 
-  // Technical Writer team (multi-pick, mirrors Konsultan)
+  // Technical Writer team (multi-pick, mirrors Consultant)
   const twList = allList.filter((r: any) => r.userRole === "TECHNICAL_WRITER");
   const twTotalPlanned = twList.reduce((s: number, r: any) => s + (r.plannedMandays ?? 0), 0);
   const twTotalActual = twList.reduce((s: number, r: any) => s + (r.actualMandays ?? 0), 0);
@@ -203,7 +203,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
   );
   const writerOptions = canEdit ? availableWriters : principalWriterPool;
 
-  // Other Resources: anyone active in the system who isn't already a Konsultan/TW/AdminProject
+  // Other Resources: anyone active in the system who isn't already a Consultant/TW/AdminProject
   // resource on this project. Free-text "Role on Project" required.
   const otherList = allList.filter(
     (r: any) => r.userRole !== "KONSULTAN" && r.userRole !== "TECHNICAL_WRITER",
@@ -485,7 +485,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
         </CardContent>
       </Card>
 
-      {/* Technical Writer Team — multi-pick, mirrors Konsultan */}
+      {/* Technical Writer Team — multi-pick, mirrors Consultant */}
       <Card className="border-border shadow-sm">
         <CardHeader className="flex flex-row items-start justify-between gap-4">
           <div>

@@ -1703,6 +1703,41 @@ export const ListProjectsNeedingResourceResponse = zod.array(
   ListProjectsNeedingResourceResponseItem,
 );
 
+/**
+ * Returns each direct supervisee of the calling Principal with the list of
+projects they are currently assigned to (status OBSERVATION / ACTIVE /
+PAUSE / COMPLETE), including project start/end dates so the Principal
+can see when each assignment wraps up.
+
+ */
+export const ListPrincipalTeamProjectsResponseItem = zod.object({
+  userId: zod.string(),
+  name: zod.string(),
+  email: zod.string(),
+  role: zod.string(),
+  title: zod.string().nullish(),
+  seniority: zod.string().nullish(),
+  isActive: zod.boolean().optional(),
+  assignments: zod.array(
+    zod.object({
+      projectId: zod.string(),
+      projectCode: zod.string(),
+      projectName: zod.string(),
+      status: zod.string(),
+      clientName: zod.string().nullish(),
+      pmName: zod.string().nullish(),
+      startDate: zod.coerce.date().nullish(),
+      endDate: zod.coerce.date().nullish(),
+      roleInProject: zod.string().nullish(),
+      plannedMandays: zod.number(),
+      proposed: zod.boolean(),
+    }),
+  ),
+});
+export const ListPrincipalTeamProjectsResponse = zod.array(
+  ListPrincipalTeamProjectsResponseItem,
+);
+
 export const ListUsersUnderSupervisionResponseItem = zod.object({
   id: zod.string(),
   email: zod.string(),

@@ -82,9 +82,9 @@ router.post("/invoice-planning/seed-sample", requireRole("MANAGEMENT"), async (r
     // Vary offsets so different projects land in different weeks/months
     const baseWeek = i % 4; // 0..3
     const plan: { name: string; pct: number; weeksFromNow: number; status: "PLANNED" | "INVOICED" | "PAID" }[] = [
-      { name: "Termin 1 — Kickoff 30%",   pct: 30, weeksFromNow: baseWeek + 1, status: i % 3 === 0 ? "INVOICED" : "PLANNED" },
-      { name: "Termin 2 — Progress 40%",  pct: 40, weeksFromNow: baseWeek + 5, status: "PLANNED" },
-      { name: "Termin 3 — Final 30%",     pct: 30, weeksFromNow: baseWeek + 10, status: "PLANNED" },
+      { name: "Installment 1 — Kickoff 30%",   pct: 30, weeksFromNow: baseWeek + 1, status: i % 3 === 0 ? "INVOICED" : "PLANNED" },
+      { name: "Installment 2 — Progress 40%",  pct: 40, weeksFromNow: baseWeek + 5, status: "PLANNED" },
+      { name: "Installment 3 — Final 30%",     pct: 30, weeksFromNow: baseWeek + 10, status: "PLANNED" },
     ];
 
     // Add a paid one if scenario picks it

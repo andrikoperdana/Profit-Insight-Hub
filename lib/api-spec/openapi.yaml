@@ -661,6 +661,51 @@ paths:
                 type: array
                 items: { $ref: "#/components/schemas/Project" }
 
+  /principal/team-projects:
+    get:
+      operationId: listPrincipalTeamProjects
+      tags: [principal]
+      description: |
+        Returns each direct supervisee of the calling Principal with the list of
+        projects they are currently assigned to (status OBSERVATION / ACTIVE /
+        PAUSE / COMPLETE), including project start/end dates so the Principal
+        can see when each assignment wraps up.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required: [userId, name, email, role, assignments]
+                  properties:
+                    userId: { type: string }
+                    name: { type: string }
+                    email: { type: string }
+                    role: { type: string }
+                    title: { type: string, nullable: true }
+                    seniority: { type: string, nullable: true }
+                    isActive: { type: boolean }
+                    assignments:
+                      type: array
+                      items:
+                        type: object
+                        required: [projectId, projectCode, projectName, status, plannedMandays, proposed]
+                        properties:
+                          projectId: { type: string }
+                          projectCode: { type: string }
+                          projectName: { type: string }
+                          status: { type: string }
+                          clientName: { type: string, nullable: true }
+                          pmName: { type: string, nullable: true }
+                          startDate: { type: string, nullable: true, format: date-time }
+                          endDate: { type: string, nullable: true, format: date-time }
+                          roleInProject: { type: string, nullable: true }
+                          plannedMandays: { type: number }
+                          proposed: { type: boolean }
+
   /users/under-supervision:
     get:
       operationId: listUsersUnderSupervision

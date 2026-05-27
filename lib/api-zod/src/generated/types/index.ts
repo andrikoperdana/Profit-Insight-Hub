@@ -93,6 +93,8 @@ export * from "./leadStage";
 export * from "./listAvailableUsersParams";
 export * from "./listLeavesParams";
 export * from "./listPerformanceReviewsParams";
+export * from "./listPrincipalTeamProjects200Item";
+export * from "./listPrincipalTeamProjects200ItemAssignmentsItem";
 export * from "./listProjectDocumentsParams";
 export * from "./listProjectsParams";
 export * from "./listSkillDevelopmentGoalsParams";
