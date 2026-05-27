@@ -62,14 +62,14 @@ router.get("/projects", async (req, res) => {
       { resources: { some: { userId } } },
     ];
   } else if (role === "PRINCIPAL_KONSULTAN") {
-    // Principal Consultant: ACTIVE projects where the principal is on the
-    // resource list themselves or supervises an assigned resource, plus all
-    // OBSERVATION projects (no involvement filter — they need to see what's
-    // in the pipeline so they can propose supervisees). DRAFT/PAUSE/COMPLETE/
-    // CLOSED are hidden.
+    // Principal Consultant: in-flight engagements (ACTIVE or PAUSE) where the
+    // principal is on the resource list themselves or supervises an assigned
+    // resource, plus all OBSERVATION projects (no involvement filter — they
+    // need to see what's in the pipeline so they can propose supervisees).
+    // DRAFT/COMPLETE/CLOSED are hidden.
     where.OR = [
       {
-        status: "ACTIVE",
+        status: { in: ["ACTIVE", "PAUSE"] },
         OR: [
           { resources: { some: { userId } } },
           { resources: { some: { user: { principalId: userId } } } },
@@ -78,12 +78,13 @@ router.get("/projects", async (req, res) => {
       { status: "OBSERVATION" },
     ];
   } else if (role === "PRINCIPAL_TECHNICAL_WRITER") {
-    // Principal TW: OBSERVATION + ACTIVE engagements (no involvement filter).
-    where.status = { in: ["OBSERVATION", "ACTIVE"] };
+    // Principal TW: OBSERVATION + in-flight (ACTIVE/PAUSE) engagements.
+    where.status = { in: ["OBSERVATION", "ACTIVE", "PAUSE"] };
   } else if (role === "PRINCIPAL_ADMIN_PROJECT") {
-    // Principal AP: OBSERVATION + ACTIVE + COMPLETE (COMPLETE projects may
-    // still be missing an assigned Admin Project for closing documents).
-    where.status = { in: ["OBSERVATION", "ACTIVE", "COMPLETE"] };
+    // Principal AP: OBSERVATION + in-flight (ACTIVE/PAUSE) + COMPLETE
+    // (COMPLETE projects may still be missing an assigned Admin Project for
+    // closing documents).
+    where.status = { in: ["OBSERVATION", "ACTIVE", "PAUSE", "COMPLETE"] };
   } else if (role === "HR") {
     // HR has no project visibility. Return empty without leaking existence.
     res.json([]);

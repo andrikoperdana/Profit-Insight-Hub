@@ -140,14 +140,14 @@ describe("userCanAccessProject", () => {
     ]);
   });
 
-  it("PRINCIPAL_KONSULTAN scoped to ACTIVE w/ involvement OR all OBSERVATION", async () => {
+  it("PRINCIPAL_KONSULTAN scoped to in-flight (ACTIVE/PAUSE) w/ involvement OR all OBSERVATION", async () => {
     findFirstMock.mockResolvedValueOnce(null);
     await userCanAccessProject("p1", { sub: "pk-1", role: "PRINCIPAL_KONSULTAN" });
     const where = findFirstMock.mock.calls[0][0].where;
     expect(where.status).toBeUndefined();
     expect(where.OR).toEqual([
       {
-        status: "ACTIVE",
+        status: { in: ["ACTIVE", "PAUSE"] },
         OR: [
           { resources: { some: { userId: "pk-1" } } },
           { resources: { some: { user: { principalId: "pk-1" } } } },
@@ -157,19 +157,19 @@ describe("userCanAccessProject", () => {
     ]);
   });
 
-  it("PRINCIPAL_TECHNICAL_WRITER scoped to OBSERVATION + ACTIVE (no involvement filter)", async () => {
+  it("PRINCIPAL_TECHNICAL_WRITER scoped to OBSERVATION + in-flight (no involvement filter)", async () => {
     findFirstMock.mockResolvedValueOnce(null);
     await userCanAccessProject("p1", { sub: "pp-1", role: "PRINCIPAL_TECHNICAL_WRITER" });
     const where = findFirstMock.mock.calls.at(-1)![0].where;
-    expect(where.status).toEqual({ in: ["OBSERVATION", "ACTIVE"] });
+    expect(where.status).toEqual({ in: ["OBSERVATION", "ACTIVE", "PAUSE"] });
     expect(where.OR).toBeUndefined();
   });
 
-  it("PRINCIPAL_ADMIN_PROJECT scoped to OBSERVATION + ACTIVE + COMPLETE (no involvement filter)", async () => {
+  it("PRINCIPAL_ADMIN_PROJECT scoped to OBSERVATION + in-flight + COMPLETE (no involvement filter)", async () => {
     findFirstMock.mockResolvedValueOnce(null);
     await userCanAccessProject("p1", { sub: "pp-1", role: "PRINCIPAL_ADMIN_PROJECT" });
     const where = findFirstMock.mock.calls.at(-1)![0].where;
-    expect(where.status).toEqual({ in: ["OBSERVATION", "ACTIVE", "COMPLETE"] });
+    expect(where.status).toEqual({ in: ["OBSERVATION", "ACTIVE", "PAUSE", "COMPLETE"] });
     expect(where.OR).toBeUndefined();
   });
 
