@@ -77,6 +77,7 @@ import TimelineTab from "./tabs/TimelineTab";
 import FinancialsTab from "./tabs/FinancialsTab";
 import ResourcesTab from "./tabs/ResourcesTab";
 import ExpensesTab from "./tabs/ExpensesTab";
+import TimesheetsTab from "./tabs/TimesheetsTab";
 import ReportTab from "./tabs/ReportTab";
 import DocumentsTab from "./tabs/DocumentsTab";
 import ActivityTab from "./tabs/ActivityTab";
@@ -270,7 +271,7 @@ export default function ProjectDetail() {
         const allowed = new Set([
           "overview", "timeline", "tasks", "financials", "resources",
           "expenses", "billing", "report", "documents", "survey",
-          "activity", "raid", "workstreams", "closing",
+          "activity", "raid", "workstreams", "closing", "timesheets",
         ]);
         const t = new URLSearchParams(window.location.search).get("tab");
         return t && allowed.has(t) ? t : "overview";
@@ -285,6 +286,9 @@ export default function ProjectDetail() {
           <TabsTrigger value="resources">Resources</TabsTrigger>
           {(user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER") && (
             <TabsTrigger value="expenses" data-testid="tab-trigger-expenses">Expenses</TabsTrigger>
+          )}
+          {(user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER") && (
+            <TabsTrigger value="timesheets" data-testid="tab-trigger-timesheets">Timesheets</TabsTrigger>
           )}
           {canViewProjectFinancials(user?.role) && (
             <TabsTrigger value="billing" data-testid="tab-trigger-billing">Billing</TabsTrigger>
@@ -341,6 +345,11 @@ export default function ProjectDetail() {
         <TabsContent value="expenses" className="pt-4 m-0">
           <ExpensesTab projectId={id} project={project} />
         </TabsContent>
+        {(user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER") && (
+          <TabsContent value="timesheets" className="pt-4 m-0">
+            <TimesheetsTab projectId={id} project={project} />
+          </TabsContent>
+        )}
         {canViewProjectFinancials(user?.role) && (
           <TabsContent value="billing" className="pt-4 m-0">
             <BillingTab projectId={id} project={project} />
