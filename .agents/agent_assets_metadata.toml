@@ -293,3 +293,9 @@ id = "6TfTB6twoUt9FOuZdxCoT"
 uri = "file://docs/USER_MANUAL_ID.md"
 type = "text"
 title = "Buku Panduan Pengguna (Updated)"
+
+[[outputs]]
+id = "r7kPcIfhElLm3JapljemK"
+uri = "file://exports/USER_MANUAL_ID.docx"
+type = "word_document"
+title = "Buku Panduan Pengguna (MS Word)"
