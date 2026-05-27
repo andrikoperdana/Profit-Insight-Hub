@@ -1889,6 +1889,96 @@ export const DeleteRaidItemResponse = zod.object({
   message: zod.string().optional(),
 });
 
+export const ListProjectWorkstreamsParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const ListProjectWorkstreamsResponseItem = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  code: zod.string(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  businessUnitId: zod.string().nullish(),
+  businessUnitName: zod.string().nullish(),
+  allocationPct: zod.number(),
+  plannedMandays: zod.number(),
+  estimatedCost: zod.number(),
+  startDate: zod.string().nullish(),
+  endDate: zod.string().nullish(),
+  status: zod.enum(["ACTIVE", "ON_HOLD", "COMPLETED", "CANCELLED"]),
+  sortOrder: zod.number(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+export const ListProjectWorkstreamsResponse = zod.array(
+  ListProjectWorkstreamsResponseItem,
+);
+
+export const CreateProjectWorkstreamParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const CreateProjectWorkstreamBody = zod.object({
+  code: zod.string(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  businessUnitId: zod.string().nullish(),
+  allocationPct: zod.number().nullish(),
+  plannedMandays: zod.number().nullish(),
+  estimatedCost: zod.number().nullish(),
+  startDate: zod.string().nullish(),
+  endDate: zod.string().nullish(),
+  status: zod.enum(["ACTIVE", "ON_HOLD", "COMPLETED", "CANCELLED"]).optional(),
+  sortOrder: zod.number().nullish(),
+});
+
+export const UpdateWorkstreamParams = zod.object({
+  wsId: zod.coerce.string(),
+});
+
+export const UpdateWorkstreamBody = zod.object({
+  code: zod.string().optional(),
+  name: zod.string().optional(),
+  description: zod.string().nullish(),
+  businessUnitId: zod.string().nullish(),
+  allocationPct: zod.number().optional(),
+  plannedMandays: zod.number().optional(),
+  estimatedCost: zod.number().optional(),
+  startDate: zod.string().nullish(),
+  endDate: zod.string().nullish(),
+  status: zod.enum(["ACTIVE", "ON_HOLD", "COMPLETED", "CANCELLED"]).optional(),
+  sortOrder: zod.number().optional(),
+});
+
+export const UpdateWorkstreamResponse = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  code: zod.string(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  businessUnitId: zod.string().nullish(),
+  businessUnitName: zod.string().nullish(),
+  allocationPct: zod.number(),
+  plannedMandays: zod.number(),
+  estimatedCost: zod.number(),
+  startDate: zod.string().nullish(),
+  endDate: zod.string().nullish(),
+  status: zod.enum(["ACTIVE", "ON_HOLD", "COMPLETED", "CANCELLED"]),
+  sortOrder: zod.number(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+export const DeleteWorkstreamParams = zod.object({
+  wsId: zod.coerce.string(),
+});
+
+export const DeleteWorkstreamResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
 export const ListPerformanceReviewsQueryParams = zod.object({
   userId: zod.coerce.string().optional(),
   reviewerId: zod.coerce.string().optional(),

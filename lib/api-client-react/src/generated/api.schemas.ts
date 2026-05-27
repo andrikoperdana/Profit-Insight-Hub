@@ -1953,6 +1953,63 @@ export interface CreateLeaveBody {
   note?: string | null;
 }
 
+export type WorkstreamStatus =
+  (typeof WorkstreamStatus)[keyof typeof WorkstreamStatus];
+
+export const WorkstreamStatus = {
+  ACTIVE: "ACTIVE",
+  ON_HOLD: "ON_HOLD",
+  COMPLETED: "COMPLETED",
+  CANCELLED: "CANCELLED",
+} as const;
+
+export interface ProjectWorkstream {
+  id: string;
+  projectId: string;
+  code: string;
+  name: string;
+  description?: string | null;
+  businessUnitId?: string | null;
+  businessUnitName?: string | null;
+  allocationPct: number;
+  plannedMandays: number;
+  estimatedCost: number;
+  startDate?: string | null;
+  endDate?: string | null;
+  status: WorkstreamStatus;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateProjectWorkstreamBody {
+  code: string;
+  name: string;
+  description?: string | null;
+  businessUnitId?: string | null;
+  allocationPct?: number | null;
+  plannedMandays?: number | null;
+  estimatedCost?: number | null;
+  startDate?: string | null;
+  endDate?: string | null;
+  status?: WorkstreamStatus;
+  sortOrder?: number | null;
+}
+
+export interface UpdateProjectWorkstreamBody {
+  code?: string;
+  name?: string;
+  description?: string | null;
+  businessUnitId?: string | null;
+  allocationPct?: number;
+  plannedMandays?: number;
+  estimatedCost?: number;
+  startDate?: string | null;
+  endDate?: string | null;
+  status?: WorkstreamStatus;
+  sortOrder?: number;
+}
+
 export type GetReportOptionsParams = {
   source: string;
 };

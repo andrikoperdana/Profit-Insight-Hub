@@ -71,7 +71,10 @@ export type AuditAction =
   | "performance_review.acknowledged"
   | "performance_review.deleted"
   | "performance_review.project_rated"
-  | "performance_review.project_rating_removed";
+  | "performance_review.project_rating_removed"
+  | "workstream.created"
+  | "workstream.updated"
+  | "workstream.deleted";
 
 export type EntityType =
   | "User"
@@ -94,6 +97,7 @@ export type EntityType =
   | "ProjectRaidItem"
   | "PerformanceReview"
   | "PerformanceReviewProjectRating"
+  | "ProjectWorkstream"
   | "System";
 
 interface AuditInput {

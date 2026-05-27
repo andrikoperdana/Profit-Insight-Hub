@@ -38,6 +38,7 @@ import leavesRouter from "./leaves.js";
 import topPerformersRouter from "./top-performers.js";
 import raidRouter from "./raid.js";
 import performanceReviewsRouter from "./performance-reviews.js";
+import workstreamsRouter from "./workstreams.js";
 
 const router: IRouter = Router();
 
@@ -80,5 +81,6 @@ router.use(leavesRouter);
 router.use(topPerformersRouter);
 router.use(raidRouter);
 router.use(performanceReviewsRouter);
+router.use(workstreamsRouter);
 
 export default router;

@@ -81,6 +81,7 @@ import ReportTab from "./tabs/ReportTab";
 import DocumentsTab from "./tabs/DocumentsTab";
 import ActivityTab from "./tabs/ActivityTab";
 import RaidTab from "./tabs/RaidTab";
+import WorkstreamsTab from "./tabs/WorkstreamsTab";
 import ClosingTab from "./tabs/ClosingTab";
 import DraftCompletionCard from "./components/DraftCompletionCard";
 import {
@@ -299,6 +300,12 @@ export default function ProjectDetail() {
           )}
           <TabsTrigger value="raid" data-testid="tab-trigger-raid">RAID</TabsTrigger>
           {(user?.role === "MANAGEMENT" ||
+            (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id)) && (
+            <TabsTrigger value="workstreams" data-testid="tab-trigger-workstreams">
+              Workstreams
+            </TabsTrigger>
+          )}
+          {(user?.role === "MANAGEMENT" ||
             (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id) ||
             (user?.role === "ADMIN_PROJECT" && project.adminProjectId === user?.id)) && (
             <TabsTrigger value="closing" data-testid="tab-trigger-closing">Closing</TabsTrigger>
@@ -344,6 +351,9 @@ export default function ProjectDetail() {
         </TabsContent>
         <TabsContent value="raid" className="pt-4 m-0">
           <RaidTab projectId={id} project={project} />
+        </TabsContent>
+        <TabsContent value="workstreams" className="pt-4 m-0">
+          <WorkstreamsTab projectId={id} project={project} />
         </TabsContent>
         <TabsContent value="closing" className="pt-4 m-0">
           <ClosingTab projectId={id} project={project} />

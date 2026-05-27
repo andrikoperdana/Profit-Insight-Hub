@@ -794,6 +794,66 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/SuccessMessage" }
 
+  /projects/{id}/workstreams:
+    get:
+      operationId: listProjectWorkstreams
+      tags: [workstreams]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ProjectWorkstream" }
+    post:
+      operationId: createProjectWorkstream
+      tags: [workstreams]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateProjectWorkstreamBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ProjectWorkstream" }
+
+  /workstreams/{wsId}:
+    patch:
+      operationId: updateWorkstream
+      tags: [workstreams]
+      parameters:
+        - { name: wsId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpdateProjectWorkstreamBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ProjectWorkstream" }
+    delete:
+      operationId: deleteWorkstream
+      tags: [workstreams]
+      parameters:
+        - { name: wsId, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
   /performance-reviews:
     get:
       operationId: listPerformanceReviews
@@ -3828,3 +3888,57 @@ components:
         endDate: { type: string }
         type: { type: string, enum: [ANNUAL, SICK, TRAINING, UNPAID, OTHER] }
         note: { type: string, nullable: true }
+
+    WorkstreamStatus: { type: string, enum: [ACTIVE, ON_HOLD, COMPLETED, CANCELLED] }
+
+    ProjectWorkstream:
+      type: object
+      required: [id, projectId, code, name, allocationPct, plannedMandays, estimatedCost, status, sortOrder, createdAt, updatedAt]
+      properties:
+        id: { type: string }
+        projectId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        businessUnitId: { type: string, nullable: true }
+        businessUnitName: { type: string, nullable: true }
+        allocationPct: { type: number }
+        plannedMandays: { type: number }
+        estimatedCost: { type: number }
+        startDate: { type: string, nullable: true }
+        endDate: { type: string, nullable: true }
+        status: { $ref: "#/components/schemas/WorkstreamStatus" }
+        sortOrder: { type: integer }
+        createdAt: { type: string }
+        updatedAt: { type: string }
+
+    CreateProjectWorkstreamBody:
+      type: object
+      required: [code, name]
+      properties:
+        code: { type: string }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        businessUnitId: { type: string, nullable: true }
+        allocationPct: { type: number, nullable: true }
+        plannedMandays: { type: number, nullable: true }
+        estimatedCost: { type: number, nullable: true }
+        startDate: { type: string, nullable: true }
+        endDate: { type: string, nullable: true }
+        status: { $ref: "#/components/schemas/WorkstreamStatus" }
+        sortOrder: { type: integer, nullable: true }
+
+    UpdateProjectWorkstreamBody:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        businessUnitId: { type: string, nullable: true }
+        allocationPct: { type: number }
+        plannedMandays: { type: number }
+        estimatedCost: { type: number }
+        startDate: { type: string, nullable: true }
+        endDate: { type: string, nullable: true }
+        status: { $ref: "#/components/schemas/WorkstreamStatus" }
+        sortOrder: { type: integer }

@@ -199,6 +199,8 @@ model Project {
   createdAt                DateTime      @default(now())
   updatedAt                DateTime      @updatedAt
 
+  useWorkstreams Boolean @default(false)
+
   surveyToken        String?                          @unique
   resources          ProjectResource[]
   timesheets         Timesheet[]
@@ -211,6 +213,37 @@ model Project {
   raidItems          ProjectRaidItem[]
   perfProjectRatings PerformanceReviewProjectRating[]
   closingChecklist   ProjectClosingChecklistItem[]
+  workstreams        ProjectWorkstream[]
+}
+
+model ProjectWorkstream {
+  id             String        @id @default(cuid())
+  projectId      String
+  project        Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  code           String
+  name           String
+  description    String?       @db.Text
+  businessUnitId String?
+  businessUnit   BusinessUnit? @relation(fields: [businessUnitId], references: [id])
+  allocationPct  Float         @default(0)
+  plannedMandays Float         @default(0)
+  estimatedCost  Float         @default(0)
+  startDate      DateTime?
+  endDate        DateTime?
+  status         String        @default("ACTIVE")
+  sortOrder      Int           @default(0)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  resources         ProjectResource[]
+  tasks             Task[]
+  expenses          ProjectExpense[]
+  billingMilestones BillingMilestone[]
+  timesheets        Timesheet[]
+
+  @@unique([projectId, code])
+  @@index([projectId])
+  @@index([businessUnitId])
 }
 
 model SurveyQuestion {
@@ -261,41 +294,45 @@ model AuditLog {
 }
 
 model ProjectResource {
-  id             String    @id @default(cuid())
+  id             String             @id @default(cuid())
   projectId      String
-  project        Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project        Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  workstreamId   String?
+  workstream     ProjectWorkstream? @relation(fields: [workstreamId], references: [id], onDelete: SetNull)
   userId         String
-  user           User      @relation(fields: [userId], references: [id])
+  user           User               @relation(fields: [userId], references: [id])
   roleInProject  String?
-  plannedMandays Float     @default(0)
-  dailyRate      Float     @default(0)
+  plannedMandays Float              @default(0)
+  dailyRate      Float              @default(0)
   proposedById   String?
-  proposedBy     User?     @relation("ResourceProposer", fields: [proposedById], references: [id])
+  proposedBy     User?              @relation("ResourceProposer", fields: [proposedById], references: [id])
   proposedAt     DateTime?
   acceptedAt     DateTime?
-  createdAt      DateTime  @default(now())
+  createdAt      DateTime           @default(now())
 
   @@unique([projectId, userId])
 }
 
 model Timesheet {
-  id              String          @id @default(cuid())
+  id              String             @id @default(cuid())
   projectId       String
-  project         Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project         Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  workstreamId    String?
+  workstream      ProjectWorkstream? @relation(fields: [workstreamId], references: [id], onDelete: SetNull)
   userId          String
-  user            User            @relation(fields: [userId], references: [id])
+  user            User               @relation(fields: [userId], references: [id])
   taskId          String?
-  task            Task?           @relation(fields: [taskId], references: [id])
+  task            Task?              @relation(fields: [taskId], references: [id])
   workDate        DateTime
   hours           Float
   description     String?
-  status          TimesheetStatus @default(DRAFT)
+  status          TimesheetStatus    @default(DRAFT)
   approvedById    String?
-  approvedBy      User?           @relation("TimesheetApprover", fields: [approvedById], references: [id])
+  approvedBy      User?              @relation("TimesheetApprover", fields: [approvedById], references: [id])
   approvedAt      DateTime?
   rejectionReason String?
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
 
   @@index([taskId])
   @@index([userId])
@@ -347,24 +384,26 @@ model ProjectClosingChecklistItem {
 }
 
 model ProjectExpense {
-  id               String        @id @default(cuid())
+  id               String             @id @default(cuid())
   projectId        String
-  project          Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project          Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  workstreamId     String?
+  workstream       ProjectWorkstream? @relation(fields: [workstreamId], references: [id], onDelete: SetNull)
   category         String
   description      String
   amount           Float
-  spentAt          DateTime      @default(now())
-  evidenceUrl      String?       @db.Text
+  spentAt          DateTime           @default(now())
+  evidenceUrl      String?            @db.Text
   evidenceFileName String?
-  status           ExpenseStatus @default(PENDING)
+  status           ExpenseStatus      @default(PENDING)
   approvedById     String?
-  approvedBy       User?         @relation("ExpenseApprover", fields: [approvedById], references: [id])
+  approvedBy       User?              @relation("ExpenseApprover", fields: [approvedById], references: [id])
   approvedAt       DateTime?
   rejectionReason  String?
   createdById      String?
-  createdBy        User?         @relation(fields: [createdById], references: [id])
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  createdBy        User?              @relation(fields: [createdById], references: [id])
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
 
   @@index([projectId])
   @@index([spentAt])
@@ -382,6 +421,7 @@ model BusinessUnit {
   users            User[]
   taskTemplates    TaskTemplate[]
   projectTemplates ProjectTemplate[]
+  workstreams      ProjectWorkstream[]
 }
 
 model Skill {
@@ -462,22 +502,24 @@ model Activity {
 }
 
 model Task {
-  id              String     @id @default(cuid())
+  id              String             @id @default(cuid())
   projectId       String
-  project         Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project         Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  workstreamId    String?
+  workstream      ProjectWorkstream? @relation(fields: [workstreamId], references: [id], onDelete: SetNull)
   title           String
   description     String?
-  status          TaskStatus @default(TODO)
-  progressPercent Int        @default(0)
-  billable        Boolean    @default(true)
+  status          TaskStatus         @default(TODO)
+  progressPercent Int                @default(0)
+  billable        Boolean            @default(true)
   startDate       DateTime?
   endDate         DateTime?
   assigneeId      String?
-  assignee        User?      @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  assignee        User?              @relation("TaskAssignee", fields: [assigneeId], references: [id])
   createdById     String?
-  createdBy       User?      @relation("TaskCreator", fields: [createdById], references: [id])
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  createdBy       User?              @relation("TaskCreator", fields: [createdById], references: [id])
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
 
   parentTaskId String?
   parentTask   Task?   @relation("TaskSubtasks", fields: [parentTaskId], references: [id], onDelete: Cascade)
@@ -512,6 +554,8 @@ model BillingMilestone {
   id            String                 @id @default(cuid())
   projectId     String
   project       Project                @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  workstreamId  String?
+  workstream    ProjectWorkstream?     @relation(fields: [workstreamId], references: [id], onDelete: SetNull)
   name          String
   description   String?
   percentage    Float                  @default(0)

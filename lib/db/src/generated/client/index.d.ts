@@ -29,6 +29,11 @@ export type Client = $Result.DefaultSelection<Prisma.$ClientPayload>
  */
 export type Project = $Result.DefaultSelection<Prisma.$ProjectPayload>
 /**
+ * Model ProjectWorkstream
+ * 
+ */
+export type ProjectWorkstream = $Result.DefaultSelection<Prisma.$ProjectWorkstreamPayload>
+/**
  * Model SurveyQuestion
  * 
  */
@@ -604,6 +609,16 @@ export class PrismaClient<
     * ```
     */
   get project(): Prisma.ProjectDelegate<ExtArgs>;
+
+  /**
+   * `prisma.projectWorkstream`: Exposes CRUD operations for the **ProjectWorkstream** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProjectWorkstreams
+    * const projectWorkstreams = await prisma.projectWorkstream.findMany()
+    * ```
+    */
+  get projectWorkstream(): Prisma.ProjectWorkstreamDelegate<ExtArgs>;
 
   /**
    * `prisma.surveyQuestion`: Exposes CRUD operations for the **SurveyQuestion** model.
@@ -1358,6 +1373,7 @@ export namespace Prisma {
     User: 'User',
     Client: 'Client',
     Project: 'Project',
+    ProjectWorkstream: 'ProjectWorkstream',
     SurveyQuestion: 'SurveyQuestion',
     SurveyResponse: 'SurveyResponse',
     AuditLog: 'AuditLog',
@@ -1404,7 +1420,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "client" | "project" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectClosingChecklistItem" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "skillDevelopmentGoal" | "skillProgressionLog" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "projectTemplate" | "projectTemplateResource" | "projectTemplateMilestone" | "projectTemplateRaidItem" | "notification" | "projectRaidItem" | "performanceReview" | "performanceReviewProjectRating"
+      modelProps: "user" | "client" | "project" | "projectWorkstream" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectClosingChecklistItem" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "skillDevelopmentGoal" | "skillProgressionLog" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "projectTemplate" | "projectTemplateResource" | "projectTemplateMilestone" | "projectTemplateRaidItem" | "notification" | "projectRaidItem" | "performanceReview" | "performanceReviewProjectRating"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1615,6 +1631,76 @@ export namespace Prisma {
           count: {
             args: Prisma.ProjectCountArgs<ExtArgs>
             result: $Utils.Optional<ProjectCountAggregateOutputType> | number
+          }
+        }
+      }
+      ProjectWorkstream: {
+        payload: Prisma.$ProjectWorkstreamPayload<ExtArgs>
+        fields: Prisma.ProjectWorkstreamFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProjectWorkstreamFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectWorkstreamPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProjectWorkstreamFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectWorkstreamPayload>
+          }
+          findFirst: {
+            args: Prisma.ProjectWorkstreamFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectWorkstreamPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProjectWorkstreamFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectWorkstreamPayload>
+          }
+          findMany: {
+            args: Prisma.ProjectWorkstreamFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectWorkstreamPayload>[]
+          }
+          create: {
+            args: Prisma.ProjectWorkstreamCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectWorkstreamPayload>
+          }
+          createMany: {
+            args: Prisma.ProjectWorkstreamCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProjectWorkstreamCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectWorkstreamPayload>[]
+          }
+          delete: {
+            args: Prisma.ProjectWorkstreamDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectWorkstreamPayload>
+          }
+          update: {
+            args: Prisma.ProjectWorkstreamUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectWorkstreamPayload>
+          }
+          deleteMany: {
+            args: Prisma.ProjectWorkstreamDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProjectWorkstreamUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ProjectWorkstreamUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectWorkstreamPayload>
+          }
+          aggregate: {
+            args: Prisma.ProjectWorkstreamAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProjectWorkstream>
+          }
+          groupBy: {
+            args: Prisma.ProjectWorkstreamGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProjectWorkstreamGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProjectWorkstreamCountArgs<ExtArgs>
+            result: $Utils.Optional<ProjectWorkstreamCountAggregateOutputType> | number
           }
         }
       }
@@ -4346,6 +4432,7 @@ export namespace Prisma {
     raidItems: number
     perfProjectRatings: number
     closingChecklist: number
+    workstreams: number
   }
 
   export type ProjectCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4360,6 +4447,7 @@ export namespace Prisma {
     raidItems?: boolean | ProjectCountOutputTypeCountRaidItemsArgs
     perfProjectRatings?: boolean | ProjectCountOutputTypeCountPerfProjectRatingsArgs
     closingChecklist?: boolean | ProjectCountOutputTypeCountClosingChecklistArgs
+    workstreams?: boolean | ProjectCountOutputTypeCountWorkstreamsArgs
   }
 
   // Custom InputTypes
@@ -4450,6 +4538,80 @@ export namespace Prisma {
     where?: ProjectClosingChecklistItemWhereInput
   }
 
+  /**
+   * ProjectCountOutputType without action
+   */
+  export type ProjectCountOutputTypeCountWorkstreamsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectWorkstreamWhereInput
+  }
+
+
+  /**
+   * Count Type ProjectWorkstreamCountOutputType
+   */
+
+  export type ProjectWorkstreamCountOutputType = {
+    resources: number
+    tasks: number
+    expenses: number
+    billingMilestones: number
+    timesheets: number
+  }
+
+  export type ProjectWorkstreamCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    resources?: boolean | ProjectWorkstreamCountOutputTypeCountResourcesArgs
+    tasks?: boolean | ProjectWorkstreamCountOutputTypeCountTasksArgs
+    expenses?: boolean | ProjectWorkstreamCountOutputTypeCountExpensesArgs
+    billingMilestones?: boolean | ProjectWorkstreamCountOutputTypeCountBillingMilestonesArgs
+    timesheets?: boolean | ProjectWorkstreamCountOutputTypeCountTimesheetsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ProjectWorkstreamCountOutputType without action
+   */
+  export type ProjectWorkstreamCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWorkstreamCountOutputType
+     */
+    select?: ProjectWorkstreamCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ProjectWorkstreamCountOutputType without action
+   */
+  export type ProjectWorkstreamCountOutputTypeCountResourcesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectResourceWhereInput
+  }
+
+  /**
+   * ProjectWorkstreamCountOutputType without action
+   */
+  export type ProjectWorkstreamCountOutputTypeCountTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaskWhereInput
+  }
+
+  /**
+   * ProjectWorkstreamCountOutputType without action
+   */
+  export type ProjectWorkstreamCountOutputTypeCountExpensesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectExpenseWhereInput
+  }
+
+  /**
+   * ProjectWorkstreamCountOutputType without action
+   */
+  export type ProjectWorkstreamCountOutputTypeCountBillingMilestonesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BillingMilestoneWhereInput
+  }
+
+  /**
+   * ProjectWorkstreamCountOutputType without action
+   */
+  export type ProjectWorkstreamCountOutputTypeCountTimesheetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TimesheetWhereInput
+  }
+
 
   /**
    * Count Type DocumentCountOutputType
@@ -4490,12 +4652,14 @@ export namespace Prisma {
     users: number
     taskTemplates: number
     projectTemplates: number
+    workstreams: number
   }
 
   export type BusinessUnitCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | BusinessUnitCountOutputTypeCountUsersArgs
     taskTemplates?: boolean | BusinessUnitCountOutputTypeCountTaskTemplatesArgs
     projectTemplates?: boolean | BusinessUnitCountOutputTypeCountProjectTemplatesArgs
+    workstreams?: boolean | BusinessUnitCountOutputTypeCountWorkstreamsArgs
   }
 
   // Custom InputTypes
@@ -4528,6 +4692,13 @@ export namespace Prisma {
    */
   export type BusinessUnitCountOutputTypeCountProjectTemplatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectTemplateWhereInput
+  }
+
+  /**
+   * BusinessUnitCountOutputType without action
+   */
+  export type BusinessUnitCountOutputTypeCountWorkstreamsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectWorkstreamWhereInput
   }
 
 
@@ -7908,6 +8079,7 @@ export namespace Prisma {
     deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    useWorkstreams: boolean | null
     surveyToken: string | null
   }
 
@@ -7943,6 +8115,7 @@ export namespace Prisma {
     deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    useWorkstreams: boolean | null
     surveyToken: string | null
   }
 
@@ -7978,6 +8151,7 @@ export namespace Prisma {
     deletedAt: number
     createdAt: number
     updatedAt: number
+    useWorkstreams: number
     surveyToken: number
     _all: number
   }
@@ -8031,6 +8205,7 @@ export namespace Prisma {
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
+    useWorkstreams?: true
     surveyToken?: true
   }
 
@@ -8066,6 +8241,7 @@ export namespace Prisma {
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
+    useWorkstreams?: true
     surveyToken?: true
   }
 
@@ -8101,6 +8277,7 @@ export namespace Prisma {
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
+    useWorkstreams?: true
     surveyToken?: true
     _all?: true
   }
@@ -8223,6 +8400,7 @@ export namespace Prisma {
     deletedAt: Date | null
     createdAt: Date
     updatedAt: Date
+    useWorkstreams: boolean
     surveyToken: string | null
     _count: ProjectCountAggregateOutputType | null
     _avg: ProjectAvgAggregateOutputType | null
@@ -8277,6 +8455,7 @@ export namespace Prisma {
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    useWorkstreams?: boolean
     surveyToken?: boolean
     client?: boolean | ClientDefaultArgs<ExtArgs>
     sales?: boolean | Project$salesArgs<ExtArgs>
@@ -8294,6 +8473,7 @@ export namespace Prisma {
     raidItems?: boolean | Project$raidItemsArgs<ExtArgs>
     perfProjectRatings?: boolean | Project$perfProjectRatingsArgs<ExtArgs>
     closingChecklist?: boolean | Project$closingChecklistArgs<ExtArgs>
+    workstreams?: boolean | Project$workstreamsArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
 
@@ -8329,6 +8509,7 @@ export namespace Prisma {
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    useWorkstreams?: boolean
     surveyToken?: boolean
     client?: boolean | ClientDefaultArgs<ExtArgs>
     sales?: boolean | Project$salesArgs<ExtArgs>
@@ -8369,6 +8550,7 @@ export namespace Prisma {
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    useWorkstreams?: boolean
     surveyToken?: boolean
   }
 
@@ -8389,6 +8571,7 @@ export namespace Prisma {
     raidItems?: boolean | Project$raidItemsArgs<ExtArgs>
     perfProjectRatings?: boolean | Project$perfProjectRatingsArgs<ExtArgs>
     closingChecklist?: boolean | Project$closingChecklistArgs<ExtArgs>
+    workstreams?: boolean | Project$workstreamsArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8418,6 +8601,7 @@ export namespace Prisma {
       raidItems: Prisma.$ProjectRaidItemPayload<ExtArgs>[]
       perfProjectRatings: Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>[]
       closingChecklist: Prisma.$ProjectClosingChecklistItemPayload<ExtArgs>[]
+      workstreams: Prisma.$ProjectWorkstreamPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8451,6 +8635,7 @@ export namespace Prisma {
       deletedAt: Date | null
       createdAt: Date
       updatedAt: Date
+      useWorkstreams: boolean
       surveyToken: string | null
     }, ExtArgs["result"]["project"]>
     composites: {}
@@ -8832,6 +9017,7 @@ export namespace Prisma {
     raidItems<T extends Project$raidItemsArgs<ExtArgs> = {}>(args?: Subset<T, Project$raidItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectRaidItemPayload<ExtArgs>, T, "findMany"> | Null>
     perfProjectRatings<T extends Project$perfProjectRatingsArgs<ExtArgs> = {}>(args?: Subset<T, Project$perfProjectRatingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>, T, "findMany"> | Null>
     closingChecklist<T extends Project$closingChecklistArgs<ExtArgs> = {}>(args?: Subset<T, Project$closingChecklistArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectClosingChecklistItemPayload<ExtArgs>, T, "findMany"> | Null>
+    workstreams<T extends Project$workstreamsArgs<ExtArgs> = {}>(args?: Subset<T, Project$workstreamsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8892,6 +9078,7 @@ export namespace Prisma {
     readonly deletedAt: FieldRef<"Project", 'DateTime'>
     readonly createdAt: FieldRef<"Project", 'DateTime'>
     readonly updatedAt: FieldRef<"Project", 'DateTime'>
+    readonly useWorkstreams: FieldRef<"Project", 'Boolean'>
     readonly surveyToken: FieldRef<"Project", 'String'>
   }
     
@@ -9491,6 +9678,26 @@ export namespace Prisma {
   }
 
   /**
+   * Project.workstreams
+   */
+  export type Project$workstreamsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWorkstream
+     */
+    select?: ProjectWorkstreamSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWorkstreamInclude<ExtArgs> | null
+    where?: ProjectWorkstreamWhereInput
+    orderBy?: ProjectWorkstreamOrderByWithRelationInput | ProjectWorkstreamOrderByWithRelationInput[]
+    cursor?: ProjectWorkstreamWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectWorkstreamScalarFieldEnum | ProjectWorkstreamScalarFieldEnum[]
+  }
+
+  /**
    * Project without action
    */
   export type ProjectDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9502,6 +9709,1248 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ProjectInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ProjectWorkstream
+   */
+
+  export type AggregateProjectWorkstream = {
+    _count: ProjectWorkstreamCountAggregateOutputType | null
+    _avg: ProjectWorkstreamAvgAggregateOutputType | null
+    _sum: ProjectWorkstreamSumAggregateOutputType | null
+    _min: ProjectWorkstreamMinAggregateOutputType | null
+    _max: ProjectWorkstreamMaxAggregateOutputType | null
+  }
+
+  export type ProjectWorkstreamAvgAggregateOutputType = {
+    allocationPct: number | null
+    plannedMandays: number | null
+    estimatedCost: number | null
+    sortOrder: number | null
+  }
+
+  export type ProjectWorkstreamSumAggregateOutputType = {
+    allocationPct: number | null
+    plannedMandays: number | null
+    estimatedCost: number | null
+    sortOrder: number | null
+  }
+
+  export type ProjectWorkstreamMinAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    code: string | null
+    name: string | null
+    description: string | null
+    businessUnitId: string | null
+    allocationPct: number | null
+    plannedMandays: number | null
+    estimatedCost: number | null
+    startDate: Date | null
+    endDate: Date | null
+    status: string | null
+    sortOrder: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProjectWorkstreamMaxAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    code: string | null
+    name: string | null
+    description: string | null
+    businessUnitId: string | null
+    allocationPct: number | null
+    plannedMandays: number | null
+    estimatedCost: number | null
+    startDate: Date | null
+    endDate: Date | null
+    status: string | null
+    sortOrder: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProjectWorkstreamCountAggregateOutputType = {
+    id: number
+    projectId: number
+    code: number
+    name: number
+    description: number
+    businessUnitId: number
+    allocationPct: number
+    plannedMandays: number
+    estimatedCost: number
+    startDate: number
+    endDate: number
+    status: number
+    sortOrder: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ProjectWorkstreamAvgAggregateInputType = {
+    allocationPct?: true
+    plannedMandays?: true
+    estimatedCost?: true
+    sortOrder?: true
+  }
+
+  export type ProjectWorkstreamSumAggregateInputType = {
+    allocationPct?: true
+    plannedMandays?: true
+    estimatedCost?: true
+    sortOrder?: true
+  }
+
+  export type ProjectWorkstreamMinAggregateInputType = {
+    id?: true
+    projectId?: true
+    code?: true
+    name?: true
+    description?: true
+    businessUnitId?: true
+    allocationPct?: true
+    plannedMandays?: true
+    estimatedCost?: true
+    startDate?: true
+    endDate?: true
+    status?: true
+    sortOrder?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProjectWorkstreamMaxAggregateInputType = {
+    id?: true
+    projectId?: true
+    code?: true
+    name?: true
+    description?: true
+    businessUnitId?: true
+    allocationPct?: true
+    plannedMandays?: true
+    estimatedCost?: true
+    startDate?: true
+    endDate?: true
+    status?: true
+    sortOrder?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProjectWorkstreamCountAggregateInputType = {
+    id?: true
+    projectId?: true
+    code?: true
+    name?: true
+    description?: true
+    businessUnitId?: true
+    allocationPct?: true
+    plannedMandays?: true
+    estimatedCost?: true
+    startDate?: true
+    endDate?: true
+    status?: true
+    sortOrder?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ProjectWorkstreamAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProjectWorkstream to aggregate.
+     */
+    where?: ProjectWorkstreamWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectWorkstreams to fetch.
+     */
+    orderBy?: ProjectWorkstreamOrderByWithRelationInput | ProjectWorkstreamOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProjectWorkstreamWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectWorkstreams from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectWorkstreams.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ProjectWorkstreams
+    **/
+    _count?: true | ProjectWorkstreamCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ProjectWorkstreamAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProjectWorkstreamSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProjectWorkstreamMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProjectWorkstreamMaxAggregateInputType
+  }
+
+  export type GetProjectWorkstreamAggregateType<T extends ProjectWorkstreamAggregateArgs> = {
+        [P in keyof T & keyof AggregateProjectWorkstream]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProjectWorkstream[P]>
+      : GetScalarType<T[P], AggregateProjectWorkstream[P]>
+  }
+
+
+
+
+  export type ProjectWorkstreamGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectWorkstreamWhereInput
+    orderBy?: ProjectWorkstreamOrderByWithAggregationInput | ProjectWorkstreamOrderByWithAggregationInput[]
+    by: ProjectWorkstreamScalarFieldEnum[] | ProjectWorkstreamScalarFieldEnum
+    having?: ProjectWorkstreamScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProjectWorkstreamCountAggregateInputType | true
+    _avg?: ProjectWorkstreamAvgAggregateInputType
+    _sum?: ProjectWorkstreamSumAggregateInputType
+    _min?: ProjectWorkstreamMinAggregateInputType
+    _max?: ProjectWorkstreamMaxAggregateInputType
+  }
+
+  export type ProjectWorkstreamGroupByOutputType = {
+    id: string
+    projectId: string
+    code: string
+    name: string
+    description: string | null
+    businessUnitId: string | null
+    allocationPct: number
+    plannedMandays: number
+    estimatedCost: number
+    startDate: Date | null
+    endDate: Date | null
+    status: string
+    sortOrder: number
+    createdAt: Date
+    updatedAt: Date
+    _count: ProjectWorkstreamCountAggregateOutputType | null
+    _avg: ProjectWorkstreamAvgAggregateOutputType | null
+    _sum: ProjectWorkstreamSumAggregateOutputType | null
+    _min: ProjectWorkstreamMinAggregateOutputType | null
+    _max: ProjectWorkstreamMaxAggregateOutputType | null
+  }
+
+  type GetProjectWorkstreamGroupByPayload<T extends ProjectWorkstreamGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProjectWorkstreamGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProjectWorkstreamGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProjectWorkstreamGroupByOutputType[P]>
+            : GetScalarType<T[P], ProjectWorkstreamGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProjectWorkstreamSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    code?: boolean
+    name?: boolean
+    description?: boolean
+    businessUnitId?: boolean
+    allocationPct?: boolean
+    plannedMandays?: boolean
+    estimatedCost?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    status?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    businessUnit?: boolean | ProjectWorkstream$businessUnitArgs<ExtArgs>
+    resources?: boolean | ProjectWorkstream$resourcesArgs<ExtArgs>
+    tasks?: boolean | ProjectWorkstream$tasksArgs<ExtArgs>
+    expenses?: boolean | ProjectWorkstream$expensesArgs<ExtArgs>
+    billingMilestones?: boolean | ProjectWorkstream$billingMilestonesArgs<ExtArgs>
+    timesheets?: boolean | ProjectWorkstream$timesheetsArgs<ExtArgs>
+    _count?: boolean | ProjectWorkstreamCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["projectWorkstream"]>
+
+  export type ProjectWorkstreamSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    code?: boolean
+    name?: boolean
+    description?: boolean
+    businessUnitId?: boolean
+    allocationPct?: boolean
+    plannedMandays?: boolean
+    estimatedCost?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    status?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    businessUnit?: boolean | ProjectWorkstream$businessUnitArgs<ExtArgs>
+  }, ExtArgs["result"]["projectWorkstream"]>
+
+  export type ProjectWorkstreamSelectScalar = {
+    id?: boolean
+    projectId?: boolean
+    code?: boolean
+    name?: boolean
+    description?: boolean
+    businessUnitId?: boolean
+    allocationPct?: boolean
+    plannedMandays?: boolean
+    estimatedCost?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    status?: boolean
+    sortOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ProjectWorkstreamInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    businessUnit?: boolean | ProjectWorkstream$businessUnitArgs<ExtArgs>
+    resources?: boolean | ProjectWorkstream$resourcesArgs<ExtArgs>
+    tasks?: boolean | ProjectWorkstream$tasksArgs<ExtArgs>
+    expenses?: boolean | ProjectWorkstream$expensesArgs<ExtArgs>
+    billingMilestones?: boolean | ProjectWorkstream$billingMilestonesArgs<ExtArgs>
+    timesheets?: boolean | ProjectWorkstream$timesheetsArgs<ExtArgs>
+    _count?: boolean | ProjectWorkstreamCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ProjectWorkstreamIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    businessUnit?: boolean | ProjectWorkstream$businessUnitArgs<ExtArgs>
+  }
+
+  export type $ProjectWorkstreamPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ProjectWorkstream"
+    objects: {
+      project: Prisma.$ProjectPayload<ExtArgs>
+      businessUnit: Prisma.$BusinessUnitPayload<ExtArgs> | null
+      resources: Prisma.$ProjectResourcePayload<ExtArgs>[]
+      tasks: Prisma.$TaskPayload<ExtArgs>[]
+      expenses: Prisma.$ProjectExpensePayload<ExtArgs>[]
+      billingMilestones: Prisma.$BillingMilestonePayload<ExtArgs>[]
+      timesheets: Prisma.$TimesheetPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      projectId: string
+      code: string
+      name: string
+      description: string | null
+      businessUnitId: string | null
+      allocationPct: number
+      plannedMandays: number
+      estimatedCost: number
+      startDate: Date | null
+      endDate: Date | null
+      status: string
+      sortOrder: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["projectWorkstream"]>
+    composites: {}
+  }
+
+  type ProjectWorkstreamGetPayload<S extends boolean | null | undefined | ProjectWorkstreamDefaultArgs> = $Result.GetResult<Prisma.$ProjectWorkstreamPayload, S>
+
+  type ProjectWorkstreamCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ProjectWorkstreamFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ProjectWorkstreamCountAggregateInputType | true
+    }
+
+  export interface ProjectWorkstreamDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProjectWorkstream'], meta: { name: 'ProjectWorkstream' } }
+    /**
+     * Find zero or one ProjectWorkstream that matches the filter.
+     * @param {ProjectWorkstreamFindUniqueArgs} args - Arguments to find a ProjectWorkstream
+     * @example
+     * // Get one ProjectWorkstream
+     * const projectWorkstream = await prisma.projectWorkstream.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProjectWorkstreamFindUniqueArgs>(args: SelectSubset<T, ProjectWorkstreamFindUniqueArgs<ExtArgs>>): Prisma__ProjectWorkstreamClient<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one ProjectWorkstream that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ProjectWorkstreamFindUniqueOrThrowArgs} args - Arguments to find a ProjectWorkstream
+     * @example
+     * // Get one ProjectWorkstream
+     * const projectWorkstream = await prisma.projectWorkstream.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProjectWorkstreamFindUniqueOrThrowArgs>(args: SelectSubset<T, ProjectWorkstreamFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProjectWorkstreamClient<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first ProjectWorkstream that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectWorkstreamFindFirstArgs} args - Arguments to find a ProjectWorkstream
+     * @example
+     * // Get one ProjectWorkstream
+     * const projectWorkstream = await prisma.projectWorkstream.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProjectWorkstreamFindFirstArgs>(args?: SelectSubset<T, ProjectWorkstreamFindFirstArgs<ExtArgs>>): Prisma__ProjectWorkstreamClient<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first ProjectWorkstream that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectWorkstreamFindFirstOrThrowArgs} args - Arguments to find a ProjectWorkstream
+     * @example
+     * // Get one ProjectWorkstream
+     * const projectWorkstream = await prisma.projectWorkstream.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProjectWorkstreamFindFirstOrThrowArgs>(args?: SelectSubset<T, ProjectWorkstreamFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProjectWorkstreamClient<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more ProjectWorkstreams that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectWorkstreamFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProjectWorkstreams
+     * const projectWorkstreams = await prisma.projectWorkstream.findMany()
+     * 
+     * // Get first 10 ProjectWorkstreams
+     * const projectWorkstreams = await prisma.projectWorkstream.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const projectWorkstreamWithIdOnly = await prisma.projectWorkstream.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProjectWorkstreamFindManyArgs>(args?: SelectSubset<T, ProjectWorkstreamFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a ProjectWorkstream.
+     * @param {ProjectWorkstreamCreateArgs} args - Arguments to create a ProjectWorkstream.
+     * @example
+     * // Create one ProjectWorkstream
+     * const ProjectWorkstream = await prisma.projectWorkstream.create({
+     *   data: {
+     *     // ... data to create a ProjectWorkstream
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProjectWorkstreamCreateArgs>(args: SelectSubset<T, ProjectWorkstreamCreateArgs<ExtArgs>>): Prisma__ProjectWorkstreamClient<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many ProjectWorkstreams.
+     * @param {ProjectWorkstreamCreateManyArgs} args - Arguments to create many ProjectWorkstreams.
+     * @example
+     * // Create many ProjectWorkstreams
+     * const projectWorkstream = await prisma.projectWorkstream.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProjectWorkstreamCreateManyArgs>(args?: SelectSubset<T, ProjectWorkstreamCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ProjectWorkstreams and returns the data saved in the database.
+     * @param {ProjectWorkstreamCreateManyAndReturnArgs} args - Arguments to create many ProjectWorkstreams.
+     * @example
+     * // Create many ProjectWorkstreams
+     * const projectWorkstream = await prisma.projectWorkstream.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ProjectWorkstreams and only return the `id`
+     * const projectWorkstreamWithIdOnly = await prisma.projectWorkstream.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProjectWorkstreamCreateManyAndReturnArgs>(args?: SelectSubset<T, ProjectWorkstreamCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a ProjectWorkstream.
+     * @param {ProjectWorkstreamDeleteArgs} args - Arguments to delete one ProjectWorkstream.
+     * @example
+     * // Delete one ProjectWorkstream
+     * const ProjectWorkstream = await prisma.projectWorkstream.delete({
+     *   where: {
+     *     // ... filter to delete one ProjectWorkstream
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProjectWorkstreamDeleteArgs>(args: SelectSubset<T, ProjectWorkstreamDeleteArgs<ExtArgs>>): Prisma__ProjectWorkstreamClient<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one ProjectWorkstream.
+     * @param {ProjectWorkstreamUpdateArgs} args - Arguments to update one ProjectWorkstream.
+     * @example
+     * // Update one ProjectWorkstream
+     * const projectWorkstream = await prisma.projectWorkstream.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProjectWorkstreamUpdateArgs>(args: SelectSubset<T, ProjectWorkstreamUpdateArgs<ExtArgs>>): Prisma__ProjectWorkstreamClient<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more ProjectWorkstreams.
+     * @param {ProjectWorkstreamDeleteManyArgs} args - Arguments to filter ProjectWorkstreams to delete.
+     * @example
+     * // Delete a few ProjectWorkstreams
+     * const { count } = await prisma.projectWorkstream.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProjectWorkstreamDeleteManyArgs>(args?: SelectSubset<T, ProjectWorkstreamDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProjectWorkstreams.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectWorkstreamUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProjectWorkstreams
+     * const projectWorkstream = await prisma.projectWorkstream.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProjectWorkstreamUpdateManyArgs>(args: SelectSubset<T, ProjectWorkstreamUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ProjectWorkstream.
+     * @param {ProjectWorkstreamUpsertArgs} args - Arguments to update or create a ProjectWorkstream.
+     * @example
+     * // Update or create a ProjectWorkstream
+     * const projectWorkstream = await prisma.projectWorkstream.upsert({
+     *   create: {
+     *     // ... data to create a ProjectWorkstream
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProjectWorkstream we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProjectWorkstreamUpsertArgs>(args: SelectSubset<T, ProjectWorkstreamUpsertArgs<ExtArgs>>): Prisma__ProjectWorkstreamClient<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of ProjectWorkstreams.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectWorkstreamCountArgs} args - Arguments to filter ProjectWorkstreams to count.
+     * @example
+     * // Count the number of ProjectWorkstreams
+     * const count = await prisma.projectWorkstream.count({
+     *   where: {
+     *     // ... the filter for the ProjectWorkstreams we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProjectWorkstreamCountArgs>(
+      args?: Subset<T, ProjectWorkstreamCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProjectWorkstreamCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProjectWorkstream.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectWorkstreamAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProjectWorkstreamAggregateArgs>(args: Subset<T, ProjectWorkstreamAggregateArgs>): Prisma.PrismaPromise<GetProjectWorkstreamAggregateType<T>>
+
+    /**
+     * Group by ProjectWorkstream.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectWorkstreamGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProjectWorkstreamGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProjectWorkstreamGroupByArgs['orderBy'] }
+        : { orderBy?: ProjectWorkstreamGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProjectWorkstreamGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProjectWorkstreamGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ProjectWorkstream model
+   */
+  readonly fields: ProjectWorkstreamFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProjectWorkstream.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProjectWorkstreamClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    businessUnit<T extends ProjectWorkstream$businessUnitArgs<ExtArgs> = {}>(args?: Subset<T, ProjectWorkstream$businessUnitArgs<ExtArgs>>): Prisma__BusinessUnitClient<$Result.GetResult<Prisma.$BusinessUnitPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    resources<T extends ProjectWorkstream$resourcesArgs<ExtArgs> = {}>(args?: Subset<T, ProjectWorkstream$resourcesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectResourcePayload<ExtArgs>, T, "findMany"> | Null>
+    tasks<T extends ProjectWorkstream$tasksArgs<ExtArgs> = {}>(args?: Subset<T, ProjectWorkstream$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany"> | Null>
+    expenses<T extends ProjectWorkstream$expensesArgs<ExtArgs> = {}>(args?: Subset<T, ProjectWorkstream$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectExpensePayload<ExtArgs>, T, "findMany"> | Null>
+    billingMilestones<T extends ProjectWorkstream$billingMilestonesArgs<ExtArgs> = {}>(args?: Subset<T, ProjectWorkstream$billingMilestonesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BillingMilestonePayload<ExtArgs>, T, "findMany"> | Null>
+    timesheets<T extends ProjectWorkstream$timesheetsArgs<ExtArgs> = {}>(args?: Subset<T, ProjectWorkstream$timesheetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimesheetPayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ProjectWorkstream model
+   */ 
+  interface ProjectWorkstreamFieldRefs {
+    readonly id: FieldRef<"ProjectWorkstream", 'String'>
+    readonly projectId: FieldRef<"ProjectWorkstream", 'String'>
+    readonly code: FieldRef<"ProjectWorkstream", 'String'>
+    readonly name: FieldRef<"ProjectWorkstream", 'String'>
+    readonly description: FieldRef<"ProjectWorkstream", 'String'>
+    readonly businessUnitId: FieldRef<"ProjectWorkstream", 'String'>
+    readonly allocationPct: FieldRef<"ProjectWorkstream", 'Float'>
+    readonly plannedMandays: FieldRef<"ProjectWorkstream", 'Float'>
+    readonly estimatedCost: FieldRef<"ProjectWorkstream", 'Float'>
+    readonly startDate: FieldRef<"ProjectWorkstream", 'DateTime'>
+    readonly endDate: FieldRef<"ProjectWorkstream", 'DateTime'>
+    readonly status: FieldRef<"ProjectWorkstream", 'String'>
+    readonly sortOrder: FieldRef<"ProjectWorkstream", 'Int'>
+    readonly createdAt: FieldRef<"ProjectWorkstream", 'DateTime'>
+    readonly updatedAt: FieldRef<"ProjectWorkstream", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ProjectWorkstream findUnique
+   */
+  export type ProjectWorkstreamFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWorkstream
+     */
+    select?: ProjectWorkstreamSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWorkstreamInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectWorkstream to fetch.
+     */
+    where: ProjectWorkstreamWhereUniqueInput
+  }
+
+  /**
+   * ProjectWorkstream findUniqueOrThrow
+   */
+  export type ProjectWorkstreamFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWorkstream
+     */
+    select?: ProjectWorkstreamSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWorkstreamInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectWorkstream to fetch.
+     */
+    where: ProjectWorkstreamWhereUniqueInput
+  }
+
+  /**
+   * ProjectWorkstream findFirst
+   */
+  export type ProjectWorkstreamFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWorkstream
+     */
+    select?: ProjectWorkstreamSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWorkstreamInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectWorkstream to fetch.
+     */
+    where?: ProjectWorkstreamWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectWorkstreams to fetch.
+     */
+    orderBy?: ProjectWorkstreamOrderByWithRelationInput | ProjectWorkstreamOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProjectWorkstreams.
+     */
+    cursor?: ProjectWorkstreamWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectWorkstreams from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectWorkstreams.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProjectWorkstreams.
+     */
+    distinct?: ProjectWorkstreamScalarFieldEnum | ProjectWorkstreamScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectWorkstream findFirstOrThrow
+   */
+  export type ProjectWorkstreamFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWorkstream
+     */
+    select?: ProjectWorkstreamSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWorkstreamInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectWorkstream to fetch.
+     */
+    where?: ProjectWorkstreamWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectWorkstreams to fetch.
+     */
+    orderBy?: ProjectWorkstreamOrderByWithRelationInput | ProjectWorkstreamOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProjectWorkstreams.
+     */
+    cursor?: ProjectWorkstreamWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectWorkstreams from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectWorkstreams.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProjectWorkstreams.
+     */
+    distinct?: ProjectWorkstreamScalarFieldEnum | ProjectWorkstreamScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectWorkstream findMany
+   */
+  export type ProjectWorkstreamFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWorkstream
+     */
+    select?: ProjectWorkstreamSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWorkstreamInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectWorkstreams to fetch.
+     */
+    where?: ProjectWorkstreamWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectWorkstreams to fetch.
+     */
+    orderBy?: ProjectWorkstreamOrderByWithRelationInput | ProjectWorkstreamOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ProjectWorkstreams.
+     */
+    cursor?: ProjectWorkstreamWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectWorkstreams from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectWorkstreams.
+     */
+    skip?: number
+    distinct?: ProjectWorkstreamScalarFieldEnum | ProjectWorkstreamScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectWorkstream create
+   */
+  export type ProjectWorkstreamCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWorkstream
+     */
+    select?: ProjectWorkstreamSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWorkstreamInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ProjectWorkstream.
+     */
+    data: XOR<ProjectWorkstreamCreateInput, ProjectWorkstreamUncheckedCreateInput>
+  }
+
+  /**
+   * ProjectWorkstream createMany
+   */
+  export type ProjectWorkstreamCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ProjectWorkstreams.
+     */
+    data: ProjectWorkstreamCreateManyInput | ProjectWorkstreamCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ProjectWorkstream createManyAndReturn
+   */
+  export type ProjectWorkstreamCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWorkstream
+     */
+    select?: ProjectWorkstreamSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many ProjectWorkstreams.
+     */
+    data: ProjectWorkstreamCreateManyInput | ProjectWorkstreamCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWorkstreamIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProjectWorkstream update
+   */
+  export type ProjectWorkstreamUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWorkstream
+     */
+    select?: ProjectWorkstreamSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWorkstreamInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ProjectWorkstream.
+     */
+    data: XOR<ProjectWorkstreamUpdateInput, ProjectWorkstreamUncheckedUpdateInput>
+    /**
+     * Choose, which ProjectWorkstream to update.
+     */
+    where: ProjectWorkstreamWhereUniqueInput
+  }
+
+  /**
+   * ProjectWorkstream updateMany
+   */
+  export type ProjectWorkstreamUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ProjectWorkstreams.
+     */
+    data: XOR<ProjectWorkstreamUpdateManyMutationInput, ProjectWorkstreamUncheckedUpdateManyInput>
+    /**
+     * Filter which ProjectWorkstreams to update
+     */
+    where?: ProjectWorkstreamWhereInput
+  }
+
+  /**
+   * ProjectWorkstream upsert
+   */
+  export type ProjectWorkstreamUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWorkstream
+     */
+    select?: ProjectWorkstreamSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWorkstreamInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ProjectWorkstream to update in case it exists.
+     */
+    where: ProjectWorkstreamWhereUniqueInput
+    /**
+     * In case the ProjectWorkstream found by the `where` argument doesn't exist, create a new ProjectWorkstream with this data.
+     */
+    create: XOR<ProjectWorkstreamCreateInput, ProjectWorkstreamUncheckedCreateInput>
+    /**
+     * In case the ProjectWorkstream was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProjectWorkstreamUpdateInput, ProjectWorkstreamUncheckedUpdateInput>
+  }
+
+  /**
+   * ProjectWorkstream delete
+   */
+  export type ProjectWorkstreamDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWorkstream
+     */
+    select?: ProjectWorkstreamSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWorkstreamInclude<ExtArgs> | null
+    /**
+     * Filter which ProjectWorkstream to delete.
+     */
+    where: ProjectWorkstreamWhereUniqueInput
+  }
+
+  /**
+   * ProjectWorkstream deleteMany
+   */
+  export type ProjectWorkstreamDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProjectWorkstreams to delete
+     */
+    where?: ProjectWorkstreamWhereInput
+  }
+
+  /**
+   * ProjectWorkstream.businessUnit
+   */
+  export type ProjectWorkstream$businessUnitArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessUnit
+     */
+    select?: BusinessUnitSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessUnitInclude<ExtArgs> | null
+    where?: BusinessUnitWhereInput
+  }
+
+  /**
+   * ProjectWorkstream.resources
+   */
+  export type ProjectWorkstream$resourcesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectResource
+     */
+    select?: ProjectResourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectResourceInclude<ExtArgs> | null
+    where?: ProjectResourceWhereInput
+    orderBy?: ProjectResourceOrderByWithRelationInput | ProjectResourceOrderByWithRelationInput[]
+    cursor?: ProjectResourceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectResourceScalarFieldEnum | ProjectResourceScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectWorkstream.tasks
+   */
+  export type ProjectWorkstream$tasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: TaskSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskInclude<ExtArgs> | null
+    where?: TaskWhereInput
+    orderBy?: TaskOrderByWithRelationInput | TaskOrderByWithRelationInput[]
+    cursor?: TaskWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TaskScalarFieldEnum | TaskScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectWorkstream.expenses
+   */
+  export type ProjectWorkstream$expensesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectExpense
+     */
+    select?: ProjectExpenseSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectExpenseInclude<ExtArgs> | null
+    where?: ProjectExpenseWhereInput
+    orderBy?: ProjectExpenseOrderByWithRelationInput | ProjectExpenseOrderByWithRelationInput[]
+    cursor?: ProjectExpenseWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectExpenseScalarFieldEnum | ProjectExpenseScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectWorkstream.billingMilestones
+   */
+  export type ProjectWorkstream$billingMilestonesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BillingMilestone
+     */
+    select?: BillingMilestoneSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BillingMilestoneInclude<ExtArgs> | null
+    where?: BillingMilestoneWhereInput
+    orderBy?: BillingMilestoneOrderByWithRelationInput | BillingMilestoneOrderByWithRelationInput[]
+    cursor?: BillingMilestoneWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BillingMilestoneScalarFieldEnum | BillingMilestoneScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectWorkstream.timesheets
+   */
+  export type ProjectWorkstream$timesheetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Timesheet
+     */
+    select?: TimesheetSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TimesheetInclude<ExtArgs> | null
+    where?: TimesheetWhereInput
+    orderBy?: TimesheetOrderByWithRelationInput | TimesheetOrderByWithRelationInput[]
+    cursor?: TimesheetWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TimesheetScalarFieldEnum | TimesheetScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectWorkstream without action
+   */
+  export type ProjectWorkstreamDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWorkstream
+     */
+    select?: ProjectWorkstreamSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWorkstreamInclude<ExtArgs> | null
   }
 
 
@@ -12463,6 +13912,7 @@ export namespace Prisma {
   export type ProjectResourceMinAggregateOutputType = {
     id: string | null
     projectId: string | null
+    workstreamId: string | null
     userId: string | null
     roleInProject: string | null
     plannedMandays: number | null
@@ -12476,6 +13926,7 @@ export namespace Prisma {
   export type ProjectResourceMaxAggregateOutputType = {
     id: string | null
     projectId: string | null
+    workstreamId: string | null
     userId: string | null
     roleInProject: string | null
     plannedMandays: number | null
@@ -12489,6 +13940,7 @@ export namespace Prisma {
   export type ProjectResourceCountAggregateOutputType = {
     id: number
     projectId: number
+    workstreamId: number
     userId: number
     roleInProject: number
     plannedMandays: number
@@ -12514,6 +13966,7 @@ export namespace Prisma {
   export type ProjectResourceMinAggregateInputType = {
     id?: true
     projectId?: true
+    workstreamId?: true
     userId?: true
     roleInProject?: true
     plannedMandays?: true
@@ -12527,6 +13980,7 @@ export namespace Prisma {
   export type ProjectResourceMaxAggregateInputType = {
     id?: true
     projectId?: true
+    workstreamId?: true
     userId?: true
     roleInProject?: true
     plannedMandays?: true
@@ -12540,6 +13994,7 @@ export namespace Prisma {
   export type ProjectResourceCountAggregateInputType = {
     id?: true
     projectId?: true
+    workstreamId?: true
     userId?: true
     roleInProject?: true
     plannedMandays?: true
@@ -12640,6 +14095,7 @@ export namespace Prisma {
   export type ProjectResourceGroupByOutputType = {
     id: string
     projectId: string
+    workstreamId: string | null
     userId: string
     roleInProject: string | null
     plannedMandays: number
@@ -12672,6 +14128,7 @@ export namespace Prisma {
   export type ProjectResourceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     projectId?: boolean
+    workstreamId?: boolean
     userId?: boolean
     roleInProject?: boolean
     plannedMandays?: boolean
@@ -12681,6 +14138,7 @@ export namespace Prisma {
     acceptedAt?: boolean
     createdAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | ProjectResource$workstreamArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     proposedBy?: boolean | ProjectResource$proposedByArgs<ExtArgs>
   }, ExtArgs["result"]["projectResource"]>
@@ -12688,6 +14146,7 @@ export namespace Prisma {
   export type ProjectResourceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     projectId?: boolean
+    workstreamId?: boolean
     userId?: boolean
     roleInProject?: boolean
     plannedMandays?: boolean
@@ -12697,6 +14156,7 @@ export namespace Prisma {
     acceptedAt?: boolean
     createdAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | ProjectResource$workstreamArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     proposedBy?: boolean | ProjectResource$proposedByArgs<ExtArgs>
   }, ExtArgs["result"]["projectResource"]>
@@ -12704,6 +14164,7 @@ export namespace Prisma {
   export type ProjectResourceSelectScalar = {
     id?: boolean
     projectId?: boolean
+    workstreamId?: boolean
     userId?: boolean
     roleInProject?: boolean
     plannedMandays?: boolean
@@ -12716,11 +14177,13 @@ export namespace Prisma {
 
   export type ProjectResourceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | ProjectResource$workstreamArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     proposedBy?: boolean | ProjectResource$proposedByArgs<ExtArgs>
   }
   export type ProjectResourceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | ProjectResource$workstreamArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     proposedBy?: boolean | ProjectResource$proposedByArgs<ExtArgs>
   }
@@ -12729,12 +14192,14 @@ export namespace Prisma {
     name: "ProjectResource"
     objects: {
       project: Prisma.$ProjectPayload<ExtArgs>
+      workstream: Prisma.$ProjectWorkstreamPayload<ExtArgs> | null
       user: Prisma.$UserPayload<ExtArgs>
       proposedBy: Prisma.$UserPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       projectId: string
+      workstreamId: string | null
       userId: string
       roleInProject: string | null
       plannedMandays: number
@@ -13108,6 +14573,7 @@ export namespace Prisma {
   export interface Prisma__ProjectResourceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    workstream<T extends ProjectResource$workstreamArgs<ExtArgs> = {}>(args?: Subset<T, ProjectResource$workstreamArgs<ExtArgs>>): Prisma__ProjectWorkstreamClient<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     proposedBy<T extends ProjectResource$proposedByArgs<ExtArgs> = {}>(args?: Subset<T, ProjectResource$proposedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
@@ -13141,6 +14607,7 @@ export namespace Prisma {
   interface ProjectResourceFieldRefs {
     readonly id: FieldRef<"ProjectResource", 'String'>
     readonly projectId: FieldRef<"ProjectResource", 'String'>
+    readonly workstreamId: FieldRef<"ProjectResource", 'String'>
     readonly userId: FieldRef<"ProjectResource", 'String'>
     readonly roleInProject: FieldRef<"ProjectResource", 'String'>
     readonly plannedMandays: FieldRef<"ProjectResource", 'Float'>
@@ -13467,6 +14934,21 @@ export namespace Prisma {
   }
 
   /**
+   * ProjectResource.workstream
+   */
+  export type ProjectResource$workstreamArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWorkstream
+     */
+    select?: ProjectWorkstreamSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWorkstreamInclude<ExtArgs> | null
+    where?: ProjectWorkstreamWhereInput
+  }
+
+  /**
    * ProjectResource.proposedBy
    */
   export type ProjectResource$proposedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13519,6 +15001,7 @@ export namespace Prisma {
   export type TimesheetMinAggregateOutputType = {
     id: string | null
     projectId: string | null
+    workstreamId: string | null
     userId: string | null
     taskId: string | null
     workDate: Date | null
@@ -13535,6 +15018,7 @@ export namespace Prisma {
   export type TimesheetMaxAggregateOutputType = {
     id: string | null
     projectId: string | null
+    workstreamId: string | null
     userId: string | null
     taskId: string | null
     workDate: Date | null
@@ -13551,6 +15035,7 @@ export namespace Prisma {
   export type TimesheetCountAggregateOutputType = {
     id: number
     projectId: number
+    workstreamId: number
     userId: number
     taskId: number
     workDate: number
@@ -13577,6 +15062,7 @@ export namespace Prisma {
   export type TimesheetMinAggregateInputType = {
     id?: true
     projectId?: true
+    workstreamId?: true
     userId?: true
     taskId?: true
     workDate?: true
@@ -13593,6 +15079,7 @@ export namespace Prisma {
   export type TimesheetMaxAggregateInputType = {
     id?: true
     projectId?: true
+    workstreamId?: true
     userId?: true
     taskId?: true
     workDate?: true
@@ -13609,6 +15096,7 @@ export namespace Prisma {
   export type TimesheetCountAggregateInputType = {
     id?: true
     projectId?: true
+    workstreamId?: true
     userId?: true
     taskId?: true
     workDate?: true
@@ -13712,6 +15200,7 @@ export namespace Prisma {
   export type TimesheetGroupByOutputType = {
     id: string
     projectId: string
+    workstreamId: string | null
     userId: string
     taskId: string | null
     workDate: Date
@@ -13747,6 +15236,7 @@ export namespace Prisma {
   export type TimesheetSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     projectId?: boolean
+    workstreamId?: boolean
     userId?: boolean
     taskId?: boolean
     workDate?: boolean
@@ -13759,6 +15249,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | Timesheet$workstreamArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     task?: boolean | Timesheet$taskArgs<ExtArgs>
     approvedBy?: boolean | Timesheet$approvedByArgs<ExtArgs>
@@ -13767,6 +15258,7 @@ export namespace Prisma {
   export type TimesheetSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     projectId?: boolean
+    workstreamId?: boolean
     userId?: boolean
     taskId?: boolean
     workDate?: boolean
@@ -13779,6 +15271,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | Timesheet$workstreamArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     task?: boolean | Timesheet$taskArgs<ExtArgs>
     approvedBy?: boolean | Timesheet$approvedByArgs<ExtArgs>
@@ -13787,6 +15280,7 @@ export namespace Prisma {
   export type TimesheetSelectScalar = {
     id?: boolean
     projectId?: boolean
+    workstreamId?: boolean
     userId?: boolean
     taskId?: boolean
     workDate?: boolean
@@ -13802,12 +15296,14 @@ export namespace Prisma {
 
   export type TimesheetInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | Timesheet$workstreamArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     task?: boolean | Timesheet$taskArgs<ExtArgs>
     approvedBy?: boolean | Timesheet$approvedByArgs<ExtArgs>
   }
   export type TimesheetIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | Timesheet$workstreamArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     task?: boolean | Timesheet$taskArgs<ExtArgs>
     approvedBy?: boolean | Timesheet$approvedByArgs<ExtArgs>
@@ -13817,6 +15313,7 @@ export namespace Prisma {
     name: "Timesheet"
     objects: {
       project: Prisma.$ProjectPayload<ExtArgs>
+      workstream: Prisma.$ProjectWorkstreamPayload<ExtArgs> | null
       user: Prisma.$UserPayload<ExtArgs>
       task: Prisma.$TaskPayload<ExtArgs> | null
       approvedBy: Prisma.$UserPayload<ExtArgs> | null
@@ -13824,6 +15321,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       projectId: string
+      workstreamId: string | null
       userId: string
       taskId: string | null
       workDate: Date
@@ -14200,6 +15698,7 @@ export namespace Prisma {
   export interface Prisma__TimesheetClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    workstream<T extends Timesheet$workstreamArgs<ExtArgs> = {}>(args?: Subset<T, Timesheet$workstreamArgs<ExtArgs>>): Prisma__ProjectWorkstreamClient<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     task<T extends Timesheet$taskArgs<ExtArgs> = {}>(args?: Subset<T, Timesheet$taskArgs<ExtArgs>>): Prisma__TaskClient<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     approvedBy<T extends Timesheet$approvedByArgs<ExtArgs> = {}>(args?: Subset<T, Timesheet$approvedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
@@ -14234,6 +15733,7 @@ export namespace Prisma {
   interface TimesheetFieldRefs {
     readonly id: FieldRef<"Timesheet", 'String'>
     readonly projectId: FieldRef<"Timesheet", 'String'>
+    readonly workstreamId: FieldRef<"Timesheet", 'String'>
     readonly userId: FieldRef<"Timesheet", 'String'>
     readonly taskId: FieldRef<"Timesheet", 'String'>
     readonly workDate: FieldRef<"Timesheet", 'DateTime'>
@@ -14560,6 +16060,21 @@ export namespace Prisma {
      * Filter which Timesheets to delete
      */
     where?: TimesheetWhereInput
+  }
+
+  /**
+   * Timesheet.workstream
+   */
+  export type Timesheet$workstreamArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWorkstream
+     */
+    select?: ProjectWorkstreamSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWorkstreamInclude<ExtArgs> | null
+    where?: ProjectWorkstreamWhereInput
   }
 
   /**
@@ -16837,6 +18352,7 @@ export namespace Prisma {
   export type ProjectExpenseMinAggregateOutputType = {
     id: string | null
     projectId: string | null
+    workstreamId: string | null
     category: string | null
     description: string | null
     amount: number | null
@@ -16855,6 +18371,7 @@ export namespace Prisma {
   export type ProjectExpenseMaxAggregateOutputType = {
     id: string | null
     projectId: string | null
+    workstreamId: string | null
     category: string | null
     description: string | null
     amount: number | null
@@ -16873,6 +18390,7 @@ export namespace Prisma {
   export type ProjectExpenseCountAggregateOutputType = {
     id: number
     projectId: number
+    workstreamId: number
     category: number
     description: number
     amount: number
@@ -16901,6 +18419,7 @@ export namespace Prisma {
   export type ProjectExpenseMinAggregateInputType = {
     id?: true
     projectId?: true
+    workstreamId?: true
     category?: true
     description?: true
     amount?: true
@@ -16919,6 +18438,7 @@ export namespace Prisma {
   export type ProjectExpenseMaxAggregateInputType = {
     id?: true
     projectId?: true
+    workstreamId?: true
     category?: true
     description?: true
     amount?: true
@@ -16937,6 +18457,7 @@ export namespace Prisma {
   export type ProjectExpenseCountAggregateInputType = {
     id?: true
     projectId?: true
+    workstreamId?: true
     category?: true
     description?: true
     amount?: true
@@ -17042,6 +18563,7 @@ export namespace Prisma {
   export type ProjectExpenseGroupByOutputType = {
     id: string
     projectId: string
+    workstreamId: string | null
     category: string
     description: string
     amount: number
@@ -17079,6 +18601,7 @@ export namespace Prisma {
   export type ProjectExpenseSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     projectId?: boolean
+    workstreamId?: boolean
     category?: boolean
     description?: boolean
     amount?: boolean
@@ -17093,6 +18616,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | ProjectExpense$workstreamArgs<ExtArgs>
     approvedBy?: boolean | ProjectExpense$approvedByArgs<ExtArgs>
     createdBy?: boolean | ProjectExpense$createdByArgs<ExtArgs>
   }, ExtArgs["result"]["projectExpense"]>
@@ -17100,6 +18624,7 @@ export namespace Prisma {
   export type ProjectExpenseSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     projectId?: boolean
+    workstreamId?: boolean
     category?: boolean
     description?: boolean
     amount?: boolean
@@ -17114,6 +18639,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | ProjectExpense$workstreamArgs<ExtArgs>
     approvedBy?: boolean | ProjectExpense$approvedByArgs<ExtArgs>
     createdBy?: boolean | ProjectExpense$createdByArgs<ExtArgs>
   }, ExtArgs["result"]["projectExpense"]>
@@ -17121,6 +18647,7 @@ export namespace Prisma {
   export type ProjectExpenseSelectScalar = {
     id?: boolean
     projectId?: boolean
+    workstreamId?: boolean
     category?: boolean
     description?: boolean
     amount?: boolean
@@ -17138,11 +18665,13 @@ export namespace Prisma {
 
   export type ProjectExpenseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | ProjectExpense$workstreamArgs<ExtArgs>
     approvedBy?: boolean | ProjectExpense$approvedByArgs<ExtArgs>
     createdBy?: boolean | ProjectExpense$createdByArgs<ExtArgs>
   }
   export type ProjectExpenseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | ProjectExpense$workstreamArgs<ExtArgs>
     approvedBy?: boolean | ProjectExpense$approvedByArgs<ExtArgs>
     createdBy?: boolean | ProjectExpense$createdByArgs<ExtArgs>
   }
@@ -17151,12 +18680,14 @@ export namespace Prisma {
     name: "ProjectExpense"
     objects: {
       project: Prisma.$ProjectPayload<ExtArgs>
+      workstream: Prisma.$ProjectWorkstreamPayload<ExtArgs> | null
       approvedBy: Prisma.$UserPayload<ExtArgs> | null
       createdBy: Prisma.$UserPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       projectId: string
+      workstreamId: string | null
       category: string
       description: string
       amount: number
@@ -17535,6 +19066,7 @@ export namespace Prisma {
   export interface Prisma__ProjectExpenseClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    workstream<T extends ProjectExpense$workstreamArgs<ExtArgs> = {}>(args?: Subset<T, ProjectExpense$workstreamArgs<ExtArgs>>): Prisma__ProjectWorkstreamClient<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     approvedBy<T extends ProjectExpense$approvedByArgs<ExtArgs> = {}>(args?: Subset<T, ProjectExpense$approvedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     createdBy<T extends ProjectExpense$createdByArgs<ExtArgs> = {}>(args?: Subset<T, ProjectExpense$createdByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
@@ -17568,6 +19100,7 @@ export namespace Prisma {
   interface ProjectExpenseFieldRefs {
     readonly id: FieldRef<"ProjectExpense", 'String'>
     readonly projectId: FieldRef<"ProjectExpense", 'String'>
+    readonly workstreamId: FieldRef<"ProjectExpense", 'String'>
     readonly category: FieldRef<"ProjectExpense", 'String'>
     readonly description: FieldRef<"ProjectExpense", 'String'>
     readonly amount: FieldRef<"ProjectExpense", 'Float'>
@@ -17899,6 +19432,21 @@ export namespace Prisma {
   }
 
   /**
+   * ProjectExpense.workstream
+   */
+  export type ProjectExpense$workstreamArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWorkstream
+     */
+    select?: ProjectWorkstreamSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWorkstreamInclude<ExtArgs> | null
+    where?: ProjectWorkstreamWhereInput
+  }
+
+  /**
    * ProjectExpense.approvedBy
    */
   export type ProjectExpense$approvedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -18118,6 +19666,7 @@ export namespace Prisma {
     users?: boolean | BusinessUnit$usersArgs<ExtArgs>
     taskTemplates?: boolean | BusinessUnit$taskTemplatesArgs<ExtArgs>
     projectTemplates?: boolean | BusinessUnit$projectTemplatesArgs<ExtArgs>
+    workstreams?: boolean | BusinessUnit$workstreamsArgs<ExtArgs>
     _count?: boolean | BusinessUnitCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["businessUnit"]>
 
@@ -18143,6 +19692,7 @@ export namespace Prisma {
     users?: boolean | BusinessUnit$usersArgs<ExtArgs>
     taskTemplates?: boolean | BusinessUnit$taskTemplatesArgs<ExtArgs>
     projectTemplates?: boolean | BusinessUnit$projectTemplatesArgs<ExtArgs>
+    workstreams?: boolean | BusinessUnit$workstreamsArgs<ExtArgs>
     _count?: boolean | BusinessUnitCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type BusinessUnitIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -18153,6 +19703,7 @@ export namespace Prisma {
       users: Prisma.$UserPayload<ExtArgs>[]
       taskTemplates: Prisma.$TaskTemplatePayload<ExtArgs>[]
       projectTemplates: Prisma.$ProjectTemplatePayload<ExtArgs>[]
+      workstreams: Prisma.$ProjectWorkstreamPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -18528,6 +20079,7 @@ export namespace Prisma {
     users<T extends BusinessUnit$usersArgs<ExtArgs> = {}>(args?: Subset<T, BusinessUnit$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany"> | Null>
     taskTemplates<T extends BusinessUnit$taskTemplatesArgs<ExtArgs> = {}>(args?: Subset<T, BusinessUnit$taskTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskTemplatePayload<ExtArgs>, T, "findMany"> | Null>
     projectTemplates<T extends BusinessUnit$projectTemplatesArgs<ExtArgs> = {}>(args?: Subset<T, BusinessUnit$projectTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectTemplatePayload<ExtArgs>, T, "findMany"> | Null>
+    workstreams<T extends BusinessUnit$workstreamsArgs<ExtArgs> = {}>(args?: Subset<T, BusinessUnit$workstreamsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -18934,6 +20486,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProjectTemplateScalarFieldEnum | ProjectTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * BusinessUnit.workstreams
+   */
+  export type BusinessUnit$workstreamsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWorkstream
+     */
+    select?: ProjectWorkstreamSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWorkstreamInclude<ExtArgs> | null
+    where?: ProjectWorkstreamWhereInput
+    orderBy?: ProjectWorkstreamOrderByWithRelationInput | ProjectWorkstreamOrderByWithRelationInput[]
+    cursor?: ProjectWorkstreamWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectWorkstreamScalarFieldEnum | ProjectWorkstreamScalarFieldEnum[]
   }
 
   /**
@@ -24052,6 +25624,7 @@ export namespace Prisma {
   export type TaskMinAggregateOutputType = {
     id: string | null
     projectId: string | null
+    workstreamId: string | null
     title: string | null
     description: string | null
     status: $Enums.TaskStatus | null
@@ -24069,6 +25642,7 @@ export namespace Prisma {
   export type TaskMaxAggregateOutputType = {
     id: string | null
     projectId: string | null
+    workstreamId: string | null
     title: string | null
     description: string | null
     status: $Enums.TaskStatus | null
@@ -24086,6 +25660,7 @@ export namespace Prisma {
   export type TaskCountAggregateOutputType = {
     id: number
     projectId: number
+    workstreamId: number
     title: number
     description: number
     status: number
@@ -24113,6 +25688,7 @@ export namespace Prisma {
   export type TaskMinAggregateInputType = {
     id?: true
     projectId?: true
+    workstreamId?: true
     title?: true
     description?: true
     status?: true
@@ -24130,6 +25706,7 @@ export namespace Prisma {
   export type TaskMaxAggregateInputType = {
     id?: true
     projectId?: true
+    workstreamId?: true
     title?: true
     description?: true
     status?: true
@@ -24147,6 +25724,7 @@ export namespace Prisma {
   export type TaskCountAggregateInputType = {
     id?: true
     projectId?: true
+    workstreamId?: true
     title?: true
     description?: true
     status?: true
@@ -24251,6 +25829,7 @@ export namespace Prisma {
   export type TaskGroupByOutputType = {
     id: string
     projectId: string
+    workstreamId: string | null
     title: string
     description: string | null
     status: $Enums.TaskStatus
@@ -24287,6 +25866,7 @@ export namespace Prisma {
   export type TaskSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     projectId?: boolean
+    workstreamId?: boolean
     title?: boolean
     description?: boolean
     status?: boolean
@@ -24300,6 +25880,7 @@ export namespace Prisma {
     updatedAt?: boolean
     parentTaskId?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | Task$workstreamArgs<ExtArgs>
     assignee?: boolean | Task$assigneeArgs<ExtArgs>
     createdBy?: boolean | Task$createdByArgs<ExtArgs>
     parentTask?: boolean | Task$parentTaskArgs<ExtArgs>
@@ -24315,6 +25896,7 @@ export namespace Prisma {
   export type TaskSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     projectId?: boolean
+    workstreamId?: boolean
     title?: boolean
     description?: boolean
     status?: boolean
@@ -24328,6 +25910,7 @@ export namespace Prisma {
     updatedAt?: boolean
     parentTaskId?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | Task$workstreamArgs<ExtArgs>
     assignee?: boolean | Task$assigneeArgs<ExtArgs>
     createdBy?: boolean | Task$createdByArgs<ExtArgs>
     parentTask?: boolean | Task$parentTaskArgs<ExtArgs>
@@ -24336,6 +25919,7 @@ export namespace Prisma {
   export type TaskSelectScalar = {
     id?: boolean
     projectId?: boolean
+    workstreamId?: boolean
     title?: boolean
     description?: boolean
     status?: boolean
@@ -24352,6 +25936,7 @@ export namespace Prisma {
 
   export type TaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | Task$workstreamArgs<ExtArgs>
     assignee?: boolean | Task$assigneeArgs<ExtArgs>
     createdBy?: boolean | Task$createdByArgs<ExtArgs>
     parentTask?: boolean | Task$parentTaskArgs<ExtArgs>
@@ -24365,6 +25950,7 @@ export namespace Prisma {
   }
   export type TaskIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | Task$workstreamArgs<ExtArgs>
     assignee?: boolean | Task$assigneeArgs<ExtArgs>
     createdBy?: boolean | Task$createdByArgs<ExtArgs>
     parentTask?: boolean | Task$parentTaskArgs<ExtArgs>
@@ -24374,6 +25960,7 @@ export namespace Prisma {
     name: "Task"
     objects: {
       project: Prisma.$ProjectPayload<ExtArgs>
+      workstream: Prisma.$ProjectWorkstreamPayload<ExtArgs> | null
       assignee: Prisma.$UserPayload<ExtArgs> | null
       createdBy: Prisma.$UserPayload<ExtArgs> | null
       parentTask: Prisma.$TaskPayload<ExtArgs> | null
@@ -24387,6 +25974,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       projectId: string
+      workstreamId: string | null
       title: string
       description: string | null
       status: $Enums.TaskStatus
@@ -24764,6 +26352,7 @@ export namespace Prisma {
   export interface Prisma__TaskClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    workstream<T extends Task$workstreamArgs<ExtArgs> = {}>(args?: Subset<T, Task$workstreamArgs<ExtArgs>>): Prisma__ProjectWorkstreamClient<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     assignee<T extends Task$assigneeArgs<ExtArgs> = {}>(args?: Subset<T, Task$assigneeArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     createdBy<T extends Task$createdByArgs<ExtArgs> = {}>(args?: Subset<T, Task$createdByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     parentTask<T extends Task$parentTaskArgs<ExtArgs> = {}>(args?: Subset<T, Task$parentTaskArgs<ExtArgs>>): Prisma__TaskClient<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
@@ -24804,6 +26393,7 @@ export namespace Prisma {
   interface TaskFieldRefs {
     readonly id: FieldRef<"Task", 'String'>
     readonly projectId: FieldRef<"Task", 'String'>
+    readonly workstreamId: FieldRef<"Task", 'String'>
     readonly title: FieldRef<"Task", 'String'>
     readonly description: FieldRef<"Task", 'String'>
     readonly status: FieldRef<"Task", 'TaskStatus'>
@@ -25131,6 +26721,21 @@ export namespace Prisma {
      * Filter which Tasks to delete
      */
     where?: TaskWhereInput
+  }
+
+  /**
+   * Task.workstream
+   */
+  export type Task$workstreamArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWorkstream
+     */
+    select?: ProjectWorkstreamSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWorkstreamInclude<ExtArgs> | null
+    where?: ProjectWorkstreamWhereInput
   }
 
   /**
@@ -26267,6 +27872,7 @@ export namespace Prisma {
   export type BillingMilestoneMinAggregateOutputType = {
     id: string | null
     projectId: string | null
+    workstreamId: string | null
     name: string | null
     description: string | null
     percentage: number | null
@@ -26284,6 +27890,7 @@ export namespace Prisma {
   export type BillingMilestoneMaxAggregateOutputType = {
     id: string | null
     projectId: string | null
+    workstreamId: string | null
     name: string | null
     description: string | null
     percentage: number | null
@@ -26301,6 +27908,7 @@ export namespace Prisma {
   export type BillingMilestoneCountAggregateOutputType = {
     id: number
     projectId: number
+    workstreamId: number
     name: number
     description: number
     percentage: number
@@ -26332,6 +27940,7 @@ export namespace Prisma {
   export type BillingMilestoneMinAggregateInputType = {
     id?: true
     projectId?: true
+    workstreamId?: true
     name?: true
     description?: true
     percentage?: true
@@ -26349,6 +27958,7 @@ export namespace Prisma {
   export type BillingMilestoneMaxAggregateInputType = {
     id?: true
     projectId?: true
+    workstreamId?: true
     name?: true
     description?: true
     percentage?: true
@@ -26366,6 +27976,7 @@ export namespace Prisma {
   export type BillingMilestoneCountAggregateInputType = {
     id?: true
     projectId?: true
+    workstreamId?: true
     name?: true
     description?: true
     percentage?: true
@@ -26470,6 +28081,7 @@ export namespace Prisma {
   export type BillingMilestoneGroupByOutputType = {
     id: string
     projectId: string
+    workstreamId: string | null
     name: string
     description: string | null
     percentage: number
@@ -26506,6 +28118,7 @@ export namespace Prisma {
   export type BillingMilestoneSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     projectId?: boolean
+    workstreamId?: boolean
     name?: boolean
     description?: boolean
     percentage?: boolean
@@ -26519,11 +28132,13 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | BillingMilestone$workstreamArgs<ExtArgs>
   }, ExtArgs["result"]["billingMilestone"]>
 
   export type BillingMilestoneSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     projectId?: boolean
+    workstreamId?: boolean
     name?: boolean
     description?: boolean
     percentage?: boolean
@@ -26537,11 +28152,13 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | BillingMilestone$workstreamArgs<ExtArgs>
   }, ExtArgs["result"]["billingMilestone"]>
 
   export type BillingMilestoneSelectScalar = {
     id?: boolean
     projectId?: boolean
+    workstreamId?: boolean
     name?: boolean
     description?: boolean
     percentage?: boolean
@@ -26558,19 +28175,23 @@ export namespace Prisma {
 
   export type BillingMilestoneInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | BillingMilestone$workstreamArgs<ExtArgs>
   }
   export type BillingMilestoneIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | BillingMilestone$workstreamArgs<ExtArgs>
   }
 
   export type $BillingMilestonePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "BillingMilestone"
     objects: {
       project: Prisma.$ProjectPayload<ExtArgs>
+      workstream: Prisma.$ProjectWorkstreamPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       projectId: string
+      workstreamId: string | null
       name: string
       description: string | null
       percentage: number
@@ -26948,6 +28569,7 @@ export namespace Prisma {
   export interface Prisma__BillingMilestoneClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    workstream<T extends BillingMilestone$workstreamArgs<ExtArgs> = {}>(args?: Subset<T, BillingMilestone$workstreamArgs<ExtArgs>>): Prisma__ProjectWorkstreamClient<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -26979,6 +28601,7 @@ export namespace Prisma {
   interface BillingMilestoneFieldRefs {
     readonly id: FieldRef<"BillingMilestone", 'String'>
     readonly projectId: FieldRef<"BillingMilestone", 'String'>
+    readonly workstreamId: FieldRef<"BillingMilestone", 'String'>
     readonly name: FieldRef<"BillingMilestone", 'String'>
     readonly description: FieldRef<"BillingMilestone", 'String'>
     readonly percentage: FieldRef<"BillingMilestone", 'Float'>
@@ -27306,6 +28929,21 @@ export namespace Prisma {
      * Filter which BillingMilestones to delete
      */
     where?: BillingMilestoneWhereInput
+  }
+
+  /**
+   * BillingMilestone.workstream
+   */
+  export type BillingMilestone$workstreamArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWorkstream
+     */
+    select?: ProjectWorkstreamSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWorkstreamInclude<ExtArgs> | null
+    where?: ProjectWorkstreamWhereInput
   }
 
   /**
@@ -42004,10 +43642,32 @@ export namespace Prisma {
     deletedAt: 'deletedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
+    useWorkstreams: 'useWorkstreams',
     surveyToken: 'surveyToken'
   };
 
   export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
+
+
+  export const ProjectWorkstreamScalarFieldEnum: {
+    id: 'id',
+    projectId: 'projectId',
+    code: 'code',
+    name: 'name',
+    description: 'description',
+    businessUnitId: 'businessUnitId',
+    allocationPct: 'allocationPct',
+    plannedMandays: 'plannedMandays',
+    estimatedCost: 'estimatedCost',
+    startDate: 'startDate',
+    endDate: 'endDate',
+    status: 'status',
+    sortOrder: 'sortOrder',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ProjectWorkstreamScalarFieldEnum = (typeof ProjectWorkstreamScalarFieldEnum)[keyof typeof ProjectWorkstreamScalarFieldEnum]
 
 
   export const SurveyQuestionScalarFieldEnum: {
@@ -42059,6 +43719,7 @@ export namespace Prisma {
   export const ProjectResourceScalarFieldEnum: {
     id: 'id',
     projectId: 'projectId',
+    workstreamId: 'workstreamId',
     userId: 'userId',
     roleInProject: 'roleInProject',
     plannedMandays: 'plannedMandays',
@@ -42075,6 +43736,7 @@ export namespace Prisma {
   export const TimesheetScalarFieldEnum: {
     id: 'id',
     projectId: 'projectId',
+    workstreamId: 'workstreamId',
     userId: 'userId',
     taskId: 'taskId',
     workDate: 'workDate',
@@ -42131,6 +43793,7 @@ export namespace Prisma {
   export const ProjectExpenseScalarFieldEnum: {
     id: 'id',
     projectId: 'projectId',
+    workstreamId: 'workstreamId',
     category: 'category',
     description: 'description',
     amount: 'amount',
@@ -42231,6 +43894,7 @@ export namespace Prisma {
   export const TaskScalarFieldEnum: {
     id: 'id',
     projectId: 'projectId',
+    workstreamId: 'workstreamId',
     title: 'title',
     description: 'description',
     status: 'status',
@@ -42261,6 +43925,7 @@ export namespace Prisma {
   export const BillingMilestoneScalarFieldEnum: {
     id: 'id',
     projectId: 'projectId',
+    workstreamId: 'workstreamId',
     name: 'name',
     description: 'description',
     percentage: 'percentage',
@@ -43228,6 +44893,7 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
+    useWorkstreams?: BoolFilter<"Project"> | boolean
     surveyToken?: StringNullableFilter<"Project"> | string | null
     client?: XOR<ClientRelationFilter, ClientWhereInput>
     sales?: XOR<UserNullableRelationFilter, UserWhereInput> | null
@@ -43245,6 +44911,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemListRelationFilter
     perfProjectRatings?: PerformanceReviewProjectRatingListRelationFilter
     closingChecklist?: ProjectClosingChecklistItemListRelationFilter
+    workstreams?: ProjectWorkstreamListRelationFilter
   }
 
   export type ProjectOrderByWithRelationInput = {
@@ -43279,6 +44946,7 @@ export namespace Prisma {
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    useWorkstreams?: SortOrder
     surveyToken?: SortOrderInput | SortOrder
     client?: ClientOrderByWithRelationInput
     sales?: UserOrderByWithRelationInput
@@ -43296,6 +44964,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemOrderByRelationAggregateInput
     perfProjectRatings?: PerformanceReviewProjectRatingOrderByRelationAggregateInput
     closingChecklist?: ProjectClosingChecklistItemOrderByRelationAggregateInput
+    workstreams?: ProjectWorkstreamOrderByRelationAggregateInput
   }
 
   export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -43334,6 +45003,7 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
+    useWorkstreams?: BoolFilter<"Project"> | boolean
     client?: XOR<ClientRelationFilter, ClientWhereInput>
     sales?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     pm?: XOR<UserNullableRelationFilter, UserWhereInput> | null
@@ -43350,6 +45020,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemListRelationFilter
     perfProjectRatings?: PerformanceReviewProjectRatingListRelationFilter
     closingChecklist?: ProjectClosingChecklistItemListRelationFilter
+    workstreams?: ProjectWorkstreamListRelationFilter
   }, "id" | "code" | "surveyToken">
 
   export type ProjectOrderByWithAggregationInput = {
@@ -43384,6 +45055,7 @@ export namespace Prisma {
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    useWorkstreams?: SortOrder
     surveyToken?: SortOrderInput | SortOrder
     _count?: ProjectCountOrderByAggregateInput
     _avg?: ProjectAvgOrderByAggregateInput
@@ -43427,7 +45099,134 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
+    useWorkstreams?: BoolWithAggregatesFilter<"Project"> | boolean
     surveyToken?: StringNullableWithAggregatesFilter<"Project"> | string | null
+  }
+
+  export type ProjectWorkstreamWhereInput = {
+    AND?: ProjectWorkstreamWhereInput | ProjectWorkstreamWhereInput[]
+    OR?: ProjectWorkstreamWhereInput[]
+    NOT?: ProjectWorkstreamWhereInput | ProjectWorkstreamWhereInput[]
+    id?: StringFilter<"ProjectWorkstream"> | string
+    projectId?: StringFilter<"ProjectWorkstream"> | string
+    code?: StringFilter<"ProjectWorkstream"> | string
+    name?: StringFilter<"ProjectWorkstream"> | string
+    description?: StringNullableFilter<"ProjectWorkstream"> | string | null
+    businessUnitId?: StringNullableFilter<"ProjectWorkstream"> | string | null
+    allocationPct?: FloatFilter<"ProjectWorkstream"> | number
+    plannedMandays?: FloatFilter<"ProjectWorkstream"> | number
+    estimatedCost?: FloatFilter<"ProjectWorkstream"> | number
+    startDate?: DateTimeNullableFilter<"ProjectWorkstream"> | Date | string | null
+    endDate?: DateTimeNullableFilter<"ProjectWorkstream"> | Date | string | null
+    status?: StringFilter<"ProjectWorkstream"> | string
+    sortOrder?: IntFilter<"ProjectWorkstream"> | number
+    createdAt?: DateTimeFilter<"ProjectWorkstream"> | Date | string
+    updatedAt?: DateTimeFilter<"ProjectWorkstream"> | Date | string
+    project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    businessUnit?: XOR<BusinessUnitNullableRelationFilter, BusinessUnitWhereInput> | null
+    resources?: ProjectResourceListRelationFilter
+    tasks?: TaskListRelationFilter
+    expenses?: ProjectExpenseListRelationFilter
+    billingMilestones?: BillingMilestoneListRelationFilter
+    timesheets?: TimesheetListRelationFilter
+  }
+
+  export type ProjectWorkstreamOrderByWithRelationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    businessUnitId?: SortOrderInput | SortOrder
+    allocationPct?: SortOrder
+    plannedMandays?: SortOrder
+    estimatedCost?: SortOrder
+    startDate?: SortOrderInput | SortOrder
+    endDate?: SortOrderInput | SortOrder
+    status?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    project?: ProjectOrderByWithRelationInput
+    businessUnit?: BusinessUnitOrderByWithRelationInput
+    resources?: ProjectResourceOrderByRelationAggregateInput
+    tasks?: TaskOrderByRelationAggregateInput
+    expenses?: ProjectExpenseOrderByRelationAggregateInput
+    billingMilestones?: BillingMilestoneOrderByRelationAggregateInput
+    timesheets?: TimesheetOrderByRelationAggregateInput
+  }
+
+  export type ProjectWorkstreamWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    projectId_code?: ProjectWorkstreamProjectIdCodeCompoundUniqueInput
+    AND?: ProjectWorkstreamWhereInput | ProjectWorkstreamWhereInput[]
+    OR?: ProjectWorkstreamWhereInput[]
+    NOT?: ProjectWorkstreamWhereInput | ProjectWorkstreamWhereInput[]
+    projectId?: StringFilter<"ProjectWorkstream"> | string
+    code?: StringFilter<"ProjectWorkstream"> | string
+    name?: StringFilter<"ProjectWorkstream"> | string
+    description?: StringNullableFilter<"ProjectWorkstream"> | string | null
+    businessUnitId?: StringNullableFilter<"ProjectWorkstream"> | string | null
+    allocationPct?: FloatFilter<"ProjectWorkstream"> | number
+    plannedMandays?: FloatFilter<"ProjectWorkstream"> | number
+    estimatedCost?: FloatFilter<"ProjectWorkstream"> | number
+    startDate?: DateTimeNullableFilter<"ProjectWorkstream"> | Date | string | null
+    endDate?: DateTimeNullableFilter<"ProjectWorkstream"> | Date | string | null
+    status?: StringFilter<"ProjectWorkstream"> | string
+    sortOrder?: IntFilter<"ProjectWorkstream"> | number
+    createdAt?: DateTimeFilter<"ProjectWorkstream"> | Date | string
+    updatedAt?: DateTimeFilter<"ProjectWorkstream"> | Date | string
+    project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    businessUnit?: XOR<BusinessUnitNullableRelationFilter, BusinessUnitWhereInput> | null
+    resources?: ProjectResourceListRelationFilter
+    tasks?: TaskListRelationFilter
+    expenses?: ProjectExpenseListRelationFilter
+    billingMilestones?: BillingMilestoneListRelationFilter
+    timesheets?: TimesheetListRelationFilter
+  }, "id" | "projectId_code">
+
+  export type ProjectWorkstreamOrderByWithAggregationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    businessUnitId?: SortOrderInput | SortOrder
+    allocationPct?: SortOrder
+    plannedMandays?: SortOrder
+    estimatedCost?: SortOrder
+    startDate?: SortOrderInput | SortOrder
+    endDate?: SortOrderInput | SortOrder
+    status?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ProjectWorkstreamCountOrderByAggregateInput
+    _avg?: ProjectWorkstreamAvgOrderByAggregateInput
+    _max?: ProjectWorkstreamMaxOrderByAggregateInput
+    _min?: ProjectWorkstreamMinOrderByAggregateInput
+    _sum?: ProjectWorkstreamSumOrderByAggregateInput
+  }
+
+  export type ProjectWorkstreamScalarWhereWithAggregatesInput = {
+    AND?: ProjectWorkstreamScalarWhereWithAggregatesInput | ProjectWorkstreamScalarWhereWithAggregatesInput[]
+    OR?: ProjectWorkstreamScalarWhereWithAggregatesInput[]
+    NOT?: ProjectWorkstreamScalarWhereWithAggregatesInput | ProjectWorkstreamScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ProjectWorkstream"> | string
+    projectId?: StringWithAggregatesFilter<"ProjectWorkstream"> | string
+    code?: StringWithAggregatesFilter<"ProjectWorkstream"> | string
+    name?: StringWithAggregatesFilter<"ProjectWorkstream"> | string
+    description?: StringNullableWithAggregatesFilter<"ProjectWorkstream"> | string | null
+    businessUnitId?: StringNullableWithAggregatesFilter<"ProjectWorkstream"> | string | null
+    allocationPct?: FloatWithAggregatesFilter<"ProjectWorkstream"> | number
+    plannedMandays?: FloatWithAggregatesFilter<"ProjectWorkstream"> | number
+    estimatedCost?: FloatWithAggregatesFilter<"ProjectWorkstream"> | number
+    startDate?: DateTimeNullableWithAggregatesFilter<"ProjectWorkstream"> | Date | string | null
+    endDate?: DateTimeNullableWithAggregatesFilter<"ProjectWorkstream"> | Date | string | null
+    status?: StringWithAggregatesFilter<"ProjectWorkstream"> | string
+    sortOrder?: IntWithAggregatesFilter<"ProjectWorkstream"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"ProjectWorkstream"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ProjectWorkstream"> | Date | string
   }
 
   export type SurveyQuestionWhereInput = {
@@ -43665,6 +45464,7 @@ export namespace Prisma {
     NOT?: ProjectResourceWhereInput | ProjectResourceWhereInput[]
     id?: StringFilter<"ProjectResource"> | string
     projectId?: StringFilter<"ProjectResource"> | string
+    workstreamId?: StringNullableFilter<"ProjectResource"> | string | null
     userId?: StringFilter<"ProjectResource"> | string
     roleInProject?: StringNullableFilter<"ProjectResource"> | string | null
     plannedMandays?: FloatFilter<"ProjectResource"> | number
@@ -43674,6 +45474,7 @@ export namespace Prisma {
     acceptedAt?: DateTimeNullableFilter<"ProjectResource"> | Date | string | null
     createdAt?: DateTimeFilter<"ProjectResource"> | Date | string
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    workstream?: XOR<ProjectWorkstreamNullableRelationFilter, ProjectWorkstreamWhereInput> | null
     user?: XOR<UserRelationFilter, UserWhereInput>
     proposedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
   }
@@ -43681,6 +45482,7 @@ export namespace Prisma {
   export type ProjectResourceOrderByWithRelationInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrderInput | SortOrder
     userId?: SortOrder
     roleInProject?: SortOrderInput | SortOrder
     plannedMandays?: SortOrder
@@ -43690,6 +45492,7 @@ export namespace Prisma {
     acceptedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     project?: ProjectOrderByWithRelationInput
+    workstream?: ProjectWorkstreamOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
     proposedBy?: UserOrderByWithRelationInput
   }
@@ -43701,6 +45504,7 @@ export namespace Prisma {
     OR?: ProjectResourceWhereInput[]
     NOT?: ProjectResourceWhereInput | ProjectResourceWhereInput[]
     projectId?: StringFilter<"ProjectResource"> | string
+    workstreamId?: StringNullableFilter<"ProjectResource"> | string | null
     userId?: StringFilter<"ProjectResource"> | string
     roleInProject?: StringNullableFilter<"ProjectResource"> | string | null
     plannedMandays?: FloatFilter<"ProjectResource"> | number
@@ -43710,6 +45514,7 @@ export namespace Prisma {
     acceptedAt?: DateTimeNullableFilter<"ProjectResource"> | Date | string | null
     createdAt?: DateTimeFilter<"ProjectResource"> | Date | string
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    workstream?: XOR<ProjectWorkstreamNullableRelationFilter, ProjectWorkstreamWhereInput> | null
     user?: XOR<UserRelationFilter, UserWhereInput>
     proposedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
   }, "id" | "projectId_userId">
@@ -43717,6 +45522,7 @@ export namespace Prisma {
   export type ProjectResourceOrderByWithAggregationInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrderInput | SortOrder
     userId?: SortOrder
     roleInProject?: SortOrderInput | SortOrder
     plannedMandays?: SortOrder
@@ -43738,6 +45544,7 @@ export namespace Prisma {
     NOT?: ProjectResourceScalarWhereWithAggregatesInput | ProjectResourceScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"ProjectResource"> | string
     projectId?: StringWithAggregatesFilter<"ProjectResource"> | string
+    workstreamId?: StringNullableWithAggregatesFilter<"ProjectResource"> | string | null
     userId?: StringWithAggregatesFilter<"ProjectResource"> | string
     roleInProject?: StringNullableWithAggregatesFilter<"ProjectResource"> | string | null
     plannedMandays?: FloatWithAggregatesFilter<"ProjectResource"> | number
@@ -43754,6 +45561,7 @@ export namespace Prisma {
     NOT?: TimesheetWhereInput | TimesheetWhereInput[]
     id?: StringFilter<"Timesheet"> | string
     projectId?: StringFilter<"Timesheet"> | string
+    workstreamId?: StringNullableFilter<"Timesheet"> | string | null
     userId?: StringFilter<"Timesheet"> | string
     taskId?: StringNullableFilter<"Timesheet"> | string | null
     workDate?: DateTimeFilter<"Timesheet"> | Date | string
@@ -43766,6 +45574,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Timesheet"> | Date | string
     updatedAt?: DateTimeFilter<"Timesheet"> | Date | string
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    workstream?: XOR<ProjectWorkstreamNullableRelationFilter, ProjectWorkstreamWhereInput> | null
     user?: XOR<UserRelationFilter, UserWhereInput>
     task?: XOR<TaskNullableRelationFilter, TaskWhereInput> | null
     approvedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
@@ -43774,6 +45583,7 @@ export namespace Prisma {
   export type TimesheetOrderByWithRelationInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrderInput | SortOrder
     userId?: SortOrder
     taskId?: SortOrderInput | SortOrder
     workDate?: SortOrder
@@ -43786,6 +45596,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     project?: ProjectOrderByWithRelationInput
+    workstream?: ProjectWorkstreamOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
     task?: TaskOrderByWithRelationInput
     approvedBy?: UserOrderByWithRelationInput
@@ -43797,6 +45608,7 @@ export namespace Prisma {
     OR?: TimesheetWhereInput[]
     NOT?: TimesheetWhereInput | TimesheetWhereInput[]
     projectId?: StringFilter<"Timesheet"> | string
+    workstreamId?: StringNullableFilter<"Timesheet"> | string | null
     userId?: StringFilter<"Timesheet"> | string
     taskId?: StringNullableFilter<"Timesheet"> | string | null
     workDate?: DateTimeFilter<"Timesheet"> | Date | string
@@ -43809,6 +45621,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Timesheet"> | Date | string
     updatedAt?: DateTimeFilter<"Timesheet"> | Date | string
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    workstream?: XOR<ProjectWorkstreamNullableRelationFilter, ProjectWorkstreamWhereInput> | null
     user?: XOR<UserRelationFilter, UserWhereInput>
     task?: XOR<TaskNullableRelationFilter, TaskWhereInput> | null
     approvedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
@@ -43817,6 +45630,7 @@ export namespace Prisma {
   export type TimesheetOrderByWithAggregationInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrderInput | SortOrder
     userId?: SortOrder
     taskId?: SortOrderInput | SortOrder
     workDate?: SortOrder
@@ -43841,6 +45655,7 @@ export namespace Prisma {
     NOT?: TimesheetScalarWhereWithAggregatesInput | TimesheetScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Timesheet"> | string
     projectId?: StringWithAggregatesFilter<"Timesheet"> | string
+    workstreamId?: StringNullableWithAggregatesFilter<"Timesheet"> | string | null
     userId?: StringWithAggregatesFilter<"Timesheet"> | string
     taskId?: StringNullableWithAggregatesFilter<"Timesheet"> | string | null
     workDate?: DateTimeWithAggregatesFilter<"Timesheet"> | Date | string
@@ -44062,6 +45877,7 @@ export namespace Prisma {
     NOT?: ProjectExpenseWhereInput | ProjectExpenseWhereInput[]
     id?: StringFilter<"ProjectExpense"> | string
     projectId?: StringFilter<"ProjectExpense"> | string
+    workstreamId?: StringNullableFilter<"ProjectExpense"> | string | null
     category?: StringFilter<"ProjectExpense"> | string
     description?: StringFilter<"ProjectExpense"> | string
     amount?: FloatFilter<"ProjectExpense"> | number
@@ -44076,6 +45892,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ProjectExpense"> | Date | string
     updatedAt?: DateTimeFilter<"ProjectExpense"> | Date | string
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    workstream?: XOR<ProjectWorkstreamNullableRelationFilter, ProjectWorkstreamWhereInput> | null
     approvedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
   }
@@ -44083,6 +45900,7 @@ export namespace Prisma {
   export type ProjectExpenseOrderByWithRelationInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrderInput | SortOrder
     category?: SortOrder
     description?: SortOrder
     amount?: SortOrder
@@ -44097,6 +45915,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     project?: ProjectOrderByWithRelationInput
+    workstream?: ProjectWorkstreamOrderByWithRelationInput
     approvedBy?: UserOrderByWithRelationInput
     createdBy?: UserOrderByWithRelationInput
   }
@@ -44107,6 +45926,7 @@ export namespace Prisma {
     OR?: ProjectExpenseWhereInput[]
     NOT?: ProjectExpenseWhereInput | ProjectExpenseWhereInput[]
     projectId?: StringFilter<"ProjectExpense"> | string
+    workstreamId?: StringNullableFilter<"ProjectExpense"> | string | null
     category?: StringFilter<"ProjectExpense"> | string
     description?: StringFilter<"ProjectExpense"> | string
     amount?: FloatFilter<"ProjectExpense"> | number
@@ -44121,6 +45941,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ProjectExpense"> | Date | string
     updatedAt?: DateTimeFilter<"ProjectExpense"> | Date | string
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    workstream?: XOR<ProjectWorkstreamNullableRelationFilter, ProjectWorkstreamWhereInput> | null
     approvedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
   }, "id">
@@ -44128,6 +45949,7 @@ export namespace Prisma {
   export type ProjectExpenseOrderByWithAggregationInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrderInput | SortOrder
     category?: SortOrder
     description?: SortOrder
     amount?: SortOrder
@@ -44154,6 +45976,7 @@ export namespace Prisma {
     NOT?: ProjectExpenseScalarWhereWithAggregatesInput | ProjectExpenseScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"ProjectExpense"> | string
     projectId?: StringWithAggregatesFilter<"ProjectExpense"> | string
+    workstreamId?: StringNullableWithAggregatesFilter<"ProjectExpense"> | string | null
     category?: StringWithAggregatesFilter<"ProjectExpense"> | string
     description?: StringWithAggregatesFilter<"ProjectExpense"> | string
     amount?: FloatWithAggregatesFilter<"ProjectExpense"> | number
@@ -44182,6 +46005,7 @@ export namespace Prisma {
     users?: UserListRelationFilter
     taskTemplates?: TaskTemplateListRelationFilter
     projectTemplates?: ProjectTemplateListRelationFilter
+    workstreams?: ProjectWorkstreamListRelationFilter
   }
 
   export type BusinessUnitOrderByWithRelationInput = {
@@ -44194,6 +46018,7 @@ export namespace Prisma {
     users?: UserOrderByRelationAggregateInput
     taskTemplates?: TaskTemplateOrderByRelationAggregateInput
     projectTemplates?: ProjectTemplateOrderByRelationAggregateInput
+    workstreams?: ProjectWorkstreamOrderByRelationAggregateInput
   }
 
   export type BusinessUnitWhereUniqueInput = Prisma.AtLeast<{
@@ -44209,6 +46034,7 @@ export namespace Prisma {
     users?: UserListRelationFilter
     taskTemplates?: TaskTemplateListRelationFilter
     projectTemplates?: ProjectTemplateListRelationFilter
+    workstreams?: ProjectWorkstreamListRelationFilter
   }, "id" | "name">
 
   export type BusinessUnitOrderByWithAggregationInput = {
@@ -44608,6 +46434,7 @@ export namespace Prisma {
     NOT?: TaskWhereInput | TaskWhereInput[]
     id?: StringFilter<"Task"> | string
     projectId?: StringFilter<"Task"> | string
+    workstreamId?: StringNullableFilter<"Task"> | string | null
     title?: StringFilter<"Task"> | string
     description?: StringNullableFilter<"Task"> | string | null
     status?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
@@ -44621,6 +46448,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Task"> | Date | string
     parentTaskId?: StringNullableFilter<"Task"> | string | null
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    workstream?: XOR<ProjectWorkstreamNullableRelationFilter, ProjectWorkstreamWhereInput> | null
     assignee?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     parentTask?: XOR<TaskNullableRelationFilter, TaskWhereInput> | null
@@ -44635,6 +46463,7 @@ export namespace Prisma {
   export type TaskOrderByWithRelationInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrderInput | SortOrder
     title?: SortOrder
     description?: SortOrderInput | SortOrder
     status?: SortOrder
@@ -44648,6 +46477,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     parentTaskId?: SortOrderInput | SortOrder
     project?: ProjectOrderByWithRelationInput
+    workstream?: ProjectWorkstreamOrderByWithRelationInput
     assignee?: UserOrderByWithRelationInput
     createdBy?: UserOrderByWithRelationInput
     parentTask?: TaskOrderByWithRelationInput
@@ -44665,6 +46495,7 @@ export namespace Prisma {
     OR?: TaskWhereInput[]
     NOT?: TaskWhereInput | TaskWhereInput[]
     projectId?: StringFilter<"Task"> | string
+    workstreamId?: StringNullableFilter<"Task"> | string | null
     title?: StringFilter<"Task"> | string
     description?: StringNullableFilter<"Task"> | string | null
     status?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
@@ -44678,6 +46509,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Task"> | Date | string
     parentTaskId?: StringNullableFilter<"Task"> | string | null
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    workstream?: XOR<ProjectWorkstreamNullableRelationFilter, ProjectWorkstreamWhereInput> | null
     assignee?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     parentTask?: XOR<TaskNullableRelationFilter, TaskWhereInput> | null
@@ -44692,6 +46524,7 @@ export namespace Prisma {
   export type TaskOrderByWithAggregationInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrderInput | SortOrder
     title?: SortOrder
     description?: SortOrderInput | SortOrder
     status?: SortOrder
@@ -44717,6 +46550,7 @@ export namespace Prisma {
     NOT?: TaskScalarWhereWithAggregatesInput | TaskScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Task"> | string
     projectId?: StringWithAggregatesFilter<"Task"> | string
+    workstreamId?: StringNullableWithAggregatesFilter<"Task"> | string | null
     title?: StringWithAggregatesFilter<"Task"> | string
     description?: StringNullableWithAggregatesFilter<"Task"> | string | null
     status?: EnumTaskStatusWithAggregatesFilter<"Task"> | $Enums.TaskStatus
@@ -44791,6 +46625,7 @@ export namespace Prisma {
     NOT?: BillingMilestoneWhereInput | BillingMilestoneWhereInput[]
     id?: StringFilter<"BillingMilestone"> | string
     projectId?: StringFilter<"BillingMilestone"> | string
+    workstreamId?: StringNullableFilter<"BillingMilestone"> | string | null
     name?: StringFilter<"BillingMilestone"> | string
     description?: StringNullableFilter<"BillingMilestone"> | string | null
     percentage?: FloatFilter<"BillingMilestone"> | number
@@ -44804,11 +46639,13 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"BillingMilestone"> | Date | string
     updatedAt?: DateTimeFilter<"BillingMilestone"> | Date | string
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    workstream?: XOR<ProjectWorkstreamNullableRelationFilter, ProjectWorkstreamWhereInput> | null
   }
 
   export type BillingMilestoneOrderByWithRelationInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrderInput | SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     percentage?: SortOrder
@@ -44822,6 +46659,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     project?: ProjectOrderByWithRelationInput
+    workstream?: ProjectWorkstreamOrderByWithRelationInput
   }
 
   export type BillingMilestoneWhereUniqueInput = Prisma.AtLeast<{
@@ -44830,6 +46668,7 @@ export namespace Prisma {
     OR?: BillingMilestoneWhereInput[]
     NOT?: BillingMilestoneWhereInput | BillingMilestoneWhereInput[]
     projectId?: StringFilter<"BillingMilestone"> | string
+    workstreamId?: StringNullableFilter<"BillingMilestone"> | string | null
     name?: StringFilter<"BillingMilestone"> | string
     description?: StringNullableFilter<"BillingMilestone"> | string | null
     percentage?: FloatFilter<"BillingMilestone"> | number
@@ -44843,11 +46682,13 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"BillingMilestone"> | Date | string
     updatedAt?: DateTimeFilter<"BillingMilestone"> | Date | string
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    workstream?: XOR<ProjectWorkstreamNullableRelationFilter, ProjectWorkstreamWhereInput> | null
   }, "id">
 
   export type BillingMilestoneOrderByWithAggregationInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrderInput | SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     percentage?: SortOrder
@@ -44873,6 +46714,7 @@ export namespace Prisma {
     NOT?: BillingMilestoneScalarWhereWithAggregatesInput | BillingMilestoneScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"BillingMilestone"> | string
     projectId?: StringWithAggregatesFilter<"BillingMilestone"> | string
+    workstreamId?: StringNullableWithAggregatesFilter<"BillingMilestone"> | string | null
     name?: StringWithAggregatesFilter<"BillingMilestone"> | string
     description?: StringNullableWithAggregatesFilter<"BillingMilestone"> | string | null
     percentage?: FloatWithAggregatesFilter<"BillingMilestone"> | number
@@ -46516,6 +48358,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
@@ -46533,6 +48376,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateInput = {
@@ -46567,6 +48411,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
@@ -46579,6 +48424,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUpdateInput = {
@@ -46608,6 +48454,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
@@ -46625,6 +48472,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateInput = {
@@ -46659,6 +48507,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
@@ -46671,6 +48520,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectCreateManyInput = {
@@ -46705,6 +48555,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
   }
 
@@ -46735,6 +48586,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -46770,7 +48622,152 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ProjectWorkstreamCreateInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    allocationPct?: number
+    plannedMandays?: number
+    estimatedCost?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    status?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutWorkstreamsInput
+    businessUnit?: BusinessUnitCreateNestedOneWithoutWorkstreamsInput
+    resources?: ProjectResourceCreateNestedManyWithoutWorkstreamInput
+    tasks?: TaskCreateNestedManyWithoutWorkstreamInput
+    expenses?: ProjectExpenseCreateNestedManyWithoutWorkstreamInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutWorkstreamInput
+    timesheets?: TimesheetCreateNestedManyWithoutWorkstreamInput
+  }
+
+  export type ProjectWorkstreamUncheckedCreateInput = {
+    id?: string
+    projectId: string
+    code: string
+    name: string
+    description?: string | null
+    businessUnitId?: string | null
+    allocationPct?: number
+    plannedMandays?: number
+    estimatedCost?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    status?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutWorkstreamInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutWorkstreamInput
+    expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutWorkstreamInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutWorkstreamInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutWorkstreamInput
+  }
+
+  export type ProjectWorkstreamUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allocationPct?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutWorkstreamsNestedInput
+    businessUnit?: BusinessUnitUpdateOneWithoutWorkstreamsNestedInput
+    resources?: ProjectResourceUpdateManyWithoutWorkstreamNestedInput
+    tasks?: TaskUpdateManyWithoutWorkstreamNestedInput
+    expenses?: ProjectExpenseUpdateManyWithoutWorkstreamNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutWorkstreamNestedInput
+    timesheets?: TimesheetUpdateManyWithoutWorkstreamNestedInput
+  }
+
+  export type ProjectWorkstreamUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    allocationPct?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resources?: ProjectResourceUncheckedUpdateManyWithoutWorkstreamNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutWorkstreamNestedInput
+    expenses?: ProjectExpenseUncheckedUpdateManyWithoutWorkstreamNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutWorkstreamNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutWorkstreamNestedInput
+  }
+
+  export type ProjectWorkstreamCreateManyInput = {
+    id?: string
+    projectId: string
+    code: string
+    name: string
+    description?: string | null
+    businessUnitId?: string | null
+    allocationPct?: number
+    plannedMandays?: number
+    estimatedCost?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    status?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectWorkstreamUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allocationPct?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectWorkstreamUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    allocationPct?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SurveyQuestionCreateInput = {
@@ -47039,6 +49036,7 @@ export namespace Prisma {
     acceptedAt?: Date | string | null
     createdAt?: Date | string
     project: ProjectCreateNestedOneWithoutResourcesInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutResourcesInput
     user: UserCreateNestedOneWithoutResourcesInput
     proposedBy?: UserCreateNestedOneWithoutProposedResourcesInput
   }
@@ -47046,6 +49044,7 @@ export namespace Prisma {
   export type ProjectResourceUncheckedCreateInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     userId: string
     roleInProject?: string | null
     plannedMandays?: number
@@ -47065,6 +49064,7 @@ export namespace Prisma {
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutResourcesNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutResourcesNestedInput
     user?: UserUpdateOneRequiredWithoutResourcesNestedInput
     proposedBy?: UserUpdateOneWithoutProposedResourcesNestedInput
   }
@@ -47072,6 +49072,7 @@ export namespace Prisma {
   export type ProjectResourceUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
     roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
     plannedMandays?: FloatFieldUpdateOperationsInput | number
@@ -47085,6 +49086,7 @@ export namespace Prisma {
   export type ProjectResourceCreateManyInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     userId: string
     roleInProject?: string | null
     plannedMandays?: number
@@ -47108,6 +49110,7 @@ export namespace Prisma {
   export type ProjectResourceUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
     roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
     plannedMandays?: FloatFieldUpdateOperationsInput | number
@@ -47129,6 +49132,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutTimesheetsInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutTimesheetsInput
     user: UserCreateNestedOneWithoutTimesheetsInput
     task?: TaskCreateNestedOneWithoutTimesheetsInput
     approvedBy?: UserCreateNestedOneWithoutApprovedTimesheetsInput
@@ -47137,6 +49141,7 @@ export namespace Prisma {
   export type TimesheetUncheckedCreateInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     userId: string
     taskId?: string | null
     workDate: Date | string
@@ -47161,6 +49166,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutTimesheetsNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutTimesheetsNestedInput
     user?: UserUpdateOneRequiredWithoutTimesheetsNestedInput
     task?: TaskUpdateOneWithoutTimesheetsNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedTimesheetsNestedInput
@@ -47169,6 +49175,7 @@ export namespace Prisma {
   export type TimesheetUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     workDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47185,6 +49192,7 @@ export namespace Prisma {
   export type TimesheetCreateManyInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     userId: string
     taskId?: string | null
     workDate: Date | string
@@ -47213,6 +49221,7 @@ export namespace Prisma {
   export type TimesheetUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     workDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47456,6 +49465,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutExpensesInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutExpensesInput
     approvedBy?: UserCreateNestedOneWithoutApprovedExpensesInput
     createdBy?: UserCreateNestedOneWithoutProjectExpensesInput
   }
@@ -47463,6 +49473,7 @@ export namespace Prisma {
   export type ProjectExpenseUncheckedCreateInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     category: string
     description: string
     amount: number
@@ -47492,6 +49503,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutExpensesNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutExpensesNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedExpensesNestedInput
     createdBy?: UserUpdateOneWithoutProjectExpensesNestedInput
   }
@@ -47499,6 +49511,7 @@ export namespace Prisma {
   export type ProjectExpenseUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
@@ -47517,6 +49530,7 @@ export namespace Prisma {
   export type ProjectExpenseCreateManyInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     category: string
     description: string
     amount: number
@@ -47550,6 +49564,7 @@ export namespace Prisma {
   export type ProjectExpenseUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
@@ -47575,6 +49590,7 @@ export namespace Prisma {
     users?: UserCreateNestedManyWithoutBusinessUnitInput
     taskTemplates?: TaskTemplateCreateNestedManyWithoutBusinessUnitInput
     projectTemplates?: ProjectTemplateCreateNestedManyWithoutBusinessUnitInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutBusinessUnitInput
   }
 
   export type BusinessUnitUncheckedCreateInput = {
@@ -47587,6 +49603,7 @@ export namespace Prisma {
     users?: UserUncheckedCreateNestedManyWithoutBusinessUnitInput
     taskTemplates?: TaskTemplateUncheckedCreateNestedManyWithoutBusinessUnitInput
     projectTemplates?: ProjectTemplateUncheckedCreateNestedManyWithoutBusinessUnitInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutBusinessUnitInput
   }
 
   export type BusinessUnitUpdateInput = {
@@ -47599,6 +49616,7 @@ export namespace Prisma {
     users?: UserUpdateManyWithoutBusinessUnitNestedInput
     taskTemplates?: TaskTemplateUpdateManyWithoutBusinessUnitNestedInput
     projectTemplates?: ProjectTemplateUpdateManyWithoutBusinessUnitNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutBusinessUnitNestedInput
   }
 
   export type BusinessUnitUncheckedUpdateInput = {
@@ -47611,6 +49629,7 @@ export namespace Prisma {
     users?: UserUncheckedUpdateManyWithoutBusinessUnitNestedInput
     taskTemplates?: TaskTemplateUncheckedUpdateManyWithoutBusinessUnitNestedInput
     projectTemplates?: ProjectTemplateUncheckedUpdateManyWithoutBusinessUnitNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutBusinessUnitNestedInput
   }
 
   export type BusinessUnitCreateManyInput = {
@@ -48018,6 +50037,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutTasksInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutTasksInput
     assignee?: UserCreateNestedOneWithoutTasksAssignedInput
     createdBy?: UserCreateNestedOneWithoutTasksCreatedInput
     parentTask?: TaskCreateNestedOneWithoutSubtasksInput
@@ -48032,6 +50052,7 @@ export namespace Prisma {
   export type TaskUncheckedCreateInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
@@ -48064,6 +50085,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutTasksNestedInput
     assignee?: UserUpdateOneWithoutTasksAssignedNestedInput
     createdBy?: UserUpdateOneWithoutTasksCreatedNestedInput
     parentTask?: TaskUpdateOneWithoutSubtasksNestedInput
@@ -48078,6 +50100,7 @@ export namespace Prisma {
   export type TaskUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -48101,6 +50124,7 @@ export namespace Prisma {
   export type TaskCreateManyInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
@@ -48131,6 +50155,7 @@ export namespace Prisma {
   export type TaskUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -48207,11 +50232,13 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutBillingMilestonesInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutBillingMilestonesInput
   }
 
   export type BillingMilestoneUncheckedCreateInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     name: string
     description?: string | null
     percentage?: number
@@ -48241,11 +50268,13 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutBillingMilestonesNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutBillingMilestonesNestedInput
   }
 
   export type BillingMilestoneUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     percentage?: FloatFieldUpdateOperationsInput | number
@@ -48263,6 +50292,7 @@ export namespace Prisma {
   export type BillingMilestoneCreateManyInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     name: string
     description?: string | null
     percentage?: number
@@ -48296,6 +50326,7 @@ export namespace Prisma {
   export type BillingMilestoneUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     percentage?: FloatFieldUpdateOperationsInput | number
@@ -50262,11 +52293,21 @@ export namespace Prisma {
     none?: BillingMilestoneWhereInput
   }
 
+  export type ProjectWorkstreamListRelationFilter = {
+    every?: ProjectWorkstreamWhereInput
+    some?: ProjectWorkstreamWhereInput
+    none?: ProjectWorkstreamWhereInput
+  }
+
   export type SurveyResponseOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type BillingMilestoneOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProjectWorkstreamOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -50302,6 +52343,7 @@ export namespace Prisma {
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    useWorkstreams?: SortOrder
     surveyToken?: SortOrder
   }
 
@@ -50345,6 +52387,7 @@ export namespace Prisma {
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    useWorkstreams?: SortOrder
     surveyToken?: SortOrder
   }
 
@@ -50380,6 +52423,7 @@ export namespace Prisma {
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    useWorkstreams?: SortOrder
     surveyToken?: SortOrder
   }
 
@@ -50425,6 +52469,84 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type ProjectRelationFilter = {
+    is?: ProjectWhereInput
+    isNot?: ProjectWhereInput
+  }
+
+  export type ProjectWorkstreamProjectIdCodeCompoundUniqueInput = {
+    projectId: string
+    code: string
+  }
+
+  export type ProjectWorkstreamCountOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    businessUnitId?: SortOrder
+    allocationPct?: SortOrder
+    plannedMandays?: SortOrder
+    estimatedCost?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    status?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProjectWorkstreamAvgOrderByAggregateInput = {
+    allocationPct?: SortOrder
+    plannedMandays?: SortOrder
+    estimatedCost?: SortOrder
+    sortOrder?: SortOrder
+  }
+
+  export type ProjectWorkstreamMaxOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    businessUnitId?: SortOrder
+    allocationPct?: SortOrder
+    plannedMandays?: SortOrder
+    estimatedCost?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    status?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProjectWorkstreamMinOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    businessUnitId?: SortOrder
+    allocationPct?: SortOrder
+    plannedMandays?: SortOrder
+    estimatedCost?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    status?: SortOrder
+    sortOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProjectWorkstreamSumOrderByAggregateInput = {
+    allocationPct?: SortOrder
+    plannedMandays?: SortOrder
+    estimatedCost?: SortOrder
+    sortOrder?: SortOrder
   }
 
   export type SurveyQuestionCountOrderByAggregateInput = {
@@ -50513,11 +52635,6 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
-
-  export type ProjectRelationFilter = {
-    is?: ProjectWhereInput
-    isNot?: ProjectWhereInput
   }
 
   export type SurveyResponseCountOrderByAggregateInput = {
@@ -50637,6 +52754,11 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type ProjectWorkstreamNullableRelationFilter = {
+    is?: ProjectWorkstreamWhereInput | null
+    isNot?: ProjectWorkstreamWhereInput | null
+  }
+
   export type UserRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
@@ -50650,6 +52772,7 @@ export namespace Prisma {
   export type ProjectResourceCountOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrder
     userId?: SortOrder
     roleInProject?: SortOrder
     plannedMandays?: SortOrder
@@ -50668,6 +52791,7 @@ export namespace Prisma {
   export type ProjectResourceMaxOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrder
     userId?: SortOrder
     roleInProject?: SortOrder
     plannedMandays?: SortOrder
@@ -50681,6 +52805,7 @@ export namespace Prisma {
   export type ProjectResourceMinOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrder
     userId?: SortOrder
     roleInProject?: SortOrder
     plannedMandays?: SortOrder
@@ -50711,6 +52836,7 @@ export namespace Prisma {
   export type TimesheetCountOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrder
     userId?: SortOrder
     taskId?: SortOrder
     workDate?: SortOrder
@@ -50731,6 +52857,7 @@ export namespace Prisma {
   export type TimesheetMaxOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrder
     userId?: SortOrder
     taskId?: SortOrder
     workDate?: SortOrder
@@ -50747,6 +52874,7 @@ export namespace Prisma {
   export type TimesheetMinOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrder
     userId?: SortOrder
     taskId?: SortOrder
     workDate?: SortOrder
@@ -50922,6 +53050,7 @@ export namespace Prisma {
   export type ProjectExpenseCountOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrder
     category?: SortOrder
     description?: SortOrder
     amount?: SortOrder
@@ -50944,6 +53073,7 @@ export namespace Prisma {
   export type ProjectExpenseMaxOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrder
     category?: SortOrder
     description?: SortOrder
     amount?: SortOrder
@@ -50962,6 +53092,7 @@ export namespace Prisma {
   export type ProjectExpenseMinOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrder
     category?: SortOrder
     description?: SortOrder
     amount?: SortOrder
@@ -51269,6 +53400,7 @@ export namespace Prisma {
   export type TaskCountOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrder
     title?: SortOrder
     description?: SortOrder
     status?: SortOrder
@@ -51290,6 +53422,7 @@ export namespace Prisma {
   export type TaskMaxOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrder
     title?: SortOrder
     description?: SortOrder
     status?: SortOrder
@@ -51307,6 +53440,7 @@ export namespace Prisma {
   export type TaskMinOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrder
     title?: SortOrder
     description?: SortOrder
     status?: SortOrder
@@ -51376,6 +53510,7 @@ export namespace Prisma {
   export type BillingMilestoneCountOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrder
     name?: SortOrder
     description?: SortOrder
     percentage?: SortOrder
@@ -51399,6 +53534,7 @@ export namespace Prisma {
   export type BillingMilestoneMaxOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrder
     name?: SortOrder
     description?: SortOrder
     percentage?: SortOrder
@@ -51416,6 +53552,7 @@ export namespace Prisma {
   export type BillingMilestoneMinOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
+    workstreamId?: SortOrder
     name?: SortOrder
     description?: SortOrder
     percentage?: SortOrder
@@ -54112,6 +56249,13 @@ export namespace Prisma {
     connect?: ProjectClosingChecklistItemWhereUniqueInput | ProjectClosingChecklistItemWhereUniqueInput[]
   }
 
+  export type ProjectWorkstreamCreateNestedManyWithoutProjectInput = {
+    create?: XOR<ProjectWorkstreamCreateWithoutProjectInput, ProjectWorkstreamUncheckedCreateWithoutProjectInput> | ProjectWorkstreamCreateWithoutProjectInput[] | ProjectWorkstreamUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutProjectInput | ProjectWorkstreamCreateOrConnectWithoutProjectInput[]
+    createMany?: ProjectWorkstreamCreateManyProjectInputEnvelope
+    connect?: ProjectWorkstreamWhereUniqueInput | ProjectWorkstreamWhereUniqueInput[]
+  }
+
   export type ProjectResourceUncheckedCreateNestedManyWithoutProjectInput = {
     create?: XOR<ProjectResourceCreateWithoutProjectInput, ProjectResourceUncheckedCreateWithoutProjectInput> | ProjectResourceCreateWithoutProjectInput[] | ProjectResourceUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: ProjectResourceCreateOrConnectWithoutProjectInput | ProjectResourceCreateOrConnectWithoutProjectInput[]
@@ -54187,6 +56331,13 @@ export namespace Prisma {
     connectOrCreate?: ProjectClosingChecklistItemCreateOrConnectWithoutProjectInput | ProjectClosingChecklistItemCreateOrConnectWithoutProjectInput[]
     createMany?: ProjectClosingChecklistItemCreateManyProjectInputEnvelope
     connect?: ProjectClosingChecklistItemWhereUniqueInput | ProjectClosingChecklistItemWhereUniqueInput[]
+  }
+
+  export type ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput = {
+    create?: XOR<ProjectWorkstreamCreateWithoutProjectInput, ProjectWorkstreamUncheckedCreateWithoutProjectInput> | ProjectWorkstreamCreateWithoutProjectInput[] | ProjectWorkstreamUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutProjectInput | ProjectWorkstreamCreateOrConnectWithoutProjectInput[]
+    createMany?: ProjectWorkstreamCreateManyProjectInputEnvelope
+    connect?: ProjectWorkstreamWhereUniqueInput | ProjectWorkstreamWhereUniqueInput[]
   }
 
   export type EnumProjectStatusFieldUpdateOperationsInput = {
@@ -54407,6 +56558,20 @@ export namespace Prisma {
     deleteMany?: ProjectClosingChecklistItemScalarWhereInput | ProjectClosingChecklistItemScalarWhereInput[]
   }
 
+  export type ProjectWorkstreamUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<ProjectWorkstreamCreateWithoutProjectInput, ProjectWorkstreamUncheckedCreateWithoutProjectInput> | ProjectWorkstreamCreateWithoutProjectInput[] | ProjectWorkstreamUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutProjectInput | ProjectWorkstreamCreateOrConnectWithoutProjectInput[]
+    upsert?: ProjectWorkstreamUpsertWithWhereUniqueWithoutProjectInput | ProjectWorkstreamUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: ProjectWorkstreamCreateManyProjectInputEnvelope
+    set?: ProjectWorkstreamWhereUniqueInput | ProjectWorkstreamWhereUniqueInput[]
+    disconnect?: ProjectWorkstreamWhereUniqueInput | ProjectWorkstreamWhereUniqueInput[]
+    delete?: ProjectWorkstreamWhereUniqueInput | ProjectWorkstreamWhereUniqueInput[]
+    connect?: ProjectWorkstreamWhereUniqueInput | ProjectWorkstreamWhereUniqueInput[]
+    update?: ProjectWorkstreamUpdateWithWhereUniqueWithoutProjectInput | ProjectWorkstreamUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: ProjectWorkstreamUpdateManyWithWhereWithoutProjectInput | ProjectWorkstreamUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: ProjectWorkstreamScalarWhereInput | ProjectWorkstreamScalarWhereInput[]
+  }
+
   export type ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput = {
     create?: XOR<ProjectResourceCreateWithoutProjectInput, ProjectResourceUncheckedCreateWithoutProjectInput> | ProjectResourceCreateWithoutProjectInput[] | ProjectResourceUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: ProjectResourceCreateOrConnectWithoutProjectInput | ProjectResourceCreateOrConnectWithoutProjectInput[]
@@ -54561,6 +56726,260 @@ export namespace Prisma {
     deleteMany?: ProjectClosingChecklistItemScalarWhereInput | ProjectClosingChecklistItemScalarWhereInput[]
   }
 
+  export type ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<ProjectWorkstreamCreateWithoutProjectInput, ProjectWorkstreamUncheckedCreateWithoutProjectInput> | ProjectWorkstreamCreateWithoutProjectInput[] | ProjectWorkstreamUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutProjectInput | ProjectWorkstreamCreateOrConnectWithoutProjectInput[]
+    upsert?: ProjectWorkstreamUpsertWithWhereUniqueWithoutProjectInput | ProjectWorkstreamUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: ProjectWorkstreamCreateManyProjectInputEnvelope
+    set?: ProjectWorkstreamWhereUniqueInput | ProjectWorkstreamWhereUniqueInput[]
+    disconnect?: ProjectWorkstreamWhereUniqueInput | ProjectWorkstreamWhereUniqueInput[]
+    delete?: ProjectWorkstreamWhereUniqueInput | ProjectWorkstreamWhereUniqueInput[]
+    connect?: ProjectWorkstreamWhereUniqueInput | ProjectWorkstreamWhereUniqueInput[]
+    update?: ProjectWorkstreamUpdateWithWhereUniqueWithoutProjectInput | ProjectWorkstreamUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: ProjectWorkstreamUpdateManyWithWhereWithoutProjectInput | ProjectWorkstreamUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: ProjectWorkstreamScalarWhereInput | ProjectWorkstreamScalarWhereInput[]
+  }
+
+  export type ProjectCreateNestedOneWithoutWorkstreamsInput = {
+    create?: XOR<ProjectCreateWithoutWorkstreamsInput, ProjectUncheckedCreateWithoutWorkstreamsInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutWorkstreamsInput
+    connect?: ProjectWhereUniqueInput
+  }
+
+  export type BusinessUnitCreateNestedOneWithoutWorkstreamsInput = {
+    create?: XOR<BusinessUnitCreateWithoutWorkstreamsInput, BusinessUnitUncheckedCreateWithoutWorkstreamsInput>
+    connectOrCreate?: BusinessUnitCreateOrConnectWithoutWorkstreamsInput
+    connect?: BusinessUnitWhereUniqueInput
+  }
+
+  export type ProjectResourceCreateNestedManyWithoutWorkstreamInput = {
+    create?: XOR<ProjectResourceCreateWithoutWorkstreamInput, ProjectResourceUncheckedCreateWithoutWorkstreamInput> | ProjectResourceCreateWithoutWorkstreamInput[] | ProjectResourceUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: ProjectResourceCreateOrConnectWithoutWorkstreamInput | ProjectResourceCreateOrConnectWithoutWorkstreamInput[]
+    createMany?: ProjectResourceCreateManyWorkstreamInputEnvelope
+    connect?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
+  }
+
+  export type TaskCreateNestedManyWithoutWorkstreamInput = {
+    create?: XOR<TaskCreateWithoutWorkstreamInput, TaskUncheckedCreateWithoutWorkstreamInput> | TaskCreateWithoutWorkstreamInput[] | TaskUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutWorkstreamInput | TaskCreateOrConnectWithoutWorkstreamInput[]
+    createMany?: TaskCreateManyWorkstreamInputEnvelope
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+  }
+
+  export type ProjectExpenseCreateNestedManyWithoutWorkstreamInput = {
+    create?: XOR<ProjectExpenseCreateWithoutWorkstreamInput, ProjectExpenseUncheckedCreateWithoutWorkstreamInput> | ProjectExpenseCreateWithoutWorkstreamInput[] | ProjectExpenseUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: ProjectExpenseCreateOrConnectWithoutWorkstreamInput | ProjectExpenseCreateOrConnectWithoutWorkstreamInput[]
+    createMany?: ProjectExpenseCreateManyWorkstreamInputEnvelope
+    connect?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+  }
+
+  export type BillingMilestoneCreateNestedManyWithoutWorkstreamInput = {
+    create?: XOR<BillingMilestoneCreateWithoutWorkstreamInput, BillingMilestoneUncheckedCreateWithoutWorkstreamInput> | BillingMilestoneCreateWithoutWorkstreamInput[] | BillingMilestoneUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: BillingMilestoneCreateOrConnectWithoutWorkstreamInput | BillingMilestoneCreateOrConnectWithoutWorkstreamInput[]
+    createMany?: BillingMilestoneCreateManyWorkstreamInputEnvelope
+    connect?: BillingMilestoneWhereUniqueInput | BillingMilestoneWhereUniqueInput[]
+  }
+
+  export type TimesheetCreateNestedManyWithoutWorkstreamInput = {
+    create?: XOR<TimesheetCreateWithoutWorkstreamInput, TimesheetUncheckedCreateWithoutWorkstreamInput> | TimesheetCreateWithoutWorkstreamInput[] | TimesheetUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: TimesheetCreateOrConnectWithoutWorkstreamInput | TimesheetCreateOrConnectWithoutWorkstreamInput[]
+    createMany?: TimesheetCreateManyWorkstreamInputEnvelope
+    connect?: TimesheetWhereUniqueInput | TimesheetWhereUniqueInput[]
+  }
+
+  export type ProjectResourceUncheckedCreateNestedManyWithoutWorkstreamInput = {
+    create?: XOR<ProjectResourceCreateWithoutWorkstreamInput, ProjectResourceUncheckedCreateWithoutWorkstreamInput> | ProjectResourceCreateWithoutWorkstreamInput[] | ProjectResourceUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: ProjectResourceCreateOrConnectWithoutWorkstreamInput | ProjectResourceCreateOrConnectWithoutWorkstreamInput[]
+    createMany?: ProjectResourceCreateManyWorkstreamInputEnvelope
+    connect?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
+  }
+
+  export type TaskUncheckedCreateNestedManyWithoutWorkstreamInput = {
+    create?: XOR<TaskCreateWithoutWorkstreamInput, TaskUncheckedCreateWithoutWorkstreamInput> | TaskCreateWithoutWorkstreamInput[] | TaskUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutWorkstreamInput | TaskCreateOrConnectWithoutWorkstreamInput[]
+    createMany?: TaskCreateManyWorkstreamInputEnvelope
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+  }
+
+  export type ProjectExpenseUncheckedCreateNestedManyWithoutWorkstreamInput = {
+    create?: XOR<ProjectExpenseCreateWithoutWorkstreamInput, ProjectExpenseUncheckedCreateWithoutWorkstreamInput> | ProjectExpenseCreateWithoutWorkstreamInput[] | ProjectExpenseUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: ProjectExpenseCreateOrConnectWithoutWorkstreamInput | ProjectExpenseCreateOrConnectWithoutWorkstreamInput[]
+    createMany?: ProjectExpenseCreateManyWorkstreamInputEnvelope
+    connect?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+  }
+
+  export type BillingMilestoneUncheckedCreateNestedManyWithoutWorkstreamInput = {
+    create?: XOR<BillingMilestoneCreateWithoutWorkstreamInput, BillingMilestoneUncheckedCreateWithoutWorkstreamInput> | BillingMilestoneCreateWithoutWorkstreamInput[] | BillingMilestoneUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: BillingMilestoneCreateOrConnectWithoutWorkstreamInput | BillingMilestoneCreateOrConnectWithoutWorkstreamInput[]
+    createMany?: BillingMilestoneCreateManyWorkstreamInputEnvelope
+    connect?: BillingMilestoneWhereUniqueInput | BillingMilestoneWhereUniqueInput[]
+  }
+
+  export type TimesheetUncheckedCreateNestedManyWithoutWorkstreamInput = {
+    create?: XOR<TimesheetCreateWithoutWorkstreamInput, TimesheetUncheckedCreateWithoutWorkstreamInput> | TimesheetCreateWithoutWorkstreamInput[] | TimesheetUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: TimesheetCreateOrConnectWithoutWorkstreamInput | TimesheetCreateOrConnectWithoutWorkstreamInput[]
+    createMany?: TimesheetCreateManyWorkstreamInputEnvelope
+    connect?: TimesheetWhereUniqueInput | TimesheetWhereUniqueInput[]
+  }
+
+  export type ProjectUpdateOneRequiredWithoutWorkstreamsNestedInput = {
+    create?: XOR<ProjectCreateWithoutWorkstreamsInput, ProjectUncheckedCreateWithoutWorkstreamsInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutWorkstreamsInput
+    upsert?: ProjectUpsertWithoutWorkstreamsInput
+    connect?: ProjectWhereUniqueInput
+    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutWorkstreamsInput, ProjectUpdateWithoutWorkstreamsInput>, ProjectUncheckedUpdateWithoutWorkstreamsInput>
+  }
+
+  export type BusinessUnitUpdateOneWithoutWorkstreamsNestedInput = {
+    create?: XOR<BusinessUnitCreateWithoutWorkstreamsInput, BusinessUnitUncheckedCreateWithoutWorkstreamsInput>
+    connectOrCreate?: BusinessUnitCreateOrConnectWithoutWorkstreamsInput
+    upsert?: BusinessUnitUpsertWithoutWorkstreamsInput
+    disconnect?: BusinessUnitWhereInput | boolean
+    delete?: BusinessUnitWhereInput | boolean
+    connect?: BusinessUnitWhereUniqueInput
+    update?: XOR<XOR<BusinessUnitUpdateToOneWithWhereWithoutWorkstreamsInput, BusinessUnitUpdateWithoutWorkstreamsInput>, BusinessUnitUncheckedUpdateWithoutWorkstreamsInput>
+  }
+
+  export type ProjectResourceUpdateManyWithoutWorkstreamNestedInput = {
+    create?: XOR<ProjectResourceCreateWithoutWorkstreamInput, ProjectResourceUncheckedCreateWithoutWorkstreamInput> | ProjectResourceCreateWithoutWorkstreamInput[] | ProjectResourceUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: ProjectResourceCreateOrConnectWithoutWorkstreamInput | ProjectResourceCreateOrConnectWithoutWorkstreamInput[]
+    upsert?: ProjectResourceUpsertWithWhereUniqueWithoutWorkstreamInput | ProjectResourceUpsertWithWhereUniqueWithoutWorkstreamInput[]
+    createMany?: ProjectResourceCreateManyWorkstreamInputEnvelope
+    set?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
+    disconnect?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
+    delete?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
+    connect?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
+    update?: ProjectResourceUpdateWithWhereUniqueWithoutWorkstreamInput | ProjectResourceUpdateWithWhereUniqueWithoutWorkstreamInput[]
+    updateMany?: ProjectResourceUpdateManyWithWhereWithoutWorkstreamInput | ProjectResourceUpdateManyWithWhereWithoutWorkstreamInput[]
+    deleteMany?: ProjectResourceScalarWhereInput | ProjectResourceScalarWhereInput[]
+  }
+
+  export type TaskUpdateManyWithoutWorkstreamNestedInput = {
+    create?: XOR<TaskCreateWithoutWorkstreamInput, TaskUncheckedCreateWithoutWorkstreamInput> | TaskCreateWithoutWorkstreamInput[] | TaskUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutWorkstreamInput | TaskCreateOrConnectWithoutWorkstreamInput[]
+    upsert?: TaskUpsertWithWhereUniqueWithoutWorkstreamInput | TaskUpsertWithWhereUniqueWithoutWorkstreamInput[]
+    createMany?: TaskCreateManyWorkstreamInputEnvelope
+    set?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    disconnect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    delete?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    update?: TaskUpdateWithWhereUniqueWithoutWorkstreamInput | TaskUpdateWithWhereUniqueWithoutWorkstreamInput[]
+    updateMany?: TaskUpdateManyWithWhereWithoutWorkstreamInput | TaskUpdateManyWithWhereWithoutWorkstreamInput[]
+    deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
+  }
+
+  export type ProjectExpenseUpdateManyWithoutWorkstreamNestedInput = {
+    create?: XOR<ProjectExpenseCreateWithoutWorkstreamInput, ProjectExpenseUncheckedCreateWithoutWorkstreamInput> | ProjectExpenseCreateWithoutWorkstreamInput[] | ProjectExpenseUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: ProjectExpenseCreateOrConnectWithoutWorkstreamInput | ProjectExpenseCreateOrConnectWithoutWorkstreamInput[]
+    upsert?: ProjectExpenseUpsertWithWhereUniqueWithoutWorkstreamInput | ProjectExpenseUpsertWithWhereUniqueWithoutWorkstreamInput[]
+    createMany?: ProjectExpenseCreateManyWorkstreamInputEnvelope
+    set?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    disconnect?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    delete?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    connect?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    update?: ProjectExpenseUpdateWithWhereUniqueWithoutWorkstreamInput | ProjectExpenseUpdateWithWhereUniqueWithoutWorkstreamInput[]
+    updateMany?: ProjectExpenseUpdateManyWithWhereWithoutWorkstreamInput | ProjectExpenseUpdateManyWithWhereWithoutWorkstreamInput[]
+    deleteMany?: ProjectExpenseScalarWhereInput | ProjectExpenseScalarWhereInput[]
+  }
+
+  export type BillingMilestoneUpdateManyWithoutWorkstreamNestedInput = {
+    create?: XOR<BillingMilestoneCreateWithoutWorkstreamInput, BillingMilestoneUncheckedCreateWithoutWorkstreamInput> | BillingMilestoneCreateWithoutWorkstreamInput[] | BillingMilestoneUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: BillingMilestoneCreateOrConnectWithoutWorkstreamInput | BillingMilestoneCreateOrConnectWithoutWorkstreamInput[]
+    upsert?: BillingMilestoneUpsertWithWhereUniqueWithoutWorkstreamInput | BillingMilestoneUpsertWithWhereUniqueWithoutWorkstreamInput[]
+    createMany?: BillingMilestoneCreateManyWorkstreamInputEnvelope
+    set?: BillingMilestoneWhereUniqueInput | BillingMilestoneWhereUniqueInput[]
+    disconnect?: BillingMilestoneWhereUniqueInput | BillingMilestoneWhereUniqueInput[]
+    delete?: BillingMilestoneWhereUniqueInput | BillingMilestoneWhereUniqueInput[]
+    connect?: BillingMilestoneWhereUniqueInput | BillingMilestoneWhereUniqueInput[]
+    update?: BillingMilestoneUpdateWithWhereUniqueWithoutWorkstreamInput | BillingMilestoneUpdateWithWhereUniqueWithoutWorkstreamInput[]
+    updateMany?: BillingMilestoneUpdateManyWithWhereWithoutWorkstreamInput | BillingMilestoneUpdateManyWithWhereWithoutWorkstreamInput[]
+    deleteMany?: BillingMilestoneScalarWhereInput | BillingMilestoneScalarWhereInput[]
+  }
+
+  export type TimesheetUpdateManyWithoutWorkstreamNestedInput = {
+    create?: XOR<TimesheetCreateWithoutWorkstreamInput, TimesheetUncheckedCreateWithoutWorkstreamInput> | TimesheetCreateWithoutWorkstreamInput[] | TimesheetUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: TimesheetCreateOrConnectWithoutWorkstreamInput | TimesheetCreateOrConnectWithoutWorkstreamInput[]
+    upsert?: TimesheetUpsertWithWhereUniqueWithoutWorkstreamInput | TimesheetUpsertWithWhereUniqueWithoutWorkstreamInput[]
+    createMany?: TimesheetCreateManyWorkstreamInputEnvelope
+    set?: TimesheetWhereUniqueInput | TimesheetWhereUniqueInput[]
+    disconnect?: TimesheetWhereUniqueInput | TimesheetWhereUniqueInput[]
+    delete?: TimesheetWhereUniqueInput | TimesheetWhereUniqueInput[]
+    connect?: TimesheetWhereUniqueInput | TimesheetWhereUniqueInput[]
+    update?: TimesheetUpdateWithWhereUniqueWithoutWorkstreamInput | TimesheetUpdateWithWhereUniqueWithoutWorkstreamInput[]
+    updateMany?: TimesheetUpdateManyWithWhereWithoutWorkstreamInput | TimesheetUpdateManyWithWhereWithoutWorkstreamInput[]
+    deleteMany?: TimesheetScalarWhereInput | TimesheetScalarWhereInput[]
+  }
+
+  export type ProjectResourceUncheckedUpdateManyWithoutWorkstreamNestedInput = {
+    create?: XOR<ProjectResourceCreateWithoutWorkstreamInput, ProjectResourceUncheckedCreateWithoutWorkstreamInput> | ProjectResourceCreateWithoutWorkstreamInput[] | ProjectResourceUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: ProjectResourceCreateOrConnectWithoutWorkstreamInput | ProjectResourceCreateOrConnectWithoutWorkstreamInput[]
+    upsert?: ProjectResourceUpsertWithWhereUniqueWithoutWorkstreamInput | ProjectResourceUpsertWithWhereUniqueWithoutWorkstreamInput[]
+    createMany?: ProjectResourceCreateManyWorkstreamInputEnvelope
+    set?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
+    disconnect?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
+    delete?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
+    connect?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
+    update?: ProjectResourceUpdateWithWhereUniqueWithoutWorkstreamInput | ProjectResourceUpdateWithWhereUniqueWithoutWorkstreamInput[]
+    updateMany?: ProjectResourceUpdateManyWithWhereWithoutWorkstreamInput | ProjectResourceUpdateManyWithWhereWithoutWorkstreamInput[]
+    deleteMany?: ProjectResourceScalarWhereInput | ProjectResourceScalarWhereInput[]
+  }
+
+  export type TaskUncheckedUpdateManyWithoutWorkstreamNestedInput = {
+    create?: XOR<TaskCreateWithoutWorkstreamInput, TaskUncheckedCreateWithoutWorkstreamInput> | TaskCreateWithoutWorkstreamInput[] | TaskUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutWorkstreamInput | TaskCreateOrConnectWithoutWorkstreamInput[]
+    upsert?: TaskUpsertWithWhereUniqueWithoutWorkstreamInput | TaskUpsertWithWhereUniqueWithoutWorkstreamInput[]
+    createMany?: TaskCreateManyWorkstreamInputEnvelope
+    set?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    disconnect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    delete?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    update?: TaskUpdateWithWhereUniqueWithoutWorkstreamInput | TaskUpdateWithWhereUniqueWithoutWorkstreamInput[]
+    updateMany?: TaskUpdateManyWithWhereWithoutWorkstreamInput | TaskUpdateManyWithWhereWithoutWorkstreamInput[]
+    deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
+  }
+
+  export type ProjectExpenseUncheckedUpdateManyWithoutWorkstreamNestedInput = {
+    create?: XOR<ProjectExpenseCreateWithoutWorkstreamInput, ProjectExpenseUncheckedCreateWithoutWorkstreamInput> | ProjectExpenseCreateWithoutWorkstreamInput[] | ProjectExpenseUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: ProjectExpenseCreateOrConnectWithoutWorkstreamInput | ProjectExpenseCreateOrConnectWithoutWorkstreamInput[]
+    upsert?: ProjectExpenseUpsertWithWhereUniqueWithoutWorkstreamInput | ProjectExpenseUpsertWithWhereUniqueWithoutWorkstreamInput[]
+    createMany?: ProjectExpenseCreateManyWorkstreamInputEnvelope
+    set?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    disconnect?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    delete?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    connect?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    update?: ProjectExpenseUpdateWithWhereUniqueWithoutWorkstreamInput | ProjectExpenseUpdateWithWhereUniqueWithoutWorkstreamInput[]
+    updateMany?: ProjectExpenseUpdateManyWithWhereWithoutWorkstreamInput | ProjectExpenseUpdateManyWithWhereWithoutWorkstreamInput[]
+    deleteMany?: ProjectExpenseScalarWhereInput | ProjectExpenseScalarWhereInput[]
+  }
+
+  export type BillingMilestoneUncheckedUpdateManyWithoutWorkstreamNestedInput = {
+    create?: XOR<BillingMilestoneCreateWithoutWorkstreamInput, BillingMilestoneUncheckedCreateWithoutWorkstreamInput> | BillingMilestoneCreateWithoutWorkstreamInput[] | BillingMilestoneUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: BillingMilestoneCreateOrConnectWithoutWorkstreamInput | BillingMilestoneCreateOrConnectWithoutWorkstreamInput[]
+    upsert?: BillingMilestoneUpsertWithWhereUniqueWithoutWorkstreamInput | BillingMilestoneUpsertWithWhereUniqueWithoutWorkstreamInput[]
+    createMany?: BillingMilestoneCreateManyWorkstreamInputEnvelope
+    set?: BillingMilestoneWhereUniqueInput | BillingMilestoneWhereUniqueInput[]
+    disconnect?: BillingMilestoneWhereUniqueInput | BillingMilestoneWhereUniqueInput[]
+    delete?: BillingMilestoneWhereUniqueInput | BillingMilestoneWhereUniqueInput[]
+    connect?: BillingMilestoneWhereUniqueInput | BillingMilestoneWhereUniqueInput[]
+    update?: BillingMilestoneUpdateWithWhereUniqueWithoutWorkstreamInput | BillingMilestoneUpdateWithWhereUniqueWithoutWorkstreamInput[]
+    updateMany?: BillingMilestoneUpdateManyWithWhereWithoutWorkstreamInput | BillingMilestoneUpdateManyWithWhereWithoutWorkstreamInput[]
+    deleteMany?: BillingMilestoneScalarWhereInput | BillingMilestoneScalarWhereInput[]
+  }
+
+  export type TimesheetUncheckedUpdateManyWithoutWorkstreamNestedInput = {
+    create?: XOR<TimesheetCreateWithoutWorkstreamInput, TimesheetUncheckedCreateWithoutWorkstreamInput> | TimesheetCreateWithoutWorkstreamInput[] | TimesheetUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: TimesheetCreateOrConnectWithoutWorkstreamInput | TimesheetCreateOrConnectWithoutWorkstreamInput[]
+    upsert?: TimesheetUpsertWithWhereUniqueWithoutWorkstreamInput | TimesheetUpsertWithWhereUniqueWithoutWorkstreamInput[]
+    createMany?: TimesheetCreateManyWorkstreamInputEnvelope
+    set?: TimesheetWhereUniqueInput | TimesheetWhereUniqueInput[]
+    disconnect?: TimesheetWhereUniqueInput | TimesheetWhereUniqueInput[]
+    delete?: TimesheetWhereUniqueInput | TimesheetWhereUniqueInput[]
+    connect?: TimesheetWhereUniqueInput | TimesheetWhereUniqueInput[]
+    update?: TimesheetUpdateWithWhereUniqueWithoutWorkstreamInput | TimesheetUpdateWithWhereUniqueWithoutWorkstreamInput[]
+    updateMany?: TimesheetUpdateManyWithWhereWithoutWorkstreamInput | TimesheetUpdateManyWithWhereWithoutWorkstreamInput[]
+    deleteMany?: TimesheetScalarWhereInput | TimesheetScalarWhereInput[]
+  }
+
   export type ProjectCreateNestedOneWithoutSurveyResponsesInput = {
     create?: XOR<ProjectCreateWithoutSurveyResponsesInput, ProjectUncheckedCreateWithoutSurveyResponsesInput>
     connectOrCreate?: ProjectCreateOrConnectWithoutSurveyResponsesInput
@@ -54597,6 +57016,12 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput
   }
 
+  export type ProjectWorkstreamCreateNestedOneWithoutResourcesInput = {
+    create?: XOR<ProjectWorkstreamCreateWithoutResourcesInput, ProjectWorkstreamUncheckedCreateWithoutResourcesInput>
+    connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutResourcesInput
+    connect?: ProjectWorkstreamWhereUniqueInput
+  }
+
   export type UserCreateNestedOneWithoutResourcesInput = {
     create?: XOR<UserCreateWithoutResourcesInput, UserUncheckedCreateWithoutResourcesInput>
     connectOrCreate?: UserCreateOrConnectWithoutResourcesInput
@@ -54615,6 +57040,16 @@ export namespace Prisma {
     upsert?: ProjectUpsertWithoutResourcesInput
     connect?: ProjectWhereUniqueInput
     update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutResourcesInput, ProjectUpdateWithoutResourcesInput>, ProjectUncheckedUpdateWithoutResourcesInput>
+  }
+
+  export type ProjectWorkstreamUpdateOneWithoutResourcesNestedInput = {
+    create?: XOR<ProjectWorkstreamCreateWithoutResourcesInput, ProjectWorkstreamUncheckedCreateWithoutResourcesInput>
+    connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutResourcesInput
+    upsert?: ProjectWorkstreamUpsertWithoutResourcesInput
+    disconnect?: ProjectWorkstreamWhereInput | boolean
+    delete?: ProjectWorkstreamWhereInput | boolean
+    connect?: ProjectWorkstreamWhereUniqueInput
+    update?: XOR<XOR<ProjectWorkstreamUpdateToOneWithWhereWithoutResourcesInput, ProjectWorkstreamUpdateWithoutResourcesInput>, ProjectWorkstreamUncheckedUpdateWithoutResourcesInput>
   }
 
   export type UserUpdateOneRequiredWithoutResourcesNestedInput = {
@@ -54639,6 +57074,12 @@ export namespace Prisma {
     create?: XOR<ProjectCreateWithoutTimesheetsInput, ProjectUncheckedCreateWithoutTimesheetsInput>
     connectOrCreate?: ProjectCreateOrConnectWithoutTimesheetsInput
     connect?: ProjectWhereUniqueInput
+  }
+
+  export type ProjectWorkstreamCreateNestedOneWithoutTimesheetsInput = {
+    create?: XOR<ProjectWorkstreamCreateWithoutTimesheetsInput, ProjectWorkstreamUncheckedCreateWithoutTimesheetsInput>
+    connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutTimesheetsInput
+    connect?: ProjectWorkstreamWhereUniqueInput
   }
 
   export type UserCreateNestedOneWithoutTimesheetsInput = {
@@ -54669,6 +57110,16 @@ export namespace Prisma {
     upsert?: ProjectUpsertWithoutTimesheetsInput
     connect?: ProjectWhereUniqueInput
     update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutTimesheetsInput, ProjectUpdateWithoutTimesheetsInput>, ProjectUncheckedUpdateWithoutTimesheetsInput>
+  }
+
+  export type ProjectWorkstreamUpdateOneWithoutTimesheetsNestedInput = {
+    create?: XOR<ProjectWorkstreamCreateWithoutTimesheetsInput, ProjectWorkstreamUncheckedCreateWithoutTimesheetsInput>
+    connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutTimesheetsInput
+    upsert?: ProjectWorkstreamUpsertWithoutTimesheetsInput
+    disconnect?: ProjectWorkstreamWhereInput | boolean
+    delete?: ProjectWorkstreamWhereInput | boolean
+    connect?: ProjectWorkstreamWhereUniqueInput
+    update?: XOR<XOR<ProjectWorkstreamUpdateToOneWithWhereWithoutTimesheetsInput, ProjectWorkstreamUpdateWithoutTimesheetsInput>, ProjectWorkstreamUncheckedUpdateWithoutTimesheetsInput>
   }
 
   export type UserUpdateOneRequiredWithoutTimesheetsNestedInput = {
@@ -54827,6 +57278,12 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput
   }
 
+  export type ProjectWorkstreamCreateNestedOneWithoutExpensesInput = {
+    create?: XOR<ProjectWorkstreamCreateWithoutExpensesInput, ProjectWorkstreamUncheckedCreateWithoutExpensesInput>
+    connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutExpensesInput
+    connect?: ProjectWorkstreamWhereUniqueInput
+  }
+
   export type UserCreateNestedOneWithoutApprovedExpensesInput = {
     create?: XOR<UserCreateWithoutApprovedExpensesInput, UserUncheckedCreateWithoutApprovedExpensesInput>
     connectOrCreate?: UserCreateOrConnectWithoutApprovedExpensesInput
@@ -54849,6 +57306,16 @@ export namespace Prisma {
     upsert?: ProjectUpsertWithoutExpensesInput
     connect?: ProjectWhereUniqueInput
     update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutExpensesInput, ProjectUpdateWithoutExpensesInput>, ProjectUncheckedUpdateWithoutExpensesInput>
+  }
+
+  export type ProjectWorkstreamUpdateOneWithoutExpensesNestedInput = {
+    create?: XOR<ProjectWorkstreamCreateWithoutExpensesInput, ProjectWorkstreamUncheckedCreateWithoutExpensesInput>
+    connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutExpensesInput
+    upsert?: ProjectWorkstreamUpsertWithoutExpensesInput
+    disconnect?: ProjectWorkstreamWhereInput | boolean
+    delete?: ProjectWorkstreamWhereInput | boolean
+    connect?: ProjectWorkstreamWhereUniqueInput
+    update?: XOR<XOR<ProjectWorkstreamUpdateToOneWithWhereWithoutExpensesInput, ProjectWorkstreamUpdateWithoutExpensesInput>, ProjectWorkstreamUncheckedUpdateWithoutExpensesInput>
   }
 
   export type UserUpdateOneWithoutApprovedExpensesNestedInput = {
@@ -54892,6 +57359,13 @@ export namespace Prisma {
     connect?: ProjectTemplateWhereUniqueInput | ProjectTemplateWhereUniqueInput[]
   }
 
+  export type ProjectWorkstreamCreateNestedManyWithoutBusinessUnitInput = {
+    create?: XOR<ProjectWorkstreamCreateWithoutBusinessUnitInput, ProjectWorkstreamUncheckedCreateWithoutBusinessUnitInput> | ProjectWorkstreamCreateWithoutBusinessUnitInput[] | ProjectWorkstreamUncheckedCreateWithoutBusinessUnitInput[]
+    connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutBusinessUnitInput | ProjectWorkstreamCreateOrConnectWithoutBusinessUnitInput[]
+    createMany?: ProjectWorkstreamCreateManyBusinessUnitInputEnvelope
+    connect?: ProjectWorkstreamWhereUniqueInput | ProjectWorkstreamWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutBusinessUnitInput = {
     create?: XOR<UserCreateWithoutBusinessUnitInput, UserUncheckedCreateWithoutBusinessUnitInput> | UserCreateWithoutBusinessUnitInput[] | UserUncheckedCreateWithoutBusinessUnitInput[]
     connectOrCreate?: UserCreateOrConnectWithoutBusinessUnitInput | UserCreateOrConnectWithoutBusinessUnitInput[]
@@ -54911,6 +57385,13 @@ export namespace Prisma {
     connectOrCreate?: ProjectTemplateCreateOrConnectWithoutBusinessUnitInput | ProjectTemplateCreateOrConnectWithoutBusinessUnitInput[]
     createMany?: ProjectTemplateCreateManyBusinessUnitInputEnvelope
     connect?: ProjectTemplateWhereUniqueInput | ProjectTemplateWhereUniqueInput[]
+  }
+
+  export type ProjectWorkstreamUncheckedCreateNestedManyWithoutBusinessUnitInput = {
+    create?: XOR<ProjectWorkstreamCreateWithoutBusinessUnitInput, ProjectWorkstreamUncheckedCreateWithoutBusinessUnitInput> | ProjectWorkstreamCreateWithoutBusinessUnitInput[] | ProjectWorkstreamUncheckedCreateWithoutBusinessUnitInput[]
+    connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutBusinessUnitInput | ProjectWorkstreamCreateOrConnectWithoutBusinessUnitInput[]
+    createMany?: ProjectWorkstreamCreateManyBusinessUnitInputEnvelope
+    connect?: ProjectWorkstreamWhereUniqueInput | ProjectWorkstreamWhereUniqueInput[]
   }
 
   export type UserUpdateManyWithoutBusinessUnitNestedInput = {
@@ -54955,6 +57436,20 @@ export namespace Prisma {
     deleteMany?: ProjectTemplateScalarWhereInput | ProjectTemplateScalarWhereInput[]
   }
 
+  export type ProjectWorkstreamUpdateManyWithoutBusinessUnitNestedInput = {
+    create?: XOR<ProjectWorkstreamCreateWithoutBusinessUnitInput, ProjectWorkstreamUncheckedCreateWithoutBusinessUnitInput> | ProjectWorkstreamCreateWithoutBusinessUnitInput[] | ProjectWorkstreamUncheckedCreateWithoutBusinessUnitInput[]
+    connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutBusinessUnitInput | ProjectWorkstreamCreateOrConnectWithoutBusinessUnitInput[]
+    upsert?: ProjectWorkstreamUpsertWithWhereUniqueWithoutBusinessUnitInput | ProjectWorkstreamUpsertWithWhereUniqueWithoutBusinessUnitInput[]
+    createMany?: ProjectWorkstreamCreateManyBusinessUnitInputEnvelope
+    set?: ProjectWorkstreamWhereUniqueInput | ProjectWorkstreamWhereUniqueInput[]
+    disconnect?: ProjectWorkstreamWhereUniqueInput | ProjectWorkstreamWhereUniqueInput[]
+    delete?: ProjectWorkstreamWhereUniqueInput | ProjectWorkstreamWhereUniqueInput[]
+    connect?: ProjectWorkstreamWhereUniqueInput | ProjectWorkstreamWhereUniqueInput[]
+    update?: ProjectWorkstreamUpdateWithWhereUniqueWithoutBusinessUnitInput | ProjectWorkstreamUpdateWithWhereUniqueWithoutBusinessUnitInput[]
+    updateMany?: ProjectWorkstreamUpdateManyWithWhereWithoutBusinessUnitInput | ProjectWorkstreamUpdateManyWithWhereWithoutBusinessUnitInput[]
+    deleteMany?: ProjectWorkstreamScalarWhereInput | ProjectWorkstreamScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutBusinessUnitNestedInput = {
     create?: XOR<UserCreateWithoutBusinessUnitInput, UserUncheckedCreateWithoutBusinessUnitInput> | UserCreateWithoutBusinessUnitInput[] | UserUncheckedCreateWithoutBusinessUnitInput[]
     connectOrCreate?: UserCreateOrConnectWithoutBusinessUnitInput | UserCreateOrConnectWithoutBusinessUnitInput[]
@@ -54995,6 +57490,20 @@ export namespace Prisma {
     update?: ProjectTemplateUpdateWithWhereUniqueWithoutBusinessUnitInput | ProjectTemplateUpdateWithWhereUniqueWithoutBusinessUnitInput[]
     updateMany?: ProjectTemplateUpdateManyWithWhereWithoutBusinessUnitInput | ProjectTemplateUpdateManyWithWhereWithoutBusinessUnitInput[]
     deleteMany?: ProjectTemplateScalarWhereInput | ProjectTemplateScalarWhereInput[]
+  }
+
+  export type ProjectWorkstreamUncheckedUpdateManyWithoutBusinessUnitNestedInput = {
+    create?: XOR<ProjectWorkstreamCreateWithoutBusinessUnitInput, ProjectWorkstreamUncheckedCreateWithoutBusinessUnitInput> | ProjectWorkstreamCreateWithoutBusinessUnitInput[] | ProjectWorkstreamUncheckedCreateWithoutBusinessUnitInput[]
+    connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutBusinessUnitInput | ProjectWorkstreamCreateOrConnectWithoutBusinessUnitInput[]
+    upsert?: ProjectWorkstreamUpsertWithWhereUniqueWithoutBusinessUnitInput | ProjectWorkstreamUpsertWithWhereUniqueWithoutBusinessUnitInput[]
+    createMany?: ProjectWorkstreamCreateManyBusinessUnitInputEnvelope
+    set?: ProjectWorkstreamWhereUniqueInput | ProjectWorkstreamWhereUniqueInput[]
+    disconnect?: ProjectWorkstreamWhereUniqueInput | ProjectWorkstreamWhereUniqueInput[]
+    delete?: ProjectWorkstreamWhereUniqueInput | ProjectWorkstreamWhereUniqueInput[]
+    connect?: ProjectWorkstreamWhereUniqueInput | ProjectWorkstreamWhereUniqueInput[]
+    update?: ProjectWorkstreamUpdateWithWhereUniqueWithoutBusinessUnitInput | ProjectWorkstreamUpdateWithWhereUniqueWithoutBusinessUnitInput[]
+    updateMany?: ProjectWorkstreamUpdateManyWithWhereWithoutBusinessUnitInput | ProjectWorkstreamUpdateManyWithWhereWithoutBusinessUnitInput[]
+    deleteMany?: ProjectWorkstreamScalarWhereInput | ProjectWorkstreamScalarWhereInput[]
   }
 
   export type UserSkillCreateNestedManyWithoutSkillInput = {
@@ -55285,6 +57794,12 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput
   }
 
+  export type ProjectWorkstreamCreateNestedOneWithoutTasksInput = {
+    create?: XOR<ProjectWorkstreamCreateWithoutTasksInput, ProjectWorkstreamUncheckedCreateWithoutTasksInput>
+    connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutTasksInput
+    connect?: ProjectWorkstreamWhereUniqueInput
+  }
+
   export type UserCreateNestedOneWithoutTasksAssignedInput = {
     create?: XOR<UserCreateWithoutTasksAssignedInput, UserUncheckedCreateWithoutTasksAssignedInput>
     connectOrCreate?: UserCreateOrConnectWithoutTasksAssignedInput
@@ -55397,6 +57912,16 @@ export namespace Prisma {
     upsert?: ProjectUpsertWithoutTasksInput
     connect?: ProjectWhereUniqueInput
     update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutTasksInput, ProjectUpdateWithoutTasksInput>, ProjectUncheckedUpdateWithoutTasksInput>
+  }
+
+  export type ProjectWorkstreamUpdateOneWithoutTasksNestedInput = {
+    create?: XOR<ProjectWorkstreamCreateWithoutTasksInput, ProjectWorkstreamUncheckedCreateWithoutTasksInput>
+    connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutTasksInput
+    upsert?: ProjectWorkstreamUpsertWithoutTasksInput
+    disconnect?: ProjectWorkstreamWhereInput | boolean
+    delete?: ProjectWorkstreamWhereInput | boolean
+    connect?: ProjectWorkstreamWhereUniqueInput
+    update?: XOR<XOR<ProjectWorkstreamUpdateToOneWithWhereWithoutTasksInput, ProjectWorkstreamUpdateWithoutTasksInput>, ProjectWorkstreamUncheckedUpdateWithoutTasksInput>
   }
 
   export type UserUpdateOneWithoutTasksAssignedNestedInput = {
@@ -55631,6 +58156,12 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput
   }
 
+  export type ProjectWorkstreamCreateNestedOneWithoutBillingMilestonesInput = {
+    create?: XOR<ProjectWorkstreamCreateWithoutBillingMilestonesInput, ProjectWorkstreamUncheckedCreateWithoutBillingMilestonesInput>
+    connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutBillingMilestonesInput
+    connect?: ProjectWorkstreamWhereUniqueInput
+  }
+
   export type EnumBillingMilestoneStatusFieldUpdateOperationsInput = {
     set?: $Enums.BillingMilestoneStatus
   }
@@ -55641,6 +58172,16 @@ export namespace Prisma {
     upsert?: ProjectUpsertWithoutBillingMilestonesInput
     connect?: ProjectWhereUniqueInput
     update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutBillingMilestonesInput, ProjectUpdateWithoutBillingMilestonesInput>, ProjectUncheckedUpdateWithoutBillingMilestonesInput>
+  }
+
+  export type ProjectWorkstreamUpdateOneWithoutBillingMilestonesNestedInput = {
+    create?: XOR<ProjectWorkstreamCreateWithoutBillingMilestonesInput, ProjectWorkstreamUncheckedCreateWithoutBillingMilestonesInput>
+    connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutBillingMilestonesInput
+    upsert?: ProjectWorkstreamUpsertWithoutBillingMilestonesInput
+    disconnect?: ProjectWorkstreamWhereInput | boolean
+    delete?: ProjectWorkstreamWhereInput | boolean
+    connect?: ProjectWorkstreamWhereUniqueInput
+    update?: XOR<XOR<ProjectWorkstreamUpdateToOneWithWhereWithoutBillingMilestonesInput, ProjectWorkstreamUpdateWithoutBillingMilestonesInput>, ProjectWorkstreamUncheckedUpdateWithoutBillingMilestonesInput>
   }
 
   export type TaskCreateNestedOneWithoutAssigneesInput = {
@@ -56899,6 +59440,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     taskTemplates?: TaskTemplateCreateNestedManyWithoutBusinessUnitInput
     projectTemplates?: ProjectTemplateCreateNestedManyWithoutBusinessUnitInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutBusinessUnitInput
   }
 
   export type BusinessUnitUncheckedCreateWithoutUsersInput = {
@@ -56910,6 +59452,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     taskTemplates?: TaskTemplateUncheckedCreateNestedManyWithoutBusinessUnitInput
     projectTemplates?: ProjectTemplateUncheckedCreateNestedManyWithoutBusinessUnitInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutBusinessUnitInput
   }
 
   export type BusinessUnitCreateOrConnectWithoutUsersInput = {
@@ -57425,12 +59968,14 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutExpensesInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutExpensesInput
     createdBy?: UserCreateNestedOneWithoutProjectExpensesInput
   }
 
   export type ProjectExpenseUncheckedCreateWithoutApprovedByInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     category: string
     description: string
     amount: number
@@ -57482,6 +60027,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
@@ -57498,6 +60044,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutSalesInput = {
@@ -57531,6 +60078,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
@@ -57543,6 +60091,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutSalesInput = {
@@ -57582,6 +60131,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
@@ -57598,6 +60148,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutPmInput = {
@@ -57631,6 +60182,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
@@ -57643,6 +60195,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutPmInput = {
@@ -57682,6 +60235,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
@@ -57698,6 +60252,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutTechnicalWriterInput = {
@@ -57731,6 +60286,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
@@ -57743,6 +60299,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutTechnicalWriterInput = {
@@ -57782,6 +60339,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
@@ -57798,6 +60356,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutAdminProjectInput = {
@@ -57831,6 +60390,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
@@ -57843,6 +60403,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutAdminProjectInput = {
@@ -57864,12 +60425,14 @@ export namespace Prisma {
     acceptedAt?: Date | string | null
     createdAt?: Date | string
     project: ProjectCreateNestedOneWithoutResourcesInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutResourcesInput
     proposedBy?: UserCreateNestedOneWithoutProposedResourcesInput
   }
 
   export type ProjectResourceUncheckedCreateWithoutUserInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     roleInProject?: string | null
     plannedMandays?: number
     dailyRate?: number
@@ -57898,12 +60461,14 @@ export namespace Prisma {
     acceptedAt?: Date | string | null
     createdAt?: Date | string
     project: ProjectCreateNestedOneWithoutResourcesInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutResourcesInput
     user: UserCreateNestedOneWithoutResourcesInput
   }
 
   export type ProjectResourceUncheckedCreateWithoutProposedByInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     userId: string
     roleInProject?: string | null
     plannedMandays?: number
@@ -57934,6 +60499,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutTimesheetsInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutTimesheetsInput
     task?: TaskCreateNestedOneWithoutTimesheetsInput
     approvedBy?: UserCreateNestedOneWithoutApprovedTimesheetsInput
   }
@@ -57941,6 +60507,7 @@ export namespace Prisma {
   export type TimesheetUncheckedCreateWithoutUserInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     taskId?: string | null
     workDate: Date | string
     hours: number
@@ -57974,6 +60541,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutTimesheetsInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutTimesheetsInput
     user: UserCreateNestedOneWithoutTimesheetsInput
     task?: TaskCreateNestedOneWithoutTimesheetsInput
   }
@@ -57981,6 +60549,7 @@ export namespace Prisma {
   export type TimesheetUncheckedCreateWithoutApprovedByInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     userId: string
     taskId?: string | null
     workDate: Date | string
@@ -58123,12 +60692,14 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutExpensesInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutExpensesInput
     approvedBy?: UserCreateNestedOneWithoutApprovedExpensesInput
   }
 
   export type ProjectExpenseUncheckedCreateWithoutCreatedByInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     category: string
     description: string
     amount: number
@@ -58165,6 +60736,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutTasksInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutTasksInput
     createdBy?: UserCreateNestedOneWithoutTasksCreatedInput
     parentTask?: TaskCreateNestedOneWithoutSubtasksInput
     subtasks?: TaskCreateNestedManyWithoutParentTaskInput
@@ -58178,6 +60750,7 @@ export namespace Prisma {
   export type TaskUncheckedCreateWithoutAssigneeInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
@@ -58219,6 +60792,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutTasksInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutTasksInput
     assignee?: UserCreateNestedOneWithoutTasksAssignedInput
     parentTask?: TaskCreateNestedOneWithoutSubtasksInput
     subtasks?: TaskCreateNestedManyWithoutParentTaskInput
@@ -58232,6 +60806,7 @@ export namespace Prisma {
   export type TaskUncheckedCreateWithoutCreatedByInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
@@ -58965,6 +61540,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     taskTemplates?: TaskTemplateUpdateManyWithoutBusinessUnitNestedInput
     projectTemplates?: ProjectTemplateUpdateManyWithoutBusinessUnitNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutBusinessUnitNestedInput
   }
 
   export type BusinessUnitUncheckedUpdateWithoutUsersInput = {
@@ -58976,6 +61552,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     taskTemplates?: TaskTemplateUncheckedUpdateManyWithoutBusinessUnitNestedInput
     projectTemplates?: ProjectTemplateUncheckedUpdateManyWithoutBusinessUnitNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutBusinessUnitNestedInput
   }
 
   export type UserUpsertWithoutReportsInput = {
@@ -59324,6 +61901,7 @@ export namespace Prisma {
     NOT?: ProjectExpenseScalarWhereInput | ProjectExpenseScalarWhereInput[]
     id?: StringFilter<"ProjectExpense"> | string
     projectId?: StringFilter<"ProjectExpense"> | string
+    workstreamId?: StringNullableFilter<"ProjectExpense"> | string | null
     category?: StringFilter<"ProjectExpense"> | string
     description?: StringFilter<"ProjectExpense"> | string
     amount?: FloatFilter<"ProjectExpense"> | number
@@ -59390,6 +61968,7 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
+    useWorkstreams?: BoolFilter<"Project"> | boolean
     surveyToken?: StringNullableFilter<"Project"> | string | null
   }
 
@@ -59463,6 +62042,7 @@ export namespace Prisma {
     NOT?: ProjectResourceScalarWhereInput | ProjectResourceScalarWhereInput[]
     id?: StringFilter<"ProjectResource"> | string
     projectId?: StringFilter<"ProjectResource"> | string
+    workstreamId?: StringNullableFilter<"ProjectResource"> | string | null
     userId?: StringFilter<"ProjectResource"> | string
     roleInProject?: StringNullableFilter<"ProjectResource"> | string | null
     plannedMandays?: FloatFilter<"ProjectResource"> | number
@@ -59511,6 +62091,7 @@ export namespace Prisma {
     NOT?: TimesheetScalarWhereInput | TimesheetScalarWhereInput[]
     id?: StringFilter<"Timesheet"> | string
     projectId?: StringFilter<"Timesheet"> | string
+    workstreamId?: StringNullableFilter<"Timesheet"> | string | null
     userId?: StringFilter<"Timesheet"> | string
     taskId?: StringNullableFilter<"Timesheet"> | string | null
     workDate?: DateTimeFilter<"Timesheet"> | Date | string
@@ -59675,6 +62256,7 @@ export namespace Prisma {
     NOT?: TaskScalarWhereInput | TaskScalarWhereInput[]
     id?: StringFilter<"Task"> | string
     projectId?: StringFilter<"Task"> | string
+    workstreamId?: StringNullableFilter<"Task"> | string | null
     title?: StringFilter<"Task"> | string
     description?: StringNullableFilter<"Task"> | string | null
     status?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
@@ -60260,6 +62842,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
@@ -60276,6 +62859,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutClientInput = {
@@ -60309,6 +62893,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
@@ -60321,6 +62906,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutClientInput = {
@@ -60924,12 +63510,14 @@ export namespace Prisma {
     proposedAt?: Date | string | null
     acceptedAt?: Date | string | null
     createdAt?: Date | string
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutResourcesInput
     user: UserCreateNestedOneWithoutResourcesInput
     proposedBy?: UserCreateNestedOneWithoutProposedResourcesInput
   }
 
   export type ProjectResourceUncheckedCreateWithoutProjectInput = {
     id?: string
+    workstreamId?: string | null
     userId: string
     roleInProject?: string | null
     plannedMandays?: number
@@ -60960,6 +63548,7 @@ export namespace Prisma {
     rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutTimesheetsInput
     user: UserCreateNestedOneWithoutTimesheetsInput
     task?: TaskCreateNestedOneWithoutTimesheetsInput
     approvedBy?: UserCreateNestedOneWithoutApprovedTimesheetsInput
@@ -60967,6 +63556,7 @@ export namespace Prisma {
 
   export type TimesheetUncheckedCreateWithoutProjectInput = {
     id?: string
+    workstreamId?: string | null
     userId: string
     taskId?: string | null
     workDate: Date | string
@@ -61103,12 +63693,14 @@ export namespace Prisma {
     rejectionReason?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutExpensesInput
     approvedBy?: UserCreateNestedOneWithoutApprovedExpensesInput
     createdBy?: UserCreateNestedOneWithoutProjectExpensesInput
   }
 
   export type ProjectExpenseUncheckedCreateWithoutProjectInput = {
     id?: string
+    workstreamId?: string | null
     category: string
     description: string
     amount: number
@@ -61145,6 +63737,7 @@ export namespace Prisma {
     endDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutTasksInput
     assignee?: UserCreateNestedOneWithoutTasksAssignedInput
     createdBy?: UserCreateNestedOneWithoutTasksCreatedInput
     parentTask?: TaskCreateNestedOneWithoutSubtasksInput
@@ -61158,6 +63751,7 @@ export namespace Prisma {
 
   export type TaskUncheckedCreateWithoutProjectInput = {
     id?: string
+    workstreamId?: string | null
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
@@ -61202,10 +63796,12 @@ export namespace Prisma {
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutBillingMilestonesInput
   }
 
   export type BillingMilestoneUncheckedCreateWithoutProjectInput = {
     id?: string
+    workstreamId?: string | null
     name: string
     description?: string | null
     percentage?: number
@@ -61337,6 +63933,60 @@ export namespace Prisma {
 
   export type ProjectClosingChecklistItemCreateManyProjectInputEnvelope = {
     data: ProjectClosingChecklistItemCreateManyProjectInput | ProjectClosingChecklistItemCreateManyProjectInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProjectWorkstreamCreateWithoutProjectInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    allocationPct?: number
+    plannedMandays?: number
+    estimatedCost?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    status?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnit?: BusinessUnitCreateNestedOneWithoutWorkstreamsInput
+    resources?: ProjectResourceCreateNestedManyWithoutWorkstreamInput
+    tasks?: TaskCreateNestedManyWithoutWorkstreamInput
+    expenses?: ProjectExpenseCreateNestedManyWithoutWorkstreamInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutWorkstreamInput
+    timesheets?: TimesheetCreateNestedManyWithoutWorkstreamInput
+  }
+
+  export type ProjectWorkstreamUncheckedCreateWithoutProjectInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    businessUnitId?: string | null
+    allocationPct?: number
+    plannedMandays?: number
+    estimatedCost?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    status?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutWorkstreamInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutWorkstreamInput
+    expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutWorkstreamInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutWorkstreamInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutWorkstreamInput
+  }
+
+  export type ProjectWorkstreamCreateOrConnectWithoutProjectInput = {
+    where: ProjectWorkstreamWhereUniqueInput
+    create: XOR<ProjectWorkstreamCreateWithoutProjectInput, ProjectWorkstreamUncheckedCreateWithoutProjectInput>
+  }
+
+  export type ProjectWorkstreamCreateManyProjectInputEnvelope = {
+    data: ProjectWorkstreamCreateManyProjectInput | ProjectWorkstreamCreateManyProjectInput[]
     skipDuplicates?: boolean
   }
 
@@ -62007,6 +64657,7 @@ export namespace Prisma {
     NOT?: BillingMilestoneScalarWhereInput | BillingMilestoneScalarWhereInput[]
     id?: StringFilter<"BillingMilestone"> | string
     projectId?: StringFilter<"BillingMilestone"> | string
+    workstreamId?: StringNullableFilter<"BillingMilestone"> | string | null
     name?: StringFilter<"BillingMilestone"> | string
     description?: StringNullableFilter<"BillingMilestone"> | string | null
     percentage?: FloatFilter<"BillingMilestone"> | number
@@ -62069,6 +64720,615 @@ export namespace Prisma {
     data: XOR<ProjectClosingChecklistItemUpdateManyMutationInput, ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectInput>
   }
 
+  export type ProjectWorkstreamUpsertWithWhereUniqueWithoutProjectInput = {
+    where: ProjectWorkstreamWhereUniqueInput
+    update: XOR<ProjectWorkstreamUpdateWithoutProjectInput, ProjectWorkstreamUncheckedUpdateWithoutProjectInput>
+    create: XOR<ProjectWorkstreamCreateWithoutProjectInput, ProjectWorkstreamUncheckedCreateWithoutProjectInput>
+  }
+
+  export type ProjectWorkstreamUpdateWithWhereUniqueWithoutProjectInput = {
+    where: ProjectWorkstreamWhereUniqueInput
+    data: XOR<ProjectWorkstreamUpdateWithoutProjectInput, ProjectWorkstreamUncheckedUpdateWithoutProjectInput>
+  }
+
+  export type ProjectWorkstreamUpdateManyWithWhereWithoutProjectInput = {
+    where: ProjectWorkstreamScalarWhereInput
+    data: XOR<ProjectWorkstreamUpdateManyMutationInput, ProjectWorkstreamUncheckedUpdateManyWithoutProjectInput>
+  }
+
+  export type ProjectWorkstreamScalarWhereInput = {
+    AND?: ProjectWorkstreamScalarWhereInput | ProjectWorkstreamScalarWhereInput[]
+    OR?: ProjectWorkstreamScalarWhereInput[]
+    NOT?: ProjectWorkstreamScalarWhereInput | ProjectWorkstreamScalarWhereInput[]
+    id?: StringFilter<"ProjectWorkstream"> | string
+    projectId?: StringFilter<"ProjectWorkstream"> | string
+    code?: StringFilter<"ProjectWorkstream"> | string
+    name?: StringFilter<"ProjectWorkstream"> | string
+    description?: StringNullableFilter<"ProjectWorkstream"> | string | null
+    businessUnitId?: StringNullableFilter<"ProjectWorkstream"> | string | null
+    allocationPct?: FloatFilter<"ProjectWorkstream"> | number
+    plannedMandays?: FloatFilter<"ProjectWorkstream"> | number
+    estimatedCost?: FloatFilter<"ProjectWorkstream"> | number
+    startDate?: DateTimeNullableFilter<"ProjectWorkstream"> | Date | string | null
+    endDate?: DateTimeNullableFilter<"ProjectWorkstream"> | Date | string | null
+    status?: StringFilter<"ProjectWorkstream"> | string
+    sortOrder?: IntFilter<"ProjectWorkstream"> | number
+    createdAt?: DateTimeFilter<"ProjectWorkstream"> | Date | string
+    updatedAt?: DateTimeFilter<"ProjectWorkstream"> | Date | string
+  }
+
+  export type ProjectCreateWithoutWorkstreamsInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    currency?: string
+    exchangeRate?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    useWorkstreams?: boolean
+    surveyToken?: string | null
+    client: ClientCreateNestedOneWithoutProjectsInput
+    sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
+    pm?: UserCreateNestedOneWithoutProjectsAsPmInput
+    technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
+    adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    resources?: ProjectResourceCreateNestedManyWithoutProjectInput
+    timesheets?: TimesheetCreateNestedManyWithoutProjectInput
+    documents?: DocumentCreateNestedManyWithoutProjectInput
+    activities?: ActivityCreateNestedManyWithoutProjectInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
+    expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
+    tasks?: TaskCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
+    closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectUncheckedCreateWithoutWorkstreamsInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
+    clientId: string
+    salesId?: string | null
+    pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    currency?: string
+    exchangeRate?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    useWorkstreams?: boolean
+    surveyToken?: string | null
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutProjectInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
+    expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
+    closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutWorkstreamsInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutWorkstreamsInput, ProjectUncheckedCreateWithoutWorkstreamsInput>
+  }
+
+  export type BusinessUnitCreateWithoutWorkstreamsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserCreateNestedManyWithoutBusinessUnitInput
+    taskTemplates?: TaskTemplateCreateNestedManyWithoutBusinessUnitInput
+    projectTemplates?: ProjectTemplateCreateNestedManyWithoutBusinessUnitInput
+  }
+
+  export type BusinessUnitUncheckedCreateWithoutWorkstreamsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutBusinessUnitInput
+    taskTemplates?: TaskTemplateUncheckedCreateNestedManyWithoutBusinessUnitInput
+    projectTemplates?: ProjectTemplateUncheckedCreateNestedManyWithoutBusinessUnitInput
+  }
+
+  export type BusinessUnitCreateOrConnectWithoutWorkstreamsInput = {
+    where: BusinessUnitWhereUniqueInput
+    create: XOR<BusinessUnitCreateWithoutWorkstreamsInput, BusinessUnitUncheckedCreateWithoutWorkstreamsInput>
+  }
+
+  export type ProjectResourceCreateWithoutWorkstreamInput = {
+    id?: string
+    roleInProject?: string | null
+    plannedMandays?: number
+    dailyRate?: number
+    proposedAt?: Date | string | null
+    acceptedAt?: Date | string | null
+    createdAt?: Date | string
+    project: ProjectCreateNestedOneWithoutResourcesInput
+    user: UserCreateNestedOneWithoutResourcesInput
+    proposedBy?: UserCreateNestedOneWithoutProposedResourcesInput
+  }
+
+  export type ProjectResourceUncheckedCreateWithoutWorkstreamInput = {
+    id?: string
+    projectId: string
+    userId: string
+    roleInProject?: string | null
+    plannedMandays?: number
+    dailyRate?: number
+    proposedById?: string | null
+    proposedAt?: Date | string | null
+    acceptedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type ProjectResourceCreateOrConnectWithoutWorkstreamInput = {
+    where: ProjectResourceWhereUniqueInput
+    create: XOR<ProjectResourceCreateWithoutWorkstreamInput, ProjectResourceUncheckedCreateWithoutWorkstreamInput>
+  }
+
+  export type ProjectResourceCreateManyWorkstreamInputEnvelope = {
+    data: ProjectResourceCreateManyWorkstreamInput | ProjectResourceCreateManyWorkstreamInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TaskCreateWithoutWorkstreamInput = {
+    id?: string
+    title: string
+    description?: string | null
+    status?: $Enums.TaskStatus
+    progressPercent?: number
+    billable?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutTasksInput
+    assignee?: UserCreateNestedOneWithoutTasksAssignedInput
+    createdBy?: UserCreateNestedOneWithoutTasksCreatedInput
+    parentTask?: TaskCreateNestedOneWithoutSubtasksInput
+    subtasks?: TaskCreateNestedManyWithoutParentTaskInput
+    timeLogs?: TaskTimeLogCreateNestedManyWithoutTaskInput
+    assignees?: TaskAssigneeCreateNestedManyWithoutTaskInput
+    timesheets?: TimesheetCreateNestedManyWithoutTaskInput
+    dependencies?: TaskDependencyCreateNestedManyWithoutTaskInput
+    dependents?: TaskDependencyCreateNestedManyWithoutDependsOnTaskInput
+  }
+
+  export type TaskUncheckedCreateWithoutWorkstreamInput = {
+    id?: string
+    projectId: string
+    title: string
+    description?: string | null
+    status?: $Enums.TaskStatus
+    progressPercent?: number
+    billable?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    assigneeId?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parentTaskId?: string | null
+    subtasks?: TaskUncheckedCreateNestedManyWithoutParentTaskInput
+    timeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutTaskInput
+    assignees?: TaskAssigneeUncheckedCreateNestedManyWithoutTaskInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutTaskInput
+    dependencies?: TaskDependencyUncheckedCreateNestedManyWithoutTaskInput
+    dependents?: TaskDependencyUncheckedCreateNestedManyWithoutDependsOnTaskInput
+  }
+
+  export type TaskCreateOrConnectWithoutWorkstreamInput = {
+    where: TaskWhereUniqueInput
+    create: XOR<TaskCreateWithoutWorkstreamInput, TaskUncheckedCreateWithoutWorkstreamInput>
+  }
+
+  export type TaskCreateManyWorkstreamInputEnvelope = {
+    data: TaskCreateManyWorkstreamInput | TaskCreateManyWorkstreamInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProjectExpenseCreateWithoutWorkstreamInput = {
+    id?: string
+    category: string
+    description: string
+    amount: number
+    spentAt?: Date | string
+    evidenceUrl?: string | null
+    evidenceFileName?: string | null
+    status?: $Enums.ExpenseStatus
+    approvedAt?: Date | string | null
+    rejectionReason?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutExpensesInput
+    approvedBy?: UserCreateNestedOneWithoutApprovedExpensesInput
+    createdBy?: UserCreateNestedOneWithoutProjectExpensesInput
+  }
+
+  export type ProjectExpenseUncheckedCreateWithoutWorkstreamInput = {
+    id?: string
+    projectId: string
+    category: string
+    description: string
+    amount: number
+    spentAt?: Date | string
+    evidenceUrl?: string | null
+    evidenceFileName?: string | null
+    status?: $Enums.ExpenseStatus
+    approvedById?: string | null
+    approvedAt?: Date | string | null
+    rejectionReason?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectExpenseCreateOrConnectWithoutWorkstreamInput = {
+    where: ProjectExpenseWhereUniqueInput
+    create: XOR<ProjectExpenseCreateWithoutWorkstreamInput, ProjectExpenseUncheckedCreateWithoutWorkstreamInput>
+  }
+
+  export type ProjectExpenseCreateManyWorkstreamInputEnvelope = {
+    data: ProjectExpenseCreateManyWorkstreamInput | ProjectExpenseCreateManyWorkstreamInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type BillingMilestoneCreateWithoutWorkstreamInput = {
+    id?: string
+    name: string
+    description?: string | null
+    percentage?: number
+    amount?: number | null
+    dueDate?: Date | string | null
+    status?: $Enums.BillingMilestoneStatus
+    invoiceNumber?: string | null
+    invoicedAt?: Date | string | null
+    paidAt?: Date | string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutBillingMilestonesInput
+  }
+
+  export type BillingMilestoneUncheckedCreateWithoutWorkstreamInput = {
+    id?: string
+    projectId: string
+    name: string
+    description?: string | null
+    percentage?: number
+    amount?: number | null
+    dueDate?: Date | string | null
+    status?: $Enums.BillingMilestoneStatus
+    invoiceNumber?: string | null
+    invoicedAt?: Date | string | null
+    paidAt?: Date | string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BillingMilestoneCreateOrConnectWithoutWorkstreamInput = {
+    where: BillingMilestoneWhereUniqueInput
+    create: XOR<BillingMilestoneCreateWithoutWorkstreamInput, BillingMilestoneUncheckedCreateWithoutWorkstreamInput>
+  }
+
+  export type BillingMilestoneCreateManyWorkstreamInputEnvelope = {
+    data: BillingMilestoneCreateManyWorkstreamInput | BillingMilestoneCreateManyWorkstreamInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TimesheetCreateWithoutWorkstreamInput = {
+    id?: string
+    workDate: Date | string
+    hours: number
+    description?: string | null
+    status?: $Enums.TimesheetStatus
+    approvedAt?: Date | string | null
+    rejectionReason?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutTimesheetsInput
+    user: UserCreateNestedOneWithoutTimesheetsInput
+    task?: TaskCreateNestedOneWithoutTimesheetsInput
+    approvedBy?: UserCreateNestedOneWithoutApprovedTimesheetsInput
+  }
+
+  export type TimesheetUncheckedCreateWithoutWorkstreamInput = {
+    id?: string
+    projectId: string
+    userId: string
+    taskId?: string | null
+    workDate: Date | string
+    hours: number
+    description?: string | null
+    status?: $Enums.TimesheetStatus
+    approvedById?: string | null
+    approvedAt?: Date | string | null
+    rejectionReason?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TimesheetCreateOrConnectWithoutWorkstreamInput = {
+    where: TimesheetWhereUniqueInput
+    create: XOR<TimesheetCreateWithoutWorkstreamInput, TimesheetUncheckedCreateWithoutWorkstreamInput>
+  }
+
+  export type TimesheetCreateManyWorkstreamInputEnvelope = {
+    data: TimesheetCreateManyWorkstreamInput | TimesheetCreateManyWorkstreamInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProjectUpsertWithoutWorkstreamsInput = {
+    update: XOR<ProjectUpdateWithoutWorkstreamsInput, ProjectUncheckedUpdateWithoutWorkstreamsInput>
+    create: XOR<ProjectCreateWithoutWorkstreamsInput, ProjectUncheckedCreateWithoutWorkstreamsInput>
+    where?: ProjectWhereInput
+  }
+
+  export type ProjectUpdateToOneWithWhereWithoutWorkstreamsInput = {
+    where?: ProjectWhereInput
+    data: XOR<ProjectUpdateWithoutWorkstreamsInput, ProjectUncheckedUpdateWithoutWorkstreamsInput>
+  }
+
+  export type ProjectUpdateWithoutWorkstreamsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
+    sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
+    pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
+    technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
+    adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
+    timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUpdateManyWithoutProjectNestedInput
+    activities?: ActivityUpdateManyWithoutProjectNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
+    expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
+    closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutWorkstreamsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
+    clientId?: StringFieldUpdateOperationsInput | string
+    salesId?: NullableStringFieldUpdateOperationsInput | string | null
+    pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutProjectNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
+    expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
+    closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type BusinessUnitUpsertWithoutWorkstreamsInput = {
+    update: XOR<BusinessUnitUpdateWithoutWorkstreamsInput, BusinessUnitUncheckedUpdateWithoutWorkstreamsInput>
+    create: XOR<BusinessUnitCreateWithoutWorkstreamsInput, BusinessUnitUncheckedCreateWithoutWorkstreamsInput>
+    where?: BusinessUnitWhereInput
+  }
+
+  export type BusinessUnitUpdateToOneWithWhereWithoutWorkstreamsInput = {
+    where?: BusinessUnitWhereInput
+    data: XOR<BusinessUnitUpdateWithoutWorkstreamsInput, BusinessUnitUncheckedUpdateWithoutWorkstreamsInput>
+  }
+
+  export type BusinessUnitUpdateWithoutWorkstreamsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutBusinessUnitNestedInput
+    taskTemplates?: TaskTemplateUpdateManyWithoutBusinessUnitNestedInput
+    projectTemplates?: ProjectTemplateUpdateManyWithoutBusinessUnitNestedInput
+  }
+
+  export type BusinessUnitUncheckedUpdateWithoutWorkstreamsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutBusinessUnitNestedInput
+    taskTemplates?: TaskTemplateUncheckedUpdateManyWithoutBusinessUnitNestedInput
+    projectTemplates?: ProjectTemplateUncheckedUpdateManyWithoutBusinessUnitNestedInput
+  }
+
+  export type ProjectResourceUpsertWithWhereUniqueWithoutWorkstreamInput = {
+    where: ProjectResourceWhereUniqueInput
+    update: XOR<ProjectResourceUpdateWithoutWorkstreamInput, ProjectResourceUncheckedUpdateWithoutWorkstreamInput>
+    create: XOR<ProjectResourceCreateWithoutWorkstreamInput, ProjectResourceUncheckedCreateWithoutWorkstreamInput>
+  }
+
+  export type ProjectResourceUpdateWithWhereUniqueWithoutWorkstreamInput = {
+    where: ProjectResourceWhereUniqueInput
+    data: XOR<ProjectResourceUpdateWithoutWorkstreamInput, ProjectResourceUncheckedUpdateWithoutWorkstreamInput>
+  }
+
+  export type ProjectResourceUpdateManyWithWhereWithoutWorkstreamInput = {
+    where: ProjectResourceScalarWhereInput
+    data: XOR<ProjectResourceUpdateManyMutationInput, ProjectResourceUncheckedUpdateManyWithoutWorkstreamInput>
+  }
+
+  export type TaskUpsertWithWhereUniqueWithoutWorkstreamInput = {
+    where: TaskWhereUniqueInput
+    update: XOR<TaskUpdateWithoutWorkstreamInput, TaskUncheckedUpdateWithoutWorkstreamInput>
+    create: XOR<TaskCreateWithoutWorkstreamInput, TaskUncheckedCreateWithoutWorkstreamInput>
+  }
+
+  export type TaskUpdateWithWhereUniqueWithoutWorkstreamInput = {
+    where: TaskWhereUniqueInput
+    data: XOR<TaskUpdateWithoutWorkstreamInput, TaskUncheckedUpdateWithoutWorkstreamInput>
+  }
+
+  export type TaskUpdateManyWithWhereWithoutWorkstreamInput = {
+    where: TaskScalarWhereInput
+    data: XOR<TaskUpdateManyMutationInput, TaskUncheckedUpdateManyWithoutWorkstreamInput>
+  }
+
+  export type ProjectExpenseUpsertWithWhereUniqueWithoutWorkstreamInput = {
+    where: ProjectExpenseWhereUniqueInput
+    update: XOR<ProjectExpenseUpdateWithoutWorkstreamInput, ProjectExpenseUncheckedUpdateWithoutWorkstreamInput>
+    create: XOR<ProjectExpenseCreateWithoutWorkstreamInput, ProjectExpenseUncheckedCreateWithoutWorkstreamInput>
+  }
+
+  export type ProjectExpenseUpdateWithWhereUniqueWithoutWorkstreamInput = {
+    where: ProjectExpenseWhereUniqueInput
+    data: XOR<ProjectExpenseUpdateWithoutWorkstreamInput, ProjectExpenseUncheckedUpdateWithoutWorkstreamInput>
+  }
+
+  export type ProjectExpenseUpdateManyWithWhereWithoutWorkstreamInput = {
+    where: ProjectExpenseScalarWhereInput
+    data: XOR<ProjectExpenseUpdateManyMutationInput, ProjectExpenseUncheckedUpdateManyWithoutWorkstreamInput>
+  }
+
+  export type BillingMilestoneUpsertWithWhereUniqueWithoutWorkstreamInput = {
+    where: BillingMilestoneWhereUniqueInput
+    update: XOR<BillingMilestoneUpdateWithoutWorkstreamInput, BillingMilestoneUncheckedUpdateWithoutWorkstreamInput>
+    create: XOR<BillingMilestoneCreateWithoutWorkstreamInput, BillingMilestoneUncheckedCreateWithoutWorkstreamInput>
+  }
+
+  export type BillingMilestoneUpdateWithWhereUniqueWithoutWorkstreamInput = {
+    where: BillingMilestoneWhereUniqueInput
+    data: XOR<BillingMilestoneUpdateWithoutWorkstreamInput, BillingMilestoneUncheckedUpdateWithoutWorkstreamInput>
+  }
+
+  export type BillingMilestoneUpdateManyWithWhereWithoutWorkstreamInput = {
+    where: BillingMilestoneScalarWhereInput
+    data: XOR<BillingMilestoneUpdateManyMutationInput, BillingMilestoneUncheckedUpdateManyWithoutWorkstreamInput>
+  }
+
+  export type TimesheetUpsertWithWhereUniqueWithoutWorkstreamInput = {
+    where: TimesheetWhereUniqueInput
+    update: XOR<TimesheetUpdateWithoutWorkstreamInput, TimesheetUncheckedUpdateWithoutWorkstreamInput>
+    create: XOR<TimesheetCreateWithoutWorkstreamInput, TimesheetUncheckedCreateWithoutWorkstreamInput>
+  }
+
+  export type TimesheetUpdateWithWhereUniqueWithoutWorkstreamInput = {
+    where: TimesheetWhereUniqueInput
+    data: XOR<TimesheetUpdateWithoutWorkstreamInput, TimesheetUncheckedUpdateWithoutWorkstreamInput>
+  }
+
+  export type TimesheetUpdateManyWithWhereWithoutWorkstreamInput = {
+    where: TimesheetScalarWhereInput
+    data: XOR<TimesheetUpdateManyMutationInput, TimesheetUncheckedUpdateManyWithoutWorkstreamInput>
+  }
+
   export type ProjectCreateWithoutSurveyResponsesInput = {
     id?: string
     code: string
@@ -62096,6 +65356,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
@@ -62112,6 +65373,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutSurveyResponsesInput = {
@@ -62146,6 +65408,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
@@ -62157,6 +65420,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutSurveyResponsesInput = {
@@ -62202,6 +65466,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
@@ -62218,6 +65483,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutSurveyResponsesInput = {
@@ -62252,6 +65518,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
@@ -62263,6 +65530,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserCreateWithoutAuditLogsInput = {
@@ -62528,6 +65796,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
@@ -62544,6 +65813,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutResourcesInput = {
@@ -62578,6 +65848,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
     documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
@@ -62589,11 +65860,61 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutResourcesInput = {
     where: ProjectWhereUniqueInput
     create: XOR<ProjectCreateWithoutResourcesInput, ProjectUncheckedCreateWithoutResourcesInput>
+  }
+
+  export type ProjectWorkstreamCreateWithoutResourcesInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    allocationPct?: number
+    plannedMandays?: number
+    estimatedCost?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    status?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutWorkstreamsInput
+    businessUnit?: BusinessUnitCreateNestedOneWithoutWorkstreamsInput
+    tasks?: TaskCreateNestedManyWithoutWorkstreamInput
+    expenses?: ProjectExpenseCreateNestedManyWithoutWorkstreamInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutWorkstreamInput
+    timesheets?: TimesheetCreateNestedManyWithoutWorkstreamInput
+  }
+
+  export type ProjectWorkstreamUncheckedCreateWithoutResourcesInput = {
+    id?: string
+    projectId: string
+    code: string
+    name: string
+    description?: string | null
+    businessUnitId?: string | null
+    allocationPct?: number
+    plannedMandays?: number
+    estimatedCost?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    status?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tasks?: TaskUncheckedCreateNestedManyWithoutWorkstreamInput
+    expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutWorkstreamInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutWorkstreamInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutWorkstreamInput
+  }
+
+  export type ProjectWorkstreamCreateOrConnectWithoutResourcesInput = {
+    where: ProjectWorkstreamWhereUniqueInput
+    create: XOR<ProjectWorkstreamCreateWithoutResourcesInput, ProjectWorkstreamUncheckedCreateWithoutResourcesInput>
   }
 
   export type UserCreateWithoutResourcesInput = {
@@ -62864,6 +66185,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
@@ -62880,6 +66202,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutResourcesInput = {
@@ -62914,6 +66237,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
@@ -62925,6 +66249,62 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectWorkstreamUpsertWithoutResourcesInput = {
+    update: XOR<ProjectWorkstreamUpdateWithoutResourcesInput, ProjectWorkstreamUncheckedUpdateWithoutResourcesInput>
+    create: XOR<ProjectWorkstreamCreateWithoutResourcesInput, ProjectWorkstreamUncheckedCreateWithoutResourcesInput>
+    where?: ProjectWorkstreamWhereInput
+  }
+
+  export type ProjectWorkstreamUpdateToOneWithWhereWithoutResourcesInput = {
+    where?: ProjectWorkstreamWhereInput
+    data: XOR<ProjectWorkstreamUpdateWithoutResourcesInput, ProjectWorkstreamUncheckedUpdateWithoutResourcesInput>
+  }
+
+  export type ProjectWorkstreamUpdateWithoutResourcesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allocationPct?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutWorkstreamsNestedInput
+    businessUnit?: BusinessUnitUpdateOneWithoutWorkstreamsNestedInput
+    tasks?: TaskUpdateManyWithoutWorkstreamNestedInput
+    expenses?: ProjectExpenseUpdateManyWithoutWorkstreamNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutWorkstreamNestedInput
+    timesheets?: TimesheetUpdateManyWithoutWorkstreamNestedInput
+  }
+
+  export type ProjectWorkstreamUncheckedUpdateWithoutResourcesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    allocationPct?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tasks?: TaskUncheckedUpdateManyWithoutWorkstreamNestedInput
+    expenses?: ProjectExpenseUncheckedUpdateManyWithoutWorkstreamNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutWorkstreamNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutWorkstreamNestedInput
   }
 
   export type UserUpsertWithoutResourcesInput = {
@@ -63196,6 +66576,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
@@ -63212,6 +66593,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutTimesheetsInput = {
@@ -63246,6 +66628,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
@@ -63257,11 +66640,61 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutTimesheetsInput = {
     where: ProjectWhereUniqueInput
     create: XOR<ProjectCreateWithoutTimesheetsInput, ProjectUncheckedCreateWithoutTimesheetsInput>
+  }
+
+  export type ProjectWorkstreamCreateWithoutTimesheetsInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    allocationPct?: number
+    plannedMandays?: number
+    estimatedCost?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    status?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutWorkstreamsInput
+    businessUnit?: BusinessUnitCreateNestedOneWithoutWorkstreamsInput
+    resources?: ProjectResourceCreateNestedManyWithoutWorkstreamInput
+    tasks?: TaskCreateNestedManyWithoutWorkstreamInput
+    expenses?: ProjectExpenseCreateNestedManyWithoutWorkstreamInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutWorkstreamInput
+  }
+
+  export type ProjectWorkstreamUncheckedCreateWithoutTimesheetsInput = {
+    id?: string
+    projectId: string
+    code: string
+    name: string
+    description?: string | null
+    businessUnitId?: string | null
+    allocationPct?: number
+    plannedMandays?: number
+    estimatedCost?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    status?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutWorkstreamInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutWorkstreamInput
+    expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutWorkstreamInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutWorkstreamInput
+  }
+
+  export type ProjectWorkstreamCreateOrConnectWithoutTimesheetsInput = {
+    where: ProjectWorkstreamWhereUniqueInput
+    create: XOR<ProjectWorkstreamCreateWithoutTimesheetsInput, ProjectWorkstreamUncheckedCreateWithoutTimesheetsInput>
   }
 
   export type UserCreateWithoutTimesheetsInput = {
@@ -63391,6 +66824,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutTasksInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutTasksInput
     assignee?: UserCreateNestedOneWithoutTasksAssignedInput
     createdBy?: UserCreateNestedOneWithoutTasksCreatedInput
     parentTask?: TaskCreateNestedOneWithoutSubtasksInput
@@ -63404,6 +66838,7 @@ export namespace Prisma {
   export type TaskUncheckedCreateWithoutTimesheetsInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
@@ -63581,6 +67016,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
@@ -63597,6 +67033,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutTimesheetsInput = {
@@ -63631,6 +67068,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
@@ -63642,6 +67080,62 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectWorkstreamUpsertWithoutTimesheetsInput = {
+    update: XOR<ProjectWorkstreamUpdateWithoutTimesheetsInput, ProjectWorkstreamUncheckedUpdateWithoutTimesheetsInput>
+    create: XOR<ProjectWorkstreamCreateWithoutTimesheetsInput, ProjectWorkstreamUncheckedCreateWithoutTimesheetsInput>
+    where?: ProjectWorkstreamWhereInput
+  }
+
+  export type ProjectWorkstreamUpdateToOneWithWhereWithoutTimesheetsInput = {
+    where?: ProjectWorkstreamWhereInput
+    data: XOR<ProjectWorkstreamUpdateWithoutTimesheetsInput, ProjectWorkstreamUncheckedUpdateWithoutTimesheetsInput>
+  }
+
+  export type ProjectWorkstreamUpdateWithoutTimesheetsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allocationPct?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutWorkstreamsNestedInput
+    businessUnit?: BusinessUnitUpdateOneWithoutWorkstreamsNestedInput
+    resources?: ProjectResourceUpdateManyWithoutWorkstreamNestedInput
+    tasks?: TaskUpdateManyWithoutWorkstreamNestedInput
+    expenses?: ProjectExpenseUpdateManyWithoutWorkstreamNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutWorkstreamNestedInput
+  }
+
+  export type ProjectWorkstreamUncheckedUpdateWithoutTimesheetsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    allocationPct?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resources?: ProjectResourceUncheckedUpdateManyWithoutWorkstreamNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutWorkstreamNestedInput
+    expenses?: ProjectExpenseUncheckedUpdateManyWithoutWorkstreamNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutWorkstreamNestedInput
   }
 
   export type UserUpsertWithoutTimesheetsInput = {
@@ -63788,6 +67282,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutTasksNestedInput
     assignee?: UserUpdateOneWithoutTasksAssignedNestedInput
     createdBy?: UserUpdateOneWithoutTasksCreatedNestedInput
     parentTask?: TaskUpdateOneWithoutSubtasksNestedInput
@@ -63801,6 +67296,7 @@ export namespace Prisma {
   export type TaskUncheckedUpdateWithoutTimesheetsInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -63968,6 +67464,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
@@ -63984,6 +67481,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutDocumentsInput = {
@@ -64018,6 +67516,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
@@ -64029,6 +67528,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutDocumentsInput = {
@@ -64272,6 +67772,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
@@ -64288,6 +67789,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutDocumentsInput = {
@@ -64322,6 +67824,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
@@ -64333,6 +67836,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutDocumentsUploadedInput = {
@@ -64544,6 +68048,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
@@ -64560,6 +68065,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutClosingChecklistInput = {
@@ -64594,6 +68100,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
@@ -64605,6 +68112,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutClosingChecklistInput = {
@@ -64765,6 +68273,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
@@ -64781,6 +68290,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutClosingChecklistInput = {
@@ -64815,6 +68325,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
@@ -64826,6 +68337,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutClosingChecklistsCompletedInput = {
@@ -64976,6 +68488,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
@@ -64992,6 +68505,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutExpensesInput = {
@@ -65026,6 +68540,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
@@ -65037,11 +68552,61 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutExpensesInput = {
     where: ProjectWhereUniqueInput
     create: XOR<ProjectCreateWithoutExpensesInput, ProjectUncheckedCreateWithoutExpensesInput>
+  }
+
+  export type ProjectWorkstreamCreateWithoutExpensesInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    allocationPct?: number
+    plannedMandays?: number
+    estimatedCost?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    status?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutWorkstreamsInput
+    businessUnit?: BusinessUnitCreateNestedOneWithoutWorkstreamsInput
+    resources?: ProjectResourceCreateNestedManyWithoutWorkstreamInput
+    tasks?: TaskCreateNestedManyWithoutWorkstreamInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutWorkstreamInput
+    timesheets?: TimesheetCreateNestedManyWithoutWorkstreamInput
+  }
+
+  export type ProjectWorkstreamUncheckedCreateWithoutExpensesInput = {
+    id?: string
+    projectId: string
+    code: string
+    name: string
+    description?: string | null
+    businessUnitId?: string | null
+    allocationPct?: number
+    plannedMandays?: number
+    estimatedCost?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    status?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutWorkstreamInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutWorkstreamInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutWorkstreamInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutWorkstreamInput
+  }
+
+  export type ProjectWorkstreamCreateOrConnectWithoutExpensesInput = {
+    where: ProjectWorkstreamWhereUniqueInput
+    create: XOR<ProjectWorkstreamCreateWithoutExpensesInput, ProjectWorkstreamUncheckedCreateWithoutExpensesInput>
   }
 
   export type UserCreateWithoutApprovedExpensesInput = {
@@ -65312,6 +68877,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
@@ -65328,6 +68894,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutExpensesInput = {
@@ -65362,6 +68929,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
@@ -65373,6 +68941,62 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectWorkstreamUpsertWithoutExpensesInput = {
+    update: XOR<ProjectWorkstreamUpdateWithoutExpensesInput, ProjectWorkstreamUncheckedUpdateWithoutExpensesInput>
+    create: XOR<ProjectWorkstreamCreateWithoutExpensesInput, ProjectWorkstreamUncheckedCreateWithoutExpensesInput>
+    where?: ProjectWorkstreamWhereInput
+  }
+
+  export type ProjectWorkstreamUpdateToOneWithWhereWithoutExpensesInput = {
+    where?: ProjectWorkstreamWhereInput
+    data: XOR<ProjectWorkstreamUpdateWithoutExpensesInput, ProjectWorkstreamUncheckedUpdateWithoutExpensesInput>
+  }
+
+  export type ProjectWorkstreamUpdateWithoutExpensesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allocationPct?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutWorkstreamsNestedInput
+    businessUnit?: BusinessUnitUpdateOneWithoutWorkstreamsNestedInput
+    resources?: ProjectResourceUpdateManyWithoutWorkstreamNestedInput
+    tasks?: TaskUpdateManyWithoutWorkstreamNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutWorkstreamNestedInput
+    timesheets?: TimesheetUpdateManyWithoutWorkstreamNestedInput
+  }
+
+  export type ProjectWorkstreamUncheckedUpdateWithoutExpensesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    allocationPct?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resources?: ProjectResourceUncheckedUpdateManyWithoutWorkstreamNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutWorkstreamNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutWorkstreamNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutWorkstreamNestedInput
   }
 
   export type UserUpsertWithoutApprovedExpensesInput = {
@@ -65823,6 +69447,60 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProjectWorkstreamCreateWithoutBusinessUnitInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    allocationPct?: number
+    plannedMandays?: number
+    estimatedCost?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    status?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutWorkstreamsInput
+    resources?: ProjectResourceCreateNestedManyWithoutWorkstreamInput
+    tasks?: TaskCreateNestedManyWithoutWorkstreamInput
+    expenses?: ProjectExpenseCreateNestedManyWithoutWorkstreamInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutWorkstreamInput
+    timesheets?: TimesheetCreateNestedManyWithoutWorkstreamInput
+  }
+
+  export type ProjectWorkstreamUncheckedCreateWithoutBusinessUnitInput = {
+    id?: string
+    projectId: string
+    code: string
+    name: string
+    description?: string | null
+    allocationPct?: number
+    plannedMandays?: number
+    estimatedCost?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    status?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutWorkstreamInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutWorkstreamInput
+    expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutWorkstreamInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutWorkstreamInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutWorkstreamInput
+  }
+
+  export type ProjectWorkstreamCreateOrConnectWithoutBusinessUnitInput = {
+    where: ProjectWorkstreamWhereUniqueInput
+    create: XOR<ProjectWorkstreamCreateWithoutBusinessUnitInput, ProjectWorkstreamUncheckedCreateWithoutBusinessUnitInput>
+  }
+
+  export type ProjectWorkstreamCreateManyBusinessUnitInputEnvelope = {
+    data: ProjectWorkstreamCreateManyBusinessUnitInput | ProjectWorkstreamCreateManyBusinessUnitInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithWhereUniqueWithoutBusinessUnitInput = {
     where: UserWhereUniqueInput
     update: XOR<UserUpdateWithoutBusinessUnitInput, UserUncheckedUpdateWithoutBusinessUnitInput>
@@ -65869,6 +69547,22 @@ export namespace Prisma {
   export type ProjectTemplateUpdateManyWithWhereWithoutBusinessUnitInput = {
     where: ProjectTemplateScalarWhereInput
     data: XOR<ProjectTemplateUpdateManyMutationInput, ProjectTemplateUncheckedUpdateManyWithoutBusinessUnitInput>
+  }
+
+  export type ProjectWorkstreamUpsertWithWhereUniqueWithoutBusinessUnitInput = {
+    where: ProjectWorkstreamWhereUniqueInput
+    update: XOR<ProjectWorkstreamUpdateWithoutBusinessUnitInput, ProjectWorkstreamUncheckedUpdateWithoutBusinessUnitInput>
+    create: XOR<ProjectWorkstreamCreateWithoutBusinessUnitInput, ProjectWorkstreamUncheckedCreateWithoutBusinessUnitInput>
+  }
+
+  export type ProjectWorkstreamUpdateWithWhereUniqueWithoutBusinessUnitInput = {
+    where: ProjectWorkstreamWhereUniqueInput
+    data: XOR<ProjectWorkstreamUpdateWithoutBusinessUnitInput, ProjectWorkstreamUncheckedUpdateWithoutBusinessUnitInput>
+  }
+
+  export type ProjectWorkstreamUpdateManyWithWhereWithoutBusinessUnitInput = {
+    where: ProjectWorkstreamScalarWhereInput
+    data: XOR<ProjectWorkstreamUpdateManyMutationInput, ProjectWorkstreamUncheckedUpdateManyWithoutBusinessUnitInput>
   }
 
   export type UserSkillCreateWithoutSkillInput = {
@@ -67513,6 +71207,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
@@ -67529,6 +71224,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutActivitiesInput = {
@@ -67563,6 +71259,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
@@ -67574,6 +71271,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutActivitiesInput = {
@@ -67740,6 +71438,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
@@ -67756,6 +71455,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutActivitiesInput = {
@@ -67790,6 +71490,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
@@ -67801,6 +71502,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectCreateWithoutTasksInput = {
@@ -67830,6 +71532,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
@@ -67846,6 +71549,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutTasksInput = {
@@ -67880,6 +71584,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
@@ -67891,11 +71596,61 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutTasksInput = {
     where: ProjectWhereUniqueInput
     create: XOR<ProjectCreateWithoutTasksInput, ProjectUncheckedCreateWithoutTasksInput>
+  }
+
+  export type ProjectWorkstreamCreateWithoutTasksInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    allocationPct?: number
+    plannedMandays?: number
+    estimatedCost?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    status?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutWorkstreamsInput
+    businessUnit?: BusinessUnitCreateNestedOneWithoutWorkstreamsInput
+    resources?: ProjectResourceCreateNestedManyWithoutWorkstreamInput
+    expenses?: ProjectExpenseCreateNestedManyWithoutWorkstreamInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutWorkstreamInput
+    timesheets?: TimesheetCreateNestedManyWithoutWorkstreamInput
+  }
+
+  export type ProjectWorkstreamUncheckedCreateWithoutTasksInput = {
+    id?: string
+    projectId: string
+    code: string
+    name: string
+    description?: string | null
+    businessUnitId?: string | null
+    allocationPct?: number
+    plannedMandays?: number
+    estimatedCost?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    status?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutWorkstreamInput
+    expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutWorkstreamInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutWorkstreamInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutWorkstreamInput
+  }
+
+  export type ProjectWorkstreamCreateOrConnectWithoutTasksInput = {
+    where: ProjectWorkstreamWhereUniqueInput
+    create: XOR<ProjectWorkstreamCreateWithoutTasksInput, ProjectWorkstreamUncheckedCreateWithoutTasksInput>
   }
 
   export type UserCreateWithoutTasksAssignedInput = {
@@ -68140,6 +71895,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutTasksInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutTasksInput
     assignee?: UserCreateNestedOneWithoutTasksAssignedInput
     createdBy?: UserCreateNestedOneWithoutTasksCreatedInput
     parentTask?: TaskCreateNestedOneWithoutSubtasksInput
@@ -68153,6 +71909,7 @@ export namespace Prisma {
   export type TaskUncheckedCreateWithoutSubtasksInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
@@ -68189,6 +71946,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutTasksInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutTasksInput
     assignee?: UserCreateNestedOneWithoutTasksAssignedInput
     createdBy?: UserCreateNestedOneWithoutTasksCreatedInput
     subtasks?: TaskCreateNestedManyWithoutParentTaskInput
@@ -68202,6 +71960,7 @@ export namespace Prisma {
   export type TaskUncheckedCreateWithoutParentTaskInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
@@ -68292,6 +72051,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutTimesheetsInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutTimesheetsInput
     user: UserCreateNestedOneWithoutTimesheetsInput
     approvedBy?: UserCreateNestedOneWithoutApprovedTimesheetsInput
   }
@@ -68299,6 +72059,7 @@ export namespace Prisma {
   export type TimesheetUncheckedCreateWithoutTaskInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     userId: string
     workDate: Date | string
     hours: number
@@ -68403,6 +72164,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
@@ -68419,6 +72181,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutTasksInput = {
@@ -68453,6 +72216,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
@@ -68464,6 +72228,62 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectWorkstreamUpsertWithoutTasksInput = {
+    update: XOR<ProjectWorkstreamUpdateWithoutTasksInput, ProjectWorkstreamUncheckedUpdateWithoutTasksInput>
+    create: XOR<ProjectWorkstreamCreateWithoutTasksInput, ProjectWorkstreamUncheckedCreateWithoutTasksInput>
+    where?: ProjectWorkstreamWhereInput
+  }
+
+  export type ProjectWorkstreamUpdateToOneWithWhereWithoutTasksInput = {
+    where?: ProjectWorkstreamWhereInput
+    data: XOR<ProjectWorkstreamUpdateWithoutTasksInput, ProjectWorkstreamUncheckedUpdateWithoutTasksInput>
+  }
+
+  export type ProjectWorkstreamUpdateWithoutTasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allocationPct?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutWorkstreamsNestedInput
+    businessUnit?: BusinessUnitUpdateOneWithoutWorkstreamsNestedInput
+    resources?: ProjectResourceUpdateManyWithoutWorkstreamNestedInput
+    expenses?: ProjectExpenseUpdateManyWithoutWorkstreamNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutWorkstreamNestedInput
+    timesheets?: TimesheetUpdateManyWithoutWorkstreamNestedInput
+  }
+
+  export type ProjectWorkstreamUncheckedUpdateWithoutTasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    allocationPct?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resources?: ProjectResourceUncheckedUpdateManyWithoutWorkstreamNestedInput
+    expenses?: ProjectExpenseUncheckedUpdateManyWithoutWorkstreamNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutWorkstreamNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutWorkstreamNestedInput
   }
 
   export type UserUpsertWithoutTasksAssignedInput = {
@@ -68731,6 +72551,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutTasksNestedInput
     assignee?: UserUpdateOneWithoutTasksAssignedNestedInput
     createdBy?: UserUpdateOneWithoutTasksCreatedNestedInput
     parentTask?: TaskUpdateOneWithoutSubtasksNestedInput
@@ -68744,6 +72565,7 @@ export namespace Prisma {
   export type TaskUncheckedUpdateWithoutSubtasksInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -68881,6 +72703,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutTasksInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutTasksInput
     assignee?: UserCreateNestedOneWithoutTasksAssignedInput
     createdBy?: UserCreateNestedOneWithoutTasksCreatedInput
     parentTask?: TaskCreateNestedOneWithoutSubtasksInput
@@ -68894,6 +72717,7 @@ export namespace Prisma {
   export type TaskUncheckedCreateWithoutDependenciesInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
@@ -68930,6 +72754,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutTasksInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutTasksInput
     assignee?: UserCreateNestedOneWithoutTasksAssignedInput
     createdBy?: UserCreateNestedOneWithoutTasksCreatedInput
     parentTask?: TaskCreateNestedOneWithoutSubtasksInput
@@ -68943,6 +72768,7 @@ export namespace Prisma {
   export type TaskUncheckedCreateWithoutDependentsInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
@@ -68990,6 +72816,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutTasksNestedInput
     assignee?: UserUpdateOneWithoutTasksAssignedNestedInput
     createdBy?: UserUpdateOneWithoutTasksCreatedNestedInput
     parentTask?: TaskUpdateOneWithoutSubtasksNestedInput
@@ -69003,6 +72830,7 @@ export namespace Prisma {
   export type TaskUncheckedUpdateWithoutDependenciesInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -69045,6 +72873,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutTasksNestedInput
     assignee?: UserUpdateOneWithoutTasksAssignedNestedInput
     createdBy?: UserUpdateOneWithoutTasksCreatedNestedInput
     parentTask?: TaskUpdateOneWithoutSubtasksNestedInput
@@ -69058,6 +72887,7 @@ export namespace Prisma {
   export type TaskUncheckedUpdateWithoutDependentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -69104,6 +72934,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
@@ -69120,6 +72951,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutBillingMilestonesInput = {
@@ -69154,6 +72986,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
@@ -69165,11 +72998,61 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutBillingMilestonesInput = {
     where: ProjectWhereUniqueInput
     create: XOR<ProjectCreateWithoutBillingMilestonesInput, ProjectUncheckedCreateWithoutBillingMilestonesInput>
+  }
+
+  export type ProjectWorkstreamCreateWithoutBillingMilestonesInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    allocationPct?: number
+    plannedMandays?: number
+    estimatedCost?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    status?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutWorkstreamsInput
+    businessUnit?: BusinessUnitCreateNestedOneWithoutWorkstreamsInput
+    resources?: ProjectResourceCreateNestedManyWithoutWorkstreamInput
+    tasks?: TaskCreateNestedManyWithoutWorkstreamInput
+    expenses?: ProjectExpenseCreateNestedManyWithoutWorkstreamInput
+    timesheets?: TimesheetCreateNestedManyWithoutWorkstreamInput
+  }
+
+  export type ProjectWorkstreamUncheckedCreateWithoutBillingMilestonesInput = {
+    id?: string
+    projectId: string
+    code: string
+    name: string
+    description?: string | null
+    businessUnitId?: string | null
+    allocationPct?: number
+    plannedMandays?: number
+    estimatedCost?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    status?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutWorkstreamInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutWorkstreamInput
+    expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutWorkstreamInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutWorkstreamInput
+  }
+
+  export type ProjectWorkstreamCreateOrConnectWithoutBillingMilestonesInput = {
+    where: ProjectWorkstreamWhereUniqueInput
+    create: XOR<ProjectWorkstreamCreateWithoutBillingMilestonesInput, ProjectWorkstreamUncheckedCreateWithoutBillingMilestonesInput>
   }
 
   export type ProjectUpsertWithoutBillingMilestonesInput = {
@@ -69210,6 +73093,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
@@ -69226,6 +73110,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutBillingMilestonesInput = {
@@ -69260,6 +73145,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
@@ -69271,6 +73157,62 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectWorkstreamUpsertWithoutBillingMilestonesInput = {
+    update: XOR<ProjectWorkstreamUpdateWithoutBillingMilestonesInput, ProjectWorkstreamUncheckedUpdateWithoutBillingMilestonesInput>
+    create: XOR<ProjectWorkstreamCreateWithoutBillingMilestonesInput, ProjectWorkstreamUncheckedCreateWithoutBillingMilestonesInput>
+    where?: ProjectWorkstreamWhereInput
+  }
+
+  export type ProjectWorkstreamUpdateToOneWithWhereWithoutBillingMilestonesInput = {
+    where?: ProjectWorkstreamWhereInput
+    data: XOR<ProjectWorkstreamUpdateWithoutBillingMilestonesInput, ProjectWorkstreamUncheckedUpdateWithoutBillingMilestonesInput>
+  }
+
+  export type ProjectWorkstreamUpdateWithoutBillingMilestonesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allocationPct?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutWorkstreamsNestedInput
+    businessUnit?: BusinessUnitUpdateOneWithoutWorkstreamsNestedInput
+    resources?: ProjectResourceUpdateManyWithoutWorkstreamNestedInput
+    tasks?: TaskUpdateManyWithoutWorkstreamNestedInput
+    expenses?: ProjectExpenseUpdateManyWithoutWorkstreamNestedInput
+    timesheets?: TimesheetUpdateManyWithoutWorkstreamNestedInput
+  }
+
+  export type ProjectWorkstreamUncheckedUpdateWithoutBillingMilestonesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    allocationPct?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resources?: ProjectResourceUncheckedUpdateManyWithoutWorkstreamNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutWorkstreamNestedInput
+    expenses?: ProjectExpenseUncheckedUpdateManyWithoutWorkstreamNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutWorkstreamNestedInput
   }
 
   export type TaskCreateWithoutAssigneesInput = {
@@ -69285,6 +73227,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutTasksInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutTasksInput
     assignee?: UserCreateNestedOneWithoutTasksAssignedInput
     createdBy?: UserCreateNestedOneWithoutTasksCreatedInput
     parentTask?: TaskCreateNestedOneWithoutSubtasksInput
@@ -69298,6 +73241,7 @@ export namespace Prisma {
   export type TaskUncheckedCreateWithoutAssigneesInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
@@ -69460,6 +73404,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutTasksNestedInput
     assignee?: UserUpdateOneWithoutTasksAssignedNestedInput
     createdBy?: UserUpdateOneWithoutTasksCreatedNestedInput
     parentTask?: TaskUpdateOneWithoutSubtasksNestedInput
@@ -69473,6 +73418,7 @@ export namespace Prisma {
   export type TaskUncheckedUpdateWithoutAssigneesInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -69625,6 +73571,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutTasksInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutTasksInput
     assignee?: UserCreateNestedOneWithoutTasksAssignedInput
     createdBy?: UserCreateNestedOneWithoutTasksCreatedInput
     parentTask?: TaskCreateNestedOneWithoutSubtasksInput
@@ -69638,6 +73585,7 @@ export namespace Prisma {
   export type TaskUncheckedCreateWithoutTimeLogsInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
@@ -69800,6 +73748,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutTasksNestedInput
     assignee?: UserUpdateOneWithoutTasksAssignedNestedInput
     createdBy?: UserUpdateOneWithoutTasksCreatedNestedInput
     parentTask?: TaskUpdateOneWithoutSubtasksNestedInput
@@ -69813,6 +73762,7 @@ export namespace Prisma {
   export type TaskUncheckedUpdateWithoutTimeLogsInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -70902,6 +74852,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutBusinessUnitInput
     projectTemplates?: ProjectTemplateCreateNestedManyWithoutBusinessUnitInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutBusinessUnitInput
   }
 
   export type BusinessUnitUncheckedCreateWithoutTaskTemplatesInput = {
@@ -70913,6 +74864,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutBusinessUnitInput
     projectTemplates?: ProjectTemplateUncheckedCreateNestedManyWithoutBusinessUnitInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutBusinessUnitInput
   }
 
   export type BusinessUnitCreateOrConnectWithoutTaskTemplatesInput = {
@@ -71107,6 +75059,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutBusinessUnitNestedInput
     projectTemplates?: ProjectTemplateUpdateManyWithoutBusinessUnitNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutBusinessUnitNestedInput
   }
 
   export type BusinessUnitUncheckedUpdateWithoutTaskTemplatesInput = {
@@ -71118,6 +75071,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutBusinessUnitNestedInput
     projectTemplates?: ProjectTemplateUncheckedUpdateManyWithoutBusinessUnitNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutBusinessUnitNestedInput
   }
 
   export type UserUpsertWithoutTaskTemplatesCreatedInput = {
@@ -71266,6 +75220,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     users?: UserCreateNestedManyWithoutBusinessUnitInput
     taskTemplates?: TaskTemplateCreateNestedManyWithoutBusinessUnitInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutBusinessUnitInput
   }
 
   export type BusinessUnitUncheckedCreateWithoutProjectTemplatesInput = {
@@ -71277,6 +75232,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutBusinessUnitInput
     taskTemplates?: TaskTemplateUncheckedCreateNestedManyWithoutBusinessUnitInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutBusinessUnitInput
   }
 
   export type BusinessUnitCreateOrConnectWithoutProjectTemplatesInput = {
@@ -71538,6 +75494,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutBusinessUnitNestedInput
     taskTemplates?: TaskTemplateUpdateManyWithoutBusinessUnitNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutBusinessUnitNestedInput
   }
 
   export type BusinessUnitUncheckedUpdateWithoutProjectTemplatesInput = {
@@ -71549,6 +75506,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutBusinessUnitNestedInput
     taskTemplates?: TaskTemplateUncheckedUpdateManyWithoutBusinessUnitNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutBusinessUnitNestedInput
   }
 
   export type TaskTemplateUpsertWithoutProjectTemplatesInput = {
@@ -72360,6 +76318,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
@@ -72376,6 +76335,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutRaidItemsInput = {
@@ -72410,6 +76370,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
@@ -72421,6 +76382,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutRaidItemsInput = {
@@ -72696,6 +76658,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
@@ -72712,6 +76675,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutRaidItemsInput = {
@@ -72746,6 +76710,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
@@ -72757,6 +76722,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutRaidItemsOwnedInput = {
@@ -73593,6 +77559,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
@@ -73609,6 +77576,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutPerfProjectRatingsInput = {
@@ -73643,6 +77611,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
@@ -73654,6 +77623,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutPerfProjectRatingsInput = {
@@ -73867,6 +77837,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
@@ -73883,6 +77854,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutPerfProjectRatingsInput = {
@@ -73917,6 +77889,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
@@ -73928,6 +77901,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutPerfProjectRatingsGivenInput = {
@@ -74099,6 +78073,7 @@ export namespace Prisma {
   export type ProjectExpenseCreateManyApprovedByInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     category: string
     description: string
     amount: number
@@ -74144,6 +78119,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
   }
 
@@ -74178,6 +78154,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
   }
 
@@ -74212,6 +78189,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
   }
 
@@ -74246,12 +78224,14 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
   }
 
   export type ProjectResourceCreateManyUserInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     roleInProject?: string | null
     plannedMandays?: number
     dailyRate?: number
@@ -74264,6 +78244,7 @@ export namespace Prisma {
   export type ProjectResourceCreateManyProposedByInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     userId: string
     roleInProject?: string | null
     plannedMandays?: number
@@ -74276,6 +78257,7 @@ export namespace Prisma {
   export type TimesheetCreateManyUserInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     taskId?: string | null
     workDate: Date | string
     hours: number
@@ -74291,6 +78273,7 @@ export namespace Prisma {
   export type TimesheetCreateManyApprovedByInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     userId: string
     taskId?: string | null
     workDate: Date | string
@@ -74343,6 +78326,7 @@ export namespace Prisma {
   export type ProjectExpenseCreateManyCreatedByInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     category: string
     description: string
     amount: number
@@ -74360,6 +78344,7 @@ export namespace Prisma {
   export type TaskCreateManyAssigneeInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
@@ -74376,6 +78361,7 @@ export namespace Prisma {
   export type TaskCreateManyCreatedByInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
@@ -74927,12 +78913,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutExpensesNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutExpensesNestedInput
     createdBy?: UserUpdateOneWithoutProjectExpensesNestedInput
   }
 
   export type ProjectExpenseUncheckedUpdateWithoutApprovedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
@@ -74950,6 +78938,7 @@ export namespace Prisma {
   export type ProjectExpenseUncheckedUpdateManyWithoutApprovedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
@@ -74991,6 +78980,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
@@ -75007,6 +78997,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutSalesInput = {
@@ -75040,6 +79031,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
@@ -75052,6 +79044,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutSalesInput = {
@@ -75085,6 +79078,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -75115,6 +79109,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
@@ -75131,6 +79126,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutPmInput = {
@@ -75164,6 +79160,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
@@ -75176,6 +79173,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutPmInput = {
@@ -75209,6 +79207,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -75239,6 +79238,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
@@ -75255,6 +79255,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutTechnicalWriterInput = {
@@ -75288,6 +79289,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
@@ -75300,6 +79302,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutTechnicalWriterInput = {
@@ -75333,6 +79336,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -75363,6 +79367,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
@@ -75379,6 +79384,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutAdminProjectInput = {
@@ -75412,6 +79418,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
@@ -75424,6 +79431,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutAdminProjectInput = {
@@ -75457,6 +79465,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -75469,12 +79478,14 @@ export namespace Prisma {
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutResourcesNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutResourcesNestedInput
     proposedBy?: UserUpdateOneWithoutProposedResourcesNestedInput
   }
 
   export type ProjectResourceUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     dailyRate?: FloatFieldUpdateOperationsInput | number
@@ -75487,6 +79498,7 @@ export namespace Prisma {
   export type ProjectResourceUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
     plannedMandays?: FloatFieldUpdateOperationsInput | number
     dailyRate?: FloatFieldUpdateOperationsInput | number
@@ -75505,12 +79517,14 @@ export namespace Prisma {
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutResourcesNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutResourcesNestedInput
     user?: UserUpdateOneRequiredWithoutResourcesNestedInput
   }
 
   export type ProjectResourceUncheckedUpdateWithoutProposedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
     roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
     plannedMandays?: FloatFieldUpdateOperationsInput | number
@@ -75523,6 +79537,7 @@ export namespace Prisma {
   export type ProjectResourceUncheckedUpdateManyWithoutProposedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
     roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
     plannedMandays?: FloatFieldUpdateOperationsInput | number
@@ -75543,6 +79558,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutTimesheetsNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutTimesheetsNestedInput
     task?: TaskUpdateOneWithoutTimesheetsNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedTimesheetsNestedInput
   }
@@ -75550,6 +79566,7 @@ export namespace Prisma {
   export type TimesheetUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     workDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hours?: FloatFieldUpdateOperationsInput | number
@@ -75565,6 +79582,7 @@ export namespace Prisma {
   export type TimesheetUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     workDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hours?: FloatFieldUpdateOperationsInput | number
@@ -75588,6 +79606,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutTimesheetsNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutTimesheetsNestedInput
     user?: UserUpdateOneRequiredWithoutTimesheetsNestedInput
     task?: TaskUpdateOneWithoutTimesheetsNestedInput
   }
@@ -75595,6 +79614,7 @@ export namespace Prisma {
   export type TimesheetUncheckedUpdateWithoutApprovedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     workDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -75610,6 +79630,7 @@ export namespace Prisma {
   export type TimesheetUncheckedUpdateManyWithoutApprovedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     workDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -75749,12 +79770,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutExpensesNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutExpensesNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedExpensesNestedInput
   }
 
   export type ProjectExpenseUncheckedUpdateWithoutCreatedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
@@ -75772,6 +79795,7 @@ export namespace Prisma {
   export type ProjectExpenseUncheckedUpdateManyWithoutCreatedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
@@ -75798,6 +79822,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutTasksNestedInput
     createdBy?: UserUpdateOneWithoutTasksCreatedNestedInput
     parentTask?: TaskUpdateOneWithoutSubtasksNestedInput
     subtasks?: TaskUpdateManyWithoutParentTaskNestedInput
@@ -75811,6 +79836,7 @@ export namespace Prisma {
   export type TaskUncheckedUpdateWithoutAssigneeInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -75833,6 +79859,7 @@ export namespace Prisma {
   export type TaskUncheckedUpdateManyWithoutAssigneeInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -75858,6 +79885,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutTasksNestedInput
     assignee?: UserUpdateOneWithoutTasksAssignedNestedInput
     parentTask?: TaskUpdateOneWithoutSubtasksNestedInput
     subtasks?: TaskUpdateManyWithoutParentTaskNestedInput
@@ -75871,6 +79899,7 @@ export namespace Prisma {
   export type TaskUncheckedUpdateWithoutCreatedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -75893,6 +79922,7 @@ export namespace Prisma {
   export type TaskUncheckedUpdateManyWithoutCreatedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -76686,6 +80716,7 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    useWorkstreams?: boolean
     surveyToken?: string | null
   }
 
@@ -76741,6 +80772,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
@@ -76757,6 +80789,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutClientInput = {
@@ -76790,6 +80823,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
@@ -76802,6 +80836,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutClientInput = {
@@ -76835,6 +80870,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -76917,6 +80953,7 @@ export namespace Prisma {
 
   export type ProjectResourceCreateManyProjectInput = {
     id?: string
+    workstreamId?: string | null
     userId: string
     roleInProject?: string | null
     plannedMandays?: number
@@ -76929,6 +80966,7 @@ export namespace Prisma {
 
   export type TimesheetCreateManyProjectInput = {
     id?: string
+    workstreamId?: string | null
     userId: string
     taskId?: string | null
     workDate: Date | string
@@ -76978,6 +81016,7 @@ export namespace Prisma {
 
   export type ProjectExpenseCreateManyProjectInput = {
     id?: string
+    workstreamId?: string | null
     category: string
     description: string
     amount: number
@@ -76995,6 +81034,7 @@ export namespace Prisma {
 
   export type TaskCreateManyProjectInput = {
     id?: string
+    workstreamId?: string | null
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
@@ -77011,6 +81051,7 @@ export namespace Prisma {
 
   export type BillingMilestoneCreateManyProjectInput = {
     id?: string
+    workstreamId?: string | null
     name: string
     description?: string | null
     percentage?: number
@@ -77065,6 +81106,23 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type ProjectWorkstreamCreateManyProjectInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    businessUnitId?: string | null
+    allocationPct?: number
+    plannedMandays?: number
+    estimatedCost?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    status?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type ProjectResourceUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77073,12 +81131,14 @@ export namespace Prisma {
     proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workstream?: ProjectWorkstreamUpdateOneWithoutResourcesNestedInput
     user?: UserUpdateOneRequiredWithoutResourcesNestedInput
     proposedBy?: UserUpdateOneWithoutProposedResourcesNestedInput
   }
 
   export type ProjectResourceUncheckedUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
     roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
     plannedMandays?: FloatFieldUpdateOperationsInput | number
@@ -77091,6 +81151,7 @@ export namespace Prisma {
 
   export type ProjectResourceUncheckedUpdateManyWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
     roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
     plannedMandays?: FloatFieldUpdateOperationsInput | number
@@ -77111,6 +81172,7 @@ export namespace Prisma {
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workstream?: ProjectWorkstreamUpdateOneWithoutTimesheetsNestedInput
     user?: UserUpdateOneRequiredWithoutTimesheetsNestedInput
     task?: TaskUpdateOneWithoutTimesheetsNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedTimesheetsNestedInput
@@ -77118,6 +81180,7 @@ export namespace Prisma {
 
   export type TimesheetUncheckedUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     workDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -77133,6 +81196,7 @@ export namespace Prisma {
 
   export type TimesheetUncheckedUpdateManyWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
     taskId?: NullableStringFieldUpdateOperationsInput | string | null
     workDate?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -77263,12 +81327,14 @@ export namespace Prisma {
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workstream?: ProjectWorkstreamUpdateOneWithoutExpensesNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedExpensesNestedInput
     createdBy?: UserUpdateOneWithoutProjectExpensesNestedInput
   }
 
   export type ProjectExpenseUncheckedUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
@@ -77286,6 +81352,7 @@ export namespace Prisma {
 
   export type ProjectExpenseUncheckedUpdateManyWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
@@ -77312,6 +81379,7 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workstream?: ProjectWorkstreamUpdateOneWithoutTasksNestedInput
     assignee?: UserUpdateOneWithoutTasksAssignedNestedInput
     createdBy?: UserUpdateOneWithoutTasksCreatedNestedInput
     parentTask?: TaskUpdateOneWithoutSubtasksNestedInput
@@ -77325,6 +81393,7 @@ export namespace Prisma {
 
   export type TaskUncheckedUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -77347,6 +81416,7 @@ export namespace Prisma {
 
   export type TaskUncheckedUpdateManyWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -77375,10 +81445,12 @@ export namespace Prisma {
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workstream?: ProjectWorkstreamUpdateOneWithoutBillingMilestonesNestedInput
   }
 
   export type BillingMilestoneUncheckedUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     percentage?: FloatFieldUpdateOperationsInput | number
@@ -77395,6 +81467,7 @@ export namespace Prisma {
 
   export type BillingMilestoneUncheckedUpdateManyWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     percentage?: FloatFieldUpdateOperationsInput | number
@@ -77529,6 +81602,403 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ProjectWorkstreamUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allocationPct?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnit?: BusinessUnitUpdateOneWithoutWorkstreamsNestedInput
+    resources?: ProjectResourceUpdateManyWithoutWorkstreamNestedInput
+    tasks?: TaskUpdateManyWithoutWorkstreamNestedInput
+    expenses?: ProjectExpenseUpdateManyWithoutWorkstreamNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutWorkstreamNestedInput
+    timesheets?: TimesheetUpdateManyWithoutWorkstreamNestedInput
+  }
+
+  export type ProjectWorkstreamUncheckedUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    allocationPct?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resources?: ProjectResourceUncheckedUpdateManyWithoutWorkstreamNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutWorkstreamNestedInput
+    expenses?: ProjectExpenseUncheckedUpdateManyWithoutWorkstreamNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutWorkstreamNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutWorkstreamNestedInput
+  }
+
+  export type ProjectWorkstreamUncheckedUpdateManyWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    allocationPct?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectResourceCreateManyWorkstreamInput = {
+    id?: string
+    projectId: string
+    userId: string
+    roleInProject?: string | null
+    plannedMandays?: number
+    dailyRate?: number
+    proposedById?: string | null
+    proposedAt?: Date | string | null
+    acceptedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type TaskCreateManyWorkstreamInput = {
+    id?: string
+    projectId: string
+    title: string
+    description?: string | null
+    status?: $Enums.TaskStatus
+    progressPercent?: number
+    billable?: boolean
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    assigneeId?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parentTaskId?: string | null
+  }
+
+  export type ProjectExpenseCreateManyWorkstreamInput = {
+    id?: string
+    projectId: string
+    category: string
+    description: string
+    amount: number
+    spentAt?: Date | string
+    evidenceUrl?: string | null
+    evidenceFileName?: string | null
+    status?: $Enums.ExpenseStatus
+    approvedById?: string | null
+    approvedAt?: Date | string | null
+    rejectionReason?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BillingMilestoneCreateManyWorkstreamInput = {
+    id?: string
+    projectId: string
+    name: string
+    description?: string | null
+    percentage?: number
+    amount?: number | null
+    dueDate?: Date | string | null
+    status?: $Enums.BillingMilestoneStatus
+    invoiceNumber?: string | null
+    invoicedAt?: Date | string | null
+    paidAt?: Date | string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TimesheetCreateManyWorkstreamInput = {
+    id?: string
+    projectId: string
+    userId: string
+    taskId?: string | null
+    workDate: Date | string
+    hours: number
+    description?: string | null
+    status?: $Enums.TimesheetStatus
+    approvedById?: string | null
+    approvedAt?: Date | string | null
+    rejectionReason?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectResourceUpdateWithoutWorkstreamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    dailyRate?: FloatFieldUpdateOperationsInput | number
+    proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutResourcesNestedInput
+    user?: UserUpdateOneRequiredWithoutResourcesNestedInput
+    proposedBy?: UserUpdateOneWithoutProposedResourcesNestedInput
+  }
+
+  export type ProjectResourceUncheckedUpdateWithoutWorkstreamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    dailyRate?: FloatFieldUpdateOperationsInput | number
+    proposedById?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectResourceUncheckedUpdateManyWithoutWorkstreamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    dailyRate?: FloatFieldUpdateOperationsInput | number
+    proposedById?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskUpdateWithoutWorkstreamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
+    assignee?: UserUpdateOneWithoutTasksAssignedNestedInput
+    createdBy?: UserUpdateOneWithoutTasksCreatedNestedInput
+    parentTask?: TaskUpdateOneWithoutSubtasksNestedInput
+    subtasks?: TaskUpdateManyWithoutParentTaskNestedInput
+    timeLogs?: TaskTimeLogUpdateManyWithoutTaskNestedInput
+    assignees?: TaskAssigneeUpdateManyWithoutTaskNestedInput
+    timesheets?: TimesheetUpdateManyWithoutTaskNestedInput
+    dependencies?: TaskDependencyUpdateManyWithoutTaskNestedInput
+    dependents?: TaskDependencyUpdateManyWithoutDependsOnTaskNestedInput
+  }
+
+  export type TaskUncheckedUpdateWithoutWorkstreamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentTaskId?: NullableStringFieldUpdateOperationsInput | string | null
+    subtasks?: TaskUncheckedUpdateManyWithoutParentTaskNestedInput
+    timeLogs?: TaskTimeLogUncheckedUpdateManyWithoutTaskNestedInput
+    assignees?: TaskAssigneeUncheckedUpdateManyWithoutTaskNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutTaskNestedInput
+    dependencies?: TaskDependencyUncheckedUpdateManyWithoutTaskNestedInput
+    dependents?: TaskDependencyUncheckedUpdateManyWithoutDependsOnTaskNestedInput
+  }
+
+  export type TaskUncheckedUpdateManyWithoutWorkstreamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    progressPercent?: IntFieldUpdateOperationsInput | number
+    billable?: BoolFieldUpdateOperationsInput | boolean
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentTaskId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ProjectExpenseUpdateWithoutWorkstreamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutExpensesNestedInput
+    approvedBy?: UserUpdateOneWithoutApprovedExpensesNestedInput
+    createdBy?: UserUpdateOneWithoutProjectExpensesNestedInput
+  }
+
+  export type ProjectExpenseUncheckedUpdateWithoutWorkstreamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
+    approvedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectExpenseUncheckedUpdateManyWithoutWorkstreamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
+    approvedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BillingMilestoneUpdateWithoutWorkstreamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    percentage?: FloatFieldUpdateOperationsInput | number
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutBillingMilestonesNestedInput
+  }
+
+  export type BillingMilestoneUncheckedUpdateWithoutWorkstreamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    percentage?: FloatFieldUpdateOperationsInput | number
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BillingMilestoneUncheckedUpdateManyWithoutWorkstreamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    percentage?: FloatFieldUpdateOperationsInput | number
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TimesheetUpdateWithoutWorkstreamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    hours?: FloatFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumTimesheetStatusFieldUpdateOperationsInput | $Enums.TimesheetStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutTimesheetsNestedInput
+    user?: UserUpdateOneRequiredWithoutTimesheetsNestedInput
+    task?: TaskUpdateOneWithoutTimesheetsNestedInput
+    approvedBy?: UserUpdateOneWithoutApprovedTimesheetsNestedInput
+  }
+
+  export type TimesheetUncheckedUpdateWithoutWorkstreamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    workDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    hours?: FloatFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumTimesheetStatusFieldUpdateOperationsInput | $Enums.TimesheetStatus
+    approvedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TimesheetUncheckedUpdateManyWithoutWorkstreamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    taskId?: NullableStringFieldUpdateOperationsInput | string | null
+    workDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    hours?: FloatFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumTimesheetStatusFieldUpdateOperationsInput | $Enums.TimesheetStatus
+    approvedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type DocumentCreateManyParentDocumentInput = {
     id?: string
     projectId: string
@@ -77639,6 +82109,23 @@ export namespace Prisma {
     taskTemplateId?: string | null
     isActive?: boolean
     createdById: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectWorkstreamCreateManyBusinessUnitInput = {
+    id?: string
+    projectId: string
+    code: string
+    name: string
+    description?: string | null
+    allocationPct?: number
+    plannedMandays?: number
+    estimatedCost?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    status?: string
+    sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -77867,6 +82354,67 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ProjectWorkstreamUpdateWithoutBusinessUnitInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allocationPct?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutWorkstreamsNestedInput
+    resources?: ProjectResourceUpdateManyWithoutWorkstreamNestedInput
+    tasks?: TaskUpdateManyWithoutWorkstreamNestedInput
+    expenses?: ProjectExpenseUpdateManyWithoutWorkstreamNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutWorkstreamNestedInput
+    timesheets?: TimesheetUpdateManyWithoutWorkstreamNestedInput
+  }
+
+  export type ProjectWorkstreamUncheckedUpdateWithoutBusinessUnitInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allocationPct?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resources?: ProjectResourceUncheckedUpdateManyWithoutWorkstreamNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutWorkstreamNestedInput
+    expenses?: ProjectExpenseUncheckedUpdateManyWithoutWorkstreamNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutWorkstreamNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutWorkstreamNestedInput
+  }
+
+  export type ProjectWorkstreamUncheckedUpdateManyWithoutBusinessUnitInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allocationPct?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserSkillCreateManySkillInput = {
     id?: string
     userId: string
@@ -77994,6 +82542,7 @@ export namespace Prisma {
   export type TaskCreateManyParentTaskInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     title: string
     description?: string | null
     status?: $Enums.TaskStatus
@@ -78025,6 +82574,7 @@ export namespace Prisma {
   export type TimesheetCreateManyTaskInput = {
     id?: string
     projectId: string
+    workstreamId?: string | null
     userId: string
     workDate: Date | string
     hours: number
@@ -78061,6 +82611,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutTasksNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutTasksNestedInput
     assignee?: UserUpdateOneWithoutTasksAssignedNestedInput
     createdBy?: UserUpdateOneWithoutTasksCreatedNestedInput
     subtasks?: TaskUpdateManyWithoutParentTaskNestedInput
@@ -78074,6 +82625,7 @@ export namespace Prisma {
   export type TaskUncheckedUpdateWithoutParentTaskInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -78096,6 +82648,7 @@ export namespace Prisma {
   export type TaskUncheckedUpdateManyWithoutParentTaskInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
@@ -78165,6 +82718,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutTimesheetsNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutTimesheetsNestedInput
     user?: UserUpdateOneRequiredWithoutTimesheetsNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedTimesheetsNestedInput
   }
@@ -78172,6 +82726,7 @@ export namespace Prisma {
   export type TimesheetUncheckedUpdateWithoutTaskInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
     workDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hours?: FloatFieldUpdateOperationsInput | number
@@ -78187,6 +82742,7 @@ export namespace Prisma {
   export type TimesheetUncheckedUpdateManyWithoutTaskInput = {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
     workDate?: DateTimeFieldUpdateOperationsInput | Date | string
     hours?: FloatFieldUpdateOperationsInput | number
@@ -78535,6 +83091,10 @@ export namespace Prisma {
      */
     export type ProjectCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProjectCountOutputTypeDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use ProjectWorkstreamCountOutputTypeDefaultArgs instead
+     */
+    export type ProjectWorkstreamCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProjectWorkstreamCountOutputTypeDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use DocumentCountOutputTypeDefaultArgs instead
      */
     export type DocumentCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = DocumentCountOutputTypeDefaultArgs<ExtArgs>
@@ -78578,6 +83138,10 @@ export namespace Prisma {
      * @deprecated Use ProjectDefaultArgs instead
      */
     export type ProjectArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProjectDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ProjectWorkstreamDefaultArgs instead
+     */
+    export type ProjectWorkstreamArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProjectWorkstreamDefaultArgs<ExtArgs>
     /**
      * @deprecated Use SurveyQuestionDefaultArgs instead
      */

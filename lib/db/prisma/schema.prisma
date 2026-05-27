@@ -199,6 +199,8 @@ model Project {
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
+  useWorkstreams Boolean   @default(false)
+
   surveyToken    String?   @unique
   resources       ProjectResource[]
   timesheets      Timesheet[]
@@ -211,6 +213,37 @@ model Project {
   raidItems       ProjectRaidItem[]
   perfProjectRatings PerformanceReviewProjectRating[]
   closingChecklist   ProjectClosingChecklistItem[]
+  workstreams     ProjectWorkstream[]
+}
+
+model ProjectWorkstream {
+  id             String   @id @default(cuid())
+  projectId      String
+  project        Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  code           String
+  name           String
+  description    String?  @db.Text
+  businessUnitId String?
+  businessUnit   BusinessUnit? @relation(fields: [businessUnitId], references: [id])
+  allocationPct  Float    @default(0)
+  plannedMandays Float    @default(0)
+  estimatedCost  Float    @default(0)
+  startDate      DateTime?
+  endDate        DateTime?
+  status         String   @default("ACTIVE")
+  sortOrder      Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  resources         ProjectResource[]
+  tasks             Task[]
+  expenses          ProjectExpense[]
+  billingMilestones BillingMilestone[]
+  timesheets        Timesheet[]
+
+  @@unique([projectId, code])
+  @@index([projectId])
+  @@index([businessUnitId])
 }
 
 model SurveyQuestion {
@@ -264,6 +297,8 @@ model ProjectResource {
   id             String   @id @default(cuid())
   projectId      String
   project        Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  workstreamId   String?
+  workstream     ProjectWorkstream? @relation(fields: [workstreamId], references: [id], onDelete: SetNull)
   userId         String
   user           User     @relation(fields: [userId], references: [id])
   roleInProject  String?
@@ -282,6 +317,8 @@ model Timesheet {
   id              String          @id @default(cuid())
   projectId       String
   project         Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  workstreamId    String?
+  workstream      ProjectWorkstream? @relation(fields: [workstreamId], references: [id], onDelete: SetNull)
   userId          String
   user            User            @relation(fields: [userId], references: [id])
   taskId          String?
@@ -350,6 +387,8 @@ model ProjectExpense {
   id               String        @id @default(cuid())
   projectId        String
   project          Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  workstreamId     String?
+  workstream       ProjectWorkstream? @relation(fields: [workstreamId], references: [id], onDelete: SetNull)
   category         String
   description      String
   amount           Float
@@ -382,6 +421,7 @@ model BusinessUnit {
   users         User[]
   taskTemplates    TaskTemplate[]
   projectTemplates ProjectTemplate[]
+  workstreams      ProjectWorkstream[]
 }
 
 model Skill {
@@ -465,6 +505,8 @@ model Task {
   id           String        @id @default(cuid())
   projectId    String
   project      Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  workstreamId String?
+  workstream   ProjectWorkstream? @relation(fields: [workstreamId], references: [id], onDelete: SetNull)
   title        String
   description  String?
   status       TaskStatus    @default(TODO)
@@ -512,6 +554,8 @@ model BillingMilestone {
   id            String                  @id @default(cuid())
   projectId     String
   project       Project                 @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  workstreamId  String?
+  workstream    ProjectWorkstream?      @relation(fields: [workstreamId], references: [id], onDelete: SetNull)
   name          String
   description   String?
   percentage    Float                   @default(0)

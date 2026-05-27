@@ -48,6 +48,7 @@ import type {
   CreateProjectBody,
   CreateProjectRaidItemBody,
   CreateProjectTemplateBody,
+  CreateProjectWorkstreamBody,
   CreateSkillBody,
   CreateSkillDevelopmentGoalBody,
   CreateTaskBody,
@@ -94,6 +95,7 @@ import type {
   ProjectRaidItem,
   ProjectResource,
   ProjectTemplate,
+  ProjectWorkstream,
   RejectProjectExpenseBody,
   RejectTimesheetBody,
   ReportFilterOption,
@@ -121,6 +123,7 @@ import type {
   UpdateProjectBody,
   UpdateProjectRaidItemBody,
   UpdateProjectReportBody,
+  UpdateProjectWorkstreamBody,
   UpdateSkillBody,
   UpdateSkillDevelopmentGoalBody,
   UpdateTaskBody,
@@ -4324,6 +4327,329 @@ export const useDeleteRaidItem = <
   TContext
 > => {
   return useMutation(getDeleteRaidItemMutationOptions(options));
+};
+
+export const getListProjectWorkstreamsUrl = (id: string) => {
+  return `/api/projects/${id}/workstreams`;
+};
+
+export const listProjectWorkstreams = async (
+  id: string,
+  options?: RequestInit,
+): Promise<ProjectWorkstream[]> => {
+  return customFetch<ProjectWorkstream[]>(getListProjectWorkstreamsUrl(id), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListProjectWorkstreamsQueryKey = (id: string) => {
+  return [`/api/projects/${id}/workstreams`] as const;
+};
+
+export const getListProjectWorkstreamsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listProjectWorkstreams>>,
+  TError = ErrorType<unknown>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listProjectWorkstreams>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getListProjectWorkstreamsQueryKey(id);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listProjectWorkstreams>>
+  > = ({ signal }) => listProjectWorkstreams(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof listProjectWorkstreams>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListProjectWorkstreamsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listProjectWorkstreams>>
+>;
+export type ListProjectWorkstreamsQueryError = ErrorType<unknown>;
+
+export function useListProjectWorkstreams<
+  TData = Awaited<ReturnType<typeof listProjectWorkstreams>>,
+  TError = ErrorType<unknown>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listProjectWorkstreams>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListProjectWorkstreamsQueryOptions(id, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getCreateProjectWorkstreamUrl = (id: string) => {
+  return `/api/projects/${id}/workstreams`;
+};
+
+export const createProjectWorkstream = async (
+  id: string,
+  createProjectWorkstreamBody: CreateProjectWorkstreamBody,
+  options?: RequestInit,
+): Promise<ProjectWorkstream> => {
+  return customFetch<ProjectWorkstream>(getCreateProjectWorkstreamUrl(id), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createProjectWorkstreamBody),
+  });
+};
+
+export const getCreateProjectWorkstreamMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createProjectWorkstream>>,
+    TError,
+    { id: string; data: BodyType<CreateProjectWorkstreamBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createProjectWorkstream>>,
+  TError,
+  { id: string; data: BodyType<CreateProjectWorkstreamBody> },
+  TContext
+> => {
+  const mutationKey = ["createProjectWorkstream"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createProjectWorkstream>>,
+    { id: string; data: BodyType<CreateProjectWorkstreamBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return createProjectWorkstream(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateProjectWorkstreamMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createProjectWorkstream>>
+>;
+export type CreateProjectWorkstreamMutationBody =
+  BodyType<CreateProjectWorkstreamBody>;
+export type CreateProjectWorkstreamMutationError = ErrorType<unknown>;
+
+export const useCreateProjectWorkstream = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createProjectWorkstream>>,
+    TError,
+    { id: string; data: BodyType<CreateProjectWorkstreamBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createProjectWorkstream>>,
+  TError,
+  { id: string; data: BodyType<CreateProjectWorkstreamBody> },
+  TContext
+> => {
+  return useMutation(getCreateProjectWorkstreamMutationOptions(options));
+};
+
+export const getUpdateWorkstreamUrl = (wsId: string) => {
+  return `/api/workstreams/${wsId}`;
+};
+
+export const updateWorkstream = async (
+  wsId: string,
+  updateProjectWorkstreamBody: UpdateProjectWorkstreamBody,
+  options?: RequestInit,
+): Promise<ProjectWorkstream> => {
+  return customFetch<ProjectWorkstream>(getUpdateWorkstreamUrl(wsId), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateProjectWorkstreamBody),
+  });
+};
+
+export const getUpdateWorkstreamMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateWorkstream>>,
+    TError,
+    { wsId: string; data: BodyType<UpdateProjectWorkstreamBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateWorkstream>>,
+  TError,
+  { wsId: string; data: BodyType<UpdateProjectWorkstreamBody> },
+  TContext
+> => {
+  const mutationKey = ["updateWorkstream"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateWorkstream>>,
+    { wsId: string; data: BodyType<UpdateProjectWorkstreamBody> }
+  > = (props) => {
+    const { wsId, data } = props ?? {};
+
+    return updateWorkstream(wsId, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateWorkstreamMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateWorkstream>>
+>;
+export type UpdateWorkstreamMutationBody =
+  BodyType<UpdateProjectWorkstreamBody>;
+export type UpdateWorkstreamMutationError = ErrorType<unknown>;
+
+export const useUpdateWorkstream = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateWorkstream>>,
+    TError,
+    { wsId: string; data: BodyType<UpdateProjectWorkstreamBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateWorkstream>>,
+  TError,
+  { wsId: string; data: BodyType<UpdateProjectWorkstreamBody> },
+  TContext
+> => {
+  return useMutation(getUpdateWorkstreamMutationOptions(options));
+};
+
+export const getDeleteWorkstreamUrl = (wsId: string) => {
+  return `/api/workstreams/${wsId}`;
+};
+
+export const deleteWorkstream = async (
+  wsId: string,
+  options?: RequestInit,
+): Promise<SuccessMessage> => {
+  return customFetch<SuccessMessage>(getDeleteWorkstreamUrl(wsId), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getDeleteWorkstreamMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteWorkstream>>,
+    TError,
+    { wsId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteWorkstream>>,
+  TError,
+  { wsId: string },
+  TContext
+> => {
+  const mutationKey = ["deleteWorkstream"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteWorkstream>>,
+    { wsId: string }
+  > = (props) => {
+    const { wsId } = props ?? {};
+
+    return deleteWorkstream(wsId, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteWorkstreamMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteWorkstream>>
+>;
+
+export type DeleteWorkstreamMutationError = ErrorType<unknown>;
+
+export const useDeleteWorkstream = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteWorkstream>>,
+    TError,
+    { wsId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteWorkstream>>,
+  TError,
+  { wsId: string },
+  TContext
+> => {
+  return useMutation(getDeleteWorkstreamMutationOptions(options));
 };
 
 export const getListPerformanceReviewsUrl = (
