@@ -281,3 +281,9 @@ id = "456gmZCWyEvtwEpwZgvEc"
 uri = "file://dist/Panduan-Instalasi-SecureProfit-Hub.docx"
 type = "word_document"
 title = "Panduan Instalasi SecureProfit Hub (MS Word)"
+
+[[outputs]]
+id = "XBP07ld6e58INIHGZaXTe"
+uri = "file://scripts/exports/SecureProfitHub-Flow-Proses.docx"
+type = "word_document"
+title = "SecureProfit Hub — Flow Proses End-to-End"

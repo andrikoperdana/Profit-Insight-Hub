@@ -7,6 +7,7 @@
     "hello": "tsx ./src/hello.ts",
     "fit-gap": "tsx ./src/fit-gap-psohub.ts",
     "role-doc": "tsx ./src/role-features-doc.ts",
+    "flow-doc": "tsx ./src/proses-flow-doc.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {
