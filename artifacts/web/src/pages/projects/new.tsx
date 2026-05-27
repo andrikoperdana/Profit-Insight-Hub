@@ -6,7 +6,9 @@ import {
   useListUsers,
   useListLeads,
   useConvertLead,
+  useListBusinessUnits,
   addProjectResource,
+  createProjectWorkstream,
 } from "@workspace/api-client-react";
 import { z } from "zod";
 import { useForm, useFieldArray } from "react-hook-form";
@@ -452,6 +454,15 @@ const resourceRowSchema = z.object({
   dailyRate: z.coerce.number().min(0, "Daily rate must be >= 0"),
 });
 
+const workstreamRowSchema = z.object({
+  code: z.string().trim().min(1, "Code required").max(20),
+  name: z.string().min(2, "Name required"),
+  businessUnitId: z.string().optional(),
+  allocationPct: z.coerce.number().min(0).max(100),
+  plannedMandays: z.coerce.number().min(0),
+  estimatedCost: z.coerce.number().min(0),
+});
+
 const createProjectSchema = z.object({
   code: z.string().min(2, "SPK/PO Number is required"),
   name: z.string().min(3, "Project name required"),
@@ -467,7 +478,42 @@ const createProjectSchema = z.object({
   vatPercent: z.coerce.number().min(0).max(100),
   contractValueIncludesVat: z.boolean(),
   resources: z.array(resourceRowSchema).min(1, "Add at least one resource requirement"),
+  useWorkstreams: z.boolean().default(false),
+  workstreams: z.array(workstreamRowSchema),
+}).superRefine((val, ctx) => {
+  if (!val.useWorkstreams) return;
+  if (val.workstreams.length === 0) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["workstreams"], message: "Add at least one workstream or disable the toggle" });
+    return;
+  }
+  const codes = new Set<string>();
+  val.workstreams.forEach((w, i) => {
+    const c = w.code.trim().toUpperCase();
+    if (codes.has(c)) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["workstreams", i, "code"], message: "Duplicate workstream code" });
+    }
+    codes.add(c);
+  });
 });
+
+const WORKSTREAM_TEMPLATES: Record<string, { label: string; rows: Array<{ code: string; name: string; buName: string; allocationPct: number }> }> = {
+  "pentest-grc-tm": {
+    label: "Pentest + GRC + Threat Modeling (standar)",
+    rows: [
+      { code: "PT", name: "Penetration Testing", buName: "Pentest", allocationPct: 40 },
+      { code: "GRC", name: "GRC / Compliance Audit", buName: "GRC", allocationPct: 35 },
+      { code: "TM", name: "Threat Modeling", buName: "Threat Hunting", allocationPct: 25 },
+    ],
+  },
+  "pentest-only": {
+    label: "Pentest only",
+    rows: [{ code: "PT", name: "Penetration Testing", buName: "Pentest", allocationPct: 100 }],
+  },
+  "grc-only": {
+    label: "GRC only",
+    rows: [{ code: "GRC", name: "GRC / Compliance Audit", buName: "GRC", allocationPct: 100 }],
+  },
+};
 
 type FormValues = z.infer<typeof createProjectSchema>;
 
@@ -477,6 +523,7 @@ function FullProjectForm() {
 
   const { data: clients, isLoading: loadingClients } = useListClients();
   const { data: users, isLoading: loadingUsers } = useListUsers();
+  const { data: businessUnits } = useListBusinessUnits();
 
   const createProject = useCreateProject({
     mutation: {
@@ -504,10 +551,13 @@ function FullProjectForm() {
       vatPercent: 11,
       contractValueIncludesVat: true,
       resources: [{ role: "KONSULTAN", userId: "", headcount: 1, mandaysPerPerson: 10, dailyRate: ROLE_RATES.KONSULTAN.rate }],
+      useWorkstreams: false,
+      workstreams: [],
     },
   });
 
   const { fields, append, remove } = useFieldArray({ control: form.control, name: "resources" });
+  const { fields: wsFields, append: wsAppend, remove: wsRemove, replace: wsReplace } = useFieldArray({ control: form.control, name: "workstreams" });
 
   const [spkFile, setSpkFile] = useState<{ url: string; name: string } | null>(null);
   const [contractFile, setContractFile] = useState<{ url: string; name: string } | null>(null);
@@ -653,10 +703,34 @@ function FullProjectForm() {
       }
     }
 
+    // Create workstreams (if enabled).
+    const wsRows = data.useWorkstreams ? data.workstreams : [];
+    let wsCreated = 0;
+    const wsFailures: string[] = [];
+    for (let i = 0; i < wsRows.length; i++) {
+      const w = wsRows[i]!;
+      try {
+        await createProjectWorkstream(project.id, {
+          code: w.code.trim().toUpperCase(),
+          name: w.name,
+          businessUnitId: w.businessUnitId || null,
+          allocationPct: Number(w.allocationPct) || 0,
+          plannedMandays: Number(w.plannedMandays) || 0,
+          estimatedCost: Number(w.estimatedCost) || 0,
+          startDate: data.startDate || null,
+          endDate: data.endDate || null,
+        });
+        wsCreated += 1;
+      } catch (err: any) {
+        wsFailures.push(`${w.code}: ${err?.message ?? "unknown error"}`);
+      }
+    }
+
     const budgetOnlyCount = data.resources.length - rowsToAssign.length;
     const parts: string[] = [`${project.code} • status: Observation`];
     if (assignedCount > 0) parts.push(`${assignedCount} resource(s) assigned`);
     if (budgetOnlyCount > 0) parts.push(`${budgetOnlyCount} budget-only row(s)`);
+    if (wsCreated > 0) parts.push(`${wsCreated} workstream(s) created`);
     toast({ title: "Project created", description: parts.join(" • ") });
 
     if (failures.length > 0) {
@@ -666,8 +740,15 @@ function FullProjectForm() {
         description: failures.join("; "),
       });
     }
+    if (wsFailures.length > 0) {
+      toast({
+        variant: "destructive",
+        title: "Some workstreams could not be created",
+        description: wsFailures.join("; "),
+      });
+    }
 
-    setLocation(`/projects/${project.id}?tab=resources`);
+    setLocation(`/projects/${project.id}?tab=${wsCreated > 0 ? "workstreams" : "resources"}`);
   };
 
   if (loadingClients || loadingUsers) {
@@ -1121,6 +1202,173 @@ function FullProjectForm() {
                 />
               </div>
             </CardContent>
+          </Card>
+
+          <Card className="border-border shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between gap-4">
+              <div>
+                <CardTitle>Workstreams (opsional)</CardTitle>
+                <CardDescription>
+                  Pisahkan project jadi beberapa workstream (mis. Pentest / GRC / Threat Modeling) supaya cost, mandays, billing, dan timesheet bisa di-track per stream. Cocok untuk SPK gabungan lintas Business Unit.
+                </CardDescription>
+              </div>
+              <FormField
+                control={form.control}
+                name="useWorkstreams"
+                render={({ field }) => (
+                  <label className="flex items-center gap-2 text-sm shrink-0 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={!!field.value}
+                      onChange={(e) => {
+                        field.onChange(e.target.checked);
+                        if (!e.target.checked) wsReplace([]);
+                      }}
+                      data-testid="toggle-use-workstreams"
+                    />
+                    <span>Pakai Workstreams</span>
+                  </label>
+                )}
+              />
+            </CardHeader>
+            {form.watch("useWorkstreams") && (
+              <CardContent className="space-y-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-sm text-muted-foreground">Template:</span>
+                  <Select
+                    onValueChange={(tplKey) => {
+                      const tpl = WORKSTREAM_TEMPLATES[tplKey];
+                      if (!tpl) return;
+                      const rows = tpl.rows.map((r) => {
+                        const bu = (businessUnits ?? []).find((b) => b.name.toLowerCase() === r.buName.toLowerCase());
+                        const mdShare = (totals.mandays * r.allocationPct) / 100;
+                        const costShare = (totals.cost * r.allocationPct) / 100;
+                        return {
+                          code: r.code,
+                          name: r.name,
+                          businessUnitId: bu?.id ?? "",
+                          allocationPct: r.allocationPct,
+                          plannedMandays: Math.round(mdShare * 10) / 10,
+                          estimatedCost: Math.round(costShare),
+                        };
+                      });
+                      wsReplace(rows);
+                    }}
+                  >
+                    <SelectTrigger className="h-8 w-72"><SelectValue placeholder="Pilih template…" /></SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(WORKSTREAM_TEMPLATES).map(([k, v]) => (
+                        <SelectItem key={k} value={k}>{v.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => wsAppend({ code: "", name: "", businessUnitId: "", allocationPct: 0, plannedMandays: 0, estimatedCost: 0 })}
+                  >
+                    <Plus className="h-4 w-4 mr-2" /> Add Workstream
+                  </Button>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="bg-muted/50 text-muted-foreground">
+                      <tr>
+                        <th className="text-left p-2 font-medium w-24">Code</th>
+                        <th className="text-left p-2 font-medium">Name</th>
+                        <th className="text-left p-2 font-medium w-44">Business Unit</th>
+                        <th className="text-right p-2 font-medium w-24">% Alloc</th>
+                        <th className="text-right p-2 font-medium w-28">Mandays</th>
+                        <th className="text-right p-2 font-medium w-40">Est. Cost</th>
+                        <th className="w-12"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {wsFields.length === 0 ? (
+                        <tr><td colSpan={7} className="p-4 text-center text-muted-foreground">Pilih template di atas, atau klik "Add Workstream" untuk mulai.</td></tr>
+                      ) : wsFields.map((f, idx) => (
+                        <tr key={f.id} className="border-t border-border">
+                          <td className="p-2">
+                            <FormField control={form.control} name={`workstreams.${idx}.code`} render={({ field }) => (
+                              <Input className="h-9 uppercase" maxLength={10} {...field} />
+                            )} />
+                          </td>
+                          <td className="p-2">
+                            <FormField control={form.control} name={`workstreams.${idx}.name`} render={({ field }) => (
+                              <Input className="h-9" {...field} />
+                            )} />
+                          </td>
+                          <td className="p-2">
+                            <FormField control={form.control} name={`workstreams.${idx}.businessUnitId`} render={({ field }) => (
+                              <Select onValueChange={(v) => field.onChange(v === "__none__" ? "" : v)} value={field.value || "__none__"}>
+                                <SelectTrigger className="h-9"><SelectValue placeholder="(none)" /></SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="__none__">(none)</SelectItem>
+                                  {(businessUnits ?? []).map((b) => (
+                                    <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            )} />
+                          </td>
+                          <td className="p-2">
+                            <FormField control={form.control} name={`workstreams.${idx}.allocationPct`} render={({ field }) => (
+                              <Input type="number" min={0} max={100} step={5} className="h-9 text-right" {...field} />
+                            )} />
+                          </td>
+                          <td className="p-2">
+                            <FormField control={form.control} name={`workstreams.${idx}.plannedMandays`} render={({ field }) => (
+                              <Input type="number" min={0} step={1} className="h-9 text-right" {...field} />
+                            )} />
+                          </td>
+                          <td className="p-2">
+                            <FormField control={form.control} name={`workstreams.${idx}.estimatedCost`} render={({ field }) => (
+                              <Input type="number" min={0} step={1000000} className="h-9 text-right font-mono" {...field} />
+                            )} />
+                          </td>
+                          <td className="p-2">
+                            <Button type="button" variant="ghost" size="icon" onClick={() => wsRemove(idx)}>
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {form.formState.errors.workstreams?.message && (
+                  <p className="text-sm text-destructive">{form.formState.errors.workstreams.message}</p>
+                )}
+
+                {wsFields.length > 0 && (() => {
+                  const ws = form.watch("workstreams") || [];
+                  const totalPct = ws.reduce((s, r) => s + (Number(r.allocationPct) || 0), 0);
+                  const totalMd = ws.reduce((s, r) => s + (Number(r.plannedMandays) || 0), 0);
+                  const totalCost = ws.reduce((s, r) => s + (Number(r.estimatedCost) || 0), 0);
+                  const pctOk = Math.abs(totalPct - 100) < 0.01;
+                  return (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 text-sm">
+                      <div>
+                        <div className="text-muted-foreground">Total Allocation %</div>
+                        <div className={`text-lg font-semibold font-mono ${pctOk ? "text-emerald-500" : "text-amber-500"}`}>
+                          {totalPct.toFixed(1)}%{!pctOk && " (idealnya 100%)"}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-muted-foreground">Total Mandays (workstreams)</div>
+                        <div className="text-lg font-semibold font-mono">{totalMd.toFixed(1)}</div>
+                      </div>
+                      <div>
+                        <div className="text-muted-foreground">Total Cost (workstreams)</div>
+                        <div className="text-lg font-semibold font-mono">{formatIDR(totalCost)}</div>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </CardContent>
+            )}
           </Card>
 
           <div className="flex justify-end space-x-4">

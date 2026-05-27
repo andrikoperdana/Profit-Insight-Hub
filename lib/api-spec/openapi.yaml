@@ -2909,6 +2909,7 @@ components:
         contractValueIncludesVat: { type: boolean, description: "If true, contractValue is gross including PPN; otherwise net (DPP)" }
         estimatedCost: { type: number }
         plannedMandays: { type: number }
+        useWorkstreams: { type: boolean }
         spkFileUrl: { type: string, nullable: true }
         spkFileName: { type: string, nullable: true }
         contractFileUrl: { type: string, nullable: true }

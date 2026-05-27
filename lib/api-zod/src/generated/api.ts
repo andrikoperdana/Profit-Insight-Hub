@@ -1169,6 +1169,7 @@ export const CreateProjectBody = zod.object({
     ),
   estimatedCost: zod.number().optional(),
   plannedMandays: zod.number().optional(),
+  useWorkstreams: zod.boolean().optional(),
   spkFileUrl: zod.string().nullish(),
   spkFileName: zod.string().nullish(),
   contractFileUrl: zod.string().nullish(),

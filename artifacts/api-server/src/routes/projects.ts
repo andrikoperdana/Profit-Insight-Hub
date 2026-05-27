@@ -262,6 +262,7 @@ router.post("/projects", requireRole(...writeRoles), async (req, res) => {
       contractValueIncludesVat: finalIncludesVat,
       estimatedCost: Number(b.estimatedCost || 0),
       plannedMandays: Number(b.plannedMandays || 0),
+      useWorkstreams: b.useWorkstreams === true,
       spkFileUrl: finalSpkFileUrl,
       spkFileName: finalSpkFileUrl ? sanitizeFileName(b.spkFileName) ?? null : null,
       contractFileUrl: finalContractFileUrl,

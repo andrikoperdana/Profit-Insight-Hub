@@ -1037,6 +1037,7 @@ export interface CreateProjectBody {
   contractValueIncludesVat?: boolean;
   estimatedCost?: number;
   plannedMandays?: number;
+  useWorkstreams?: boolean;
   spkFileUrl?: string | null;
   spkFileName?: string | null;
   contractFileUrl?: string | null;
