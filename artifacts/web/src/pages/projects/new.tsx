@@ -533,6 +533,18 @@ function FullProjectForm() {
     }
   }, [isInternal, currentUser?.role, rulesShown]);
 
+  // Auto-pick PM = current user when the logged-in user is a Project Manager.
+  useEffect(() => {
+    if (
+      currentUser?.role === UserRole.PROJECT_MANAGER &&
+      currentUser.id &&
+      !form.getValues("pmId")
+    ) {
+      form.setValue("pmId", currentUser.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser?.id, currentUser?.role]);
+
   useEffect(() => {
     if (isInternal) {
       form.setValue("vatPercent", 0);
