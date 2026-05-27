@@ -252,7 +252,11 @@ function OverviewTab({ project }: { project: any }) {
         </Card>
       )}
 
-      <DocumentChecklistCard projectId={project.id} projectStatus={project.status} />
+      {(user?.role === "MANAGEMENT" ||
+        (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id) ||
+        (user?.role === "ADMIN_PROJECT" && project.adminProjectId === user?.id)) && (
+        <DocumentChecklistCard projectId={project.id} projectStatus={project.status} />
+      )}
 
       {project.kind && project.kind !== "CLIENT" && canViewProjectFinancials(user?.role) && (
         <BudgetConsumptionCard

@@ -284,9 +284,7 @@ export default function ProjectDetail() {
             <TabsTrigger value="financials">Financials</TabsTrigger>
           )}
           <TabsTrigger value="resources">Resources</TabsTrigger>
-          {(user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER") && (
-            <TabsTrigger value="expenses" data-testid="tab-trigger-expenses">Expenses</TabsTrigger>
-          )}
+          <TabsTrigger value="expenses" data-testid="tab-trigger-expenses">Expenses</TabsTrigger>
           {(user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER") && (
             <TabsTrigger value="timesheets" data-testid="tab-trigger-timesheets">Timesheets</TabsTrigger>
           )}
