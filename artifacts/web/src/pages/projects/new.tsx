@@ -6,6 +6,7 @@ import {
   useListUsers,
   useListLeads,
   useConvertLead,
+  addProjectResource,
 } from "@workspace/api-client-react";
 import { z } from "zod";
 import { useForm, useFieldArray } from "react-hook-form";
@@ -445,6 +446,7 @@ function SalesIntakeForm() {
 
 const resourceRowSchema = z.object({
   role: z.string().min(1, "Role required"),
+  userId: z.string().optional(),
   headcount: z.coerce.number().min(1, "At least 1"),
   mandaysPerPerson: z.coerce.number().min(0.5, "At least 0.5"),
   dailyRate: z.coerce.number().min(0, "Daily rate must be >= 0"),
@@ -478,13 +480,6 @@ function FullProjectForm() {
 
   const createProject = useCreateProject({
     mutation: {
-      onSuccess: (data) => {
-        toast({
-          title: "Project created",
-          description: `${data.code} • status: Observation. Assign actual team members in the Resources tab.`,
-        });
-        setLocation(`/projects/${data.id}?tab=resources`);
-      },
       onError: (err: any) => {
         toast({ variant: "destructive", title: "Failed to create project", description: err?.message ?? "Unknown error" });
       },
@@ -508,7 +503,7 @@ function FullProjectForm() {
       exchangeRate: 1,
       vatPercent: 11,
       contractValueIncludesVat: true,
-      resources: [{ role: "KONSULTAN", headcount: 1, mandaysPerPerson: 10, dailyRate: ROLE_RATES.KONSULTAN.rate }],
+      resources: [{ role: "KONSULTAN", userId: "", headcount: 1, mandaysPerPerson: 10, dailyRate: ROLE_RATES.KONSULTAN.rate }],
     },
   });
 
@@ -516,6 +511,7 @@ function FullProjectForm() {
 
   const [spkFile, setSpkFile] = useState<{ url: string; name: string } | null>(null);
   const [contractFile, setContractFile] = useState<{ url: string; name: string } | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const watchedResources = form.watch("resources");
   const watchedRevenue = Number(form.watch("contractValue") || 0);
@@ -581,32 +577,97 @@ function FullProjectForm() {
   const estimatedProfit = watchedRevenue - totals.cost;
   const marginPct = watchedRevenue > 0 ? (estimatedProfit / watchedRevenue) * 100 : 0;
 
-  const onSubmit = (data: FormValues) => {
-    createProject.mutate({
-      data: {
-        code: data.code,
-        name: data.name,
-        description: data.description,
-        clientId: data.clientId,
-        salesId: isInternal ? (currentUser?.id ?? data.salesId ?? undefined) : data.salesId,
-        pmId: data.pmId,
-        status: ProjectStatus.OBSERVATION,
-        kind: isInternal ? ProjectKind.INTERNAL : ProjectKind.CLIENT,
-        startDate: data.startDate || undefined,
-        endDate: data.endDate || undefined,
-        contractValue: data.contractValue,
-        currency: isInternal ? "IDR" : (data.currency || "IDR"),
-        exchangeRate: isInternal ? 1 : Number(data.exchangeRate || 1),
-        vatPercent: isInternal ? 0 : data.vatPercent,
-        contractValueIncludesVat: isInternal ? false : data.contractValueIncludesVat,
-        estimatedCost: totals.cost,
-        plannedMandays: totals.mandays,
-        spkFileUrl: isInternal ? null : (spkFile?.url ?? null),
-        spkFileName: isInternal ? null : (spkFile?.name ?? null),
-        contractFileUrl: isInternal ? null : (contractFile?.url ?? null),
-        contractFileName: isInternal ? null : (contractFile?.name ?? null),
-      },
-    });
+  const onSubmit = async (data: FormValues) => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      await runSubmit(data);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const runSubmit = async (data: FormValues) => {
+    // Validate uniqueness of assigned users across resource rows up-front.
+    const assignedIds = data.resources.map((r) => r.userId).filter(Boolean) as string[];
+    const dupId = assignedIds.find((id, i) => assignedIds.indexOf(id) !== i);
+    if (dupId) {
+      const dupName = users?.find((u) => u.id === dupId)?.name ?? dupId;
+      toast({
+        variant: "destructive",
+        title: "Duplicate assignment",
+        description: `${dupName} is assigned to more than one resource row. Each user can only appear once.`,
+      });
+      return;
+    }
+
+    let project;
+    try {
+      project = await createProject.mutateAsync({
+        data: {
+          code: data.code,
+          name: data.name,
+          description: data.description,
+          clientId: data.clientId,
+          salesId: isInternal ? (currentUser?.id ?? data.salesId ?? undefined) : data.salesId,
+          pmId: data.pmId,
+          status: ProjectStatus.OBSERVATION,
+          kind: isInternal ? ProjectKind.INTERNAL : ProjectKind.CLIENT,
+          startDate: data.startDate || undefined,
+          endDate: data.endDate || undefined,
+          contractValue: data.contractValue,
+          currency: isInternal ? "IDR" : (data.currency || "IDR"),
+          exchangeRate: isInternal ? 1 : Number(data.exchangeRate || 1),
+          vatPercent: isInternal ? 0 : data.vatPercent,
+          contractValueIncludesVat: isInternal ? false : data.contractValueIncludesVat,
+          estimatedCost: totals.cost,
+          plannedMandays: totals.mandays,
+          spkFileUrl: isInternal ? null : (spkFile?.url ?? null),
+          spkFileName: isInternal ? null : (spkFile?.name ?? null),
+          contractFileUrl: isInternal ? null : (contractFile?.url ?? null),
+          contractFileName: isInternal ? null : (contractFile?.name ?? null),
+        },
+      });
+    } catch {
+      // onError toast already shown
+      return;
+    }
+
+    // Create ProjectResource records for every row that has an assigned user.
+    // Rows without userId remain budget-only (cost/mandays already captured on Project).
+    const rowsToAssign = data.resources.filter((r) => !!r.userId);
+    let assignedCount = 0;
+    const failures: string[] = [];
+    for (const row of rowsToAssign) {
+      try {
+        await addProjectResource(project.id, {
+          userId: row.userId!,
+          roleInProject: ROLE_RATES[row.role]?.label ?? row.role,
+          plannedMandays: Number(row.mandaysPerPerson) || 0,
+          dailyRate: Number(row.dailyRate) || 0,
+        });
+        assignedCount += 1;
+      } catch (err: any) {
+        const name = users?.find((u) => u.id === row.userId)?.name ?? row.userId;
+        failures.push(`${name}: ${err?.message ?? "unknown error"}`);
+      }
+    }
+
+    const budgetOnlyCount = data.resources.length - rowsToAssign.length;
+    const parts: string[] = [`${project.code} • status: Observation`];
+    if (assignedCount > 0) parts.push(`${assignedCount} resource(s) assigned`);
+    if (budgetOnlyCount > 0) parts.push(`${budgetOnlyCount} budget-only row(s)`);
+    toast({ title: "Project created", description: parts.join(" • ") });
+
+    if (failures.length > 0) {
+      toast({
+        variant: "destructive",
+        title: "Some resources could not be assigned",
+        description: failures.join("; "),
+      });
+    }
+
+    setLocation(`/projects/${project.id}?tab=resources`);
   };
 
   if (loadingClients || loadingUsers) {
@@ -894,20 +955,24 @@ function FullProjectForm() {
           <Card className="border-border shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Resource Requirements</CardTitle>
-              <Button type="button" variant="outline" size="sm" onClick={() => append({ role: "KONSULTAN", headcount: 1, mandaysPerPerson: 5, dailyRate: ROLE_RATES.KONSULTAN.rate })}>
+              <Button type="button" variant="outline" size="sm" onClick={() => append({ role: "KONSULTAN", userId: "", headcount: 1, mandaysPerPerson: 5, dailyRate: ROLE_RATES.KONSULTAN.rate })}>
                 <Plus className="h-4 w-4 mr-2" /> Add Row
               </Button>
             </CardHeader>
             <CardContent className="space-y-4">
+              <p className="text-xs text-muted-foreground">
+                Pilih orang spesifik di kolom <span className="font-medium text-foreground">Assign To</span> agar resource langsung muncul di tab Resources project. Biarkan kosong untuk baris yang sekadar mencatat budget (rencana headcount &gt; 1 atau orang belum ditentukan). Tiap user hanya boleh muncul satu kali per project.
+              </p>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead className="bg-muted/50 text-muted-foreground">
                     <tr>
                       <th className="text-left p-2 font-medium">Role</th>
-                      <th className="text-right p-2 font-medium w-32">Headcount</th>
+                      <th className="text-left p-2 font-medium w-56">Assign To</th>
+                      <th className="text-right p-2 font-medium w-28">Headcount</th>
                       <th className="text-right p-2 font-medium w-32">Mandays/Person</th>
                       <th className="text-right p-2 font-medium w-40">Daily Rate</th>
-                      <th className="text-right p-2 font-medium w-44">Subtotal Cost</th>
+                      <th className="text-right p-2 font-medium w-40">Subtotal Cost</th>
                       <th className="w-12"></th>
                     </tr>
                   </thead>
@@ -918,6 +983,11 @@ function FullProjectForm() {
                       const md = Number(r?.mandaysPerPerson || 0);
                       const rate = Number(r?.dailyRate || 0);
                       const subtotal = head * md * rate;
+                      const rowRole = r?.role ?? "KONSULTAN";
+                      const candidateUsers = (users ?? []).filter(
+                        (u) => u.isActive && u.role === rowRole,
+                      );
+                      const hasUser = !!r?.userId;
                       return (
                         <tr key={f.id} className="border-t border-border">
                           <td className="p-2">
@@ -932,6 +1002,9 @@ function FullProjectForm() {
                                     if (defaultRate !== undefined) {
                                       form.setValue(`resources.${idx}.dailyRate`, defaultRate, { shouldDirty: true });
                                     }
+                                    // Reset user picker when role changes — previously selected
+                                    // user almost certainly doesn't match the new role.
+                                    form.setValue(`resources.${idx}.userId`, "", { shouldDirty: true });
                                   }}
                                   value={field.value}
                                 >
@@ -948,9 +1021,50 @@ function FullProjectForm() {
                           <td className="p-2">
                             <FormField
                               control={form.control}
+                              name={`resources.${idx}.userId`}
+                              render={({ field }) => (
+                                <Select
+                                  onValueChange={(v) => {
+                                    const next = v === "__none__" ? "" : v;
+                                    field.onChange(next);
+                                    if (next) {
+                                      form.setValue(`resources.${idx}.headcount`, 1, { shouldDirty: true });
+                                    }
+                                  }}
+                                  value={field.value || "__none__"}
+                                >
+                                  <SelectTrigger className="h-9" data-testid={`select-resource-user-${idx}`}>
+                                    <SelectValue placeholder="(Budget only)" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="__none__">(Budget only — assign nanti)</SelectItem>
+                                    {candidateUsers.length === 0 ? (
+                                      <div className="px-2 py-1.5 text-xs text-muted-foreground">
+                                        Tidak ada user aktif dengan role ini.
+                                      </div>
+                                    ) : (
+                                      candidateUsers.map((u) => (
+                                        <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>
+                                      ))
+                                    )}
+                                  </SelectContent>
+                                </Select>
+                              )}
+                            />
+                          </td>
+                          <td className="p-2">
+                            <FormField
+                              control={form.control}
                               name={`resources.${idx}.headcount`}
                               render={({ field }) => (
-                                <Input type="number" min={1} className="h-9 text-right" {...field} />
+                                <Input
+                                  type="number"
+                                  min={1}
+                                  className="h-9 text-right"
+                                  disabled={hasUser}
+                                  title={hasUser ? "Headcount fixed to 1 when a user is assigned" : undefined}
+                                  {...field}
+                                />
                               )}
                             />
                           </td>
@@ -1013,8 +1127,8 @@ function FullProjectForm() {
             <Button variant="outline" asChild>
               <Link href="/projects">Cancel</Link>
             </Button>
-            <Button type="submit" disabled={createProject.isPending}>
-              {createProject.isPending ? "Creating..." : (
+            <Button type="submit" disabled={isSubmitting || createProject.isPending}>
+              {isSubmitting || createProject.isPending ? "Creating..." : (
                 <><Save className="mr-2 h-4 w-4" /> Save Project</>
               )}
             </Button>
