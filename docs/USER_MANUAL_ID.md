@@ -6,9 +6,9 @@
 - Bagian 2: Memulai (Login & Antarmuka)
 - Bagian 3: Peran Pengguna & Hak Akses
 - Bagian 4: Manajemen Klien
-- Bagian 5: Manajemen Proyek (Siklus 5 Status)
+- Bagian 5: Manajemen Proyek (Siklus Status)
 - Bagian 6: Manajemen Sumber Daya (Resource)
-- Bagian 7: Timesheet & Persetujuan
+- Bagian 7: Time Tracking & Persetujuan
 - Bagian 8: Dokumen — BAST & Invoice (Auto-Close)
 - Bagian 9: Profit & Loss + Forecasting
 - Bagian 10: Kapasitas & Utilisasi Tim
@@ -51,7 +51,7 @@ Buka peramban (Chrome, Edge, atau Firefox versi terbaru) lalu kunjungi alamat ap
 
 1. Masukkan alamat email perusahaan Anda.
 2. Masukkan kata sandi.
-3. Klik tombol **Sign In**.
+3. Klik tombol **Initialize Session**.
 
 Apabila kombinasi email/kata sandi salah lebih dari beberapa kali berturut-turut, sistem akan menerapkan pembatasan sementara (rate limiting) untuk alasan keamanan. Tunggu beberapa saat sebelum mencoba kembali, atau hubungi administrator.
 
@@ -71,16 +71,22 @@ Klik nama Anda di sudut kanan atas, kemudian pilih **Logout**. Sesi akan diakhir
 
 ## Bagian 3 — Peran Pengguna & Hak Akses
 
-SecureProfit Hub menggunakan model **Role-Based Access Control (RBAC)** dengan enam peran berikut:
+SecureProfit Hub menggunakan model **Role-Based Access Control (RBAC)**. Label peran yang tampil di antarmuka:
 
-| Peran | Tanggung Jawab Utama |
-|-------|----------------------|
-| MANAGEMENT | Akses penuh ke seluruh modul, persetujuan strategis, melihat P&L dan BI. |
-| PROJECT_MANAGER | Mengelola proyek yang ditugaskan, memimpin tim, menyetujui timesheet. |
-| FINANCE | Mengelola tarif, mengunggah invoice, memverifikasi pembayaran. |
-| CONSULTANT | Mengisi timesheet, melihat tugas yang ditetapkan. |
-| SALES | Mendaftarkan proyek baru, mengelola data klien dan kontrak. |
-| AUDITOR | Hanya membaca — melihat audit log, P&L, dan dokumen untuk keperluan kepatuhan. |
+| Enum Peran | Label Tampilan | Tanggung Jawab Utama |
+|------------|----------------|----------------------|
+| MANAGEMENT | PMO Director | Akses penuh ke seluruh modul, persetujuan strategis, melihat P&L dan BI. |
+| PROJECT_MANAGER | Project Manager | Mengelola proyek yang ditugaskan, memimpin tim, menyetujui timesheet. |
+| SALES | Sales | Mendaftarkan proyek baru (intake), mengelola data klien dan kontrak. |
+| KONSULTAN | Consultant | Mengisi timesheet, melihat tugas yang ditetapkan. |
+| TECHNICAL_WRITER | Technical Writer | Menyusun laporan dan dokumentasi proyek. |
+| ADMIN_PROJECT | Admin Project | Mengurus dokumen penutupan (BAST/Invoice/Contract). |
+| PRINCIPAL_KONSULTAN | Principal Consultant | Supervisi & mengusulkan konsultan ke proyek. |
+| PRINCIPAL_TECHNICAL_WRITER | Principal Technical Writer | Supervisi & mengusulkan TW ke proyek. |
+| PRINCIPAL_ADMIN_PROJECT | Principal Admin Project | Supervisi & mengusulkan Admin Project ke proyek. |
+| FINANCE | Finance | Read-only ke proyek/laporan, mengunggah Invoice & Contract, VAT recap. |
+| HR | HR | People-ops: employees, org chart, leave, skill matrix, bench, capacity. |
+| SITE_ADMIN | Site Admin | Mengelola users dan melihat audit log. |
 
 Menu dan tombol yang tampak di layar Anda otomatis disaring berdasarkan peran. Jika sebuah aksi tidak terlihat, kemungkinan peran Anda tidak memiliki hak untuk melakukannya.
 
@@ -110,63 +116,58 @@ Klien yang dihapus tidak benar-benar hilang dari database (soft delete) sehingga
 
 ---
 
-## Bagian 5 — Manajemen Proyek (Siklus 5 Status)
+## Bagian 5 — Manajemen Proyek (Siklus Status)
 
-Setiap proyek di SecureProfit Hub melewati **lima status siklus hidup**:
+Setiap proyek di SecureProfit Hub melewati siklus hidup berikut:
 
-1. **DRAFT** — proyek baru didaftarkan, masih dapat diubah bebas.
-2. **APPROVED** — disetujui Manajemen, siap dieksekusi.
-3. **IN_PROGRESS** — pekerjaan sedang berjalan, timesheet aktif.
-4. **COMPLETE** — pekerjaan selesai, menunggu BAST & Invoice.
-5. **CLOSED** — BAST + Invoice lengkap, link survey kepuasan otomatis aktif.
+1. **DRAFT** — Sales melakukan intake awal (4 field minimum), PM belum ditetapkan.
+2. **OBSERVATION** — Manajemen sudah menugaskan PM, PM melengkapi deskripsi/tanggal/nilai kontrak/mandays/biaya.
+3. **ACTIVE** — pekerjaan sedang berjalan, timesheet aktif.
+4. **PAUSE** / **COMPLETE** — proyek dijeda sementara, atau pekerjaan selesai menunggu dokumen penutup.
+5. **CLOSED** — dokumen BAST + Invoice lengkap, link survei kepuasan otomatis aktif.
 
-### 5.1 Membuat Proyek Baru
+### 5.1 Membuat Proyek Baru (Intake oleh Sales)
 
-1. Buka menu **Projects** → tombol **+ New Project**.
-2. Isi data utama:
-   - **Project Code & Name** — kode unik dan judul proyek.
-   - **Client** — pilih dari daftar klien aktif.
-   - **Start Date & End Date** — periode rencana pelaksanaan.
-   - **Contract Value** — nilai kontrak (Rupiah).
-   - **Planned Mandays** — total mandays rencana.
-   - **Project Manager** — PM yang ditugaskan.
-3. Klik **Create Project**. Status awal otomatis **DRAFT**.
+1. Buka menu **Projects** → tombol **New Project**.
+2. Isi formulir registrasi (halaman **Register New Project**) dengan data utama: kode, nama, klien, dan nilai kontrak.
+3. Klik **Create Project**. Status awal otomatis **DRAFT** dan `salesId` diisi otomatis dari akun yang login. PM dikosongkan dulu, menunggu penugasan Manajemen.
 
-### 5.2 Mengubah Status Proyek
+### 5.2 Melengkapi Proyek (PM)
 
-Pengguna berperan **MANAGEMENT** atau **PROJECT_MANAGER** pemilik proyek dapat memindahkan status melalui tombol di halaman detail proyek. Saat mengubah status, sistem akan meminta **alasan perubahan (status change reason)** yang akan dicatat di audit log dan timeline aktivitas.
+Setelah Manajemen menugaskan PM, halaman detail proyek menampilkan kartu **Draft Completion** untuk PM. PM melengkapi deskripsi, tanggal mulai/akhir, revenue/contract value, planned mandays, dan estimasi biaya. Setelah disimpan, status berpindah otomatis ke **OBSERVATION**.
 
-### 5.3 Menetapkan Resource pada Proyek
+### 5.3 Mengubah Status Proyek
 
-Pada tab **Team** di detail proyek:
+Pengguna berperan **PMO Director** (MANAGEMENT) atau **Project Manager** pemilik proyek dapat memindahkan status melalui tombol di halaman detail proyek. Aktivitas perubahan status tercatat di audit log dan timeline aktivitas.
 
-1. Klik **+ Assign Resource**.
-2. Pilih konsultan, tentukan **Allocation %** dan periode keterlibatan.
-3. Klik **Save**.
+### 5.4 Menetapkan Resource pada Proyek
 
-Resource yang sudah dialokasikan akan ikut diperhitungkan pada modul kapasitas dan utilisasi.
+Pada tab **Resources** di detail proyek terdapat 4 bagian:
 
-### 5.4 Menghapus Proyek
+- **Admin Project** (pilih satu).
+- **Konsultan team** — daftar konsultan dengan planned mandays + daily rate.
+- **Technical Writer team** — daftar TW.
+- **Other Resources** — peran bebas (free-text role).
 
-Hanya **MANAGEMENT** yang dapat menghapus proyek, dan penghapusan bersifat soft delete sehingga seluruh data tetap dapat ditelusuri dari audit log.
+PM atau Manajemen menambah baris langsung di tabel. Principal dapat **mengusulkan** anggotanya melalui tombol khusus; usulan harus diterima PM/Manajemen sebelum aktif.
+
+### 5.5 Menghapus Proyek
+
+Hanya **PMO Director** (MANAGEMENT) yang dapat menghapus proyek, dan penghapusan bersifat soft delete sehingga seluruh data tetap dapat ditelusuri dari audit log.
 
 ---
 
 ## Bagian 6 — Manajemen Sumber Daya (Resource)
 
-Modul **Resources** berisi daftar konsultan beserta tarif harian (daily rate) dan kapasitas standarnya.
+Modul **Resources** (untuk PM/Manajemen) berisi daftar konsultan & TW beserta tarif harian (daily rate), skill, dan kapasitas. Daftar lengkap karyawan dikelola di menu **Employees** (HR / Site Admin).
 
-### 6.1 Menambah Konsultan
+### 6.1 Menambah Karyawan
 
-Pengguna **FINANCE** atau **MANAGEMENT** dapat menambahkan konsultan baru:
-
-1. Buka **Resources** → **+ New Resource**.
-2. Lengkapi data: **Name, Email, Title, Daily Rate (Rp)**.
-3. Aktifkan akun bila konsultan akan login sendiri untuk mengisi timesheet.
+Pengguna **HR** atau **Site Admin** mengelola data karyawan melalui menu **Employees**. Field yang dapat diisi: nama, email, role, title, daily rate, seniority, business unit, manager, principal, dan skills. Aktifkan akun bila karyawan akan login sendiri untuk mengisi timesheet.
 
 ### 6.2 Daily Rate
 
-Daily rate konsultan dipakai untuk menghitung **biaya proyek (cost)** secara otomatis berdasarkan jam yang disetujui pada timesheet. Perubahan tarif berlaku ke depan dan tercatat di audit log.
+Daily rate karyawan dipakai untuk menghitung **biaya proyek (cost)** secara otomatis berdasarkan jam yang disetujui pada timesheet. Perubahan tarif berlaku ke depan dan tercatat di audit log.
 
 ---
 
@@ -174,17 +175,17 @@ Daily rate konsultan dipakai untuk menghitung **biaya proyek (cost)** secara oto
 
 ### 7.1 Konsultan Mengisi Timesheet
 
-1. Buka menu **Timesheet**.
-2. Pilih minggu yang ingin diisi.
-3. Untuk setiap proyek yang ditugaskan, isi jumlah jam per hari.
+1. Buka menu **Time Tracking**.
+2. Klik **Entry Mingguan** (Weekly Entry) dan pilih minggu yang ingin diisi.
+3. Untuk setiap proyek yang ditugaskan, isi jumlah jam per hari (Sen–Jum).
 4. Tambahkan catatan singkat bila perlu.
-5. Klik **Submit for Approval**.
+5. Klik **Submit** untuk mengirim ke PM.
 
 Setelah disubmit, entri menjadi **read-only** sampai disetujui atau ditolak oleh PM.
 
 ### 7.2 PM Menyetujui Timesheet
 
-Project Manager melihat antrian timesheet pada menu **Timesheet → Approvals**. Untuk tiap baris, tersedia tombol **Approve** atau **Reject** dengan kolom alasan. Timesheet yang ditolak akan dikembalikan ke konsultan untuk diperbaiki.
+Project Manager melihat antrian timesheet pada menu **Approval Inbox** (sidebar khusus PM). Untuk tiap baris tersedia tombol **Approve** / **Reject**, atau **Approve All** untuk batch. Timesheet yang ditolak akan dikembalikan ke konsultan untuk diperbaiki.
 
 ### 7.3 Dampak ke P&L
 
@@ -235,11 +236,11 @@ Tersedia filter berdasarkan **periode**, **klien**, **PM**, dan **status proyek*
 
 ### 10.1 Capacity Planning
 
-Menu **Capacity** menampilkan kapasitas standar tiap konsultan per minggu (umumnya 5 hari kerja) dan membandingkannya dengan total alokasi proyek aktif. Kelebihan alokasi (overallocation) ditandai dengan warna merah agar PM dapat menyeimbangkan beban.
+Menu **Capacity Planning** (PM/HR) menampilkan kapasitas standar tiap konsultan per minggu (5 hari kerja) dan membandingkannya dengan total alokasi proyek aktif. Kelebihan alokasi (overallocation) ditandai warna merah agar PM dapat menyeimbangkan beban.
 
-### 10.2 Utilization
+### 10.2 Resource Planning & Bench
 
-Halaman **Utilization** memperlihatkan persentase utilisasi historis: berapa persen jam disetujui versus kapasitas tersedia, per konsultan dan per periode. Berguna untuk evaluasi produktivitas dan perencanaan rekrutmen.
+Menu **Resource Planning** menampilkan grid mingguan per business unit dengan distribusi planned mandays — sel berwarna emerald (ringan), amber (≥4), merah (≥6). Menu **Bench Report** menampilkan karyawan yang sedang idle. Menu **Skill Matrix** menunjukkan peta skill × karyawan dengan deteksi gap (skill tanpa pemegang Senior/Principal).
 
 ---
 
@@ -285,7 +286,7 @@ Audit Log mencatat seluruh perubahan penting di sistem: pembuatan/penghapusan en
 
 ### 14.1 Mengakses
 
-Hanya peran **MANAGEMENT** dan **AUDITOR** yang dapat membuka menu **Audit Log**. Tersedia filter berdasarkan **aktor**, **tipe aksi**, **entitas**, dan **rentang tanggal**.
+Hanya peran **PMO Director** (MANAGEMENT) dan **Site Admin** yang dapat membuka menu **Audit Log**. Tersedia filter berdasarkan **aktor**, **tipe aksi**, **entitas**, dan **rentang tanggal**.
 
 ### 14.2 Detail Entri
 
@@ -357,11 +358,13 @@ Pengguna **MANAGEMENT** dapat membuka **Settings → Survey Template** untuk men
 
 ## Bagian 17 — Pengaturan Sistem
 
-Menu **Settings** menampung konfigurasi yang dapat diakses sesuai peran:
+Konfigurasi sistem tersebar di beberapa menu sesuai peran:
 
-- **Users** (MANAGEMENT) — undang pengguna baru, atur peran, nonaktifkan akun.
-- **Survey Template** (MANAGEMENT) — kelola pertanyaan CSAT.
-- **Profile** (semua peran) — ubah nama tampilan dan kata sandi.
+- **Users** (Site Admin) — mengelola seluruh akun pengguna: undang baru, ubah peran, aktif/nonaktif, reset password.
+- **Employees** (HR) — mengelola data karyawan (title, daily rate, seniority, business unit, manager, principal, skills) tanpa hak mengubah role/email/status aktif orang lain.
+- **Business Units** & **Skills** (Site Admin / HR) — kelola taksonomi BU dan skill.
+- **Survey Template** (PMO Director) — kelola pertanyaan CSAT, snapshot pertanyaan disimpan per respons.
+- **Settings → Profile** (semua peran) — ubah foto profil dan kata sandi sendiri.
 
 ---
 
