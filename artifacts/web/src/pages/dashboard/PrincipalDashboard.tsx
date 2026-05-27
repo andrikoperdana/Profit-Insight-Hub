@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { ProjectStatusBadge } from "@/components/common/Badges";
 import { RoleLabels, PRINCIPAL_TO_REPORT_ROLE } from "@/lib/roles";
 import { UserPlus, Users } from "lucide-react";
+import MyExpensesCard from "@/components/dashboard/MyExpensesCard";
 
 export default function PrincipalDashboard() {
   const { user } = useAuth();
@@ -187,6 +188,8 @@ export default function PrincipalDashboard() {
           )}
         </CardContent>
       </Card>
+
+      <MyExpensesCard />
 
       <Dialog open={!!proposeFor} onOpenChange={(o) => !o && setProposeFor(null)}>
         <DialogContent>

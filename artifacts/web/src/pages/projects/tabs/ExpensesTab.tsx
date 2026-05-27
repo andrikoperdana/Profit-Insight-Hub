@@ -50,8 +50,9 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   ArrowLeft, Building2, User, Calendar, DollarSign, TrendingUp, TrendingDown,
   Activity, Flame, Upload, FileText, Trash2, CheckCircle2, AlertCircle, Plus,
-  Pencil, AlertTriangle, Paperclip, X,
+  Pencil, AlertTriangle, Paperclip, X, Download,
 } from "lucide-react";
+import { triggerExpenseReceiptDownload } from "@/components/dashboard/MyExpensesCard";
 import { formatIDR, formatDate, formatPct } from "@/lib/format";
 import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
 import { LoadingPage } from "@/components/common/Loading";
@@ -134,6 +135,10 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
     qc.invalidateQueries({ queryKey: getGetProjectQueryKey(projectId) });
     qc.invalidateQueries({ queryKey: getGetProjectFinancialsQueryKey(projectId) });
     qc.invalidateQueries({ queryKey: ["/projects"] });
+    // Submitter's dashboard "Pengajuan Expense Saya" reads /api/expenses/mine
+    // with this key; refresh it so newly approved/rejected rows surface their
+    // Download Receipt button without waiting for staleTime expiry.
+    qc.invalidateQueries({ queryKey: ["my-expenses"] });
   };
 
   const addMutation = useAddProjectExpense({
@@ -442,6 +447,23 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
                                 Reject
                               </Button>
                             </>
+                          )}
+                          {(e.status === "APPROVED" || e.status === "REJECTED") && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-7 px-2 text-xs"
+                              data-testid={`button-download-receipt-${e.id}`}
+                              onClick={() =>
+                                triggerExpenseReceiptDownload(e.id, project?.code ?? null, (msg) =>
+                                  toast({ title: "Download failed", description: msg, variant: "destructive" }),
+                                )
+                              }
+                              title="Download merged PDF receipt"
+                            >
+                              <Download className="h-3.5 w-3.5 mr-1" />
+                              Receipt
+                            </Button>
                           )}
                           {(e.status === "PENDING" || isApprover) && (
                             <Button

@@ -39,6 +39,7 @@ import {
   Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, Cell,
 } from "recharts";
 import WelcomeBanner from "@/components/dashboard/WelcomeBanner";
+import MyExpensesCard from "@/components/dashboard/MyExpensesCard";
 import WeeklyEntryDialog from "@/pages/timesheets/WeeklyEntryDialog";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -96,6 +97,8 @@ export default function ConsultantDashboard() {
       <WelcomeBanner subtitle="Log today's hours so your PM can approve them quickly." />
 
       <QuickLogCard loggedToday={loggedToday} />
+
+      <MyExpensesCard />
 
       <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
         {isLoading ? (

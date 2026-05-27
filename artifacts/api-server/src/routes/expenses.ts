@@ -162,8 +162,21 @@ router.get("/projects/:id/expenses", async (req, res) => {
       return;
     }
   }
+  // Except MGMT (global) and the project's PM, every other role only sees
+  // expenses they themselves submitted on this project. Sales/Konsultan/TW/
+  // Principal_*/Admin all submit reimbursement requests for their own work;
+  // they have no need to see each other's pending or approved expense lines.
+  const isFullView =
+    role === "MANAGEMENT" ||
+    role === "SITE_ADMIN" ||
+    role === "FINANCE" ||
+    (role === "PROJECT_MANAGER" && project.pmId === userId);
+  const expenseWhere: { projectId: string; createdById?: string } = { projectId };
+  if (!isFullView) {
+    expenseWhere.createdById = userId;
+  }
   const expenses = await prisma.projectExpense.findMany({
-    where: { projectId },
+    where: expenseWhere,
     include: expenseInclude,
     orderBy: { spentAt: "desc" },
   });
@@ -382,6 +395,39 @@ router.delete(
   },
 );
 
+// Submitter's own expenses across all their projects — feeds the
+// "My Expenses" card on Consultant / Principal / Sales dashboards so they
+// can track approval status and download receipts for closed items.
+router.get("/expenses/mine", async (req, res) => {
+  const userId = req.user!.sub;
+  const expenses = await prisma.projectExpense.findMany({
+    where: { createdById: userId },
+    include: {
+      approvedBy: { select: { name: true } },
+      project: { select: { id: true, code: true, name: true } },
+    },
+    orderBy: { spentAt: "desc" },
+    take: 50,
+  });
+  res.json(
+    expenses.map((e) => ({
+      id: e.id,
+      projectId: e.projectId,
+      projectCode: e.project?.code ?? null,
+      projectName: e.project?.name ?? null,
+      category: e.category,
+      description: e.description,
+      amount: e.amount,
+      spentAt: e.spentAt.toISOString(),
+      status: e.status,
+      rejectionReason: e.rejectionReason,
+      approvedByName: e.approvedBy?.name ?? null,
+      approvedAt: e.approvedAt ? e.approvedAt.toISOString() : null,
+      hasReceipt: e.status === "APPROVED" || e.status === "REJECTED",
+    })),
+  );
+});
+
 // Cross-project expense listing for the global /expenses page.
 // MGMT sees everything; PM sees own projects; SALES sees own projects;
 // other roles get 403 (commercial data).
@@ -543,5 +589,203 @@ router.post(
     res.json(serializeExpense(updated as any));
   },
 );
+
+// Generate a single merged PDF receipt for an APPROVED or REJECTED expense:
+// page 1 = formatted receipt (project, expense detail, large APPROVED/REJECTED
+// stamp with reviewer name & timestamp); subsequent pages = the original
+// evidence file (PNG/JPEG embedded as a full-page image, or each page of the
+// evidence PDF copied in). Access: the submitter, MGMT, or the project's PM.
+router.get("/expenses/:expenseId/receipt", async (req, res) => {
+  const userId = req.user!.sub;
+  const role = req.user!.role;
+  const expense = await prisma.projectExpense.findUnique({
+    where: { id: String(req.params.expenseId) },
+    include: {
+      createdBy: { select: { name: true } },
+      approvedBy: { select: { name: true } },
+      project: {
+        select: {
+          pmId: true,
+          code: true,
+          name: true,
+          client: { select: { name: true } },
+        },
+      },
+    },
+  });
+  if (!expense) {
+    res.status(404).json({ error: "Expense not found" });
+    return;
+  }
+  const isCreator = expense.createdById === userId;
+  const isPmOfProject = role === "PROJECT_MANAGER" && expense.project.pmId === userId;
+  if (!(role === "MANAGEMENT" || isPmOfProject || isCreator)) {
+    res.status(403).json({ error: "You can only download receipts for your own expenses" });
+    return;
+  }
+  if (expense.status !== "APPROVED" && expense.status !== "REJECTED") {
+    res.status(409).json({
+      error: "Receipt is only available after the expense has been approved or rejected",
+    });
+    return;
+  }
+
+  const { PDFDocument, StandardFonts, rgb, degrees } = await import("pdf-lib");
+  const pdf = await PDFDocument.create();
+  const helv = await pdf.embedFont(StandardFonts.Helvetica);
+  const helvBold = await pdf.embedFont(StandardFonts.HelveticaBold);
+
+  const A4: [number, number] = [595.28, 841.89];
+  const page = pdf.addPage(A4);
+  const { width, height } = page.getSize();
+
+  const ink = rgb(0.06, 0.09, 0.16);
+  const accent = rgb(0.13, 0.77, 0.37);
+  const danger = rgb(0.86, 0.21, 0.27);
+  const muted = rgb(0.39, 0.45, 0.55);
+  const headerH = 90;
+  page.drawRectangle({ x: 0, y: height - headerH, width, height: headerH, color: ink });
+  page.drawRectangle({ x: 0, y: height - headerH - 3, width, height: 3, color: accent });
+  page.drawText("SecureProfit Hub", { x: 50, y: height - 38, size: 14, font: helvBold, color: accent });
+  page.drawText("Expense Receipt", { x: 50, y: height - 62, size: 20, font: helvBold, color: rgb(1, 1, 1) });
+  page.drawText(`Ref: ${expense.id.slice(-10).toUpperCase()}`, {
+    x: 50, y: height - 80, size: 9, font: helv, color: rgb(0.8, 0.85, 0.92),
+  });
+
+  let y = height - headerH - 32;
+  const left = 50;
+  const labelOpts = { size: 9, font: helvBold, color: muted };
+  const valueOpts = { size: 11, font: helv, color: ink };
+
+  const row = (label: string, value: string) => {
+    page.drawText(label.toUpperCase(), { x: left, y, ...labelOpts });
+    y -= 14;
+    const lines = wrapText(value, helv, 11, width - left * 2);
+    for (const line of lines) {
+      page.drawText(line, { x: left, y, ...valueOpts });
+      y -= 14;
+    }
+    y -= 6;
+  };
+
+  row("Project", `${expense.project.code} — ${expense.project.name}`);
+  row("Client", expense.project.client?.name ?? "—");
+  row("Category", String(expense.category));
+  row("Description", expense.description);
+  row("Amount (IDR)", formatIdr(expense.amount));
+  row("Spent on", expense.spentAt.toISOString().slice(0, 10));
+  row("Submitted by", `${expense.createdBy?.name ?? "—"} (${expense.createdAt.toISOString().slice(0, 10)})`);
+
+  // Approval / rejection stamp
+  const stampLabel = expense.status === "APPROVED" ? "APPROVED" : "REJECTED";
+  const stampColor = expense.status === "APPROVED" ? accent : danger;
+  const reviewerLine = `${stampLabel} BY: ${expense.approvedBy?.name ?? "—"}`;
+  const reviewerDate = expense.approvedAt
+    ? `On ${expense.approvedAt.toISOString().slice(0, 16).replace("T", " ")} UTC`
+    : "";
+
+  y -= 10;
+  page.drawRectangle({
+    x: left, y: y - 90, width: width - left * 2, height: 90,
+    borderColor: stampColor, borderWidth: 2, color: rgb(1, 1, 1),
+  });
+  page.drawText(stampLabel, {
+    x: left + 20, y: y - 50, size: 36, font: helvBold, color: stampColor, rotate: degrees(-8),
+  });
+  page.drawText(reviewerLine, { x: left + 220, y: y - 36, size: 11, font: helvBold, color: ink });
+  if (reviewerDate) {
+    page.drawText(reviewerDate, { x: left + 220, y: y - 52, size: 10, font: helv, color: muted });
+  }
+  if (expense.status === "REJECTED" && expense.rejectionReason) {
+    const reasonLines = wrapText(`Reason: ${expense.rejectionReason}`, helv, 10, width - left * 2 - 240);
+    let ry = y - 68;
+    for (const line of reasonLines.slice(0, 2)) {
+      page.drawText(line, { x: left + 220, y: ry, size: 10, font: helv, color: ink });
+      ry -= 12;
+    }
+  }
+  y -= 110;
+
+  page.drawText(`Generated ${new Date().toISOString().slice(0, 19).replace("T", " ")} UTC`, {
+    x: left, y: 40, size: 8, font: helv, color: muted,
+  });
+
+  // Embed evidence file
+  if (expense.evidenceUrl) {
+    const m = /^data:(application\/pdf|image\/(png|jpe?g|webp));base64,(.+)$/i.exec(expense.evidenceUrl);
+    if (m) {
+      const mime = m[1].toLowerCase();
+      const bytes = Buffer.from(m[3], "base64");
+      try {
+        if (mime === "application/pdf") {
+          const ev = await PDFDocument.load(bytes, { ignoreEncryption: true });
+          const copied = await pdf.copyPages(ev, ev.getPageIndices());
+          for (const p of copied) pdf.addPage(p);
+        } else if (mime === "image/png" || mime === "image/jpeg" || mime === "image/jpg") {
+          const img = mime === "image/png" ? await pdf.embedPng(bytes) : await pdf.embedJpg(bytes);
+          const evPage = pdf.addPage(A4);
+          const maxW = evPage.getWidth() - 80;
+          const maxH = evPage.getHeight() - 120;
+          const scale = Math.min(maxW / img.width, maxH / img.height, 1);
+          const w = img.width * scale;
+          const h = img.height * scale;
+          evPage.drawText("Evidence (image)", {
+            x: 50, y: evPage.getHeight() - 60, size: 12, font: helvBold, color: ink,
+          });
+          evPage.drawImage(img, {
+            x: (evPage.getWidth() - w) / 2,
+            y: (evPage.getHeight() - h) / 2 - 20,
+            width: w, height: h,
+          });
+        } else {
+          // WebP and any other future-allowed image format that pdf-lib
+          // can't embed natively — keep the receipt usable with a note.
+          const evPage = pdf.addPage(A4);
+          evPage.drawText("Evidence file attached separately", {
+            x: 50, y: evPage.getHeight() - 80, size: 12, font: helvBold, color: ink,
+          });
+          evPage.drawText(
+            `Format ${mime} cannot be embedded in this PDF. Open the expense in the app to view.`,
+            { x: 50, y: evPage.getHeight() - 100, size: 10, font: helv, color: muted },
+          );
+        }
+      } catch (err) {
+        req.log.warn({ err, expenseId: expense.id }, "Failed to embed expense evidence into receipt");
+      }
+    }
+  }
+
+  const out = await pdf.save();
+  const filename = `expense-${expense.project.code}-${expense.id.slice(-6)}.pdf`;
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+  res.send(Buffer.from(out));
+});
+
+function formatIdr(n: number): string {
+  return "Rp " + n.toLocaleString("id-ID");
+}
+
+function wrapText(
+  text: string,
+  font: { widthOfTextAtSize: (s: string, size: number) => number },
+  size: number,
+  maxWidth: number,
+): string[] {
+  const words = String(text ?? "").split(/\s+/);
+  const out: string[] = [];
+  let line = "";
+  for (const w of words) {
+    const trial = line ? `${line} ${w}` : w;
+    if (font.widthOfTextAtSize(trial, size) <= maxWidth) {
+      line = trial;
+    } else {
+      if (line) out.push(line);
+      line = w;
+    }
+  }
+  if (line) out.push(line);
+  return out.length ? out : [""];
+}
 
 export default router;
