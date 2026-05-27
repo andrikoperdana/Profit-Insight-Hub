@@ -124,7 +124,11 @@ Shared `WelcomeBanner` shows time-aware greeting + role label.
 
 ## Pages
 
-`/login`, `/` (dashboard), `/projects`, `/projects/new`, `/projects/:id`, `/timesheets`, `/clients`, `/users` (SITE_ADMIN + HR view/edit-limited), `/skills` (SITE_ADMIN + HR), `/business-units` (SITE_ADMIN + HR), `/resource-planning` (PM/MGMT/HR), `/skill-matrix` (PM/MGMT/HR), `/bench` (PM/MGMT/HR), `/capacity` (PM/MGMT/HR), `/task-templates` (PM/MGMT), `/leaves` (HR/MGMT/PM read-only), `/org-chart` (HR/MGMT/SITE_ADMIN), `/reports` (MGMT/PM), `/vat-recap` (MGMT), `/settings`.
+`/login`, `/` (dashboard), `/projects`, `/projects/new`, `/projects/:id`, `/timesheets`, `/clients`, `/users` (SITE_ADMIN + HR view/edit-limited), `/skills` (SITE_ADMIN + HR), `/business-units` (SITE_ADMIN + HR), `/resource-planning` (PM/MGMT/HR), `/skill-matrix` (PM/MGMT/HR), `/bench` (PM/MGMT/HR), `/capacity` (PM/MGMT/HR), `/task-templates` (PM/MGMT), `/leaves` (HR/MGMT/PM read-only), `/org-chart` (HR/MGMT/SITE_ADMIN), `/reports` (MGMT/PM), `/vat-recap` (MGMT), `/settings`, `/my-tasks` `/my-timesheets` `/my-expenses` (Konsultan/TW/AdminProject + Principal_* + Sales — paginasi + CSV export).
+
+**`MY_VIEW_ROLES`** (App.tsx) is the single source of truth for the "My …" personal pages — same list used by Sidebar's `canSeeMyViews`. Add a role here to expose all three pages at once.
+
+**Timesheet scope guard** (`routes/timesheets.ts`): the `?scope=all` branch is **default-deny** — only MANAGEMENT sees all, PROJECT_MANAGER sees own+own-project, everyone else is forced to `userId === self`. Never extend via denylist (regression risk for new roles).
 
 ## Performance Reviews (`/performance-reviews`, MGMT/PM/Principal_* only)
 

@@ -28,6 +28,7 @@ import {
   CalendarOff,
   GitBranch,
   ClipboardCheck,
+  CheckSquare,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -57,7 +58,27 @@ export default function Sidebar() {
 
   const canSeeLeads = user?.role === "SALES";
 
+  // "My …" personal views — for delivery roles (Konsultan, TW, Admin Project)
+  // and their Principal supervisors, plus Sales. Gives them a paginated +
+  // exportable history of their own work without needing to dig into each
+  // project tab.
+  const canSeeMyViews =
+    user?.role === "KONSULTAN" ||
+    user?.role === "TECHNICAL_WRITER" ||
+    user?.role === "ADMIN_PROJECT" ||
+    user?.role === "PRINCIPAL_KONSULTAN" ||
+    user?.role === "PRINCIPAL_TECHNICAL_WRITER" ||
+    user?.role === "PRINCIPAL_ADMIN_PROJECT" ||
+    user?.role === "SALES";
+
   const operations: NavLink[] = [
+    ...(canSeeMyViews
+      ? [
+          { href: "/my-tasks", label: "My Tasks", icon: CheckSquare },
+          { href: "/my-timesheets", label: "My Timesheet", icon: Clock },
+          { href: "/my-expenses", label: "My Expenses", icon: Receipt },
+        ]
+      : []),
     ...(canSeeLeads ? [{ href: "/leads", label: "Sales Pipeline", icon: Target }] : []),
     ...(isPM ? [{ href: "/approvals", label: "Approval Inbox", icon: Inbox }] : []),
     ...(canViewResources(user?.role) ? [{ href: "/resources", label: "Resources", icon: UserCog }] : []),

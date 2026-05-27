@@ -43,11 +43,27 @@ const ReportsIndex = lazy(() => import("@/pages/reports"));
 const ReportRunner = lazy(() => import("@/pages/reports/[id]"));
 const LeavesPage = lazy(() => import("@/pages/leaves"));
 const OrgChartPage = lazy(() => import("@/pages/org-chart"));
+const MyTasksPage = lazy(() => import("@/pages/my-tasks"));
+const MyTimesheetsPage = lazy(() => import("@/pages/my-timesheets"));
+const MyExpensesPage = lazy(() => import("@/pages/my-expenses"));
 const PerformanceReviewsListPage = lazy(() => import("@/pages/performance-reviews"));
 const PerformanceReviewDetailPage = lazy(() => import("@/pages/performance-reviews/[id]"));
 const SurveyTemplateEditor = lazy(() => import("@/pages/settings/SurveyTemplate"));
 const PublicSurveyPage = lazy(() => import("@/pages/survey/[token]"));
 import { ThemeProvider } from "@/lib/theme";
+
+// Personal "My …" views are open to delivery roles, their Principal
+// supervisors, and Sales. Kept identical to Sidebar's `canSeeMyViews` so the
+// URL-bar policy and the visible menu policy never drift.
+const MY_VIEW_ROLES = [
+  "KONSULTAN",
+  "TECHNICAL_WRITER",
+  "ADMIN_PROJECT",
+  "PRINCIPAL_KONSULTAN",
+  "PRINCIPAL_TECHNICAL_WRITER",
+  "PRINCIPAL_ADMIN_PROJECT",
+  "SALES",
+];
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -148,6 +164,9 @@ function Router() {
         <Route path="/skill-development" component={() => <ProtectedRoute component={SkillDevelopmentPage} />} />
         <Route path="/leaves" component={() => <ProtectedRoute component={LeavesPage} />} />
         <Route path="/org-chart" component={() => <ProtectedRoute component={OrgChartPage} />} />
+        <Route path="/my-tasks" component={() => <ProtectedRoute component={MyTasksPage} allowRoles={MY_VIEW_ROLES} />} />
+        <Route path="/my-timesheets" component={() => <ProtectedRoute component={MyTimesheetsPage} allowRoles={MY_VIEW_ROLES} />} />
+        <Route path="/my-expenses" component={() => <ProtectedRoute component={MyExpensesPage} allowRoles={MY_VIEW_ROLES} />} />
         <Route path="/performance-reviews" component={() => <ProtectedRoute component={PerformanceReviewsListPage} allowRoles={["MANAGEMENT","PROJECT_MANAGER","PRINCIPAL_KONSULTAN","PRINCIPAL_TECHNICAL_WRITER","PRINCIPAL_ADMIN_PROJECT"]} />} />
         <Route path="/performance-reviews/:id" component={() => <ProtectedRoute component={PerformanceReviewDetailPage} allowRoles={["MANAGEMENT","PROJECT_MANAGER","PRINCIPAL_KONSULTAN","PRINCIPAL_TECHNICAL_WRITER","PRINCIPAL_ADMIN_PROJECT"]} />} />
         <Route component={NotFound} />

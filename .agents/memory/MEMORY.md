@@ -1,0 +1,2 @@
+- [Timesheet scope=all default-deny](timesheet-scope-default-deny.md) — non-MGMT/PM roles must be forced to own-userId on the global timesheet list; allowlist new roles, never extend a denylist.
+- [My-view role gating](my-view-role-gating.md) — Sidebar visibility flags and App.tsx route allow/deny lists must reference the same role constant or they will drift.

@@ -400,6 +400,10 @@ router.delete(
 // can track approval status and download receipts for closed items.
 router.get("/expenses/mine", async (req, res) => {
   const userId = req.user!.sub;
+  // Default 50 (cheap for the dashboard card). Pages that paginate all-time
+  // history pass ?limit=500 to fetch the full set.
+  const raw = Number(req.query.limit);
+  const limit = Number.isFinite(raw) && raw > 0 ? Math.min(Math.floor(raw), 1000) : 50;
   const expenses = await prisma.projectExpense.findMany({
     where: { createdById: userId },
     include: {
@@ -407,7 +411,7 @@ router.get("/expenses/mine", async (req, res) => {
       project: { select: { id: true, code: true, name: true } },
     },
     orderBy: { spentAt: "desc" },
-    take: 50,
+    take: limit,
   });
   res.json(
     expenses.map((e) => ({

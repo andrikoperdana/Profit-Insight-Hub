@@ -66,18 +66,20 @@ router.get("/timesheets", async (req, res) => {
       where.project = { pmId: req.user!.sub };
     }
   } else {
-    // "all" — restrict by role. Only MANAGEMENT and PROJECT_MANAGER may use
-    // the broad team-view scope. Other roles are forced down to their own
-    // entries to prevent cross-team timesheet leakage.
-    if (role === "KONSULTAN" || role === "TECHNICAL_WRITER" || role === "SALES" || role === "ADMIN_PROJECT") {
-      where.userId = req.user!.sub;
+    // "all" — restrict by role. Default-deny: any role not explicitly granted
+    // a broader view is forced down to their own entries so PRINCIPAL_*,
+    // FINANCE, SITE_ADMIN and any future role cannot read cross-team
+    // timesheets by passing ?scope=all.
+    if (role === "MANAGEMENT") {
+      // MANAGEMENT sees all
     } else if (role === "PROJECT_MANAGER") {
       where.OR = [
         { userId: req.user!.sub },
         { project: { pmId: req.user!.sub } },
       ];
+    } else {
+      where.userId = req.user!.sub;
     }
-    // MANAGEMENT sees all
   }
 
   const list = await prisma.timesheet.findMany({
