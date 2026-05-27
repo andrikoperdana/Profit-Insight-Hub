@@ -21,6 +21,7 @@ export { runSeed, ensureCoreAccountsAndTaxonomy } from "./seed.js";
 export { ensureSampleReportData } from "./sample-report-data.js";
 export { ensureSampleTaskTemplates } from "./sample-task-templates.js";
 export { ensureSampleProjectTemplates } from "./sample-project-templates.js";
+export { ensureSampleWorkstreamProjects } from "./sample-workstream-projects.js";
 
 export type {
   User,

@@ -5,6 +5,7 @@ import {
   ensureCoreAccountsAndTaxonomy,
   ensureSampleTaskTemplates,
   ensureSampleProjectTemplates,
+  ensureSampleWorkstreamProjects,
 } from "@workspace/db";
 
 const rawPort = process.env["PORT"];
@@ -45,6 +46,7 @@ if (!isProd || seedOptIn) {
     await ensureCoreAccountsAndTaxonomy();
     await ensureSampleTaskTemplates();
     await ensureSampleProjectTemplates();
+    await ensureSampleWorkstreamProjects();
   })()
     .then(() => logger.info("Core accounts + taxonomy + templates ensured (production)"))
     .catch((err) => logger.error({ err }, "Production ensure failed (continuing)"));
