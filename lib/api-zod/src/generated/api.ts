@@ -374,6 +374,99 @@ export const UpdateProjectReportResponse = zod.object({
   createdAt: zod.string(),
 });
 
+export const ListProjectReportsParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const listProjectReportsQueryPageDefault = 1;
+
+export const listProjectReportsQueryPageSizeDefault = 10;
+export const listProjectReportsQueryPageSizeMax = 100;
+
+export const ListProjectReportsQueryParams = zod.object({
+  page: zod.coerce.number().min(1).default(listProjectReportsQueryPageDefault),
+  pageSize: zod.coerce
+    .number()
+    .min(1)
+    .max(listProjectReportsQueryPageSizeMax)
+    .default(listProjectReportsQueryPageSizeDefault),
+});
+
+export const ListProjectReportsResponse = zod.object({
+  items: zod.array(
+    zod.object({
+      id: zod.string(),
+      projectId: zod.string(),
+      title: zod.string(),
+      coverUrl: zod.string().nullish(),
+      link: zod.string().nullish(),
+      note: zod.string().nullish(),
+      workstreamId: zod.string().nullish(),
+      workstreamName: zod.string().nullish(),
+      workstreamCode: zod.string().nullish(),
+      submittedAt: zod.string().nullish(),
+      createdById: zod.string().nullish(),
+      createdByName: zod.string().nullish(),
+      createdAt: zod.string(),
+      updatedAt: zod.string(),
+    }),
+  ),
+  total: zod.number(),
+  page: zod.number(),
+  pageSize: zod.number(),
+  totalPages: zod.number(),
+});
+
+export const CreateProjectReportParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const CreateProjectReportBody = zod.object({
+  title: zod.string().min(1),
+  coverUrl: zod.string().nullish(),
+  link: zod.string().nullish(),
+  note: zod.string().nullish(),
+  workstreamId: zod.string().nullish(),
+});
+
+export const UpdateProjectReportItemParams = zod.object({
+  reportId: zod.coerce.string(),
+});
+
+export const UpdateProjectReportItemBody = zod.object({
+  title: zod.string().min(1).optional(),
+  coverUrl: zod.string().nullish(),
+  link: zod.string().nullish(),
+  note: zod.string().nullish(),
+  workstreamId: zod.string().nullish(),
+});
+
+export const UpdateProjectReportItemResponse = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  title: zod.string(),
+  coverUrl: zod.string().nullish(),
+  link: zod.string().nullish(),
+  note: zod.string().nullish(),
+  workstreamId: zod.string().nullish(),
+  workstreamName: zod.string().nullish(),
+  workstreamCode: zod.string().nullish(),
+  submittedAt: zod.string().nullish(),
+  createdById: zod.string().nullish(),
+  createdByName: zod.string().nullish(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+export const DeleteProjectReportParams = zod.object({
+  reportId: zod.coerce.string(),
+});
+
+export const DeleteProjectReportResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
 });

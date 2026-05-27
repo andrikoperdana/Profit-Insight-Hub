@@ -29,6 +29,11 @@ export type Client = $Result.DefaultSelection<Prisma.$ClientPayload>
  */
 export type Project = $Result.DefaultSelection<Prisma.$ProjectPayload>
 /**
+ * Model ProjectReport
+ * 
+ */
+export type ProjectReport = $Result.DefaultSelection<Prisma.$ProjectReportPayload>
+/**
  * Model ProjectWorkstream
  * 
  */
@@ -609,6 +614,16 @@ export class PrismaClient<
     * ```
     */
   get project(): Prisma.ProjectDelegate<ExtArgs>;
+
+  /**
+   * `prisma.projectReport`: Exposes CRUD operations for the **ProjectReport** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProjectReports
+    * const projectReports = await prisma.projectReport.findMany()
+    * ```
+    */
+  get projectReport(): Prisma.ProjectReportDelegate<ExtArgs>;
 
   /**
    * `prisma.projectWorkstream`: Exposes CRUD operations for the **ProjectWorkstream** model.
@@ -1373,6 +1388,7 @@ export namespace Prisma {
     User: 'User',
     Client: 'Client',
     Project: 'Project',
+    ProjectReport: 'ProjectReport',
     ProjectWorkstream: 'ProjectWorkstream',
     SurveyQuestion: 'SurveyQuestion',
     SurveyResponse: 'SurveyResponse',
@@ -1420,7 +1436,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "client" | "project" | "projectWorkstream" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectClosingChecklistItem" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "skillDevelopmentGoal" | "skillProgressionLog" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "projectTemplate" | "projectTemplateResource" | "projectTemplateMilestone" | "projectTemplateRaidItem" | "notification" | "projectRaidItem" | "performanceReview" | "performanceReviewProjectRating"
+      modelProps: "user" | "client" | "project" | "projectReport" | "projectWorkstream" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectClosingChecklistItem" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "skillDevelopmentGoal" | "skillProgressionLog" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "projectTemplate" | "projectTemplateResource" | "projectTemplateMilestone" | "projectTemplateRaidItem" | "notification" | "projectRaidItem" | "performanceReview" | "performanceReviewProjectRating"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1631,6 +1647,76 @@ export namespace Prisma {
           count: {
             args: Prisma.ProjectCountArgs<ExtArgs>
             result: $Utils.Optional<ProjectCountAggregateOutputType> | number
+          }
+        }
+      }
+      ProjectReport: {
+        payload: Prisma.$ProjectReportPayload<ExtArgs>
+        fields: Prisma.ProjectReportFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProjectReportFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectReportPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProjectReportFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectReportPayload>
+          }
+          findFirst: {
+            args: Prisma.ProjectReportFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectReportPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProjectReportFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectReportPayload>
+          }
+          findMany: {
+            args: Prisma.ProjectReportFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectReportPayload>[]
+          }
+          create: {
+            args: Prisma.ProjectReportCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectReportPayload>
+          }
+          createMany: {
+            args: Prisma.ProjectReportCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProjectReportCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectReportPayload>[]
+          }
+          delete: {
+            args: Prisma.ProjectReportDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectReportPayload>
+          }
+          update: {
+            args: Prisma.ProjectReportUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectReportPayload>
+          }
+          deleteMany: {
+            args: Prisma.ProjectReportDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProjectReportUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ProjectReportUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectReportPayload>
+          }
+          aggregate: {
+            args: Prisma.ProjectReportAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProjectReport>
+          }
+          groupBy: {
+            args: Prisma.ProjectReportGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProjectReportGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProjectReportCountArgs<ExtArgs>
+            result: $Utils.Optional<ProjectReportCountAggregateOutputType> | number
           }
         }
       }
@@ -4061,6 +4147,7 @@ export namespace Prisma {
     leaves: number
     taskTemplatesCreated: number
     projectTemplatesCreated: number
+    projectReportsCreated: number
     closingChecklistsCompleted: number
     skillGoalsAsSubject: number
     skillGoalsCreated: number
@@ -4100,6 +4187,7 @@ export namespace Prisma {
     leaves?: boolean | UserCountOutputTypeCountLeavesArgs
     taskTemplatesCreated?: boolean | UserCountOutputTypeCountTaskTemplatesCreatedArgs
     projectTemplatesCreated?: boolean | UserCountOutputTypeCountProjectTemplatesCreatedArgs
+    projectReportsCreated?: boolean | UserCountOutputTypeCountProjectReportsCreatedArgs
     closingChecklistsCompleted?: boolean | UserCountOutputTypeCountClosingChecklistsCompletedArgs
     skillGoalsAsSubject?: boolean | UserCountOutputTypeCountSkillGoalsAsSubjectArgs
     skillGoalsCreated?: boolean | UserCountOutputTypeCountSkillGoalsCreatedArgs
@@ -4308,6 +4396,13 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountProjectReportsCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectReportWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountClosingChecklistsCompletedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectClosingChecklistItemWhereInput
   }
@@ -4433,6 +4528,7 @@ export namespace Prisma {
     perfProjectRatings: number
     closingChecklist: number
     workstreams: number
+    reports: number
   }
 
   export type ProjectCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4448,6 +4544,7 @@ export namespace Prisma {
     perfProjectRatings?: boolean | ProjectCountOutputTypeCountPerfProjectRatingsArgs
     closingChecklist?: boolean | ProjectCountOutputTypeCountClosingChecklistArgs
     workstreams?: boolean | ProjectCountOutputTypeCountWorkstreamsArgs
+    reports?: boolean | ProjectCountOutputTypeCountReportsArgs
   }
 
   // Custom InputTypes
@@ -4545,6 +4642,13 @@ export namespace Prisma {
     where?: ProjectWorkstreamWhereInput
   }
 
+  /**
+   * ProjectCountOutputType without action
+   */
+  export type ProjectCountOutputTypeCountReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectReportWhereInput
+  }
+
 
   /**
    * Count Type ProjectWorkstreamCountOutputType
@@ -4556,6 +4660,7 @@ export namespace Prisma {
     expenses: number
     billingMilestones: number
     timesheets: number
+    reports: number
   }
 
   export type ProjectWorkstreamCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4564,6 +4669,7 @@ export namespace Prisma {
     expenses?: boolean | ProjectWorkstreamCountOutputTypeCountExpensesArgs
     billingMilestones?: boolean | ProjectWorkstreamCountOutputTypeCountBillingMilestonesArgs
     timesheets?: boolean | ProjectWorkstreamCountOutputTypeCountTimesheetsArgs
+    reports?: boolean | ProjectWorkstreamCountOutputTypeCountReportsArgs
   }
 
   // Custom InputTypes
@@ -4610,6 +4716,13 @@ export namespace Prisma {
    */
   export type ProjectWorkstreamCountOutputTypeCountTimesheetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TimesheetWhereInput
+  }
+
+  /**
+   * ProjectWorkstreamCountOutputType without action
+   */
+  export type ProjectWorkstreamCountOutputTypeCountReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectReportWhereInput
   }
 
 
@@ -5300,6 +5413,7 @@ export namespace Prisma {
     leaves?: boolean | User$leavesArgs<ExtArgs>
     taskTemplatesCreated?: boolean | User$taskTemplatesCreatedArgs<ExtArgs>
     projectTemplatesCreated?: boolean | User$projectTemplatesCreatedArgs<ExtArgs>
+    projectReportsCreated?: boolean | User$projectReportsCreatedArgs<ExtArgs>
     closingChecklistsCompleted?: boolean | User$closingChecklistsCompletedArgs<ExtArgs>
     skillGoalsAsSubject?: boolean | User$skillGoalsAsSubjectArgs<ExtArgs>
     skillGoalsCreated?: boolean | User$skillGoalsCreatedArgs<ExtArgs>
@@ -5386,6 +5500,7 @@ export namespace Prisma {
     leaves?: boolean | User$leavesArgs<ExtArgs>
     taskTemplatesCreated?: boolean | User$taskTemplatesCreatedArgs<ExtArgs>
     projectTemplatesCreated?: boolean | User$projectTemplatesCreatedArgs<ExtArgs>
+    projectReportsCreated?: boolean | User$projectReportsCreatedArgs<ExtArgs>
     closingChecklistsCompleted?: boolean | User$closingChecklistsCompletedArgs<ExtArgs>
     skillGoalsAsSubject?: boolean | User$skillGoalsAsSubjectArgs<ExtArgs>
     skillGoalsCreated?: boolean | User$skillGoalsCreatedArgs<ExtArgs>
@@ -5436,6 +5551,7 @@ export namespace Prisma {
       leaves: Prisma.$UserLeavePayload<ExtArgs>[]
       taskTemplatesCreated: Prisma.$TaskTemplatePayload<ExtArgs>[]
       projectTemplatesCreated: Prisma.$ProjectTemplatePayload<ExtArgs>[]
+      projectReportsCreated: Prisma.$ProjectReportPayload<ExtArgs>[]
       closingChecklistsCompleted: Prisma.$ProjectClosingChecklistItemPayload<ExtArgs>[]
       skillGoalsAsSubject: Prisma.$SkillDevelopmentGoalPayload<ExtArgs>[]
       skillGoalsCreated: Prisma.$SkillDevelopmentGoalPayload<ExtArgs>[]
@@ -5858,6 +5974,7 @@ export namespace Prisma {
     leaves<T extends User$leavesArgs<ExtArgs> = {}>(args?: Subset<T, User$leavesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserLeavePayload<ExtArgs>, T, "findMany"> | Null>
     taskTemplatesCreated<T extends User$taskTemplatesCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$taskTemplatesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskTemplatePayload<ExtArgs>, T, "findMany"> | Null>
     projectTemplatesCreated<T extends User$projectTemplatesCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$projectTemplatesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectTemplatePayload<ExtArgs>, T, "findMany"> | Null>
+    projectReportsCreated<T extends User$projectReportsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$projectReportsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectReportPayload<ExtArgs>, T, "findMany"> | Null>
     closingChecklistsCompleted<T extends User$closingChecklistsCompletedArgs<ExtArgs> = {}>(args?: Subset<T, User$closingChecklistsCompletedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectClosingChecklistItemPayload<ExtArgs>, T, "findMany"> | Null>
     skillGoalsAsSubject<T extends User$skillGoalsAsSubjectArgs<ExtArgs> = {}>(args?: Subset<T, User$skillGoalsAsSubjectArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SkillDevelopmentGoalPayload<ExtArgs>, T, "findMany"> | Null>
     skillGoalsCreated<T extends User$skillGoalsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$skillGoalsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SkillDevelopmentGoalPayload<ExtArgs>, T, "findMany"> | Null>
@@ -6794,6 +6911,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProjectTemplateScalarFieldEnum | ProjectTemplateScalarFieldEnum[]
+  }
+
+  /**
+   * User.projectReportsCreated
+   */
+  export type User$projectReportsCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectReport
+     */
+    select?: ProjectReportSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectReportInclude<ExtArgs> | null
+    where?: ProjectReportWhereInput
+    orderBy?: ProjectReportOrderByWithRelationInput | ProjectReportOrderByWithRelationInput[]
+    cursor?: ProjectReportWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectReportScalarFieldEnum | ProjectReportScalarFieldEnum[]
   }
 
   /**
@@ -8474,6 +8611,7 @@ export namespace Prisma {
     perfProjectRatings?: boolean | Project$perfProjectRatingsArgs<ExtArgs>
     closingChecklist?: boolean | Project$closingChecklistArgs<ExtArgs>
     workstreams?: boolean | Project$workstreamsArgs<ExtArgs>
+    reports?: boolean | Project$reportsArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
 
@@ -8572,6 +8710,7 @@ export namespace Prisma {
     perfProjectRatings?: boolean | Project$perfProjectRatingsArgs<ExtArgs>
     closingChecklist?: boolean | Project$closingChecklistArgs<ExtArgs>
     workstreams?: boolean | Project$workstreamsArgs<ExtArgs>
+    reports?: boolean | Project$reportsArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8602,6 +8741,7 @@ export namespace Prisma {
       perfProjectRatings: Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>[]
       closingChecklist: Prisma.$ProjectClosingChecklistItemPayload<ExtArgs>[]
       workstreams: Prisma.$ProjectWorkstreamPayload<ExtArgs>[]
+      reports: Prisma.$ProjectReportPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -9018,6 +9158,7 @@ export namespace Prisma {
     perfProjectRatings<T extends Project$perfProjectRatingsArgs<ExtArgs> = {}>(args?: Subset<T, Project$perfProjectRatingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>, T, "findMany"> | Null>
     closingChecklist<T extends Project$closingChecklistArgs<ExtArgs> = {}>(args?: Subset<T, Project$closingChecklistArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectClosingChecklistItemPayload<ExtArgs>, T, "findMany"> | Null>
     workstreams<T extends Project$workstreamsArgs<ExtArgs> = {}>(args?: Subset<T, Project$workstreamsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "findMany"> | Null>
+    reports<T extends Project$reportsArgs<ExtArgs> = {}>(args?: Subset<T, Project$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectReportPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9698,6 +9839,26 @@ export namespace Prisma {
   }
 
   /**
+   * Project.reports
+   */
+  export type Project$reportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectReport
+     */
+    select?: ProjectReportSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectReportInclude<ExtArgs> | null
+    where?: ProjectReportWhereInput
+    orderBy?: ProjectReportOrderByWithRelationInput | ProjectReportOrderByWithRelationInput[]
+    cursor?: ProjectReportWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectReportScalarFieldEnum | ProjectReportScalarFieldEnum[]
+  }
+
+  /**
    * Project without action
    */
   export type ProjectDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9709,6 +9870,1053 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ProjectInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ProjectReport
+   */
+
+  export type AggregateProjectReport = {
+    _count: ProjectReportCountAggregateOutputType | null
+    _min: ProjectReportMinAggregateOutputType | null
+    _max: ProjectReportMaxAggregateOutputType | null
+  }
+
+  export type ProjectReportMinAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    title: string | null
+    coverUrl: string | null
+    link: string | null
+    note: string | null
+    workstreamId: string | null
+    submittedAt: Date | null
+    createdById: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProjectReportMaxAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    title: string | null
+    coverUrl: string | null
+    link: string | null
+    note: string | null
+    workstreamId: string | null
+    submittedAt: Date | null
+    createdById: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProjectReportCountAggregateOutputType = {
+    id: number
+    projectId: number
+    title: number
+    coverUrl: number
+    link: number
+    note: number
+    workstreamId: number
+    submittedAt: number
+    createdById: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ProjectReportMinAggregateInputType = {
+    id?: true
+    projectId?: true
+    title?: true
+    coverUrl?: true
+    link?: true
+    note?: true
+    workstreamId?: true
+    submittedAt?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProjectReportMaxAggregateInputType = {
+    id?: true
+    projectId?: true
+    title?: true
+    coverUrl?: true
+    link?: true
+    note?: true
+    workstreamId?: true
+    submittedAt?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProjectReportCountAggregateInputType = {
+    id?: true
+    projectId?: true
+    title?: true
+    coverUrl?: true
+    link?: true
+    note?: true
+    workstreamId?: true
+    submittedAt?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ProjectReportAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProjectReport to aggregate.
+     */
+    where?: ProjectReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectReports to fetch.
+     */
+    orderBy?: ProjectReportOrderByWithRelationInput | ProjectReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProjectReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectReports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ProjectReports
+    **/
+    _count?: true | ProjectReportCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProjectReportMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProjectReportMaxAggregateInputType
+  }
+
+  export type GetProjectReportAggregateType<T extends ProjectReportAggregateArgs> = {
+        [P in keyof T & keyof AggregateProjectReport]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProjectReport[P]>
+      : GetScalarType<T[P], AggregateProjectReport[P]>
+  }
+
+
+
+
+  export type ProjectReportGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectReportWhereInput
+    orderBy?: ProjectReportOrderByWithAggregationInput | ProjectReportOrderByWithAggregationInput[]
+    by: ProjectReportScalarFieldEnum[] | ProjectReportScalarFieldEnum
+    having?: ProjectReportScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProjectReportCountAggregateInputType | true
+    _min?: ProjectReportMinAggregateInputType
+    _max?: ProjectReportMaxAggregateInputType
+  }
+
+  export type ProjectReportGroupByOutputType = {
+    id: string
+    projectId: string
+    title: string
+    coverUrl: string | null
+    link: string | null
+    note: string | null
+    workstreamId: string | null
+    submittedAt: Date | null
+    createdById: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: ProjectReportCountAggregateOutputType | null
+    _min: ProjectReportMinAggregateOutputType | null
+    _max: ProjectReportMaxAggregateOutputType | null
+  }
+
+  type GetProjectReportGroupByPayload<T extends ProjectReportGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProjectReportGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProjectReportGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProjectReportGroupByOutputType[P]>
+            : GetScalarType<T[P], ProjectReportGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProjectReportSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    title?: boolean
+    coverUrl?: boolean
+    link?: boolean
+    note?: boolean
+    workstreamId?: boolean
+    submittedAt?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | ProjectReport$workstreamArgs<ExtArgs>
+    createdBy?: boolean | ProjectReport$createdByArgs<ExtArgs>
+  }, ExtArgs["result"]["projectReport"]>
+
+  export type ProjectReportSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    title?: boolean
+    coverUrl?: boolean
+    link?: boolean
+    note?: boolean
+    workstreamId?: boolean
+    submittedAt?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | ProjectReport$workstreamArgs<ExtArgs>
+    createdBy?: boolean | ProjectReport$createdByArgs<ExtArgs>
+  }, ExtArgs["result"]["projectReport"]>
+
+  export type ProjectReportSelectScalar = {
+    id?: boolean
+    projectId?: boolean
+    title?: boolean
+    coverUrl?: boolean
+    link?: boolean
+    note?: boolean
+    workstreamId?: boolean
+    submittedAt?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ProjectReportInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | ProjectReport$workstreamArgs<ExtArgs>
+    createdBy?: boolean | ProjectReport$createdByArgs<ExtArgs>
+  }
+  export type ProjectReportIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workstream?: boolean | ProjectReport$workstreamArgs<ExtArgs>
+    createdBy?: boolean | ProjectReport$createdByArgs<ExtArgs>
+  }
+
+  export type $ProjectReportPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ProjectReport"
+    objects: {
+      project: Prisma.$ProjectPayload<ExtArgs>
+      workstream: Prisma.$ProjectWorkstreamPayload<ExtArgs> | null
+      createdBy: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      projectId: string
+      title: string
+      coverUrl: string | null
+      link: string | null
+      note: string | null
+      workstreamId: string | null
+      submittedAt: Date | null
+      createdById: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["projectReport"]>
+    composites: {}
+  }
+
+  type ProjectReportGetPayload<S extends boolean | null | undefined | ProjectReportDefaultArgs> = $Result.GetResult<Prisma.$ProjectReportPayload, S>
+
+  type ProjectReportCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ProjectReportFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ProjectReportCountAggregateInputType | true
+    }
+
+  export interface ProjectReportDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProjectReport'], meta: { name: 'ProjectReport' } }
+    /**
+     * Find zero or one ProjectReport that matches the filter.
+     * @param {ProjectReportFindUniqueArgs} args - Arguments to find a ProjectReport
+     * @example
+     * // Get one ProjectReport
+     * const projectReport = await prisma.projectReport.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProjectReportFindUniqueArgs>(args: SelectSubset<T, ProjectReportFindUniqueArgs<ExtArgs>>): Prisma__ProjectReportClient<$Result.GetResult<Prisma.$ProjectReportPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one ProjectReport that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ProjectReportFindUniqueOrThrowArgs} args - Arguments to find a ProjectReport
+     * @example
+     * // Get one ProjectReport
+     * const projectReport = await prisma.projectReport.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProjectReportFindUniqueOrThrowArgs>(args: SelectSubset<T, ProjectReportFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProjectReportClient<$Result.GetResult<Prisma.$ProjectReportPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first ProjectReport that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectReportFindFirstArgs} args - Arguments to find a ProjectReport
+     * @example
+     * // Get one ProjectReport
+     * const projectReport = await prisma.projectReport.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProjectReportFindFirstArgs>(args?: SelectSubset<T, ProjectReportFindFirstArgs<ExtArgs>>): Prisma__ProjectReportClient<$Result.GetResult<Prisma.$ProjectReportPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first ProjectReport that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectReportFindFirstOrThrowArgs} args - Arguments to find a ProjectReport
+     * @example
+     * // Get one ProjectReport
+     * const projectReport = await prisma.projectReport.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProjectReportFindFirstOrThrowArgs>(args?: SelectSubset<T, ProjectReportFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProjectReportClient<$Result.GetResult<Prisma.$ProjectReportPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more ProjectReports that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectReportFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProjectReports
+     * const projectReports = await prisma.projectReport.findMany()
+     * 
+     * // Get first 10 ProjectReports
+     * const projectReports = await prisma.projectReport.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const projectReportWithIdOnly = await prisma.projectReport.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProjectReportFindManyArgs>(args?: SelectSubset<T, ProjectReportFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectReportPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a ProjectReport.
+     * @param {ProjectReportCreateArgs} args - Arguments to create a ProjectReport.
+     * @example
+     * // Create one ProjectReport
+     * const ProjectReport = await prisma.projectReport.create({
+     *   data: {
+     *     // ... data to create a ProjectReport
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProjectReportCreateArgs>(args: SelectSubset<T, ProjectReportCreateArgs<ExtArgs>>): Prisma__ProjectReportClient<$Result.GetResult<Prisma.$ProjectReportPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many ProjectReports.
+     * @param {ProjectReportCreateManyArgs} args - Arguments to create many ProjectReports.
+     * @example
+     * // Create many ProjectReports
+     * const projectReport = await prisma.projectReport.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProjectReportCreateManyArgs>(args?: SelectSubset<T, ProjectReportCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ProjectReports and returns the data saved in the database.
+     * @param {ProjectReportCreateManyAndReturnArgs} args - Arguments to create many ProjectReports.
+     * @example
+     * // Create many ProjectReports
+     * const projectReport = await prisma.projectReport.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ProjectReports and only return the `id`
+     * const projectReportWithIdOnly = await prisma.projectReport.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProjectReportCreateManyAndReturnArgs>(args?: SelectSubset<T, ProjectReportCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectReportPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a ProjectReport.
+     * @param {ProjectReportDeleteArgs} args - Arguments to delete one ProjectReport.
+     * @example
+     * // Delete one ProjectReport
+     * const ProjectReport = await prisma.projectReport.delete({
+     *   where: {
+     *     // ... filter to delete one ProjectReport
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProjectReportDeleteArgs>(args: SelectSubset<T, ProjectReportDeleteArgs<ExtArgs>>): Prisma__ProjectReportClient<$Result.GetResult<Prisma.$ProjectReportPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one ProjectReport.
+     * @param {ProjectReportUpdateArgs} args - Arguments to update one ProjectReport.
+     * @example
+     * // Update one ProjectReport
+     * const projectReport = await prisma.projectReport.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProjectReportUpdateArgs>(args: SelectSubset<T, ProjectReportUpdateArgs<ExtArgs>>): Prisma__ProjectReportClient<$Result.GetResult<Prisma.$ProjectReportPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more ProjectReports.
+     * @param {ProjectReportDeleteManyArgs} args - Arguments to filter ProjectReports to delete.
+     * @example
+     * // Delete a few ProjectReports
+     * const { count } = await prisma.projectReport.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProjectReportDeleteManyArgs>(args?: SelectSubset<T, ProjectReportDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProjectReports.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectReportUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProjectReports
+     * const projectReport = await prisma.projectReport.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProjectReportUpdateManyArgs>(args: SelectSubset<T, ProjectReportUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ProjectReport.
+     * @param {ProjectReportUpsertArgs} args - Arguments to update or create a ProjectReport.
+     * @example
+     * // Update or create a ProjectReport
+     * const projectReport = await prisma.projectReport.upsert({
+     *   create: {
+     *     // ... data to create a ProjectReport
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProjectReport we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProjectReportUpsertArgs>(args: SelectSubset<T, ProjectReportUpsertArgs<ExtArgs>>): Prisma__ProjectReportClient<$Result.GetResult<Prisma.$ProjectReportPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of ProjectReports.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectReportCountArgs} args - Arguments to filter ProjectReports to count.
+     * @example
+     * // Count the number of ProjectReports
+     * const count = await prisma.projectReport.count({
+     *   where: {
+     *     // ... the filter for the ProjectReports we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProjectReportCountArgs>(
+      args?: Subset<T, ProjectReportCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProjectReportCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProjectReport.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectReportAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProjectReportAggregateArgs>(args: Subset<T, ProjectReportAggregateArgs>): Prisma.PrismaPromise<GetProjectReportAggregateType<T>>
+
+    /**
+     * Group by ProjectReport.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectReportGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProjectReportGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProjectReportGroupByArgs['orderBy'] }
+        : { orderBy?: ProjectReportGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProjectReportGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProjectReportGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ProjectReport model
+   */
+  readonly fields: ProjectReportFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProjectReport.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProjectReportClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    workstream<T extends ProjectReport$workstreamArgs<ExtArgs> = {}>(args?: Subset<T, ProjectReport$workstreamArgs<ExtArgs>>): Prisma__ProjectWorkstreamClient<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    createdBy<T extends ProjectReport$createdByArgs<ExtArgs> = {}>(args?: Subset<T, ProjectReport$createdByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ProjectReport model
+   */ 
+  interface ProjectReportFieldRefs {
+    readonly id: FieldRef<"ProjectReport", 'String'>
+    readonly projectId: FieldRef<"ProjectReport", 'String'>
+    readonly title: FieldRef<"ProjectReport", 'String'>
+    readonly coverUrl: FieldRef<"ProjectReport", 'String'>
+    readonly link: FieldRef<"ProjectReport", 'String'>
+    readonly note: FieldRef<"ProjectReport", 'String'>
+    readonly workstreamId: FieldRef<"ProjectReport", 'String'>
+    readonly submittedAt: FieldRef<"ProjectReport", 'DateTime'>
+    readonly createdById: FieldRef<"ProjectReport", 'String'>
+    readonly createdAt: FieldRef<"ProjectReport", 'DateTime'>
+    readonly updatedAt: FieldRef<"ProjectReport", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ProjectReport findUnique
+   */
+  export type ProjectReportFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectReport
+     */
+    select?: ProjectReportSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectReportInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectReport to fetch.
+     */
+    where: ProjectReportWhereUniqueInput
+  }
+
+  /**
+   * ProjectReport findUniqueOrThrow
+   */
+  export type ProjectReportFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectReport
+     */
+    select?: ProjectReportSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectReportInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectReport to fetch.
+     */
+    where: ProjectReportWhereUniqueInput
+  }
+
+  /**
+   * ProjectReport findFirst
+   */
+  export type ProjectReportFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectReport
+     */
+    select?: ProjectReportSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectReportInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectReport to fetch.
+     */
+    where?: ProjectReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectReports to fetch.
+     */
+    orderBy?: ProjectReportOrderByWithRelationInput | ProjectReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProjectReports.
+     */
+    cursor?: ProjectReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectReports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProjectReports.
+     */
+    distinct?: ProjectReportScalarFieldEnum | ProjectReportScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectReport findFirstOrThrow
+   */
+  export type ProjectReportFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectReport
+     */
+    select?: ProjectReportSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectReportInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectReport to fetch.
+     */
+    where?: ProjectReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectReports to fetch.
+     */
+    orderBy?: ProjectReportOrderByWithRelationInput | ProjectReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProjectReports.
+     */
+    cursor?: ProjectReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectReports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProjectReports.
+     */
+    distinct?: ProjectReportScalarFieldEnum | ProjectReportScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectReport findMany
+   */
+  export type ProjectReportFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectReport
+     */
+    select?: ProjectReportSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectReportInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectReports to fetch.
+     */
+    where?: ProjectReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectReports to fetch.
+     */
+    orderBy?: ProjectReportOrderByWithRelationInput | ProjectReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ProjectReports.
+     */
+    cursor?: ProjectReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectReports.
+     */
+    skip?: number
+    distinct?: ProjectReportScalarFieldEnum | ProjectReportScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectReport create
+   */
+  export type ProjectReportCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectReport
+     */
+    select?: ProjectReportSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectReportInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ProjectReport.
+     */
+    data: XOR<ProjectReportCreateInput, ProjectReportUncheckedCreateInput>
+  }
+
+  /**
+   * ProjectReport createMany
+   */
+  export type ProjectReportCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ProjectReports.
+     */
+    data: ProjectReportCreateManyInput | ProjectReportCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ProjectReport createManyAndReturn
+   */
+  export type ProjectReportCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectReport
+     */
+    select?: ProjectReportSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many ProjectReports.
+     */
+    data: ProjectReportCreateManyInput | ProjectReportCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectReportIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProjectReport update
+   */
+  export type ProjectReportUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectReport
+     */
+    select?: ProjectReportSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectReportInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ProjectReport.
+     */
+    data: XOR<ProjectReportUpdateInput, ProjectReportUncheckedUpdateInput>
+    /**
+     * Choose, which ProjectReport to update.
+     */
+    where: ProjectReportWhereUniqueInput
+  }
+
+  /**
+   * ProjectReport updateMany
+   */
+  export type ProjectReportUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ProjectReports.
+     */
+    data: XOR<ProjectReportUpdateManyMutationInput, ProjectReportUncheckedUpdateManyInput>
+    /**
+     * Filter which ProjectReports to update
+     */
+    where?: ProjectReportWhereInput
+  }
+
+  /**
+   * ProjectReport upsert
+   */
+  export type ProjectReportUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectReport
+     */
+    select?: ProjectReportSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectReportInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ProjectReport to update in case it exists.
+     */
+    where: ProjectReportWhereUniqueInput
+    /**
+     * In case the ProjectReport found by the `where` argument doesn't exist, create a new ProjectReport with this data.
+     */
+    create: XOR<ProjectReportCreateInput, ProjectReportUncheckedCreateInput>
+    /**
+     * In case the ProjectReport was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProjectReportUpdateInput, ProjectReportUncheckedUpdateInput>
+  }
+
+  /**
+   * ProjectReport delete
+   */
+  export type ProjectReportDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectReport
+     */
+    select?: ProjectReportSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectReportInclude<ExtArgs> | null
+    /**
+     * Filter which ProjectReport to delete.
+     */
+    where: ProjectReportWhereUniqueInput
+  }
+
+  /**
+   * ProjectReport deleteMany
+   */
+  export type ProjectReportDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProjectReports to delete
+     */
+    where?: ProjectReportWhereInput
+  }
+
+  /**
+   * ProjectReport.workstream
+   */
+  export type ProjectReport$workstreamArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectWorkstream
+     */
+    select?: ProjectWorkstreamSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectWorkstreamInclude<ExtArgs> | null
+    where?: ProjectWorkstreamWhereInput
+  }
+
+  /**
+   * ProjectReport.createdBy
+   */
+  export type ProjectReport$createdByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * ProjectReport without action
+   */
+  export type ProjectReportDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectReport
+     */
+    select?: ProjectReportSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectReportInclude<ExtArgs> | null
   }
 
 
@@ -10009,6 +11217,7 @@ export namespace Prisma {
     expenses?: boolean | ProjectWorkstream$expensesArgs<ExtArgs>
     billingMilestones?: boolean | ProjectWorkstream$billingMilestonesArgs<ExtArgs>
     timesheets?: boolean | ProjectWorkstream$timesheetsArgs<ExtArgs>
+    reports?: boolean | ProjectWorkstream$reportsArgs<ExtArgs>
     _count?: boolean | ProjectWorkstreamCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["projectWorkstream"]>
 
@@ -10058,6 +11267,7 @@ export namespace Prisma {
     expenses?: boolean | ProjectWorkstream$expensesArgs<ExtArgs>
     billingMilestones?: boolean | ProjectWorkstream$billingMilestonesArgs<ExtArgs>
     timesheets?: boolean | ProjectWorkstream$timesheetsArgs<ExtArgs>
+    reports?: boolean | ProjectWorkstream$reportsArgs<ExtArgs>
     _count?: boolean | ProjectWorkstreamCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProjectWorkstreamIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10075,6 +11285,7 @@ export namespace Prisma {
       expenses: Prisma.$ProjectExpensePayload<ExtArgs>[]
       billingMilestones: Prisma.$BillingMilestonePayload<ExtArgs>[]
       timesheets: Prisma.$TimesheetPayload<ExtArgs>[]
+      reports: Prisma.$ProjectReportPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -10463,6 +11674,7 @@ export namespace Prisma {
     expenses<T extends ProjectWorkstream$expensesArgs<ExtArgs> = {}>(args?: Subset<T, ProjectWorkstream$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectExpensePayload<ExtArgs>, T, "findMany"> | Null>
     billingMilestones<T extends ProjectWorkstream$billingMilestonesArgs<ExtArgs> = {}>(args?: Subset<T, ProjectWorkstream$billingMilestonesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BillingMilestonePayload<ExtArgs>, T, "findMany"> | Null>
     timesheets<T extends ProjectWorkstream$timesheetsArgs<ExtArgs> = {}>(args?: Subset<T, ProjectWorkstream$timesheetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimesheetPayload<ExtArgs>, T, "findMany"> | Null>
+    reports<T extends ProjectWorkstream$reportsArgs<ExtArgs> = {}>(args?: Subset<T, ProjectWorkstream$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectReportPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10937,6 +12149,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TimesheetScalarFieldEnum | TimesheetScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectWorkstream.reports
+   */
+  export type ProjectWorkstream$reportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectReport
+     */
+    select?: ProjectReportSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectReportInclude<ExtArgs> | null
+    where?: ProjectReportWhereInput
+    orderBy?: ProjectReportOrderByWithRelationInput | ProjectReportOrderByWithRelationInput[]
+    cursor?: ProjectReportWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectReportScalarFieldEnum | ProjectReportScalarFieldEnum[]
   }
 
   /**
@@ -43649,6 +44881,23 @@ export namespace Prisma {
   export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
 
 
+  export const ProjectReportScalarFieldEnum: {
+    id: 'id',
+    projectId: 'projectId',
+    title: 'title',
+    coverUrl: 'coverUrl',
+    link: 'link',
+    note: 'note',
+    workstreamId: 'workstreamId',
+    submittedAt: 'submittedAt',
+    createdById: 'createdById',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ProjectReportScalarFieldEnum = (typeof ProjectReportScalarFieldEnum)[keyof typeof ProjectReportScalarFieldEnum]
+
+
   export const ProjectWorkstreamScalarFieldEnum: {
     id: 'id',
     projectId: 'projectId',
@@ -44604,6 +45853,7 @@ export namespace Prisma {
     leaves?: UserLeaveListRelationFilter
     taskTemplatesCreated?: TaskTemplateListRelationFilter
     projectTemplatesCreated?: ProjectTemplateListRelationFilter
+    projectReportsCreated?: ProjectReportListRelationFilter
     closingChecklistsCompleted?: ProjectClosingChecklistItemListRelationFilter
     skillGoalsAsSubject?: SkillDevelopmentGoalListRelationFilter
     skillGoalsCreated?: SkillDevelopmentGoalListRelationFilter
@@ -44663,6 +45913,7 @@ export namespace Prisma {
     leaves?: UserLeaveOrderByRelationAggregateInput
     taskTemplatesCreated?: TaskTemplateOrderByRelationAggregateInput
     projectTemplatesCreated?: ProjectTemplateOrderByRelationAggregateInput
+    projectReportsCreated?: ProjectReportOrderByRelationAggregateInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemOrderByRelationAggregateInput
     skillGoalsAsSubject?: SkillDevelopmentGoalOrderByRelationAggregateInput
     skillGoalsCreated?: SkillDevelopmentGoalOrderByRelationAggregateInput
@@ -44725,6 +45976,7 @@ export namespace Prisma {
     leaves?: UserLeaveListRelationFilter
     taskTemplatesCreated?: TaskTemplateListRelationFilter
     projectTemplatesCreated?: ProjectTemplateListRelationFilter
+    projectReportsCreated?: ProjectReportListRelationFilter
     closingChecklistsCompleted?: ProjectClosingChecklistItemListRelationFilter
     skillGoalsAsSubject?: SkillDevelopmentGoalListRelationFilter
     skillGoalsCreated?: SkillDevelopmentGoalListRelationFilter
@@ -44912,6 +46164,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingListRelationFilter
     closingChecklist?: ProjectClosingChecklistItemListRelationFilter
     workstreams?: ProjectWorkstreamListRelationFilter
+    reports?: ProjectReportListRelationFilter
   }
 
   export type ProjectOrderByWithRelationInput = {
@@ -44965,6 +46218,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingOrderByRelationAggregateInput
     closingChecklist?: ProjectClosingChecklistItemOrderByRelationAggregateInput
     workstreams?: ProjectWorkstreamOrderByRelationAggregateInput
+    reports?: ProjectReportOrderByRelationAggregateInput
   }
 
   export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -45021,6 +46275,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingListRelationFilter
     closingChecklist?: ProjectClosingChecklistItemListRelationFilter
     workstreams?: ProjectWorkstreamListRelationFilter
+    reports?: ProjectReportListRelationFilter
   }, "id" | "code" | "surveyToken">
 
   export type ProjectOrderByWithAggregationInput = {
@@ -45103,6 +46358,97 @@ export namespace Prisma {
     surveyToken?: StringNullableWithAggregatesFilter<"Project"> | string | null
   }
 
+  export type ProjectReportWhereInput = {
+    AND?: ProjectReportWhereInput | ProjectReportWhereInput[]
+    OR?: ProjectReportWhereInput[]
+    NOT?: ProjectReportWhereInput | ProjectReportWhereInput[]
+    id?: StringFilter<"ProjectReport"> | string
+    projectId?: StringFilter<"ProjectReport"> | string
+    title?: StringFilter<"ProjectReport"> | string
+    coverUrl?: StringNullableFilter<"ProjectReport"> | string | null
+    link?: StringNullableFilter<"ProjectReport"> | string | null
+    note?: StringNullableFilter<"ProjectReport"> | string | null
+    workstreamId?: StringNullableFilter<"ProjectReport"> | string | null
+    submittedAt?: DateTimeNullableFilter<"ProjectReport"> | Date | string | null
+    createdById?: StringNullableFilter<"ProjectReport"> | string | null
+    createdAt?: DateTimeFilter<"ProjectReport"> | Date | string
+    updatedAt?: DateTimeFilter<"ProjectReport"> | Date | string
+    project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    workstream?: XOR<ProjectWorkstreamNullableRelationFilter, ProjectWorkstreamWhereInput> | null
+    createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+  }
+
+  export type ProjectReportOrderByWithRelationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    title?: SortOrder
+    coverUrl?: SortOrderInput | SortOrder
+    link?: SortOrderInput | SortOrder
+    note?: SortOrderInput | SortOrder
+    workstreamId?: SortOrderInput | SortOrder
+    submittedAt?: SortOrderInput | SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    project?: ProjectOrderByWithRelationInput
+    workstream?: ProjectWorkstreamOrderByWithRelationInput
+    createdBy?: UserOrderByWithRelationInput
+  }
+
+  export type ProjectReportWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ProjectReportWhereInput | ProjectReportWhereInput[]
+    OR?: ProjectReportWhereInput[]
+    NOT?: ProjectReportWhereInput | ProjectReportWhereInput[]
+    projectId?: StringFilter<"ProjectReport"> | string
+    title?: StringFilter<"ProjectReport"> | string
+    coverUrl?: StringNullableFilter<"ProjectReport"> | string | null
+    link?: StringNullableFilter<"ProjectReport"> | string | null
+    note?: StringNullableFilter<"ProjectReport"> | string | null
+    workstreamId?: StringNullableFilter<"ProjectReport"> | string | null
+    submittedAt?: DateTimeNullableFilter<"ProjectReport"> | Date | string | null
+    createdById?: StringNullableFilter<"ProjectReport"> | string | null
+    createdAt?: DateTimeFilter<"ProjectReport"> | Date | string
+    updatedAt?: DateTimeFilter<"ProjectReport"> | Date | string
+    project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    workstream?: XOR<ProjectWorkstreamNullableRelationFilter, ProjectWorkstreamWhereInput> | null
+    createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+  }, "id">
+
+  export type ProjectReportOrderByWithAggregationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    title?: SortOrder
+    coverUrl?: SortOrderInput | SortOrder
+    link?: SortOrderInput | SortOrder
+    note?: SortOrderInput | SortOrder
+    workstreamId?: SortOrderInput | SortOrder
+    submittedAt?: SortOrderInput | SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ProjectReportCountOrderByAggregateInput
+    _max?: ProjectReportMaxOrderByAggregateInput
+    _min?: ProjectReportMinOrderByAggregateInput
+  }
+
+  export type ProjectReportScalarWhereWithAggregatesInput = {
+    AND?: ProjectReportScalarWhereWithAggregatesInput | ProjectReportScalarWhereWithAggregatesInput[]
+    OR?: ProjectReportScalarWhereWithAggregatesInput[]
+    NOT?: ProjectReportScalarWhereWithAggregatesInput | ProjectReportScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ProjectReport"> | string
+    projectId?: StringWithAggregatesFilter<"ProjectReport"> | string
+    title?: StringWithAggregatesFilter<"ProjectReport"> | string
+    coverUrl?: StringNullableWithAggregatesFilter<"ProjectReport"> | string | null
+    link?: StringNullableWithAggregatesFilter<"ProjectReport"> | string | null
+    note?: StringNullableWithAggregatesFilter<"ProjectReport"> | string | null
+    workstreamId?: StringNullableWithAggregatesFilter<"ProjectReport"> | string | null
+    submittedAt?: DateTimeNullableWithAggregatesFilter<"ProjectReport"> | Date | string | null
+    createdById?: StringNullableWithAggregatesFilter<"ProjectReport"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ProjectReport"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ProjectReport"> | Date | string
+  }
+
   export type ProjectWorkstreamWhereInput = {
     AND?: ProjectWorkstreamWhereInput | ProjectWorkstreamWhereInput[]
     OR?: ProjectWorkstreamWhereInput[]
@@ -45129,6 +46475,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseListRelationFilter
     billingMilestones?: BillingMilestoneListRelationFilter
     timesheets?: TimesheetListRelationFilter
+    reports?: ProjectReportListRelationFilter
   }
 
   export type ProjectWorkstreamOrderByWithRelationInput = {
@@ -45154,6 +46501,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseOrderByRelationAggregateInput
     billingMilestones?: BillingMilestoneOrderByRelationAggregateInput
     timesheets?: TimesheetOrderByRelationAggregateInput
+    reports?: ProjectReportOrderByRelationAggregateInput
   }
 
   export type ProjectWorkstreamWhereUniqueInput = Prisma.AtLeast<{
@@ -45183,6 +46531,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseListRelationFilter
     billingMilestones?: BillingMilestoneListRelationFilter
     timesheets?: TimesheetListRelationFilter
+    reports?: ProjectReportListRelationFilter
   }, "id" | "projectId_code">
 
   export type ProjectWorkstreamOrderByWithAggregationInput = {
@@ -48009,6 +49358,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -48065,6 +49415,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -48121,6 +49472,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -48177,6 +49529,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -48377,6 +49730,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateInput = {
@@ -48425,6 +49779,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUpdateInput = {
@@ -48473,6 +49828,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateInput = {
@@ -48521,6 +49877,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectCreateManyInput = {
@@ -48626,6 +49983,101 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type ProjectReportCreateInput = {
+    id?: string
+    title: string
+    coverUrl?: string | null
+    link?: string | null
+    note?: string | null
+    submittedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutReportsInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutReportsInput
+    createdBy?: UserCreateNestedOneWithoutProjectReportsCreatedInput
+  }
+
+  export type ProjectReportUncheckedCreateInput = {
+    id?: string
+    projectId: string
+    title: string
+    coverUrl?: string | null
+    link?: string | null
+    note?: string | null
+    workstreamId?: string | null
+    submittedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectReportUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutReportsNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutReportsNestedInput
+    createdBy?: UserUpdateOneWithoutProjectReportsCreatedNestedInput
+  }
+
+  export type ProjectReportUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectReportCreateManyInput = {
+    id?: string
+    projectId: string
+    title: string
+    coverUrl?: string | null
+    link?: string | null
+    note?: string | null
+    workstreamId?: string | null
+    submittedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectReportUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectReportUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ProjectWorkstreamCreateInput = {
     id?: string
     code: string
@@ -48647,6 +50099,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseCreateNestedManyWithoutWorkstreamInput
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutWorkstreamInput
     timesheets?: TimesheetCreateNestedManyWithoutWorkstreamInput
+    reports?: ProjectReportCreateNestedManyWithoutWorkstreamInput
   }
 
   export type ProjectWorkstreamUncheckedCreateInput = {
@@ -48670,6 +50123,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutWorkstreamInput
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutWorkstreamInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutWorkstreamInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutWorkstreamInput
   }
 
   export type ProjectWorkstreamUpdateInput = {
@@ -48693,6 +50147,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseUpdateManyWithoutWorkstreamNestedInput
     billingMilestones?: BillingMilestoneUpdateManyWithoutWorkstreamNestedInput
     timesheets?: TimesheetUpdateManyWithoutWorkstreamNestedInput
+    reports?: ProjectReportUpdateManyWithoutWorkstreamNestedInput
   }
 
   export type ProjectWorkstreamUncheckedUpdateInput = {
@@ -48716,6 +50171,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutWorkstreamNestedInput
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutWorkstreamNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutWorkstreamNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutWorkstreamNestedInput
   }
 
   export type ProjectWorkstreamCreateManyInput = {
@@ -51887,6 +53343,12 @@ export namespace Prisma {
     none?: ProjectTemplateWhereInput
   }
 
+  export type ProjectReportListRelationFilter = {
+    every?: ProjectReportWhereInput
+    some?: ProjectReportWhereInput
+    none?: ProjectReportWhereInput
+  }
+
   export type ProjectClosingChecklistItemListRelationFilter = {
     every?: ProjectClosingChecklistItemWhereInput
     some?: ProjectClosingChecklistItemWhereInput
@@ -51997,6 +53459,10 @@ export namespace Prisma {
   }
 
   export type ProjectTemplateOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProjectReportOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -52476,6 +53942,53 @@ export namespace Prisma {
     isNot?: ProjectWhereInput
   }
 
+  export type ProjectWorkstreamNullableRelationFilter = {
+    is?: ProjectWorkstreamWhereInput | null
+    isNot?: ProjectWorkstreamWhereInput | null
+  }
+
+  export type ProjectReportCountOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    title?: SortOrder
+    coverUrl?: SortOrder
+    link?: SortOrder
+    note?: SortOrder
+    workstreamId?: SortOrder
+    submittedAt?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProjectReportMaxOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    title?: SortOrder
+    coverUrl?: SortOrder
+    link?: SortOrder
+    note?: SortOrder
+    workstreamId?: SortOrder
+    submittedAt?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProjectReportMinOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    title?: SortOrder
+    coverUrl?: SortOrder
+    link?: SortOrder
+    note?: SortOrder
+    workstreamId?: SortOrder
+    submittedAt?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type ProjectWorkstreamProjectIdCodeCompoundUniqueInput = {
     projectId: string
     code: string
@@ -52752,11 +54265,6 @@ export namespace Prisma {
     entityId?: SortOrder
     description?: SortOrder
     createdAt?: SortOrder
-  }
-
-  export type ProjectWorkstreamNullableRelationFilter = {
-    is?: ProjectWorkstreamWhereInput | null
-    isNot?: ProjectWorkstreamWhereInput | null
   }
 
   export type UserRelationFilter = {
@@ -54654,6 +56162,13 @@ export namespace Prisma {
     connect?: ProjectTemplateWhereUniqueInput | ProjectTemplateWhereUniqueInput[]
   }
 
+  export type ProjectReportCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<ProjectReportCreateWithoutCreatedByInput, ProjectReportUncheckedCreateWithoutCreatedByInput> | ProjectReportCreateWithoutCreatedByInput[] | ProjectReportUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: ProjectReportCreateOrConnectWithoutCreatedByInput | ProjectReportCreateOrConnectWithoutCreatedByInput[]
+    createMany?: ProjectReportCreateManyCreatedByInputEnvelope
+    connect?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+  }
+
   export type ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput = {
     create?: XOR<ProjectClosingChecklistItemCreateWithoutCompletedByInput, ProjectClosingChecklistItemUncheckedCreateWithoutCompletedByInput> | ProjectClosingChecklistItemCreateWithoutCompletedByInput[] | ProjectClosingChecklistItemUncheckedCreateWithoutCompletedByInput[]
     connectOrCreate?: ProjectClosingChecklistItemCreateOrConnectWithoutCompletedByInput | ProjectClosingChecklistItemCreateOrConnectWithoutCompletedByInput[]
@@ -54904,6 +56419,13 @@ export namespace Prisma {
     connectOrCreate?: ProjectTemplateCreateOrConnectWithoutCreatedByInput | ProjectTemplateCreateOrConnectWithoutCreatedByInput[]
     createMany?: ProjectTemplateCreateManyCreatedByInputEnvelope
     connect?: ProjectTemplateWhereUniqueInput | ProjectTemplateWhereUniqueInput[]
+  }
+
+  export type ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<ProjectReportCreateWithoutCreatedByInput, ProjectReportUncheckedCreateWithoutCreatedByInput> | ProjectReportCreateWithoutCreatedByInput[] | ProjectReportUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: ProjectReportCreateOrConnectWithoutCreatedByInput | ProjectReportCreateOrConnectWithoutCreatedByInput[]
+    createMany?: ProjectReportCreateManyCreatedByInputEnvelope
+    connect?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
   }
 
   export type ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput = {
@@ -55414,6 +56936,20 @@ export namespace Prisma {
     deleteMany?: ProjectTemplateScalarWhereInput | ProjectTemplateScalarWhereInput[]
   }
 
+  export type ProjectReportUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<ProjectReportCreateWithoutCreatedByInput, ProjectReportUncheckedCreateWithoutCreatedByInput> | ProjectReportCreateWithoutCreatedByInput[] | ProjectReportUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: ProjectReportCreateOrConnectWithoutCreatedByInput | ProjectReportCreateOrConnectWithoutCreatedByInput[]
+    upsert?: ProjectReportUpsertWithWhereUniqueWithoutCreatedByInput | ProjectReportUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: ProjectReportCreateManyCreatedByInputEnvelope
+    set?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    disconnect?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    delete?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    connect?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    update?: ProjectReportUpdateWithWhereUniqueWithoutCreatedByInput | ProjectReportUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: ProjectReportUpdateManyWithWhereWithoutCreatedByInput | ProjectReportUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: ProjectReportScalarWhereInput | ProjectReportScalarWhereInput[]
+  }
+
   export type ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput = {
     create?: XOR<ProjectClosingChecklistItemCreateWithoutCompletedByInput, ProjectClosingChecklistItemUncheckedCreateWithoutCompletedByInput> | ProjectClosingChecklistItemCreateWithoutCompletedByInput[] | ProjectClosingChecklistItemUncheckedCreateWithoutCompletedByInput[]
     connectOrCreate?: ProjectClosingChecklistItemCreateOrConnectWithoutCompletedByInput | ProjectClosingChecklistItemCreateOrConnectWithoutCompletedByInput[]
@@ -55918,6 +57454,20 @@ export namespace Prisma {
     deleteMany?: ProjectTemplateScalarWhereInput | ProjectTemplateScalarWhereInput[]
   }
 
+  export type ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<ProjectReportCreateWithoutCreatedByInput, ProjectReportUncheckedCreateWithoutCreatedByInput> | ProjectReportCreateWithoutCreatedByInput[] | ProjectReportUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: ProjectReportCreateOrConnectWithoutCreatedByInput | ProjectReportCreateOrConnectWithoutCreatedByInput[]
+    upsert?: ProjectReportUpsertWithWhereUniqueWithoutCreatedByInput | ProjectReportUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: ProjectReportCreateManyCreatedByInputEnvelope
+    set?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    disconnect?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    delete?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    connect?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    update?: ProjectReportUpdateWithWhereUniqueWithoutCreatedByInput | ProjectReportUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: ProjectReportUpdateManyWithWhereWithoutCreatedByInput | ProjectReportUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: ProjectReportScalarWhereInput | ProjectReportScalarWhereInput[]
+  }
+
   export type ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput = {
     create?: XOR<ProjectClosingChecklistItemCreateWithoutCompletedByInput, ProjectClosingChecklistItemUncheckedCreateWithoutCompletedByInput> | ProjectClosingChecklistItemCreateWithoutCompletedByInput[] | ProjectClosingChecklistItemUncheckedCreateWithoutCompletedByInput[]
     connectOrCreate?: ProjectClosingChecklistItemCreateOrConnectWithoutCompletedByInput | ProjectClosingChecklistItemCreateOrConnectWithoutCompletedByInput[]
@@ -56256,6 +57806,13 @@ export namespace Prisma {
     connect?: ProjectWorkstreamWhereUniqueInput | ProjectWorkstreamWhereUniqueInput[]
   }
 
+  export type ProjectReportCreateNestedManyWithoutProjectInput = {
+    create?: XOR<ProjectReportCreateWithoutProjectInput, ProjectReportUncheckedCreateWithoutProjectInput> | ProjectReportCreateWithoutProjectInput[] | ProjectReportUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectReportCreateOrConnectWithoutProjectInput | ProjectReportCreateOrConnectWithoutProjectInput[]
+    createMany?: ProjectReportCreateManyProjectInputEnvelope
+    connect?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+  }
+
   export type ProjectResourceUncheckedCreateNestedManyWithoutProjectInput = {
     create?: XOR<ProjectResourceCreateWithoutProjectInput, ProjectResourceUncheckedCreateWithoutProjectInput> | ProjectResourceCreateWithoutProjectInput[] | ProjectResourceUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: ProjectResourceCreateOrConnectWithoutProjectInput | ProjectResourceCreateOrConnectWithoutProjectInput[]
@@ -56338,6 +57895,13 @@ export namespace Prisma {
     connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutProjectInput | ProjectWorkstreamCreateOrConnectWithoutProjectInput[]
     createMany?: ProjectWorkstreamCreateManyProjectInputEnvelope
     connect?: ProjectWorkstreamWhereUniqueInput | ProjectWorkstreamWhereUniqueInput[]
+  }
+
+  export type ProjectReportUncheckedCreateNestedManyWithoutProjectInput = {
+    create?: XOR<ProjectReportCreateWithoutProjectInput, ProjectReportUncheckedCreateWithoutProjectInput> | ProjectReportCreateWithoutProjectInput[] | ProjectReportUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectReportCreateOrConnectWithoutProjectInput | ProjectReportCreateOrConnectWithoutProjectInput[]
+    createMany?: ProjectReportCreateManyProjectInputEnvelope
+    connect?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
   }
 
   export type EnumProjectStatusFieldUpdateOperationsInput = {
@@ -56572,6 +58136,20 @@ export namespace Prisma {
     deleteMany?: ProjectWorkstreamScalarWhereInput | ProjectWorkstreamScalarWhereInput[]
   }
 
+  export type ProjectReportUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<ProjectReportCreateWithoutProjectInput, ProjectReportUncheckedCreateWithoutProjectInput> | ProjectReportCreateWithoutProjectInput[] | ProjectReportUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectReportCreateOrConnectWithoutProjectInput | ProjectReportCreateOrConnectWithoutProjectInput[]
+    upsert?: ProjectReportUpsertWithWhereUniqueWithoutProjectInput | ProjectReportUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: ProjectReportCreateManyProjectInputEnvelope
+    set?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    disconnect?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    delete?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    connect?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    update?: ProjectReportUpdateWithWhereUniqueWithoutProjectInput | ProjectReportUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: ProjectReportUpdateManyWithWhereWithoutProjectInput | ProjectReportUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: ProjectReportScalarWhereInput | ProjectReportScalarWhereInput[]
+  }
+
   export type ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput = {
     create?: XOR<ProjectResourceCreateWithoutProjectInput, ProjectResourceUncheckedCreateWithoutProjectInput> | ProjectResourceCreateWithoutProjectInput[] | ProjectResourceUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: ProjectResourceCreateOrConnectWithoutProjectInput | ProjectResourceCreateOrConnectWithoutProjectInput[]
@@ -56740,6 +58318,66 @@ export namespace Prisma {
     deleteMany?: ProjectWorkstreamScalarWhereInput | ProjectWorkstreamScalarWhereInput[]
   }
 
+  export type ProjectReportUncheckedUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<ProjectReportCreateWithoutProjectInput, ProjectReportUncheckedCreateWithoutProjectInput> | ProjectReportCreateWithoutProjectInput[] | ProjectReportUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectReportCreateOrConnectWithoutProjectInput | ProjectReportCreateOrConnectWithoutProjectInput[]
+    upsert?: ProjectReportUpsertWithWhereUniqueWithoutProjectInput | ProjectReportUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: ProjectReportCreateManyProjectInputEnvelope
+    set?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    disconnect?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    delete?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    connect?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    update?: ProjectReportUpdateWithWhereUniqueWithoutProjectInput | ProjectReportUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: ProjectReportUpdateManyWithWhereWithoutProjectInput | ProjectReportUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: ProjectReportScalarWhereInput | ProjectReportScalarWhereInput[]
+  }
+
+  export type ProjectCreateNestedOneWithoutReportsInput = {
+    create?: XOR<ProjectCreateWithoutReportsInput, ProjectUncheckedCreateWithoutReportsInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutReportsInput
+    connect?: ProjectWhereUniqueInput
+  }
+
+  export type ProjectWorkstreamCreateNestedOneWithoutReportsInput = {
+    create?: XOR<ProjectWorkstreamCreateWithoutReportsInput, ProjectWorkstreamUncheckedCreateWithoutReportsInput>
+    connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutReportsInput
+    connect?: ProjectWorkstreamWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutProjectReportsCreatedInput = {
+    create?: XOR<UserCreateWithoutProjectReportsCreatedInput, UserUncheckedCreateWithoutProjectReportsCreatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProjectReportsCreatedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ProjectUpdateOneRequiredWithoutReportsNestedInput = {
+    create?: XOR<ProjectCreateWithoutReportsInput, ProjectUncheckedCreateWithoutReportsInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutReportsInput
+    upsert?: ProjectUpsertWithoutReportsInput
+    connect?: ProjectWhereUniqueInput
+    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutReportsInput, ProjectUpdateWithoutReportsInput>, ProjectUncheckedUpdateWithoutReportsInput>
+  }
+
+  export type ProjectWorkstreamUpdateOneWithoutReportsNestedInput = {
+    create?: XOR<ProjectWorkstreamCreateWithoutReportsInput, ProjectWorkstreamUncheckedCreateWithoutReportsInput>
+    connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutReportsInput
+    upsert?: ProjectWorkstreamUpsertWithoutReportsInput
+    disconnect?: ProjectWorkstreamWhereInput | boolean
+    delete?: ProjectWorkstreamWhereInput | boolean
+    connect?: ProjectWorkstreamWhereUniqueInput
+    update?: XOR<XOR<ProjectWorkstreamUpdateToOneWithWhereWithoutReportsInput, ProjectWorkstreamUpdateWithoutReportsInput>, ProjectWorkstreamUncheckedUpdateWithoutReportsInput>
+  }
+
+  export type UserUpdateOneWithoutProjectReportsCreatedNestedInput = {
+    create?: XOR<UserCreateWithoutProjectReportsCreatedInput, UserUncheckedCreateWithoutProjectReportsCreatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProjectReportsCreatedInput
+    upsert?: UserUpsertWithoutProjectReportsCreatedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProjectReportsCreatedInput, UserUpdateWithoutProjectReportsCreatedInput>, UserUncheckedUpdateWithoutProjectReportsCreatedInput>
+  }
+
   export type ProjectCreateNestedOneWithoutWorkstreamsInput = {
     create?: XOR<ProjectCreateWithoutWorkstreamsInput, ProjectUncheckedCreateWithoutWorkstreamsInput>
     connectOrCreate?: ProjectCreateOrConnectWithoutWorkstreamsInput
@@ -56787,6 +58425,13 @@ export namespace Prisma {
     connect?: TimesheetWhereUniqueInput | TimesheetWhereUniqueInput[]
   }
 
+  export type ProjectReportCreateNestedManyWithoutWorkstreamInput = {
+    create?: XOR<ProjectReportCreateWithoutWorkstreamInput, ProjectReportUncheckedCreateWithoutWorkstreamInput> | ProjectReportCreateWithoutWorkstreamInput[] | ProjectReportUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: ProjectReportCreateOrConnectWithoutWorkstreamInput | ProjectReportCreateOrConnectWithoutWorkstreamInput[]
+    createMany?: ProjectReportCreateManyWorkstreamInputEnvelope
+    connect?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+  }
+
   export type ProjectResourceUncheckedCreateNestedManyWithoutWorkstreamInput = {
     create?: XOR<ProjectResourceCreateWithoutWorkstreamInput, ProjectResourceUncheckedCreateWithoutWorkstreamInput> | ProjectResourceCreateWithoutWorkstreamInput[] | ProjectResourceUncheckedCreateWithoutWorkstreamInput[]
     connectOrCreate?: ProjectResourceCreateOrConnectWithoutWorkstreamInput | ProjectResourceCreateOrConnectWithoutWorkstreamInput[]
@@ -56820,6 +58465,13 @@ export namespace Prisma {
     connectOrCreate?: TimesheetCreateOrConnectWithoutWorkstreamInput | TimesheetCreateOrConnectWithoutWorkstreamInput[]
     createMany?: TimesheetCreateManyWorkstreamInputEnvelope
     connect?: TimesheetWhereUniqueInput | TimesheetWhereUniqueInput[]
+  }
+
+  export type ProjectReportUncheckedCreateNestedManyWithoutWorkstreamInput = {
+    create?: XOR<ProjectReportCreateWithoutWorkstreamInput, ProjectReportUncheckedCreateWithoutWorkstreamInput> | ProjectReportCreateWithoutWorkstreamInput[] | ProjectReportUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: ProjectReportCreateOrConnectWithoutWorkstreamInput | ProjectReportCreateOrConnectWithoutWorkstreamInput[]
+    createMany?: ProjectReportCreateManyWorkstreamInputEnvelope
+    connect?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
   }
 
   export type ProjectUpdateOneRequiredWithoutWorkstreamsNestedInput = {
@@ -56910,6 +58562,20 @@ export namespace Prisma {
     deleteMany?: TimesheetScalarWhereInput | TimesheetScalarWhereInput[]
   }
 
+  export type ProjectReportUpdateManyWithoutWorkstreamNestedInput = {
+    create?: XOR<ProjectReportCreateWithoutWorkstreamInput, ProjectReportUncheckedCreateWithoutWorkstreamInput> | ProjectReportCreateWithoutWorkstreamInput[] | ProjectReportUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: ProjectReportCreateOrConnectWithoutWorkstreamInput | ProjectReportCreateOrConnectWithoutWorkstreamInput[]
+    upsert?: ProjectReportUpsertWithWhereUniqueWithoutWorkstreamInput | ProjectReportUpsertWithWhereUniqueWithoutWorkstreamInput[]
+    createMany?: ProjectReportCreateManyWorkstreamInputEnvelope
+    set?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    disconnect?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    delete?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    connect?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    update?: ProjectReportUpdateWithWhereUniqueWithoutWorkstreamInput | ProjectReportUpdateWithWhereUniqueWithoutWorkstreamInput[]
+    updateMany?: ProjectReportUpdateManyWithWhereWithoutWorkstreamInput | ProjectReportUpdateManyWithWhereWithoutWorkstreamInput[]
+    deleteMany?: ProjectReportScalarWhereInput | ProjectReportScalarWhereInput[]
+  }
+
   export type ProjectResourceUncheckedUpdateManyWithoutWorkstreamNestedInput = {
     create?: XOR<ProjectResourceCreateWithoutWorkstreamInput, ProjectResourceUncheckedCreateWithoutWorkstreamInput> | ProjectResourceCreateWithoutWorkstreamInput[] | ProjectResourceUncheckedCreateWithoutWorkstreamInput[]
     connectOrCreate?: ProjectResourceCreateOrConnectWithoutWorkstreamInput | ProjectResourceCreateOrConnectWithoutWorkstreamInput[]
@@ -56978,6 +58644,20 @@ export namespace Prisma {
     update?: TimesheetUpdateWithWhereUniqueWithoutWorkstreamInput | TimesheetUpdateWithWhereUniqueWithoutWorkstreamInput[]
     updateMany?: TimesheetUpdateManyWithWhereWithoutWorkstreamInput | TimesheetUpdateManyWithWhereWithoutWorkstreamInput[]
     deleteMany?: TimesheetScalarWhereInput | TimesheetScalarWhereInput[]
+  }
+
+  export type ProjectReportUncheckedUpdateManyWithoutWorkstreamNestedInput = {
+    create?: XOR<ProjectReportCreateWithoutWorkstreamInput, ProjectReportUncheckedCreateWithoutWorkstreamInput> | ProjectReportCreateWithoutWorkstreamInput[] | ProjectReportUncheckedCreateWithoutWorkstreamInput[]
+    connectOrCreate?: ProjectReportCreateOrConnectWithoutWorkstreamInput | ProjectReportCreateOrConnectWithoutWorkstreamInput[]
+    upsert?: ProjectReportUpsertWithWhereUniqueWithoutWorkstreamInput | ProjectReportUpsertWithWhereUniqueWithoutWorkstreamInput[]
+    createMany?: ProjectReportCreateManyWorkstreamInputEnvelope
+    set?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    disconnect?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    delete?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    connect?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+    update?: ProjectReportUpdateWithWhereUniqueWithoutWorkstreamInput | ProjectReportUpdateWithWhereUniqueWithoutWorkstreamInput[]
+    updateMany?: ProjectReportUpdateManyWithWhereWithoutWorkstreamInput | ProjectReportUpdateManyWithWhereWithoutWorkstreamInput[]
+    deleteMany?: ProjectReportScalarWhereInput | ProjectReportScalarWhereInput[]
   }
 
   export type ProjectCreateNestedOneWithoutSurveyResponsesInput = {
@@ -59503,6 +61183,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -59558,6 +61239,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -59618,6 +61300,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -59673,6 +61356,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -59738,6 +61422,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -59793,6 +61478,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -59853,6 +61539,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -59908,6 +61595,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -60045,6 +61733,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutSalesInput = {
@@ -60092,6 +61781,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutSalesInput = {
@@ -60149,6 +61839,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutPmInput = {
@@ -60196,6 +61887,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutPmInput = {
@@ -60253,6 +61945,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutTechnicalWriterInput = {
@@ -60300,6 +61993,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutTechnicalWriterInput = {
@@ -60357,6 +62051,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutAdminProjectInput = {
@@ -60404,6 +62099,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutAdminProjectInput = {
@@ -61126,6 +62822,42 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProjectReportCreateWithoutCreatedByInput = {
+    id?: string
+    title: string
+    coverUrl?: string | null
+    link?: string | null
+    note?: string | null
+    submittedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutReportsInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutReportsInput
+  }
+
+  export type ProjectReportUncheckedCreateWithoutCreatedByInput = {
+    id?: string
+    projectId: string
+    title: string
+    coverUrl?: string | null
+    link?: string | null
+    note?: string | null
+    workstreamId?: string | null
+    submittedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectReportCreateOrConnectWithoutCreatedByInput = {
+    where: ProjectReportWhereUniqueInput
+    create: XOR<ProjectReportCreateWithoutCreatedByInput, ProjectReportUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type ProjectReportCreateManyCreatedByInputEnvelope = {
+    data: ProjectReportCreateManyCreatedByInput | ProjectReportCreateManyCreatedByInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ProjectClosingChecklistItemCreateWithoutCompletedByInput = {
     id?: string
     key: string
@@ -61609,6 +63341,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -61664,6 +63397,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -61769,6 +63503,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -61824,6 +63559,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -62547,6 +64283,39 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"ProjectTemplate"> | Date | string
   }
 
+  export type ProjectReportUpsertWithWhereUniqueWithoutCreatedByInput = {
+    where: ProjectReportWhereUniqueInput
+    update: XOR<ProjectReportUpdateWithoutCreatedByInput, ProjectReportUncheckedUpdateWithoutCreatedByInput>
+    create: XOR<ProjectReportCreateWithoutCreatedByInput, ProjectReportUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type ProjectReportUpdateWithWhereUniqueWithoutCreatedByInput = {
+    where: ProjectReportWhereUniqueInput
+    data: XOR<ProjectReportUpdateWithoutCreatedByInput, ProjectReportUncheckedUpdateWithoutCreatedByInput>
+  }
+
+  export type ProjectReportUpdateManyWithWhereWithoutCreatedByInput = {
+    where: ProjectReportScalarWhereInput
+    data: XOR<ProjectReportUpdateManyMutationInput, ProjectReportUncheckedUpdateManyWithoutCreatedByInput>
+  }
+
+  export type ProjectReportScalarWhereInput = {
+    AND?: ProjectReportScalarWhereInput | ProjectReportScalarWhereInput[]
+    OR?: ProjectReportScalarWhereInput[]
+    NOT?: ProjectReportScalarWhereInput | ProjectReportScalarWhereInput[]
+    id?: StringFilter<"ProjectReport"> | string
+    projectId?: StringFilter<"ProjectReport"> | string
+    title?: StringFilter<"ProjectReport"> | string
+    coverUrl?: StringNullableFilter<"ProjectReport"> | string | null
+    link?: StringNullableFilter<"ProjectReport"> | string | null
+    note?: StringNullableFilter<"ProjectReport"> | string | null
+    workstreamId?: StringNullableFilter<"ProjectReport"> | string | null
+    submittedAt?: DateTimeNullableFilter<"ProjectReport"> | Date | string | null
+    createdById?: StringNullableFilter<"ProjectReport"> | string | null
+    createdAt?: DateTimeFilter<"ProjectReport"> | Date | string
+    updatedAt?: DateTimeFilter<"ProjectReport"> | Date | string
+  }
+
   export type ProjectClosingChecklistItemUpsertWithWhereUniqueWithoutCompletedByInput = {
     where: ProjectClosingChecklistItemWhereUniqueInput
     update: XOR<ProjectClosingChecklistItemUpdateWithoutCompletedByInput, ProjectClosingChecklistItemUncheckedUpdateWithoutCompletedByInput>
@@ -62860,6 +64629,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutClientInput = {
@@ -62907,6 +64677,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutClientInput = {
@@ -63085,6 +64856,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -63140,6 +64912,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -63200,6 +64973,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -63255,6 +65029,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -63315,6 +65090,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -63370,6 +65146,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -63430,6 +65207,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -63485,6 +65263,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -63956,6 +65735,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseCreateNestedManyWithoutWorkstreamInput
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutWorkstreamInput
     timesheets?: TimesheetCreateNestedManyWithoutWorkstreamInput
+    reports?: ProjectReportCreateNestedManyWithoutWorkstreamInput
   }
 
   export type ProjectWorkstreamUncheckedCreateWithoutProjectInput = {
@@ -63978,6 +65758,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutWorkstreamInput
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutWorkstreamInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutWorkstreamInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutWorkstreamInput
   }
 
   export type ProjectWorkstreamCreateOrConnectWithoutProjectInput = {
@@ -63987,6 +65768,42 @@ export namespace Prisma {
 
   export type ProjectWorkstreamCreateManyProjectInputEnvelope = {
     data: ProjectWorkstreamCreateManyProjectInput | ProjectWorkstreamCreateManyProjectInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProjectReportCreateWithoutProjectInput = {
+    id?: string
+    title: string
+    coverUrl?: string | null
+    link?: string | null
+    note?: string | null
+    submittedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutReportsInput
+    createdBy?: UserCreateNestedOneWithoutProjectReportsCreatedInput
+  }
+
+  export type ProjectReportUncheckedCreateWithoutProjectInput = {
+    id?: string
+    title: string
+    coverUrl?: string | null
+    link?: string | null
+    note?: string | null
+    workstreamId?: string | null
+    submittedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectReportCreateOrConnectWithoutProjectInput = {
+    where: ProjectReportWhereUniqueInput
+    create: XOR<ProjectReportCreateWithoutProjectInput, ProjectReportUncheckedCreateWithoutProjectInput>
+  }
+
+  export type ProjectReportCreateManyProjectInputEnvelope = {
+    data: ProjectReportCreateManyProjectInput | ProjectReportCreateManyProjectInput[]
     skipDuplicates?: boolean
   }
 
@@ -64079,6 +65896,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -64134,6 +65952,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -64200,6 +66019,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -64255,6 +66075,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -64321,6 +66142,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -64376,6 +66198,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -64442,6 +66265,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -64497,6 +66321,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -64757,6 +66582,578 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"ProjectWorkstream"> | Date | string
   }
 
+  export type ProjectReportUpsertWithWhereUniqueWithoutProjectInput = {
+    where: ProjectReportWhereUniqueInput
+    update: XOR<ProjectReportUpdateWithoutProjectInput, ProjectReportUncheckedUpdateWithoutProjectInput>
+    create: XOR<ProjectReportCreateWithoutProjectInput, ProjectReportUncheckedCreateWithoutProjectInput>
+  }
+
+  export type ProjectReportUpdateWithWhereUniqueWithoutProjectInput = {
+    where: ProjectReportWhereUniqueInput
+    data: XOR<ProjectReportUpdateWithoutProjectInput, ProjectReportUncheckedUpdateWithoutProjectInput>
+  }
+
+  export type ProjectReportUpdateManyWithWhereWithoutProjectInput = {
+    where: ProjectReportScalarWhereInput
+    data: XOR<ProjectReportUpdateManyMutationInput, ProjectReportUncheckedUpdateManyWithoutProjectInput>
+  }
+
+  export type ProjectCreateWithoutReportsInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    currency?: string
+    exchangeRate?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    useWorkstreams?: boolean
+    surveyToken?: string | null
+    client: ClientCreateNestedOneWithoutProjectsInput
+    sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
+    pm?: UserCreateNestedOneWithoutProjectsAsPmInput
+    technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
+    adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    resources?: ProjectResourceCreateNestedManyWithoutProjectInput
+    timesheets?: TimesheetCreateNestedManyWithoutProjectInput
+    documents?: DocumentCreateNestedManyWithoutProjectInput
+    activities?: ActivityCreateNestedManyWithoutProjectInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
+    expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
+    tasks?: TaskCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
+    closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectUncheckedCreateWithoutReportsInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
+    clientId: string
+    salesId?: string | null
+    pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    currency?: string
+    exchangeRate?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    useWorkstreams?: boolean
+    surveyToken?: string | null
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutProjectInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
+    expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
+    closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutReportsInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutReportsInput, ProjectUncheckedCreateWithoutReportsInput>
+  }
+
+  export type ProjectWorkstreamCreateWithoutReportsInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    allocationPct?: number
+    plannedMandays?: number
+    estimatedCost?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    status?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutWorkstreamsInput
+    businessUnit?: BusinessUnitCreateNestedOneWithoutWorkstreamsInput
+    resources?: ProjectResourceCreateNestedManyWithoutWorkstreamInput
+    tasks?: TaskCreateNestedManyWithoutWorkstreamInput
+    expenses?: ProjectExpenseCreateNestedManyWithoutWorkstreamInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutWorkstreamInput
+    timesheets?: TimesheetCreateNestedManyWithoutWorkstreamInput
+  }
+
+  export type ProjectWorkstreamUncheckedCreateWithoutReportsInput = {
+    id?: string
+    projectId: string
+    code: string
+    name: string
+    description?: string | null
+    businessUnitId?: string | null
+    allocationPct?: number
+    plannedMandays?: number
+    estimatedCost?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    status?: string
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutWorkstreamInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutWorkstreamInput
+    expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutWorkstreamInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutWorkstreamInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutWorkstreamInput
+  }
+
+  export type ProjectWorkstreamCreateOrConnectWithoutReportsInput = {
+    where: ProjectWorkstreamWhereUniqueInput
+    create: XOR<ProjectWorkstreamCreateWithoutReportsInput, ProjectWorkstreamUncheckedCreateWithoutReportsInput>
+  }
+
+  export type UserCreateWithoutProjectReportsCreatedInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    calendarTokenVersion?: number
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
+    skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
+    skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
+    skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserUncheckedCreateWithoutProjectReportsCreatedInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnitId?: string | null
+    managerId?: string | null
+    principalId?: string | null
+    calendarTokenVersion?: number
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
+    skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
+    skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
+    skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserCreateOrConnectWithoutProjectReportsCreatedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutProjectReportsCreatedInput, UserUncheckedCreateWithoutProjectReportsCreatedInput>
+  }
+
+  export type ProjectUpsertWithoutReportsInput = {
+    update: XOR<ProjectUpdateWithoutReportsInput, ProjectUncheckedUpdateWithoutReportsInput>
+    create: XOR<ProjectCreateWithoutReportsInput, ProjectUncheckedCreateWithoutReportsInput>
+    where?: ProjectWhereInput
+  }
+
+  export type ProjectUpdateToOneWithWhereWithoutReportsInput = {
+    where?: ProjectWhereInput
+    data: XOR<ProjectUpdateWithoutReportsInput, ProjectUncheckedUpdateWithoutReportsInput>
+  }
+
+  export type ProjectUpdateWithoutReportsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
+    sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
+    pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
+    technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
+    adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
+    timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUpdateManyWithoutProjectNestedInput
+    activities?: ActivityUpdateManyWithoutProjectNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
+    expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
+    closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutReportsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
+    clientId?: StringFieldUpdateOperationsInput | string
+    salesId?: NullableStringFieldUpdateOperationsInput | string | null
+    pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutProjectNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
+    expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
+    closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectWorkstreamUpsertWithoutReportsInput = {
+    update: XOR<ProjectWorkstreamUpdateWithoutReportsInput, ProjectWorkstreamUncheckedUpdateWithoutReportsInput>
+    create: XOR<ProjectWorkstreamCreateWithoutReportsInput, ProjectWorkstreamUncheckedCreateWithoutReportsInput>
+    where?: ProjectWorkstreamWhereInput
+  }
+
+  export type ProjectWorkstreamUpdateToOneWithWhereWithoutReportsInput = {
+    where?: ProjectWorkstreamWhereInput
+    data: XOR<ProjectWorkstreamUpdateWithoutReportsInput, ProjectWorkstreamUncheckedUpdateWithoutReportsInput>
+  }
+
+  export type ProjectWorkstreamUpdateWithoutReportsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allocationPct?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutWorkstreamsNestedInput
+    businessUnit?: BusinessUnitUpdateOneWithoutWorkstreamsNestedInput
+    resources?: ProjectResourceUpdateManyWithoutWorkstreamNestedInput
+    tasks?: TaskUpdateManyWithoutWorkstreamNestedInput
+    expenses?: ProjectExpenseUpdateManyWithoutWorkstreamNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutWorkstreamNestedInput
+    timesheets?: TimesheetUpdateManyWithoutWorkstreamNestedInput
+  }
+
+  export type ProjectWorkstreamUncheckedUpdateWithoutReportsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    allocationPct?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resources?: ProjectResourceUncheckedUpdateManyWithoutWorkstreamNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutWorkstreamNestedInput
+    expenses?: ProjectExpenseUncheckedUpdateManyWithoutWorkstreamNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutWorkstreamNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutWorkstreamNestedInput
+  }
+
+  export type UserUpsertWithoutProjectReportsCreatedInput = {
+    update: XOR<UserUpdateWithoutProjectReportsCreatedInput, UserUncheckedUpdateWithoutProjectReportsCreatedInput>
+    create: XOR<UserCreateWithoutProjectReportsCreatedInput, UserUncheckedCreateWithoutProjectReportsCreatedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutProjectReportsCreatedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutProjectReportsCreatedInput, UserUncheckedUpdateWithoutProjectReportsCreatedInput>
+  }
+
+  export type UserUpdateWithoutProjectReportsCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
+    skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
+    skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
+    skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutProjectReportsCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
+    skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
+    skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  }
+
   export type ProjectCreateWithoutWorkstreamsInput = {
     id?: string
     code: string
@@ -64802,6 +67199,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutWorkstreamsInput = {
@@ -64849,6 +67247,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutWorkstreamsInput = {
@@ -65109,6 +67508,42 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProjectReportCreateWithoutWorkstreamInput = {
+    id?: string
+    title: string
+    coverUrl?: string | null
+    link?: string | null
+    note?: string | null
+    submittedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutReportsInput
+    createdBy?: UserCreateNestedOneWithoutProjectReportsCreatedInput
+  }
+
+  export type ProjectReportUncheckedCreateWithoutWorkstreamInput = {
+    id?: string
+    projectId: string
+    title: string
+    coverUrl?: string | null
+    link?: string | null
+    note?: string | null
+    submittedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectReportCreateOrConnectWithoutWorkstreamInput = {
+    where: ProjectReportWhereUniqueInput
+    create: XOR<ProjectReportCreateWithoutWorkstreamInput, ProjectReportUncheckedCreateWithoutWorkstreamInput>
+  }
+
+  export type ProjectReportCreateManyWorkstreamInputEnvelope = {
+    data: ProjectReportCreateManyWorkstreamInput | ProjectReportCreateManyWorkstreamInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ProjectUpsertWithoutWorkstreamsInput = {
     update: XOR<ProjectUpdateWithoutWorkstreamsInput, ProjectUncheckedUpdateWithoutWorkstreamsInput>
     create: XOR<ProjectCreateWithoutWorkstreamsInput, ProjectUncheckedCreateWithoutWorkstreamsInput>
@@ -65165,6 +67600,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutWorkstreamsInput = {
@@ -65212,6 +67648,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type BusinessUnitUpsertWithoutWorkstreamsInput = {
@@ -65329,6 +67766,22 @@ export namespace Prisma {
     data: XOR<TimesheetUpdateManyMutationInput, TimesheetUncheckedUpdateManyWithoutWorkstreamInput>
   }
 
+  export type ProjectReportUpsertWithWhereUniqueWithoutWorkstreamInput = {
+    where: ProjectReportWhereUniqueInput
+    update: XOR<ProjectReportUpdateWithoutWorkstreamInput, ProjectReportUncheckedUpdateWithoutWorkstreamInput>
+    create: XOR<ProjectReportCreateWithoutWorkstreamInput, ProjectReportUncheckedCreateWithoutWorkstreamInput>
+  }
+
+  export type ProjectReportUpdateWithWhereUniqueWithoutWorkstreamInput = {
+    where: ProjectReportWhereUniqueInput
+    data: XOR<ProjectReportUpdateWithoutWorkstreamInput, ProjectReportUncheckedUpdateWithoutWorkstreamInput>
+  }
+
+  export type ProjectReportUpdateManyWithWhereWithoutWorkstreamInput = {
+    where: ProjectReportScalarWhereInput
+    data: XOR<ProjectReportUpdateManyMutationInput, ProjectReportUncheckedUpdateManyWithoutWorkstreamInput>
+  }
+
   export type ProjectCreateWithoutSurveyResponsesInput = {
     id?: string
     code: string
@@ -65374,6 +67827,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutSurveyResponsesInput = {
@@ -65421,6 +67875,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutSurveyResponsesInput = {
@@ -65484,6 +67939,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutSurveyResponsesInput = {
@@ -65531,6 +67987,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserCreateWithoutAuditLogsInput = {
@@ -65576,6 +68033,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -65631,6 +68089,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -65702,6 +68161,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -65757,6 +68217,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -65814,6 +68275,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutResourcesInput = {
@@ -65861,6 +68323,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutResourcesInput = {
@@ -65888,6 +68351,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseCreateNestedManyWithoutWorkstreamInput
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutWorkstreamInput
     timesheets?: TimesheetCreateNestedManyWithoutWorkstreamInput
+    reports?: ProjectReportCreateNestedManyWithoutWorkstreamInput
   }
 
   export type ProjectWorkstreamUncheckedCreateWithoutResourcesInput = {
@@ -65910,6 +68374,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutWorkstreamInput
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutWorkstreamInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutWorkstreamInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutWorkstreamInput
   }
 
   export type ProjectWorkstreamCreateOrConnectWithoutResourcesInput = {
@@ -65960,6 +68425,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -66015,6 +68481,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -66075,6 +68542,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -66130,6 +68598,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -66203,6 +68672,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutResourcesInput = {
@@ -66250,6 +68720,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectWorkstreamUpsertWithoutResourcesInput = {
@@ -66283,6 +68754,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseUpdateManyWithoutWorkstreamNestedInput
     billingMilestones?: BillingMilestoneUpdateManyWithoutWorkstreamNestedInput
     timesheets?: TimesheetUpdateManyWithoutWorkstreamNestedInput
+    reports?: ProjectReportUpdateManyWithoutWorkstreamNestedInput
   }
 
   export type ProjectWorkstreamUncheckedUpdateWithoutResourcesInput = {
@@ -66305,6 +68777,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutWorkstreamNestedInput
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutWorkstreamNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutWorkstreamNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutWorkstreamNestedInput
   }
 
   export type UserUpsertWithoutResourcesInput = {
@@ -66361,6 +68834,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -66416,6 +68890,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -66482,6 +68957,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -66537,6 +69013,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -66594,6 +69071,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutTimesheetsInput = {
@@ -66641,6 +69119,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutTimesheetsInput = {
@@ -66668,6 +69147,7 @@ export namespace Prisma {
     tasks?: TaskCreateNestedManyWithoutWorkstreamInput
     expenses?: ProjectExpenseCreateNestedManyWithoutWorkstreamInput
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutWorkstreamInput
+    reports?: ProjectReportCreateNestedManyWithoutWorkstreamInput
   }
 
   export type ProjectWorkstreamUncheckedCreateWithoutTimesheetsInput = {
@@ -66690,6 +69170,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedCreateNestedManyWithoutWorkstreamInput
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutWorkstreamInput
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutWorkstreamInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutWorkstreamInput
   }
 
   export type ProjectWorkstreamCreateOrConnectWithoutTimesheetsInput = {
@@ -66740,6 +69221,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -66795,6 +69277,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -66906,6 +69389,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -66961,6 +69445,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -67034,6 +69519,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutTimesheetsInput = {
@@ -67081,6 +69567,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectWorkstreamUpsertWithoutTimesheetsInput = {
@@ -67114,6 +69601,7 @@ export namespace Prisma {
     tasks?: TaskUpdateManyWithoutWorkstreamNestedInput
     expenses?: ProjectExpenseUpdateManyWithoutWorkstreamNestedInput
     billingMilestones?: BillingMilestoneUpdateManyWithoutWorkstreamNestedInput
+    reports?: ProjectReportUpdateManyWithoutWorkstreamNestedInput
   }
 
   export type ProjectWorkstreamUncheckedUpdateWithoutTimesheetsInput = {
@@ -67136,6 +69624,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedUpdateManyWithoutWorkstreamNestedInput
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutWorkstreamNestedInput
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutWorkstreamNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutWorkstreamNestedInput
   }
 
   export type UserUpsertWithoutTimesheetsInput = {
@@ -67192,6 +69681,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -67247,6 +69737,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -67370,6 +69861,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -67425,6 +69917,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -67482,6 +69975,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutDocumentsInput = {
@@ -67529,6 +70023,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutDocumentsInput = {
@@ -67579,6 +70074,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -67634,6 +70130,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -67790,6 +70287,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutDocumentsInput = {
@@ -67837,6 +70335,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutDocumentsUploadedInput = {
@@ -67893,6 +70392,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -67948,6 +70448,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -68066,6 +70567,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutClosingChecklistInput = {
@@ -68113,6 +70615,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutClosingChecklistInput = {
@@ -68164,6 +70667,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -68219,6 +70723,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -68291,6 +70796,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutClosingChecklistInput = {
@@ -68338,6 +70844,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutClosingChecklistsCompletedInput = {
@@ -68395,6 +70902,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -68450,6 +70958,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -68506,6 +71015,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutExpensesInput = {
@@ -68553,6 +71063,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutExpensesInput = {
@@ -68580,6 +71091,7 @@ export namespace Prisma {
     tasks?: TaskCreateNestedManyWithoutWorkstreamInput
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutWorkstreamInput
     timesheets?: TimesheetCreateNestedManyWithoutWorkstreamInput
+    reports?: ProjectReportCreateNestedManyWithoutWorkstreamInput
   }
 
   export type ProjectWorkstreamUncheckedCreateWithoutExpensesInput = {
@@ -68602,6 +71114,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedCreateNestedManyWithoutWorkstreamInput
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutWorkstreamInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutWorkstreamInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutWorkstreamInput
   }
 
   export type ProjectWorkstreamCreateOrConnectWithoutExpensesInput = {
@@ -68652,6 +71165,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -68707,6 +71221,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -68767,6 +71282,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -68822,6 +71338,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -68895,6 +71412,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutExpensesInput = {
@@ -68942,6 +71460,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectWorkstreamUpsertWithoutExpensesInput = {
@@ -68975,6 +71494,7 @@ export namespace Prisma {
     tasks?: TaskUpdateManyWithoutWorkstreamNestedInput
     billingMilestones?: BillingMilestoneUpdateManyWithoutWorkstreamNestedInput
     timesheets?: TimesheetUpdateManyWithoutWorkstreamNestedInput
+    reports?: ProjectReportUpdateManyWithoutWorkstreamNestedInput
   }
 
   export type ProjectWorkstreamUncheckedUpdateWithoutExpensesInput = {
@@ -68997,6 +71517,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedUpdateManyWithoutWorkstreamNestedInput
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutWorkstreamNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutWorkstreamNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutWorkstreamNestedInput
   }
 
   export type UserUpsertWithoutApprovedExpensesInput = {
@@ -69053,6 +71574,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -69108,6 +71630,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -69174,6 +71697,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -69229,6 +71753,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -69284,6 +71809,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -69339,6 +71865,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -69467,6 +71994,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseCreateNestedManyWithoutWorkstreamInput
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutWorkstreamInput
     timesheets?: TimesheetCreateNestedManyWithoutWorkstreamInput
+    reports?: ProjectReportCreateNestedManyWithoutWorkstreamInput
   }
 
   export type ProjectWorkstreamUncheckedCreateWithoutBusinessUnitInput = {
@@ -69489,6 +72017,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutWorkstreamInput
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutWorkstreamInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutWorkstreamInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutWorkstreamInput
   }
 
   export type ProjectWorkstreamCreateOrConnectWithoutBusinessUnitInput = {
@@ -69748,6 +72277,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -69803,6 +72333,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -69901,6 +72432,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -69956,6 +72488,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -70045,6 +72578,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -70100,6 +72634,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -70187,6 +72722,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -70242,6 +72778,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -70313,6 +72850,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -70368,6 +72906,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -70467,6 +73006,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -70522,6 +73062,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -70577,6 +73118,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -70632,6 +73174,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -70719,6 +73262,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -70774,6 +73318,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -70845,6 +73390,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -70900,6 +73446,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -70999,6 +73546,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -71054,6 +73602,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -71108,6 +73657,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -71163,6 +73713,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -71225,6 +73776,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutActivitiesInput = {
@@ -71272,6 +73824,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutActivitiesInput = {
@@ -71333,6 +73886,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -71388,6 +73942,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -71456,6 +74011,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutActivitiesInput = {
@@ -71503,6 +74059,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectCreateWithoutTasksInput = {
@@ -71550,6 +74107,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutTasksInput = {
@@ -71597,6 +74155,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutTasksInput = {
@@ -71624,6 +74183,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseCreateNestedManyWithoutWorkstreamInput
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutWorkstreamInput
     timesheets?: TimesheetCreateNestedManyWithoutWorkstreamInput
+    reports?: ProjectReportCreateNestedManyWithoutWorkstreamInput
   }
 
   export type ProjectWorkstreamUncheckedCreateWithoutTasksInput = {
@@ -71646,6 +74206,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutWorkstreamInput
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutWorkstreamInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutWorkstreamInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutWorkstreamInput
   }
 
   export type ProjectWorkstreamCreateOrConnectWithoutTasksInput = {
@@ -71696,6 +74257,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -71751,6 +74313,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -71811,6 +74374,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -71866,6 +74430,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -72182,6 +74747,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutTasksInput = {
@@ -72229,6 +74795,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectWorkstreamUpsertWithoutTasksInput = {
@@ -72262,6 +74829,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseUpdateManyWithoutWorkstreamNestedInput
     billingMilestones?: BillingMilestoneUpdateManyWithoutWorkstreamNestedInput
     timesheets?: TimesheetUpdateManyWithoutWorkstreamNestedInput
+    reports?: ProjectReportUpdateManyWithoutWorkstreamNestedInput
   }
 
   export type ProjectWorkstreamUncheckedUpdateWithoutTasksInput = {
@@ -72284,6 +74852,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutWorkstreamNestedInput
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutWorkstreamNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutWorkstreamNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutWorkstreamNestedInput
   }
 
   export type UserUpsertWithoutTasksAssignedInput = {
@@ -72340,6 +74909,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -72395,6 +74965,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -72461,6 +75032,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -72516,6 +75088,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -72952,6 +75525,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutBillingMilestonesInput = {
@@ -72999,6 +75573,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutBillingMilestonesInput = {
@@ -73026,6 +75601,7 @@ export namespace Prisma {
     tasks?: TaskCreateNestedManyWithoutWorkstreamInput
     expenses?: ProjectExpenseCreateNestedManyWithoutWorkstreamInput
     timesheets?: TimesheetCreateNestedManyWithoutWorkstreamInput
+    reports?: ProjectReportCreateNestedManyWithoutWorkstreamInput
   }
 
   export type ProjectWorkstreamUncheckedCreateWithoutBillingMilestonesInput = {
@@ -73048,6 +75624,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedCreateNestedManyWithoutWorkstreamInput
     expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutWorkstreamInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutWorkstreamInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutWorkstreamInput
   }
 
   export type ProjectWorkstreamCreateOrConnectWithoutBillingMilestonesInput = {
@@ -73111,6 +75688,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutBillingMilestonesInput = {
@@ -73158,6 +75736,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectWorkstreamUpsertWithoutBillingMilestonesInput = {
@@ -73191,6 +75770,7 @@ export namespace Prisma {
     tasks?: TaskUpdateManyWithoutWorkstreamNestedInput
     expenses?: ProjectExpenseUpdateManyWithoutWorkstreamNestedInput
     timesheets?: TimesheetUpdateManyWithoutWorkstreamNestedInput
+    reports?: ProjectReportUpdateManyWithoutWorkstreamNestedInput
   }
 
   export type ProjectWorkstreamUncheckedUpdateWithoutBillingMilestonesInput = {
@@ -73213,6 +75793,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedUpdateManyWithoutWorkstreamNestedInput
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutWorkstreamNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutWorkstreamNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutWorkstreamNestedInput
   }
 
   export type TaskCreateWithoutAssigneesInput = {
@@ -73309,6 +75890,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -73364,6 +75946,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -73492,6 +76075,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -73547,6 +76131,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -73653,6 +76238,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -73708,6 +76294,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -73836,6 +76423,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -73891,6 +76479,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -73975,6 +76564,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -74030,6 +76620,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -74168,6 +76759,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -74223,6 +76815,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -74351,6 +76944,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -74406,6 +77000,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -74540,6 +77135,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -74595,6 +77191,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -74650,6 +77247,7 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -74705,6 +77303,7 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -74776,6 +77375,7 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -74831,6 +77431,7 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -74915,6 +77516,7 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -74970,6 +77572,7 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -75128,6 +77731,7 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -75183,6 +77787,7 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -75312,6 +77917,7 @@ export namespace Prisma {
     leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -75367,6 +77973,7 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -75598,6 +78205,7 @@ export namespace Prisma {
     leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -75653,6 +78261,7 @@ export namespace Prisma {
     leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -76098,6 +78707,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -76153,6 +78763,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -76224,6 +78835,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -76279,6 +78891,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -76336,6 +78949,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutRaidItemsInput = {
@@ -76383,6 +78997,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutRaidItemsInput = {
@@ -76434,6 +79049,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -76489,6 +79105,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -76549,6 +79166,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -76604,6 +79222,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -76676,6 +79295,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutRaidItemsInput = {
@@ -76723,6 +79343,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutRaidItemsOwnedInput = {
@@ -76780,6 +79401,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -76835,6 +79457,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -76901,6 +79524,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -76956,6 +79580,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -77011,6 +79636,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -77066,6 +79692,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -77126,6 +79753,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -77181,6 +79809,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -77282,6 +79911,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -77337,6 +79967,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -77403,6 +80034,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -77458,6 +80090,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -77577,6 +80210,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutPerfProjectRatingsInput = {
@@ -77624,6 +80258,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutPerfProjectRatingsInput = {
@@ -77675,6 +80310,7 @@ export namespace Prisma {
     leaves?: UserLeaveCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
@@ -77730,6 +80366,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
@@ -77855,6 +80492,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutPerfProjectRatingsInput = {
@@ -77902,6 +80540,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutPerfProjectRatingsGivenInput = {
@@ -77959,6 +80598,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -78014,6 +80654,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -78475,6 +81116,19 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type ProjectReportCreateManyCreatedByInput = {
+    id?: string
+    projectId: string
+    title: string
+    coverUrl?: string | null
+    link?: string | null
+    note?: string | null
+    workstreamId?: string | null
+    submittedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type ProjectClosingChecklistItemCreateManyCompletedByInput = {
     id?: string
     projectId: string
@@ -78663,6 +81317,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -78718,6 +81373,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -78792,6 +81448,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -78847,6 +81504,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -78998,6 +81656,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutSalesInput = {
@@ -79045,6 +81704,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutSalesInput = {
@@ -79127,6 +81787,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutPmInput = {
@@ -79174,6 +81835,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutPmInput = {
@@ -79256,6 +81918,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutTechnicalWriterInput = {
@@ -79303,6 +81966,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutTechnicalWriterInput = {
@@ -79385,6 +82049,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutAdminProjectInput = {
@@ -79432,6 +82097,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutAdminProjectInput = {
@@ -80246,6 +82912,45 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ProjectReportUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutReportsNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutReportsNestedInput
+  }
+
+  export type ProjectReportUncheckedUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectReportUncheckedUpdateManyWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ProjectClosingChecklistItemUpdateWithoutCompletedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     key?: StringFieldUpdateOperationsInput | string
@@ -80790,6 +83495,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutClientInput = {
@@ -80837,6 +83543,7 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutClientInput = {
@@ -81119,6 +83826,19 @@ export namespace Prisma {
     endDate?: Date | string | null
     status?: string
     sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectReportCreateManyProjectInput = {
+    id?: string
+    title: string
+    coverUrl?: string | null
+    link?: string | null
+    note?: string | null
+    workstreamId?: string | null
+    submittedAt?: Date | string | null
+    createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -81622,6 +84342,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseUpdateManyWithoutWorkstreamNestedInput
     billingMilestones?: BillingMilestoneUpdateManyWithoutWorkstreamNestedInput
     timesheets?: TimesheetUpdateManyWithoutWorkstreamNestedInput
+    reports?: ProjectReportUpdateManyWithoutWorkstreamNestedInput
   }
 
   export type ProjectWorkstreamUncheckedUpdateWithoutProjectInput = {
@@ -81644,6 +84365,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutWorkstreamNestedInput
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutWorkstreamNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutWorkstreamNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutWorkstreamNestedInput
   }
 
   export type ProjectWorkstreamUncheckedUpdateManyWithoutProjectInput = {
@@ -81659,6 +84381,45 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: StringFieldUpdateOperationsInput | string
     sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectReportUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workstream?: ProjectWorkstreamUpdateOneWithoutReportsNestedInput
+    createdBy?: UserUpdateOneWithoutProjectReportsCreatedNestedInput
+  }
+
+  export type ProjectReportUncheckedUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectReportUncheckedUpdateManyWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -81740,6 +84501,19 @@ export namespace Prisma {
     approvedById?: string | null
     approvedAt?: Date | string | null
     rejectionReason?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectReportCreateManyWorkstreamInput = {
+    id?: string
+    projectId: string
+    title: string
+    coverUrl?: string | null
+    link?: string | null
+    note?: string | null
+    submittedAt?: Date | string | null
+    createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -81999,6 +84773,45 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ProjectReportUpdateWithoutWorkstreamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutReportsNestedInput
+    createdBy?: UserUpdateOneWithoutProjectReportsCreatedNestedInput
+  }
+
+  export type ProjectReportUncheckedUpdateWithoutWorkstreamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectReportUncheckedUpdateManyWithoutWorkstreamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    coverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type DocumentCreateManyParentDocumentInput = {
     id?: string
     projectId: string
@@ -82173,6 +84986,7 @@ export namespace Prisma {
     leaves?: UserLeaveUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
@@ -82228,6 +85042,7 @@ export namespace Prisma {
     leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -82374,6 +85189,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseUpdateManyWithoutWorkstreamNestedInput
     billingMilestones?: BillingMilestoneUpdateManyWithoutWorkstreamNestedInput
     timesheets?: TimesheetUpdateManyWithoutWorkstreamNestedInput
+    reports?: ProjectReportUpdateManyWithoutWorkstreamNestedInput
   }
 
   export type ProjectWorkstreamUncheckedUpdateWithoutBusinessUnitInput = {
@@ -82396,6 +85212,7 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutWorkstreamNestedInput
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutWorkstreamNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutWorkstreamNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutWorkstreamNestedInput
   }
 
   export type ProjectWorkstreamUncheckedUpdateManyWithoutBusinessUnitInput = {
@@ -83138,6 +85955,10 @@ export namespace Prisma {
      * @deprecated Use ProjectDefaultArgs instead
      */
     export type ProjectArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProjectDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ProjectReportDefaultArgs instead
+     */
+    export type ProjectReportArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProjectReportDefaultArgs<ExtArgs>
     /**
      * @deprecated Use ProjectWorkstreamDefaultArgs instead
      */

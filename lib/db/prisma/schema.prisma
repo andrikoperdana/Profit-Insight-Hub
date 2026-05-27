@@ -132,6 +132,7 @@ model User {
   leaves             UserLeave[]
   taskTemplatesCreated    TaskTemplate[]    @relation("TaskTemplateCreator")
   projectTemplatesCreated ProjectTemplate[] @relation("ProjectTemplateCreator")
+  projectReportsCreated   ProjectReport[]   @relation("ProjectReportCreator")
   closingChecklistsCompleted ProjectClosingChecklistItem[] @relation("ClosingChecklistCompleter")
   skillGoalsAsSubject       SkillDevelopmentGoal[]  @relation("SkillGoalSubject")
   skillGoalsCreated         SkillDevelopmentGoal[]  @relation("SkillGoalCreator")
@@ -214,6 +215,27 @@ model Project {
   perfProjectRatings PerformanceReviewProjectRating[]
   closingChecklist   ProjectClosingChecklistItem[]
   workstreams     ProjectWorkstream[]
+  reports         ProjectReport[]
+}
+
+model ProjectReport {
+  id           String   @id @default(cuid())
+  projectId    String
+  project      Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title        String
+  coverUrl     String?  @db.Text
+  link         String?  @db.Text
+  note         String?  @db.Text
+  workstreamId String?
+  workstream   ProjectWorkstream? @relation(fields: [workstreamId], references: [id], onDelete: SetNull)
+  submittedAt  DateTime?
+  createdById  String?
+  createdBy    User?    @relation("ProjectReportCreator", fields: [createdById], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([workstreamId])
 }
 
 model ProjectWorkstream {
@@ -240,6 +262,7 @@ model ProjectWorkstream {
   expenses          ProjectExpense[]
   billingMilestones BillingMilestone[]
   timesheets        Timesheet[]
+  reports           ProjectReport[]
 
   @@unique([projectId, code])
   @@index([projectId])

@@ -47,6 +47,7 @@ import type {
   CreatePerformanceReviewBody,
   CreateProjectBody,
   CreateProjectRaidItemBody,
+  CreateProjectReportBody,
   CreateProjectTemplateBody,
   CreateProjectWorkstreamBody,
   CreateSkillBody,
@@ -77,6 +78,7 @@ import type {
   ListPerformanceReviewsParams,
   ListPrincipalTeamProjects200Item,
   ListProjectDocumentsParams,
+  ListProjectReportsParams,
   ListProjectsParams,
   ListSkillDevelopmentGoalsParams,
   ListSkillProgressionLogsParams,
@@ -95,6 +97,8 @@ import type {
   ProjectExpense,
   ProjectFinancials,
   ProjectRaidItem,
+  ProjectReport,
+  ProjectReportPage,
   ProjectResource,
   ProjectTemplate,
   ProjectWorkstream,
@@ -125,6 +129,7 @@ import type {
   UpdateProjectBody,
   UpdateProjectRaidItemBody,
   UpdateProjectReportBody,
+  UpdateProjectReportItemBody,
   UpdateProjectWorkstreamBody,
   UpdateSkillBody,
   UpdateSkillDevelopmentGoalBody,
@@ -849,6 +854,350 @@ export const useUpdateProjectReport = <
   TContext
 > => {
   return useMutation(getUpdateProjectReportMutationOptions(options));
+};
+
+export const getListProjectReportsUrl = (
+  id: string,
+  params?: ListProjectReportsParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/projects/${id}/reports?${stringifiedParams}`
+    : `/api/projects/${id}/reports`;
+};
+
+export const listProjectReports = async (
+  id: string,
+  params?: ListProjectReportsParams,
+  options?: RequestInit,
+): Promise<ProjectReportPage> => {
+  return customFetch<ProjectReportPage>(getListProjectReportsUrl(id, params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListProjectReportsQueryKey = (
+  id: string,
+  params?: ListProjectReportsParams,
+) => {
+  return [`/api/projects/${id}/reports`, ...(params ? [params] : [])] as const;
+};
+
+export const getListProjectReportsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listProjectReports>>,
+  TError = ErrorType<unknown>,
+>(
+  id: string,
+  params?: ListProjectReportsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listProjectReports>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getListProjectReportsQueryKey(id, params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listProjectReports>>
+  > = ({ signal }) =>
+    listProjectReports(id, params, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof listProjectReports>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListProjectReportsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listProjectReports>>
+>;
+export type ListProjectReportsQueryError = ErrorType<unknown>;
+
+export function useListProjectReports<
+  TData = Awaited<ReturnType<typeof listProjectReports>>,
+  TError = ErrorType<unknown>,
+>(
+  id: string,
+  params?: ListProjectReportsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listProjectReports>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListProjectReportsQueryOptions(id, params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getCreateProjectReportUrl = (id: string) => {
+  return `/api/projects/${id}/reports`;
+};
+
+export const createProjectReport = async (
+  id: string,
+  createProjectReportBody: CreateProjectReportBody,
+  options?: RequestInit,
+): Promise<ProjectReport> => {
+  return customFetch<ProjectReport>(getCreateProjectReportUrl(id), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createProjectReportBody),
+  });
+};
+
+export const getCreateProjectReportMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createProjectReport>>,
+    TError,
+    { id: string; data: BodyType<CreateProjectReportBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createProjectReport>>,
+  TError,
+  { id: string; data: BodyType<CreateProjectReportBody> },
+  TContext
+> => {
+  const mutationKey = ["createProjectReport"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createProjectReport>>,
+    { id: string; data: BodyType<CreateProjectReportBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return createProjectReport(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateProjectReportMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createProjectReport>>
+>;
+export type CreateProjectReportMutationBody = BodyType<CreateProjectReportBody>;
+export type CreateProjectReportMutationError = ErrorType<unknown>;
+
+export const useCreateProjectReport = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createProjectReport>>,
+    TError,
+    { id: string; data: BodyType<CreateProjectReportBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createProjectReport>>,
+  TError,
+  { id: string; data: BodyType<CreateProjectReportBody> },
+  TContext
+> => {
+  return useMutation(getCreateProjectReportMutationOptions(options));
+};
+
+export const getUpdateProjectReportItemUrl = (reportId: string) => {
+  return `/api/project-reports/${reportId}`;
+};
+
+export const updateProjectReportItem = async (
+  reportId: string,
+  updateProjectReportItemBody: UpdateProjectReportItemBody,
+  options?: RequestInit,
+): Promise<ProjectReport> => {
+  return customFetch<ProjectReport>(getUpdateProjectReportItemUrl(reportId), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateProjectReportItemBody),
+  });
+};
+
+export const getUpdateProjectReportItemMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateProjectReportItem>>,
+    TError,
+    { reportId: string; data: BodyType<UpdateProjectReportItemBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateProjectReportItem>>,
+  TError,
+  { reportId: string; data: BodyType<UpdateProjectReportItemBody> },
+  TContext
+> => {
+  const mutationKey = ["updateProjectReportItem"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateProjectReportItem>>,
+    { reportId: string; data: BodyType<UpdateProjectReportItemBody> }
+  > = (props) => {
+    const { reportId, data } = props ?? {};
+
+    return updateProjectReportItem(reportId, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateProjectReportItemMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateProjectReportItem>>
+>;
+export type UpdateProjectReportItemMutationBody =
+  BodyType<UpdateProjectReportItemBody>;
+export type UpdateProjectReportItemMutationError = ErrorType<unknown>;
+
+export const useUpdateProjectReportItem = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateProjectReportItem>>,
+    TError,
+    { reportId: string; data: BodyType<UpdateProjectReportItemBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateProjectReportItem>>,
+  TError,
+  { reportId: string; data: BodyType<UpdateProjectReportItemBody> },
+  TContext
+> => {
+  return useMutation(getUpdateProjectReportItemMutationOptions(options));
+};
+
+export const getDeleteProjectReportUrl = (reportId: string) => {
+  return `/api/project-reports/${reportId}`;
+};
+
+export const deleteProjectReport = async (
+  reportId: string,
+  options?: RequestInit,
+): Promise<SuccessMessage> => {
+  return customFetch<SuccessMessage>(getDeleteProjectReportUrl(reportId), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getDeleteProjectReportMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteProjectReport>>,
+    TError,
+    { reportId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteProjectReport>>,
+  TError,
+  { reportId: string },
+  TContext
+> => {
+  const mutationKey = ["deleteProjectReport"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteProjectReport>>,
+    { reportId: string }
+  > = (props) => {
+    const { reportId } = props ?? {};
+
+    return deleteProjectReport(reportId, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteProjectReportMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteProjectReport>>
+>;
+
+export type DeleteProjectReportMutationError = ErrorType<unknown>;
+
+export const useDeleteProjectReport = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteProjectReport>>,
+    TError,
+    { reportId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteProjectReport>>,
+  TError,
+  { reportId: string },
+  TContext
+> => {
+  return useMutation(getDeleteProjectReportMutationOptions(options));
 };
 
 export const getHealthCheckUrl = () => {

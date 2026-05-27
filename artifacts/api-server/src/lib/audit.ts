@@ -60,6 +60,9 @@ export type AuditAction =
   | "billing_milestone.updated"
   | "billing_milestone.deleted"
   | "project.report_updated"
+  | "project_report.created"
+  | "project_report.updated"
+  | "project_report.deleted"
   | "admin.sample_data_seeded"
   | "admin.emails_renamed"
   | "raid.created"
@@ -98,6 +101,7 @@ export type EntityType =
   | "PerformanceReview"
   | "PerformanceReviewProjectRating"
   | "ProjectWorkstream"
+  | "ProjectReport"
   | "System";
 
 interface AuditInput {

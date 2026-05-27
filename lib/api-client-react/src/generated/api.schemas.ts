@@ -1078,6 +1078,49 @@ export interface UpdateProjectReportBody {
   reportLink?: string | null;
 }
 
+export interface ProjectReport {
+  id: string;
+  projectId: string;
+  title: string;
+  coverUrl?: string | null;
+  link?: string | null;
+  note?: string | null;
+  workstreamId?: string | null;
+  workstreamName?: string | null;
+  workstreamCode?: string | null;
+  submittedAt?: string | null;
+  createdById?: string | null;
+  createdByName?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProjectReportPage {
+  items: ProjectReport[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+export interface CreateProjectReportBody {
+  /** @minLength 1 */
+  title: string;
+  coverUrl?: string | null;
+  link?: string | null;
+  note?: string | null;
+  workstreamId?: string | null;
+}
+
+export interface UpdateProjectReportItemBody {
+  /** @minLength 1 */
+  title?: string;
+  coverUrl?: string | null;
+  link?: string | null;
+  note?: string | null;
+  workstreamId?: string | null;
+}
+
 export interface AvailableUser {
   id: string;
   name: string;
@@ -2032,6 +2075,18 @@ export type GetReportOptionsParams = {
 
 export type ListAvailableUsersParams = {
   role: UserRole;
+};
+
+export type ListProjectReportsParams = {
+  /**
+   * @minimum 1
+   */
+  page?: number;
+  /**
+   * @minimum 1
+   * @maximum 100
+   */
+  pageSize?: number;
 };
 
 export type GetLeadsAnalyticsParams = {
