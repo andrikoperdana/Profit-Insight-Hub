@@ -6,10 +6,12 @@ import {
   useListProjects,
   useListMyTasks,
   useLogTaskTime,
-  useUpdateProjectReport,
+  useListProjectReports,
+  useCreateProjectReport,
   getListTimesheetsQueryKey,
   getListMyTasksQueryKey,
   getListProjectsQueryKey,
+  getListProjectReportsQueryKey,
   type Task,
   type TaskStatus,
 } from "@workspace/api-client-react";
@@ -630,11 +632,58 @@ function KpiCard({
   );
 }
 
+const REPORT_TYPE_OPTIONS = [
+  { value: "DRAFT", label: "Draft" },
+  { value: "INTERIM", label: "Interim" },
+  { value: "FINAL", label: "Final" },
+];
+
+const REPORT_TYPE_BADGE: Record<string, string> = {
+  DRAFT: "bg-amber-500/10 text-amber-500 border-amber-500/30",
+  INTERIM: "bg-sky-500/10 text-sky-500 border-sky-500/30",
+  FINAL: "bg-emerald-500/10 text-emerald-500 border-emerald-500/30",
+};
+
+type ReportFormState = {
+  title: string;
+  reportNumber: string;
+  version: string;
+  reportType: string;
+  periodStart: string;
+  periodEnd: string;
+  author: string;
+  coverUrl: string;
+  link: string;
+  note: string;
+};
+
+function safeHttpUrl(value: unknown): string | null {
+  if (!value) return null;
+  try {
+    const u = new URL(String(value));
+    if (u.protocol === "http:" || u.protocol === "https:") return u.toString();
+  } catch {
+    /* ignore */
+  }
+  return null;
+}
+
+const EMPTY_REPORT_FORM: ReportFormState = {
+  title: "",
+  reportNumber: "",
+  version: "",
+  reportType: "",
+  periodStart: "",
+  periodEnd: "",
+  author: "",
+  coverUrl: "",
+  link: "",
+  note: "",
+};
+
 function MyReportAssignmentsCard() {
   const { user } = useAuth();
   const isWriter = user?.role === "TECHNICAL_WRITER";
-  const qc = useQueryClient();
-  const { toast } = useToast();
   const { data: projects } = useListProjects(
     {},
     { query: { queryKey: getListProjectsQueryKey({}), enabled: isWriter } },
@@ -645,22 +694,7 @@ function MyReportAssignmentsCard() {
     [projects, user?.id],
   );
 
-  const [openId, setOpenId] = useState<string | null>(null);
-  const editing = myProjects.find((p: any) => p.id === openId) || null;
-  const [coverUrl, setCoverUrl] = useState<string>("");
-  const [reportLink, setReportLink] = useState<string>("");
-
-  const update = useUpdateProjectReport({
-    mutation: {
-      onSuccess: () => {
-        toast({ title: "Report saved" });
-        qc.invalidateQueries({ queryKey: getListProjectsQueryKey({}) });
-        setOpenId(null);
-      },
-      onError: (e: any) =>
-        toast({ title: "Failed", description: e?.message ?? "Could not save", variant: "destructive" }),
-    },
-  });
+  const [openProject, setOpenProject] = useState<{ id: string; code: string; name: string } | null>(null);
 
   if (!isWriter) return null;
 
@@ -670,95 +704,264 @@ function MyReportAssignmentsCard() {
         <CardTitle className="flex items-center gap-2">
           <FileText className="h-4 w-4 text-primary" /> My Report Assignments
         </CardTitle>
-        <CardDescription>Projects where you are the assigned Technical Writer. Upload cover photo and Drive link.</CardDescription>
+        <CardDescription>
+          Projects where you are the assigned Technical Writer. Upload each report with type, version, and reporting period.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         {myProjects.length === 0 ? (
           <EmptyState title="No report assignments" description="The PM will assign you on the project's Resources tab." />
         ) : (
           <div className="space-y-2">
-            {myProjects.map((p: any) => {
-              const submitted = !!p.reportSubmittedAt;
-              return (
-                <div key={p.id} className="flex items-center justify-between rounded-md border border-border p-3">
-                  <div className="min-w-0">
-                    <Link href={`/projects/${p.id}`} className="text-primary hover:underline font-medium text-sm">
-                      {p.code} · {p.name}
-                    </Link>
-                    <div className="text-xs text-muted-foreground mt-0.5">
-                      {submitted ? `Submitted ${formatDate(p.reportSubmittedAt)}` : "Not yet submitted"}
-                    </div>
+            {myProjects.map((p: any) => (
+              <div key={p.id} className="flex items-center justify-between rounded-md border border-border p-3">
+                <div className="min-w-0">
+                  <Link href={`/projects/${p.id}`} className="text-primary hover:underline font-medium text-sm">
+                    {p.code} · {p.name}
+                  </Link>
+                  <div className="text-xs text-muted-foreground mt-0.5">
+                    Click "Manage Reports" to add or view this project's reports.
                   </div>
-                  <Button
-                    size="sm"
-                    variant={submitted ? "outline" : "default"}
-                    onClick={() => {
-                      setOpenId(p.id);
-                      setCoverUrl(p.reportCoverUrl ?? "");
-                      setReportLink(p.reportLink ?? "");
-                    }}
-                    data-testid={`button-tw-upload-${p.id}`}
-                  >
-                    <Upload className="h-3.5 w-3.5 mr-1" /> {submitted ? "Edit" : "Upload"}
-                  </Button>
                 </div>
-              );
-            })}
+                <Button
+                  size="sm"
+                  onClick={() => setOpenProject({ id: p.id, code: p.code, name: p.name })}
+                  data-testid={`button-tw-upload-${p.id}`}
+                >
+                  <Upload className="h-3.5 w-3.5 mr-1" /> Manage Reports
+                </Button>
+              </div>
+            ))}
           </div>
         )}
       </CardContent>
 
-      <Dialog open={!!editing} onOpenChange={(o) => !o && setOpenId(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Report — {editing?.code}</DialogTitle>
-            <DialogDescription>Upload the cover image and paste the report link.</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-3 pt-2">
+      {openProject && (
+        <ReportsDialog
+          project={openProject}
+          onClose={() => setOpenProject(null)}
+        />
+      )}
+    </Card>
+  );
+}
+
+function ReportsDialog({
+  project,
+  onClose,
+}: {
+  project: { id: string; code: string; name: string };
+  onClose: () => void;
+}) {
+  const qc = useQueryClient();
+  const { toast } = useToast();
+  const params = { page: 1, pageSize: 50 };
+  const { data, isLoading } = useListProjectReports(project.id, params, {
+    query: { queryKey: getListProjectReportsQueryKey(project.id, params) },
+  });
+  const reports = (data as any)?.items ?? [];
+
+  const [form, setForm] = useState<ReportFormState>(EMPTY_REPORT_FORM);
+
+  const create = useCreateProjectReport({
+    mutation: {
+      onSuccess: () => {
+        toast({ title: "Report added" });
+        qc.invalidateQueries({ queryKey: getListProjectReportsQueryKey(project.id, params) });
+        setForm(EMPTY_REPORT_FORM);
+      },
+      onError: (e: any) =>
+        toast({ title: "Failed to add report", description: e?.message ?? "Could not save", variant: "destructive" }),
+    },
+  });
+
+  const update = (k: keyof ReportFormState, v: string) => setForm((p) => ({ ...p, [k]: v }));
+
+  const canSubmit = form.title.trim().length > 0 && !create.isPending;
+
+  const handleSubmit = () => {
+    const body: any = { title: form.title.trim() };
+    if (form.reportNumber.trim()) body.reportNumber = form.reportNumber.trim();
+    if (form.version.trim()) body.version = form.version.trim();
+    if (form.reportType) body.reportType = form.reportType;
+    if (form.periodStart) body.periodStart = form.periodStart;
+    if (form.periodEnd) body.periodEnd = form.periodEnd;
+    if (form.author.trim()) body.author = form.author.trim();
+    if (form.coverUrl) body.coverUrl = form.coverUrl;
+    if (form.link.trim()) body.link = form.link.trim();
+    if (form.note.trim()) body.note = form.note.trim();
+    create.mutate({ id: project.id, data: body });
+  };
+
+  return (
+    <Dialog open onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Reports — {project.code}</DialogTitle>
+          <DialogDescription>{project.name}</DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-2 pt-2">
+          <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Existing Reports ({reports.length})
+          </div>
+          {isLoading ? (
+            <div className="text-sm text-muted-foreground py-3">Loading reports…</div>
+          ) : reports.length === 0 ? (
+            <div className="text-sm text-muted-foreground py-2">No reports yet. Add the first one below.</div>
+          ) : (
+            <div className="space-y-1.5 max-h-48 overflow-y-auto">
+              {reports.map((r: any) => (
+                <div key={r.id} className="flex items-start justify-between gap-2 rounded-md border border-border p-2 text-sm">
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium truncate">{r.title}</div>
+                    <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
+                      {r.reportType && (
+                        <Badge variant="outline" className={REPORT_TYPE_BADGE[r.reportType] ?? ""}>
+                          {r.reportType}
+                        </Badge>
+                      )}
+                      {r.version && <span className="text-xs text-muted-foreground">v{r.version}</span>}
+                      {r.reportNumber && <span className="text-xs text-muted-foreground">· {r.reportNumber}</span>}
+                      {r.author && <span className="text-xs text-muted-foreground">· {r.author}</span>}
+                    </div>
+                    {(r.periodStart || r.periodEnd) && (
+                      <div className="text-[11px] text-muted-foreground mt-0.5">
+                        Period: {r.periodStart ? formatDate(r.periodStart) : "—"} → {r.periodEnd ? formatDate(r.periodEnd) : "—"}
+                      </div>
+                    )}
+                  </div>
+                  {(() => {
+                    const safe = safeHttpUrl(r.link);
+                    return safe ? (
+                      <a href={safe} target="_blank" rel="noreferrer" className="text-xs text-primary hover:underline whitespace-nowrap mt-0.5">
+                        Open
+                      </a>
+                    ) : null;
+                  })()}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="space-y-3 pt-4 border-t border-border">
+          <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Add New Report</div>
+
+          <div className="space-y-1.5">
+            <Label>Title *</Label>
+            <Input
+              value={form.title}
+              onChange={(e) => update("title", e.target.value)}
+              placeholder="e.g. Final Pentest Report"
+              data-testid="input-report-title"
+            />
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
             <div className="space-y-1.5">
-              <Label>Cover photo</Label>
-              {coverUrl && (
-                <img src={coverUrl} alt="cover" className="w-full h-40 object-cover rounded-md border border-border" />
-              )}
+              <Label>Report Number</Label>
               <Input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const f = e.target.files?.[0];
-                  if (!f) return;
-                  if (f.size > 4 * 1024 * 1024) {
-                    toast({ title: "File too large", description: "Max 4 MB", variant: "destructive" });
-                    return;
-                  }
-                  const r = new FileReader();
-                  r.onload = () => setCoverUrl(String(r.result || ""));
-                  r.readAsDataURL(f);
-                }}
+                value={form.reportNumber}
+                onChange={(e) => update("reportNumber", e.target.value)}
+                placeholder="e.g. RPT-2026-001"
               />
             </div>
             <div className="space-y-1.5">
-              <Label>Report link</Label>
+              <Label>Version</Label>
               <Input
-                placeholder="https://drive.google.com/..."
-                value={reportLink}
-                onChange={(e) => setReportLink(e.target.value)}
+                value={form.version}
+                onChange={(e) => update("version", e.target.value)}
+                placeholder="e.g. 1.0"
               />
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setOpenId(null)}>Cancel</Button>
-            <Button
-              onClick={() => editing && update.mutate({
-                id: editing.id,
-                data: { reportCoverUrl: coverUrl || null, reportLink: reportLink || null } as any,
-              })}
-              disabled={update.isPending}
-            >
-              {update.isPending ? "Saving..." : "Save"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </Card>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="space-y-1.5">
+              <Label>Type</Label>
+              <Select value={form.reportType || "__none__"} onValueChange={(v) => update("reportType", v === "__none__" ? "" : v)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__">— None —</SelectItem>
+                  {REPORT_TYPE_OPTIONS.map((o) => (
+                    <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label>Author</Label>
+              <Input
+                value={form.author}
+                onChange={(e) => update("author", e.target.value)}
+                placeholder="e.g. Ayu Wulandari"
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="space-y-1.5">
+              <Label>Period Start</Label>
+              <Input type="date" value={form.periodStart} onChange={(e) => update("periodStart", e.target.value)} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Period End</Label>
+              <Input type="date" value={form.periodEnd} onChange={(e) => update("periodEnd", e.target.value)} />
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <Label>Cover photo</Label>
+            {form.coverUrl && (
+              <img src={form.coverUrl} alt="cover" className="w-full h-32 object-cover rounded-md border border-border" />
+            )}
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (!f) return;
+                if (f.size > 4 * 1024 * 1024) {
+                  toast({ title: "File too large", description: "Max 4 MB", variant: "destructive" });
+                  return;
+                }
+                const r = new FileReader();
+                r.onload = () => update("coverUrl", String(r.result || ""));
+                r.readAsDataURL(f);
+              }}
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label>Report link</Label>
+            <Input
+              placeholder="https://drive.google.com/..."
+              value={form.link}
+              onChange={(e) => update("link", e.target.value)}
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label>Note</Label>
+            <Textarea
+              rows={2}
+              placeholder="Optional notes about this report"
+              value={form.note}
+              onChange={(e) => update("note", e.target.value)}
+            />
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Close</Button>
+          <Button onClick={handleSubmit} disabled={!canSubmit} data-testid="button-tw-add-report">
+            {create.isPending ? "Saving..." : "Add Report"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

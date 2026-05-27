@@ -32,6 +32,40 @@ type ReportRow = {
 
 const REPORT_TYPES = new Set(["DRAFT", "INTERIM", "FINAL"]);
 
+function validateLink(value: unknown, field: string): string | null {
+  if (value === undefined || value === null) return null;
+  const s = String(value).trim();
+  if (!s) return null;
+  let u: URL;
+  try {
+    u = new URL(s);
+  } catch {
+    throw new Error(`${field} must be a valid http(s) URL`);
+  }
+  if (u.protocol !== "http:" && u.protocol !== "https:") {
+    throw new Error(`${field} must use http:// or https://`);
+  }
+  return s;
+}
+
+function validateCoverUrl(value: unknown, field: string): string | null {
+  if (value === undefined || value === null) return null;
+  const s = String(value).trim();
+  if (!s) return null;
+  // Allow data: image URIs (used by inline base64 upload) OR http(s) URLs.
+  if (s.startsWith("data:image/")) return s;
+  let u: URL;
+  try {
+    u = new URL(s);
+  } catch {
+    throw new Error(`${field} must be a data:image/* URI or a valid http(s) URL`);
+  }
+  if (u.protocol !== "http:" && u.protocol !== "https:") {
+    throw new Error(`${field} must use http:// or https://`);
+  }
+  return s;
+}
+
 const DATE_ONLY_RE = /^\d{4}-\d{2}-\d{2}$/;
 const DATE_TIME_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:?\d{2})?$/;
 
@@ -151,8 +185,15 @@ router.post("/projects/:id/reports", async (req, res) => {
     }
     workstreamId = ws.id;
   }
-  const coverUrl = b.coverUrl ? String(b.coverUrl) : null;
-  const link = b.link ? String(b.link).trim() || null : null;
+  let coverUrl: string | null;
+  let link: string | null;
+  try {
+    coverUrl = validateCoverUrl(b.coverUrl, "coverUrl");
+    link = validateLink(b.link, "link");
+  } catch (e: any) {
+    res.status(400).json({ error: e?.message ?? "Invalid URL" });
+    return;
+  }
   const note = b.note ? String(b.note).trim() || null : null;
   const reportNumber = b.reportNumber ? String(b.reportNumber).trim() || null : null;
   const version = b.version ? String(b.version).trim() || null : null;
@@ -244,8 +285,22 @@ router.patch("/project-reports/:reportId", async (req, res) => {
     }
     data.title = t;
   }
-  if (b.coverUrl !== undefined) data.coverUrl = b.coverUrl ? String(b.coverUrl) : null;
-  if (b.link !== undefined) data.link = b.link ? String(b.link).trim() || null : null;
+  if (b.coverUrl !== undefined) {
+    try {
+      data.coverUrl = validateCoverUrl(b.coverUrl, "coverUrl");
+    } catch (e: any) {
+      res.status(400).json({ error: e?.message ?? "Invalid coverUrl" });
+      return;
+    }
+  }
+  if (b.link !== undefined) {
+    try {
+      data.link = validateLink(b.link, "link");
+    } catch (e: any) {
+      res.status(400).json({ error: e?.message ?? "Invalid link" });
+      return;
+    }
+  }
   if (b.note !== undefined) data.note = b.note ? String(b.note).trim() || null : null;
   if (b.reportNumber !== undefined) data.reportNumber = b.reportNumber ? String(b.reportNumber).trim() || null : null;
   if (b.version !== undefined) data.version = b.version ? String(b.version).trim() || null : null;

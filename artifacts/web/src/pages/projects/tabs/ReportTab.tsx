@@ -303,17 +303,27 @@ function ReportTab({ projectId, project }: { projectId: string; project: any }) 
                         {period && <span>Period: <span className="text-foreground">{period}</span></span>}
                         {r.author && <span>Author: <span className="text-foreground">{r.author}</span></span>}
                       </div>
-                      {r.link && (
-                        <a
-                          href={r.link}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-xs text-primary underline break-all inline-flex items-center gap-1"
-                        >
-                          <ExternalLink className="h-3 w-3" />
-                          {r.link}
-                        </a>
-                      )}
+                      {(() => {
+                        if (!r.link) return null;
+                        let safe: string | null = null;
+                        try {
+                          const u = new URL(String(r.link));
+                          if (u.protocol === "http:" || u.protocol === "https:") safe = u.toString();
+                        } catch { /* ignore */ }
+                        return safe ? (
+                          <a
+                            href={safe}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-xs text-primary underline break-all inline-flex items-center gap-1"
+                          >
+                            <ExternalLink className="h-3 w-3" />
+                            {safe}
+                          </a>
+                        ) : (
+                          <span className="text-xs text-muted-foreground italic">Invalid link</span>
+                        );
+                      })()}
                       {r.note && <p className="text-xs text-muted-foreground">{r.note}</p>}
                       <p className="text-xs text-muted-foreground">
                         Added {formatDate(r.createdAt)}{r.createdByName ? ` by ${r.createdByName}` : ""}
