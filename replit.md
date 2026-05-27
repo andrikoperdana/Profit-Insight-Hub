@@ -169,6 +169,10 @@ CRUD endpoints: `GET/POST/PATCH/DELETE /api/skills`, `/api/business-units`.
 - No emojis in UI
 - App.tsx lazy-loads every page except `/login` and `/` via `React.lazy()` + single `<Suspense>`. Global QueryClient: `staleTime: 30_000`, `gcTime: 5min`
 
+## User preferences
+
+- **All user-facing strings in the app must be English**, including toast titles/descriptions, dialog copy, table headers, button labels, placeholders, and server-side error `reason` messages that surface in the UI. The user chats in Bahasa Indonesia, but the product UI is English-only.
+
 ## Common tasks
 
 - Regenerate Prisma: `pnpm --filter @workspace/db exec prisma generate`

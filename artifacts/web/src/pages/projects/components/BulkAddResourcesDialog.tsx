@@ -91,8 +91,8 @@ export function BulkAddResourcesDialog({
         const errs = Array.isArray(res?.errors) ? res.errors : [];
         if (errs.length === 0) {
           toast({
-            title: `${created} resource ditambahkan`,
-            description: "Semua anggota berhasil di-assign ke project.",
+            title: `${created} resource(s) added`,
+            description: "All selected members were assigned to this project.",
           });
           onOpenChange(false);
         } else {
@@ -101,8 +101,8 @@ export function BulkAddResourcesDialog({
             .map((e: any) => `${e.userName ?? e.userId}: ${e.reason}`)
             .join(" • ");
           toast({
-            title: `${created} berhasil, ${errs.length} gagal`,
-            description: errs.length > 3 ? `${sample} … (+${errs.length - 3} lainnya)` : sample,
+            title: `${created} succeeded, ${errs.length} failed`,
+            description: errs.length > 3 ? `${sample} … (+${errs.length - 3} more)` : sample,
             variant: created > 0 ? "default" : "destructive",
           });
           if (created > 0) onOpenChange(false);
@@ -110,8 +110,8 @@ export function BulkAddResourcesDialog({
       },
       onError: (e: any) =>
         toast({
-          title: "Bulk add gagal",
-          description: e?.message ?? "Tidak dapat menambahkan resource",
+          title: "Bulk add failed",
+          description: e?.message ?? "Could not add resources",
           variant: "destructive",
         }),
     },
@@ -156,7 +156,7 @@ export function BulkAddResourcesDialog({
 
   const goToStep2 = () => {
     if (selectedIds.size === 0) {
-      toast({ title: "Belum ada yang dipilih", description: "Centang minimal 1 anggota.", variant: "destructive" });
+      toast({ title: "No one selected", description: "Check at least one team member.", variant: "destructive" });
       return;
     }
     const seed: typeof rows = {};
@@ -228,8 +228,8 @@ export function BulkAddResourcesDialog({
       const missing = resources.filter((r) => !r.roleInProject || !String(r.roleInProject).trim());
       if (missing.length > 0) {
         toast({
-          title: `${missing.length} baris tanpa Role on Project`,
-          description: "Isi 'Role on Project' untuk semua baris (atau gunakan Apply to all).",
+          title: `${missing.length} row(s) missing Role on Project`,
+          description: "Fill 'Role on Project' for every row (or use Apply to all).",
           variant: "destructive",
         });
         return;
@@ -254,19 +254,19 @@ export function BulkAddResourcesDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" />
-            Tambah {VARIANT_LABEL[variant]} (Multiple)
+            Add {VARIANT_LABEL[variant]} (Multiple)
           </DialogTitle>
           <DialogDescription>
             {step === 1
-              ? "Pilih satu atau lebih anggota lalu klik Next untuk mengatur mandays & rate per orang."
-              : `Atur mandays & daily rate untuk ${selectedCandidates.length} anggota terpilih. Klik 'Apply to all' untuk men-set sekaligus.`}
+              ? "Pick one or more team members, then click Next to set mandays & rate per person."
+              : `Set mandays & daily rate for ${selectedCandidates.length} selected member(s). Use 'Apply to all' to set every row at once.`}
           </DialogDescription>
         </DialogHeader>
 
         {step === 1 ? (
           <div className="space-y-3">
             <Input
-              placeholder="Cari berdasarkan nama, email, atau title…"
+              placeholder="Search by name, email, or title…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               autoFocus
@@ -279,18 +279,18 @@ export function BulkAddResourcesDialog({
                 onClick={toggleAllFiltered}
                 disabled={filteredCandidates.length === 0}
               >
-                {allFilteredSelected ? "Hapus semua di halaman" : "Pilih semua di halaman"} ({filteredCandidates.length})
+                {allFilteredSelected ? "Clear all on page" : "Select all on page"} ({filteredCandidates.length})
               </button>
               <Badge variant="outline" data-testid="bulk-selected-count">
-                {selectedIds.size} dipilih
+                {selectedIds.size} selected
               </Badge>
             </div>
             <div className="max-h-96 overflow-y-auto border border-border rounded-md divide-y divide-border">
               {filteredCandidates.length === 0 ? (
                 <div className="p-6 text-center text-sm text-muted-foreground">
                   {candidates.length === 0
-                    ? "Tidak ada anggota tersedia untuk ditambahkan."
-                    : "Tidak ada hasil yang cocok dengan pencarian."}
+                    ? "No members available to add."
+                    : "No results match your search."}
                 </div>
               ) : (
                 filteredCandidates.map((c) => {
@@ -342,7 +342,7 @@ export function BulkAddResourcesDialog({
                   <Input
                     type="number"
                     inputMode="numeric"
-                    placeholder="mis. 10"
+                    placeholder="e.g. 10"
                     value={bulkMandays}
                     onChange={(e) => setBulkMandays(e.target.value)}
                   />
@@ -355,7 +355,7 @@ export function BulkAddResourcesDialog({
                   <Input
                     type="number"
                     inputMode="numeric"
-                    placeholder="mis. 1500000"
+                    placeholder="e.g. 1500000"
                     value={bulkRate}
                     onChange={(e) => setBulkRate(e.target.value)}
                   />
@@ -367,7 +367,7 @@ export function BulkAddResourcesDialog({
                   <Label className="text-xs">Apply Role on Project to All</Label>
                   <div className="flex gap-1 mt-1">
                     <Input
-                      placeholder="mis. SOC Analyst"
+                      placeholder="e.g. SOC Analyst"
                       value={bulkRoleInProject}
                       onChange={(e) => setBulkRoleInProject(e.target.value)}
                     />
@@ -382,7 +382,7 @@ export function BulkAddResourcesDialog({
               <table className="w-full text-sm">
                 <thead className="bg-muted/40 sticky top-0">
                   <tr className="text-left">
-                    <th className="p-2 font-medium">Nama</th>
+                    <th className="p-2 font-medium">Name</th>
                     {variant === "OTHER" && <th className="p-2 font-medium">Role on Project</th>}
                     <th className="p-2 font-medium w-24">Mandays</th>
                     <th className="p-2 font-medium w-36">Daily Rate</th>
@@ -436,7 +436,7 @@ export function BulkAddResourcesDialog({
                               setRows(r);
                               if (next.size === 0) setStep(1);
                             }}
-                            title="Hapus dari pilihan"
+                            title="Remove from selection"
                           >
                             <X className="h-4 w-4" />
                           </button>
@@ -449,7 +449,7 @@ export function BulkAddResourcesDialog({
             </div>
             <div className="flex items-center justify-between text-xs text-muted-foreground px-1">
               <div>Total mandays: <span className="font-mono font-medium text-foreground">{totalMd.toLocaleString()}</span></div>
-              <div>Estimasi biaya: <span className="font-mono font-medium text-foreground">{new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(totalEstCost)}</span></div>
+              <div>Estimated cost: <span className="font-mono font-medium text-foreground">{new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(totalEstCost)}</span></div>
             </div>
           </div>
         )}
@@ -476,7 +476,7 @@ export function BulkAddResourcesDialog({
                 disabled={bulkMutation.isPending || selectedCandidates.length === 0}
                 data-testid="bulk-submit"
               >
-                {bulkMutation.isPending ? "Menyimpan…" : `Tambahkan ${selectedCandidates.length} Resource`}
+                {bulkMutation.isPending ? "Saving…" : `Add ${selectedCandidates.length} Resource(s)`}
               </Button>
             )}
           </div>

@@ -318,7 +318,7 @@ router.post(
         errors.push({
           userId,
           userName: user.name,
-          reason: `roleInProject diperlukan untuk ${user.name} (sistem role ${user.role})`,
+          reason: `roleInProject required for ${user.name} (system role ${user.role})`,
         });
         continue;
       }
@@ -327,7 +327,7 @@ router.post(
         where: { projectId_userId: { projectId, userId } },
       });
       if (existing) {
-        errors.push({ userId, userName: user.name, reason: `${user.name} sudah terdaftar di project ini` });
+        errors.push({ userId, userName: user.name, reason: `${user.name} is already assigned to this project` });
         continue;
       }
 
