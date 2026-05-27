@@ -6,6 +6,34 @@ import { canViewProjectFinancials } from "../lib/serializers.js";
 import { notifyUser } from "../lib/notifications.js";
 import { validateWorkstreamId } from "../lib/workstreams.js";
 
+// Direct involvement check for Principal roles on a project. Unlike
+// `userCanAccessProject` (which grants principals broad status-based
+// visibility for proposal/oversight workflows), this predicate is narrow:
+// the principal must either be assigned to the project themselves, or have
+// at least one direct supervisee (`principalId = principal`) staffed on
+// the project as a resource, Admin Project, or Technical Writer. This is
+// what we use for write-like actions (submit expense) and per-project data
+// reads (expense list) where status visibility must not imply authority.
+async function principalIsInvolvedInProject(
+  projectId: string,
+  principalId: string,
+): Promise<boolean> {
+  const hit = await prisma.project.findFirst({
+    where: {
+      id: projectId,
+      deletedAt: null,
+      OR: [
+        { resources: { some: { userId: principalId } } },
+        { resources: { some: { user: { principalId } } } },
+        { adminProject: { is: { principalId } } },
+        { technicalWriter: { is: { principalId } } },
+      ],
+    },
+    select: { id: true },
+  });
+  return !!hit;
+}
+
 const router: IRouter = Router();
 router.use(requireAuth);
 
@@ -20,6 +48,9 @@ const submitRoles = [
   "KONSULTAN",
   "TECHNICAL_WRITER",
   "ADMIN_PROJECT",
+  "PRINCIPAL_KONSULTAN",
+  "PRINCIPAL_TECHNICAL_WRITER",
+  "PRINCIPAL_ADMIN_PROJECT",
 ] as const;
 // Only MGMT and PM-of-project can approve/reject expenses.
 const approverRoles = ["MANAGEMENT", "PROJECT_MANAGER"] as const;
@@ -116,6 +147,16 @@ router.get("/projects/:id/expenses", async (req, res) => {
       });
       allowed = !!isResource;
     }
+    // Principals see expenses only when directly involved (themselves staffed,
+    // or supervising someone staffed) — not via broad status-based visibility.
+    if (
+      !allowed &&
+      (role === "PRINCIPAL_KONSULTAN" ||
+        role === "PRINCIPAL_TECHNICAL_WRITER" ||
+        role === "PRINCIPAL_ADMIN_PROJECT")
+    ) {
+      allowed = await principalIsInvolvedInProject(projectId, userId);
+    }
     if (!allowed) {
       res.status(403).json({ error: "You do not have access to this project" });
       return;
@@ -182,6 +223,18 @@ router.post(
       });
       if (!isResource && project.pmId !== userId && project.salesId !== userId) {
         res.status(403).json({ error: "You can only submit expenses on projects you're assigned to" });
+        return;
+      }
+    }
+    // Principals submit only when directly involved (themselves staffed, or
+    // supervising someone staffed) — not via broad status-based visibility.
+    if (
+      role === "PRINCIPAL_KONSULTAN" ||
+      role === "PRINCIPAL_TECHNICAL_WRITER" ||
+      role === "PRINCIPAL_ADMIN_PROJECT"
+    ) {
+      if (!(await principalIsInvolvedInProject(projectId, userId))) {
+        res.status(403).json({ error: "You can only submit expenses on projects you're involved in" });
         return;
       }
     }
