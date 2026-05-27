@@ -289,6 +289,10 @@ export async function ensureSampleReportData() {
           { category: "SOFTWARE", description: "Subscription tools recon (1 bulan)",  amount: 750000, status: "APPROVED", daysAgo: 14 },
           { category: "OTHER",    description: "Voucher training CTF tim",            amount: 1250000, status: "PENDING",  daysAgo: 2 },
           { category: "HARDWARE", description: "Adapter & kabel USB-C lapangan",      amount: 425000,  status: "REJECTED", daysAgo: 10 },
+          { category: "TRAVEL",   description: "Parkir & tol onsite Jakarta Selatan", amount: 95000,   status: "APPROVED", daysAgo: 3 },
+          { category: "OTHER",    description: "Konsumsi tim saat lembur deploy",     amount: 340000,  status: "APPROVED", daysAgo: 20 },
+          { category: "LICENSE",  description: "Perpanjangan lisensi Burp Suite Pro", amount: 5500000, status: "PENDING",  daysAgo: 1 },
+          { category: "TRAVEL",   description: "Akomodasi hotel klien Surabaya 2hr",  amount: 1850000, status: "APPROVED", daysAgo: 28 },
         ],
       },
       {
@@ -298,6 +302,9 @@ export async function ensureSampleReportData() {
           { category: "TRAVEL",   description: "Tiket KA Jakarta–Bandung onsite",     amount: 320000, status: "APPROVED", daysAgo: 9 },
           { category: "OTHER",    description: "Print laporan akhir untuk klien",      amount: 175000, status: "APPROVED", daysAgo: 4 },
           { category: "SOFTWARE", description: "Lisensi tools pentest personal",       amount: 2100000, status: "PENDING", daysAgo: 1 },
+          { category: "TRAVEL",   description: "Taksi malam onsite remediasi P1",      amount: 215000,  status: "APPROVED", daysAgo: 12 },
+          { category: "HARDWARE", description: "Yubikey hardware token tim",           amount: 1450000, status: "REJECTED", daysAgo: 22 },
+          { category: "OTHER",    description: "Buku referensi OSCP exam prep",        amount: 780000,  status: "PENDING",  daysAgo: 5 },
         ],
       },
       {
@@ -307,14 +314,47 @@ export async function ensureSampleReportData() {
           { category: "TRAVEL",   description: "Travel review proyek di klien",       amount: 1450000, status: "APPROVED", daysAgo: 11 },
           { category: "OTHER",    description: "Konsumsi workshop internal tim",       amount: 680000,  status: "APPROVED", daysAgo: 5 },
           { category: "HARDWARE", description: "Hardware token cadangan untuk tim",    amount: 3200000, status: "REJECTED", daysAgo: 16 },
+          { category: "LICENSE",  description: "Lisensi Nessus Professional tim",     amount: 8500000, status: "APPROVED", daysAgo: 25 },
+          { category: "TRAVEL",   description: "Tiket pesawat audit Bali (PP)",        amount: 2350000, status: "PENDING",  daysAgo: 3 },
+          { category: "OTHER",    description: "Sertifikasi CISSP exam fee",           amount: 9800000, status: "PENDING",  daysAgo: 1 },
         ],
       },
       {
-        email: "writer@secureprofit.id",
+        email: "writer@itsecasia.com",
         label: "Technical Writer",
         rows: [
           { category: "SOFTWARE", description: "Lisensi Grammarly Business",          amount: 450000, status: "APPROVED", daysAgo: 7 },
           { category: "OTHER",    description: "Cetak draft laporan untuk klien",      amount: 220000, status: "PENDING",  daysAgo: 2 },
+          { category: "SOFTWARE", description: "Subscription Canva Pro 1 tahun",       amount: 1200000, status: "APPROVED", daysAgo: 18 },
+          { category: "OTHER",    description: "Jilid hardcover laporan final klien",  amount: 380000,  status: "APPROVED", daysAgo: 4 },
+          { category: "HARDWARE", description: "External SSD untuk arsip dokumen",     amount: 1850000, status: "REJECTED", daysAgo: 14 },
+        ],
+      },
+      {
+        email: "admin@itsecasia.com",
+        label: "Admin Project",
+        rows: [
+          { category: "OTHER",    description: "Materai & legalisir dokumen kontrak", amount: 150000,  status: "APPROVED", daysAgo: 6 },
+          { category: "TRAVEL",   description: "Kurir dokumen ke klien Bank Sentosa",  amount: 85000,   status: "APPROVED", daysAgo: 3 },
+          { category: "SOFTWARE", description: "Subscription DocuSign 1 bulan",        amount: 650000,  status: "PENDING",  daysAgo: 2 },
+          { category: "OTHER",    description: "ATK tim project (binder, label, dll)", amount: 425000,  status: "APPROVED", daysAgo: 11 },
+        ],
+      },
+      {
+        email: "principal.tw.m9k2@itsecasia.com",
+        label: "Principal Technical Writer",
+        rows: [
+          { category: "SOFTWARE", description: "Lisensi Adobe Acrobat Pro tim TW",    amount: 2800000, status: "APPROVED", daysAgo: 15 },
+          { category: "OTHER",    description: "Workshop technical writing eksternal", amount: 3500000, status: "PENDING",  daysAgo: 4 },
+        ],
+      },
+      {
+        email: "principal.ap.r3n8@itsecasia.com",
+        label: "Principal Admin Project",
+        rows: [
+          { category: "SOFTWARE", description: "Lisensi MS Project untuk tim AP",     amount: 1850000, status: "APPROVED", daysAgo: 9 },
+          { category: "OTHER",    description: "Konsumsi rapat koordinasi PMO",        amount: 520000,  status: "APPROVED", daysAgo: 5 },
+          { category: "TRAVEL",   description: "Taksi kantor klien Bank Nusantara",    amount: 165000,  status: "PENDING",  daysAgo: 2 },
         ],
       },
     ];
