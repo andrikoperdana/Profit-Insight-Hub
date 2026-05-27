@@ -71,11 +71,10 @@ export default function Sidebar() {
     { href: "/skill-development", label: "Skill Development", icon: Award },
     ...(isPM || isFinance || user?.role === "ADMIN_PROJECT" || user?.role === "SALES" ? [{ href: "/invoice-planning", label: "Invoice Planning", icon: Wallet }] : []),
     ...(isPM || isFinance ? [{ href: "/reports", label: "Reports", icon: FileBarChart }] : []),
-    ...(isPM || isHr ||
+    ...(user?.role === "MANAGEMENT" || isPM ||
       user?.role === "PRINCIPAL_KONSULTAN" ||
       user?.role === "PRINCIPAL_TECHNICAL_WRITER" ||
-      user?.role === "PRINCIPAL_ADMIN_PROJECT" ||
-      user?.role === "KONSULTAN" || user?.role === "TECHNICAL_WRITER" || user?.role === "ADMIN_PROJECT"
+      user?.role === "PRINCIPAL_ADMIN_PROJECT"
       ? [{ href: "/performance-reviews", label: "Performance Reviews", icon: ClipboardCheck }] : []),
   ];
 

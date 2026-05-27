@@ -10,11 +10,87 @@ router.use(requireAuth);
 const PERIODS = new Set(["Q1", "Q2", "Q3", "Q4", "ANNUAL"]);
 const STATUSES = new Set(["DRAFT", "SUBMITTED", "ACKNOWLEDGED"]);
 
-// HR + MGMT can create/list any review. PMs and Principals can create reviews
-// for direct reports / supervisees. Subjects can see their own. Everyone else
-// is denied.
-function canAdministerReviews(role: string): boolean {
-  return role === "MANAGEMENT" || role === "HR";
+const PRINCIPAL_ROLES = new Set([
+  "PRINCIPAL_KONSULTAN",
+  "PRINCIPAL_TECHNICAL_WRITER",
+  "PRINCIPAL_ADMIN_PROJECT",
+]);
+
+const PERFORMANCE_REVIEW_ROLES = new Set<string>([
+  "MANAGEMENT",
+  "PROJECT_MANAGER",
+  ...PRINCIPAL_ROLES,
+]);
+
+// Performance Reviews are restricted to three role buckets:
+//   - MANAGEMENT (PMO Director): reviews PROJECT_MANAGER subjects only
+//   - PROJECT_MANAGER: reviews team members on their own projects
+//   - PRINCIPAL_*: reviews users whose principalId === own id
+// No other role may read or write any review.
+// NOTE: this is mounted under the explicit "/performance-reviews" path prefix so
+// it never runs for sibling routers mounted via router.use(subRouter) in routes/index.ts.
+const requirePerfReviewRole = (req: any, res: any, next: any) => {
+  if (!PERFORMANCE_REVIEW_ROLES.has(req.user!.role)) {
+    res.status(403).json({
+      error:
+        "Performance Reviews are only accessible to PMO Director (Management), Project Managers, and Principals",
+    });
+    return;
+  }
+  next();
+};
+router.use("/performance-reviews", requirePerfReviewRole);
+
+// Returns the set of subject userIds the caller is allowed to review.
+async function allowedSubjectIds(user: { sub: string; role: string }): Promise<string[]> {
+  if (user.role === "MANAGEMENT") {
+    const pms = await prisma.user.findMany({
+      where: { role: "PROJECT_MANAGER" },
+      select: { id: true },
+    });
+    return pms.map((u) => u.id);
+  }
+  if (user.role === "PROJECT_MANAGER") {
+    const projects = await prisma.project.findMany({
+      where: { pmId: user.sub },
+      select: { id: true, adminProjectId: true, technicalWriterId: true },
+    });
+    const ids = new Set<string>();
+    for (const p of projects) {
+      if (p.adminProjectId) ids.add(p.adminProjectId);
+      if (p.technicalWriterId) ids.add(p.technicalWriterId);
+    }
+    const projectIds = projects.map((p) => p.id);
+    if (projectIds.length > 0) {
+      const [resources, ts] = await Promise.all([
+        prisma.projectResource.findMany({
+          where: { projectId: { in: projectIds } },
+          select: { userId: true },
+        }),
+        prisma.timesheet.findMany({
+          where: { projectId: { in: projectIds }, status: "APPROVED" },
+          select: { userId: true },
+          distinct: ["userId"],
+        }),
+      ]);
+      resources.forEach((r) => ids.add(r.userId));
+      ts.forEach((t) => ids.add(t.userId));
+    }
+    return [...ids];
+  }
+  if (PRINCIPAL_ROLES.has(user.role)) {
+    const subs = await prisma.user.findMany({
+      where: { principalId: user.sub },
+      select: { id: true },
+    });
+    return subs.map((u) => u.id);
+  }
+  return [];
+}
+
+async function canReviewSubject(subjectUserId: string, user: { sub: string; role: string }): Promise<boolean> {
+  const ids = await allowedSubjectIds(user);
+  return ids.includes(subjectUserId);
 }
 
 function periodRange(period: string, year: number): { start: Date; end: Date } {
@@ -196,27 +272,24 @@ async function loadDetail(id: string) {
 }
 
 async function canAccessReview(
-  review: { userId: string; reviewerId: string },
+  review: { userId: string },
   user: { sub: string; role: string },
 ): Promise<boolean> {
-  if (canAdministerReviews(user.role)) return true;
-  if (review.userId === user.sub) return true;
-  if (review.reviewerId === user.sub) return true;
-  // PMs and Principals who manage the subject directly.
-  const subject = await prisma.user.findUnique({
-    where: { id: review.userId },
-    select: { managerId: true, principalId: true },
-  });
-  if (!subject) return false;
-  return subject.managerId === user.sub || subject.principalId === user.sub;
+  // Access is granted only if the caller currently has the subject within
+  // their reviewable scope (MGMT→PMs, PM→team, Principal→supervisees).
+  return canReviewSubject(review.userId, user);
 }
 
-function canEditReview(
-  review: { reviewerId: string; status: string },
+async function canEditReview(
+  review: { userId: string; reviewerId: string; status: string },
   user: { sub: string; role: string },
-): boolean {
+): Promise<boolean> {
   if (review.status === "ACKNOWLEDGED") return false;
-  if (canAdministerReviews(user.role)) return true;
+  // Only the original reviewer may edit, and only while the subject is still
+  // within their reviewable scope. MGMT may also edit reviews of PM subjects
+  // even if another MGMT user authored them.
+  if (!(await canReviewSubject(review.userId, user))) return false;
+  if (user.role === "MANAGEMENT") return true;
   return review.reviewerId === user.sub;
 }
 
@@ -233,18 +306,17 @@ router.get("/performance-reviews", async (req, res) => {
     const y = Number(req.query.year);
     if (Number.isFinite(y)) where.periodYear = y;
   }
-  // Scope: admins see all; others see those they author, are subject of, or
-  // manage the subject (manager/principal).
-  if (!canAdministerReviews(user.role)) {
-    const supervised = await prisma.user.findMany({
-      where: { OR: [{ managerId: user.sub }, { principalId: user.sub }] },
-      select: { id: true },
-    });
-    const allowedSubjectIds = [user.sub, ...supervised.map((u) => u.id)];
-    where.OR = [
-      { userId: { in: allowedSubjectIds } },
-      { reviewerId: user.sub },
-    ];
+  // Scope: subjects must be in the caller's reviewable set.
+  const allowed = await allowedSubjectIds(user);
+  if (req.query.userId) {
+    const requested = String(req.query.userId);
+    if (!allowed.includes(requested)) {
+      res.json([]);
+      return;
+    }
+    where.userId = requested;
+  } else {
+    where.userId = { in: allowed };
   }
   const reviews = await prisma.performanceReview.findMany({
     where,
@@ -267,19 +339,29 @@ router.post("/performance-reviews", async (req, res) => {
   }
   const subject = await prisma.user.findUnique({
     where: { id: userId },
-    select: { id: true, managerId: true, principalId: true, isActive: true },
+    select: { id: true, role: true, isActive: true },
   });
   if (!subject) { res.status(404).json({ error: "Subject user not found" }); return; }
-  const isManager = subject.managerId === user.sub || subject.principalId === user.sub;
-  if (!canAdministerReviews(user.role) && !isManager) {
-    res.status(403).json({ error: "Only HR/Management or the subject's direct manager can create a review" });
+  if (!(await canReviewSubject(userId, user))) {
+    res.status(403).json({
+      error:
+        user.role === "MANAGEMENT"
+          ? "Management can only review Project Managers"
+          : user.role === "PROJECT_MANAGER"
+          ? "Project Managers can only review team members on their own projects"
+          : "Principals can only review their direct supervisees",
+    });
     return;
   }
   let reviewerId = user.sub;
-  if (body.reviewerId && canAdministerReviews(user.role)) {
+  if (body.reviewerId && user.role === "MANAGEMENT") {
     reviewerId = String(body.reviewerId);
-    const r = await prisma.user.findUnique({ where: { id: reviewerId }, select: { id: true } });
+    const r = await prisma.user.findUnique({ where: { id: reviewerId }, select: { id: true, role: true } });
     if (!r) { res.status(400).json({ error: "reviewerId not found" }); return; }
+    if (!PERFORMANCE_REVIEW_ROLES.has(r.role)) {
+      res.status(400).json({ error: "reviewerId must be a Management, Project Manager, or Principal user" });
+      return;
+    }
   }
   const { start, end } = periodRange(period, periodYear);
   try {
@@ -328,8 +410,8 @@ router.patch("/performance-reviews/:id", async (req, res) => {
   const id = String(req.params.id);
   const before = await prisma.performanceReview.findUnique({ where: { id } });
   if (!before) { res.status(404).json({ error: "Review not found" }); return; }
-  if (!canEditReview(before, req.user!)) {
-    res.status(403).json({ error: "Only the reviewer or HR/Management can edit, and not after acknowledgement" });
+  if (!(await canEditReview(before, req.user!))) {
+    res.status(403).json({ error: "Only the reviewer (or Management for PM reviews) can edit, and not after acknowledgement" });
     return;
   }
   const body = req.body || {};
@@ -365,8 +447,8 @@ router.delete("/performance-reviews/:id", async (req, res) => {
   const id = String(req.params.id);
   const before = await prisma.performanceReview.findUnique({ where: { id } });
   if (!before) { res.status(404).json({ error: "Review not found" }); return; }
-  if (!canAdministerReviews(req.user!.role)) {
-    res.status(403).json({ error: "Only HR/Management can delete reviews" });
+  if (req.user!.role !== "MANAGEMENT" || !(await canReviewSubject(before.userId, req.user!))) {
+    res.status(403).json({ error: "Only Management can delete reviews, and only for Project Manager subjects" });
     return;
   }
   await prisma.performanceReview.delete({ where: { id } });
@@ -383,7 +465,7 @@ router.post("/performance-reviews/:id/submit", async (req, res) => {
   const id = String(req.params.id);
   const before = await prisma.performanceReview.findUnique({ where: { id } });
   if (!before) { res.status(404).json({ error: "Review not found" }); return; }
-  if (!canEditReview(before, req.user!)) {
+  if (!(await canEditReview(before, req.user!))) {
     res.status(403).json({ error: "Not allowed" });
     return;
   }
@@ -455,14 +537,14 @@ router.post("/performance-reviews/:id/project-ratings", async (req, res) => {
   if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
     res.status(400).json({ error: "rating must be 1..5" }); return;
   }
-  // Only MGMT/HR or the project's PM can rate, AND the project must be
-  // linked to the review subject within the review period (via approved
-  // timesheet or an active resource assignment). This blocks PMs from
-  // rating unrelated subjects with their own projects.
-  const isAdminOrHr = canAdministerReviews(req.user!.role);
-  const canWrite = isAdminOrHr || (await userCanWriteProject(projectId, req.user!));
+  // Only MGMT or the project's PM can rate, AND the project must be linked
+  // to the review subject within the review period (via approved timesheet
+  // or an active resource assignment). This blocks PMs from rating
+  // unrelated subjects with their own projects.
+  const isMgmt = req.user!.role === "MANAGEMENT";
+  const canWrite = isMgmt || (await userCanWriteProject(projectId, req.user!));
   if (!canWrite) {
-    res.status(403).json({ error: "Only the project's PM or HR/Management can rate this project" });
+    res.status(403).json({ error: "Only the project's PM or Management can rate this project" });
     return;
   }
   const [tsLink, resourceLink] = await Promise.all([
@@ -524,10 +606,17 @@ router.delete("/performance-reviews/:id/project-ratings/:ratingId", async (req, 
     res.status(409).json({ error: "Cannot delete ratings after acknowledgement" });
     return;
   }
-  const isAdminOrHr = canAdministerReviews(req.user!.role);
+  // Caller must still have access to the parent review (subject must be in
+  // their allowed-subject set). This prevents a former rater whose scope has
+  // changed (e.g., subject no longer on their project) from deleting via known IDs.
+  if (!(await canAccessReview(review, req.user!))) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  const isMgmt = req.user!.role === "MANAGEMENT";
   const isOwner = rating.ratedById === req.user!.sub;
-  if (!isAdminOrHr && !isOwner) {
-    res.status(403).json({ error: "Only the rater or HR/Management can delete this rating" });
+  if (!isMgmt && !isOwner) {
+    res.status(403).json({ error: "Only the rater or Management can delete this rating" });
     return;
   }
   await prisma.performanceReviewProjectRating.delete({ where: { id: ratingId } });

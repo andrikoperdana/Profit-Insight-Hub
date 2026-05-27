@@ -39,7 +39,11 @@ const PERIODS: PerformanceReviewPeriod[] = ["Q1", "Q2", "Q3", "Q4", "ANNUAL"];
 export default function PerformanceReviewsListPage() {
   const { user } = useAuth();
   const { toast } = useToast();
-  const isAdmin = user?.role === "MANAGEMENT" || user?.role === "HR";
+  const isMgmt = user?.role === "MANAGEMENT";
+  // /api/users is open to MANAGEMENT, PROJECT_MANAGER, SALES, HR, SITE_ADMIN.
+  // PMs need it to pick team subjects; Principals fall back to manual entry
+  // (server enforces principalId scope).
+  const canLoadUserDirectory = isMgmt || user?.role === "PROJECT_MANAGER";
 
   const [statusFilter, setStatusFilter] = useState<string>("__all__");
   const [yearFilter, setYearFilter] = useState<string>(String(new Date().getFullYear()));
@@ -50,9 +54,13 @@ export default function PerformanceReviewsListPage() {
 
   const { data: reviews = [], isLoading, refetch } = useListPerformanceReviews(params);
   const { data: usersResp } = useListUsers(
-    isAdmin ? undefined : { query: { enabled: false, queryKey: ["users-disabled"] } },
+    canLoadUserDirectory ? undefined : { query: { enabled: false, queryKey: ["users-disabled"] } },
   );
-  const allUsers = Array.isArray(usersResp) ? usersResp : [];
+  const allUsersRaw = Array.isArray(usersResp) ? usersResp : [];
+  // MGMT can only review PMs; surface only PMs in the picker.
+  const allUsers = isMgmt
+    ? allUsersRaw.filter((u: any) => u.role === "PROJECT_MANAGER")
+    : allUsersRaw;
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [newUserId, setNewUserId] = useState("");
@@ -125,9 +133,11 @@ export default function PerformanceReviewsListPage() {
               <DialogHeader>
                 <DialogTitle>Create Performance Review</DialogTitle>
                 <DialogDescription>
-                  {isAdmin
-                    ? "Pick an employee and a period."
-                    : "You can create reviews for your direct reports / supervisees."}
+                  {isMgmt
+                    ? "Pick a Project Manager and a period."
+                    : user?.role === "PROJECT_MANAGER"
+                    ? "Pick a team member from one of your projects and a period."
+                    : "Pick a direct supervisee and a period."}
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-3">

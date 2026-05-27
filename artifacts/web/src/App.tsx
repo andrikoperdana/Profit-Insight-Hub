@@ -74,9 +74,11 @@ function PageFallback() {
 function ProtectedRoute({
   component: Component,
   denyRoles,
+  allowRoles,
 }: {
   component: any;
   denyRoles?: string[];
+  allowRoles?: string[];
 }) {
   const { isAuthenticated, user } = useAuth();
   const [, setLocation] = useLocation();
@@ -91,6 +93,11 @@ function ProtectedRoute({
   // so URL bar / bookmarks can't reach a forbidden page even if the API
   // returns empty/404.
   if (denyRoles && user?.role && denyRoles.includes(user.role)) {
+    setLocation("/");
+    return null;
+  }
+  // Hard-allow: only listed roles may reach the route; everyone else lands on /.
+  if (allowRoles && (!user?.role || !allowRoles.includes(user.role))) {
     setLocation("/");
     return null;
   }
@@ -141,8 +148,8 @@ function Router() {
         <Route path="/skill-development" component={() => <ProtectedRoute component={SkillDevelopmentPage} />} />
         <Route path="/leaves" component={() => <ProtectedRoute component={LeavesPage} />} />
         <Route path="/org-chart" component={() => <ProtectedRoute component={OrgChartPage} />} />
-        <Route path="/performance-reviews" component={() => <ProtectedRoute component={PerformanceReviewsListPage} />} />
-        <Route path="/performance-reviews/:id" component={() => <ProtectedRoute component={PerformanceReviewDetailPage} />} />
+        <Route path="/performance-reviews" component={() => <ProtectedRoute component={PerformanceReviewsListPage} allowRoles={["MANAGEMENT","PROJECT_MANAGER","PRINCIPAL_KONSULTAN","PRINCIPAL_TECHNICAL_WRITER","PRINCIPAL_ADMIN_PROJECT"]} />} />
+        <Route path="/performance-reviews/:id" component={() => <ProtectedRoute component={PerformanceReviewDetailPage} allowRoles={["MANAGEMENT","PROJECT_MANAGER","PRINCIPAL_KONSULTAN","PRINCIPAL_TECHNICAL_WRITER","PRINCIPAL_ADMIN_PROJECT"]} />} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>

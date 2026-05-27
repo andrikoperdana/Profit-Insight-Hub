@@ -82,12 +82,12 @@ export default function PerformanceReviewDetailPage() {
 
   if (isLoading || !review) return <div className="p-6 text-muted-foreground">Loading…</div>;
 
-  const isAdmin = user?.role === "MANAGEMENT" || user?.role === "HR";
+  const isMgmt = user?.role === "MANAGEMENT";
   const isReviewer = review.reviewerId === user?.id;
   const isSubject = review.userId === user?.id;
-  const editable = (isReviewer || isAdmin) && review.status !== "ACKNOWLEDGED";
+  const editable = (isReviewer || isMgmt) && review.status !== "ACKNOWLEDGED";
   const canAck = isSubject && review.status === "SUBMITTED";
-  const canRate = isAdmin || isReviewer || user?.role === "PROJECT_MANAGER";
+  const canRate = isMgmt || isReviewer || user?.role === "PROJECT_MANAGER";
 
   async function refresh() {
     await qc.invalidateQueries({ queryKey: getGetPerformanceReviewQueryKey(id) });
@@ -227,7 +227,7 @@ export default function PerformanceReviewDetailPage() {
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="outline" className={STATUS_COLORS[review.status]}>{review.status}</Badge>
-          {isAdmin && (
+          {isMgmt && (
             <Button variant="ghost" size="sm" onClick={handleDelete}>
               <Trash2 className="h-4 w-4 text-red-400" />
             </Button>
@@ -359,7 +359,7 @@ export default function PerformanceReviewDetailPage() {
                     <DialogHeader>
                       <DialogTitle>Add Project Rating</DialogTitle>
                       <DialogDescription>
-                        Only the project's PM (or HR/MGMT) can rate. Scale: 1 (poor) — 5 (excellent).
+                        Only the project's PM (or MGMT) can rate. Scale: 1 (poor) — 5 (excellent).
                       </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-3">
@@ -416,7 +416,7 @@ export default function PerformanceReviewDetailPage() {
                       <span className="inline-flex items-center gap-1 text-sm">
                         <Star className="h-3.5 w-3.5 text-amber-400" />{pr.rating}/5
                       </span>
-                      {(isAdmin || pr.ratedById === user?.id) && review.status !== "ACKNOWLEDGED" && (
+                      {(isMgmt || pr.ratedById === user?.id) && review.status !== "ACKNOWLEDGED" && (
                         <Button variant="ghost" size="sm" onClick={() => handleRemoveRating(pr.id)}>
                           <Trash2 className="h-3.5 w-3.5 text-red-400" />
                         </Button>

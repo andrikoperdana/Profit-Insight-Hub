@@ -125,20 +125,27 @@ Shared `WelcomeBanner` shows time-aware greeting + role label.
 
 `/login`, `/` (dashboard), `/projects`, `/projects/new`, `/projects/:id`, `/timesheets`, `/clients`, `/users` (SITE_ADMIN + HR view/edit-limited), `/skills` (SITE_ADMIN + HR), `/business-units` (SITE_ADMIN + HR), `/resource-planning` (PM/MGMT/HR), `/skill-matrix` (PM/MGMT/HR), `/bench` (PM/MGMT/HR), `/capacity` (PM/MGMT/HR), `/task-templates` (PM/MGMT), `/leaves` (HR/MGMT/PM read-only), `/org-chart` (HR/MGMT/SITE_ADMIN), `/reports` (MGMT/PM), `/vat-recap` (MGMT), `/settings`.
 
-## Performance Reviews (`/performance-reviews`, MGMT/HR/PM/Principal/Konsultan/TW/Admin)
+## Performance Reviews (`/performance-reviews`, MGMT/PM/Principal_* only)
 
-`PerformanceReview` (period Q1–Q4/ANNUAL × periodYear, unique per user+period+year) → DRAFT → SUBMITTED → ACKNOWLEDGED. Reviewer fills `overallRating` (1–5), `summary`, `strengths`, `improvements`, `goals`; subject acknowledges (optional note). `PerformanceReviewProjectRating` (1–5 per project, comment, unique reviewId+projectId) rated by MGMT/HR or `userCanWriteProject`.
+Restricted to exactly three reviewer buckets — all other roles (HR, Sales, Finance, Konsultan, TW, Admin Project, Site Admin, and review subjects themselves) get 403 on every endpoint, enforced by a top-level `router.use` role gate (`PERFORMANCE_REVIEW_ROLES`):
+- **MANAGEMENT** (PMO Director) → may review subjects whose `role === "PROJECT_MANAGER"` only
+- **PROJECT_MANAGER** → may review users staffed on their own projects (via `ProjectResource` / `Project.adminProjectId` / `pmId` link)
+- **PRINCIPAL_KONSULTAN / PRINCIPAL_TECHNICAL_WRITER / PRINCIPAL_ADMIN_PROJECT** → may review direct supervisees (`principalId === user.sub`)
+
+Helpers `allowedSubjectIds(user)` + `canReviewSubject()` enforce scope on POST/PATCH/list. Error messages: "Management can only review Project Managers", "Project Managers can only review team members on their own projects", "Principals can only review direct supervisees".
+
+`PerformanceReview` (period Q1–Q4/ANNUAL × periodYear, unique per user+period+year) → DRAFT → SUBMITTED → ACKNOWLEDGED. Reviewer fills `overallRating` (1–5), `summary`, `strengths`, `improvements`, `goals`; subject acknowledges (optional note). `PerformanceReviewProjectRating` (1–5 per project, comment, unique reviewId+projectId) rated by MGMT or `userCanWriteProject` (PM-of-project).
 
 Endpoints in `routes/performance-reviews.ts`:
-- `GET/POST /api/performance-reviews` (filter status/year/userId/reviewerId)
+- `GET/POST /api/performance-reviews` (filter status/year/userId/reviewerId; list scoped to caller's allowed subject set)
 - `GET /api/performance-reviews/:id` returns review + projectRatings + computed `metrics` (billableHours, totalHours, utilizationPct vs ~21d×8h/month capacity, projectCount, skillCount, per-project hours, user skills with proficiency, avgProjectRating)
-- `PATCH /api/performance-reviews/:id` (reviewer or HR/MGMT, not after ACKNOWLEDGED)
+- `PATCH /api/performance-reviews/:id` (reviewer or MGMT, not after ACKNOWLEDGED)
 - `POST /api/performance-reviews/:id/submit` (requires overallRating; DRAFT→SUBMITTED)
-- `POST /api/performance-reviews/:id/acknowledge` (subject only, SUBMITTED→ACKNOWLEDGED)
-- `POST /api/performance-reviews/:id/project-ratings` (upsert per project), `DELETE /api/performance-reviews/:id/project-ratings/:ratingId`
-- `DELETE /api/performance-reviews/:id` (HR/MGMT only)
+- `POST /api/performance-reviews/:id/acknowledge` (subject only — but subject must be a role allowed by the top-level gate, so in practice this is only invoked when subject is a PM acknowledging an MGMT review, or a supervisee who happens to also hold a reviewer role)
+- `POST /api/performance-reviews/:id/project-ratings` (upsert per project), `DELETE /api/performance-reviews/:id/project-ratings/:ratingId` (MGMT or rating owner)
+- `DELETE /api/performance-reviews/:id` (MGMT only, and only when subject is a PM)
 
-Access scope: HR+MGMT see all. PM/Principal can create+view reviews for their direct reports (`managerId`/`principalId`). Subject can view+acknowledge own. Pages: `pages/performance-reviews/index.tsx` (filterable list + create dialog) and `pages/performance-reviews/[id].tsx` (metric KPIs, scoring form, project-ratings panel, hours-per-project + skill profile).
+Pages: `pages/performance-reviews/index.tsx` (filterable list + create dialog — MGMT picker filtered to PROJECT_MANAGERs; PM picker uses full `/api/users`; Principal falls back to manual entry since `/api/users` is not granted to that role) and `pages/performance-reviews/[id].tsx` (metric KPIs, scoring form, project-ratings panel, hours-per-project + skill profile). Sidebar link visible to MGMT/PM/Principal_* only.
 
 ## Phase-2 features
 
