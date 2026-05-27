@@ -479,8 +479,11 @@ function FullProjectForm() {
   const createProject = useCreateProject({
     mutation: {
       onSuccess: (data) => {
-        toast({ title: "Project created", description: `${data.code} • status: Observation` });
-        setLocation(`/projects/${data.id}`);
+        toast({
+          title: "Project created",
+          description: `${data.code} • status: Observation. Assign actual team members in the Resources tab.`,
+        });
+        setLocation(`/projects/${data.id}?tab=resources`);
       },
       onError: (err: any) => {
         toast({ variant: "destructive", title: "Failed to create project", description: err?.message ?? "Unknown error" });

@@ -339,6 +339,38 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
         </Card>
       </div>
 
+      {(() => {
+        const plannedMd = Number(project?.plannedMandays ?? 0);
+        const estCostFromIntake = Number(project?.estimatedCost ?? 0);
+        const totalAssigned = (list?.length ?? 0) + (twList?.length ?? 0) + (otherList?.length ?? 0);
+        if (totalAssigned > 0 || (plannedMd <= 0 && estCostFromIntake <= 0)) return null;
+        return (
+          <Card className="border-amber-500/40 bg-amber-500/5 shadow-sm">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <AlertTriangle className="h-4 w-4 text-amber-500" />
+                Rencana Staffing dari Registrasi
+              </CardTitle>
+              <CardDescription>
+                Saat pembuatan project ini, kebutuhan resource sudah dicatat sebagai estimasi budget. Tugaskan orang yang sebenarnya di bawah ini agar utilization & timesheet bisa di-track.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+              <div>
+                <div className="text-muted-foreground">Total Planned Mandays</div>
+                <div className="text-lg font-semibold font-mono">{plannedMd.toLocaleString()}</div>
+              </div>
+              {canViewProjectFinancials(user?.role) && (
+                <div>
+                  <div className="text-muted-foreground">Estimated Resource Cost</div>
+                  <div className="text-lg font-semibold font-mono">{formatIDR(estCostFromIntake)}</div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        );
+      })()}
+
       <Card className="border-border shadow-sm">
         <CardHeader className="flex flex-row items-start justify-between gap-4">
           <div>

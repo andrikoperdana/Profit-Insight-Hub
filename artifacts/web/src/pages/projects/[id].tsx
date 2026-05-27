@@ -265,7 +265,16 @@ export default function ProjectDetail() {
         <DraftCompletionCard project={project} />
       )}
 
-      <Tabs defaultValue="overview">
+      <Tabs defaultValue={(() => {
+        if (typeof window === "undefined") return "overview";
+        const allowed = new Set([
+          "overview", "timeline", "tasks", "financials", "resources",
+          "expenses", "billing", "report", "documents", "survey",
+          "activity", "raid", "workstreams", "closing",
+        ]);
+        const t = new URLSearchParams(window.location.search).get("tab");
+        return t && allowed.has(t) ? t : "overview";
+      })()}>
         <TabsList className="bg-muted">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="timeline">Timeline</TabsTrigger>
