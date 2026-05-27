@@ -373,6 +373,14 @@ router.get("/dashboard/resource-utilization-detail", async (req, res) => {
     currentProjectStatus: string | null;
     currentClientId: string | null;
     currentClientName: string | null;
+    liveProjects: {
+      projectId: string;
+      projectName: string;
+      projectStatus: string;
+      clientName: string | null;
+      endDate: string | null;
+      plannedMandays: number;
+    }[];
     assignmentEndDate: string | null;
     daysRemaining: number | null;
     finishingSoon: boolean;
@@ -458,6 +466,21 @@ router.get("/dashboard/resource-utilization-detail", async (req, res) => {
       currentProjectStatus: current?.project.status ?? null,
       currentClientId: current?.project.client.id ?? null,
       currentClientName: current?.project.client.name ?? null,
+      liveProjects: liveResources
+        .slice()
+        .sort((a, b) => {
+          const ae = a.project.endDate?.getTime() ?? Infinity;
+          const be = b.project.endDate?.getTime() ?? Infinity;
+          return ae - be;
+        })
+        .map((r) => ({
+          projectId: r.projectId,
+          projectName: r.project.name,
+          projectStatus: r.project.status,
+          clientName: r.project.client?.name ?? null,
+          endDate: r.project.endDate ? r.project.endDate.toISOString() : null,
+          plannedMandays: r.plannedMandays ?? 0,
+        })),
       assignmentEndDate: assignmentEnd ? assignmentEnd.toISOString() : null,
       daysRemaining,
       finishingSoon,

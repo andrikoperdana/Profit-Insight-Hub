@@ -37,6 +37,20 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { exportCsv } from "@/lib/exports";
 import { Pagination, usePagination } from "@/components/common/Pagination";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+
+type LiveProject = {
+  projectId: string;
+  projectName: string;
+  projectStatus: string;
+  clientName: string | null;
+  endDate: string | null;
+  plannedMandays: number;
+};
 
 type Row = {
   userId: string;
@@ -47,6 +61,7 @@ type Row = {
   currentProjectId: string | null;
   currentProjectName: string | null;
   currentProjectStatus: string | null;
+  liveProjects: LiveProject[];
   assignmentEndDate: string | null;
   daysRemaining: number | null;
   finishingSoon: boolean;
@@ -86,7 +101,12 @@ function toExportRows(rows: Row[]) {
     Role: ROLE_LABEL[r.role] ?? r.role,
     Title: r.title ?? "",
     Status: r.status,
+    "Active Projects": r.liveProjects.length,
     "Current Project": r.currentProjectName ?? "",
+    "All Projects":
+      r.liveProjects.length > 0
+        ? r.liveProjects.map((p) => p.projectName).join(" | ")
+        : "",
     "Project Status": r.currentProjectStatus ?? "",
     "Assignment End": r.assignmentEndDate
       ? format(new Date(r.assignmentEndDate), "yyyy-MM-dd")
@@ -159,6 +179,9 @@ export default function ResourcesPage() {
         (r) =>
           r.userName.toLowerCase().includes(q) ||
           (r.currentProjectName ?? "").toLowerCase().includes(q) ||
+          r.liveProjects.some((p) =>
+            p.projectName.toLowerCase().includes(q),
+          ) ||
           (ROLE_LABEL[r.role] ?? r.role).toLowerCase().includes(q),
       );
     }
@@ -387,7 +410,12 @@ export default function ResourcesPage() {
                         return (
                           <TableRow key={r.userId}>
                             <TableCell className="font-medium">
-                              {r.userName}
+                              <Link
+                                href={`/users/${r.userId}`}
+                                className="text-primary hover:underline"
+                              >
+                                {r.userName}
+                              </Link>
                             </TableCell>
                             <TableCell className="text-muted-foreground">
                               {ROLE_LABEL[r.role] ?? r.role}
@@ -415,15 +443,67 @@ export default function ResourcesPage() {
                               )}
                             </TableCell>
                             <TableCell>
-                              {r.currentProjectId && r.currentProjectName ? (
-                                <Link
-                                  href={`/projects/${r.currentProjectId}`}
-                                  className="text-primary hover:underline"
-                                >
-                                  {r.currentProjectName}
-                                </Link>
-                              ) : (
+                              {r.liveProjects.length === 0 ? (
                                 <span className="text-muted-foreground">—</span>
+                              ) : (
+                                <div className="flex items-center gap-2">
+                                  <Link
+                                    href={`/projects/${r.liveProjects[0].projectId}`}
+                                    className="text-primary hover:underline"
+                                  >
+                                    {r.liveProjects[0].projectName}
+                                  </Link>
+                                  {r.liveProjects.length > 1 && (
+                                    <HoverCard openDelay={100}>
+                                      <HoverCardTrigger asChild>
+                                        <Link
+                                          href={`/users/${r.userId}`}
+                                          className="inline-flex"
+                                        >
+                                          <Badge
+                                            variant="outline"
+                                            className="cursor-pointer border-primary/40 text-primary hover:bg-primary/10"
+                                            data-testid={`extra-projects-${r.userId}`}
+                                          >
+                                            +{r.liveProjects.length - 1} more
+                                          </Badge>
+                                        </Link>
+                                      </HoverCardTrigger>
+                                      <HoverCardContent
+                                        align="start"
+                                        className="w-72"
+                                      >
+                                        <div className="text-xs font-semibold text-muted-foreground mb-2">
+                                          All active assignments (
+                                          {r.liveProjects.length})
+                                        </div>
+                                        <ul className="space-y-1.5">
+                                          {r.liveProjects.map((p) => (
+                                            <li
+                                              key={p.projectId}
+                                              className="flex items-start justify-between gap-2 text-sm"
+                                            >
+                                              <Link
+                                                href={`/projects/${p.projectId}`}
+                                                className="text-primary hover:underline truncate"
+                                              >
+                                                {p.projectName}
+                                              </Link>
+                                              <span className="text-xs text-muted-foreground whitespace-nowrap">
+                                                {p.endDate
+                                                  ? format(
+                                                      new Date(p.endDate),
+                                                      "dd MMM",
+                                                    )
+                                                  : "—"}
+                                              </span>
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </HoverCardContent>
+                                    </HoverCard>
+                                  )}
+                                </div>
                               )}
                             </TableCell>
                             <TableCell className="text-muted-foreground">
