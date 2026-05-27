@@ -10,6 +10,7 @@ import type { BillingMilestoneStatus } from "./billingMilestoneStatus";
 export interface BillingMilestone {
   id: string;
   projectId: string;
+  workstreamId?: string | null;
   name: string;
   description?: string | null;
   percentage: number;

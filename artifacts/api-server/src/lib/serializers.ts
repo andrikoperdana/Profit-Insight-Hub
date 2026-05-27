@@ -284,6 +284,7 @@ export function serializeProject(project: ProjectWithRelations, callerRole?: str
     healthComponents: health?.components ?? null,
     healthReasons: health?.reasons ?? null,
     lastStatusReason: project.lastStatusReason ?? null,
+    useWorkstreams: (project as any).useWorkstreams ?? false,
     createdAt: project.createdAt.toISOString(),
   };
 }

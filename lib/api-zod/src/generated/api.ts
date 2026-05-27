@@ -322,6 +322,12 @@ export const UpdateProjectReportResponse = zod.object({
   exchangeRate: zod.number().nullish(),
   vatPercent: zod.number().optional(),
   contractValueIncludesVat: zod.boolean().optional(),
+  useWorkstreams: zod
+    .boolean()
+    .optional()
+    .describe(
+      "If true, project is split into Workstreams; per-workstream pickers become available on resources\/tasks\/expenses\/billing.",
+    ),
   revenueNet: zod.number().optional(),
   vatAmount: zod.number().optional(),
   recognizedRevenue: zod.number().optional(),
@@ -1069,6 +1075,12 @@ export const ListProjectsResponseItem = zod.object({
   exchangeRate: zod.number().nullish(),
   vatPercent: zod.number().optional(),
   contractValueIncludesVat: zod.boolean().optional(),
+  useWorkstreams: zod
+    .boolean()
+    .optional()
+    .describe(
+      "If true, project is split into Workstreams; per-workstream pickers become available on resources\/tasks\/expenses\/billing.",
+    ),
   revenueNet: zod.number().optional(),
   vatAmount: zod.number().optional(),
   recognizedRevenue: zod.number().optional(),
@@ -1205,6 +1217,12 @@ export const GetProjectResponse = zod
     exchangeRate: zod.number().nullish(),
     vatPercent: zod.number().optional(),
     contractValueIncludesVat: zod.boolean().optional(),
+    useWorkstreams: zod
+      .boolean()
+      .optional()
+      .describe(
+        "If true, project is split into Workstreams; per-workstream pickers become available on resources\/tasks\/expenses\/billing.",
+      ),
     revenueNet: zod.number().optional(),
     vatAmount: zod.number().optional(),
     recognizedRevenue: zod.number().optional(),
@@ -1268,6 +1286,7 @@ export const GetProjectResponse = zod
           zod.object({
             id: zod.string(),
             projectId: zod.string(),
+            workstreamId: zod.string().nullish(),
             userId: zod.string(),
             userName: zod.string(),
             userRole: zod
@@ -1410,6 +1429,12 @@ export const UpdateProjectResponse = zod.object({
   exchangeRate: zod.number().nullish(),
   vatPercent: zod.number().optional(),
   contractValueIncludesVat: zod.boolean().optional(),
+  useWorkstreams: zod
+    .boolean()
+    .optional()
+    .describe(
+      "If true, project is split into Workstreams; per-workstream pickers become available on resources\/tasks\/expenses\/billing.",
+    ),
   revenueNet: zod.number().optional(),
   vatAmount: zod.number().optional(),
   recognizedRevenue: zod.number().optional(),
@@ -1511,6 +1536,7 @@ export const ListProjectResourcesParams = zod.object({
 export const ListProjectResourcesResponseItem = zod.object({
   id: zod.string(),
   projectId: zod.string(),
+  workstreamId: zod.string().nullish(),
   userId: zod.string(),
   userName: zod.string(),
   userRole: zod
@@ -1551,6 +1577,7 @@ export const AddProjectResourceBody = zod.object({
   roleInProject: zod.string().optional(),
   plannedMandays: zod.number(),
   dailyRate: zod.number(),
+  workstreamId: zod.string().nullish(),
 });
 
 export const RemoveProjectResourceParams = zod.object({
@@ -1571,6 +1598,7 @@ export const ProposeProjectResourceBody = zod.object({
   roleInProject: zod.string().optional(),
   plannedMandays: zod.number(),
   dailyRate: zod.number(),
+  workstreamId: zod.string().nullish(),
 });
 
 export const AcceptProjectResourceParams = zod.object({
@@ -1619,6 +1647,12 @@ export const ListProjectsNeedingResourceResponseItem = zod.object({
   exchangeRate: zod.number().nullish(),
   vatPercent: zod.number().optional(),
   contractValueIncludesVat: zod.boolean().optional(),
+  useWorkstreams: zod
+    .boolean()
+    .optional()
+    .describe(
+      "If true, project is split into Workstreams; per-workstream pickers become available on resources\/tasks\/expenses\/billing.",
+    ),
   revenueNet: zod.number().optional(),
   vatAmount: zod.number().optional(),
   recognizedRevenue: zod.number().optional(),
@@ -1726,6 +1760,7 @@ export const ListProjectExpensesParams = zod.object({
 export const ListProjectExpensesResponseItem = zod.object({
   id: zod.string(),
   projectId: zod.string(),
+  workstreamId: zod.string().nullish(),
   projectCode: zod.string().nullish(),
   projectName: zod.string().nullish(),
   clientName: zod.string().nullish(),
@@ -1762,6 +1797,7 @@ export const AddProjectExpenseBody = zod.object({
     .nullish()
     .describe("Base64 data URL of supporting invoice\/receipt PDF or image"),
   evidenceFileName: zod.string().nullish(),
+  workstreamId: zod.string().nullish(),
 });
 
 /**
@@ -1772,6 +1808,7 @@ own projects; Sales sees own projects; other roles get 403.
 export const ListExpensesResponseItem = zod.object({
   id: zod.string(),
   projectId: zod.string(),
+  workstreamId: zod.string().nullish(),
   projectCode: zod.string().nullish(),
   projectName: zod.string().nullish(),
   clientName: zod.string().nullish(),
@@ -2449,6 +2486,7 @@ export const ApproveProjectExpenseParams = zod.object({
 export const ApproveProjectExpenseResponse = zod.object({
   id: zod.string(),
   projectId: zod.string(),
+  workstreamId: zod.string().nullish(),
   projectCode: zod.string().nullish(),
   projectName: zod.string().nullish(),
   clientName: zod.string().nullish(),
@@ -2482,6 +2520,7 @@ export const RejectProjectExpenseBody = zod.object({
 export const RejectProjectExpenseResponse = zod.object({
   id: zod.string(),
   projectId: zod.string(),
+  workstreamId: zod.string().nullish(),
   projectCode: zod.string().nullish(),
   projectName: zod.string().nullish(),
   clientName: zod.string().nullish(),
@@ -2756,6 +2795,7 @@ export const ListTimesheetsQueryParams = zod.object({
 export const ListTimesheetsResponseItem = zod.object({
   id: zod.string(),
   projectId: zod.string(),
+  workstreamId: zod.string().nullish(),
   projectName: zod.string(),
   userId: zod.string(),
   userName: zod.string(),
@@ -2779,6 +2819,7 @@ export const CreateTimesheetBody = zod.object({
   workDate: zod.string(),
   hours: zod.number(),
   description: zod.string().optional(),
+  workstreamId: zod.string().nullish(),
 });
 
 export const CreateBulkTimesheetsBody = zod.object({
@@ -2789,6 +2830,7 @@ export const CreateBulkTimesheetsBody = zod.object({
       hours: zod.number(),
       taskId: zod.string().nullish(),
       description: zod.string().nullish(),
+      workstreamId: zod.string().nullish(),
     }),
   ),
 });
@@ -3399,6 +3441,7 @@ export const SubmitTimesheetParams = zod.object({
 export const SubmitTimesheetResponse = zod.object({
   id: zod.string(),
   projectId: zod.string(),
+  workstreamId: zod.string().nullish(),
   projectName: zod.string(),
   userId: zod.string(),
   userName: zod.string(),
@@ -3422,6 +3465,7 @@ export const ApproveTimesheetParams = zod.object({
 export const ApproveTimesheetResponse = zod.object({
   id: zod.string(),
   projectId: zod.string(),
+  workstreamId: zod.string().nullish(),
   projectName: zod.string(),
   userId: zod.string(),
   userName: zod.string(),
@@ -3449,6 +3493,7 @@ export const RejectTimesheetBody = zod.object({
 export const RejectTimesheetResponse = zod.object({
   id: zod.string(),
   projectId: zod.string(),
+  workstreamId: zod.string().nullish(),
   projectName: zod.string(),
   userId: zod.string(),
   userName: zod.string(),
@@ -3602,6 +3647,7 @@ export const listProjectTasksResponseProgressPercentMax = 100;
 export const ListProjectTasksResponseItem = zod.object({
   id: zod.string(),
   projectId: zod.string(),
+  workstreamId: zod.string().nullish(),
   projectCode: zod.string().nullish(),
   projectName: zod.string().nullish(),
   title: zod.string(),
@@ -3664,6 +3710,7 @@ export const CreateProjectTaskBody = zod.object({
   assigneeIds: zod.array(zod.string()).optional(),
   parentTaskId: zod.string().nullish(),
   dependencyTaskIds: zod.array(zod.string()).optional(),
+  workstreamId: zod.string().nullish(),
 });
 
 export const listMyTasksResponseProgressPercentMin = 0;
@@ -3672,6 +3719,7 @@ export const listMyTasksResponseProgressPercentMax = 100;
 export const ListMyTasksResponseItem = zod.object({
   id: zod.string(),
   projectId: zod.string(),
+  workstreamId: zod.string().nullish(),
   projectCode: zod.string().nullish(),
   projectName: zod.string().nullish(),
   title: zod.string(),
@@ -3734,6 +3782,7 @@ export const UpdateTaskBody = zod.object({
   assigneeIds: zod.array(zod.string()).optional(),
   parentTaskId: zod.string().nullish(),
   dependencyTaskIds: zod.array(zod.string()).optional(),
+  workstreamId: zod.string().nullish(),
 });
 
 export const updateTaskResponseProgressPercentMin = 0;
@@ -3742,6 +3791,7 @@ export const updateTaskResponseProgressPercentMax = 100;
 export const UpdateTaskResponse = zod.object({
   id: zod.string(),
   projectId: zod.string(),
+  workstreamId: zod.string().nullish(),
   projectCode: zod.string().nullish(),
   projectName: zod.string().nullish(),
   title: zod.string(),
@@ -3933,6 +3983,7 @@ export const ListBillingMilestonesParams = zod.object({
 export const ListBillingMilestonesResponseItem = zod.object({
   id: zod.string(),
   projectId: zod.string(),
+  workstreamId: zod.string().nullish(),
   name: zod.string(),
   description: zod.string().nullish(),
   percentage: zod.number(),
@@ -3962,6 +4013,7 @@ export const CreateBillingMilestoneBody = zod.object({
   dueDate: zod.string().nullish(),
   invoiceNumber: zod.string().nullish(),
   sortOrder: zod.number().optional(),
+  workstreamId: zod.string().nullish(),
 });
 
 export const UpdateBillingMilestoneParams = zod.object({
@@ -3979,11 +4031,13 @@ export const UpdateBillingMilestoneBody = zod.object({
   invoicedAt: zod.string().nullish(),
   paidAt: zod.string().nullish(),
   sortOrder: zod.number().optional(),
+  workstreamId: zod.string().nullish(),
 });
 
 export const UpdateBillingMilestoneResponse = zod.object({
   id: zod.string(),
   projectId: zod.string(),
+  workstreamId: zod.string().nullish(),
   name: zod.string(),
   description: zod.string().nullish(),
   percentage: zod.number(),
@@ -4097,6 +4151,12 @@ export const GetTopProjectsResponseItem = zod.object({
   exchangeRate: zod.number().nullish(),
   vatPercent: zod.number().optional(),
   contractValueIncludesVat: zod.boolean().optional(),
+  useWorkstreams: zod
+    .boolean()
+    .optional()
+    .describe(
+      "If true, project is split into Workstreams; per-workstream pickers become available on resources\/tasks\/expenses\/billing.",
+    ),
   revenueNet: zod.number().optional(),
   vatAmount: zod.number().optional(),
   recognizedRevenue: zod.number().optional(),

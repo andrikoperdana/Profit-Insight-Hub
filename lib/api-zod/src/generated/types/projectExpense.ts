@@ -11,6 +11,7 @@ import type { ProjectExpenseCategory } from "./projectExpenseCategory";
 export interface ProjectExpense {
   id: string;
   projectId: string;
+  workstreamId?: string | null;
   projectCode?: string | null;
   projectName?: string | null;
   clientName?: string | null;

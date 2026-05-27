@@ -12,6 +12,7 @@ import type { TaskStatus } from "./taskStatus";
 export interface Task {
   id: string;
   projectId: string;
+  workstreamId?: string | null;
   projectCode?: string | null;
   projectName?: string | null;
   title: string;

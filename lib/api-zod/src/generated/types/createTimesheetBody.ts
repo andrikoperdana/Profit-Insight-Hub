@@ -12,4 +12,5 @@ export interface CreateTimesheetBody {
   workDate: string;
   hours: number;
   description?: string;
+  workstreamId?: string | null;
 }

@@ -14,4 +14,5 @@ export interface CreateBillingMilestoneBody {
   dueDate?: string | null;
   invoiceNumber?: string | null;
   sortOrder?: number;
+  workstreamId?: string | null;
 }

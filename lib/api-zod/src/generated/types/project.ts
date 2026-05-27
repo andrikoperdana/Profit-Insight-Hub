@@ -34,6 +34,8 @@ export interface Project {
   exchangeRate?: number | null;
   vatPercent?: number;
   contractValueIncludesVat?: boolean;
+  /** If true, project is split into Workstreams; per-workstream pickers become available on resources/tasks/expenses/billing. */
+  useWorkstreams?: boolean;
   revenueNet?: number;
   vatAmount?: number;
   recognizedRevenue?: number;

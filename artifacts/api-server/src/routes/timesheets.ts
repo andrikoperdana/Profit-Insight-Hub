@@ -3,6 +3,7 @@ import { prisma, type TimesheetStatus, type Prisma } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
 import { notifyUser } from "../lib/notifications.js";
+import { validateWorkstreamId } from "../lib/workstreams.js";
 
 const MAX_HOURS_PER_ENTRY = 24;
 
@@ -26,6 +27,7 @@ function serialize(
   return {
     id: ts.id,
     projectId: ts.projectId,
+    workstreamId: ts.workstreamId ?? null,
     projectName: ts.project.name,
     userId: ts.userId,
     userName: ts.user.name,
@@ -105,7 +107,7 @@ function earliestAllowedWorkDate(today: Date, businessDays: number): Date {
 }
 
 router.post("/timesheets", async (req, res) => {
-  const { projectId, workDate, hours, description, taskId } = req.body || {};
+  const { projectId, workDate, hours, description, taskId, workstreamId } = req.body || {};
   if (!projectId || !workDate || hours == null) {
     res.status(400).json({ error: "projectId, workDate, hours required" });
     return;
@@ -154,12 +156,14 @@ router.post("/timesheets", async (req, res) => {
   // current user is one of its assignees (legacy or join-table). Reject early
   // so we never attach an unrelated/unauthorized task.
   let resolvedTaskId: string | null = null;
+  let resolvedWorkstreamId: string | null = null;
   if (taskId) {
     const t = await prisma.task.findUnique({
       where: { id: String(taskId) },
       select: {
         id: true,
         projectId: true,
+        workstreamId: true,
         assigneeId: true,
         assignees: { select: { userId: true } },
       },
@@ -176,11 +180,23 @@ router.post("/timesheets", async (req, res) => {
       return;
     }
     resolvedTaskId = t.id;
+    // Auto-derive workstream from the linked task; explicit body value
+    // overrides below.
+    resolvedWorkstreamId = t.workstreamId ?? null;
+  }
+  if (workstreamId !== undefined) {
+    const wsCheck = await validateWorkstreamId(String(projectId), workstreamId);
+    if (!wsCheck.ok) {
+      res.status(400).json({ error: wsCheck.error });
+      return;
+    }
+    resolvedWorkstreamId = wsCheck.workstreamId;
   }
 
   const ts = await prisma.timesheet.create({
     data: {
       projectId: String(projectId),
+      workstreamId: resolvedWorkstreamId,
       userId: req.user!.sub,
       taskId: resolvedTaskId,
       workDate: new Date(workDate),
@@ -269,10 +285,11 @@ router.post("/timesheets/bulk", async (req, res) => {
         continue;
       }
       let resolvedTaskId: string | null = null;
+      let resolvedWsId: string | null = null;
       if (e.taskId) {
         const t = await prisma.task.findUnique({
           where: { id: String(e.taskId) },
-          select: { id: true, projectId: true, assigneeId: true, assignees: { select: { userId: true } } },
+          select: { id: true, projectId: true, workstreamId: true, assigneeId: true, assignees: { select: { userId: true } } },
         });
         if (!t || t.projectId !== projectId) {
           results.push({ index: i, ok: false, error: "task does not belong to project" });
@@ -286,11 +303,22 @@ router.post("/timesheets/bulk", async (req, res) => {
           continue;
         }
         resolvedTaskId = t.id;
+        resolvedWsId = t.workstreamId ?? null;
+      }
+      if (e.workstreamId !== undefined) {
+        const wsCheck = await validateWorkstreamId(projectId, e.workstreamId);
+        if (!wsCheck.ok) {
+          results.push({ index: i, ok: false, error: wsCheck.error });
+          failed++;
+          continue;
+        }
+        resolvedWsId = wsCheck.workstreamId;
       }
       const entryAutoApprove = isMgmt || (isPm && projectPmMap.get(projectId) === userId);
       const ts = await prisma.timesheet.create({
         data: {
           projectId,
+          workstreamId: resolvedWsId,
           userId,
           taskId: resolvedTaskId,
           workDate: new Date(workDateStr),

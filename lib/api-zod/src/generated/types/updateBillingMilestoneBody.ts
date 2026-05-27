@@ -18,4 +18,5 @@ export interface UpdateBillingMilestoneBody {
   invoicedAt?: string | null;
   paidAt?: string | null;
   sortOrder?: number;
+  workstreamId?: string | null;
 }

@@ -38,6 +38,7 @@ import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "@/lib/format";
 import { exportCsv } from "@/lib/exports";
 import { EmptyState } from "@/components/common/EmptyState";
+import { WorkstreamPicker } from "./components/WorkstreamPicker";
 import { TableSkeleton } from "@/components/common/Loading";
 import { Pagination, usePagination } from "@/components/common/Pagination";
 import {
@@ -129,7 +130,7 @@ function StatusBadge({ status }: { status: TaskStatus }) {
 
 interface TasksTabProps {
   projectId: string;
-  project: { pmId?: string | null; status?: string };
+  project: { pmId?: string | null; status?: string; useWorkstreams?: boolean };
 }
 
 export default function TasksTab({ projectId, project }: TasksTabProps) {
@@ -461,6 +462,7 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
           projectId={projectId}
           resources={resources ?? []}
           allTasks={tasks ?? []}
+          useWorkstreams={!!project.useWorkstreams}
           onClose={() => setCreateOpen(false)}
           onSaved={invalidate}
         />
@@ -471,6 +473,7 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
           resources={resources ?? []}
           allTasks={tasks ?? []}
           task={editTask}
+          useWorkstreams={!!project.useWorkstreams}
           onClose={() => setEditTask(null)}
           onSaved={invalidate}
         />
@@ -572,6 +575,7 @@ function TaskFormDialog({
   resources,
   task,
   allTasks,
+  useWorkstreams,
   onClose,
   onSaved,
 }: {
@@ -579,6 +583,7 @@ function TaskFormDialog({
   resources: { userId: string; userName: string }[];
   task?: Task;
   allTasks?: Task[];
+  useWorkstreams?: boolean;
   onClose: () => void;
   onSaved: () => void;
 }) {
@@ -604,6 +609,9 @@ function TaskFormDialog({
     return Array.isArray(list) ? list.map((d) => d.dependsOnTaskId) : [];
   })();
   const [dependencyTaskIds, setDependencyTaskIds] = useState<string[]>(initialDependencyIds);
+  const [workstreamId, setWorkstreamId] = useState<string | null>(
+    ((task as any)?.workstreamId as string | null | undefined) ?? null,
+  );
   function toggleDependency(taskId: string) {
     setDependencyTaskIds((prev) =>
       prev.includes(taskId) ? prev.filter((x) => x !== taskId) : [...prev, taskId],
@@ -708,6 +716,7 @@ function TaskFormDialog({
       billable,
       parentTaskId: parentTaskId || undefined,
       dependencyTaskIds,
+      ...(useWorkstreams ? { workstreamId } : {}),
     };
     if (editing && task) {
       // PATCH allows nulls to clear
@@ -724,6 +733,7 @@ function TaskFormDialog({
           billable,
           parentTaskId: parentTaskId || null,
           dependencyTaskIds,
+          ...(useWorkstreams ? { workstreamId } : {}),
         } as any,
       });
     } else {
@@ -827,6 +837,15 @@ function TaskFormDialog({
               Select more than one for tasks worked on by multiple people at the same time.
             </p>
           </div>
+          {useWorkstreams && (
+            <WorkstreamPicker
+              projectId={projectId}
+              value={workstreamId}
+              onChange={setWorkstreamId}
+              enabled
+              testId="select-task-workstream"
+            />
+          )}
           <div>
             <Label>Parent Task (WBS)</Label>
             <Select

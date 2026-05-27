@@ -21,6 +21,7 @@ export type TaskWithRelations = {
   assignee?: { id: string; name: string } | null;
   createdBy?: { name: string } | null;
   project?: { code: string; name: string; pmId: string | null } | null;
+  workstreamId?: string | null;
   timeLogs?: { hours: number }[];
   assignees?: { userId: string; user?: { id: string; name: string } | null }[];
   dependencies?: { id: string; dependsOnTaskId: string; dependsOnTask?: { title: string } | null }[];
@@ -51,6 +52,7 @@ export function serializeTask(t: TaskWithRelations) {
   return {
     id: t.id,
     projectId: t.projectId,
+    workstreamId: t.workstreamId ?? null,
     projectCode: t.project?.code ?? null,
     projectName: t.project?.name ?? null,
     title: t.title,

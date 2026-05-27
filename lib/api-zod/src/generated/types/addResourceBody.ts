@@ -11,4 +11,5 @@ export interface AddResourceBody {
   roleInProject?: string;
   plannedMandays: number;
   dailyRate: number;
+  workstreamId?: string | null;
 }

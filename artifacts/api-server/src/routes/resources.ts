@@ -3,6 +3,7 @@ import { prisma, type UserRole } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
 import { canViewDailyRate } from "../lib/serializers.js";
+import { validateWorkstreamId } from "../lib/workstreams.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -91,6 +92,7 @@ router.get("/projects/:id/resources", async (req, res) => {
     resources.map((r) => ({
       id: r.id,
       projectId: r.projectId,
+      workstreamId: r.workstreamId ?? null,
       userId: r.userId,
       userName: r.user.name,
       userRole: r.user.role,
@@ -108,11 +110,18 @@ router.get("/projects/:id/resources", async (req, res) => {
 
 async function upsertResource(req: any, res: any, opts: { propose: boolean }) {
   const projectId = req.params.id;
-  const { userId, roleInProject, plannedMandays, dailyRate } = req.body || {};
+  const { userId, roleInProject, plannedMandays, dailyRate, workstreamId } = req.body || {};
+  const workstreamIdProvided = Object.prototype.hasOwnProperty.call(req.body || {}, "workstreamId");
   if (!userId) {
     res.status(400).json({ error: "userId required" });
     return;
   }
+  const wsCheck = await validateWorkstreamId(projectId, workstreamId);
+  if (!wsCheck.ok) {
+    res.status(400).json({ error: wsCheck.error });
+    return;
+  }
+  const wsId = wsCheck.workstreamId;
   const pm = Number(plannedMandays || 0);
   const dr = Number(dailyRate || 0);
   if (pm < 0 || dr < 0 || !isFinite(pm) || !isFinite(dr)) {
@@ -174,6 +183,9 @@ async function upsertResource(req: any, res: any, opts: { propose: boolean }) {
       roleInProject: roleInProject || null,
       plannedMandays: pm,
       dailyRate: dr,
+      // Omitting workstreamId in the request preserves the existing value;
+      // pass an explicit null to clear it.
+      ...(workstreamIdProvided ? { workstreamId: wsId } : {}),
       // If PM/MGMT touches a previously-proposed row, mark accepted now.
       ...(isPmOrMgmt && existing && existing.proposedAt && !existing.acceptedAt
         ? { acceptedAt: now }
@@ -185,6 +197,7 @@ async function upsertResource(req: any, res: any, opts: { propose: boolean }) {
       roleInProject: roleInProject || null,
       plannedMandays: pm,
       dailyRate: dr,
+      workstreamId: wsId,
       proposedById: opts.propose ? req.user!.sub : null,
       proposedAt: opts.propose ? now : null,
       acceptedAt: opts.propose ? null : now,
@@ -206,6 +219,7 @@ async function upsertResource(req: any, res: any, opts: { propose: boolean }) {
   res.status(existing ? 200 : 201).json({
     id: r.id,
     projectId: r.projectId,
+    workstreamId: r.workstreamId ?? null,
     userId: r.userId,
     userName: r.user.name,
     userRole: r.user.role,

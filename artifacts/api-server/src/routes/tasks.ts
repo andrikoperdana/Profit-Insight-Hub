@@ -17,6 +17,7 @@ import {
   canViewProject,
 } from "../lib/taskHelpers.js";
 import { parsePagination, setTotalCount } from "../lib/pagination.js";
+import { validateWorkstreamId } from "../lib/workstreams.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -86,6 +87,7 @@ router.post("/projects/:id/tasks", async (req, res) => {
     billable,
     parentTaskId,
     dependencyTaskIds: rawDependencyIds,
+    workstreamId,
   } = req.body || {};
   const trimmedTitle = typeof title === "string" ? title.trim() : "";
   if (!trimmedTitle) {
@@ -192,9 +194,16 @@ router.post("/projects/:id/tasks", async (req, res) => {
     }
   }
 
+  const wsCheck = await validateWorkstreamId(projectId, workstreamId);
+  if (!wsCheck.ok) {
+    res.status(400).json({ error: wsCheck.error });
+    return;
+  }
+
   const task = await prisma.task.create({
     data: {
       projectId,
+      workstreamId: wsCheck.workstreamId,
       title: trimmedTitle,
       description: desc,
       status: st as "TODO" | "IN_PROGRESS" | "BLOCKED" | "DONE",
@@ -281,9 +290,23 @@ router.patch("/tasks/:taskId", async (req, res) => {
     billable,
     parentTaskId,
     dependencyTaskIds: rawDependencyIds,
+    workstreamId,
   } = req.body || {};
 
   const data: Record<string, unknown> = {};
+
+  if (workstreamId !== undefined) {
+    if (!isManager) {
+      res.status(403).json({ error: "Only Management/PM can change workstream" });
+      return;
+    }
+    const wsCheck = await validateWorkstreamId(before.projectId, workstreamId);
+    if (!wsCheck.ok) {
+      res.status(400).json({ error: wsCheck.error });
+      return;
+    }
+    data.workstreamId = wsCheck.workstreamId;
+  }
 
   // parentTaskId (WBS) — manager-only.
   if (parentTaskId !== undefined) {

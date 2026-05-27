@@ -30,6 +30,7 @@ import { useAuth } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate, formatIDR } from "@/lib/format";
 import { EmptyState } from "@/components/common/EmptyState";
+import { WorkstreamPicker } from "./components/WorkstreamPicker";
 import { Plus, Trash2, Pencil, Loader2, Receipt, AlertCircle } from "lucide-react";
 
 const STATUS_LABEL: Record<BillingMilestoneStatus, string> = {
@@ -53,6 +54,7 @@ interface BillingTabProps {
     contractValue?: number;
     vatPercent?: number;
     contractValueIncludesVat?: boolean;
+    useWorkstreams?: boolean;
   };
 }
 
@@ -273,6 +275,7 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
         <MilestoneFormDialog
           projectId={projectId}
           contractValue={project.contractValue ?? 0}
+          useWorkstreams={!!project.useWorkstreams}
           onClose={() => setCreateOpen(false)}
           onSaved={invalidate}
         />
@@ -281,6 +284,7 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
         <MilestoneFormDialog
           projectId={projectId}
           contractValue={project.contractValue ?? 0}
+          useWorkstreams={!!project.useWorkstreams}
           milestone={editRow}
           onClose={() => setEditRow(null)}
           onSaved={invalidate}
@@ -318,12 +322,14 @@ function Stat({
 function MilestoneFormDialog({
   projectId,
   contractValue,
+  useWorkstreams,
   milestone,
   onClose,
   onSaved,
 }: {
   projectId: string;
   contractValue: number;
+  useWorkstreams: boolean;
   milestone?: BillingMilestone;
   onClose: () => void;
   onSaved: () => void;
@@ -338,6 +344,9 @@ function MilestoneFormDialog({
   const [dueDate, setDueDate] = useState(milestone?.dueDate ? milestone.dueDate.slice(0, 10) : "");
   const [status, setStatus] = useState<BillingMilestoneStatus>(milestone?.status ?? "PLANNED");
   const [invoiceNumber, setInvoiceNumber] = useState(milestone?.invoiceNumber ?? "");
+  const [workstreamId, setWorkstreamId] = useState<string | null>(
+    (milestone as any)?.workstreamId ?? null,
+  );
 
   const create = useCreateBillingMilestone({
     mutation: {
@@ -380,6 +389,7 @@ function MilestoneFormDialog({
       amount: overrideAmount && isFinite(Number(amount)) ? Number(amount) : null,
       dueDate: dueDate || null,
       invoiceNumber: invoiceNumber.trim() || null,
+      ...(useWorkstreams ? { workstreamId } : {}),
     };
     if (editing && milestone) {
       update.mutate({
@@ -462,6 +472,15 @@ function MilestoneFormDialog({
               </p>
             )}
           </div>
+          {useWorkstreams && (
+            <WorkstreamPicker
+              projectId={projectId}
+              value={workstreamId}
+              onChange={setWorkstreamId}
+              enabled
+              testId="select-milestone-workstream"
+            />
+          )}
           {editing && (
             <div className="grid grid-cols-2 gap-3">
               <div>

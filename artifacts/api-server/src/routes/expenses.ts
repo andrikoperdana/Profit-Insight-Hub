@@ -4,6 +4,7 @@ import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
 import { canViewProjectFinancials } from "../lib/serializers.js";
 import { notifyUser } from "../lib/notifications.js";
+import { validateWorkstreamId } from "../lib/workstreams.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -40,6 +41,7 @@ function serializeExpense(e: {
   spentAt: Date;
   evidenceUrl: string | null;
   evidenceFileName: string | null;
+  workstreamId?: string | null;
   status?: string;
   approvedById?: string | null;
   approvedAt?: Date | null;
@@ -53,6 +55,7 @@ function serializeExpense(e: {
   return {
     id: e.id,
     projectId: e.projectId,
+    workstreamId: e.workstreamId ?? null,
     projectCode: e.project?.code ?? null,
     projectName: e.project?.name ?? null,
     clientName: e.project?.client?.name ?? null,
@@ -183,7 +186,12 @@ router.post(
       }
     }
 
-    const { category, description, amount, spentAt, evidenceUrl, evidenceFileName } = req.body || {};
+    const { category, description, amount, spentAt, evidenceUrl, evidenceFileName, workstreamId } = req.body || {};
+    const wsCheck = await validateWorkstreamId(projectId, workstreamId);
+    if (!wsCheck.ok) {
+      res.status(400).json({ error: wsCheck.error });
+      return;
+    }
     if (!category || !ALLOWED_CATEGORIES.has(String(category))) {
       res.status(400).json({
         error: `category required; must be one of ${[...ALLOWED_CATEGORIES].join(", ")}`,
@@ -237,6 +245,7 @@ router.post(
     const expense = await prisma.projectExpense.create({
       data: {
         projectId,
+        workstreamId: wsCheck.workstreamId,
         category: String(category),
         description: desc,
         amount: amt,

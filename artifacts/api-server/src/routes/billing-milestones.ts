@@ -3,6 +3,7 @@ import { prisma } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
 import { canViewAllProjects } from "../lib/roles.js";
+import { validateWorkstreamId } from "../lib/workstreams.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -56,6 +57,7 @@ function serialize(m: any) {
   return {
     id: m.id,
     projectId: m.projectId,
+    workstreamId: m.workstreamId ?? null,
     name: m.name,
     description: m.description,
     percentage: m.percentage,
@@ -241,7 +243,12 @@ router.post("/projects/:id/billing-milestones", async (req, res) => {
     res.status(403).json({ error: "Only Management or assigned PM can create billing milestones" });
     return;
   }
-  const { name, description, percentage, amount, dueDate, invoiceNumber, sortOrder } = req.body || {};
+  const { name, description, percentage, amount, dueDate, invoiceNumber, sortOrder, workstreamId } = req.body || {};
+  const wsCheck = await validateWorkstreamId(projectId, workstreamId);
+  if (!wsCheck.ok) {
+    res.status(400).json({ error: wsCheck.error });
+    return;
+  }
   const trimmedName = typeof name === "string" ? name.trim() : "";
   if (!trimmedName) {
     res.status(400).json({ error: "name required" });
@@ -281,6 +288,7 @@ router.post("/projects/:id/billing-milestones", async (req, res) => {
   const created = await prisma.billingMilestone.create({
     data: {
       projectId,
+      workstreamId: wsCheck.workstreamId,
       name: trimmedName,
       description: typeof description === "string" && description.trim() ? description.trim() : null,
       percentage: pct,
@@ -315,9 +323,17 @@ router.patch("/billing-milestones/:milestoneId", async (req, res) => {
     res.status(403).json({ error: "Only Management or assigned PM can edit billing milestones" });
     return;
   }
-  const { name, description, percentage, amount, dueDate, status, invoiceNumber, invoicedAt, paidAt, sortOrder } =
+  const { name, description, percentage, amount, dueDate, status, invoiceNumber, invoicedAt, paidAt, sortOrder, workstreamId } =
     req.body || {};
   const data: Record<string, unknown> = {};
+  if (workstreamId !== undefined) {
+    const wsCheck = await validateWorkstreamId(before.projectId, workstreamId);
+    if (!wsCheck.ok) {
+      res.status(400).json({ error: wsCheck.error });
+      return;
+    }
+    data.workstreamId = wsCheck.workstreamId;
+  }
   if (name !== undefined) {
     const t = String(name).trim();
     if (!t) {

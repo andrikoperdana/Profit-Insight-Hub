@@ -56,6 +56,7 @@ import { formatIDR, formatDate, formatPct } from "@/lib/format";
 import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
 import { LoadingPage } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
+import { WorkstreamPicker, WorkstreamBadge } from "../components/WorkstreamPicker";
 import { PdfUploadField, type PdfFileData } from "@/components/common/PdfUploadField";
 import { useAuth } from "@/lib/auth";
 import { RoleLabels, canViewProjectFinancials } from "@/lib/roles";
@@ -100,6 +101,8 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [spentAt, setSpentAt] = useState<string>(new Date().toISOString().slice(0, 10));
+  const [workstreamId, setWorkstreamId] = useState<string | null>(null);
+  const [filterWorkstreamId, setFilterWorkstreamId] = useState<string | null>(null);
   const [evidence, setEvidence] = useState<{ name: string; url: string } | null>(null);
   const evidenceInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -200,8 +203,10 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
         spentAt: spentAt || undefined,
         evidenceUrl: evidence?.url,
         evidenceFileName: evidence?.name,
+        workstreamId,
       },
     });
+    setWorkstreamId(null);
   }
 
   if (isLoading) return <LoadingPage />;
@@ -335,6 +340,17 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
                 )}
               </div>
             </div>
+            {project?.useWorkstreams && (
+              <div className="md:w-1/2">
+                <WorkstreamPicker
+                  projectId={projectId}
+                  value={workstreamId}
+                  onChange={setWorkstreamId}
+                  enabled
+                  testId="select-expense-workstream"
+                />
+              </div>
+            )}
             <div className="flex justify-end">
               <Button
                 onClick={handleAdd}

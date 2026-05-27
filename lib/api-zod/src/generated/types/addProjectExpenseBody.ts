@@ -15,4 +15,5 @@ export interface AddProjectExpenseBody {
   /** Base64 data URL of supporting invoice/receipt PDF or image */
   evidenceUrl?: string | null;
   evidenceFileName?: string | null;
+  workstreamId?: string | null;
 }

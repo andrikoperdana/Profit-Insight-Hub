@@ -205,6 +205,7 @@ export const BillingMilestoneStatus = {
 export interface BillingMilestone {
   id: string;
   projectId: string;
+  workstreamId?: string | null;
   name: string;
   description?: string | null;
   percentage: number;
@@ -227,6 +228,7 @@ export interface CreateBillingMilestoneBody {
   dueDate?: string | null;
   invoiceNumber?: string | null;
   sortOrder?: number;
+  workstreamId?: string | null;
 }
 
 export interface UpdateBillingMilestoneBody {
@@ -240,6 +242,7 @@ export interface UpdateBillingMilestoneBody {
   invoicedAt?: string | null;
   paidAt?: string | null;
   sortOrder?: number;
+  workstreamId?: string | null;
 }
 
 export interface TaskDependencyRef {
@@ -251,6 +254,7 @@ export interface TaskDependencyRef {
 export interface Task {
   id: string;
   projectId: string;
+  workstreamId?: string | null;
   projectCode?: string | null;
   projectName?: string | null;
   title: string;
@@ -293,6 +297,7 @@ export interface CreateTaskBody {
   assigneeIds?: string[];
   parentTaskId?: string | null;
   dependencyTaskIds?: string[];
+  workstreamId?: string | null;
 }
 
 export interface UpdateTaskBody {
@@ -311,6 +316,7 @@ export interface UpdateTaskBody {
   assigneeIds?: string[];
   parentTaskId?: string | null;
   dependencyTaskIds?: string[];
+  workstreamId?: string | null;
 }
 
 export interface TaskTimeLog {
@@ -674,6 +680,8 @@ export interface Project {
   exchangeRate?: number | null;
   vatPercent?: number;
   contractValueIncludesVat?: boolean;
+  /** If true, project is split into Workstreams; per-workstream pickers become available on resources/tasks/expenses/billing. */
+  useWorkstreams?: boolean;
   revenueNet?: number;
   vatAmount?: number;
   recognizedRevenue?: number;
@@ -722,6 +730,7 @@ export const ProjectExpenseCategory = {
 export interface ProjectExpense {
   id: string;
   projectId: string;
+  workstreamId?: string | null;
   projectCode?: string | null;
   projectName?: string | null;
   clientName?: string | null;
@@ -760,6 +769,7 @@ export interface AddProjectExpenseBody {
   /** Base64 data URL of supporting invoice/receipt PDF or image */
   evidenceUrl?: string | null;
   evidenceFileName?: string | null;
+  workstreamId?: string | null;
 }
 
 export type RaidType = (typeof RaidType)[keyof typeof RaidType];
@@ -967,6 +977,7 @@ export interface UpsertProjectRatingBody {
 export interface ProjectResource {
   id: string;
   projectId: string;
+  workstreamId?: string | null;
   userId: string;
   userName: string;
   userRole?: UserRole;
@@ -1102,11 +1113,13 @@ export interface AddResourceBody {
   roleInProject?: string;
   plannedMandays: number;
   dailyRate: number;
+  workstreamId?: string | null;
 }
 
 export interface Timesheet {
   id: string;
   projectId: string;
+  workstreamId?: string | null;
   projectName: string;
   userId: string;
   userName: string;
@@ -1129,6 +1142,7 @@ export interface CreateTimesheetBody {
   workDate: string;
   hours: number;
   description?: string;
+  workstreamId?: string | null;
 }
 
 export interface RejectTimesheetBody {
@@ -1711,6 +1725,7 @@ export type CreateBulkTimesheetsBodyEntriesItem = {
   hours: number;
   taskId?: string | null;
   description?: string | null;
+  workstreamId?: string | null;
 };
 
 export interface CreateBulkTimesheetsBody {

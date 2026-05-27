@@ -56,6 +56,7 @@ import {
 } from "lucide-react";
 import { formatIDR, formatDate, formatPct } from "@/lib/format";
 import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
+import { WorkstreamPicker } from "../components/WorkstreamPicker";
 import { LoadingPage } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
 import { PdfUploadField, type PdfFileData } from "@/components/common/PdfUploadField";
@@ -123,6 +124,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
   });
   const [addingRole, setAddingRole] = useState<null | "KONSULTAN" | "TECHNICAL_WRITER" | "OTHER">(null);
   const [form, setForm] = useState({ userId: "", roleInProject: "", plannedMandays: "10", dailyRate: "1500000" });
+  const [formWorkstreamId, setFormWorkstreamId] = useState<string | null>(null);
   const [suggestRole, setSuggestRole] = useState<null | "KONSULTAN" | "TECHNICAL_WRITER">(null);
 
   const updateProject = useUpdateProject({
@@ -254,6 +256,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
         roleInProject: form.roleInProject || undefined,
         plannedMandays: Number(form.plannedMandays) || 0,
         dailyRate: Number(form.dailyRate) || 0,
+        workstreamId: formWorkstreamId,
       },
     };
     if (canEdit) {
@@ -762,6 +765,13 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
             <p className="text-xs text-muted-foreground">
               Estimated cost for this assignment: <span className="font-mono text-foreground">{formatIDR((Number(form.plannedMandays) || 0) * (Number(form.dailyRate) || 0))}</span>
             </p>
+            <WorkstreamPicker
+              projectId={projectId}
+              value={formWorkstreamId}
+              onChange={setFormWorkstreamId}
+              enabled={!!project?.useWorkstreams}
+              testId="select-resource-workstream"
+            />
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setAddingRole(null)} disabled={addMutation.isPending || proposeMutation.isPending}>Cancel</Button>

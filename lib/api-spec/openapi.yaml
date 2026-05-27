@@ -2155,6 +2155,7 @@ components:
       properties:
         id: { type: string }
         projectId: { type: string }
+        workstreamId: { type: string, nullable: true }
         name: { type: string }
         description: { type: string, nullable: true }
         percentage: { type: number }
@@ -2179,6 +2180,7 @@ components:
         dueDate: { type: string, nullable: true }
         invoiceNumber: { type: string, nullable: true }
         sortOrder: { type: integer }
+        workstreamId: { type: string, nullable: true }
 
     UpdateBillingMilestoneBody:
       type: object
@@ -2193,6 +2195,7 @@ components:
         invoicedAt: { type: string, nullable: true }
         paidAt: { type: string, nullable: true }
         sortOrder: { type: integer }
+        workstreamId: { type: string, nullable: true }
 
     TaskDependencyRef:
       type: object
@@ -2208,6 +2211,7 @@ components:
       properties:
         id: { type: string }
         projectId: { type: string }
+        workstreamId: { type: string, nullable: true }
         projectCode: { type: string, nullable: true }
         projectName: { type: string, nullable: true }
         title: { type: string }
@@ -2252,6 +2256,7 @@ components:
         dependencyTaskIds:
           type: array
           items: { type: string }
+        workstreamId: { type: string, nullable: true }
 
     UpdateTaskBody:
       type: object
@@ -2271,6 +2276,7 @@ components:
         dependencyTaskIds:
           type: array
           items: { type: string }
+        workstreamId: { type: string, nullable: true }
 
     TaskTimeLog:
       type: object
@@ -2615,6 +2621,7 @@ components:
         exchangeRate: { type: number, nullable: true }
         vatPercent: { type: number }
         contractValueIncludesVat: { type: boolean }
+        useWorkstreams: { type: boolean, description: "If true, project is split into Workstreams; per-workstream pickers become available on resources/tasks/expenses/billing." }
         revenueNet: { type: number }
         vatAmount: { type: number }
         recognizedRevenue: { type: number }
@@ -2670,6 +2677,7 @@ components:
       properties:
         id: { type: string }
         projectId: { type: string }
+        workstreamId: { type: string, nullable: true }
         projectCode: { type: string, nullable: true }
         projectName: { type: string, nullable: true }
         clientName: { type: string, nullable: true }
@@ -2698,6 +2706,7 @@ components:
         spentAt: { type: string }
         evidenceUrl: { type: string, nullable: true, description: "Base64 data URL of supporting invoice/receipt PDF or image" }
         evidenceFileName: { type: string, nullable: true }
+        workstreamId: { type: string, nullable: true }
 
     RaidType: { type: string, enum: [RISK, ASSUMPTION, ISSUE, DEPENDENCY] }
     RaidImpact: { type: string, enum: [LOW, MEDIUM, HIGH, CRITICAL] }
@@ -2982,6 +2991,7 @@ components:
       properties:
         id: { type: string }
         projectId: { type: string }
+        workstreamId: { type: string, nullable: true }
         userId: { type: string }
         userName: { type: string }
         userRole: { $ref: "#/components/schemas/UserRole" }
@@ -3002,6 +3012,7 @@ components:
         roleInProject: { type: string }
         plannedMandays: { type: number }
         dailyRate: { type: number }
+        workstreamId: { type: string, nullable: true }
 
     Timesheet:
       type: object
@@ -3009,6 +3020,7 @@ components:
       properties:
         id: { type: string }
         projectId: { type: string }
+        workstreamId: { type: string, nullable: true }
         projectName: { type: string }
         userId: { type: string }
         userName: { type: string }
@@ -3033,6 +3045,7 @@ components:
         workDate: { type: string }
         hours: { type: number }
         description: { type: string }
+        workstreamId: { type: string, nullable: true }
 
     RejectTimesheetBody:
       type: object
@@ -3662,6 +3675,7 @@ components:
               hours: { type: number }
               taskId: { type: string, nullable: true }
               description: { type: string, nullable: true }
+              workstreamId: { type: string, nullable: true }
 
     CreateBulkTimesheetsResponse:
       type: object

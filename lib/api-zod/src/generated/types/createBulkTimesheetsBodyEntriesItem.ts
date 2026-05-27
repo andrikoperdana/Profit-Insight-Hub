@@ -12,4 +12,5 @@ export type CreateBulkTimesheetsBodyEntriesItem = {
   hours: number;
   taskId?: string | null;
   description?: string | null;
+  workstreamId?: string | null;
 };

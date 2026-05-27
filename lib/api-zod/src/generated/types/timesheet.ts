@@ -10,6 +10,7 @@ import type { TimesheetStatus } from "./timesheetStatus";
 export interface Timesheet {
   id: string;
   projectId: string;
+  workstreamId?: string | null;
   projectName: string;
   userId: string;
   userName: string;

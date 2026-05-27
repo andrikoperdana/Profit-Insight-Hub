@@ -10,6 +10,7 @@ import type { UserRole } from "./userRole";
 export interface ProjectResource {
   id: string;
   projectId: string;
+  workstreamId?: string | null;
   userId: string;
   userName: string;
   userRole?: UserRole;

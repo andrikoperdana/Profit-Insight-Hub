@@ -23,4 +23,5 @@ export interface UpdateTaskBody {
   assigneeIds?: string[];
   parentTaskId?: string | null;
   dependencyTaskIds?: string[];
+  workstreamId?: string | null;
 }
