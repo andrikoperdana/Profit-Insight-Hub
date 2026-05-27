@@ -1,6 +1,10 @@
 import { prisma } from "./index.js";
 import bcrypt from "bcryptjs";
 import { ensureSampleReportData } from "./sample-report-data.js";
+import { ensureSampleTaskTemplates } from "./sample-task-templates.js";
+import { ensureSampleProjectTemplates } from "./sample-project-templates.js";
+import { ensureSampleWorkstreamProjects } from "./sample-workstream-projects.js";
+import { ensureSamplePerformanceReviews } from "./sample-performance-reviews.js";
 
 // Idempotent additive Principal hierarchy patch — runs even when database is
 // already seeded, so we can introduce the supervisor model on top of an
@@ -164,7 +168,11 @@ export async function runSeed() {
     await ensureBusinessUnitsAndSkills();
     await ensureInternalClient();
     await ensureSampleReportData();
-    console.log("Principals + hierarchy + BU/Skills + Internal client + sample report data ensured.");
+    await ensureSampleTaskTemplates();
+    await ensureSampleProjectTemplates();
+    await ensureSampleWorkstreamProjects();
+    await ensureSamplePerformanceReviews();
+    console.log("Principals + hierarchy + BU/Skills + Internal client + all sample data ensured.");
     return;
   }
 
@@ -303,6 +311,10 @@ export async function runSeed() {
 
   await ensureBusinessUnitsAndSkills();
   await ensureSampleReportData();
+  await ensureSampleTaskTemplates();
+  await ensureSampleProjectTemplates();
+  await ensureSampleWorkstreamProjects();
+  await ensureSamplePerformanceReviews();
 
   console.log("Seed complete.");
 }

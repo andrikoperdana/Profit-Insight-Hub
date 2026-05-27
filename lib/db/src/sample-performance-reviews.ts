@@ -212,8 +212,11 @@ export async function ensureSamplePerformanceReviews() {
   console.log(`Sample performance reviews: ${created} created, ${skipped} skipped, ${ratingsCreated} project ratings.`);
 }
 
-// Allow standalone execution
-const isMain = import.meta.url === `file://${process.argv[1]}`;
+// Allow standalone execution (skip when bundled into another entrypoint)
+const __argv1 = process.argv[1] ?? "";
+const isMain =
+  import.meta.url === `file://${__argv1}` &&
+  (__argv1.endsWith("sample-performance-reviews.ts") || __argv1.endsWith("sample-performance-reviews.js"));
 if (isMain) {
   ensureSamplePerformanceReviews()
     .then(() => prisma.$disconnect())

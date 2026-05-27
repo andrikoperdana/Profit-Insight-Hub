@@ -226,7 +226,11 @@ export async function ensureSampleProjectTemplates() {
   console.log(`[sample-project-templates] created ${created} (of ${TEMPLATES.length}) project templates.`);
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+const __argv1 = process.argv[1] ?? "";
+if (
+  import.meta.url === `file://${__argv1}` &&
+  (__argv1.endsWith("sample-project-templates.ts") || __argv1.endsWith("sample-project-templates.js"))
+) {
   ensureSampleProjectTemplates()
     .then(() => prisma.$disconnect())
     .catch((e) => {
