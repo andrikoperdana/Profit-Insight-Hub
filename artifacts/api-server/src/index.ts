@@ -1,6 +1,7 @@
 import app from "./app";
 import { logger } from "./lib/logger";
 import {
+  prisma,
   runSeed,
   ensureCoreAccountsAndTaxonomy,
   ensureSampleTaskTemplates,
@@ -52,7 +53,7 @@ if (!isProd || seedOptIn) {
     .catch((err) => logger.error({ err }, "Production ensure failed (continuing)"));
 }
 
-app.listen(port, (err?: Error) => {
+const server = app.listen(port, (err?: Error) => {
   if (err) {
     logger.error({ err }, "Error listening on port");
     process.exit(1);
@@ -60,3 +61,35 @@ app.listen(port, (err?: Error) => {
 
   logger.info({ port }, "Server listening");
 });
+
+// Graceful shutdown: on deploy rollover / container stop, stop accepting new
+// connections, let in-flight requests finish, close the DB pool cleanly, then
+// exit. A hard timeout guarantees we still exit even if something hangs (the
+// platform would otherwise SIGKILL us). Prisma auto-reconnects on the next
+// query if a connection is reaped mid-flight, so this only covers orderly stop.
+let shuttingDown = false;
+async function shutdown(signal: string): Promise<void> {
+  if (shuttingDown) return;
+  shuttingDown = true;
+  logger.info({ signal }, "Shutting down gracefully");
+
+  const force = setTimeout(() => {
+    logger.warn("Graceful shutdown timed out; forcing exit");
+    process.exit(1);
+  }, 10_000);
+  force.unref();
+
+  server.close(async () => {
+    try {
+      await prisma.$disconnect();
+    } catch (err) {
+      logger.warn({ err }, "Error disconnecting Prisma during shutdown");
+    }
+    clearTimeout(force);
+    logger.info("Shutdown complete");
+    process.exit(0);
+  });
+}
+
+process.on("SIGTERM", () => void shutdown("SIGTERM"));
+process.on("SIGINT", () => void shutdown("SIGINT"));
