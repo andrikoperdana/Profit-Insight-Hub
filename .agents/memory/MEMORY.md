@@ -1,2 +1,3 @@
 - [Timesheet scope=all default-deny](timesheet-scope-default-deny.md) — non-MGMT/PM roles must be forced to own-userId on the global timesheet list; allowlist new roles, never extend a denylist.
 - [My-view role gating](my-view-role-gating.md) — Sidebar visibility flags and App.tsx route allow/deny lists must reference the same role constant or they will drift.
+- [DB connection resilience + endpoint caching](db-connection-resilience.md) — Prisma URL carries pool params (E57P01 idle drops); read-heavy dashboards use a 30s TtlCache whose key must encode caller scope.

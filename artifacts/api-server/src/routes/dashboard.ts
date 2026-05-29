@@ -8,9 +8,15 @@ import {
   canViewProjectFinancials,
 } from "../lib/serializers.js";
 import { isPrincipalRole } from "../lib/roles.js";
+import { TtlCache } from "../lib/ttlCache.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
+
+// Resource-utilization detail is expensive (loads recent timesheets + active
+// assignments for the whole eligible workforce). Cache per caller scope for a
+// short window; 30s matches the frontend React Query staleTime.
+const utilizationDetailCache = new TtlCache<unknown>(30_000);
 
 // Roles that must NOT see commercial portfolio figures via dashboard endpoints.
 // Mirrors the financials masking in serializers.ts.
@@ -279,6 +285,14 @@ router.get("/dashboard/resource-utilization-detail", async (req, res) => {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
+
+  const cacheKey = `${role}:${req.user!.sub}`;
+  const cached = utilizationDetailCache.get(cacheKey);
+  if (cached) {
+    res.json(cached);
+    return;
+  }
+
   // PM only sees resources that have a current assignment OR recent timesheet
   // on a project they own.
   let pmProjectIdSet: Set<string> | null = null;
@@ -318,12 +332,27 @@ router.get("/dashboard/resource-utilization-detail", async (req, res) => {
   }
   const users = await prisma.user.findMany({
     where: userWhere,
-    include: {
+    select: {
+      id: true,
+      name: true,
+      role: true,
+      title: true,
       resources: {
         where: pmProjectIdSet
           ? { projectId: { in: Array.from(pmProjectIdSet) } }
           : undefined,
-        include: { project: { include: { client: true } } },
+        select: {
+          projectId: true,
+          plannedMandays: true,
+          project: {
+            select: {
+              name: true,
+              status: true,
+              endDate: true,
+              client: { select: { id: true, name: true } },
+            },
+          },
+        },
       },
       timesheets: {
         where: {
@@ -333,7 +362,12 @@ router.get("/dashboard/resource-utilization-detail", async (req, res) => {
             ? { projectId: { in: Array.from(pmProjectIdSet) } }
             : {}),
         },
-        include: { project: true },
+        select: {
+          projectId: true,
+          hours: true,
+          workDate: true,
+          project: { select: { status: true } },
+        },
       },
     },
     orderBy: { name: "asc" },
@@ -512,7 +546,7 @@ router.get("/dashboard/resource-utilization-detail", async (req, res) => {
     if (r.specialization) specializations.add(r.specialization);
   }
 
-  res.json({
+  const payload = {
     summary: {
       total,
       active: activeCount,
@@ -539,7 +573,9 @@ router.get("/dashboard/resource-utilization-detail", async (req, res) => {
     finishingSoonList: rows.filter((r) => r.finishingSoon),
     idleLongList: rows.filter((r) => r.idleLong),
     overloadedList: rows.filter((r) => r.overloaded),
-  });
+  };
+  utilizationDetailCache.set(cacheKey, payload);
+  res.json(payload);
 });
 
 /**

@@ -1,9 +1,15 @@
 import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
+import { TtlCache } from "../lib/ttlCache.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
+
+// The matrix is identical for every authorized caller (it always loads the
+// whole active workforce), so we key only by window params. 30s matches the
+// frontend React Query staleTime.
+const planningCache = new TtlCache<unknown>(30_000);
 
 // Returns the Monday (UTC) of the ISO week containing `d`.
 function startOfIsoWeek(d: Date): Date {
@@ -53,6 +59,13 @@ router.get(
       start = startOfIsoWeek(new Date());
     }
     const end = addDaysUtc(start, weeks * 7);
+
+    const cacheKey = `${isoDate(start)}:${weeks}`;
+    const cached = planningCache.get(cacheKey);
+    if (cached) {
+      res.json(cached);
+      return;
+    }
 
     const weekStarts: Date[] = [];
     for (let i = 0; i < weeks; i++) weekStarts.push(addDaysUtc(start, i * 7));
@@ -173,12 +186,14 @@ router.get(
       return a.businessUnitName.localeCompare(b.businessUnitName);
     });
 
-    res.json({
+    const payload = {
       startDate: isoDate(start),
       weeks,
       weekStarts: weekStarts.map(isoDate),
       groups,
-    });
+    };
+    planningCache.set(cacheKey, payload);
+    res.json(payload);
   },
 );
 
