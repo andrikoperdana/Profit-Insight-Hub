@@ -95,18 +95,18 @@ export default function MyTasksPage() {
       const projName = t.projectName ?? t.project?.name ?? "";
       const projCode = t.projectCode ?? t.project?.code ?? "";
       return {
-        Proyek: projCode || projName,
+        Project: projCode || projName,
         Task: t.title,
-        Deskripsi: t.description ?? "",
+        Description: t.description ?? "",
         Status: t.status,
-        "Tanggal Mulai": t.startDate ? formatDate(t.startDate) : "",
-        "Tanggal Selesai": t.endDate ? formatDate(t.endDate) : "",
+        "Start Date": t.startDate ? formatDate(t.startDate) : "",
+        "End Date": t.endDate ? formatDate(t.endDate) : "",
         "Progress %": t.progressPercent ?? 0,
-        Billable: t.billable ? "Ya" : "Tidak",
+        Billable: t.billable ? "Yes" : "No",
       };
     });
     if (rows.length === 0) {
-      toast({ title: "Tidak ada data", description: "Filter saat ini tidak menghasilkan baris untuk di-export." });
+      toast({ title: "No data", description: "The current filter produced no rows to export." });
       return;
     }
     exportCsv("my-tasks", rows);
@@ -121,7 +121,7 @@ export default function MyTasksPage() {
             My Tasks
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Semua task yang ditugaskan kepada Anda — filter, paginasi, dan export CSV.
+            All tasks assigned to you — filter, paginate, and export to CSV.
           </p>
         </div>
         <Button onClick={handleExport} variant="outline" data-testid="button-export-my-tasks">
@@ -131,7 +131,7 @@ export default function MyTasksPage() {
       </div>
 
       <div className="grid gap-3 md:grid-cols-5">
-        <KpiCard label="Total" value={String(kpi.total)} sub="setelah filter" />
+        <KpiCard label="Total" value={String(kpi.total)} sub="after filter" />
         <KpiCard label="To Do" value={String(kpi.todo)} accent="text-muted-foreground" />
         <KpiCard label="In Progress" value={String(kpi.inProgress)} accent="text-blue-400" />
         <KpiCard label="Done" value={String(kpi.done)} accent="text-emerald-400" />
@@ -140,13 +140,13 @@ export default function MyTasksPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Daftar Task</CardTitle>
-          <CardDescription>Klik nama proyek untuk membuka detail proyek.</CardDescription>
+          <CardTitle className="text-base">Task List</CardTitle>
+          <CardDescription>Click the project name to open the project details.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap items-center gap-3">
             <Input
-              placeholder="Cari task / proyek…"
+              placeholder="Search task / project…"
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               className="max-w-xs"
@@ -157,8 +157,8 @@ export default function MyTasksPage() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ACTIVE">Aktif (kecuali Done)</SelectItem>
-                <SelectItem value="ALL">Semua Status</SelectItem>
+                <SelectItem value="ACTIVE">Active (except Done)</SelectItem>
+                <SelectItem value="ALL">All Status</SelectItem>
                 <SelectItem value="TODO">To Do</SelectItem>
                 <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
                 <SelectItem value="DONE">Done</SelectItem>
@@ -171,16 +171,16 @@ export default function MyTasksPage() {
               </SelectTrigger>
               <SelectContent>
                 {[10, 25, 50, 100].map((n) => (
-                  <SelectItem key={n} value={String(n)}>{n} / hal</SelectItem>
+                  <SelectItem key={n} value={String(n)}>{n} / page</SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
 
           {isLoading ? (
-            <p className="text-sm text-muted-foreground">Memuat…</p>
+            <p className="text-sm text-muted-foreground">Loading…</p>
           ) : filtered.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Tidak ada task yang cocok.</p>
+            <p className="text-sm text-muted-foreground">No matching tasks.</p>
           ) : (
             <>
               <div className="overflow-x-auto">
@@ -188,9 +188,9 @@ export default function MyTasksPage() {
                   <TableHeader>
                     <TableRow>
                       <TableHead>Task</TableHead>
-                      <TableHead>Proyek</TableHead>
-                      <TableHead className="w-[120px]">Mulai</TableHead>
-                      <TableHead className="w-[120px]">Selesai</TableHead>
+                      <TableHead>Project</TableHead>
+                      <TableHead className="w-[120px]">Start</TableHead>
+                      <TableHead className="w-[120px]">End</TableHead>
                       <TableHead className="w-[110px] text-right">Progress</TableHead>
                       <TableHead className="w-[120px]">Status</TableHead>
                     </TableRow>

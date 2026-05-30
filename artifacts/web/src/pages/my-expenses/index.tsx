@@ -104,19 +104,19 @@ export default function MyExpensesPage() {
 
   function handleExport() {
     const rows = filtered.map((e) => ({
-      Tanggal: formatDate(e.spentAt),
-      Proyek: e.projectCode ?? "",
-      "Nama Proyek": e.projectName ?? "",
-      Kategori: e.category,
-      Deskripsi: e.description,
-      Jumlah: e.amount,
+      Date: formatDate(e.spentAt),
+      Project: e.projectCode ?? "",
+      "Project Name": e.projectName ?? "",
+      Category: e.category,
+      Description: e.description,
+      Amount: e.amount,
       Status: e.status,
       "Approved By": e.approvedByName ?? "",
       "Approved At": e.approvedAt ? formatDate(e.approvedAt) : "",
-      "Alasan Reject": e.rejectionReason ?? "",
+      "Rejection Reason": e.rejectionReason ?? "",
     }));
     if (rows.length === 0) {
-      toast({ title: "Tidak ada data", description: "Filter saat ini tidak menghasilkan baris untuk di-export." });
+      toast({ title: "No data", description: "The current filter produced no rows to export." });
       return;
     }
     exportCsv("my-expenses", rows);
@@ -131,7 +131,7 @@ export default function MyExpensesPage() {
             My Expenses
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Semua pengajuan expense Anda — filter, paginasi, dan export ke CSV.
+            All your expense submissions — filter, paginate, and export to CSV.
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -144,7 +144,7 @@ export default function MyExpensesPage() {
       </div>
 
       <div className="grid gap-3 md:grid-cols-4">
-        <KpiCard label="Total" value={formatIDR(kpi.total)} sub={`${filtered.length} baris`} />
+        <KpiCard label="Total" value={formatIDR(kpi.total)} sub={`${filtered.length} rows`} />
         <KpiCard label="Approved" value={formatIDR(kpi.approved)} accent="text-emerald-400" />
         <KpiCard label="Pending" value={formatIDR(kpi.pending)} accent="text-amber-400" />
         <KpiCard label="Rejected" value={formatIDR(kpi.rejected)} accent="text-destructive" />
@@ -152,13 +152,13 @@ export default function MyExpensesPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Riwayat Pengajuan</CardTitle>
-          <CardDescription>Klik kode proyek untuk membuka detail proyek.</CardDescription>
+          <CardTitle className="text-base">Submission History</CardTitle>
+          <CardDescription>Click the project code to open the project details.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap items-center gap-3">
             <Input
-              placeholder="Cari deskripsi / proyek / kategori…"
+              placeholder="Search description / project / category…"
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               className="max-w-xs"
@@ -169,7 +169,7 @@ export default function MyExpensesPage() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ALL">Semua Status</SelectItem>
+                <SelectItem value="ALL">All Status</SelectItem>
                 <SelectItem value="PENDING">Pending</SelectItem>
                 <SelectItem value="APPROVED">Approved</SelectItem>
                 <SelectItem value="REJECTED">Rejected</SelectItem>
@@ -181,26 +181,26 @@ export default function MyExpensesPage() {
               </SelectTrigger>
               <SelectContent>
                 {[10, 25, 50, 100].map((n) => (
-                  <SelectItem key={n} value={String(n)}>{n} / hal</SelectItem>
+                  <SelectItem key={n} value={String(n)}>{n} / page</SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
 
           {isLoading ? (
-            <p className="text-sm text-muted-foreground">Memuat…</p>
+            <p className="text-sm text-muted-foreground">Loading…</p>
           ) : filtered.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Tidak ada pengajuan expense yang cocok.</p>
+            <p className="text-sm text-muted-foreground">No matching expense submissions.</p>
           ) : (
             <>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-[110px]">Tanggal</TableHead>
-                      <TableHead>Proyek</TableHead>
-                      <TableHead>Deskripsi</TableHead>
-                      <TableHead className="text-right">Jumlah</TableHead>
+                      <TableHead className="w-[110px]">Date</TableHead>
+                      <TableHead>Project</TableHead>
+                      <TableHead>Description</TableHead>
+                      <TableHead className="text-right">Amount</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead className="text-right">Receipt</TableHead>
                     </TableRow>
@@ -515,7 +515,7 @@ export function PageNav({
   const to = Math.min(page * pageSize, total);
   return (
     <div className="flex items-center justify-between text-xs text-muted-foreground">
-      <span>Menampilkan {from}–{to} dari {total}</span>
+      <span>Showing {from}–{to} of {total}</span>
       <div className="flex items-center gap-2">
         <Button
           variant="outline"
@@ -527,7 +527,7 @@ export function PageNav({
         >
           <ChevronLeft className="h-3.5 w-3.5" />
         </Button>
-        <span className="px-2">Hal {page} / {totalPages}</span>
+        <span className="px-2">Page {page} / {totalPages}</span>
         <Button
           variant="outline"
           size="sm"

@@ -82,28 +82,28 @@ export default function MyExpensesCard() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Receipt className="h-5 w-5 text-primary" />
-          Pengajuan Expense Saya
+          My Expense Submissions
         </CardTitle>
         <CardDescription>
-          Status reimburse expense yang Anda submit. Unduh receipt PDF setelah di-approve atau di-reject.
+          Status of expense reimbursements you submitted. Download the receipt PDF once approved or rejected.
         </CardDescription>
       </CardHeader>
       <CardContent>
         {isLoading ? (
-          <p className="text-sm text-muted-foreground">Memuat…</p>
+          <p className="text-sm text-muted-foreground">Loading…</p>
         ) : list.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            Belum ada pengajuan expense. Submit dari tab Expenses pada halaman proyek.
+            No expense submissions yet. Submit from the Expenses tab on a project page.
           </p>
         ) : (
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[110px]">Tanggal</TableHead>
-                  <TableHead>Proyek</TableHead>
-                  <TableHead>Deskripsi</TableHead>
-                  <TableHead className="text-right">Jumlah</TableHead>
+                  <TableHead className="w-[110px]">Date</TableHead>
+                  <TableHead>Project</TableHead>
+                  <TableHead>Description</TableHead>
+                  <TableHead className="text-right">Amount</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Receipt</TableHead>
                 </TableRow>

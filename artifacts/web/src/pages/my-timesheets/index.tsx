@@ -92,18 +92,18 @@ export default function MyTimesheetsPage() {
 
   function handleExport() {
     const rows = filtered.map((t) => ({
-      Tanggal: formatDate(t.workDate),
-      Proyek: t.projectName,
+      Date: formatDate(t.workDate),
+      Project: t.projectName,
       Task: t.taskTitle ?? "",
-      Jam: t.hours,
-      Deskripsi: t.description ?? "",
+      Hours: t.hours,
+      Description: t.description ?? "",
       Status: t.status,
       "Approved By": t.approvedByName ?? "",
       "Approved At": t.approvedAt ? formatDate(t.approvedAt) : "",
-      "Alasan Reject": t.rejectionReason ?? "",
+      "Rejection Reason": t.rejectionReason ?? "",
     }));
     if (rows.length === 0) {
-      toast({ title: "Tidak ada data", description: "Filter saat ini tidak menghasilkan baris untuk di-export." });
+      toast({ title: "No data", description: "The current filter produced no rows to export." });
       return;
     }
     exportCsv("my-timesheets", rows);
@@ -118,7 +118,7 @@ export default function MyTimesheetsPage() {
             My Timesheet
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Riwayat semua entri timesheet Anda — filter status, cari, paginasi, dan export CSV.
+            History of all your timesheet entries — filter by status, search, paginate, and export to CSV.
           </p>
         </div>
         <Button onClick={handleExport} variant="outline" data-testid="button-export-my-timesheets">
@@ -128,7 +128,7 @@ export default function MyTimesheetsPage() {
       </div>
 
       <div className="grid gap-3 md:grid-cols-5">
-        <KpiCard label="Total Jam" value={kpi.total.toFixed(1)} sub={`${filtered.length} entri`} />
+        <KpiCard label="Total Hours" value={kpi.total.toFixed(1)} sub={`${filtered.length} entries`} />
         <KpiCard label="Approved" value={kpi.approved.toFixed(1)} accent="text-emerald-400" />
         <KpiCard label="Submitted" value={kpi.submitted.toFixed(1)} accent="text-blue-400" />
         <KpiCard label="Draft" value={kpi.draft.toFixed(1)} accent="text-amber-400" />
@@ -137,13 +137,13 @@ export default function MyTimesheetsPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Entri Timesheet</CardTitle>
-          <CardDescription>Klik proyek untuk membuka detail.</CardDescription>
+          <CardTitle className="text-base">Timesheet Entries</CardTitle>
+          <CardDescription>Click the project to open the details.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap items-center gap-3">
             <Input
-              placeholder="Cari proyek / task / deskripsi…"
+              placeholder="Search project / task / description…"
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               className="max-w-xs"
@@ -154,7 +154,7 @@ export default function MyTimesheetsPage() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ALL">Semua Status</SelectItem>
+                <SelectItem value="ALL">All Status</SelectItem>
                 <SelectItem value="DRAFT">Draft</SelectItem>
                 <SelectItem value="SUBMITTED">Submitted</SelectItem>
                 <SelectItem value="APPROVED">Approved</SelectItem>
@@ -167,27 +167,27 @@ export default function MyTimesheetsPage() {
               </SelectTrigger>
               <SelectContent>
                 {[10, 25, 50, 100].map((n) => (
-                  <SelectItem key={n} value={String(n)}>{n} / hal</SelectItem>
+                  <SelectItem key={n} value={String(n)}>{n} / page</SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
 
           {isLoading ? (
-            <p className="text-sm text-muted-foreground">Memuat…</p>
+            <p className="text-sm text-muted-foreground">Loading…</p>
           ) : filtered.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Tidak ada entri timesheet yang cocok.</p>
+            <p className="text-sm text-muted-foreground">No matching timesheet entries.</p>
           ) : (
             <>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-[110px]">Tanggal</TableHead>
-                      <TableHead>Proyek</TableHead>
+                      <TableHead className="w-[110px]">Date</TableHead>
+                      <TableHead>Project</TableHead>
                       <TableHead>Task</TableHead>
-                      <TableHead className="text-right">Jam</TableHead>
-                      <TableHead>Deskripsi</TableHead>
+                      <TableHead className="text-right">Hours</TableHead>
+                      <TableHead>Description</TableHead>
                       <TableHead>Status</TableHead>
                     </TableRow>
                   </TableHeader>

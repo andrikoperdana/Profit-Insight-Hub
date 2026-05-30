@@ -135,7 +135,7 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
     qc.invalidateQueries({ queryKey: getGetProjectQueryKey(projectId) });
     qc.invalidateQueries({ queryKey: getGetProjectFinancialsQueryKey(projectId) });
     qc.invalidateQueries({ queryKey: ["/projects"] });
-    // Submitter's dashboard "Pengajuan Expense Saya" reads /api/expenses/mine
+    // Submitter's dashboard "My Expense Submissions" reads /api/expenses/mine
     // with this key; refresh it so newly approved/rejected rows surface their
     // Download Receipt button without waiting for staleTime expiry.
     qc.invalidateQueries({ queryKey: ["my-expenses"] });
