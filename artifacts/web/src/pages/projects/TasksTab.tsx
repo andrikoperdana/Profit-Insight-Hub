@@ -743,7 +743,7 @@ function TaskFormDialog({
 
   return (
     <Dialog open onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{editing ? "Edit Task" : "New Task"}</DialogTitle>
           <DialogDescription>
@@ -940,20 +940,39 @@ function TaskFormDialog({
           <div>
             <div className="flex items-center justify-between">
               <Label>Progress</Label>
-              <span className="text-xs font-mono text-muted-foreground">
-                {status === "DONE" ? 100 : status === "TODO" ? 0 : progressPercent}%
-              </span>
+              <div className="flex items-center gap-1">
+                <Input
+                  type="number"
+                  min={0}
+                  max={100}
+                  step={1}
+                  value={status === "DONE" ? 100 : status === "TODO" ? 0 : progressPercent}
+                  onChange={(e) => {
+                    const n = Number(e.target.value);
+                    if (Number.isNaN(n)) return;
+                    setProgressPercent(Math.max(0, Math.min(100, Math.round(n))));
+                  }}
+                  disabled={status === "DONE" || status === "TODO"}
+                  className="h-8 w-20 text-right font-mono"
+                  data-testid="input-task-progress-number"
+                />
+                <span className="text-xs font-mono text-muted-foreground">%</span>
+              </div>
             </div>
             <Input
               type="range"
               min={0}
               max={100}
               step={5}
-              value={progressPercent}
+              value={status === "DONE" ? 100 : status === "TODO" ? 0 : progressPercent}
               onChange={(e) => setProgressPercent(Number(e.target.value))}
               disabled={status === "DONE" || status === "TODO"}
+              className="mt-2"
               data-testid="input-task-progress"
             />
+            <div className="mt-2">
+              <ProgressBar value={status === "DONE" ? 100 : status === "TODO" ? 0 : progressPercent} />
+            </div>
             {(status === "DONE" || status === "TODO") && (
               <p className="text-[11px] text-muted-foreground mt-1">
                 Progress is locked automatically based on status ({status === "DONE" ? "100%" : "0%"}). Change status to In Progress / Blocked to set it manually.

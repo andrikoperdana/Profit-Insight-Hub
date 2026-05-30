@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import {
   useListProjects,
+  useListMyTasks,
   useCreateBulkTimesheets,
   getListTimesheetsQueryKey,
 } from "@workspace/api-client-react";
@@ -10,6 +11,9 @@ import { Input } from "@/components/ui/input";
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { CalendarRange } from "lucide-react";
@@ -32,9 +36,12 @@ export default function WeeklyEntryDialog({ isAutoApprove }: { isAutoApprove: bo
   const [weekStartIso, setWeekStartIso] = useState(startOfWeek(new Date()).toISOString().slice(0, 10));
   // grid[projectId][dayIndex] = hours
   const [grid, setGrid] = useState<Record<string, number[]>>({});
+  // taskByProject[projectId] = taskId (optional task linkage for the whole week)
+  const [taskByProject, setTaskByProject] = useState<Record<string, string>>({});
   const [desc, setDesc] = useState("");
 
   const { data: projects } = useListProjects({ status: "ACTIVE" }, { query: { enabled: open, queryKey: ["projects", "active", { open }] as const } });
+  const { data: myTasks } = useListMyTasks({ query: { enabled: open, queryKey: ["my-tasks", "weekly-entry"] } });
 
   const days = useMemo(() => {
     const start = new Date(weekStartIso);
@@ -82,6 +89,7 @@ export default function WeeklyEntryDialog({ isAutoApprove }: { isAutoApprove: bo
         if (res.failed === 0) {
           setOpen(false);
           setGrid({});
+          setTaskByProject({});
           setDesc("");
         }
       },
@@ -90,10 +98,11 @@ export default function WeeklyEntryDialog({ isAutoApprove }: { isAutoApprove: bo
   });
 
   const submit = () => {
-    const entries: Array<{ projectId: string; workDate: string; hours: number; description?: string }> = [];
+    const entries: Array<{ projectId: string; workDate: string; hours: number; taskId?: string; description?: string }> = [];
     Object.entries(grid).forEach(([pid, row]) => {
+      const taskId = taskByProject[pid] || undefined;
       row.forEach((h, i) => {
-        if (h > 0) entries.push({ projectId: pid, workDate: days[i].iso, hours: h, description: desc || `Weekly ${weekStartIso}` });
+        if (h > 0) entries.push({ projectId: pid, workDate: days[i].iso, hours: h, ...(taskId ? { taskId } : {}), description: desc || `Weekly ${weekStartIso}` });
       });
     });
     if (entries.length === 0) {
@@ -149,6 +158,7 @@ export default function WeeklyEntryDialog({ isAutoApprove }: { isAutoApprove: bo
                 <thead className="bg-muted/40">
                   <tr>
                     <th className="text-left p-2 sticky left-0 bg-muted/40 min-w-[220px]">Project</th>
+                    <th className="text-left p-2 min-w-[180px]">Task (optional)</th>
                     {days.map((d) => (
                       <th key={d.iso} className="text-center p-2 min-w-[80px]">
                         <div>{d.label}</div>
@@ -162,11 +172,36 @@ export default function WeeklyEntryDialog({ isAutoApprove }: { isAutoApprove: bo
                   {projectList.map((p) => {
                     const row = grid[p.id] ?? [0, 0, 0, 0, 0];
                     const rowTotal = row.reduce((a, b) => a + b, 0);
+                    const tasksForProject = (myTasks ?? []).filter(
+                      (t: any) => t.projectId === p.id && t.status !== "DONE",
+                    );
                     return (
                       <tr key={p.id} className="border-t border-border/40">
                         <td className="p-2 sticky left-0 bg-background">
                           <div className="font-medium">{p.code}</div>
                           <div className="text-[10px] text-muted-foreground truncate max-w-[200px]">{p.name}</div>
+                        </td>
+                        <td className="p-1">
+                          {tasksForProject.length === 0 ? (
+                            <span className="text-[10px] text-muted-foreground">No assigned tasks</span>
+                          ) : (
+                            <Select
+                              value={taskByProject[p.id] || "__none"}
+                              onValueChange={(v) =>
+                                setTaskByProject((prev) => ({ ...prev, [p.id]: v === "__none" ? "" : v }))
+                              }
+                            >
+                              <SelectTrigger className="h-8 text-xs" data-testid={`weekly-task-${p.id}`}>
+                                <SelectValue placeholder="Not linked" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="__none">Not linked to a task</SelectItem>
+                                {tasksForProject.map((t: any) => (
+                                  <SelectItem key={t.id} value={t.id}>{t.title}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
                         </td>
                         {row.map((h, i) => (
                           <td key={i} className="p-1 text-center">
@@ -187,7 +222,7 @@ export default function WeeklyEntryDialog({ isAutoApprove }: { isAutoApprove: bo
                     );
                   })}
                   <tr className="border-t-2 border-border bg-muted/30 font-semibold">
-                    <td className="p-2 sticky left-0 bg-muted/30">Total per day</td>
+                    <td className="p-2 sticky left-0 bg-muted/30" colSpan={2}>Total per day</td>
                     {totals.perDay.map((t, i) => (
                       <td key={i} className="p-2 text-center font-mono">{t > 0 ? t.toFixed(1) : "—"}</td>
                     ))}
