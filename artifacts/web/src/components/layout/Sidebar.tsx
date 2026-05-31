@@ -29,6 +29,7 @@ import {
   GitBranch,
   ClipboardCheck,
   CheckSquare,
+  FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -122,6 +123,7 @@ export default function Sidebar() {
       ? [{ href: "/top-performers", label: "Top Performers", icon: Trophy }]
       : []),
     ...(user?.role === "MANAGEMENT" || isFinance ? [{ href: "/vat-recap", label: "VAT Recap", icon: Receipt }] : []),
+    ...(user?.role === "MANAGEMENT" || isFinance ? [{ href: "/invoice-settings", label: "Invoice Settings", icon: FileText }] : []),
     ...(user?.role === "MANAGEMENT" || user?.role === "SALES" ? [{ href: "/survey-results", label: "Survey Results", icon: ClipboardList }] : []),
     ...(user?.role === "MANAGEMENT" ? [{ href: "/settings/survey-template", label: "Survey Template", icon: ClipboardList }] : []),
     ...(canViewAuditLogs(user?.role) ? [{ href: "/audit-logs", label: "Audit Log", icon: ScrollText }] : []),

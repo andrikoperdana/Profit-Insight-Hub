@@ -129,10 +129,33 @@ async function ensureBusinessUnitsAndSkills() {
   }
 }
 
-// Production-safe boot step: upserts the known short list of core accounts
-// (Principals, Site Admin, Finance, HR) + business units + skills + role
-// hierarchy links. Does NOT seed demo projects, clients, timesheets, or
-// `[sample]` report data. Safe to run on every boot in any environment.
+// Seeds the singleton invoice issuer profile (company + bank details printed
+// on generated invoices) with sample placeholder data. Idempotent: never
+// overwrites an existing row, so edits made in-app are preserved on reseed.
+export async function ensureInvoiceSetting() {
+  const existing = await (prisma as any).invoiceSetting.findUnique({ where: { id: "default" } });
+  if (existing) return existing;
+  return (prisma as any).invoiceSetting.create({
+    data: {
+      id: "default",
+      companyName: "PT IT Security Asia",
+      brand: "SecureProfit Hub",
+      addressLines: [
+        "Menara Sentraya, Lantai 18",
+        "Jl. Iskandarsyah Raya No. 1A",
+        "Kebayoran Baru, Jakarta Selatan 12160",
+      ],
+      npwp: "01.234.567.8-021.000",
+      email: "finance@itsecasia.com",
+      phone: "+62 21 5290 1234",
+      city: "Jakarta",
+      bankName: "Bank Central Asia (BCA) - KCU Sudirman",
+      bankAccountName: "PT IT Security Asia",
+      bankAccountNumber: "035-201-8899",
+    },
+  });
+}
+
 // Ensures a singleton "Internal" client exists. Used as the default client
 // for non-CLIENT projects (INTERNAL/PRESALES/TRAINING) so the existing
 // required clientId FK stays satisfied without polluting real client data.
@@ -155,6 +178,7 @@ export async function ensureCoreAccountsAndTaxonomy() {
   await ensurePrincipals(passwordDefault);
   await ensureBusinessUnitsAndSkills();
   await ensureInternalClient();
+  await ensureInvoiceSetting();
 }
 
 export async function runSeed() {
@@ -172,6 +196,7 @@ export async function runSeed() {
     await ensureSampleProjectTemplates();
     await ensureSampleWorkstreamProjects();
     await ensureSamplePerformanceReviews();
+    await ensureInvoiceSetting();
     console.log("Principals + hierarchy + BU/Skills + Internal client + all sample data ensured.");
     return;
   }
@@ -315,6 +340,7 @@ export async function runSeed() {
   await ensureSampleProjectTemplates();
   await ensureSampleWorkstreamProjects();
   await ensureSamplePerformanceReviews();
+  await ensureInvoiceSetting();
 
   console.log("Seed complete.");
 }

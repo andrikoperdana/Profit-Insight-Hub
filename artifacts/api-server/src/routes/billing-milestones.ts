@@ -5,6 +5,7 @@ import { recordAudit } from "../lib/audit.js";
 import { canViewAllProjects } from "../lib/roles.js";
 import { validateWorkstreamId } from "../lib/workstreams.js";
 import { buildInvoicePdf } from "../lib/invoice-pdf.js";
+import { getInvoiceIssuer } from "../lib/invoice-config.js";
 
 function splitVat(
   gross: number,
@@ -553,6 +554,8 @@ router.post("/billing-milestones/:milestoneId/generate-invoice", async (req, res
   const explicitNumber = milestone.invoiceNumber?.trim() || null;
   const MAX_ATTEMPTS = 5;
 
+  const issuer = await getInvoiceIssuer();
+
   let invoiceNumber = "";
   let updated: any = null;
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
@@ -564,6 +567,7 @@ router.post("/billing-milestones/:milestoneId/generate-invoice", async (req, res
         invoiceNumber,
         invoiceDate: invoicedAt,
         dueDate: milestone.dueDate ?? null,
+        issuer,
         project: { code: milestone.project.code, name: milestone.project.name },
         client: {
           name: milestone.project.client?.name ?? "—",

@@ -139,6 +139,19 @@ export default function Dashboard() {
             </Card>
           </a>
         )}
+        {isFinance && (
+          <a href="/invoice-settings">
+            <Card className="cursor-pointer border-sky-500/30 bg-sky-500/5 hover:border-sky-500/60 transition h-full" data-testid="card-invoice-settings-shortcut">
+              <CardContent className="flex items-center justify-between gap-3 py-4">
+                <div>
+                  <div className="text-sm font-medium text-sky-300">Invoice Settings</div>
+                  <CardDescription className="text-xs">Edit the company and bank details printed on every generated invoice.</CardDescription>
+                </div>
+                <Button size="sm" variant="outline" className="border-sky-500/40 text-sky-300 hover:bg-sky-500/10">Open</Button>
+              </CardContent>
+            </Card>
+          </a>
+        )}
       </div>
 
       {!isFinance && pendingAssignment.length > 0 && (

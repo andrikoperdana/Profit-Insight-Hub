@@ -944,3 +944,19 @@ model PerformanceReviewProjectRating {
   @@unique([reviewId, projectId])
   @@index([projectId])
 }
+
+model InvoiceSetting {
+  id                String   @id @default("default")
+  companyName       String
+  brand             String
+  addressLines      String[]
+  npwp              String
+  email             String
+  phone             String
+  city              String
+  bankName          String
+  bankAccountName   String
+  bankAccountNumber String
+  updatedAt         DateTime @updatedAt
+  updatedById       String?
+}

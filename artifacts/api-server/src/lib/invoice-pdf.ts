@@ -1,9 +1,10 @@
-import { INVOICE_ISSUER } from "./invoice-config.js";
+import type { InvoiceIssuer } from "./invoice-config.js";
 
 export interface InvoicePdfData {
   invoiceNumber: string;
   invoiceDate: Date;
   dueDate: Date | null;
+  issuer: InvoiceIssuer;
   project: { code: string; name: string };
   client: {
     name: string;
@@ -113,14 +114,14 @@ export async function buildInvoicePdf(data: InvoicePdfData): Promise<Uint8Array>
   const headerH = 96;
   page.drawRectangle({ x: 0, y: height - headerH, width, height: headerH, color: ink });
   page.drawRectangle({ x: 0, y: height - headerH - 3, width, height: 3, color: accent });
-  page.drawText(INVOICE_ISSUER.companyName, {
+  page.drawText(data.issuer.companyName, {
     x: left,
     y: height - 36,
     size: 16,
     font: helvBold,
     color: rgb(1, 1, 1),
   });
-  page.drawText(INVOICE_ISSUER.brand, {
+  page.drawText(data.issuer.brand, {
     x: left,
     y: height - 54,
     size: 10,
@@ -128,9 +129,9 @@ export async function buildInvoicePdf(data: InvoicePdfData): Promise<Uint8Array>
     color: accent,
   });
   const issuerMeta = [
-    ...INVOICE_ISSUER.addressLines,
-    `NPWP: ${INVOICE_ISSUER.npwp}`,
-    [INVOICE_ISSUER.email, INVOICE_ISSUER.phone].filter(Boolean).join("  •  "),
+    ...data.issuer.addressLines,
+    `NPWP: ${data.issuer.npwp}`,
+    [data.issuer.email, data.issuer.phone].filter(Boolean).join("  •  "),
   ].filter(Boolean);
   let hy = height - 70;
   for (const line of issuerMeta.slice(0, 2)) {
@@ -303,9 +304,9 @@ export async function buildInvoicePdf(data: InvoicePdfData): Promise<Uint8Array>
     color: ink,
   });
   const payLines = [
-    INVOICE_ISSUER.bankName,
-    `A/N: ${INVOICE_ISSUER.bankAccountName}`,
-    `No: ${INVOICE_ISSUER.bankAccountNumber}`,
+    data.issuer.bankName,
+    `A/N: ${data.issuer.bankAccountName}`,
+    `No: ${data.issuer.bankAccountNumber}`,
   ];
   let py = boxTop - 34;
   for (const line of payLines) {
@@ -315,14 +316,14 @@ export async function buildInvoicePdf(data: InvoicePdfData): Promise<Uint8Array>
 
   // Signature area (right)
   const sigX = 360;
-  page.drawText(`${INVOICE_ISSUER.city}, ${fmtDate(data.invoiceDate)}`, {
+  page.drawText(`${data.issuer.city}, ${fmtDate(data.invoiceDate)}`, {
     x: sigX,
     y: boxTop - 18,
     size: 9,
     font: helv,
     color: muted,
   });
-  page.drawText(INVOICE_ISSUER.companyName, {
+  page.drawText(data.issuer.companyName, {
     x: sigX,
     y: boxTop - 34,
     size: 9,
@@ -345,7 +346,7 @@ export async function buildInvoicePdf(data: InvoicePdfData): Promise<Uint8Array>
 
   // Footer
   page.drawText(
-    `Generated ${new Date().toISOString().slice(0, 19).replace("T", " ")} UTC — ${INVOICE_ISSUER.brand}`,
+    `Generated ${new Date().toISOString().slice(0, 19).replace("T", " ")} UTC — ${data.issuer.brand}`,
     { x: left, y: 36, size: 8, font: helv, color: muted },
   );
 
