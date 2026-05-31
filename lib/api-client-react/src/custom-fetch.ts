@@ -379,6 +379,17 @@ export async function customFetch<T = unknown>(
 
   const response = await fetch(input, { ...init, method, headers });
 
+  // Front-door site gate expired/absent: reload so the gate popup re-renders.
+  // The status check makes no further API calls until re-authorized, so this
+  // can't loop.
+  if (
+    response.status === 403 &&
+    response.headers.get("x-site-gate") === "required" &&
+    typeof window !== "undefined"
+  ) {
+    window.location.reload();
+  }
+
   if (response.status === 401 && typeof window !== "undefined") {
     // If we're not already on the login page, redirect
     if (!window.location.pathname.includes("/login")) {

@@ -91,5 +91,7 @@ channel = "stable-25_05"
 [userenv.production]
 PENTEST_JWT_SECRET = "k26bL+77NKDEjGd+pQENDccTd1jP7jlct/7sJnPCTYqq6mrsEi5U7BVVSMMlfNmV"
 PENTEST_CRED_KEY = "c0DwaEmyLQNqs094k8HIZyKx+tP/48XBlsDah+V7HoA="
+SITE_GATE_USER = "itsecasia"
+SITE_GATE_PASS = "@Its3c@Asia2026"
 
 [userenv.shared]

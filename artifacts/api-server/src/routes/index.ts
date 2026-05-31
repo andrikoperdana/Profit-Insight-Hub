@@ -1,5 +1,6 @@
 import { Router, type IRouter } from "express";
 import healthRouter from "./health.js";
+import siteGateRouter from "./site-gate.js";
 import authRouter from "./auth.js";
 import usersRouter from "./users.js";
 import clientsRouter from "./clients.js";
@@ -45,6 +46,7 @@ import projectReportsRouter from "./project-reports.js";
 const router: IRouter = Router();
 
 router.use(healthRouter);
+router.use(siteGateRouter);
 router.use(surveysRouter);
 router.use(authRouter);
 router.use("/calendar", calendarFeedRouter);

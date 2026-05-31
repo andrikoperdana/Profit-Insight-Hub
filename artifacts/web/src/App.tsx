@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/lib/auth";
 import Layout from "@/components/layout/Layout";
 import NotFound from "@/pages/not-found";
+import { SiteGate } from "@/components/SiteGate";
 
 // Eager: hot-path screens that the user lands on first / hits frequently. Anything
 // else is lazy-loaded so the initial JS bundle is much smaller (faster first paint).
@@ -182,11 +183,13 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
       <TooltipProvider>
-        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-          <AuthProvider>
-            <Router />
-          </AuthProvider>
-        </WouterRouter>
+        <SiteGate>
+          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+            <AuthProvider>
+              <Router />
+            </AuthProvider>
+          </WouterRouter>
+        </SiteGate>
         <Toaster />
       </TooltipProvider>
       </ThemeProvider>
