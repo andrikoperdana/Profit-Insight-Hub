@@ -4,6 +4,43 @@ import { requireAuth } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
 import { canViewAllProjects } from "../lib/roles.js";
 import { validateWorkstreamId } from "../lib/workstreams.js";
+import { buildInvoicePdf } from "../lib/invoice-pdf.js";
+
+function splitVat(
+  gross: number,
+  vatPct: number,
+  includesVat: boolean,
+): { dpp: number; vat: number; total: number } {
+  if (!isFinite(gross) || gross <= 0) return { dpp: 0, vat: 0, total: 0 };
+  if (includesVat) {
+    const dpp = gross / (1 + vatPct / 100);
+    return { dpp, vat: gross - dpp, total: gross };
+  }
+  const vat = gross * (vatPct / 100);
+  return { dpp: gross, vat, total: gross + vat };
+}
+
+/**
+ * Allocate the next sequential invoice number for the given date in the format
+ * INV/YYYY/MM/NNNN. The sequence is derived from existing BillingMilestone
+ * invoiceNumbers sharing the same year/month prefix.
+ */
+async function nextInvoiceNumber(date: Date): Promise<string> {
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const prefix = `INV/${year}/${month}/`;
+  const existing = await prisma.billingMilestone.findMany({
+    where: { invoiceNumber: { startsWith: prefix } },
+    select: { invoiceNumber: true },
+  });
+  let max = 0;
+  for (const row of existing) {
+    const suffix = row.invoiceNumber?.slice(prefix.length) ?? "";
+    const n = parseInt(suffix, 10);
+    if (Number.isFinite(n) && n > max) max = n;
+  }
+  return `${prefix}${String(max + 1).padStart(4, "0")}`;
+}
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -452,6 +489,222 @@ router.delete("/billing-milestones/:milestoneId", async (req, res) => {
     before: { id: before.id, name: before.name, projectId: before.projectId },
   });
   res.json({ success: true });
+});
+
+/**
+ * POST /api/billing-milestones/:milestoneId/generate-invoice
+ * Generates a PDF invoice for the milestone: assigns an invoice number (if
+ * missing), transitions the milestone to INVOICED (stamping invoicedAt), and
+ * archives the PDF as a Document (type INVOICE) linked to the milestone.
+ * Restricted to MANAGEMENT or the project's assigned PM.
+ */
+router.post("/billing-milestones/:milestoneId/generate-invoice", async (req, res) => {
+  const userId = req.user!.sub;
+  const role = req.user!.role;
+  const milestone = await prisma.billingMilestone.findUnique({
+    where: { id: req.params.milestoneId },
+    include: {
+      project: {
+        select: {
+          id: true,
+          code: true,
+          name: true,
+          pmId: true,
+          contractValue: true,
+          vatPercent: true,
+          contractValueIncludesVat: true,
+          client: {
+            select: { name: true, contactPerson: true, email: true, phone: true },
+          },
+        },
+      },
+    },
+  });
+  if (!milestone) {
+    res.status(404).json({ error: "Billing milestone not found" });
+    return;
+  }
+  if (!canManage(role, { pmId: milestone.project.pmId }, userId)) {
+    res.status(403).json({ error: "Only Management or assigned PM can generate invoices" });
+    return;
+  }
+  if (milestone.status === "CANCELLED") {
+    res.status(409).json({ error: "Cannot generate an invoice for a cancelled milestone" });
+    return;
+  }
+
+  const vatPct = milestone.project.vatPercent ?? 11;
+  const includesVat = milestone.project.contractValueIncludesVat ?? true;
+  const baseAmount =
+    milestone.amount ??
+    ((milestone.project.contractValue ?? 0) * (milestone.percentage || 0)) / 100;
+  if (!isFinite(baseAmount) || baseAmount <= 0) {
+    res.status(409).json({ error: "Milestone has no billable amount to invoice" });
+    return;
+  }
+  const { dpp, vat, total } = splitVat(baseAmount, vatPct, includesVat);
+
+  const now = new Date();
+  const invoicedAt = milestone.invoicedAt ?? now;
+  // Preserve an explicitly-set invoice number; otherwise auto-allocate. The
+  // number, PDF build, milestone update, and document archival all happen
+  // inside a transaction that retries on a unique-constraint clash (P2002) so
+  // concurrent generations cannot mint duplicate invoice numbers.
+  const explicitNumber = milestone.invoiceNumber?.trim() || null;
+  const MAX_ATTEMPTS = 5;
+
+  let invoiceNumber = "";
+  let updated: any = null;
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+    invoiceNumber = explicitNumber || (await nextInvoiceNumber(invoicedAt));
+
+    let pdfBytes: Uint8Array;
+    try {
+      pdfBytes = await buildInvoicePdf({
+        invoiceNumber,
+        invoiceDate: invoicedAt,
+        dueDate: milestone.dueDate ?? null,
+        project: { code: milestone.project.code, name: milestone.project.name },
+        client: {
+          name: milestone.project.client?.name ?? "—",
+          contactPerson: milestone.project.client?.contactPerson,
+          email: milestone.project.client?.email,
+          phone: milestone.project.client?.phone,
+        },
+        milestone: { name: milestone.name, description: milestone.description },
+        vatPercent: vatPct,
+        dpp,
+        vat,
+        total,
+      });
+    } catch (err) {
+      req.log.error({ err, milestoneId: milestone.id }, "Failed to build invoice PDF");
+      res.status(500).json({ error: "Failed to generate invoice PDF" });
+      return;
+    }
+
+    const dataUrl = `data:application/pdf;base64,${Buffer.from(pdfBytes).toString("base64")}`;
+    const fileName = `Invoice-${invoiceNumber.replace(/[\\/]/g, "-")}.pdf`;
+
+    try {
+      updated = await prisma.$transaction(async (tx) => {
+        // Re-read inside the transaction to guard against a concurrent status
+        // change (e.g. cancellation) between the initial read and the write.
+        const fresh = await tx.billingMilestone.findUnique({
+          where: { id: milestone.id },
+          select: { status: true },
+        });
+        if (!fresh) throw new Error("MILESTONE_GONE");
+        if (fresh.status === "CANCELLED") throw new Error("MILESTONE_CANCELLED");
+
+        const m = await tx.billingMilestone.update({
+          where: { id: milestone.id },
+          data: {
+            invoiceNumber,
+            status: fresh.status === "PLANNED" ? "INVOICED" : fresh.status,
+            invoicedAt,
+          },
+        });
+        // Replace any prior auto-generated invoice document for this milestone.
+        await tx.document.deleteMany({
+          where: { billingMilestoneId: milestone.id, type: "INVOICE" },
+        });
+        await tx.document.create({
+          data: {
+            projectId: milestone.project.id,
+            billingMilestoneId: milestone.id,
+            type: "INVOICE",
+            fileName,
+            fileUrl: dataUrl,
+            invoiceNumber,
+            invoiceAmount: total,
+            invoiceStatus: m.status,
+            notes: `Auto-generated invoice for billing milestone "${milestone.name}"`,
+            uploadedById: userId,
+          },
+        });
+        return m;
+      });
+      break;
+    } catch (err: any) {
+      // Unique clash on invoiceNumber — another request grabbed it. Retry with
+      // a freshly recomputed number (only meaningful when auto-allocating).
+      if (err?.code === "P2002" && !explicitNumber && attempt < MAX_ATTEMPTS - 1) {
+        continue;
+      }
+      if (err?.code === "P2002") {
+        res.status(409).json({ error: "Invoice number already in use; please retry" });
+        return;
+      }
+      if (err?.message === "MILESTONE_CANCELLED") {
+        res.status(409).json({ error: "Cannot generate an invoice for a cancelled milestone" });
+        return;
+      }
+      if (err?.message === "MILESTONE_GONE") {
+        res.status(404).json({ error: "Billing milestone not found" });
+        return;
+      }
+      throw err;
+    }
+  }
+
+  if (!updated) {
+    res.status(409).json({ error: "Could not allocate a unique invoice number; please retry" });
+    return;
+  }
+
+  await recordAudit(req, {
+    action: "billing_milestone.invoice_generated",
+    entityType: "BillingMilestone",
+    entityId: milestone.id,
+    description: `Generated invoice ${invoiceNumber} for milestone "${milestone.name}"`,
+    after: { invoiceNumber, status: updated.status, total },
+  });
+
+  res.json({ ...serialize(updated), invoiceNumber, total });
+});
+
+/**
+ * GET /api/billing-milestones/:milestoneId/invoice
+ * Streams the archived invoice PDF for the milestone. Access mirrors the
+ * milestone read scope (canViewProject). 409 if no invoice was generated yet.
+ * Not part of the OpenAPI surface — frontend fetches with a bearer token.
+ */
+router.get("/billing-milestones/:milestoneId/invoice", async (req, res) => {
+  const milestone = await prisma.billingMilestone.findUnique({
+    where: { id: req.params.milestoneId },
+    include: { project: { select: { id: true, code: true, pmId: true, salesId: true } } },
+  });
+  if (!milestone) {
+    res.status(404).json({ error: "Billing milestone not found" });
+    return;
+  }
+  const allowed = await canViewProject(req.user?.role, req.user?.sub, milestone.project);
+  if (!allowed) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  const doc = await prisma.document.findFirst({
+    where: { billingMilestoneId: milestone.id, type: "INVOICE" },
+    orderBy: { uploadedAt: "desc" },
+    select: { fileUrl: true, fileName: true },
+  });
+  if (!doc) {
+    res.status(409).json({ error: "Invoice has not been generated yet" });
+    return;
+  }
+  const m = /^data:application\/pdf;base64,(.+)$/i.exec(doc.fileUrl);
+  if (!m) {
+    res.status(500).json({ error: "Stored invoice is not a valid PDF" });
+    return;
+  }
+  const bytes = Buffer.from(m[1], "base64");
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader(
+    "Content-Disposition",
+    `attachment; filename="${doc.fileName || `invoice-${milestone.project.code}.pdf`}"`,
+  );
+  res.send(bytes);
 });
 
 export default router;

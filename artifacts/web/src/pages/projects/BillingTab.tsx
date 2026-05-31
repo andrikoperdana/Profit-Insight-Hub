@@ -31,7 +31,8 @@ import { useToast } from "@/hooks/use-toast";
 import { formatDate, formatIDR } from "@/lib/format";
 import { EmptyState } from "@/components/common/EmptyState";
 import { WorkstreamPicker } from "./components/WorkstreamPicker";
-import { Plus, Trash2, Pencil, Loader2, Receipt, AlertCircle } from "lucide-react";
+import { downloadAuthed, postAuthed } from "@/lib/exports";
+import { Plus, Trash2, Pencil, Loader2, Receipt, AlertCircle, FileText, Download } from "lucide-react";
 
 const STATUS_LABEL: Record<BillingMilestoneStatus, string> = {
   PLANNED: "Planned",
@@ -87,10 +88,42 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
 
   const [createOpen, setCreateOpen] = useState(false);
   const [editRow, setEditRow] = useState<BillingMilestone | null>(null);
+  const [busyId, setBusyId] = useState<string | null>(null);
 
   const invalidate = () => {
     qc.invalidateQueries({ queryKey: getListBillingMilestonesQueryKey(projectId) });
   };
+
+  async function handleGenerateInvoice(m: BillingMilestone) {
+    setBusyId(m.id);
+    try {
+      await postAuthed(`/api/billing-milestones/${m.id}/generate-invoice`);
+      toast({ title: "Invoice generated", description: "Downloading the PDF…" });
+      invalidate();
+      await downloadAuthed(
+        `/api/billing-milestones/${m.id}/invoice`,
+        `Invoice-${m.name.replace(/[\\/]/g, "-")}.pdf`,
+      );
+    } catch (e: any) {
+      toast({ title: "Generate invoice failed", description: e?.message, variant: "destructive" });
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  async function handleDownloadInvoice(m: BillingMilestone) {
+    setBusyId(m.id);
+    try {
+      await downloadAuthed(
+        `/api/billing-milestones/${m.id}/invoice`,
+        `Invoice-${(m.invoiceNumber ?? m.name).replace(/[\\/]/g, "-")}.pdf`,
+      );
+    } catch (e: any) {
+      toast({ title: "Download failed", description: e?.message, variant: "destructive" });
+    } finally {
+      setBusyId(null);
+    }
+  }
 
   const deleteMutation = useDeleteBillingMilestone({
     mutation: {
@@ -241,6 +274,38 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
                     <TableCell className="text-xs font-mono">{m.invoiceNumber ?? "—"}</TableCell>
                     <TableCell>
                       <div className="flex items-center justify-end gap-1.5">
+                        {isManager && m.status === "PLANNED" && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            disabled={busyId === m.id}
+                            onClick={() => handleGenerateInvoice(m)}
+                            data-testid={`button-generate-invoice-${m.id}`}
+                          >
+                            {busyId === m.id ? (
+                              <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                            ) : (
+                              <FileText className="h-3.5 w-3.5 mr-1.5" />
+                            )}
+                            Generate Invoice
+                          </Button>
+                        )}
+                        {(m.status === "INVOICED" || m.status === "PAID") && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            disabled={busyId === m.id}
+                            onClick={() => handleDownloadInvoice(m)}
+                            data-testid={`button-download-invoice-${m.id}`}
+                          >
+                            {busyId === m.id ? (
+                              <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                            ) : (
+                              <Download className="h-3.5 w-3.5 mr-1.5" />
+                            )}
+                            Invoice
+                          </Button>
+                        )}
                         {isManager && (
                           <>
                             <Button size="icon" variant="ghost" onClick={() => setEditRow(m)}>

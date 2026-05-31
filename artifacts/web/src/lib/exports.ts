@@ -24,6 +24,27 @@ export async function downloadAuthed(url: string, filename: string): Promise<voi
   setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
 }
 
+export async function postAuthed<T = unknown>(url: string, body?: unknown): Promise<T> {
+  const token = localStorage.getItem("auth_token");
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: body !== undefined ? JSON.stringify(body) : undefined,
+  });
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try {
+      const j = await res.json();
+      if (j?.error) msg = j.error;
+    } catch {}
+    throw new Error(msg);
+  }
+  return (await res.json()) as T;
+}
+
 export function exportSheets(
   fileName: string,
   sheets: { name: string; rows: any[] }[],

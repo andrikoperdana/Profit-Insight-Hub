@@ -4954,6 +4954,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type BillingMilestoneCountOutputType
+   */
+
+  export type BillingMilestoneCountOutputType = {
+    invoiceDocuments: number
+  }
+
+  export type BillingMilestoneCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    invoiceDocuments?: boolean | BillingMilestoneCountOutputTypeCountInvoiceDocumentsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * BillingMilestoneCountOutputType without action
+   */
+  export type BillingMilestoneCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BillingMilestoneCountOutputType
+     */
+    select?: BillingMilestoneCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * BillingMilestoneCountOutputType without action
+   */
+  export type BillingMilestoneCountOutputTypeCountInvoiceDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentWhereInput
+  }
+
+
+  /**
    * Count Type LeadCountOutputType
    */
 
@@ -17476,6 +17507,7 @@ export namespace Prisma {
     version: number | null
     parentDocumentId: string | null
     isLatest: boolean | null
+    billingMilestoneId: string | null
   }
 
   export type DocumentMaxAggregateOutputType = {
@@ -17493,6 +17525,7 @@ export namespace Prisma {
     version: number | null
     parentDocumentId: string | null
     isLatest: boolean | null
+    billingMilestoneId: string | null
   }
 
   export type DocumentCountAggregateOutputType = {
@@ -17510,6 +17543,7 @@ export namespace Prisma {
     version: number
     parentDocumentId: number
     isLatest: number
+    billingMilestoneId: number
     _all: number
   }
 
@@ -17539,6 +17573,7 @@ export namespace Prisma {
     version?: true
     parentDocumentId?: true
     isLatest?: true
+    billingMilestoneId?: true
   }
 
   export type DocumentMaxAggregateInputType = {
@@ -17556,6 +17591,7 @@ export namespace Prisma {
     version?: true
     parentDocumentId?: true
     isLatest?: true
+    billingMilestoneId?: true
   }
 
   export type DocumentCountAggregateInputType = {
@@ -17573,6 +17609,7 @@ export namespace Prisma {
     version?: true
     parentDocumentId?: true
     isLatest?: true
+    billingMilestoneId?: true
     _all?: true
   }
 
@@ -17677,6 +17714,7 @@ export namespace Prisma {
     version: number
     parentDocumentId: string | null
     isLatest: boolean
+    billingMilestoneId: string | null
     _count: DocumentCountAggregateOutputType | null
     _avg: DocumentAvgAggregateOutputType | null
     _sum: DocumentSumAggregateOutputType | null
@@ -17713,10 +17751,12 @@ export namespace Prisma {
     version?: boolean
     parentDocumentId?: boolean
     isLatest?: boolean
+    billingMilestoneId?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     uploadedBy?: boolean | Document$uploadedByArgs<ExtArgs>
     parentDocument?: boolean | Document$parentDocumentArgs<ExtArgs>
     versions?: boolean | Document$versionsArgs<ExtArgs>
+    billingMilestone?: boolean | Document$billingMilestoneArgs<ExtArgs>
     _count?: boolean | DocumentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["document"]>
 
@@ -17735,9 +17775,11 @@ export namespace Prisma {
     version?: boolean
     parentDocumentId?: boolean
     isLatest?: boolean
+    billingMilestoneId?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     uploadedBy?: boolean | Document$uploadedByArgs<ExtArgs>
     parentDocument?: boolean | Document$parentDocumentArgs<ExtArgs>
+    billingMilestone?: boolean | Document$billingMilestoneArgs<ExtArgs>
   }, ExtArgs["result"]["document"]>
 
   export type DocumentSelectScalar = {
@@ -17755,6 +17797,7 @@ export namespace Prisma {
     version?: boolean
     parentDocumentId?: boolean
     isLatest?: boolean
+    billingMilestoneId?: boolean
   }
 
   export type DocumentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -17762,12 +17805,14 @@ export namespace Prisma {
     uploadedBy?: boolean | Document$uploadedByArgs<ExtArgs>
     parentDocument?: boolean | Document$parentDocumentArgs<ExtArgs>
     versions?: boolean | Document$versionsArgs<ExtArgs>
+    billingMilestone?: boolean | Document$billingMilestoneArgs<ExtArgs>
     _count?: boolean | DocumentCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DocumentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     uploadedBy?: boolean | Document$uploadedByArgs<ExtArgs>
     parentDocument?: boolean | Document$parentDocumentArgs<ExtArgs>
+    billingMilestone?: boolean | Document$billingMilestoneArgs<ExtArgs>
   }
 
   export type $DocumentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -17777,6 +17822,7 @@ export namespace Prisma {
       uploadedBy: Prisma.$UserPayload<ExtArgs> | null
       parentDocument: Prisma.$DocumentPayload<ExtArgs> | null
       versions: Prisma.$DocumentPayload<ExtArgs>[]
+      billingMilestone: Prisma.$BillingMilestonePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -17793,6 +17839,7 @@ export namespace Prisma {
       version: number
       parentDocumentId: string | null
       isLatest: boolean
+      billingMilestoneId: string | null
     }, ExtArgs["result"]["document"]>
     composites: {}
   }
@@ -18161,6 +18208,7 @@ export namespace Prisma {
     uploadedBy<T extends Document$uploadedByArgs<ExtArgs> = {}>(args?: Subset<T, Document$uploadedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     parentDocument<T extends Document$parentDocumentArgs<ExtArgs> = {}>(args?: Subset<T, Document$parentDocumentArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     versions<T extends Document$versionsArgs<ExtArgs> = {}>(args?: Subset<T, Document$versionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany"> | Null>
+    billingMilestone<T extends Document$billingMilestoneArgs<ExtArgs> = {}>(args?: Subset<T, Document$billingMilestoneArgs<ExtArgs>>): Prisma__BillingMilestoneClient<$Result.GetResult<Prisma.$BillingMilestonePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -18204,6 +18252,7 @@ export namespace Prisma {
     readonly version: FieldRef<"Document", 'Int'>
     readonly parentDocumentId: FieldRef<"Document", 'String'>
     readonly isLatest: FieldRef<"Document", 'Boolean'>
+    readonly billingMilestoneId: FieldRef<"Document", 'String'>
   }
     
 
@@ -18569,6 +18618,21 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
+  }
+
+  /**
+   * Document.billingMilestone
+   */
+  export type Document$billingMilestoneArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BillingMilestone
+     */
+    select?: BillingMilestoneSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BillingMilestoneInclude<ExtArgs> | null
+    where?: BillingMilestoneWhereInput
   }
 
   /**
@@ -29450,6 +29514,8 @@ export namespace Prisma {
     updatedAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     workstream?: boolean | BillingMilestone$workstreamArgs<ExtArgs>
+    invoiceDocuments?: boolean | BillingMilestone$invoiceDocumentsArgs<ExtArgs>
+    _count?: boolean | BillingMilestoneCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["billingMilestone"]>
 
   export type BillingMilestoneSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -29493,6 +29559,8 @@ export namespace Prisma {
   export type BillingMilestoneInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     workstream?: boolean | BillingMilestone$workstreamArgs<ExtArgs>
+    invoiceDocuments?: boolean | BillingMilestone$invoiceDocumentsArgs<ExtArgs>
+    _count?: boolean | BillingMilestoneCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type BillingMilestoneIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
@@ -29504,6 +29572,7 @@ export namespace Prisma {
     objects: {
       project: Prisma.$ProjectPayload<ExtArgs>
       workstream: Prisma.$ProjectWorkstreamPayload<ExtArgs> | null
+      invoiceDocuments: Prisma.$DocumentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -29887,6 +29956,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     workstream<T extends BillingMilestone$workstreamArgs<ExtArgs> = {}>(args?: Subset<T, BillingMilestone$workstreamArgs<ExtArgs>>): Prisma__ProjectWorkstreamClient<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    invoiceDocuments<T extends BillingMilestone$invoiceDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, BillingMilestone$invoiceDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -30261,6 +30331,26 @@ export namespace Prisma {
      */
     include?: ProjectWorkstreamInclude<ExtArgs> | null
     where?: ProjectWorkstreamWhereInput
+  }
+
+  /**
+   * BillingMilestone.invoiceDocuments
+   */
+  export type BillingMilestone$invoiceDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    where?: DocumentWhereInput
+    orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
+    cursor?: DocumentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
   }
 
   /**
@@ -45107,7 +45197,8 @@ export namespace Prisma {
     uploadedAt: 'uploadedAt',
     version: 'version',
     parentDocumentId: 'parentDocumentId',
-    isLatest: 'isLatest'
+    isLatest: 'isLatest',
+    billingMilestoneId: 'billingMilestoneId'
   };
 
   export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
@@ -47171,10 +47262,12 @@ export namespace Prisma {
     version?: IntFilter<"Document"> | number
     parentDocumentId?: StringNullableFilter<"Document"> | string | null
     isLatest?: BoolFilter<"Document"> | boolean
+    billingMilestoneId?: StringNullableFilter<"Document"> | string | null
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
     uploadedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     parentDocument?: XOR<DocumentNullableRelationFilter, DocumentWhereInput> | null
     versions?: DocumentListRelationFilter
+    billingMilestone?: XOR<BillingMilestoneNullableRelationFilter, BillingMilestoneWhereInput> | null
   }
 
   export type DocumentOrderByWithRelationInput = {
@@ -47192,10 +47285,12 @@ export namespace Prisma {
     version?: SortOrder
     parentDocumentId?: SortOrderInput | SortOrder
     isLatest?: SortOrder
+    billingMilestoneId?: SortOrderInput | SortOrder
     project?: ProjectOrderByWithRelationInput
     uploadedBy?: UserOrderByWithRelationInput
     parentDocument?: DocumentOrderByWithRelationInput
     versions?: DocumentOrderByRelationAggregateInput
+    billingMilestone?: BillingMilestoneOrderByWithRelationInput
   }
 
   export type DocumentWhereUniqueInput = Prisma.AtLeast<{
@@ -47216,10 +47311,12 @@ export namespace Prisma {
     version?: IntFilter<"Document"> | number
     parentDocumentId?: StringNullableFilter<"Document"> | string | null
     isLatest?: BoolFilter<"Document"> | boolean
+    billingMilestoneId?: StringNullableFilter<"Document"> | string | null
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
     uploadedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     parentDocument?: XOR<DocumentNullableRelationFilter, DocumentWhereInput> | null
     versions?: DocumentListRelationFilter
+    billingMilestone?: XOR<BillingMilestoneNullableRelationFilter, BillingMilestoneWhereInput> | null
   }, "id">
 
   export type DocumentOrderByWithAggregationInput = {
@@ -47237,6 +47334,7 @@ export namespace Prisma {
     version?: SortOrder
     parentDocumentId?: SortOrderInput | SortOrder
     isLatest?: SortOrder
+    billingMilestoneId?: SortOrderInput | SortOrder
     _count?: DocumentCountOrderByAggregateInput
     _avg?: DocumentAvgOrderByAggregateInput
     _max?: DocumentMaxOrderByAggregateInput
@@ -47262,6 +47360,7 @@ export namespace Prisma {
     version?: IntWithAggregatesFilter<"Document"> | number
     parentDocumentId?: StringNullableWithAggregatesFilter<"Document"> | string | null
     isLatest?: BoolWithAggregatesFilter<"Document"> | boolean
+    billingMilestoneId?: StringNullableWithAggregatesFilter<"Document"> | string | null
   }
 
   export type ProjectClosingChecklistItemWhereInput = {
@@ -48124,6 +48223,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"BillingMilestone"> | Date | string
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
     workstream?: XOR<ProjectWorkstreamNullableRelationFilter, ProjectWorkstreamWhereInput> | null
+    invoiceDocuments?: DocumentListRelationFilter
   }
 
   export type BillingMilestoneOrderByWithRelationInput = {
@@ -48144,10 +48244,12 @@ export namespace Prisma {
     updatedAt?: SortOrder
     project?: ProjectOrderByWithRelationInput
     workstream?: ProjectWorkstreamOrderByWithRelationInput
+    invoiceDocuments?: DocumentOrderByRelationAggregateInput
   }
 
   export type BillingMilestoneWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    invoiceNumber?: string
     AND?: BillingMilestoneWhereInput | BillingMilestoneWhereInput[]
     OR?: BillingMilestoneWhereInput[]
     NOT?: BillingMilestoneWhereInput | BillingMilestoneWhereInput[]
@@ -48159,7 +48261,6 @@ export namespace Prisma {
     amount?: FloatNullableFilter<"BillingMilestone"> | number | null
     dueDate?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     status?: EnumBillingMilestoneStatusFilter<"BillingMilestone"> | $Enums.BillingMilestoneStatus
-    invoiceNumber?: StringNullableFilter<"BillingMilestone"> | string | null
     invoicedAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     paidAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     sortOrder?: IntFilter<"BillingMilestone"> | number
@@ -48167,7 +48268,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"BillingMilestone"> | Date | string
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
     workstream?: XOR<ProjectWorkstreamNullableRelationFilter, ProjectWorkstreamWhereInput> | null
-  }, "id">
+    invoiceDocuments?: DocumentListRelationFilter
+  }, "id" | "invoiceNumber">
 
   export type BillingMilestoneOrderByWithAggregationInput = {
     id?: SortOrder
@@ -50884,6 +50986,7 @@ export namespace Prisma {
     uploadedBy?: UserCreateNestedOneWithoutDocumentsUploadedInput
     parentDocument?: DocumentCreateNestedOneWithoutVersionsInput
     versions?: DocumentCreateNestedManyWithoutParentDocumentInput
+    billingMilestone?: BillingMilestoneCreateNestedOneWithoutInvoiceDocumentsInput
   }
 
   export type DocumentUncheckedCreateInput = {
@@ -50901,6 +51004,7 @@ export namespace Prisma {
     version?: number
     parentDocumentId?: string | null
     isLatest?: boolean
+    billingMilestoneId?: string | null
     versions?: DocumentUncheckedCreateNestedManyWithoutParentDocumentInput
   }
 
@@ -50920,6 +51024,7 @@ export namespace Prisma {
     uploadedBy?: UserUpdateOneWithoutDocumentsUploadedNestedInput
     parentDocument?: DocumentUpdateOneWithoutVersionsNestedInput
     versions?: DocumentUpdateManyWithoutParentDocumentNestedInput
+    billingMilestone?: BillingMilestoneUpdateOneWithoutInvoiceDocumentsNestedInput
   }
 
   export type DocumentUncheckedUpdateInput = {
@@ -50937,6 +51042,7 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     parentDocumentId?: NullableStringFieldUpdateOperationsInput | string | null
     isLatest?: BoolFieldUpdateOperationsInput | boolean
+    billingMilestoneId?: NullableStringFieldUpdateOperationsInput | string | null
     versions?: DocumentUncheckedUpdateManyWithoutParentDocumentNestedInput
   }
 
@@ -50955,6 +51061,7 @@ export namespace Prisma {
     version?: number
     parentDocumentId?: string | null
     isLatest?: boolean
+    billingMilestoneId?: string | null
   }
 
   export type DocumentUpdateManyMutationInput = {
@@ -50986,6 +51093,7 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     parentDocumentId?: NullableStringFieldUpdateOperationsInput | string | null
     isLatest?: BoolFieldUpdateOperationsInput | boolean
+    billingMilestoneId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProjectClosingChecklistItemCreateInput = {
@@ -51866,6 +51974,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutBillingMilestonesInput
     workstream?: ProjectWorkstreamCreateNestedOneWithoutBillingMilestonesInput
+    invoiceDocuments?: DocumentCreateNestedManyWithoutBillingMilestoneInput
   }
 
   export type BillingMilestoneUncheckedCreateInput = {
@@ -51884,6 +51993,7 @@ export namespace Prisma {
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    invoiceDocuments?: DocumentUncheckedCreateNestedManyWithoutBillingMilestoneInput
   }
 
   export type BillingMilestoneUpdateInput = {
@@ -51902,6 +52012,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutBillingMilestonesNestedInput
     workstream?: ProjectWorkstreamUpdateOneWithoutBillingMilestonesNestedInput
+    invoiceDocuments?: DocumentUpdateManyWithoutBillingMilestoneNestedInput
   }
 
   export type BillingMilestoneUncheckedUpdateInput = {
@@ -51920,6 +52031,7 @@ export namespace Prisma {
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoiceDocuments?: DocumentUncheckedUpdateManyWithoutBillingMilestoneNestedInput
   }
 
   export type BillingMilestoneCreateManyInput = {
@@ -54634,6 +54746,11 @@ export namespace Prisma {
     isNot?: DocumentWhereInput | null
   }
 
+  export type BillingMilestoneNullableRelationFilter = {
+    is?: BillingMilestoneWhereInput | null
+    isNot?: BillingMilestoneWhereInput | null
+  }
+
   export type DocumentCountOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
@@ -54649,6 +54766,7 @@ export namespace Prisma {
     version?: SortOrder
     parentDocumentId?: SortOrder
     isLatest?: SortOrder
+    billingMilestoneId?: SortOrder
   }
 
   export type DocumentAvgOrderByAggregateInput = {
@@ -54671,6 +54789,7 @@ export namespace Prisma {
     version?: SortOrder
     parentDocumentId?: SortOrder
     isLatest?: SortOrder
+    billingMilestoneId?: SortOrder
   }
 
   export type DocumentMinOrderByAggregateInput = {
@@ -54688,6 +54807,7 @@ export namespace Prisma {
     version?: SortOrder
     parentDocumentId?: SortOrder
     isLatest?: SortOrder
+    billingMilestoneId?: SortOrder
   }
 
   export type DocumentSumOrderByAggregateInput = {
@@ -59071,6 +59191,12 @@ export namespace Prisma {
     connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
   }
 
+  export type BillingMilestoneCreateNestedOneWithoutInvoiceDocumentsInput = {
+    create?: XOR<BillingMilestoneCreateWithoutInvoiceDocumentsInput, BillingMilestoneUncheckedCreateWithoutInvoiceDocumentsInput>
+    connectOrCreate?: BillingMilestoneCreateOrConnectWithoutInvoiceDocumentsInput
+    connect?: BillingMilestoneWhereUniqueInput
+  }
+
   export type DocumentUncheckedCreateNestedManyWithoutParentDocumentInput = {
     create?: XOR<DocumentCreateWithoutParentDocumentInput, DocumentUncheckedCreateWithoutParentDocumentInput> | DocumentCreateWithoutParentDocumentInput[] | DocumentUncheckedCreateWithoutParentDocumentInput[]
     connectOrCreate?: DocumentCreateOrConnectWithoutParentDocumentInput | DocumentCreateOrConnectWithoutParentDocumentInput[]
@@ -59122,6 +59248,16 @@ export namespace Prisma {
     update?: DocumentUpdateWithWhereUniqueWithoutParentDocumentInput | DocumentUpdateWithWhereUniqueWithoutParentDocumentInput[]
     updateMany?: DocumentUpdateManyWithWhereWithoutParentDocumentInput | DocumentUpdateManyWithWhereWithoutParentDocumentInput[]
     deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
+  }
+
+  export type BillingMilestoneUpdateOneWithoutInvoiceDocumentsNestedInput = {
+    create?: XOR<BillingMilestoneCreateWithoutInvoiceDocumentsInput, BillingMilestoneUncheckedCreateWithoutInvoiceDocumentsInput>
+    connectOrCreate?: BillingMilestoneCreateOrConnectWithoutInvoiceDocumentsInput
+    upsert?: BillingMilestoneUpsertWithoutInvoiceDocumentsInput
+    disconnect?: BillingMilestoneWhereInput | boolean
+    delete?: BillingMilestoneWhereInput | boolean
+    connect?: BillingMilestoneWhereUniqueInput
+    update?: XOR<XOR<BillingMilestoneUpdateToOneWithWhereWithoutInvoiceDocumentsInput, BillingMilestoneUpdateWithoutInvoiceDocumentsInput>, BillingMilestoneUncheckedUpdateWithoutInvoiceDocumentsInput>
   }
 
   export type DocumentUncheckedUpdateManyWithoutParentDocumentNestedInput = {
@@ -60058,6 +60194,20 @@ export namespace Prisma {
     connect?: ProjectWorkstreamWhereUniqueInput
   }
 
+  export type DocumentCreateNestedManyWithoutBillingMilestoneInput = {
+    create?: XOR<DocumentCreateWithoutBillingMilestoneInput, DocumentUncheckedCreateWithoutBillingMilestoneInput> | DocumentCreateWithoutBillingMilestoneInput[] | DocumentUncheckedCreateWithoutBillingMilestoneInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutBillingMilestoneInput | DocumentCreateOrConnectWithoutBillingMilestoneInput[]
+    createMany?: DocumentCreateManyBillingMilestoneInputEnvelope
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+  }
+
+  export type DocumentUncheckedCreateNestedManyWithoutBillingMilestoneInput = {
+    create?: XOR<DocumentCreateWithoutBillingMilestoneInput, DocumentUncheckedCreateWithoutBillingMilestoneInput> | DocumentCreateWithoutBillingMilestoneInput[] | DocumentUncheckedCreateWithoutBillingMilestoneInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutBillingMilestoneInput | DocumentCreateOrConnectWithoutBillingMilestoneInput[]
+    createMany?: DocumentCreateManyBillingMilestoneInputEnvelope
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+  }
+
   export type EnumBillingMilestoneStatusFieldUpdateOperationsInput = {
     set?: $Enums.BillingMilestoneStatus
   }
@@ -60078,6 +60228,34 @@ export namespace Prisma {
     delete?: ProjectWorkstreamWhereInput | boolean
     connect?: ProjectWorkstreamWhereUniqueInput
     update?: XOR<XOR<ProjectWorkstreamUpdateToOneWithWhereWithoutBillingMilestonesInput, ProjectWorkstreamUpdateWithoutBillingMilestonesInput>, ProjectWorkstreamUncheckedUpdateWithoutBillingMilestonesInput>
+  }
+
+  export type DocumentUpdateManyWithoutBillingMilestoneNestedInput = {
+    create?: XOR<DocumentCreateWithoutBillingMilestoneInput, DocumentUncheckedCreateWithoutBillingMilestoneInput> | DocumentCreateWithoutBillingMilestoneInput[] | DocumentUncheckedCreateWithoutBillingMilestoneInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutBillingMilestoneInput | DocumentCreateOrConnectWithoutBillingMilestoneInput[]
+    upsert?: DocumentUpsertWithWhereUniqueWithoutBillingMilestoneInput | DocumentUpsertWithWhereUniqueWithoutBillingMilestoneInput[]
+    createMany?: DocumentCreateManyBillingMilestoneInputEnvelope
+    set?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    disconnect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    delete?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    update?: DocumentUpdateWithWhereUniqueWithoutBillingMilestoneInput | DocumentUpdateWithWhereUniqueWithoutBillingMilestoneInput[]
+    updateMany?: DocumentUpdateManyWithWhereWithoutBillingMilestoneInput | DocumentUpdateManyWithWhereWithoutBillingMilestoneInput[]
+    deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
+  }
+
+  export type DocumentUncheckedUpdateManyWithoutBillingMilestoneNestedInput = {
+    create?: XOR<DocumentCreateWithoutBillingMilestoneInput, DocumentUncheckedCreateWithoutBillingMilestoneInput> | DocumentCreateWithoutBillingMilestoneInput[] | DocumentUncheckedCreateWithoutBillingMilestoneInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutBillingMilestoneInput | DocumentCreateOrConnectWithoutBillingMilestoneInput[]
+    upsert?: DocumentUpsertWithWhereUniqueWithoutBillingMilestoneInput | DocumentUpsertWithWhereUniqueWithoutBillingMilestoneInput[]
+    createMany?: DocumentCreateManyBillingMilestoneInputEnvelope
+    set?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    disconnect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    delete?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    update?: DocumentUpdateWithWhereUniqueWithoutBillingMilestoneInput | DocumentUpdateWithWhereUniqueWithoutBillingMilestoneInput[]
+    updateMany?: DocumentUpdateManyWithWhereWithoutBillingMilestoneInput | DocumentUpdateManyWithWhereWithoutBillingMilestoneInput[]
+    deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
   }
 
   export type TaskCreateNestedOneWithoutAssigneesInput = {
@@ -62516,6 +62694,7 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutDocumentsInput
     parentDocument?: DocumentCreateNestedOneWithoutVersionsInput
     versions?: DocumentCreateNestedManyWithoutParentDocumentInput
+    billingMilestone?: BillingMilestoneCreateNestedOneWithoutInvoiceDocumentsInput
   }
 
   export type DocumentUncheckedCreateWithoutUploadedByInput = {
@@ -62532,6 +62711,7 @@ export namespace Prisma {
     version?: number
     parentDocumentId?: string | null
     isLatest?: boolean
+    billingMilestoneId?: string | null
     versions?: DocumentUncheckedCreateNestedManyWithoutParentDocumentInput
   }
 
@@ -64136,6 +64316,7 @@ export namespace Prisma {
     version?: IntFilter<"Document"> | number
     parentDocumentId?: StringNullableFilter<"Document"> | string | null
     isLatest?: BoolFilter<"Document"> | boolean
+    billingMilestoneId?: StringNullableFilter<"Document"> | string | null
   }
 
   export type ActivityUpsertWithWhereUniqueWithoutUserInput = {
@@ -65625,6 +65806,7 @@ export namespace Prisma {
     uploadedBy?: UserCreateNestedOneWithoutDocumentsUploadedInput
     parentDocument?: DocumentCreateNestedOneWithoutVersionsInput
     versions?: DocumentCreateNestedManyWithoutParentDocumentInput
+    billingMilestone?: BillingMilestoneCreateNestedOneWithoutInvoiceDocumentsInput
   }
 
   export type DocumentUncheckedCreateWithoutProjectInput = {
@@ -65641,6 +65823,7 @@ export namespace Prisma {
     version?: number
     parentDocumentId?: string | null
     isLatest?: boolean
+    billingMilestoneId?: string | null
     versions?: DocumentUncheckedCreateNestedManyWithoutParentDocumentInput
   }
 
@@ -65827,6 +66010,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     workstream?: ProjectWorkstreamCreateNestedOneWithoutBillingMilestonesInput
+    invoiceDocuments?: DocumentCreateNestedManyWithoutBillingMilestoneInput
   }
 
   export type BillingMilestoneUncheckedCreateWithoutProjectInput = {
@@ -65844,6 +66028,7 @@ export namespace Prisma {
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    invoiceDocuments?: DocumentUncheckedCreateNestedManyWithoutBillingMilestoneInput
   }
 
   export type BillingMilestoneCreateOrConnectWithoutProjectInput = {
@@ -67700,6 +67885,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutBillingMilestonesInput
+    invoiceDocuments?: DocumentCreateNestedManyWithoutBillingMilestoneInput
   }
 
   export type BillingMilestoneUncheckedCreateWithoutWorkstreamInput = {
@@ -67717,6 +67903,7 @@ export namespace Prisma {
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    invoiceDocuments?: DocumentUncheckedCreateNestedManyWithoutBillingMilestoneInput
   }
 
   export type BillingMilestoneCreateOrConnectWithoutWorkstreamInput = {
@@ -70438,6 +70625,7 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutDocumentsInput
     uploadedBy?: UserCreateNestedOneWithoutDocumentsUploadedInput
     parentDocument?: DocumentCreateNestedOneWithoutVersionsInput
+    billingMilestone?: BillingMilestoneCreateNestedOneWithoutInvoiceDocumentsInput
   }
 
   export type DocumentUncheckedCreateWithoutVersionsInput = {
@@ -70455,6 +70643,7 @@ export namespace Prisma {
     version?: number
     parentDocumentId?: string | null
     isLatest?: boolean
+    billingMilestoneId?: string | null
   }
 
   export type DocumentCreateOrConnectWithoutVersionsInput = {
@@ -70477,6 +70666,7 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutDocumentsInput
     uploadedBy?: UserCreateNestedOneWithoutDocumentsUploadedInput
     versions?: DocumentCreateNestedManyWithoutParentDocumentInput
+    billingMilestone?: BillingMilestoneCreateNestedOneWithoutInvoiceDocumentsInput
   }
 
   export type DocumentUncheckedCreateWithoutParentDocumentInput = {
@@ -70493,6 +70683,7 @@ export namespace Prisma {
     uploadedAt?: Date | string
     version?: number
     isLatest?: boolean
+    billingMilestoneId?: string | null
     versions?: DocumentUncheckedCreateNestedManyWithoutParentDocumentInput
   }
 
@@ -70504,6 +70695,47 @@ export namespace Prisma {
   export type DocumentCreateManyParentDocumentInputEnvelope = {
     data: DocumentCreateManyParentDocumentInput | DocumentCreateManyParentDocumentInput[]
     skipDuplicates?: boolean
+  }
+
+  export type BillingMilestoneCreateWithoutInvoiceDocumentsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    percentage?: number
+    amount?: number | null
+    dueDate?: Date | string | null
+    status?: $Enums.BillingMilestoneStatus
+    invoiceNumber?: string | null
+    invoicedAt?: Date | string | null
+    paidAt?: Date | string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutBillingMilestonesInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutBillingMilestonesInput
+  }
+
+  export type BillingMilestoneUncheckedCreateWithoutInvoiceDocumentsInput = {
+    id?: string
+    projectId: string
+    workstreamId?: string | null
+    name: string
+    description?: string | null
+    percentage?: number
+    amount?: number | null
+    dueDate?: Date | string | null
+    status?: $Enums.BillingMilestoneStatus
+    invoiceNumber?: string | null
+    invoicedAt?: Date | string | null
+    paidAt?: Date | string | null
+    sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BillingMilestoneCreateOrConnectWithoutInvoiceDocumentsInput = {
+    where: BillingMilestoneWhereUniqueInput
+    create: XOR<BillingMilestoneCreateWithoutInvoiceDocumentsInput, BillingMilestoneUncheckedCreateWithoutInvoiceDocumentsInput>
   }
 
   export type ProjectUpsertWithoutDocumentsInput = {
@@ -70762,6 +70994,7 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutDocumentsNestedInput
     uploadedBy?: UserUpdateOneWithoutDocumentsUploadedNestedInput
     parentDocument?: DocumentUpdateOneWithoutVersionsNestedInput
+    billingMilestone?: BillingMilestoneUpdateOneWithoutInvoiceDocumentsNestedInput
   }
 
   export type DocumentUncheckedUpdateWithoutVersionsInput = {
@@ -70779,6 +71012,7 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     parentDocumentId?: NullableStringFieldUpdateOperationsInput | string | null
     isLatest?: BoolFieldUpdateOperationsInput | boolean
+    billingMilestoneId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DocumentUpsertWithWhereUniqueWithoutParentDocumentInput = {
@@ -70795,6 +71029,53 @@ export namespace Prisma {
   export type DocumentUpdateManyWithWhereWithoutParentDocumentInput = {
     where: DocumentScalarWhereInput
     data: XOR<DocumentUpdateManyMutationInput, DocumentUncheckedUpdateManyWithoutParentDocumentInput>
+  }
+
+  export type BillingMilestoneUpsertWithoutInvoiceDocumentsInput = {
+    update: XOR<BillingMilestoneUpdateWithoutInvoiceDocumentsInput, BillingMilestoneUncheckedUpdateWithoutInvoiceDocumentsInput>
+    create: XOR<BillingMilestoneCreateWithoutInvoiceDocumentsInput, BillingMilestoneUncheckedCreateWithoutInvoiceDocumentsInput>
+    where?: BillingMilestoneWhereInput
+  }
+
+  export type BillingMilestoneUpdateToOneWithWhereWithoutInvoiceDocumentsInput = {
+    where?: BillingMilestoneWhereInput
+    data: XOR<BillingMilestoneUpdateWithoutInvoiceDocumentsInput, BillingMilestoneUncheckedUpdateWithoutInvoiceDocumentsInput>
+  }
+
+  export type BillingMilestoneUpdateWithoutInvoiceDocumentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    percentage?: FloatFieldUpdateOperationsInput | number
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutBillingMilestonesNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutBillingMilestonesNestedInput
+  }
+
+  export type BillingMilestoneUncheckedUpdateWithoutInvoiceDocumentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    percentage?: FloatFieldUpdateOperationsInput | number
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProjectCreateWithoutClosingChecklistInput = {
@@ -75907,6 +76188,52 @@ export namespace Prisma {
     create: XOR<ProjectWorkstreamCreateWithoutBillingMilestonesInput, ProjectWorkstreamUncheckedCreateWithoutBillingMilestonesInput>
   }
 
+  export type DocumentCreateWithoutBillingMilestoneInput = {
+    id?: string
+    type: $Enums.DocumentType
+    fileName: string
+    fileUrl: string
+    invoiceNumber?: string | null
+    invoiceAmount?: number | null
+    invoiceStatus?: string | null
+    notes?: string | null
+    uploadedAt?: Date | string
+    version?: number
+    isLatest?: boolean
+    project: ProjectCreateNestedOneWithoutDocumentsInput
+    uploadedBy?: UserCreateNestedOneWithoutDocumentsUploadedInput
+    parentDocument?: DocumentCreateNestedOneWithoutVersionsInput
+    versions?: DocumentCreateNestedManyWithoutParentDocumentInput
+  }
+
+  export type DocumentUncheckedCreateWithoutBillingMilestoneInput = {
+    id?: string
+    projectId: string
+    type: $Enums.DocumentType
+    fileName: string
+    fileUrl: string
+    invoiceNumber?: string | null
+    invoiceAmount?: number | null
+    invoiceStatus?: string | null
+    notes?: string | null
+    uploadedById?: string | null
+    uploadedAt?: Date | string
+    version?: number
+    parentDocumentId?: string | null
+    isLatest?: boolean
+    versions?: DocumentUncheckedCreateNestedManyWithoutParentDocumentInput
+  }
+
+  export type DocumentCreateOrConnectWithoutBillingMilestoneInput = {
+    where: DocumentWhereUniqueInput
+    create: XOR<DocumentCreateWithoutBillingMilestoneInput, DocumentUncheckedCreateWithoutBillingMilestoneInput>
+  }
+
+  export type DocumentCreateManyBillingMilestoneInputEnvelope = {
+    data: DocumentCreateManyBillingMilestoneInput | DocumentCreateManyBillingMilestoneInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ProjectUpsertWithoutBillingMilestonesInput = {
     update: XOR<ProjectUpdateWithoutBillingMilestonesInput, ProjectUncheckedUpdateWithoutBillingMilestonesInput>
     create: XOR<ProjectCreateWithoutBillingMilestonesInput, ProjectUncheckedCreateWithoutBillingMilestonesInput>
@@ -76069,6 +76396,22 @@ export namespace Prisma {
     expenses?: ProjectExpenseUncheckedUpdateManyWithoutWorkstreamNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutWorkstreamNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutWorkstreamNestedInput
+  }
+
+  export type DocumentUpsertWithWhereUniqueWithoutBillingMilestoneInput = {
+    where: DocumentWhereUniqueInput
+    update: XOR<DocumentUpdateWithoutBillingMilestoneInput, DocumentUncheckedUpdateWithoutBillingMilestoneInput>
+    create: XOR<DocumentCreateWithoutBillingMilestoneInput, DocumentUncheckedCreateWithoutBillingMilestoneInput>
+  }
+
+  export type DocumentUpdateWithWhereUniqueWithoutBillingMilestoneInput = {
+    where: DocumentWhereUniqueInput
+    data: XOR<DocumentUpdateWithoutBillingMilestoneInput, DocumentUncheckedUpdateWithoutBillingMilestoneInput>
+  }
+
+  export type DocumentUpdateManyWithWhereWithoutBillingMilestoneInput = {
+    where: DocumentScalarWhereInput
+    data: XOR<DocumentUpdateManyMutationInput, DocumentUncheckedUpdateManyWithoutBillingMilestoneInput>
   }
 
   export type TaskCreateWithoutAssigneesInput = {
@@ -81216,6 +81559,7 @@ export namespace Prisma {
     version?: number
     parentDocumentId?: string | null
     isLatest?: boolean
+    billingMilestoneId?: string | null
   }
 
   export type ActivityCreateManyUserInput = {
@@ -82605,6 +82949,7 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutDocumentsNestedInput
     parentDocument?: DocumentUpdateOneWithoutVersionsNestedInput
     versions?: DocumentUpdateManyWithoutParentDocumentNestedInput
+    billingMilestone?: BillingMilestoneUpdateOneWithoutInvoiceDocumentsNestedInput
   }
 
   export type DocumentUncheckedUpdateWithoutUploadedByInput = {
@@ -82621,6 +82966,7 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     parentDocumentId?: NullableStringFieldUpdateOperationsInput | string | null
     isLatest?: BoolFieldUpdateOperationsInput | boolean
+    billingMilestoneId?: NullableStringFieldUpdateOperationsInput | string | null
     versions?: DocumentUncheckedUpdateManyWithoutParentDocumentNestedInput
   }
 
@@ -82638,6 +82984,7 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     parentDocumentId?: NullableStringFieldUpdateOperationsInput | string | null
     isLatest?: BoolFieldUpdateOperationsInput | boolean
+    billingMilestoneId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ActivityUpdateWithoutUserInput = {
@@ -84000,6 +84347,7 @@ export namespace Prisma {
     version?: number
     parentDocumentId?: string | null
     isLatest?: boolean
+    billingMilestoneId?: string | null
   }
 
   export type ActivityCreateManyProjectInput = {
@@ -84250,6 +84598,7 @@ export namespace Prisma {
     uploadedBy?: UserUpdateOneWithoutDocumentsUploadedNestedInput
     parentDocument?: DocumentUpdateOneWithoutVersionsNestedInput
     versions?: DocumentUpdateManyWithoutParentDocumentNestedInput
+    billingMilestone?: BillingMilestoneUpdateOneWithoutInvoiceDocumentsNestedInput
   }
 
   export type DocumentUncheckedUpdateWithoutProjectInput = {
@@ -84266,6 +84615,7 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     parentDocumentId?: NullableStringFieldUpdateOperationsInput | string | null
     isLatest?: BoolFieldUpdateOperationsInput | boolean
+    billingMilestoneId?: NullableStringFieldUpdateOperationsInput | string | null
     versions?: DocumentUncheckedUpdateManyWithoutParentDocumentNestedInput
   }
 
@@ -84283,6 +84633,7 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     parentDocumentId?: NullableStringFieldUpdateOperationsInput | string | null
     isLatest?: BoolFieldUpdateOperationsInput | boolean
+    billingMilestoneId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ActivityUpdateWithoutProjectInput = {
@@ -84471,6 +84822,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workstream?: ProjectWorkstreamUpdateOneWithoutBillingMilestonesNestedInput
+    invoiceDocuments?: DocumentUpdateManyWithoutBillingMilestoneNestedInput
   }
 
   export type BillingMilestoneUncheckedUpdateWithoutProjectInput = {
@@ -84488,6 +84840,7 @@ export namespace Prisma {
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoiceDocuments?: DocumentUncheckedUpdateManyWithoutBillingMilestoneNestedInput
   }
 
   export type BillingMilestoneUncheckedUpdateManyWithoutProjectInput = {
@@ -85018,6 +85371,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutBillingMilestonesNestedInput
+    invoiceDocuments?: DocumentUpdateManyWithoutBillingMilestoneNestedInput
   }
 
   export type BillingMilestoneUncheckedUpdateWithoutWorkstreamInput = {
@@ -85035,6 +85389,7 @@ export namespace Prisma {
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoiceDocuments?: DocumentUncheckedUpdateManyWithoutBillingMilestoneNestedInput
   }
 
   export type BillingMilestoneUncheckedUpdateManyWithoutWorkstreamInput = {
@@ -85173,6 +85528,7 @@ export namespace Prisma {
     uploadedAt?: Date | string
     version?: number
     isLatest?: boolean
+    billingMilestoneId?: string | null
   }
 
   export type DocumentUpdateWithoutParentDocumentInput = {
@@ -85190,6 +85546,7 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutDocumentsNestedInput
     uploadedBy?: UserUpdateOneWithoutDocumentsUploadedNestedInput
     versions?: DocumentUpdateManyWithoutParentDocumentNestedInput
+    billingMilestone?: BillingMilestoneUpdateOneWithoutInvoiceDocumentsNestedInput
   }
 
   export type DocumentUncheckedUpdateWithoutParentDocumentInput = {
@@ -85206,6 +85563,7 @@ export namespace Prisma {
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     isLatest?: BoolFieldUpdateOperationsInput | boolean
+    billingMilestoneId?: NullableStringFieldUpdateOperationsInput | string | null
     versions?: DocumentUncheckedUpdateManyWithoutParentDocumentNestedInput
   }
 
@@ -85223,6 +85581,7 @@ export namespace Prisma {
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     version?: IntFieldUpdateOperationsInput | number
     isLatest?: BoolFieldUpdateOperationsInput | boolean
+    billingMilestoneId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserCreateManyBusinessUnitInput = {
@@ -85955,6 +86314,76 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DocumentCreateManyBillingMilestoneInput = {
+    id?: string
+    projectId: string
+    type: $Enums.DocumentType
+    fileName: string
+    fileUrl: string
+    invoiceNumber?: string | null
+    invoiceAmount?: number | null
+    invoiceStatus?: string | null
+    notes?: string | null
+    uploadedById?: string | null
+    uploadedAt?: Date | string
+    version?: number
+    parentDocumentId?: string | null
+    isLatest?: boolean
+  }
+
+  export type DocumentUpdateWithoutBillingMilestoneInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    invoiceStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    isLatest?: BoolFieldUpdateOperationsInput | boolean
+    project?: ProjectUpdateOneRequiredWithoutDocumentsNestedInput
+    uploadedBy?: UserUpdateOneWithoutDocumentsUploadedNestedInput
+    parentDocument?: DocumentUpdateOneWithoutVersionsNestedInput
+    versions?: DocumentUpdateManyWithoutParentDocumentNestedInput
+  }
+
+  export type DocumentUncheckedUpdateWithoutBillingMilestoneInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    invoiceStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    parentDocumentId?: NullableStringFieldUpdateOperationsInput | string | null
+    isLatest?: BoolFieldUpdateOperationsInput | boolean
+    versions?: DocumentUncheckedUpdateManyWithoutParentDocumentNestedInput
+  }
+
+  export type DocumentUncheckedUpdateManyWithoutBillingMilestoneInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    invoiceStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    version?: IntFieldUpdateOperationsInput | number
+    parentDocumentId?: NullableStringFieldUpdateOperationsInput | string | null
+    isLatest?: BoolFieldUpdateOperationsInput | boolean
+  }
+
   export type LeadActivityCreateManyLeadInput = {
     id?: string
     type: $Enums.LeadActivityType
@@ -86274,6 +86703,10 @@ export namespace Prisma {
      * @deprecated Use TaskCountOutputTypeDefaultArgs instead
      */
     export type TaskCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = TaskCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use BillingMilestoneCountOutputTypeDefaultArgs instead
+     */
+    export type BillingMilestoneCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BillingMilestoneCountOutputTypeDefaultArgs<ExtArgs>
     /**
      * @deprecated Use LeadCountOutputTypeDefaultArgs instead
      */

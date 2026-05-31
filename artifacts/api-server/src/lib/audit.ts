@@ -59,6 +59,7 @@ export type AuditAction =
   | "billing_milestone.created"
   | "billing_milestone.updated"
   | "billing_milestone.deleted"
+  | "billing_milestone.invoice_generated"
   | "project.report_updated"
   | "project_report.created"
   | "project_report.updated"
