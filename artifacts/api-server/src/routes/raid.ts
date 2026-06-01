@@ -3,6 +3,7 @@ import { prisma } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
 import { userCanAccessProject } from "../lib/projectAccess.js";
+import { canViewRaid } from "../lib/roles.js";
 import { prisma as prismaForRaid } from "@workspace/db";
 
 // RAID writes are strictly limited to MANAGEMENT or the project's assigned PM,
@@ -74,6 +75,10 @@ const include = {
 
 router.get("/projects/:id/raid", async (req, res) => {
   const projectId = String(req.params.id);
+  if (!canViewRaid(req.user!.role)) {
+    res.status(403).json({ error: "You do not have access to the RAID log" });
+    return;
+  }
   if (!(await userCanAccessProject(projectId, req.user!))) {
     res.status(404).json({ error: "Project not found" });
     return;

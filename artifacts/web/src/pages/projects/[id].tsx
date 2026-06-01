@@ -58,7 +58,7 @@ import { LoadingPage } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
 import { PdfUploadField, type PdfFileData } from "@/components/common/PdfUploadField";
 import { useAuth } from "@/lib/auth";
-import { RoleLabels, canViewProjectFinancials } from "@/lib/roles";
+import { RoleLabels, canViewProjectFinancials, canViewRaid } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
 
 import { Button } from "@/components/ui/button";
@@ -309,7 +309,9 @@ export default function ProjectDetail() {
             (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id)) && (
             <TabsTrigger value="activity" data-testid="tab-trigger-activity">Activity</TabsTrigger>
           )}
-          <TabsTrigger value="raid" data-testid="tab-trigger-raid">RAID</TabsTrigger>
+          {canViewRaid(user?.role) && (
+            <TabsTrigger value="raid" data-testid="tab-trigger-raid">RAID</TabsTrigger>
+          )}
           {(user?.role === "MANAGEMENT" ||
             (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id)) && (
             <TabsTrigger value="workstreams" data-testid="tab-trigger-workstreams">
@@ -365,9 +367,11 @@ export default function ProjectDetail() {
         <TabsContent value="activity" className="pt-4 m-0">
           <ActivityTab projectId={id} />
         </TabsContent>
-        <TabsContent value="raid" className="pt-4 m-0">
-          <RaidTab projectId={id} project={project} />
-        </TabsContent>
+        {canViewRaid(user?.role) && (
+          <TabsContent value="raid" className="pt-4 m-0">
+            <RaidTab projectId={id} project={project} />
+          </TabsContent>
+        )}
         <TabsContent value="workstreams" className="pt-4 m-0">
           <WorkstreamsTab projectId={id} project={project} />
         </TabsContent>

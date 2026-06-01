@@ -75,3 +75,16 @@ export function canViewProjectFinancials(role?: UserRole): boolean {
 export function canViewDailyRate(role?: UserRole): boolean {
   return role === UserRole.MANAGEMENT || role === UserRole.PROJECT_MANAGER;
 }
+
+// RAID log is restricted to the core project delivery team: Management,
+// Project Manager, Consultants, and all Principal roles. Sales, Technical
+// Writer, Admin Project, Finance, HR, and Site Admin do not see it.
+// Mirrors `canViewRaid` on the server.
+export function canViewRaid(role?: UserRole): boolean {
+  return (
+    role === UserRole.MANAGEMENT ||
+    role === UserRole.PROJECT_MANAGER ||
+    role === UserRole.KONSULTAN ||
+    isPrincipalRole(role)
+  );
+}

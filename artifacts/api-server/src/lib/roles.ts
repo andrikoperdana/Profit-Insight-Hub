@@ -56,3 +56,21 @@ const DELIVERY_ASSIGNMENT_ROLES = new Set<string>(["KONSULTAN", "TECHNICAL_WRITE
 export function isDeliveryAssignmentRole(role: string | null | undefined): boolean {
   return !!role && DELIVERY_ASSIGNMENT_ROLES.has(role);
 }
+
+// RAID log read access is restricted to the core project delivery team:
+// Management, Project Manager, Consultant (KONSULTAN), and all Principal
+// roles. Sales, Technical Writer, Admin Project, Finance, HR, and Site Admin
+// are intentionally excluded. Read access is still further scoped per-project
+// by `userCanAccessProject`. Mirrors `canViewRaid` on the web frontend.
+const RAID_VIEW_ROLES = new Set<string>([
+  "MANAGEMENT",
+  "PROJECT_MANAGER",
+  "KONSULTAN",
+  "PRINCIPAL_KONSULTAN",
+  "PRINCIPAL_TECHNICAL_WRITER",
+  "PRINCIPAL_ADMIN_PROJECT",
+]);
+
+export function canViewRaid(role: string | null | undefined): boolean {
+  return !!role && RAID_VIEW_ROLES.has(role);
+}
