@@ -29,7 +29,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/common/EmptyState";
 import { LoadingPage } from "@/components/common/Loading";
-import { RoleLabels } from "@/lib/roles";
+import { RoleLabels, isPrincipalRole } from "@/lib/roles";
 import {
   Users,
   AlertTriangle,
@@ -63,7 +63,8 @@ export default function BenchPage() {
   const isMgmt = user?.role === "MANAGEMENT";
   const isPM = user?.role === "PROJECT_MANAGER";
   const isHr = user?.role === "HR";
-  const allowed = isMgmt || isPM || isHr;
+  const isPrincipal = isPrincipalRole(user?.role);
+  const allowed = isMgmt || isPM || isHr || isPrincipal;
 
   const { data, isLoading } = useGetResourceUtilizationDetail({
     query: { enabled: !!user && allowed },
@@ -110,7 +111,7 @@ export default function BenchPage() {
       <EmptyState
         icon={<AlertTriangle className="h-12 w-12 text-muted-foreground/50" />}
         title="Access denied"
-        description="The Bench Report is only available for Management and Project Managers."
+        description="The Bench Report is available to Management, Project Managers, HR, and Principals (their own team)."
       />
     );
   }

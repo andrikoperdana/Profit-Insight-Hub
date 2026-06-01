@@ -1,14 +1,16 @@
 import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
+import { isPrincipalRole } from "../lib/roles.js";
 import { TtlCache } from "../lib/ttlCache.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
 
-// The matrix is identical for every authorized caller (it always loads the
-// whole active workforce), so we key only by window params. 30s matches the
-// frontend React Query staleTime.
+// For MGMT/PM/HR the matrix is identical (the whole active workforce), so we
+// key those by window params only. Principals see a scoped subset (their direct
+// supervisees), so their cache key is additionally namespaced by user id (see
+// `cacheKey` below). 30s matches the frontend React Query staleTime.
 const planningCache = new TtlCache<unknown>(30_000);
 
 // Returns the Monday (UTC) of the ISO week containing `d`.
@@ -41,8 +43,18 @@ function isoDate(d: Date): string {
  */
 router.get(
   "/resource-planning",
-  requireRole("MANAGEMENT", "PROJECT_MANAGER", "HR"),
+  requireRole(
+    "MANAGEMENT",
+    "PROJECT_MANAGER",
+    "HR",
+    "PRINCIPAL_KONSULTAN",
+    "PRINCIPAL_TECHNICAL_WRITER",
+    "PRINCIPAL_ADMIN_PROJECT",
+  ),
   async (req, res) => {
+    // Principals see only their direct supervisees (User.principalId = me);
+    // everyone else (MGMT/PM/HR) sees the whole active workforce.
+    const isPrincipal = isPrincipalRole(req.user!.role);
     let weeks = Number(req.query.weeks ?? 8);
     if (!isFinite(weeks) || weeks < 1) weeks = 8;
     if (weeks > 26) weeks = 26;
@@ -60,7 +72,9 @@ router.get(
     }
     const end = addDaysUtc(start, weeks * 7);
 
-    const cacheKey = `${isoDate(start)}:${weeks}`;
+    const cacheKey = isPrincipal
+      ? `principal:${req.user!.sub}:${isoDate(start)}:${weeks}`
+      : `${isoDate(start)}:${weeks}`;
     const cached = planningCache.get(cacheKey);
     if (cached) {
       res.json(cached);
@@ -72,7 +86,11 @@ router.get(
 
     // Pull all active users with seniority/skill-relevant roles plus PMs.
     const users = await prisma.user.findMany({
-      where: { deletedAt: null, isActive: true },
+      where: {
+        deletedAt: null,
+        isActive: true,
+        ...(isPrincipal ? { principalId: req.user!.sub } : {}),
+      },
       orderBy: { name: "asc" },
       include: {
         businessUnit: { select: { id: true, name: true } },

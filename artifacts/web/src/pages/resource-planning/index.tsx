@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useAuth } from "@/lib/auth";
+import { isPrincipalRole } from "@/lib/roles";
 import { useGetResourcePlanning, useListLeaves } from "@workspace/api-client-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,7 +13,11 @@ import { Grid3x3, ShieldAlert } from "lucide-react";
 
 export default function ResourcePlanningPage() {
   const { user } = useAuth();
-  const isPM = user?.role === "PROJECT_MANAGER" || user?.role === "MANAGEMENT" || user?.role === "HR";
+  const isPM =
+    user?.role === "PROJECT_MANAGER" ||
+    user?.role === "MANAGEMENT" ||
+    user?.role === "HR" ||
+    isPrincipalRole(user?.role);
 
   const today = new Date();
   const day = today.getDay();
@@ -67,7 +72,7 @@ export default function ResourcePlanningPage() {
     return (
       <EmptyState
         title="Access denied"
-        description="Resource Planning is available to Project Managers and Management only."
+        description="Resource Planning is available to Management, Project Managers, HR, and Principals (their own team)."
         icon={<ShieldAlert className="h-10 w-10 text-destructive/50" />}
       />
     );

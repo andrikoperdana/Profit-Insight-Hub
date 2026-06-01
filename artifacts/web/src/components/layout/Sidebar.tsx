@@ -45,6 +45,10 @@ export default function Sidebar() {
   const isSiteAdmin = user?.role === "SITE_ADMIN";
   const isFinance = user?.role === "FINANCE";
   const isHr = user?.role === "HR";
+  const isPrincipal =
+    user?.role === "PRINCIPAL_KONSULTAN" ||
+    user?.role === "PRINCIPAL_TECHNICAL_WRITER" ||
+    user?.role === "PRINCIPAL_ADMIN_PROJECT";
 
   const main: NavLink[] = [
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -85,8 +89,8 @@ export default function Sidebar() {
     ...(canViewResources(user?.role) ? [{ href: "/resources", label: "Resources", icon: UserCog }] : []),
     ...(isPM || isHr ? [{ href: "/capacity", label: "Capacity Planning", icon: CalendarRange }] : []),
     ...(canSeeExpenses ? [{ href: "/expenses", label: "Expenses", icon: Receipt }] : []),
-    ...(isPM || isHr ? [{ href: "/resource-planning", label: "Resource Planning", icon: Grid3x3 }] : []),
-    ...(isPM || isHr ? [{ href: "/bench", label: "Bench Report", icon: UserCog }] : []),
+    ...(isPM || isHr || isPrincipal ? [{ href: "/resource-planning", label: "Resource Planning", icon: Grid3x3 }] : []),
+    ...(isPM || isHr || isPrincipal ? [{ href: "/bench", label: "Bench Report", icon: UserCog }] : []),
     ...(isPM || isHr ? [{ href: "/skill-matrix", label: "Skill Matrix", icon: Award }] : []),
     ...(isPM ? [{ href: "/task-templates", label: "Task Templates", icon: ListChecks }] : []),
     ...(isPM || user?.role === "SALES" ? [{ href: "/project-templates", label: "Project Templates", icon: ListChecks }] : []),

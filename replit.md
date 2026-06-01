@@ -75,7 +75,9 @@ Intake: Sales fills 4-field form at `/projects/new` (server forces `status=DRAFT
 
 **Visibility**: `canViewProjectFinancials()` returns false for any `PRINCIPAL_*` role — hides Financials/Billing tabs and all contractValue/margin/cost columns including Estimated Cost.
 
-## Resource Planning (`/resource-planning`, PM+MGMT)
+## Resource Planning (`/resource-planning`, PM+MGMT+HR+Principal_*)
+
+Principals (PRINCIPAL_KONSULTAN/TECHNICAL_WRITER/ADMIN_PROJECT) are scoped to their direct supervisees only (`User.principalId === self`); MGMT/PM/HR see the whole active workforce. The TtlCache key is namespaced per-principal (`principal:<sub>:...`) so scoped and full-workforce payloads never cross-contaminate.
 
 `GET /api/resource-planning?startDate=YYYY-MM-DD&weeks=N` returns BU-grouped rows with weekly mandays cells (sum `ProjectResource.plannedMandays` distributed across active project weeks). Cells color-coded: ≥6 destructive, ≥4 amber, >0 emerald. Per-cell tooltip lists project allocations.
 
@@ -124,7 +126,7 @@ Shared `WelcomeBanner` shows time-aware greeting + role label.
 
 ## Pages
 
-`/login`, `/` (dashboard), `/projects`, `/projects/new`, `/projects/:id`, `/timesheets`, `/clients`, `/users` (SITE_ADMIN + HR view/edit-limited), `/skills` (SITE_ADMIN + HR), `/business-units` (SITE_ADMIN + HR), `/resource-planning` (PM/MGMT/HR), `/skill-matrix` (PM/MGMT/HR), `/bench` (PM/MGMT/HR), `/capacity` (PM/MGMT/HR), `/task-templates` (PM/MGMT), `/leaves` (HR/MGMT/PM read-only), `/org-chart` (HR/MGMT/SITE_ADMIN), `/reports` (MGMT/PM), `/vat-recap` (MGMT), `/settings`, `/my-tasks` `/my-timesheets` `/my-expenses` (Konsultan/TW/AdminProject + Principal_* + Sales — paginasi + CSV export).
+`/login`, `/` (dashboard), `/projects`, `/projects/new`, `/projects/:id`, `/timesheets`, `/clients`, `/users` (SITE_ADMIN + HR view/edit-limited), `/skills` (SITE_ADMIN + HR), `/business-units` (SITE_ADMIN + HR), `/resource-planning` (PM/MGMT/HR/Principal_* — Principals scoped to supervisees), `/skill-matrix` (PM/MGMT/HR), `/bench` (PM/MGMT/HR/Principal_* — Principals scoped to supervisees), `/capacity` (PM/MGMT/HR), `/task-templates` (PM/MGMT), `/leaves` (HR/MGMT/PM read-only), `/org-chart` (HR/MGMT/SITE_ADMIN), `/reports` (MGMT/PM), `/vat-recap` (MGMT), `/settings`, `/my-tasks` `/my-timesheets` `/my-expenses` (Konsultan/TW/AdminProject + Principal_* + Sales — paginasi + CSV export).
 
 **`MY_VIEW_ROLES`** (App.tsx) is the single source of truth for the "My …" personal pages — same list used by Sidebar's `canSeeMyViews`. Add a role here to expose all three pages at once.
 
