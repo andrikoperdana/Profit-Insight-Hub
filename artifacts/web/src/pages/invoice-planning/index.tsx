@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import { EmptyState } from "@/components/common/EmptyState";
 import { TableSkeleton } from "@/components/common/Loading";
-import { FileBarChart, ShieldAlert, Download } from "lucide-react";
+import { FileBarChart, ShieldAlert, Download, ChevronRight, ChevronDown } from "lucide-react";
 import { formatIDR } from "@/lib/format";
 import { useLocation } from "wouter";
 import { exportCsv } from "@/lib/exports";
@@ -71,7 +71,17 @@ export default function InvoicePlanningPage() {
   const [metric, setMetric] = useState<Metric>("dpp");
   const [startDate, setStartDate] = useState<string>(defaultMonIso);
   const [periods, setPeriods] = useState<number>(8);
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [seeding, setSeeding] = useState(false);
+
+  function toggleGroup(key: string) {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -132,6 +142,27 @@ export default function InvoicePlanningPage() {
     };
   }, [data]);
 
+  // Per-BU roll-up: totals for each period column + BU grand total, plus the
+  // grand totals across all BUs. Recomputes when the metric (DPP/Total) flips.
+  const rollup = useMemo(() => {
+    if (!data) return null;
+    const n = data.periodStarts.length;
+    const pick = (c: { dpp: number; total: number }) => (metric === "dpp" ? c.dpp : c.total);
+    const groups = data.groups.map((g) => {
+      const key = g.businessUnitId ?? "_none";
+      const perPeriod = new Array(n).fill(0);
+      let total = 0;
+      for (const r of g.rows) {
+        r.cells.forEach((c, i) => { perPeriod[i] += pick(c); });
+        total += metric === "dpp" ? r.rowTotalDpp : r.rowTotalTotal;
+      }
+      return { key, name: g.businessUnitName, projectCount: g.rows.length, perPeriod, total };
+    });
+    const grandPerPeriod = (data.periodTotals ?? []).map((pt) => (metric === "dpp" ? pt.dpp : pt.total));
+    const grandTotal = grandPerPeriod.reduce((s, v) => s + v, 0);
+    return { groups, grandPerPeriod, grandTotal };
+  }, [data, metric]);
+
   if (!allowed) {
     return (
       <EmptyState
@@ -184,7 +215,7 @@ export default function InvoicePlanningPage() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Invoice Planning</h1>
         <p className="text-muted-foreground">
-          Cash inflow plan per project, grouped by PM's Business Unit. Each cell aggregates billing milestones by their due date.
+          Cash inflow plan rolled up per Business Unit, with totals per week or month. Drill into a unit to see its projects. Each cell aggregates billing milestones by their due date.
         </p>
       </div>
 
@@ -288,15 +319,92 @@ export default function InvoicePlanningPage() {
         />
       ) : (
         <div className="space-y-6">
-          {data.groups.map((g) => (
-            <Card key={g.businessUnitId ?? "_none"} className="border-border overflow-hidden">
+          {/* Roll-up: total per period per Business Unit, with grand total. */}
+          {rollup && rollup.groups.length ? (
+            <Card className="border-border overflow-hidden">
               <CardHeader className="pb-2 bg-muted/30">
-                <CardTitle className="text-base flex items-center gap-2">
-                  <span>{g.businessUnitName}</span>
-                  <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30 text-[10px]">
-                    {g.rows.length} project{g.rows.length === 1 ? "" : "s"}
-                  </Badge>
-                </CardTitle>
+                <CardTitle className="text-base">All Business Units</CardTitle>
+                <CardDescription>
+                  Total {metric === "dpp" ? "DPP (Net)" : "Total (incl. VAT)"} per {mode === "month" ? "month" : "week"} per Business Unit. Click a unit to drill into its projects below.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-0 overflow-x-auto">
+                <table className="w-full text-xs">
+                  <thead className="bg-muted/40">
+                    <tr>
+                      <th className="text-left p-2 sticky left-0 bg-muted/40 min-w-[220px]">Business Unit</th>
+                      {headers.map((w) => (
+                        <th key={w.iso} className="text-right p-2 font-mono whitespace-nowrap min-w-[80px]">{w.label}</th>
+                      ))}
+                      <th className="text-right p-2 font-mono border-l border-border/40 min-w-[100px]">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rollup.groups.map((g) => (
+                      <tr key={g.key} className="border-t border-border/40 hover:bg-muted/20">
+                        <td className="p-2 sticky left-0 bg-background font-medium">
+                          <button
+                            type="button"
+                            className="flex items-center gap-1.5 text-left hover:text-primary"
+                            onClick={() => toggleGroup(g.key)}
+                            data-testid={`button-ip-bu-${g.key}`}
+                          >
+                            {expanded.has(g.key) ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
+                            <span className="font-semibold">{g.name}</span>
+                            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30 text-[10px]">
+                              {g.projectCount}
+                            </Badge>
+                          </button>
+                        </td>
+                        {g.perPeriod.map((v, i) => (
+                          <td key={i} className="p-2 text-right font-mono">{v > 0 ? compactIDR(v) : "—"}</td>
+                        ))}
+                        <td className="p-2 text-right font-mono font-semibold border-l border-border/40">
+                          {g.total > 0 ? compactIDR(g.total) : "—"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                  <tfoot className="bg-muted/40 font-semibold border-t-2 border-primary/30">
+                    <tr>
+                      <td className="p-2 sticky left-0 bg-muted/40">Grand total</td>
+                      {rollup.grandPerPeriod.map((v, i) => (
+                        <td key={i} className="p-2 text-right font-mono">{v > 0 ? compactIDR(v) : "—"}</td>
+                      ))}
+                      <td className="p-2 text-right font-mono border-l border-border/40">
+                        {rollup.grandTotal > 0 ? compactIDR(rollup.grandTotal) : "—"}
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </CardContent>
+            </Card>
+          ) : null}
+
+          {data.groups.map((g) => {
+            const groupKey = g.businessUnitId ?? "_none";
+            const isOpen = expanded.has(groupKey);
+            const groupSum = rollup?.groups.find((x) => x.key === groupKey);
+            return (
+            <Card key={groupKey} className="border-border overflow-hidden">
+              <CardHeader className="pb-2 bg-muted/30">
+                <button
+                  type="button"
+                  onClick={() => toggleGroup(groupKey)}
+                  className="flex items-center gap-2 w-full text-left"
+                  data-testid={`button-ip-group-${groupKey}`}
+                >
+                  {isOpen ? <ChevronDown className="h-4 w-4 shrink-0" /> : <ChevronRight className="h-4 w-4 shrink-0" />}
+                  <CardTitle className="text-base flex items-center gap-2 flex-1">
+                    <span>{g.businessUnitName}</span>
+                    <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30 text-[10px]">
+                      {g.rows.length} project{g.rows.length === 1 ? "" : "s"}
+                    </Badge>
+                  </CardTitle>
+                  <span className="font-mono font-semibold text-sm">
+                    {groupSum && groupSum.total > 0 ? formatIDR(groupSum.total) : "—"}
+                  </span>
+                </button>
               </CardHeader>
               <CardContent className="p-0 overflow-x-auto">
                 <table className="w-full text-xs">
@@ -312,7 +420,7 @@ export default function InvoicePlanningPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {g.rows.map((r) => {
+                    {isOpen && g.rows.map((r) => {
                       const rowTotal = metric === "dpp" ? r.rowTotalDpp : r.rowTotalTotal;
                       return (
                         <tr key={r.projectId} className="border-t border-border/40 hover:bg-muted/20" data-testid={`row-ip-${r.projectId}`}>
@@ -366,22 +474,17 @@ export default function InvoicePlanningPage() {
                       );
                     })}
                   </tbody>
-                  {data.periodTotals?.length ? (
+                  {groupSum ? (
                     <tfoot className="bg-muted/30 font-semibold">
                       <tr>
-                        <td className="p-2 sticky left-0 bg-muted/30" colSpan={3}>Period totals</td>
-                        {data.periodTotals.map((pt, idx) => {
-                          const v = metric === "dpp" ? pt.dpp : pt.total;
-                          return (
-                            <td key={idx} className="p-2 text-right font-mono">
-                              {v > 0 ? compactIDR(v) : "—"}
-                            </td>
-                          );
-                        })}
+                        <td className="p-2 sticky left-0 bg-muted/30" colSpan={3}>{g.businessUnitName} total</td>
+                        {groupSum.perPeriod.map((v, idx) => (
+                          <td key={idx} className="p-2 text-right font-mono">
+                            {v > 0 ? compactIDR(v) : "—"}
+                          </td>
+                        ))}
                         <td className="p-2 text-right font-mono border-l border-border/40">
-                          {compactIDR(
-                            (data.periodTotals ?? []).reduce((s, pt) => s + (metric === "dpp" ? pt.dpp : pt.total), 0),
-                          )}
+                          {groupSum.total > 0 ? compactIDR(groupSum.total) : "—"}
                         </td>
                       </tr>
                     </tfoot>
@@ -389,7 +492,8 @@ export default function InvoicePlanningPage() {
                 </table>
               </CardContent>
             </Card>
-          ))}
+            );
+          })}
         </div>
       )}
 
