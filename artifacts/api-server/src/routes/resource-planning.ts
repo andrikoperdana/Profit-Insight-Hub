@@ -186,11 +186,11 @@ router.get(
       cells: buildCells(u),
     }));
 
-    // Group by business unit (null grouped under "Tanpa BU").
+    // Group by business unit (null grouped under "No Business Unit").
     const groupMap = new Map<string, { businessUnitId: string | null; businessUnitName: string; rows: Row[] }>();
     for (const r of rows) {
       const key = r.businessUnitId ?? "__none__";
-      const name = r.businessUnitName ?? "Tanpa Business Unit";
+      const name = r.businessUnitName ?? "No Business Unit";
       let g = groupMap.get(key);
       if (!g) {
         g = { businessUnitId: r.businessUnitId, businessUnitName: name, rows: [] };

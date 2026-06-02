@@ -224,7 +224,7 @@ router.get("/invoice-planning", async (req, res) => {
   const groupMap = new Map<string, Group>();
   for (const p of projects) {
     const buId = p.pm?.businessUnitId ?? null;
-    const buName = p.pm?.businessUnit?.name ?? "Tanpa Business Unit";
+    const buName = p.pm?.businessUnit?.name ?? "No Business Unit";
     const key = buId ?? "__none__";
     let g = groupMap.get(key);
     if (!g) {
