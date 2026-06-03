@@ -237,3 +237,8 @@ export * from "./vatRecap";
 export * from "./vatRecapMonth";
 export * from "./vatRecapTotals";
 export * from "./workstreamStatus";
+export * from "./xeroClientSyncResult";
+export * from "./xeroConnectUrl";
+export * from "./xeroInvoiceResult";
+export * from "./xeroStatus";
+export * from "./xeroSyncResult";

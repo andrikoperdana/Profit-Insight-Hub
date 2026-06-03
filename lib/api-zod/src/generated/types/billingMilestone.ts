@@ -18,6 +18,8 @@ export interface BillingMilestone {
   dueDate?: string | null;
   status: BillingMilestoneStatus;
   invoiceNumber?: string | null;
+  xeroInvoiceId?: string | null;
+  xeroInvoiceNumber?: string | null;
   invoicedAt?: string | null;
   paidAt?: string | null;
   sortOrder: number;

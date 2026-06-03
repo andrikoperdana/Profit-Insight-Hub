@@ -12,6 +12,7 @@ function serialize(c: {
   email: string | null;
   phone: string | null;
   industry: string | null;
+  xeroContactId?: string | null;
   createdAt: Date;
 }) {
   return {
@@ -21,6 +22,7 @@ function serialize(c: {
     email: c.email,
     phone: c.phone,
     industry: c.industry,
+    xeroContactId: c.xeroContactId ?? null,
     createdAt: c.createdAt.toISOString(),
   };
 }

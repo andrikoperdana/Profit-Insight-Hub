@@ -4,6 +4,7 @@ import {
   useCreateBillingMilestone,
   useUpdateBillingMilestone,
   useDeleteBillingMilestone,
+  usePushMilestoneToXero,
   getListBillingMilestonesQueryKey,
   type BillingMilestone,
   type BillingMilestoneStatus,
@@ -32,7 +33,7 @@ import { formatDate, formatIDR } from "@/lib/format";
 import { EmptyState } from "@/components/common/EmptyState";
 import { WorkstreamPicker } from "./components/WorkstreamPicker";
 import { downloadAuthed, postAuthed } from "@/lib/exports";
-import { Plus, Trash2, Pencil, Loader2, Receipt, AlertCircle, FileText, Download } from "lucide-react";
+import { Plus, Trash2, Pencil, Loader2, Receipt, AlertCircle, FileText, Download, Link2 } from "lucide-react";
 
 const STATUS_LABEL: Record<BillingMilestoneStatus, string> = {
   PLANNED: "Planned",
@@ -86,6 +87,11 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
     user?.role === "MANAGEMENT" ||
     (user?.role === "PROJECT_MANAGER" && project.pmId === user.id);
 
+  const canPushXero =
+    user?.role === "MANAGEMENT" ||
+    user?.role === "FINANCE" ||
+    (user?.role === "PROJECT_MANAGER" && project.pmId === user.id);
+
   const [createOpen, setCreateOpen] = useState(false);
   const [editRow, setEditRow] = useState<BillingMilestone | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -93,6 +99,23 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
   const invalidate = () => {
     qc.invalidateQueries({ queryKey: getListBillingMilestonesQueryKey(projectId) });
   };
+
+  const pushToXero = usePushMilestoneToXero({
+    mutation: {
+      onSuccess: (res) => {
+        toast({
+          title: "Sent to Xero",
+          description: res.xeroInvoiceNumber
+            ? `Created Xero invoice ${res.xeroInvoiceNumber}.`
+            : "Xero invoice created.",
+        });
+        invalidate();
+      },
+      onError: (e: any) =>
+        toast({ title: "Send to Xero failed", description: e?.message, variant: "destructive" }),
+      onSettled: () => setBusyId(null),
+    },
+  });
 
   async function handleGenerateInvoice(m: BillingMilestone) {
     setBusyId(m.id);
@@ -271,9 +294,35 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
                         {STATUS_LABEL[m.status]}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-xs font-mono">{m.invoiceNumber ?? "—"}</TableCell>
+                    <TableCell className="text-xs font-mono">
+                      {m.invoiceNumber ?? "—"}
+                      {m.xeroInvoiceId && (
+                        <span className="mt-0.5 flex items-center gap-1 text-[10px] text-emerald-500">
+                          <Link2 className="h-3 w-3" /> Xero{m.xeroInvoiceNumber ? ` ${m.xeroInvoiceNumber}` : ""}
+                        </span>
+                      )}
+                    </TableCell>
                     <TableCell>
                       <div className="flex items-center justify-end gap-1.5">
+                        {canPushXero && !m.xeroInvoiceId && m.status !== "CANCELLED" && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            disabled={busyId === m.id}
+                            onClick={() => {
+                              setBusyId(m.id);
+                              pushToXero.mutate({ milestoneId: m.id });
+                            }}
+                            data-testid={`button-send-xero-${m.id}`}
+                          >
+                            {busyId === m.id ? (
+                              <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                            ) : (
+                              <Link2 className="h-3.5 w-3.5 mr-1.5" />
+                            )}
+                            Send to Xero
+                          </Button>
+                        )}
                         {isManager && m.status === "PLANNED" && (
                           <Button
                             size="sm"

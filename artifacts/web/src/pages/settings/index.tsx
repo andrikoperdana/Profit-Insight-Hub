@@ -1,6 +1,15 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/lib/auth";
-import { useGetMe, customFetch, type User } from "@workspace/api-client-react";
+import {
+  useGetMe,
+  customFetch,
+  type User,
+  useGetXeroStatus,
+  getGetXeroStatusQueryKey,
+  useGetXeroConnectUrl,
+  useDisconnectXero,
+  useSyncXeroPayments,
+} from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { RoleLabels } from "@/lib/roles";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LoadingPage } from "@/components/common/Loading";
-import { Calendar, Copy, RefreshCw, Check, KeyRound, Upload, Trash2 } from "lucide-react";
+import { Calendar, Copy, RefreshCw, Check, KeyRound, Upload, Trash2, Link2, Unlink, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const AVATAR_MAX_BYTES = 300 * 1024;
@@ -320,11 +329,156 @@ function AvatarBlock({ profile }: { profile: User }) {
   );
 }
 
+function XeroIntegrationCard() {
+  const { toast } = useToast();
+  const qc = useQueryClient();
+  const { data: status, isLoading } = useGetXeroStatus({
+    query: { queryKey: getGetXeroStatusQueryKey() },
+  });
+
+  const connectUrl = useGetXeroConnectUrl({
+    mutation: {
+      onSuccess: (res) => {
+        window.location.href = res.url;
+      },
+      onError: (e: any) =>
+        toast({ title: "Could not start Xero connection", description: e?.message, variant: "destructive" }),
+    },
+  });
+
+  const disconnect = useDisconnectXero({
+    mutation: {
+      onSuccess: () => {
+        toast({ title: "Xero disconnected" });
+        qc.invalidateQueries({ queryKey: getGetXeroStatusQueryKey() });
+      },
+      onError: (e: any) =>
+        toast({ title: "Disconnect failed", description: e?.message, variant: "destructive" }),
+    },
+  });
+
+  const syncPayments = useSyncXeroPayments({
+    mutation: {
+      onSuccess: (res) => {
+        toast({
+          title: "Payment sync complete",
+          description: `Checked ${res.checked} invoice(s), marked ${res.updated} as paid.`,
+        });
+      },
+      onError: (e: any) =>
+        toast({ title: "Payment sync failed", description: e?.message, variant: "destructive" }),
+    },
+  });
+
+  const connected = !!status?.connected;
+  const configured = status?.configured ?? false;
+
+  return (
+    <Card className="border-border shadow-sm">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Link2 className="h-5 w-5" /> Xero Accounting
+        </CardTitle>
+        <CardDescription>
+          Connect Xero to push billing milestones as sales invoices, sync clients to Xero contacts,
+          and pull payment status back into the app.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {isLoading ? (
+          <p className="text-sm text-muted-foreground">Loading connection status…</p>
+        ) : !configured ? (
+          <p className="text-sm text-muted-foreground">
+            Xero is not configured on the server. Add the Xero credentials to enable this integration.
+          </p>
+        ) : (
+          <>
+            <div className="flex items-center gap-3">
+              <div className={`h-2.5 w-2.5 rounded-full ${connected ? "bg-emerald-500" : "bg-muted-foreground/40"}`} />
+              <div>
+                <p className="font-medium">
+                  {connected ? `Connected${status?.tenantName ? ` — ${status.tenantName}` : ""}` : "Not connected"}
+                </p>
+                {connected && status?.connectedAt && (
+                  <p className="text-xs text-muted-foreground">
+                    Since {new Date(status.connectedAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              {connected ? (
+                <>
+                  <Button
+                    variant="outline"
+                    onClick={() => syncPayments.mutate()}
+                    disabled={syncPayments.isPending}
+                  >
+                    {syncPayments.isPending ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                    )}
+                    Sync Payments
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="text-destructive hover:text-destructive"
+                    onClick={() => {
+                      if (confirm("Disconnect the Xero integration?")) disconnect.mutate();
+                    }}
+                    disabled={disconnect.isPending}
+                  >
+                    {disconnect.isPending ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <Unlink className="h-4 w-4 mr-2" />
+                    )}
+                    Disconnect
+                  </Button>
+                </>
+              ) : (
+                <Button onClick={() => connectUrl.mutate()} disabled={connectUrl.isPending}>
+                  {connectUrl.isPending ? (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  ) : (
+                    <Link2 className="h-4 w-4 mr-2" />
+                  )}
+                  Connect to Xero
+                </Button>
+              )}
+            </div>
+          </>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function Settings() {
   const { user } = useAuth();
+  const { toast } = useToast();
   const { data: profile, isLoading } = useGetMe({
     query: { enabled: !!user, queryKey: ["me"] }
   });
+
+  const canManageXero = user?.role === "MANAGEMENT" || user?.role === "FINANCE";
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const xero = params.get("xero");
+    if (xero === "connected") {
+      toast({ title: "Xero connected", description: "Your Xero organisation is now linked." });
+    } else if (xero === "error") {
+      toast({ title: "Xero connection failed", description: "Please try connecting again.", variant: "destructive" });
+    }
+    if (xero) {
+      params.delete("xero");
+      const qs = params.toString();
+      window.history.replaceState({}, "", window.location.pathname + (qs ? `?${qs}` : ""));
+    }
+  }, [toast]);
 
   if (isLoading || !profile) return <LoadingPage />;
 
@@ -366,6 +520,8 @@ export default function Settings() {
           </div>
         </CardContent>
       </Card>
+
+      {canManageXero && <XeroIntegrationCard />}
 
       <ChangePasswordCard />
 

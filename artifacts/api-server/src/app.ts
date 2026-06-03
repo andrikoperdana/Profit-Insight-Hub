@@ -40,6 +40,9 @@ app.use("/api", (req, res, next) => {
   if (!gateEnabled()) return next();
   const p = req.path;
   if (p === "/healthz" || p.startsWith("/site-gate")) return next();
+  // Xero redirects the browser back to this callback with no app cookies;
+  // it authenticates via a signed OAuth state, so it must bypass the gate.
+  if (p === "/xero/callback") return next();
   if (verifyGateToken(readGateCookie(req.headers.cookie))) return next();
   res.setHeader("X-Site-Gate", "required");
   res.status(403).json({ error: "site_gate_required" });

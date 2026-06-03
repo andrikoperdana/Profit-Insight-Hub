@@ -8,6 +8,8 @@ import {
   ensureSampleProjectTemplates,
   ensureSampleWorkstreamProjects,
 } from "@workspace/db";
+import { runPaymentSync } from "./routes/xero.js";
+import { xeroConfigured } from "./lib/xero.js";
 
 const rawPort = process.env["PORT"];
 
@@ -61,6 +63,23 @@ const server = app.listen(port, (err?: Error) => {
 
   logger.info({ port }, "Server listening");
 });
+
+// Poll Xero for invoice payment status and mark fully-paid milestones PAID.
+// Manual sync is still available from the UI; this just keeps things fresh
+// without webhooks. No-op until Xero is configured + connected (runPaymentSync
+// short-circuits when there are no pushed invoices, and getValidAccessToken
+// throws harmlessly if disconnected).
+const XERO_POLL_MS = 30 * 60_000;
+if (xeroConfigured()) {
+  const poll = setInterval(() => {
+    runPaymentSync()
+      .then((r) => {
+        if (r.updated > 0) logger.info(r, "Xero payment poll updated milestones");
+      })
+      .catch((err) => logger.warn({ err }, "Xero payment poll failed (continuing)"));
+  }, XERO_POLL_MS);
+  poll.unref();
+}
 
 // Graceful shutdown: on deploy rollover / container stop, stop accepting new
 // connections, let in-flight requests finish, close the DB pool cleanly, then

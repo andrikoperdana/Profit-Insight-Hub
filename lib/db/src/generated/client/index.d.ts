@@ -198,6 +198,11 @@ export type PerformanceReviewProjectRating = $Result.DefaultSelection<Prisma.$Pe
  * 
  */
 export type InvoiceSetting = $Result.DefaultSelection<Prisma.$InvoiceSettingPayload>
+/**
+ * Model XeroConnection
+ * 
+ */
+export type XeroConnection = $Result.DefaultSelection<Prisma.$XeroConnectionPayload>
 
 /**
  * Enums
@@ -972,6 +977,16 @@ export class PrismaClient<
     * ```
     */
   get invoiceSetting(): Prisma.InvoiceSettingDelegate<ExtArgs>;
+
+  /**
+   * `prisma.xeroConnection`: Exposes CRUD operations for the **XeroConnection** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more XeroConnections
+    * const xeroConnections = await prisma.xeroConnection.findMany()
+    * ```
+    */
+  get xeroConnection(): Prisma.XeroConnectionDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -1449,7 +1464,8 @@ export namespace Prisma {
     ProjectRaidItem: 'ProjectRaidItem',
     PerformanceReview: 'PerformanceReview',
     PerformanceReviewProjectRating: 'PerformanceReviewProjectRating',
-    InvoiceSetting: 'InvoiceSetting'
+    InvoiceSetting: 'InvoiceSetting',
+    XeroConnection: 'XeroConnection'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1465,7 +1481,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "client" | "project" | "projectReport" | "projectWorkstream" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectClosingChecklistItem" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "skillDevelopmentGoal" | "skillProgressionLog" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "projectTemplate" | "projectTemplateResource" | "projectTemplateMilestone" | "projectTemplateRaidItem" | "notification" | "projectRaidItem" | "performanceReview" | "performanceReviewProjectRating" | "invoiceSetting"
+      modelProps: "user" | "client" | "project" | "projectReport" | "projectWorkstream" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectClosingChecklistItem" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "skillDevelopmentGoal" | "skillProgressionLog" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "projectTemplate" | "projectTemplateResource" | "projectTemplateMilestone" | "projectTemplateRaidItem" | "notification" | "projectRaidItem" | "performanceReview" | "performanceReviewProjectRating" | "invoiceSetting" | "xeroConnection"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4056,6 +4072,76 @@ export namespace Prisma {
           count: {
             args: Prisma.InvoiceSettingCountArgs<ExtArgs>
             result: $Utils.Optional<InvoiceSettingCountAggregateOutputType> | number
+          }
+        }
+      }
+      XeroConnection: {
+        payload: Prisma.$XeroConnectionPayload<ExtArgs>
+        fields: Prisma.XeroConnectionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.XeroConnectionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$XeroConnectionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.XeroConnectionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$XeroConnectionPayload>
+          }
+          findFirst: {
+            args: Prisma.XeroConnectionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$XeroConnectionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.XeroConnectionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$XeroConnectionPayload>
+          }
+          findMany: {
+            args: Prisma.XeroConnectionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$XeroConnectionPayload>[]
+          }
+          create: {
+            args: Prisma.XeroConnectionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$XeroConnectionPayload>
+          }
+          createMany: {
+            args: Prisma.XeroConnectionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.XeroConnectionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$XeroConnectionPayload>[]
+          }
+          delete: {
+            args: Prisma.XeroConnectionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$XeroConnectionPayload>
+          }
+          update: {
+            args: Prisma.XeroConnectionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$XeroConnectionPayload>
+          }
+          deleteMany: {
+            args: Prisma.XeroConnectionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.XeroConnectionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.XeroConnectionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$XeroConnectionPayload>
+          }
+          aggregate: {
+            args: Prisma.XeroConnectionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateXeroConnection>
+          }
+          groupBy: {
+            args: Prisma.XeroConnectionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<XeroConnectionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.XeroConnectionCountArgs<ExtArgs>
+            result: $Utils.Optional<XeroConnectionCountAggregateOutputType> | number
           }
         }
       }
@@ -7295,6 +7381,7 @@ export namespace Prisma {
     email: string | null
     phone: string | null
     industry: string | null
+    xeroContactId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7306,6 +7393,7 @@ export namespace Prisma {
     email: string | null
     phone: string | null
     industry: string | null
+    xeroContactId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7317,6 +7405,7 @@ export namespace Prisma {
     email: number
     phone: number
     industry: number
+    xeroContactId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -7330,6 +7419,7 @@ export namespace Prisma {
     email?: true
     phone?: true
     industry?: true
+    xeroContactId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7341,6 +7431,7 @@ export namespace Prisma {
     email?: true
     phone?: true
     industry?: true
+    xeroContactId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7352,6 +7443,7 @@ export namespace Prisma {
     email?: true
     phone?: true
     industry?: true
+    xeroContactId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -7436,6 +7528,7 @@ export namespace Prisma {
     email: string | null
     phone: string | null
     industry: string | null
+    xeroContactId: string | null
     createdAt: Date
     updatedAt: Date
     _count: ClientCountAggregateOutputType | null
@@ -7464,6 +7557,7 @@ export namespace Prisma {
     email?: boolean
     phone?: boolean
     industry?: boolean
+    xeroContactId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     projects?: boolean | Client$projectsArgs<ExtArgs>
@@ -7478,6 +7572,7 @@ export namespace Prisma {
     email?: boolean
     phone?: boolean
     industry?: boolean
+    xeroContactId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["client"]>
@@ -7489,6 +7584,7 @@ export namespace Prisma {
     email?: boolean
     phone?: boolean
     industry?: boolean
+    xeroContactId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
@@ -7513,6 +7609,7 @@ export namespace Prisma {
       email: string | null
       phone: string | null
       industry: string | null
+      xeroContactId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["client"]>
@@ -7916,6 +8013,7 @@ export namespace Prisma {
     readonly email: FieldRef<"Client", 'String'>
     readonly phone: FieldRef<"Client", 'String'>
     readonly industry: FieldRef<"Client", 'String'>
+    readonly xeroContactId: FieldRef<"Client", 'String'>
     readonly createdAt: FieldRef<"Client", 'DateTime'>
     readonly updatedAt: FieldRef<"Client", 'DateTime'>
   }
@@ -29347,6 +29445,8 @@ export namespace Prisma {
     dueDate: Date | null
     status: $Enums.BillingMilestoneStatus | null
     invoiceNumber: string | null
+    xeroInvoiceId: string | null
+    xeroInvoiceNumber: string | null
     invoicedAt: Date | null
     paidAt: Date | null
     sortOrder: number | null
@@ -29365,6 +29465,8 @@ export namespace Prisma {
     dueDate: Date | null
     status: $Enums.BillingMilestoneStatus | null
     invoiceNumber: string | null
+    xeroInvoiceId: string | null
+    xeroInvoiceNumber: string | null
     invoicedAt: Date | null
     paidAt: Date | null
     sortOrder: number | null
@@ -29383,6 +29485,8 @@ export namespace Prisma {
     dueDate: number
     status: number
     invoiceNumber: number
+    xeroInvoiceId: number
+    xeroInvoiceNumber: number
     invoicedAt: number
     paidAt: number
     sortOrder: number
@@ -29415,6 +29519,8 @@ export namespace Prisma {
     dueDate?: true
     status?: true
     invoiceNumber?: true
+    xeroInvoiceId?: true
+    xeroInvoiceNumber?: true
     invoicedAt?: true
     paidAt?: true
     sortOrder?: true
@@ -29433,6 +29539,8 @@ export namespace Prisma {
     dueDate?: true
     status?: true
     invoiceNumber?: true
+    xeroInvoiceId?: true
+    xeroInvoiceNumber?: true
     invoicedAt?: true
     paidAt?: true
     sortOrder?: true
@@ -29451,6 +29559,8 @@ export namespace Prisma {
     dueDate?: true
     status?: true
     invoiceNumber?: true
+    xeroInvoiceId?: true
+    xeroInvoiceNumber?: true
     invoicedAt?: true
     paidAt?: true
     sortOrder?: true
@@ -29556,6 +29666,8 @@ export namespace Prisma {
     dueDate: Date | null
     status: $Enums.BillingMilestoneStatus
     invoiceNumber: string | null
+    xeroInvoiceId: string | null
+    xeroInvoiceNumber: string | null
     invoicedAt: Date | null
     paidAt: Date | null
     sortOrder: number
@@ -29593,6 +29705,8 @@ export namespace Prisma {
     dueDate?: boolean
     status?: boolean
     invoiceNumber?: boolean
+    xeroInvoiceId?: boolean
+    xeroInvoiceNumber?: boolean
     invoicedAt?: boolean
     paidAt?: boolean
     sortOrder?: boolean
@@ -29615,6 +29729,8 @@ export namespace Prisma {
     dueDate?: boolean
     status?: boolean
     invoiceNumber?: boolean
+    xeroInvoiceId?: boolean
+    xeroInvoiceNumber?: boolean
     invoicedAt?: boolean
     paidAt?: boolean
     sortOrder?: boolean
@@ -29635,6 +29751,8 @@ export namespace Prisma {
     dueDate?: boolean
     status?: boolean
     invoiceNumber?: boolean
+    xeroInvoiceId?: boolean
+    xeroInvoiceNumber?: boolean
     invoicedAt?: boolean
     paidAt?: boolean
     sortOrder?: boolean
@@ -29671,6 +29789,8 @@ export namespace Prisma {
       dueDate: Date | null
       status: $Enums.BillingMilestoneStatus
       invoiceNumber: string | null
+      xeroInvoiceId: string | null
+      xeroInvoiceNumber: string | null
       invoicedAt: Date | null
       paidAt: Date | null
       sortOrder: number
@@ -30082,6 +30202,8 @@ export namespace Prisma {
     readonly dueDate: FieldRef<"BillingMilestone", 'DateTime'>
     readonly status: FieldRef<"BillingMilestone", 'BillingMilestoneStatus'>
     readonly invoiceNumber: FieldRef<"BillingMilestone", 'String'>
+    readonly xeroInvoiceId: FieldRef<"BillingMilestone", 'String'>
+    readonly xeroInvoiceNumber: FieldRef<"BillingMilestone", 'String'>
     readonly invoicedAt: FieldRef<"BillingMilestone", 'DateTime'>
     readonly paidAt: FieldRef<"BillingMilestone", 'DateTime'>
     readonly sortOrder: FieldRef<"BillingMilestone", 'Int'>
@@ -46023,6 +46145,932 @@ export namespace Prisma {
 
 
   /**
+   * Model XeroConnection
+   */
+
+  export type AggregateXeroConnection = {
+    _count: XeroConnectionCountAggregateOutputType | null
+    _min: XeroConnectionMinAggregateOutputType | null
+    _max: XeroConnectionMaxAggregateOutputType | null
+  }
+
+  export type XeroConnectionMinAggregateOutputType = {
+    id: string | null
+    accessToken: string | null
+    refreshToken: string | null
+    expiresAt: Date | null
+    tenantId: string | null
+    tenantName: string | null
+    connectedAt: Date | null
+    connectedById: string | null
+    updatedAt: Date | null
+  }
+
+  export type XeroConnectionMaxAggregateOutputType = {
+    id: string | null
+    accessToken: string | null
+    refreshToken: string | null
+    expiresAt: Date | null
+    tenantId: string | null
+    tenantName: string | null
+    connectedAt: Date | null
+    connectedById: string | null
+    updatedAt: Date | null
+  }
+
+  export type XeroConnectionCountAggregateOutputType = {
+    id: number
+    accessToken: number
+    refreshToken: number
+    expiresAt: number
+    tenantId: number
+    tenantName: number
+    connectedAt: number
+    connectedById: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type XeroConnectionMinAggregateInputType = {
+    id?: true
+    accessToken?: true
+    refreshToken?: true
+    expiresAt?: true
+    tenantId?: true
+    tenantName?: true
+    connectedAt?: true
+    connectedById?: true
+    updatedAt?: true
+  }
+
+  export type XeroConnectionMaxAggregateInputType = {
+    id?: true
+    accessToken?: true
+    refreshToken?: true
+    expiresAt?: true
+    tenantId?: true
+    tenantName?: true
+    connectedAt?: true
+    connectedById?: true
+    updatedAt?: true
+  }
+
+  export type XeroConnectionCountAggregateInputType = {
+    id?: true
+    accessToken?: true
+    refreshToken?: true
+    expiresAt?: true
+    tenantId?: true
+    tenantName?: true
+    connectedAt?: true
+    connectedById?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type XeroConnectionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which XeroConnection to aggregate.
+     */
+    where?: XeroConnectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of XeroConnections to fetch.
+     */
+    orderBy?: XeroConnectionOrderByWithRelationInput | XeroConnectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: XeroConnectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` XeroConnections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` XeroConnections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned XeroConnections
+    **/
+    _count?: true | XeroConnectionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: XeroConnectionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: XeroConnectionMaxAggregateInputType
+  }
+
+  export type GetXeroConnectionAggregateType<T extends XeroConnectionAggregateArgs> = {
+        [P in keyof T & keyof AggregateXeroConnection]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateXeroConnection[P]>
+      : GetScalarType<T[P], AggregateXeroConnection[P]>
+  }
+
+
+
+
+  export type XeroConnectionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: XeroConnectionWhereInput
+    orderBy?: XeroConnectionOrderByWithAggregationInput | XeroConnectionOrderByWithAggregationInput[]
+    by: XeroConnectionScalarFieldEnum[] | XeroConnectionScalarFieldEnum
+    having?: XeroConnectionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: XeroConnectionCountAggregateInputType | true
+    _min?: XeroConnectionMinAggregateInputType
+    _max?: XeroConnectionMaxAggregateInputType
+  }
+
+  export type XeroConnectionGroupByOutputType = {
+    id: string
+    accessToken: string
+    refreshToken: string
+    expiresAt: Date
+    tenantId: string
+    tenantName: string | null
+    connectedAt: Date
+    connectedById: string | null
+    updatedAt: Date
+    _count: XeroConnectionCountAggregateOutputType | null
+    _min: XeroConnectionMinAggregateOutputType | null
+    _max: XeroConnectionMaxAggregateOutputType | null
+  }
+
+  type GetXeroConnectionGroupByPayload<T extends XeroConnectionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<XeroConnectionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof XeroConnectionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], XeroConnectionGroupByOutputType[P]>
+            : GetScalarType<T[P], XeroConnectionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type XeroConnectionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    accessToken?: boolean
+    refreshToken?: boolean
+    expiresAt?: boolean
+    tenantId?: boolean
+    tenantName?: boolean
+    connectedAt?: boolean
+    connectedById?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["xeroConnection"]>
+
+  export type XeroConnectionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    accessToken?: boolean
+    refreshToken?: boolean
+    expiresAt?: boolean
+    tenantId?: boolean
+    tenantName?: boolean
+    connectedAt?: boolean
+    connectedById?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["xeroConnection"]>
+
+  export type XeroConnectionSelectScalar = {
+    id?: boolean
+    accessToken?: boolean
+    refreshToken?: boolean
+    expiresAt?: boolean
+    tenantId?: boolean
+    tenantName?: boolean
+    connectedAt?: boolean
+    connectedById?: boolean
+    updatedAt?: boolean
+  }
+
+
+  export type $XeroConnectionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "XeroConnection"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      accessToken: string
+      refreshToken: string
+      expiresAt: Date
+      tenantId: string
+      tenantName: string | null
+      connectedAt: Date
+      connectedById: string | null
+      updatedAt: Date
+    }, ExtArgs["result"]["xeroConnection"]>
+    composites: {}
+  }
+
+  type XeroConnectionGetPayload<S extends boolean | null | undefined | XeroConnectionDefaultArgs> = $Result.GetResult<Prisma.$XeroConnectionPayload, S>
+
+  type XeroConnectionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<XeroConnectionFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: XeroConnectionCountAggregateInputType | true
+    }
+
+  export interface XeroConnectionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['XeroConnection'], meta: { name: 'XeroConnection' } }
+    /**
+     * Find zero or one XeroConnection that matches the filter.
+     * @param {XeroConnectionFindUniqueArgs} args - Arguments to find a XeroConnection
+     * @example
+     * // Get one XeroConnection
+     * const xeroConnection = await prisma.xeroConnection.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends XeroConnectionFindUniqueArgs>(args: SelectSubset<T, XeroConnectionFindUniqueArgs<ExtArgs>>): Prisma__XeroConnectionClient<$Result.GetResult<Prisma.$XeroConnectionPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one XeroConnection that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {XeroConnectionFindUniqueOrThrowArgs} args - Arguments to find a XeroConnection
+     * @example
+     * // Get one XeroConnection
+     * const xeroConnection = await prisma.xeroConnection.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends XeroConnectionFindUniqueOrThrowArgs>(args: SelectSubset<T, XeroConnectionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__XeroConnectionClient<$Result.GetResult<Prisma.$XeroConnectionPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first XeroConnection that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {XeroConnectionFindFirstArgs} args - Arguments to find a XeroConnection
+     * @example
+     * // Get one XeroConnection
+     * const xeroConnection = await prisma.xeroConnection.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends XeroConnectionFindFirstArgs>(args?: SelectSubset<T, XeroConnectionFindFirstArgs<ExtArgs>>): Prisma__XeroConnectionClient<$Result.GetResult<Prisma.$XeroConnectionPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first XeroConnection that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {XeroConnectionFindFirstOrThrowArgs} args - Arguments to find a XeroConnection
+     * @example
+     * // Get one XeroConnection
+     * const xeroConnection = await prisma.xeroConnection.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends XeroConnectionFindFirstOrThrowArgs>(args?: SelectSubset<T, XeroConnectionFindFirstOrThrowArgs<ExtArgs>>): Prisma__XeroConnectionClient<$Result.GetResult<Prisma.$XeroConnectionPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more XeroConnections that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {XeroConnectionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all XeroConnections
+     * const xeroConnections = await prisma.xeroConnection.findMany()
+     * 
+     * // Get first 10 XeroConnections
+     * const xeroConnections = await prisma.xeroConnection.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const xeroConnectionWithIdOnly = await prisma.xeroConnection.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends XeroConnectionFindManyArgs>(args?: SelectSubset<T, XeroConnectionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$XeroConnectionPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a XeroConnection.
+     * @param {XeroConnectionCreateArgs} args - Arguments to create a XeroConnection.
+     * @example
+     * // Create one XeroConnection
+     * const XeroConnection = await prisma.xeroConnection.create({
+     *   data: {
+     *     // ... data to create a XeroConnection
+     *   }
+     * })
+     * 
+     */
+    create<T extends XeroConnectionCreateArgs>(args: SelectSubset<T, XeroConnectionCreateArgs<ExtArgs>>): Prisma__XeroConnectionClient<$Result.GetResult<Prisma.$XeroConnectionPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many XeroConnections.
+     * @param {XeroConnectionCreateManyArgs} args - Arguments to create many XeroConnections.
+     * @example
+     * // Create many XeroConnections
+     * const xeroConnection = await prisma.xeroConnection.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends XeroConnectionCreateManyArgs>(args?: SelectSubset<T, XeroConnectionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many XeroConnections and returns the data saved in the database.
+     * @param {XeroConnectionCreateManyAndReturnArgs} args - Arguments to create many XeroConnections.
+     * @example
+     * // Create many XeroConnections
+     * const xeroConnection = await prisma.xeroConnection.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many XeroConnections and only return the `id`
+     * const xeroConnectionWithIdOnly = await prisma.xeroConnection.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends XeroConnectionCreateManyAndReturnArgs>(args?: SelectSubset<T, XeroConnectionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$XeroConnectionPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a XeroConnection.
+     * @param {XeroConnectionDeleteArgs} args - Arguments to delete one XeroConnection.
+     * @example
+     * // Delete one XeroConnection
+     * const XeroConnection = await prisma.xeroConnection.delete({
+     *   where: {
+     *     // ... filter to delete one XeroConnection
+     *   }
+     * })
+     * 
+     */
+    delete<T extends XeroConnectionDeleteArgs>(args: SelectSubset<T, XeroConnectionDeleteArgs<ExtArgs>>): Prisma__XeroConnectionClient<$Result.GetResult<Prisma.$XeroConnectionPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one XeroConnection.
+     * @param {XeroConnectionUpdateArgs} args - Arguments to update one XeroConnection.
+     * @example
+     * // Update one XeroConnection
+     * const xeroConnection = await prisma.xeroConnection.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends XeroConnectionUpdateArgs>(args: SelectSubset<T, XeroConnectionUpdateArgs<ExtArgs>>): Prisma__XeroConnectionClient<$Result.GetResult<Prisma.$XeroConnectionPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more XeroConnections.
+     * @param {XeroConnectionDeleteManyArgs} args - Arguments to filter XeroConnections to delete.
+     * @example
+     * // Delete a few XeroConnections
+     * const { count } = await prisma.xeroConnection.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends XeroConnectionDeleteManyArgs>(args?: SelectSubset<T, XeroConnectionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more XeroConnections.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {XeroConnectionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many XeroConnections
+     * const xeroConnection = await prisma.xeroConnection.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends XeroConnectionUpdateManyArgs>(args: SelectSubset<T, XeroConnectionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one XeroConnection.
+     * @param {XeroConnectionUpsertArgs} args - Arguments to update or create a XeroConnection.
+     * @example
+     * // Update or create a XeroConnection
+     * const xeroConnection = await prisma.xeroConnection.upsert({
+     *   create: {
+     *     // ... data to create a XeroConnection
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the XeroConnection we want to update
+     *   }
+     * })
+     */
+    upsert<T extends XeroConnectionUpsertArgs>(args: SelectSubset<T, XeroConnectionUpsertArgs<ExtArgs>>): Prisma__XeroConnectionClient<$Result.GetResult<Prisma.$XeroConnectionPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of XeroConnections.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {XeroConnectionCountArgs} args - Arguments to filter XeroConnections to count.
+     * @example
+     * // Count the number of XeroConnections
+     * const count = await prisma.xeroConnection.count({
+     *   where: {
+     *     // ... the filter for the XeroConnections we want to count
+     *   }
+     * })
+    **/
+    count<T extends XeroConnectionCountArgs>(
+      args?: Subset<T, XeroConnectionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], XeroConnectionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a XeroConnection.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {XeroConnectionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends XeroConnectionAggregateArgs>(args: Subset<T, XeroConnectionAggregateArgs>): Prisma.PrismaPromise<GetXeroConnectionAggregateType<T>>
+
+    /**
+     * Group by XeroConnection.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {XeroConnectionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends XeroConnectionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: XeroConnectionGroupByArgs['orderBy'] }
+        : { orderBy?: XeroConnectionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, XeroConnectionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetXeroConnectionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the XeroConnection model
+   */
+  readonly fields: XeroConnectionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for XeroConnection.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__XeroConnectionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the XeroConnection model
+   */ 
+  interface XeroConnectionFieldRefs {
+    readonly id: FieldRef<"XeroConnection", 'String'>
+    readonly accessToken: FieldRef<"XeroConnection", 'String'>
+    readonly refreshToken: FieldRef<"XeroConnection", 'String'>
+    readonly expiresAt: FieldRef<"XeroConnection", 'DateTime'>
+    readonly tenantId: FieldRef<"XeroConnection", 'String'>
+    readonly tenantName: FieldRef<"XeroConnection", 'String'>
+    readonly connectedAt: FieldRef<"XeroConnection", 'DateTime'>
+    readonly connectedById: FieldRef<"XeroConnection", 'String'>
+    readonly updatedAt: FieldRef<"XeroConnection", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * XeroConnection findUnique
+   */
+  export type XeroConnectionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the XeroConnection
+     */
+    select?: XeroConnectionSelect<ExtArgs> | null
+    /**
+     * Filter, which XeroConnection to fetch.
+     */
+    where: XeroConnectionWhereUniqueInput
+  }
+
+  /**
+   * XeroConnection findUniqueOrThrow
+   */
+  export type XeroConnectionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the XeroConnection
+     */
+    select?: XeroConnectionSelect<ExtArgs> | null
+    /**
+     * Filter, which XeroConnection to fetch.
+     */
+    where: XeroConnectionWhereUniqueInput
+  }
+
+  /**
+   * XeroConnection findFirst
+   */
+  export type XeroConnectionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the XeroConnection
+     */
+    select?: XeroConnectionSelect<ExtArgs> | null
+    /**
+     * Filter, which XeroConnection to fetch.
+     */
+    where?: XeroConnectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of XeroConnections to fetch.
+     */
+    orderBy?: XeroConnectionOrderByWithRelationInput | XeroConnectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for XeroConnections.
+     */
+    cursor?: XeroConnectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` XeroConnections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` XeroConnections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of XeroConnections.
+     */
+    distinct?: XeroConnectionScalarFieldEnum | XeroConnectionScalarFieldEnum[]
+  }
+
+  /**
+   * XeroConnection findFirstOrThrow
+   */
+  export type XeroConnectionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the XeroConnection
+     */
+    select?: XeroConnectionSelect<ExtArgs> | null
+    /**
+     * Filter, which XeroConnection to fetch.
+     */
+    where?: XeroConnectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of XeroConnections to fetch.
+     */
+    orderBy?: XeroConnectionOrderByWithRelationInput | XeroConnectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for XeroConnections.
+     */
+    cursor?: XeroConnectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` XeroConnections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` XeroConnections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of XeroConnections.
+     */
+    distinct?: XeroConnectionScalarFieldEnum | XeroConnectionScalarFieldEnum[]
+  }
+
+  /**
+   * XeroConnection findMany
+   */
+  export type XeroConnectionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the XeroConnection
+     */
+    select?: XeroConnectionSelect<ExtArgs> | null
+    /**
+     * Filter, which XeroConnections to fetch.
+     */
+    where?: XeroConnectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of XeroConnections to fetch.
+     */
+    orderBy?: XeroConnectionOrderByWithRelationInput | XeroConnectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing XeroConnections.
+     */
+    cursor?: XeroConnectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` XeroConnections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` XeroConnections.
+     */
+    skip?: number
+    distinct?: XeroConnectionScalarFieldEnum | XeroConnectionScalarFieldEnum[]
+  }
+
+  /**
+   * XeroConnection create
+   */
+  export type XeroConnectionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the XeroConnection
+     */
+    select?: XeroConnectionSelect<ExtArgs> | null
+    /**
+     * The data needed to create a XeroConnection.
+     */
+    data: XOR<XeroConnectionCreateInput, XeroConnectionUncheckedCreateInput>
+  }
+
+  /**
+   * XeroConnection createMany
+   */
+  export type XeroConnectionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many XeroConnections.
+     */
+    data: XeroConnectionCreateManyInput | XeroConnectionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * XeroConnection createManyAndReturn
+   */
+  export type XeroConnectionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the XeroConnection
+     */
+    select?: XeroConnectionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many XeroConnections.
+     */
+    data: XeroConnectionCreateManyInput | XeroConnectionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * XeroConnection update
+   */
+  export type XeroConnectionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the XeroConnection
+     */
+    select?: XeroConnectionSelect<ExtArgs> | null
+    /**
+     * The data needed to update a XeroConnection.
+     */
+    data: XOR<XeroConnectionUpdateInput, XeroConnectionUncheckedUpdateInput>
+    /**
+     * Choose, which XeroConnection to update.
+     */
+    where: XeroConnectionWhereUniqueInput
+  }
+
+  /**
+   * XeroConnection updateMany
+   */
+  export type XeroConnectionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update XeroConnections.
+     */
+    data: XOR<XeroConnectionUpdateManyMutationInput, XeroConnectionUncheckedUpdateManyInput>
+    /**
+     * Filter which XeroConnections to update
+     */
+    where?: XeroConnectionWhereInput
+  }
+
+  /**
+   * XeroConnection upsert
+   */
+  export type XeroConnectionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the XeroConnection
+     */
+    select?: XeroConnectionSelect<ExtArgs> | null
+    /**
+     * The filter to search for the XeroConnection to update in case it exists.
+     */
+    where: XeroConnectionWhereUniqueInput
+    /**
+     * In case the XeroConnection found by the `where` argument doesn't exist, create a new XeroConnection with this data.
+     */
+    create: XOR<XeroConnectionCreateInput, XeroConnectionUncheckedCreateInput>
+    /**
+     * In case the XeroConnection was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<XeroConnectionUpdateInput, XeroConnectionUncheckedUpdateInput>
+  }
+
+  /**
+   * XeroConnection delete
+   */
+  export type XeroConnectionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the XeroConnection
+     */
+    select?: XeroConnectionSelect<ExtArgs> | null
+    /**
+     * Filter which XeroConnection to delete.
+     */
+    where: XeroConnectionWhereUniqueInput
+  }
+
+  /**
+   * XeroConnection deleteMany
+   */
+  export type XeroConnectionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which XeroConnections to delete
+     */
+    where?: XeroConnectionWhereInput
+  }
+
+  /**
+   * XeroConnection without action
+   */
+  export type XeroConnectionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the XeroConnection
+     */
+    select?: XeroConnectionSelect<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -46066,6 +47114,7 @@ export namespace Prisma {
     email: 'email',
     phone: 'phone',
     industry: 'industry',
+    xeroContactId: 'xeroContactId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -46420,6 +47469,8 @@ export namespace Prisma {
     dueDate: 'dueDate',
     status: 'status',
     invoiceNumber: 'invoiceNumber',
+    xeroInvoiceId: 'xeroInvoiceId',
+    xeroInvoiceNumber: 'xeroInvoiceNumber',
     invoicedAt: 'invoicedAt',
     paidAt: 'paidAt',
     sortOrder: 'sortOrder',
@@ -46680,6 +47731,21 @@ export namespace Prisma {
   };
 
   export type InvoiceSettingScalarFieldEnum = (typeof InvoiceSettingScalarFieldEnum)[keyof typeof InvoiceSettingScalarFieldEnum]
+
+
+  export const XeroConnectionScalarFieldEnum: {
+    id: 'id',
+    accessToken: 'accessToken',
+    refreshToken: 'refreshToken',
+    expiresAt: 'expiresAt',
+    tenantId: 'tenantId',
+    tenantName: 'tenantName',
+    connectedAt: 'connectedAt',
+    connectedById: 'connectedById',
+    updatedAt: 'updatedAt'
+  };
+
+  export type XeroConnectionScalarFieldEnum = (typeof XeroConnectionScalarFieldEnum)[keyof typeof XeroConnectionScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -47318,6 +48384,7 @@ export namespace Prisma {
     email?: StringNullableFilter<"Client"> | string | null
     phone?: StringNullableFilter<"Client"> | string | null
     industry?: StringNullableFilter<"Client"> | string | null
+    xeroContactId?: StringNullableFilter<"Client"> | string | null
     createdAt?: DateTimeFilter<"Client"> | Date | string
     updatedAt?: DateTimeFilter<"Client"> | Date | string
     projects?: ProjectListRelationFilter
@@ -47331,6 +48398,7 @@ export namespace Prisma {
     email?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     industry?: SortOrderInput | SortOrder
+    xeroContactId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     projects?: ProjectOrderByRelationAggregateInput
@@ -47347,6 +48415,7 @@ export namespace Prisma {
     email?: StringNullableFilter<"Client"> | string | null
     phone?: StringNullableFilter<"Client"> | string | null
     industry?: StringNullableFilter<"Client"> | string | null
+    xeroContactId?: StringNullableFilter<"Client"> | string | null
     createdAt?: DateTimeFilter<"Client"> | Date | string
     updatedAt?: DateTimeFilter<"Client"> | Date | string
     projects?: ProjectListRelationFilter
@@ -47360,6 +48429,7 @@ export namespace Prisma {
     email?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     industry?: SortOrderInput | SortOrder
+    xeroContactId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ClientCountOrderByAggregateInput
@@ -47377,6 +48447,7 @@ export namespace Prisma {
     email?: StringNullableWithAggregatesFilter<"Client"> | string | null
     phone?: StringNullableWithAggregatesFilter<"Client"> | string | null
     industry?: StringNullableWithAggregatesFilter<"Client"> | string | null
+    xeroContactId?: StringNullableWithAggregatesFilter<"Client"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Client"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Client"> | Date | string
   }
@@ -49291,6 +50362,8 @@ export namespace Prisma {
     dueDate?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     status?: EnumBillingMilestoneStatusFilter<"BillingMilestone"> | $Enums.BillingMilestoneStatus
     invoiceNumber?: StringNullableFilter<"BillingMilestone"> | string | null
+    xeroInvoiceId?: StringNullableFilter<"BillingMilestone"> | string | null
+    xeroInvoiceNumber?: StringNullableFilter<"BillingMilestone"> | string | null
     invoicedAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     paidAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     sortOrder?: IntFilter<"BillingMilestone"> | number
@@ -49312,6 +50385,8 @@ export namespace Prisma {
     dueDate?: SortOrderInput | SortOrder
     status?: SortOrder
     invoiceNumber?: SortOrderInput | SortOrder
+    xeroInvoiceId?: SortOrderInput | SortOrder
+    xeroInvoiceNumber?: SortOrderInput | SortOrder
     invoicedAt?: SortOrderInput | SortOrder
     paidAt?: SortOrderInput | SortOrder
     sortOrder?: SortOrder
@@ -49336,6 +50411,8 @@ export namespace Prisma {
     amount?: FloatNullableFilter<"BillingMilestone"> | number | null
     dueDate?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     status?: EnumBillingMilestoneStatusFilter<"BillingMilestone"> | $Enums.BillingMilestoneStatus
+    xeroInvoiceId?: StringNullableFilter<"BillingMilestone"> | string | null
+    xeroInvoiceNumber?: StringNullableFilter<"BillingMilestone"> | string | null
     invoicedAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     paidAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     sortOrder?: IntFilter<"BillingMilestone"> | number
@@ -49357,6 +50434,8 @@ export namespace Prisma {
     dueDate?: SortOrderInput | SortOrder
     status?: SortOrder
     invoiceNumber?: SortOrderInput | SortOrder
+    xeroInvoiceId?: SortOrderInput | SortOrder
+    xeroInvoiceNumber?: SortOrderInput | SortOrder
     invoicedAt?: SortOrderInput | SortOrder
     paidAt?: SortOrderInput | SortOrder
     sortOrder?: SortOrder
@@ -49383,6 +50462,8 @@ export namespace Prisma {
     dueDate?: DateTimeNullableWithAggregatesFilter<"BillingMilestone"> | Date | string | null
     status?: EnumBillingMilestoneStatusWithAggregatesFilter<"BillingMilestone"> | $Enums.BillingMilestoneStatus
     invoiceNumber?: StringNullableWithAggregatesFilter<"BillingMilestone"> | string | null
+    xeroInvoiceId?: StringNullableWithAggregatesFilter<"BillingMilestone"> | string | null
+    xeroInvoiceNumber?: StringNullableWithAggregatesFilter<"BillingMilestone"> | string | null
     invoicedAt?: DateTimeNullableWithAggregatesFilter<"BillingMilestone"> | Date | string | null
     paidAt?: DateTimeNullableWithAggregatesFilter<"BillingMilestone"> | Date | string | null
     sortOrder?: IntWithAggregatesFilter<"BillingMilestone"> | number
@@ -50718,6 +51799,78 @@ export namespace Prisma {
     updatedById?: StringNullableWithAggregatesFilter<"InvoiceSetting"> | string | null
   }
 
+  export type XeroConnectionWhereInput = {
+    AND?: XeroConnectionWhereInput | XeroConnectionWhereInput[]
+    OR?: XeroConnectionWhereInput[]
+    NOT?: XeroConnectionWhereInput | XeroConnectionWhereInput[]
+    id?: StringFilter<"XeroConnection"> | string
+    accessToken?: StringFilter<"XeroConnection"> | string
+    refreshToken?: StringFilter<"XeroConnection"> | string
+    expiresAt?: DateTimeFilter<"XeroConnection"> | Date | string
+    tenantId?: StringFilter<"XeroConnection"> | string
+    tenantName?: StringNullableFilter<"XeroConnection"> | string | null
+    connectedAt?: DateTimeFilter<"XeroConnection"> | Date | string
+    connectedById?: StringNullableFilter<"XeroConnection"> | string | null
+    updatedAt?: DateTimeFilter<"XeroConnection"> | Date | string
+  }
+
+  export type XeroConnectionOrderByWithRelationInput = {
+    id?: SortOrder
+    accessToken?: SortOrder
+    refreshToken?: SortOrder
+    expiresAt?: SortOrder
+    tenantId?: SortOrder
+    tenantName?: SortOrderInput | SortOrder
+    connectedAt?: SortOrder
+    connectedById?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type XeroConnectionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: XeroConnectionWhereInput | XeroConnectionWhereInput[]
+    OR?: XeroConnectionWhereInput[]
+    NOT?: XeroConnectionWhereInput | XeroConnectionWhereInput[]
+    accessToken?: StringFilter<"XeroConnection"> | string
+    refreshToken?: StringFilter<"XeroConnection"> | string
+    expiresAt?: DateTimeFilter<"XeroConnection"> | Date | string
+    tenantId?: StringFilter<"XeroConnection"> | string
+    tenantName?: StringNullableFilter<"XeroConnection"> | string | null
+    connectedAt?: DateTimeFilter<"XeroConnection"> | Date | string
+    connectedById?: StringNullableFilter<"XeroConnection"> | string | null
+    updatedAt?: DateTimeFilter<"XeroConnection"> | Date | string
+  }, "id">
+
+  export type XeroConnectionOrderByWithAggregationInput = {
+    id?: SortOrder
+    accessToken?: SortOrder
+    refreshToken?: SortOrder
+    expiresAt?: SortOrder
+    tenantId?: SortOrder
+    tenantName?: SortOrderInput | SortOrder
+    connectedAt?: SortOrder
+    connectedById?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    _count?: XeroConnectionCountOrderByAggregateInput
+    _max?: XeroConnectionMaxOrderByAggregateInput
+    _min?: XeroConnectionMinOrderByAggregateInput
+  }
+
+  export type XeroConnectionScalarWhereWithAggregatesInput = {
+    AND?: XeroConnectionScalarWhereWithAggregatesInput | XeroConnectionScalarWhereWithAggregatesInput[]
+    OR?: XeroConnectionScalarWhereWithAggregatesInput[]
+    NOT?: XeroConnectionScalarWhereWithAggregatesInput | XeroConnectionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"XeroConnection"> | string
+    accessToken?: StringWithAggregatesFilter<"XeroConnection"> | string
+    refreshToken?: StringWithAggregatesFilter<"XeroConnection"> | string
+    expiresAt?: DateTimeWithAggregatesFilter<"XeroConnection"> | Date | string
+    tenantId?: StringWithAggregatesFilter<"XeroConnection"> | string
+    tenantName?: StringNullableWithAggregatesFilter<"XeroConnection"> | string | null
+    connectedAt?: DateTimeWithAggregatesFilter<"XeroConnection"> | Date | string
+    connectedById?: StringNullableWithAggregatesFilter<"XeroConnection"> | string | null
+    updatedAt?: DateTimeWithAggregatesFilter<"XeroConnection"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -51010,6 +52163,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     industry?: string | null
+    xeroContactId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectCreateNestedManyWithoutClientInput
@@ -51023,6 +52177,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     industry?: string | null
+    xeroContactId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutClientInput
@@ -51036,6 +52191,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroContactId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUpdateManyWithoutClientNestedInput
@@ -51049,6 +52205,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroContactId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutClientNestedInput
@@ -51062,6 +52219,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     industry?: string | null
+    xeroContactId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -51073,6 +52231,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroContactId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -51084,6 +52243,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroContactId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -53134,6 +54294,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     status?: $Enums.BillingMilestoneStatus
     invoiceNumber?: string | null
+    xeroInvoiceId?: string | null
+    xeroInvoiceNumber?: string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
@@ -53155,6 +54317,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     status?: $Enums.BillingMilestoneStatus
     invoiceNumber?: string | null
+    xeroInvoiceId?: string | null
+    xeroInvoiceNumber?: string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
@@ -53172,6 +54336,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -53193,6 +54359,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -53212,6 +54380,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     status?: $Enums.BillingMilestoneStatus
     invoiceNumber?: string | null
+    xeroInvoiceId?: string | null
+    xeroInvoiceNumber?: string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
@@ -53228,6 +54398,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -53246,6 +54418,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -54700,6 +55874,90 @@ export namespace Prisma {
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type XeroConnectionCreateInput = {
+    id?: string
+    accessToken: string
+    refreshToken: string
+    expiresAt: Date | string
+    tenantId: string
+    tenantName?: string | null
+    connectedAt?: Date | string
+    connectedById?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type XeroConnectionUncheckedCreateInput = {
+    id?: string
+    accessToken: string
+    refreshToken: string
+    expiresAt: Date | string
+    tenantId: string
+    tenantName?: string | null
+    connectedAt?: Date | string
+    connectedById?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type XeroConnectionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tenantId?: StringFieldUpdateOperationsInput | string
+    tenantName?: NullableStringFieldUpdateOperationsInput | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    connectedById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type XeroConnectionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tenantId?: StringFieldUpdateOperationsInput | string
+    tenantName?: NullableStringFieldUpdateOperationsInput | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    connectedById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type XeroConnectionCreateManyInput = {
+    id?: string
+    accessToken: string
+    refreshToken: string
+    expiresAt: Date | string
+    tenantId: string
+    tenantName?: string | null
+    connectedAt?: Date | string
+    connectedById?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type XeroConnectionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tenantId?: StringFieldUpdateOperationsInput | string
+    tenantName?: NullableStringFieldUpdateOperationsInput | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    connectedById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type XeroConnectionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tenantId?: StringFieldUpdateOperationsInput | string
+    tenantName?: NullableStringFieldUpdateOperationsInput | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    connectedById?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -55259,6 +56517,7 @@ export namespace Prisma {
     email?: SortOrder
     phone?: SortOrder
     industry?: SortOrder
+    xeroContactId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -55270,6 +56529,7 @@ export namespace Prisma {
     email?: SortOrder
     phone?: SortOrder
     industry?: SortOrder
+    xeroContactId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -55281,6 +56541,7 @@ export namespace Prisma {
     email?: SortOrder
     phone?: SortOrder
     industry?: SortOrder
+    xeroContactId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -56637,6 +57898,8 @@ export namespace Prisma {
     dueDate?: SortOrder
     status?: SortOrder
     invoiceNumber?: SortOrder
+    xeroInvoiceId?: SortOrder
+    xeroInvoiceNumber?: SortOrder
     invoicedAt?: SortOrder
     paidAt?: SortOrder
     sortOrder?: SortOrder
@@ -56661,6 +57924,8 @@ export namespace Prisma {
     dueDate?: SortOrder
     status?: SortOrder
     invoiceNumber?: SortOrder
+    xeroInvoiceId?: SortOrder
+    xeroInvoiceNumber?: SortOrder
     invoicedAt?: SortOrder
     paidAt?: SortOrder
     sortOrder?: SortOrder
@@ -56679,6 +57944,8 @@ export namespace Prisma {
     dueDate?: SortOrder
     status?: SortOrder
     invoiceNumber?: SortOrder
+    xeroInvoiceId?: SortOrder
+    xeroInvoiceNumber?: SortOrder
     invoicedAt?: SortOrder
     paidAt?: SortOrder
     sortOrder?: SortOrder
@@ -57625,6 +58892,42 @@ export namespace Prisma {
     bankAccountNumber?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrder
+  }
+
+  export type XeroConnectionCountOrderByAggregateInput = {
+    id?: SortOrder
+    accessToken?: SortOrder
+    refreshToken?: SortOrder
+    expiresAt?: SortOrder
+    tenantId?: SortOrder
+    tenantName?: SortOrder
+    connectedAt?: SortOrder
+    connectedById?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type XeroConnectionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    accessToken?: SortOrder
+    refreshToken?: SortOrder
+    expiresAt?: SortOrder
+    tenantId?: SortOrder
+    tenantName?: SortOrder
+    connectedAt?: SortOrder
+    connectedById?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type XeroConnectionMinOrderByAggregateInput = {
+    id?: SortOrder
+    accessToken?: SortOrder
+    refreshToken?: SortOrder
+    expiresAt?: SortOrder
+    tenantId?: SortOrder
+    tenantName?: SortOrder
+    connectedAt?: SortOrder
+    connectedById?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type BusinessUnitCreateNestedOneWithoutUsersInput = {
@@ -66565,6 +67868,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     industry?: string | null
+    xeroContactId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     leads?: LeadCreateNestedManyWithoutClientInput
@@ -66577,6 +67881,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     industry?: string | null
+    xeroContactId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     leads?: LeadUncheckedCreateNestedManyWithoutClientInput
@@ -67346,6 +68651,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     status?: $Enums.BillingMilestoneStatus
     invoiceNumber?: string | null
+    xeroInvoiceId?: string | null
+    xeroInvoiceNumber?: string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
@@ -67365,6 +68672,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     status?: $Enums.BillingMilestoneStatus
     invoiceNumber?: string | null
+    xeroInvoiceId?: string | null
+    xeroInvoiceNumber?: string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
@@ -67615,6 +68924,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroContactId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leads?: LeadUpdateManyWithoutClientNestedInput
@@ -67627,6 +68937,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroContactId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leads?: LeadUncheckedUpdateManyWithoutClientNestedInput
@@ -68280,6 +69591,8 @@ export namespace Prisma {
     dueDate?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     status?: EnumBillingMilestoneStatusFilter<"BillingMilestone"> | $Enums.BillingMilestoneStatus
     invoiceNumber?: StringNullableFilter<"BillingMilestone"> | string | null
+    xeroInvoiceId?: StringNullableFilter<"BillingMilestone"> | string | null
+    xeroInvoiceNumber?: StringNullableFilter<"BillingMilestone"> | string | null
     invoicedAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     paidAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     sortOrder?: IntFilter<"BillingMilestone"> | number
@@ -69221,6 +70534,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     status?: $Enums.BillingMilestoneStatus
     invoiceNumber?: string | null
+    xeroInvoiceId?: string | null
+    xeroInvoiceNumber?: string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
@@ -69240,6 +70555,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     status?: $Enums.BillingMilestoneStatus
     invoiceNumber?: string | null
+    xeroInvoiceId?: string | null
+    xeroInvoiceNumber?: string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
@@ -72048,6 +73365,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     status?: $Enums.BillingMilestoneStatus
     invoiceNumber?: string | null
+    xeroInvoiceId?: string | null
+    xeroInvoiceNumber?: string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
@@ -72068,6 +73387,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     status?: $Enums.BillingMilestoneStatus
     invoiceNumber?: string | null
+    xeroInvoiceId?: string | null
+    xeroInvoiceNumber?: string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
@@ -72393,6 +73714,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -72413,6 +73736,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -78459,6 +79784,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     industry?: string | null
+    xeroContactId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectCreateNestedManyWithoutClientInput
@@ -78471,6 +79797,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     industry?: string | null
+    xeroContactId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutClientInput
@@ -78648,6 +79975,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroContactId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUpdateManyWithoutClientNestedInput
@@ -78660,6 +79988,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroContactId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutClientNestedInput
@@ -85755,6 +87084,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     status?: $Enums.BillingMilestoneStatus
     invoiceNumber?: string | null
+    xeroInvoiceId?: string | null
+    xeroInvoiceNumber?: string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
@@ -86158,6 +87489,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -86177,6 +87510,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -86195,6 +87530,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -86500,6 +87837,8 @@ export namespace Prisma {
     dueDate?: Date | string | null
     status?: $Enums.BillingMilestoneStatus
     invoiceNumber?: string | null
+    xeroInvoiceId?: string | null
+    xeroInvoiceNumber?: string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
@@ -86707,6 +88046,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -86726,6 +88067,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -86744,6 +88087,8 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: EnumBillingMilestoneStatusFieldUpdateOperationsInput | $Enums.BillingMilestoneStatus
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -88213,6 +89558,10 @@ export namespace Prisma {
      * @deprecated Use InvoiceSettingDefaultArgs instead
      */
     export type InvoiceSettingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = InvoiceSettingDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use XeroConnectionDefaultArgs instead
+     */
+    export type XeroConnectionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = XeroConnectionDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

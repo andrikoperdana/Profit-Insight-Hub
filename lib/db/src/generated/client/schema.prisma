@@ -161,6 +161,7 @@ model Client {
   email         String?
   phone         String?
   industry      String?
+  xeroContactId String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -590,23 +591,25 @@ model TaskDependency {
 }
 
 model BillingMilestone {
-  id            String                 @id @default(cuid())
-  projectId     String
-  project       Project                @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  workstreamId  String?
-  workstream    ProjectWorkstream?     @relation(fields: [workstreamId], references: [id], onDelete: SetNull)
-  name          String
-  description   String?
-  percentage    Float                  @default(0)
-  amount        Float?
-  dueDate       DateTime?
-  status        BillingMilestoneStatus @default(PLANNED)
-  invoiceNumber String?                @unique
-  invoicedAt    DateTime?
-  paidAt        DateTime?
-  sortOrder     Int                    @default(0)
-  createdAt     DateTime               @default(now())
-  updatedAt     DateTime               @updatedAt
+  id                String                 @id @default(cuid())
+  projectId         String
+  project           Project                @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  workstreamId      String?
+  workstream        ProjectWorkstream?     @relation(fields: [workstreamId], references: [id], onDelete: SetNull)
+  name              String
+  description       String?
+  percentage        Float                  @default(0)
+  amount            Float?
+  dueDate           DateTime?
+  status            BillingMilestoneStatus @default(PLANNED)
+  invoiceNumber     String?                @unique
+  xeroInvoiceId     String?
+  xeroInvoiceNumber String?
+  invoicedAt        DateTime?
+  paidAt            DateTime?
+  sortOrder         Int                    @default(0)
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
 
   invoiceDocuments Document[]
 
@@ -959,4 +962,16 @@ model InvoiceSetting {
   bankAccountNumber String
   updatedAt         DateTime @updatedAt
   updatedById       String?
+}
+
+model XeroConnection {
+  id            String   @id @default("default")
+  accessToken   String
+  refreshToken  String
+  expiresAt     DateTime
+  tenantId      String
+  tenantName    String?
+  connectedAt   DateTime @default(now())
+  connectedById String?
+  updatedAt     DateTime @updatedAt
 }

@@ -1108,6 +1108,7 @@ export const ListClientsResponseItem = zod.object({
   email: zod.string().nullish(),
   phone: zod.string().nullish(),
   industry: zod.string().nullish(),
+  xeroContactId: zod.string().nullish(),
   createdAt: zod.string(),
 });
 export const ListClientsResponse = zod.array(ListClientsResponseItem);
@@ -1139,6 +1140,7 @@ export const UpdateClientResponse = zod.object({
   email: zod.string().nullish(),
   phone: zod.string().nullish(),
   industry: zod.string().nullish(),
+  xeroContactId: zod.string().nullish(),
   createdAt: zod.string(),
 });
 
@@ -1396,6 +1398,7 @@ export const GetProjectResponse = zod
           email: zod.string().nullish(),
           phone: zod.string().nullish(),
           industry: zod.string().nullish(),
+          xeroContactId: zod.string().nullish(),
           createdAt: zod.string(),
         })
         .optional(),
@@ -4204,6 +4207,8 @@ export const ListBillingMilestonesResponseItem = zod.object({
   dueDate: zod.string().nullish(),
   status: zod.enum(["PLANNED", "INVOICED", "PAID", "CANCELLED"]),
   invoiceNumber: zod.string().nullish(),
+  xeroInvoiceId: zod.string().nullish(),
+  xeroInvoiceNumber: zod.string().nullish(),
   invoicedAt: zod.string().nullish(),
   paidAt: zod.string().nullish(),
   sortOrder: zod.number(),
@@ -4258,6 +4263,8 @@ export const UpdateBillingMilestoneResponse = zod.object({
   dueDate: zod.string().nullish(),
   status: zod.enum(["PLANNED", "INVOICED", "PAID", "CANCELLED"]),
   invoiceNumber: zod.string().nullish(),
+  xeroInvoiceId: zod.string().nullish(),
+  xeroInvoiceNumber: zod.string().nullish(),
   invoicedAt: zod.string().nullish(),
   paidAt: zod.string().nullish(),
   sortOrder: zod.number(),
@@ -4602,4 +4609,46 @@ export const GetBillableUtilizationResponse = zod.object({
       billablePct: zod.number(),
     }),
   ),
+});
+
+export const GetXeroStatusResponse = zod.object({
+  connected: zod.boolean(),
+  configured: zod.boolean(),
+  tenantName: zod.string().nullish(),
+  connectedAt: zod.string().nullish(),
+});
+
+export const GetXeroConnectUrlResponse = zod.object({
+  url: zod.string(),
+});
+
+export const DisconnectXeroResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+export const SyncXeroPaymentsResponse = zod.object({
+  checked: zod.number(),
+  updated: zod.number(),
+});
+
+export const SyncClientToXeroParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const SyncClientToXeroResponse = zod.object({
+  id: zod.string(),
+  xeroContactId: zod.string(),
+});
+
+export const PushMilestoneToXeroParams = zod.object({
+  milestoneId: zod.coerce.string(),
+});
+
+export const PushMilestoneToXeroResponse = zod.object({
+  id: zod.string(),
+  status: zod.enum(["PLANNED", "INVOICED", "PAID", "CANCELLED"]),
+  xeroInvoiceId: zod.string().nullish(),
+  xeroInvoiceNumber: zod.string().nullish(),
+  invoiceNumber: zod.string().nullish(),
 });

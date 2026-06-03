@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { canManageClients } from "@/lib/roles";
-import { useListClients, useCreateClient } from "@workspace/api-client-react";
+import { useListClients, useCreateClient, useSyncClientToXero } from "@workspace/api-client-react";
 import { getListClientsQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Building2, Plus, Mail, Phone, Download } from "lucide-react";
+import { Building2, Plus, Mail, Phone, Download, Link2, Check, Loader2 } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -51,9 +51,25 @@ export default function ClientsList() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [syncingId, setSyncingId] = useState<string | null>(null);
 
   const { data: clients, isLoading } = useListClients({
     query: { queryKey: getListClientsQueryKey() }
+  });
+
+  const canSyncXero = user?.role === "MANAGEMENT" || user?.role === "FINANCE";
+
+  const syncToXero = useSyncClientToXero({
+    mutation: {
+      onSuccess: () => {
+        toast({ title: "Client synced to Xero" });
+        queryClient.invalidateQueries({ queryKey: getListClientsQueryKey() });
+      },
+      onError: (err: any) => {
+        toast({ variant: "destructive", title: "Xero sync failed", description: err?.message });
+      },
+      onSettled: () => setSyncingId(null),
+    },
   });
 
   const createClient = useCreateClient({
@@ -226,6 +242,7 @@ export default function ClientsList() {
                 <TableHead>Company</TableHead>
                 <TableHead>Contact</TableHead>
                 <TableHead>Contact Details</TableHead>
+                {canSyncXero && <TableHead>Xero</TableHead>}
                 <TableHead className="text-right">Added</TableHead>
               </TableRow>
             </TableHeader>
@@ -250,6 +267,33 @@ export default function ClientsList() {
                       {!client.email && !client.phone && <span className="italic">No contact details</span>}
                     </div>
                   </TableCell>
+                  {canSyncXero && (
+                    <TableCell>
+                      {client.xeroContactId ? (
+                        <span className="inline-flex items-center gap-1.5 text-xs text-emerald-500">
+                          <Check className="h-3.5 w-3.5" /> Synced
+                        </span>
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          disabled={syncingId === client.id}
+                          onClick={() => {
+                            setSyncingId(client.id);
+                            syncToXero.mutate({ id: client.id });
+                          }}
+                          data-testid={`button-sync-xero-${client.id}`}
+                        >
+                          {syncingId === client.id ? (
+                            <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                          ) : (
+                            <Link2 className="h-3.5 w-3.5 mr-1.5" />
+                          )}
+                          Sync to Xero
+                        </Button>
+                      )}
+                    </TableCell>
+                  )}
                   <TableCell className="text-right text-muted-foreground text-sm">
                     {new Date(client.createdAt).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}
                   </TableCell>

@@ -13,5 +13,6 @@ export interface Client {
   email?: string | null;
   phone?: string | null;
   industry?: string | null;
+  xeroContactId?: string | null;
   createdAt: string;
 }

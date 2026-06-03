@@ -60,6 +60,10 @@ export type AuditAction =
   | "billing_milestone.updated"
   | "billing_milestone.deleted"
   | "billing_milestone.invoice_generated"
+  | "billing_milestone.xero_invoice_created"
+  | "xero.connected"
+  | "xero.disconnected"
+  | "client.xero_synced"
   | "invoice_settings.updated"
   | "project.report_updated"
   | "project_report.created"
@@ -105,6 +109,8 @@ export type EntityType =
   | "ProjectWorkstream"
   | "ProjectReport"
   | "InvoiceSetting"
+  | "Client"
+  | "XeroConnection"
   | "System";
 
 interface AuditInput {

@@ -142,6 +142,11 @@ import type {
   UserLeave,
   UtilizationRow,
   VatRecap,
+  XeroClientSyncResult,
+  XeroConnectUrl,
+  XeroInvoiceResult,
+  XeroStatus,
+  XeroSyncResult,
 } from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
@@ -11472,3 +11477,455 @@ export function useGetBillableUtilization<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+export const getGetXeroStatusUrl = () => {
+  return `/api/xero/status`;
+};
+
+export const getXeroStatus = async (
+  options?: RequestInit,
+): Promise<XeroStatus> => {
+  return customFetch<XeroStatus>(getGetXeroStatusUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetXeroStatusQueryKey = () => {
+  return [`/api/xero/status`] as const;
+};
+
+export const getGetXeroStatusQueryOptions = <
+  TData = Awaited<ReturnType<typeof getXeroStatus>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getXeroStatus>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetXeroStatusQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getXeroStatus>>> = ({
+    signal,
+  }) => getXeroStatus({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getXeroStatus>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetXeroStatusQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getXeroStatus>>
+>;
+export type GetXeroStatusQueryError = ErrorType<unknown>;
+
+export function useGetXeroStatus<
+  TData = Awaited<ReturnType<typeof getXeroStatus>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getXeroStatus>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetXeroStatusQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getGetXeroConnectUrlUrl = () => {
+  return `/api/xero/connect-url`;
+};
+
+export const getXeroConnectUrl = async (
+  options?: RequestInit,
+): Promise<XeroConnectUrl> => {
+  return customFetch<XeroConnectUrl>(getGetXeroConnectUrlUrl(), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getGetXeroConnectUrlMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof getXeroConnectUrl>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof getXeroConnectUrl>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = ["getXeroConnectUrl"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof getXeroConnectUrl>>,
+    void
+  > = () => {
+    return getXeroConnectUrl(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type GetXeroConnectUrlMutationResult = NonNullable<
+  Awaited<ReturnType<typeof getXeroConnectUrl>>
+>;
+
+export type GetXeroConnectUrlMutationError = ErrorType<unknown>;
+
+export const useGetXeroConnectUrl = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof getXeroConnectUrl>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof getXeroConnectUrl>>,
+  TError,
+  void,
+  TContext
+> => {
+  return useMutation(getGetXeroConnectUrlMutationOptions(options));
+};
+
+export const getDisconnectXeroUrl = () => {
+  return `/api/xero/disconnect`;
+};
+
+export const disconnectXero = async (
+  options?: RequestInit,
+): Promise<SuccessMessage> => {
+  return customFetch<SuccessMessage>(getDisconnectXeroUrl(), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getDisconnectXeroMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof disconnectXero>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof disconnectXero>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = ["disconnectXero"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof disconnectXero>>,
+    void
+  > = () => {
+    return disconnectXero(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DisconnectXeroMutationResult = NonNullable<
+  Awaited<ReturnType<typeof disconnectXero>>
+>;
+
+export type DisconnectXeroMutationError = ErrorType<unknown>;
+
+export const useDisconnectXero = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof disconnectXero>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof disconnectXero>>,
+  TError,
+  void,
+  TContext
+> => {
+  return useMutation(getDisconnectXeroMutationOptions(options));
+};
+
+export const getSyncXeroPaymentsUrl = () => {
+  return `/api/xero/sync-payments`;
+};
+
+export const syncXeroPayments = async (
+  options?: RequestInit,
+): Promise<XeroSyncResult> => {
+  return customFetch<XeroSyncResult>(getSyncXeroPaymentsUrl(), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getSyncXeroPaymentsMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof syncXeroPayments>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof syncXeroPayments>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = ["syncXeroPayments"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof syncXeroPayments>>,
+    void
+  > = () => {
+    return syncXeroPayments(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SyncXeroPaymentsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof syncXeroPayments>>
+>;
+
+export type SyncXeroPaymentsMutationError = ErrorType<unknown>;
+
+export const useSyncXeroPayments = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof syncXeroPayments>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof syncXeroPayments>>,
+  TError,
+  void,
+  TContext
+> => {
+  return useMutation(getSyncXeroPaymentsMutationOptions(options));
+};
+
+export const getSyncClientToXeroUrl = (id: string) => {
+  return `/api/clients/${id}/xero-sync`;
+};
+
+export const syncClientToXero = async (
+  id: string,
+  options?: RequestInit,
+): Promise<XeroClientSyncResult> => {
+  return customFetch<XeroClientSyncResult>(getSyncClientToXeroUrl(id), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getSyncClientToXeroMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof syncClientToXero>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof syncClientToXero>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["syncClientToXero"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof syncClientToXero>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return syncClientToXero(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SyncClientToXeroMutationResult = NonNullable<
+  Awaited<ReturnType<typeof syncClientToXero>>
+>;
+
+export type SyncClientToXeroMutationError = ErrorType<unknown>;
+
+export const useSyncClientToXero = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof syncClientToXero>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof syncClientToXero>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getSyncClientToXeroMutationOptions(options));
+};
+
+export const getPushMilestoneToXeroUrl = (milestoneId: string) => {
+  return `/api/billing-milestones/${milestoneId}/xero-invoice`;
+};
+
+export const pushMilestoneToXero = async (
+  milestoneId: string,
+  options?: RequestInit,
+): Promise<XeroInvoiceResult> => {
+  return customFetch<XeroInvoiceResult>(
+    getPushMilestoneToXeroUrl(milestoneId),
+    {
+      ...options,
+      method: "POST",
+    },
+  );
+};
+
+export const getPushMilestoneToXeroMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof pushMilestoneToXero>>,
+    TError,
+    { milestoneId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof pushMilestoneToXero>>,
+  TError,
+  { milestoneId: string },
+  TContext
+> => {
+  const mutationKey = ["pushMilestoneToXero"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof pushMilestoneToXero>>,
+    { milestoneId: string }
+  > = (props) => {
+    const { milestoneId } = props ?? {};
+
+    return pushMilestoneToXero(milestoneId, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PushMilestoneToXeroMutationResult = NonNullable<
+  Awaited<ReturnType<typeof pushMilestoneToXero>>
+>;
+
+export type PushMilestoneToXeroMutationError = ErrorType<unknown>;
+
+export const usePushMilestoneToXero = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof pushMilestoneToXero>>,
+    TError,
+    { milestoneId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof pushMilestoneToXero>>,
+  TError,
+  { milestoneId: string },
+  TContext
+> => {
+  return useMutation(getPushMilestoneToXeroMutationOptions(options));
+};

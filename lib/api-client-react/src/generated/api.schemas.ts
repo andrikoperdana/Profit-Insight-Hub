@@ -14,6 +14,45 @@ export interface SuccessMessage {
   message?: string;
 }
 
+export interface XeroStatus {
+  connected: boolean;
+  configured: boolean;
+  tenantName?: string | null;
+  connectedAt?: string | null;
+}
+
+export interface XeroConnectUrl {
+  url: string;
+}
+
+export interface XeroSyncResult {
+  checked: number;
+  updated: number;
+}
+
+export interface XeroClientSyncResult {
+  id: string;
+  xeroContactId: string;
+}
+
+export type BillingMilestoneStatus =
+  (typeof BillingMilestoneStatus)[keyof typeof BillingMilestoneStatus];
+
+export const BillingMilestoneStatus = {
+  PLANNED: "PLANNED",
+  INVOICED: "INVOICED",
+  PAID: "PAID",
+  CANCELLED: "CANCELLED",
+} as const;
+
+export interface XeroInvoiceResult {
+  id: string;
+  status: BillingMilestoneStatus;
+  xeroInvoiceId?: string | null;
+  xeroInvoiceNumber?: string | null;
+  invoiceNumber?: string | null;
+}
+
 export type UserRole = (typeof UserRole)[keyof typeof UserRole];
 
 export const UserRole = {
@@ -192,16 +231,6 @@ export interface VatRecap {
   totals: VatRecapTotals;
 }
 
-export type BillingMilestoneStatus =
-  (typeof BillingMilestoneStatus)[keyof typeof BillingMilestoneStatus];
-
-export const BillingMilestoneStatus = {
-  PLANNED: "PLANNED",
-  INVOICED: "INVOICED",
-  PAID: "PAID",
-  CANCELLED: "CANCELLED",
-} as const;
-
 export interface BillingMilestone {
   id: string;
   projectId: string;
@@ -213,6 +242,8 @@ export interface BillingMilestone {
   dueDate?: string | null;
   status: BillingMilestoneStatus;
   invoiceNumber?: string | null;
+  xeroInvoiceId?: string | null;
+  xeroInvoiceNumber?: string | null;
   invoicedAt?: string | null;
   paidAt?: string | null;
   sortOrder: number;
@@ -627,6 +658,7 @@ export interface Client {
   email?: string | null;
   phone?: string | null;
   industry?: string | null;
+  xeroContactId?: string | null;
   createdAt: string;
 }
 

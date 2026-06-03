@@ -42,6 +42,7 @@ import raidRouter from "./raid.js";
 import performanceReviewsRouter from "./performance-reviews.js";
 import workstreamsRouter from "./workstreams.js";
 import projectReportsRouter from "./project-reports.js";
+import xeroRouter from "./xero.js";
 
 const router: IRouter = Router();
 
@@ -88,5 +89,6 @@ router.use(raidRouter);
 router.use(performanceReviewsRouter);
 router.use(workstreamsRouter);
 router.use(projectReportsRouter);
+router.use(xeroRouter);
 
 export default router;

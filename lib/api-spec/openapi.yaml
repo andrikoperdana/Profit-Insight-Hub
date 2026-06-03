@@ -2175,6 +2175,76 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/BillableUtilization" }
 
+  /xero/status:
+    get:
+      operationId: getXeroStatus
+      tags: [xero]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/XeroStatus" }
+
+  /xero/connect-url:
+    post:
+      operationId: getXeroConnectUrl
+      tags: [xero]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/XeroConnectUrl" }
+
+  /xero/disconnect:
+    post:
+      operationId: disconnectXero
+      tags: [xero]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /xero/sync-payments:
+    post:
+      operationId: syncXeroPayments
+      tags: [xero]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/XeroSyncResult" }
+
+  /clients/{id}/xero-sync:
+    post:
+      operationId: syncClientToXero
+      tags: [xero]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/XeroClientSyncResult" }
+
+  /billing-milestones/{milestoneId}/xero-invoice:
+    post:
+      operationId: pushMilestoneToXero
+      tags: [xero]
+      parameters:
+        - { name: milestoneId, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/XeroInvoiceResult" }
+
 components:
   schemas:
     HealthStatus:
@@ -2189,6 +2259,45 @@ components:
       properties:
         success: { type: boolean }
         message: { type: string }
+
+    XeroStatus:
+      type: object
+      required: [connected, configured]
+      properties:
+        connected: { type: boolean }
+        configured: { type: boolean }
+        tenantName: { type: string, nullable: true }
+        connectedAt: { type: string, nullable: true }
+
+    XeroConnectUrl:
+      type: object
+      required: [url]
+      properties:
+        url: { type: string }
+
+    XeroSyncResult:
+      type: object
+      required: [checked, updated]
+      properties:
+        checked: { type: integer }
+        updated: { type: integer }
+
+    XeroClientSyncResult:
+      type: object
+      required: [id, xeroContactId]
+      properties:
+        id: { type: string }
+        xeroContactId: { type: string }
+
+    XeroInvoiceResult:
+      type: object
+      required: [id, status]
+      properties:
+        id: { type: string }
+        status: { $ref: "#/components/schemas/BillingMilestoneStatus" }
+        xeroInvoiceId: { type: string, nullable: true }
+        xeroInvoiceNumber: { type: string, nullable: true }
+        invoiceNumber: { type: string, nullable: true }
 
     UserRole:
       type: string
@@ -2338,6 +2447,8 @@ components:
         dueDate: { type: string, nullable: true }
         status: { $ref: "#/components/schemas/BillingMilestoneStatus" }
         invoiceNumber: { type: string, nullable: true }
+        xeroInvoiceId: { type: string, nullable: true }
+        xeroInvoiceNumber: { type: string, nullable: true }
         invoicedAt: { type: string, nullable: true }
         paidAt: { type: string, nullable: true }
         sortOrder: { type: integer }
@@ -2757,6 +2868,7 @@ components:
         email: { type: string, nullable: true }
         phone: { type: string, nullable: true }
         industry: { type: string, nullable: true }
+        xeroContactId: { type: string, nullable: true }
         createdAt: { type: string }
 
     CreateClientBody:
