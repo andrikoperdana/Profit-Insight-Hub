@@ -46163,6 +46163,7 @@ export namespace Prisma {
     tenantName: string | null
     connectedAt: Date | null
     connectedById: string | null
+    disconnectedAt: Date | null
     updatedAt: Date | null
   }
 
@@ -46175,6 +46176,7 @@ export namespace Prisma {
     tenantName: string | null
     connectedAt: Date | null
     connectedById: string | null
+    disconnectedAt: Date | null
     updatedAt: Date | null
   }
 
@@ -46187,6 +46189,7 @@ export namespace Prisma {
     tenantName: number
     connectedAt: number
     connectedById: number
+    disconnectedAt: number
     updatedAt: number
     _all: number
   }
@@ -46201,6 +46204,7 @@ export namespace Prisma {
     tenantName?: true
     connectedAt?: true
     connectedById?: true
+    disconnectedAt?: true
     updatedAt?: true
   }
 
@@ -46213,6 +46217,7 @@ export namespace Prisma {
     tenantName?: true
     connectedAt?: true
     connectedById?: true
+    disconnectedAt?: true
     updatedAt?: true
   }
 
@@ -46225,6 +46230,7 @@ export namespace Prisma {
     tenantName?: true
     connectedAt?: true
     connectedById?: true
+    disconnectedAt?: true
     updatedAt?: true
     _all?: true
   }
@@ -46310,6 +46316,7 @@ export namespace Prisma {
     tenantName: string | null
     connectedAt: Date
     connectedById: string | null
+    disconnectedAt: Date | null
     updatedAt: Date
     _count: XeroConnectionCountAggregateOutputType | null
     _min: XeroConnectionMinAggregateOutputType | null
@@ -46339,6 +46346,7 @@ export namespace Prisma {
     tenantName?: boolean
     connectedAt?: boolean
     connectedById?: boolean
+    disconnectedAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["xeroConnection"]>
 
@@ -46351,6 +46359,7 @@ export namespace Prisma {
     tenantName?: boolean
     connectedAt?: boolean
     connectedById?: boolean
+    disconnectedAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["xeroConnection"]>
 
@@ -46363,6 +46372,7 @@ export namespace Prisma {
     tenantName?: boolean
     connectedAt?: boolean
     connectedById?: boolean
+    disconnectedAt?: boolean
     updatedAt?: boolean
   }
 
@@ -46379,6 +46389,7 @@ export namespace Prisma {
       tenantName: string | null
       connectedAt: Date
       connectedById: string | null
+      disconnectedAt: Date | null
       updatedAt: Date
     }, ExtArgs["result"]["xeroConnection"]>
     composites: {}
@@ -46781,6 +46792,7 @@ export namespace Prisma {
     readonly tenantName: FieldRef<"XeroConnection", 'String'>
     readonly connectedAt: FieldRef<"XeroConnection", 'DateTime'>
     readonly connectedById: FieldRef<"XeroConnection", 'String'>
+    readonly disconnectedAt: FieldRef<"XeroConnection", 'DateTime'>
     readonly updatedAt: FieldRef<"XeroConnection", 'DateTime'>
   }
     
@@ -47742,6 +47754,7 @@ export namespace Prisma {
     tenantName: 'tenantName',
     connectedAt: 'connectedAt',
     connectedById: 'connectedById',
+    disconnectedAt: 'disconnectedAt',
     updatedAt: 'updatedAt'
   };
 
@@ -51811,6 +51824,7 @@ export namespace Prisma {
     tenantName?: StringNullableFilter<"XeroConnection"> | string | null
     connectedAt?: DateTimeFilter<"XeroConnection"> | Date | string
     connectedById?: StringNullableFilter<"XeroConnection"> | string | null
+    disconnectedAt?: DateTimeNullableFilter<"XeroConnection"> | Date | string | null
     updatedAt?: DateTimeFilter<"XeroConnection"> | Date | string
   }
 
@@ -51823,6 +51837,7 @@ export namespace Prisma {
     tenantName?: SortOrderInput | SortOrder
     connectedAt?: SortOrder
     connectedById?: SortOrderInput | SortOrder
+    disconnectedAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
   }
 
@@ -51838,6 +51853,7 @@ export namespace Prisma {
     tenantName?: StringNullableFilter<"XeroConnection"> | string | null
     connectedAt?: DateTimeFilter<"XeroConnection"> | Date | string
     connectedById?: StringNullableFilter<"XeroConnection"> | string | null
+    disconnectedAt?: DateTimeNullableFilter<"XeroConnection"> | Date | string | null
     updatedAt?: DateTimeFilter<"XeroConnection"> | Date | string
   }, "id">
 
@@ -51850,6 +51866,7 @@ export namespace Prisma {
     tenantName?: SortOrderInput | SortOrder
     connectedAt?: SortOrder
     connectedById?: SortOrderInput | SortOrder
+    disconnectedAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     _count?: XeroConnectionCountOrderByAggregateInput
     _max?: XeroConnectionMaxOrderByAggregateInput
@@ -51868,6 +51885,7 @@ export namespace Prisma {
     tenantName?: StringNullableWithAggregatesFilter<"XeroConnection"> | string | null
     connectedAt?: DateTimeWithAggregatesFilter<"XeroConnection"> | Date | string
     connectedById?: StringNullableWithAggregatesFilter<"XeroConnection"> | string | null
+    disconnectedAt?: DateTimeNullableWithAggregatesFilter<"XeroConnection"> | Date | string | null
     updatedAt?: DateTimeWithAggregatesFilter<"XeroConnection"> | Date | string
   }
 
@@ -55883,6 +55901,7 @@ export namespace Prisma {
     tenantName?: string | null
     connectedAt?: Date | string
     connectedById?: string | null
+    disconnectedAt?: Date | string | null
     updatedAt?: Date | string
   }
 
@@ -55895,6 +55914,7 @@ export namespace Prisma {
     tenantName?: string | null
     connectedAt?: Date | string
     connectedById?: string | null
+    disconnectedAt?: Date | string | null
     updatedAt?: Date | string
   }
 
@@ -55907,6 +55927,7 @@ export namespace Prisma {
     tenantName?: NullableStringFieldUpdateOperationsInput | string | null
     connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     connectedById?: NullableStringFieldUpdateOperationsInput | string | null
+    disconnectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -55919,6 +55940,7 @@ export namespace Prisma {
     tenantName?: NullableStringFieldUpdateOperationsInput | string | null
     connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     connectedById?: NullableStringFieldUpdateOperationsInput | string | null
+    disconnectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -55931,6 +55953,7 @@ export namespace Prisma {
     tenantName?: string | null
     connectedAt?: Date | string
     connectedById?: string | null
+    disconnectedAt?: Date | string | null
     updatedAt?: Date | string
   }
 
@@ -55943,6 +55966,7 @@ export namespace Prisma {
     tenantName?: NullableStringFieldUpdateOperationsInput | string | null
     connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     connectedById?: NullableStringFieldUpdateOperationsInput | string | null
+    disconnectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -55955,6 +55979,7 @@ export namespace Prisma {
     tenantName?: NullableStringFieldUpdateOperationsInput | string | null
     connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     connectedById?: NullableStringFieldUpdateOperationsInput | string | null
+    disconnectedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -58903,6 +58928,7 @@ export namespace Prisma {
     tenantName?: SortOrder
     connectedAt?: SortOrder
     connectedById?: SortOrder
+    disconnectedAt?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -58915,6 +58941,7 @@ export namespace Prisma {
     tenantName?: SortOrder
     connectedAt?: SortOrder
     connectedById?: SortOrder
+    disconnectedAt?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -58927,6 +58954,7 @@ export namespace Prisma {
     tenantName?: SortOrder
     connectedAt?: SortOrder
     connectedById?: SortOrder
+    disconnectedAt?: SortOrder
     updatedAt?: SortOrder
   }
 

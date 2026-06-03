@@ -965,13 +965,14 @@ model InvoiceSetting {
 }
 
 model XeroConnection {
-  id            String    @id @default("default")
-  accessToken   String
-  refreshToken  String
-  expiresAt     DateTime
-  tenantId      String
-  tenantName    String?
-  connectedAt   DateTime  @default(now())
-  connectedById String?
-  updatedAt     DateTime  @updatedAt
+  id             String    @id @default("default")
+  accessToken    String
+  refreshToken   String
+  expiresAt      DateTime
+  tenantId       String
+  tenantName     String?
+  connectedAt    DateTime  @default(now())
+  connectedById  String?
+  disconnectedAt DateTime?
+  updatedAt      DateTime  @updatedAt
 }

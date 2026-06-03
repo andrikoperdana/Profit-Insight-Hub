@@ -81,6 +81,25 @@ OK, `/identity/error` (page body contains `invalid_scope`) = scope refused.
 Our code only POSTs /Invoices, POSTs /Contacts, GETs /Invoices -> needs exactly
 `accounting.invoices accounting.contacts offline_access`.
 
+## App binds to ONE org; switching orgs needs soft-disconnect + stale-id cleanup
+`completeConnection` auto-picks the first ORGANISATION tenant from `/connections`
+(`find(ORGANISATION) ?? tenants[0]`) and stores its `tenantId`; every API call sends
+that stored `Xero-tenant-id`. If the user authorizes the wrong org (e.g. a "Personal"
+/ demo org instead of their real company) the sync *succeeds* but contacts/invoices
+land in the wrong org — looks like a silent failure but is an org mismatch (confirm
+via `XeroConnection.tenantName`).
+**To recover by switching orgs:** stored `Client.xeroContactId` / `BillingMilestone.
+xeroInvoiceId` belong to the OLD org and are invalid in the new one, and the UI only
+shows the sync button when the id is null — so they must be cleared on org change.
+`disconnect()` is therefore a **soft delete** (stamps `disconnectedAt`, keeps the row)
+so `completeConnection` can compare the previous `tenantId` to the newly connected one
+and, only when they differ, clear those ids in the SAME `$transaction` as the upsert.
+Same-org reconnect must KEEP the ids (re-creating a contact with a duplicate Name hits
+Xero's unique-name error). `getConnectionInfo`/`getValidAccessToken` must treat a
+`disconnectedAt`-stamped row as not connected.
+**Why:** hard-deleting on disconnect loses the org memory, so the disconnect→connect
+path (the only reconnect UX) couldn't detect the switch and left stale ids.
+
 ## OAuth state must fail closed
 `/api/xero/callback` is intentionally unauthenticated and site-gate-bypassed; it trusts
 only the HMAC-signed `state`. The signing secret (`SESSION_SECRET`) must have **no

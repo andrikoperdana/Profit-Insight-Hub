@@ -178,8 +178,24 @@ export async function completeConnection(
   if (!tenant) {
     throw new Error("No Xero organisation is connected to this app");
   }
+
+  // Disconnect is a SOFT delete (it only stamps disconnectedAt), so the prior
+  // connection row survives and we can still see which organisation we were last
+  // bound to. If this connection points at a DIFFERENT Xero organisation than
+  // before, every stored external id (contact/invoice) refers to the old org and
+  // is meaningless in the new one — clear them so contacts get re-created (and
+  // invoices re-pushed) into the newly connected organisation, rather than
+  // failing later with "contact/invoice not found" against the wrong tenant.
+  // Reconnecting to the SAME org keeps the ids (re-syncing would otherwise hit
+  // Xero's unique-contact-name error). First-time connect has no prior tenant.
+  const previous = await prisma.xeroConnection.findUnique({
+    where: { id: CONNECTION_ID },
+    select: { tenantId: true },
+  });
+  const orgChanged = !!previous && previous.tenantId !== tenant.tenantId;
+
   const expiresAt = new Date(Date.now() + token.expires_in * 1000);
-  await prisma.xeroConnection.upsert({
+  const upsertConnection = prisma.xeroConnection.upsert({
     where: { id: CONNECTION_ID },
     create: {
       id: CONNECTION_ID,
@@ -198,8 +214,36 @@ export async function completeConnection(
       tenantName: tenant.tenantName,
       connectedById,
       connectedAt: new Date(),
+      disconnectedAt: null,
     },
   });
+
+  // Cleanup and the connection upsert run atomically so we never end up with
+  // cleared ids but no (re)stored connection, or vice versa.
+  if (orgChanged) {
+    const [clientsCleared, milestonesCleared] = await prisma.$transaction([
+      prisma.client.updateMany({
+        where: { xeroContactId: { not: null } },
+        data: { xeroContactId: null },
+      }),
+      prisma.billingMilestone.updateMany({
+        where: { xeroInvoiceId: { not: null } },
+        data: { xeroInvoiceId: null, xeroInvoiceNumber: null },
+      }),
+      upsertConnection,
+    ]);
+    logger.warn(
+      {
+        previousTenantId: previous?.tenantId,
+        newTenantId: tenant.tenantId,
+        clientsCleared: clientsCleared.count,
+        milestonesCleared: milestonesCleared.count,
+      },
+      "Xero organisation changed on reconnect — cleared stale contact/invoice ids",
+    );
+  } else {
+    await upsertConnection;
+  }
 }
 
 export interface XeroConnectionInfo {
@@ -210,7 +254,11 @@ export interface XeroConnectionInfo {
 
 export async function getConnectionInfo(): Promise<XeroConnectionInfo> {
   const conn = await prisma.xeroConnection.findUnique({ where: { id: CONNECTION_ID } });
-  if (!conn) return { connected: false, tenantName: null, connectedAt: null };
+  // A soft-disconnected row still exists (so we remember the last org), but it
+  // must report as not connected.
+  if (!conn || conn.disconnectedAt) {
+    return { connected: false, tenantName: null, connectedAt: null };
+  }
   return {
     connected: true,
     tenantName: conn.tenantName,
@@ -219,7 +267,13 @@ export async function getConnectionInfo(): Promise<XeroConnectionInfo> {
 }
 
 export async function disconnect(): Promise<void> {
-  await prisma.xeroConnection.deleteMany({ where: { id: CONNECTION_ID } });
+  // Soft delete: stamp disconnectedAt instead of removing the row, so a later
+  // reconnect can detect whether the user switched to a different Xero org and
+  // clear stale contact/invoice ids accordingly. No-op if never connected.
+  await prisma.xeroConnection.updateMany({
+    where: { id: CONNECTION_ID },
+    data: { disconnectedAt: new Date() },
+  });
 }
 
 export class XeroNotConnectedError extends Error {
@@ -260,7 +314,7 @@ async function doRefresh(refreshToken: string): Promise<{ accessToken: string; t
  */
 export async function getValidAccessToken(): Promise<{ accessToken: string; tenantId: string }> {
   const conn = await prisma.xeroConnection.findUnique({ where: { id: CONNECTION_ID } });
-  if (!conn) throw new XeroNotConnectedError();
+  if (!conn || conn.disconnectedAt) throw new XeroNotConnectedError();
   if (conn.expiresAt.getTime() - Date.now() > EXPIRY_BUFFER_MS) {
     return { accessToken: conn.accessToken, tenantId: conn.tenantId };
   }
