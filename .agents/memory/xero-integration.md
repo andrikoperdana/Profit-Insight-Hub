@@ -38,6 +38,15 @@ fallback for cross-origin top access) so the redirect escapes the iframe. Produc
 **Separately:** the derived `redirect_uri` (`https://<host>/api/xero/callback`, from
 x-forwarded-host) must be registered in the Xero developer app or Xero rejects authorize.
 
+## Authorize URL scope must be %20-encoded, not "+"
+Building the authorize URL with `URLSearchParams` encodes the spaces between scopes
+as `+`. Xero treats a literal `+` in the query as part of the scope value, so the
+space-separated scopes collapse into one invalid token and Xero returns
+`invalid_scope` (500 error page). Build the query manually with `encodeURIComponent`
+(space -> %20). **Why:** in a URL query component `+` is a literal plus per RFC 3986,
+not a space; only form bodies treat `+` as space. **How to apply:** never use
+URLSearchParams for OAuth authorize URLs whose values contain spaces.
+
 ## OAuth state must fail closed
 `/api/xero/callback` is intentionally unauthenticated and site-gate-bypassed; it trusts
 only the HMAC-signed `state`. The signing secret (`SESSION_SECRET`) must have **no

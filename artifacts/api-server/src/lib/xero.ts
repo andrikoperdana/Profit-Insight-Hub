@@ -91,14 +91,22 @@ export function verifyState(state: string | undefined): boolean {
 }
 
 export function buildAuthorizeUrl(redirectUri: string, state: string): string {
-  const params = new URLSearchParams({
-    response_type: "code",
-    client_id: clientId(),
-    redirect_uri: redirectUri,
-    scope: SCOPES,
-    state,
-  });
-  return `${AUTHORIZE_URL}?${params.toString()}`;
+  // Build the query string with encodeURIComponent (space -> %20) rather than
+  // URLSearchParams (space -> "+"). Xero interprets a literal "+" in the query
+  // as part of the scope value, turning the space-separated scopes into one
+  // invalid token ("openid+profile+...") and returning invalid_scope. Xero's
+  // docs require the scopes joined with %20.
+  const params: Array<[string, string]> = [
+    ["response_type", "code"],
+    ["client_id", clientId()],
+    ["redirect_uri", redirectUri],
+    ["scope", SCOPES],
+    ["state", state],
+  ];
+  const qs = params
+    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+    .join("&");
+  return `${AUTHORIZE_URL}?${qs}`;
 }
 
 function basicAuthHeader(): string {
