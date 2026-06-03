@@ -339,7 +339,19 @@ function XeroIntegrationCard() {
   const connectUrl = useGetXeroConnectUrl({
     mutation: {
       onSuccess: (res) => {
-        window.location.href = res.url;
+        // The app may run inside the Replit preview iframe. Xero's login page
+        // refuses to be framed, so navigate the top-level window to break out
+        // of the iframe; fall back to a new tab if cross-origin top access is
+        // blocked. In production (no iframe) this is just a normal navigation.
+        try {
+          if (window.top && window.top !== window.self) {
+            window.top.location.href = res.url;
+          } else {
+            window.location.href = res.url;
+          }
+        } catch {
+          window.open(res.url, "_blank", "noopener");
+        }
       },
       onError: (e: any) =>
         toast({ title: "Could not start Xero connection", description: e?.message, variant: "destructive" }),

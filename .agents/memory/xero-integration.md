@@ -28,6 +28,16 @@ per-entity advisory lock and reserve the local number before the external call.
 Do **not** infer paid from `AmountDue === 0`. Voided/deleted/credited invoices also
 have zero due and would be falsely marked PAID, corrupting in-app financial status.
 
+## Connect button must break out of the Replit preview iframe
+The "Connect to Xero" click navigates the browser to `login.xero.com`, which refuses
+to be framed. In the Replit dev preview the app runs inside an iframe, so a plain
+`window.location.href = url` loads the OAuth page *inside the iframe* and Xero shows a
+refused/error page. Navigate `window.top.location` (with a `window.open(_blank)`
+fallback for cross-origin top access) so the redirect escapes the iframe. Production
+(no iframe) is unaffected.
+**Separately:** the derived `redirect_uri` (`https://<host>/api/xero/callback`, from
+x-forwarded-host) must be registered in the Xero developer app or Xero rejects authorize.
+
 ## OAuth state must fail closed
 `/api/xero/callback` is intentionally unauthenticated and site-gate-bypassed; it trusts
 only the HMAC-signed `state`. The signing secret (`SESSION_SECRET`) must have **no
