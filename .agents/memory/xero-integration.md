@@ -65,6 +65,21 @@ client_credentials => it's a Custom Connection (wrong type for our flow).
 integration, register the production `<domain>/api/xero/callback` redirect, and put its
 client id/secret in XERO_CLIENT_ID/XERO_CLIENT_SECRET.
 
+## accounting.transactions can be invalid_scope at the app level
+Verified against Xero authorize (with a valid registered redirect, so client+redirect
+are confirmed good): a Web app may be issued `accounting.contacts`/`accounting.settings`
+(+openid/offline_access) but get `invalid_scope` for `accounting.transactions`,
+`accounting.transactions.read`, `accounting.reports.read`, `accounting.journals.read`.
+This persists (not propagation lag) and is validated at authorize time against the
+**app's** allowed scopes — before any org is selected — so it is NOT fixable in code and
+NOT org/edition related. Leading cause: the Xero developer account's region/eligibility
+or verification state restricts which scopes its apps may request (this account is
+Indonesia-based; Xero's full accounting region list is AU/NZ/UK/US + others).
+**Diagnostic that pinpoints it:** loop each scope through the authorize URL with a valid
+redirect; reaching `/identity/user/login` = scope OK, `/identity/error` (page body
+contains `invalid_scope`) = scope refused. Our invoice push REQUIRES
+`accounting.transactions`, so until Xero issues it the Connect flow cannot complete.
+
 ## OAuth state must fail closed
 `/api/xero/callback` is intentionally unauthenticated and site-gate-bypassed; it trusts
 only the HMAC-signed `state`. The signing secret (`SESSION_SECRET`) must have **no
