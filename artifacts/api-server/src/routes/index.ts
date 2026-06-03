@@ -51,6 +51,12 @@ router.use(siteGateRouter);
 router.use(surveysRouter);
 router.use(authRouter);
 router.use("/calendar", calendarFeedRouter);
+// Mounted BEFORE the blanket-auth routers below (users, clients, ...). The Xero
+// OAuth callback (GET /xero/callback) arrives as a top-level browser navigation
+// with no Bearer token; xeroRouter applies auth per-route, so the unauthenticated
+// callback would otherwise be intercepted by the first sub-router whose top-level
+// requireAuth runs for every request, returning 401 before reaching the handler.
+router.use(xeroRouter);
 router.use(usersRouter);
 router.use(clientsRouter);
 router.use(projectsRouter);
@@ -89,6 +95,5 @@ router.use(raidRouter);
 router.use(performanceReviewsRouter);
 router.use(workstreamsRouter);
 router.use(projectReportsRouter);
-router.use(xeroRouter);
 
 export default router;

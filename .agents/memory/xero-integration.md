@@ -86,3 +86,16 @@ Our code only POSTs /Invoices, POSTs /Contacts, GETs /Invoices -> needs exactly
 only the HMAC-signed `state`. The signing secret (`SESSION_SECRET`) must have **no
 default fallback** — refuse to sign/verify state if it is missing, or a predictable
 secret lets an attacker forge state and complete a connection.
+
+## Callback must be mounted BEFORE blanket-auth sub-routers
+The unauthenticated OAuth callback returned `{"error":"Unauthorized"}` (a 401, NOT the
+site-gate's `site_gate_required`) even though the callback route itself omits requireAuth.
+**Why:** most sub-routers (users, clients, projects, ...) apply auth via a top-level
+`router.use(requireAuth)` and are mounted with `router.use(subRouter)` (no path prefix).
+A request that matches no route falls through every router in order; the Xero router was
+mounted LAST, so the no-Bearer callback hit the first blanket-auth router (users) and got
+401 before reaching the callback handler. The app-level site gate bypasses the callback,
+but in-router blanket auth does not. **How to apply:** any unauthenticated route (OAuth
+callbacks, webhooks) must be mounted in the router chain *before* the first sub-router that
+has a top-level `router.use(requireAuth/requireRole)` — or those routers must not use
+blanket auth (see the express-sub-router gotcha in replit.md).
