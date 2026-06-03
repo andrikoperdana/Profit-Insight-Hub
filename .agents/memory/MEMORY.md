@@ -4,3 +4,4 @@
 - [Front-door site gate](site-gate.md) — public-demo gate is a separate signed cookie (SITE_GATE_USER/PASS, prod-only), never HTTP Basic Auth, or it collides with the Bearer JWT.
 - [Invoice numbering & generation](invoice-numbering.md) — BillingMilestone.invoiceNumber is DB-unique; allocate INV/YYYY/MM/NNNN inside a retrying transaction, never scan-then-max+1 unguarded.
 - [Generated hook query options require queryKey](codegen-hook-querykey.md) — Orval hooks force an explicit `queryKey` inside any `{query:{...}}` options object; don't use `as any`, pass a stable key.
+- [Xero integration rules](xero-integration.md) — invoice push needs per-milestone advisory lock + reserve invoiceNumber before the Xero call; mark PAID only on Status==="PAID"; OAuth state secret fails closed.

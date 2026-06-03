@@ -66,6 +66,46 @@ async function nextInvoiceNumber(date: Date): Promise<string> {
   return `${prefix}${String(max + 1).padStart(4, "0")}`;
 }
 
+// Postgres advisory-lock namespace for serializing per-milestone Xero invoice
+// pushes across concurrent requests (and across instances, since the lock lives
+// in the shared database).
+const XERO_LOCK_NS = 0x58524f; // "XRO"
+
+async function tryMilestoneLock(milestoneId: string): Promise<boolean> {
+  const rows = await prisma.$queryRaw<{ locked: boolean }[]>`
+    SELECT pg_try_advisory_lock(${XERO_LOCK_NS}::int4, hashtext(${milestoneId})) AS locked`;
+  return rows[0]?.locked === true;
+}
+
+async function releaseMilestoneLock(milestoneId: string): Promise<void> {
+  await prisma.$queryRaw`SELECT pg_advisory_unlock(${XERO_LOCK_NS}::int4, hashtext(${milestoneId}))`;
+}
+
+/**
+ * Reserve a sequential invoiceNumber on the milestone before any Xero call.
+ * Writing it first lets the DB unique constraint arbitrate concurrent sequence
+ * allocation: a P2002 clash means another row grabbed the number, so we retry
+ * with the next one. Returns the reserved number (or a pre-existing one).
+ */
+async function reserveInvoiceNumber(milestoneId: string, existing: string | null, invoicedAt: Date): Promise<string> {
+  const current = existing?.trim();
+  if (current) return current;
+  for (let attempt = 0; attempt < 6; attempt++) {
+    const candidate = await nextInvoiceNumber(invoicedAt);
+    try {
+      await prisma.billingMilestone.update({
+        where: { id: milestoneId },
+        data: { invoiceNumber: candidate },
+      });
+      return candidate;
+    } catch (err) {
+      if ((err as { code?: string }).code === "P2002") continue;
+      throw err;
+    }
+  }
+  throw new Error("Could not allocate a unique invoice number");
+}
+
 // --- Connection status -----------------------------------------------------
 
 router.get("/xero/status", requireAuth, requireRole(...ADMIN_ROLES), async (_req, res) => {
@@ -247,7 +287,24 @@ router.post(
     }
     const { dpp, vat } = splitVat(baseAmount, vatPct, includesVat);
 
+    // Serialize concurrent pushes for this milestone so two requests can't each
+    // create a Xero invoice before either records the resulting xeroInvoiceId.
+    const locked = await tryMilestoneLock(milestone.id);
+    if (!locked) {
+      res.status(409).json({ error: "An invoice push for this milestone is already in progress" });
+      return;
+    }
     try {
+      // Re-check the claim under the lock (the initial read happened before it).
+      const fresh = await prisma.billingMilestone.findUnique({
+        where: { id: milestone.id },
+        select: { xeroInvoiceId: true, invoiceNumber: true },
+      });
+      if (fresh?.xeroInvoiceId) {
+        res.status(409).json({ error: "This milestone was already pushed to Xero" });
+        return;
+      }
+
       // Ensure the client exists as a Xero contact.
       let contactId = client.xeroContactId;
       if (!contactId) {
@@ -264,8 +321,13 @@ router.post(
       }
 
       const invoicedAt = milestone.invoicedAt ?? new Date();
-      const invoiceNumber =
-        milestone.invoiceNumber?.trim() || (await nextInvoiceNumber(invoicedAt));
+      // Reserve the number (and persist it) before calling Xero so a sequence
+      // clash can never leave an orphaned invoice in Xero.
+      const invoiceNumber = await reserveInvoiceNumber(
+        milestone.id,
+        fresh?.invoiceNumber ?? null,
+        invoicedAt,
+      );
 
       const created = await createInvoice({
         contactId,
@@ -283,7 +345,6 @@ router.post(
         data: {
           xeroInvoiceId: created.invoiceId,
           xeroInvoiceNumber: created.invoiceNumber ?? invoiceNumber,
-          invoiceNumber: milestone.invoiceNumber ?? invoiceNumber,
           status: milestone.status === "PLANNED" ? "INVOICED" : milestone.status,
           invoicedAt,
         },
@@ -311,6 +372,10 @@ router.post(
       }
       req.log.error({ err, milestoneId: milestone.id }, "Xero invoice push failed");
       res.status(502).json({ error: "Failed to push invoice to Xero" });
+    } finally {
+      await releaseMilestoneLock(milestone.id).catch((err) => {
+        req.log.warn({ err, milestoneId: milestone.id }, "Failed to release Xero milestone lock");
+      });
     }
   },
 );

@@ -105,6 +105,8 @@ function serialize(m: any) {
     invoiceNumber: m.invoiceNumber,
     invoicedAt: m.invoicedAt ? m.invoicedAt.toISOString() : null,
     paidAt: m.paidAt ? m.paidAt.toISOString() : null,
+    xeroInvoiceId: m.xeroInvoiceId ?? null,
+    xeroInvoiceNumber: m.xeroInvoiceNumber ?? null,
     sortOrder: m.sortOrder,
     createdAt: m.createdAt.toISOString(),
     updatedAt: m.updatedAt.toISOString(),

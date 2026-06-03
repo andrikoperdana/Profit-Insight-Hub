@@ -41,7 +41,13 @@ function clientSecret(): string {
   return process.env["XERO_CLIENT_SECRET"] ?? "";
 }
 function stateSecret(): string {
-  return process.env["SESSION_SECRET"] ?? "dev-secret";
+  const s = process.env["SESSION_SECRET"];
+  // Fail closed: the OAuth callback is intentionally unauthenticated and only
+  // trusts the signed `state`. A weak/default secret would let an attacker
+  // forge a valid state and complete a connection, so we refuse to sign or
+  // verify state without a real secret.
+  if (!s) throw new Error("SESSION_SECRET is required for Xero OAuth state signing");
+  return s;
 }
 
 export function xeroConfigured(): boolean {
@@ -414,7 +420,9 @@ export async function getInvoiceStatuses(
       status: inv.Status ?? null,
       amountDue: inv.AmountDue ?? null,
       amountPaid: inv.AmountPaid ?? null,
-      fullyPaid: inv.Status === "PAID" || (inv.AmountDue ?? 1) === 0,
+      // Only Xero's explicit PAID status counts. AmountDue can be 0 for
+      // VOIDED/DELETED/credited invoices too, which must not be treated as paid.
+      fullyPaid: inv.Status === "PAID",
     });
   }
   return out;
