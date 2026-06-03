@@ -12,7 +12,7 @@ version = "1.0.0"
 [[services]]
 name = "web"
 paths = [ "/build-cost-deck/" ]
-localPort = 20974
+localPort = 9000
 
 [services.development]
 run = "pnpm --filter @workspace/build-cost-deck run dev"
@@ -27,5 +27,5 @@ from = "/*"
 to = "/index.html"
 
 [services.env]
-PORT = "20974"
+PORT = "9000"
 BASE_PATH = "/build-cost-deck/"
