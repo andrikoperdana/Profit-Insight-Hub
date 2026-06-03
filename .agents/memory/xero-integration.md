@@ -51,6 +51,20 @@ offline_access` only. The OpenID scopes (openid/profile/email) were removed: we 
 read the Xero user's identity, and requesting scopes the app isn't granted also
 triggers invalid_scope. Keep `offline_access` (refresh token) — it is required.
 
+## App type must be Web app (Auth Code), NOT Custom Connection
+Our integration is the interactive Auth Code flow (Connect button -> login.xero.com
+authorize -> redirect to /api/xero/callback). A **Custom Connection** (machine-to-
+machine, client_credentials grant) has no authorize flow, so every authorize attempt
+returns `invalid_scope` regardless of encoding or scope set — this looks identical to
+an encoding bug but is a Xero-portal app-type mismatch.
+**Diagnose without user action:** POST client_credentials to identity.xero.com/connect/token
+with the app's id/secret. `unauthorized_client` => standard Auth Code app (good).
+`invalid_scope`/"Client credentials scope validation failed" => the client *accepts*
+client_credentials => it's a Custom Connection (wrong type for our flow).
+**Fix is in the Xero developer portal**, not code: create a "Web app" / Auth Code
+integration, register the production `<domain>/api/xero/callback` redirect, and put its
+client id/secret in XERO_CLIENT_ID/XERO_CLIENT_SECRET.
+
 ## OAuth state must fail closed
 `/api/xero/callback` is intentionally unauthenticated and site-gate-bypassed; it trusts
 only the HMAC-signed `state`. The signing secret (`SESSION_SECRET`) must have **no
