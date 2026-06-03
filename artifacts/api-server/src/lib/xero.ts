@@ -17,12 +17,14 @@ const TOKEN_URL = "https://identity.xero.com/connect/token";
 const CONNECTIONS_URL = "https://api.xero.com/connections";
 const API_BASE = "https://api.xero.com/api.xro/2.0";
 
-// Minimal scopes for our one-way push: Accounting API for invoices/contacts +
-// offline_access for the refresh token. We never read the Xero user's identity,
-// so the OpenID Connect scopes (openid/profile/email) are intentionally omitted
-// — requesting scopes the app isn't granted causes Xero invalid_scope errors.
+// Minimal scopes for our one-way push: create Xero invoices + contacts, plus
+// offline_access for the refresh token. We use Xero's NEW granular scopes:
+// `accounting.invoices` (read+write invoices) replaces the legacy broad
+// `accounting.transactions`, which no longer exists for apps created after
+// 2 March 2026 and therefore returns invalid_scope. We never read the Xero
+// user's identity, so the OpenID Connect scopes (openid/profile/email) are omitted.
 const SCOPES = [
-  "accounting.transactions",
+  "accounting.invoices",
   "accounting.contacts",
   "offline_access",
 ].join(" ");

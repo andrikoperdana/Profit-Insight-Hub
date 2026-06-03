@@ -46,10 +46,11 @@ space-separated scopes collapse into one invalid token and Xero returns
 (space -> %20). **Why:** in a URL query component `+` is a literal plus per RFC 3986,
 not a space; only form bodies treat `+` as space. **How to apply:** never use
 URLSearchParams for OAuth authorize URLs whose values contain spaces.
-Scope set is intentionally minimal — `accounting.transactions accounting.contacts
-offline_access` only. The OpenID scopes (openid/profile/email) were removed: we never
-read the Xero user's identity, and requesting scopes the app isn't granted also
-triggers invalid_scope. Keep `offline_access` (refresh token) — it is required.
+Scope set is intentionally minimal — `accounting.invoices accounting.contacts
+offline_access` only (NEW granular scopes; see note below). The OpenID scopes
+(openid/profile/email) were removed: we never read the Xero user's identity, and
+requesting scopes the app isn't granted triggers invalid_scope. Keep `offline_access`
+(refresh token) — it is required.
 
 ## App type must be Web app (Auth Code), NOT Custom Connection
 Our integration is the interactive Auth Code flow (Connect button -> login.xero.com
@@ -65,20 +66,20 @@ client_credentials => it's a Custom Connection (wrong type for our flow).
 integration, register the production `<domain>/api/xero/callback` redirect, and put its
 client id/secret in XERO_CLIENT_ID/XERO_CLIENT_SECRET.
 
-## accounting.transactions can be invalid_scope at the app level
-Verified against Xero authorize (with a valid registered redirect, so client+redirect
-are confirmed good): a Web app may be issued `accounting.contacts`/`accounting.settings`
-(+openid/offline_access) but get `invalid_scope` for `accounting.transactions`,
-`accounting.transactions.read`, `accounting.reports.read`, `accounting.journals.read`.
-This persists (not propagation lag) and is validated at authorize time against the
-**app's** allowed scopes — before any org is selected — so it is NOT fixable in code and
-NOT org/edition related. Leading cause: the Xero developer account's region/eligibility
-or verification state restricts which scopes its apps may request (this account is
-Indonesia-based; Xero's full accounting region list is AU/NZ/UK/US + others).
-**Diagnostic that pinpoints it:** loop each scope through the authorize URL with a valid
-redirect; reaching `/identity/user/login` = scope OK, `/identity/error` (page body
-contains `invalid_scope`) = scope refused. Our invoice push REQUIRES
-`accounting.transactions`, so until Xero issues it the Connect flow cannot complete.
+## Use Xero's NEW granular scopes, not the legacy broad ones
+Root cause of a stubborn `invalid_scope` (June 2026): Xero migrated to granular scopes.
+**Apps created after 2 March 2026 only get the new scopes**; the legacy broad
+`accounting.transactions` no longer exists for them and returns invalid_scope, while
+overlapping scopes (`accounting.contacts`, `accounting.settings`) keep working — which
+makes it look like a partial/region restriction but is NOT. Mapping that matters here:
+broad `accounting.transactions` -> granular **`accounting.invoices`** (read+write invoices),
+plus `accounting.banktransactions`, `accounting.creditnotes`, etc. for other tx types.
+`accounting.contacts` is unchanged. Full list is on the app's Configuration page.
+**Diagnostic that pinpoints which scope is refused:** loop each scope through the
+authorize URL with a *valid registered redirect*; reaching `/identity/user/login` = scope
+OK, `/identity/error` (page body contains `invalid_scope`) = scope refused.
+Our code only POSTs /Invoices, POSTs /Contacts, GETs /Invoices -> needs exactly
+`accounting.invoices accounting.contacts offline_access`.
 
 ## OAuth state must fail closed
 `/api/xero/callback` is intentionally unauthenticated and site-gate-bypassed; it trusts
