@@ -46,6 +46,10 @@ space-separated scopes collapse into one invalid token and Xero returns
 (space -> %20). **Why:** in a URL query component `+` is a literal plus per RFC 3986,
 not a space; only form bodies treat `+` as space. **How to apply:** never use
 URLSearchParams for OAuth authorize URLs whose values contain spaces.
+Scope set is intentionally minimal — `accounting.transactions accounting.contacts
+offline_access` only. The OpenID scopes (openid/profile/email) were removed: we never
+read the Xero user's identity, and requesting scopes the app isn't granted also
+triggers invalid_scope. Keep `offline_access` (refresh token) — it is required.
 
 ## OAuth state must fail closed
 `/api/xero/callback` is intentionally unauthenticated and site-gate-bypassed; it trusts
