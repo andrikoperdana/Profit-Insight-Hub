@@ -508,6 +508,40 @@ children.push(
   p([t("Catatan: ", true), t("antarmuka aplikasi berbahasa Inggris; dokumen ini berbahasa Indonesia khusus untuk bahan presentasi.")]),
 );
 
+// LAMPIRAN A — GLOSARIUM PERHITUNGAN
+children.push(new Paragraph({ children: [new PageBreak()] }));
+children.push(h1("Lampiran A — Glosarium Perhitungan"));
+children.push(
+  p("Penjelasan ringkas setiap metrik finansial beserta rumus dan contoh angka (mengacu contoh project pada Bagian 7: nilai kontrak Rp 1.000.000.000 termasuk PPN 11%)."),
+);
+children.push(
+  table(
+    ["Istilah", "Arti", "Rumus", "Contoh"],
+    [
+      ["resourceCost", "Biaya jam kerja konsultan yang sudah disetujui (APPROVED)", "Σ (jam ÷ 8 × tarif harian)", "Rp 110.000.000"],
+      ["additionalCost", "Biaya non-tenaga kerja yang disetujui (lisensi, software, dll)", "Σ amount (APPROVED)", "Rp 20.000.000"],
+      ["actualCost", "Total biaya nyata project", "resourceCost + additionalCost", "Rp 130.000.000"],
+      ["actualProfit", "Profit setelah dikurangi biaya aktual", "contractValue − actualCost", "Rp 870.000.000"],
+      ["marginPct", "Margin terhadap nilai kontrak (%)", "actualProfit ÷ contractValue × 100", "87,0%"],
+      ["DPP (revenueNet)", "Pendapatan bersih tanpa PPN", "nilai ÷ 1,11 (inclusive)", "Rp 900.900.900,90"],
+      ["PPN", "Bagian pajak di dalam nilai kontrak", "nilai − DPP", "Rp 99.099.099,10"],
+      ["burnRatePct", "Tingkat penyelesaian (manday aktual vs rencana, maks 100%)", "min(actualMandays ÷ plannedMandays × 100, 100)", "60%"],
+      ["recognizedRevenue", "Pendapatan diakui sesuai progres (PSAK 72)", "burnRatePct × DPP", "Rp 540.540.540,54"],
+      ["loadedResourceCost", "Biaya tenaga kerja setelah dibebani overhead", "resourceCost × overheadMultiplier", "Rp 143.000.000"],
+      ["netActualCost", "Total biaya penuh (sudah termasuk overhead)", "loadedResourceCost + additionalCost", "Rp 163.000.000"],
+      ["netActualProfit", "Profit bersih penuh (dihitung vs DPP)", "revenueNet − netActualCost", "Rp 737.900.900,90"],
+      ["netMarginPct", "Margin bersih penuh (%)", "netActualProfit ÷ revenueNet × 100", "81,9%"],
+    ],
+    [17, 33, 30, 20],
+  ),
+);
+children.push(
+  p([
+    t("Dua jenis margin: ", true),
+    t("marginPct (87,0%) adalah pandangan cepat — nilai kontrak kotor dikurangi biaya langsung saja. netMarginPct (81,9%) adalah pandangan realistis — pendapatan bersih (tanpa PPN) dikurangi biaya yang sudah dibebani overhead, sehingga selalu lebih kecil dan lebih jujur untuk pengambilan keputusan."),
+  ]),
+);
+
 // ---------- build ----------
 const doc = new Document({
   creator: "SecureProfit Hub",

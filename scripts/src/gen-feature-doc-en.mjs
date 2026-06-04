@@ -470,6 +470,40 @@ full.push(bullet("\"Every cost figure comes from approved timesheets & expenses 
 full.push(bullet("\"Billing and VAT are automated, connected directly to accounting (Xero).\""));
 full.push(bullet("\"Each role only sees what is relevant — financials are protected from the delivery team.\""));
 
+// APPENDIX A — CALCULATION GLOSSARY
+full.push(new Paragraph({ children: [new PageBreak()] }));
+full.push(h1("Appendix A — Calculation Glossary"));
+full.push(
+  p("A concise explanation of each financial metric, its formula, and an example figure (referencing the sample project in Section 7: contract value Rp 1,000,000,000 VAT-inclusive at 11%)."),
+);
+full.push(
+  table(
+    ["Term", "Meaning", "Formula", "Example"],
+    [
+      ["resourceCost", "Approved consultant labor cost", "SUM(hours / 8 x daily rate)", "Rp 110,000,000"],
+      ["additionalCost", "Approved non-labor cost (license, software, etc.)", "SUM(amount) APPROVED", "Rp 20,000,000"],
+      ["actualCost", "Total real project cost", "resourceCost + additionalCost", "Rp 130,000,000"],
+      ["actualProfit", "Profit after actual cost", "contractValue - actualCost", "Rp 870,000,000"],
+      ["marginPct", "Margin vs contract value (%)", "actualProfit / contractValue x 100", "87.0%"],
+      ["DPP (revenueNet)", "Net revenue excluding VAT", "value / 1.11 (inclusive)", "Rp 900,900,900.90"],
+      ["VAT (PPN)", "Tax embedded in the contract value", "value - DPP", "Rp 99,099,099.10"],
+      ["burnRatePct", "Completion (actual vs planned mandays, max 100%)", "min(actualMandays / plannedMandays x 100, 100)", "60%"],
+      ["recognizedRevenue", "Revenue recognized by progress (PSAK 72)", "burnRatePct x DPP", "Rp 540,540,540.54"],
+      ["loadedResourceCost", "Labor cost after overhead loading", "resourceCost x overheadMultiplier", "Rp 143,000,000"],
+      ["netActualCost", "Fully-loaded total cost (incl. overhead)", "loadedResourceCost + additionalCost", "Rp 163,000,000"],
+      ["netActualProfit", "Fully-loaded net profit (vs DPP)", "revenueNet - netActualCost", "Rp 737,900,900.90"],
+      ["netMarginPct", "Fully-loaded net margin (%)", "netActualProfit / revenueNet x 100", "81.9%"],
+    ],
+    [17, 33, 30, 20],
+  ),
+);
+full.push(
+  p([
+    t("Two kinds of margin: ", true),
+    t("marginPct (87.0%) is the quick view — gross contract value minus direct cost only. netMarginPct (81.9%) is the realistic view — net revenue (excluding VAT) minus overhead-loaded cost, so it is always lower and more honest for decision-making."),
+  ]),
+);
+
 const fullDoc = buildDoc(full, "SecureProfit Hub — Feature & Calculation Reference");
 const fullBuf = await Packer.toBuffer(fullDoc);
 writeFileSync("exports/SecureProfit-Hub-Features-and-Calculations-EN.docx", fullBuf);
