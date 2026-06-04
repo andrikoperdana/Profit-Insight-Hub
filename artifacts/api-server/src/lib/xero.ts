@@ -530,10 +530,10 @@ export interface InvoiceInput {
   date?: Date | null;
   dueDate?: Date | null;
   lineDescription: string;
-  // DPP (tax-exclusive unit amount) and the VAT/tax amount, both in the
-  // project currency.
-  unitAmount: number;
-  taxAmount: number;
+  // Tax-inclusive gross total for the line (DPP + VAT), in the project
+  // currency. Sent as an Inclusive line amount so Xero back-computes the DPP
+  // and tax and the invoice total matches the milestone total exactly.
+  grossAmount: number;
   // VAT percentage for the line, used to pick a matching Xero output tax type.
   taxRate?: number;
 }
@@ -554,11 +554,12 @@ function xeroDate(d: Date): string {
 
 /**
  * Create an ACCREC (accounts receivable) sales invoice in Xero with a single
- * line item. The line is tax-exclusive (UnitAmount = DPP) with a discovered
- * TaxType whose rate matches the project VAT, so Xero computes the tax itself
- * and the gross still equals the milestone total. We deliberately do NOT send
- * an explicit TaxAmount: a 0.01 rounding difference vs Xero's own calculation
- * would trip a validation rejection.
+ * line item. The line is tax-INCLUSIVE (UnitAmount = gross total) with a
+ * discovered TaxType whose rate matches the project VAT, so Xero back-computes
+ * the DPP and tax and the invoice total equals the milestone total to the
+ * cent. We deliberately do NOT send an explicit TaxAmount: a 0.01 rounding
+ * difference vs Xero's own calculation would trip a validation rejection, and
+ * exclusive line amounts can drift the total by a cent.
  */
 export async function createInvoice(input: InvoiceInput): Promise<{
   invoiceId: string;
@@ -573,7 +574,7 @@ export async function createInvoice(input: InvoiceInput): Promise<{
   const invoice: Record<string, unknown> = {
     Type: "ACCREC",
     Contact: { ContactID: input.contactId },
-    LineAmountTypes: "Exclusive",
+    LineAmountTypes: "Inclusive",
     Status: "AUTHORISED",
     ...(input.invoiceNumber ? { InvoiceNumber: input.invoiceNumber } : {}),
     ...(input.reference ? { Reference: input.reference } : {}),
@@ -583,7 +584,7 @@ export async function createInvoice(input: InvoiceInput): Promise<{
       {
         Description: input.lineDescription,
         Quantity: 1,
-        UnitAmount: Number(input.unitAmount.toFixed(2)),
+        UnitAmount: Number(input.grossAmount.toFixed(2)),
         AccountCode: accountCode,
         TaxType: taxType,
       },

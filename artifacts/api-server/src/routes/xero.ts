@@ -285,7 +285,7 @@ router.post(
       res.status(409).json({ error: "Milestone has no billable amount to invoice" });
       return;
     }
-    const { dpp, vat } = splitVat(baseAmount, vatPct, includesVat);
+    const { total } = splitVat(baseAmount, vatPct, includesVat);
 
     // Serialize concurrent pushes for this milestone so two requests can't each
     // create a Xero invoice before either records the resulting xeroInvoiceId.
@@ -336,8 +336,7 @@ router.post(
         date: invoicedAt,
         dueDate: milestone.dueDate,
         lineDescription: `${milestone.project.name} — ${milestone.name}`,
-        unitAmount: dpp,
-        taxAmount: vat,
+        grossAmount: total,
         taxRate: vatPct,
       });
 

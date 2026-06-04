@@ -111,11 +111,14 @@ requires the `accounting.settings.read` scope — `accounting.invoices`/`contact
 cache per-tenant, allow env overrides. Adding a scope needs the user to disconnect+reconnect
 (re-consent) before discovery works.
 
-## Don't send an explicit TaxAmount alongside a TaxType
-Let Xero compute the tax from the matched TaxType (rate == project VAT). Sending both an
-explicit `TaxAmount` and a `TaxType` risks a 0.01 rounding-mismatch validation rejection.
-Tax-exclusive UnitAmount=DPP + an N% TaxType yields gross = DPP×(1+N%) which still equals
-the milestone total for both VAT-inclusive and VAT-exclusive contracts.
+## Push invoices tax-INCLUSIVE (gross), never exclusive (DPP)
+Send `LineAmountTypes: "Inclusive"` with UnitAmount = the gross milestone total
+(`splitVat().total`) and let Xero back-compute DPP + VAT from the matched TaxType. Do NOT
+send an explicit `TaxAmount`, and do NOT send tax-EXCLUSIVE DPP. **Why:** exclusive DPP +
+Xero-computed tax drifts the invoice total 0.01 below the milestone total (e.g.
+71,999,999.99 vs 72,000,000 at 11%); an explicit TaxAmount risks a rounding-mismatch
+validation rejection. Inclusive gross makes the invoice total equal the milestone total to
+the cent for both VAT-inclusive and VAT-exclusive contracts.
 
 ## App wraps every Xero failure as 502 — surface ValidationErrors
 The push route returns 502 on any Xero error, so a 400 ValidationException shows as "HTTP
