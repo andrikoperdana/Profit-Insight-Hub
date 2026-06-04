@@ -443,10 +443,12 @@ function pickSalesAccountCode(accounts: XeroAccount[]): string {
     active.find((a) => a.Type === "SALES") ??
     active[0];
   if (!chosen?.Code) {
-    throw new Error(
+    const err = new Error(
       "No active revenue account found in Xero to post the invoice line to. " +
         "Add a sales/revenue account in Xero, or set XERO_SALES_ACCOUNT_CODE.",
-    );
+    ) as Error & { userFacing?: boolean };
+    err.userFacing = true;
+    throw err;
   }
   return chosen.Code;
 }
@@ -466,10 +468,12 @@ function pickSalesTaxType(taxRates: XeroTaxRate[], ratePct: number): string {
   const chosen =
     matches.find((t) => /output|sales|keluaran/i.test(t.Name ?? "")) ?? matches[0];
   if (!chosen?.TaxType) {
-    throw new Error(
+    const err = new Error(
       `No active Xero sales tax rate at ${ratePct}% was found. Create an output ` +
         `VAT rate at ${ratePct}% in Xero (Settings → Tax rates), or set XERO_SALES_TAX_TYPE.`,
-    );
+    ) as Error & { userFacing?: boolean };
+    err.userFacing = true;
+    throw err;
   }
   return chosen.TaxType;
 }

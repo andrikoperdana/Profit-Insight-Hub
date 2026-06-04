@@ -376,6 +376,11 @@ router.post(
       }
       req.log.error({ err, milestoneId: milestone.id }, "Xero invoice push failed");
       const detail = (err as { xeroDetail?: string })?.xeroDetail;
+      const userFacing = (err as { userFacing?: boolean })?.userFacing;
+      if (userFacing) {
+        res.status(422).json({ error: (err as Error).message });
+        return;
+      }
       res.status(502).json({
         error: detail
           ? `Failed to push invoice to Xero: ${detail}`
