@@ -2,7 +2,7 @@ import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
-import { canViewAllProjects } from "../lib/roles.js";
+import { canViewAllProjects, canInvoiceProjectStatus } from "../lib/roles.js";
 import { validateWorkstreamId } from "../lib/workstreams.js";
 import { buildInvoicePdf } from "../lib/invoice-pdf.js";
 import { getInvoiceIssuer } from "../lib/invoice-config.js";
@@ -353,7 +353,7 @@ router.patch("/billing-milestones/:milestoneId", async (req, res) => {
   const role = req.user!.role;
   const before = await prisma.billingMilestone.findUnique({
     where: { id: req.params.milestoneId },
-    include: { project: { select: { id: true, pmId: true } } },
+    include: { project: { select: { id: true, pmId: true, status: true } } },
   });
   if (!before) {
     res.status(404).json({ error: "Billing milestone not found" });
@@ -415,6 +415,15 @@ router.patch("/billing-milestones/:milestoneId", async (req, res) => {
   if (status !== undefined) {
     if (!ALLOWED_STATUSES.has(String(status))) {
       res.status(400).json({ error: "invalid status" });
+      return;
+    }
+    if (
+      (status === "INVOICED" || status === "PAID") &&
+      !canInvoiceProjectStatus(before.project.status)
+    ) {
+      res.status(409).json({
+        error: `Cannot mark this milestone as ${status}: the project is not active yet (status: ${before.project.status}). Set the project to Active before invoicing.`,
+      });
       return;
     }
     data.status = String(status);
@@ -512,6 +521,7 @@ router.post("/billing-milestones/:milestoneId/generate-invoice", async (req, res
           id: true,
           code: true,
           name: true,
+          status: true,
           pmId: true,
           contractValue: true,
           vatPercent: true,
@@ -533,6 +543,12 @@ router.post("/billing-milestones/:milestoneId/generate-invoice", async (req, res
   }
   if (milestone.status === "CANCELLED") {
     res.status(409).json({ error: "Cannot generate an invoice for a cancelled milestone" });
+    return;
+  }
+  if (!canInvoiceProjectStatus(milestone.project.status)) {
+    res.status(409).json({
+      error: `Cannot generate an invoice: the project is not active yet (status: ${milestone.project.status}). Set the project to Active before invoicing.`,
+    });
     return;
   }
 

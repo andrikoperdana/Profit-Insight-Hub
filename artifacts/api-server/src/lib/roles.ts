@@ -74,3 +74,19 @@ const RAID_VIEW_ROLES = new Set<string>([
 export function canViewRaid(role: string | null | undefined): boolean {
   return !!role && RAID_VIEW_ROLES.has(role);
 }
+
+// A project may only be invoiced once it is actually running or beyond. Projects
+// that have not started yet (DRAFT, OBSERVATION) or that were marked as not
+// needing a consultant (NO_NEED_CONSULTANT) cannot be invoiced — no push to
+// Xero, no generated invoice PDF, no manual transition to INVOICED/PAID.
+// Mirrors `canInvoiceProjectStatus` on the web frontend.
+const INVOICEABLE_PROJECT_STATUSES = new Set<string>([
+  "ACTIVE",
+  "PAUSE",
+  "COMPLETE",
+  "CLOSED",
+]);
+
+export function canInvoiceProjectStatus(status: string | null | undefined): boolean {
+  return !!status && INVOICEABLE_PROJECT_STATUSES.has(status);
+}

@@ -88,3 +88,16 @@ export function canViewRaid(role?: UserRole): boolean {
     isPrincipalRole(role)
   );
 }
+
+// A project may only be invoiced once it is actually running or beyond. Projects
+// that have not started yet (DRAFT, OBSERVATION) or that were marked as not
+// needing a consultant (NO_NEED_CONSULTANT) cannot be invoiced. Mirrors
+// `canInvoiceProjectStatus` on the API server.
+export function canInvoiceProjectStatus(status?: string | null): boolean {
+  return (
+    status === "ACTIVE" ||
+    status === "PAUSE" ||
+    status === "COMPLETE" ||
+    status === "CLOSED"
+  );
+}

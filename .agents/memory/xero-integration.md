@@ -28,6 +28,19 @@ per-entity advisory lock and reserve the local number before the external call.
 Do **not** infer paid from `AmountDue === 0`. Voided/deleted/credited invoices also
 have zero due and would be falsely marked PAID, corrupting in-app financial status.
 
+## Only running-or-later projects may be invoiced
+Invoicing actions (Xero push, generate-invoice PDF, manual PATCH milestone ->
+INVOICED/PAID) are gated by `canInvoiceProjectStatus()` — an **allowlist** of
+ACTIVE/PAUSE/COMPLETE/CLOSED; blocked for DRAFT/OBSERVATION/NO_NEED_CONSULTANT.
+**Why:** a project still in OBSERVATION hasn't started, so issuing invoices for it
+is wrong. Allowlist (fail-closed) so a future early-stage status is blocked by
+default. The helper is **mirrored** in `api-server/src/lib/roles.ts` and
+`web/src/lib/roles.ts` (artifacts can't import each other) — change both together.
+**Deliberately NOT guarded:** `runPaymentSync()` (Xero → mark PAID). A milestone can
+only carry a `xeroInvoiceId` if it already passed the push guard, and payment sync
+must reflect the real-world fact that an already-issued invoice was paid in Xero —
+gating it on current project status would desync the app from Xero.
+
 ## Connect button must break out of the Replit preview iframe
 The "Connect to Xero" click navigates the browser to `login.xero.com`, which refuses
 to be framed. In the Replit dev preview the app runs inside an iframe, so a plain

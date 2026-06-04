@@ -3,6 +3,7 @@ import { prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
 import { logger } from "../lib/logger.js";
+import { canInvoiceProjectStatus } from "../lib/roles.js";
 import {
   xeroConfigured,
   signState,
@@ -231,6 +232,7 @@ router.post(
             id: true,
             code: true,
             name: true,
+            status: true,
             pmId: true,
             contractValue: true,
             vatPercent: true,
@@ -266,6 +268,12 @@ router.post(
       res.status(409).json({ error: "Cannot invoice a cancelled milestone" });
       return;
     }
+    if (!canInvoiceProjectStatus(milestone.project.status)) {
+      res.status(409).json({
+        error: `Cannot invoice this milestone: the project is not active yet (status: ${milestone.project.status}). Set the project to Active before invoicing.`,
+      });
+      return;
+    }
     if (milestone.xeroInvoiceId) {
       res.status(409).json({ error: "This milestone was already pushed to Xero" });
       return;
@@ -298,10 +306,23 @@ router.post(
       // Re-check the claim under the lock (the initial read happened before it).
       const fresh = await prisma.billingMilestone.findUnique({
         where: { id: milestone.id },
-        select: { xeroInvoiceId: true, invoiceNumber: true, status: true },
+        select: {
+          xeroInvoiceId: true,
+          invoiceNumber: true,
+          status: true,
+          project: { select: { status: true } },
+        },
       });
       if (fresh?.xeroInvoiceId) {
         res.status(409).json({ error: "This milestone was already pushed to Xero" });
+        return;
+      }
+      // Re-check project status under the lock in case it was changed between
+      // the initial read and acquiring the lock (TOCTOU).
+      if (!canInvoiceProjectStatus(fresh?.project?.status)) {
+        res.status(409).json({
+          error: `Cannot invoice this milestone: the project is not active yet (status: ${fresh?.project?.status}). Set the project to Active before invoicing.`,
+        });
         return;
       }
 

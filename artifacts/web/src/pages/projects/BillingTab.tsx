@@ -28,6 +28,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { useAuth } from "@/lib/auth";
+import { canInvoiceProjectStatus } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate, formatIDR } from "@/lib/format";
 import { EmptyState } from "@/components/common/EmptyState";
@@ -53,6 +54,7 @@ interface BillingTabProps {
   projectId: string;
   project: {
     pmId?: string | null;
+    status?: string;
     contractValue?: number;
     vatPercent?: number;
     contractValueIncludesVat?: boolean;
@@ -91,6 +93,11 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
     user?.role === "MANAGEMENT" ||
     user?.role === "FINANCE" ||
     (user?.role === "PROJECT_MANAGER" && project.pmId === user.id);
+
+  // A project can only be invoiced once it is running (ACTIVE) or beyond. Before
+  // that (DRAFT / OBSERVATION / NO_NEED_CONSULTANT) invoicing actions are blocked.
+  const canInvoiceNow = canInvoiceProjectStatus(project.status);
+  const notInvoiceableReason = `The project is not active yet (status: ${project.status ?? "unknown"}). Set the project to Active before invoicing.`;
 
   const [createOpen, setCreateOpen] = useState(false);
   const [editRow, setEditRow] = useState<BillingMilestone | null>(null);
@@ -308,7 +315,8 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
                           <Button
                             size="sm"
                             variant="outline"
-                            disabled={busyId === m.id}
+                            disabled={busyId === m.id || !canInvoiceNow}
+                            title={!canInvoiceNow ? notInvoiceableReason : undefined}
                             onClick={() => {
                               setBusyId(m.id);
                               pushToXero.mutate({ milestoneId: m.id });
@@ -327,7 +335,8 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
                           <Button
                             size="sm"
                             variant="outline"
-                            disabled={busyId === m.id}
+                            disabled={busyId === m.id || !canInvoiceNow}
+                            title={!canInvoiceNow ? notInvoiceableReason : undefined}
                             onClick={() => handleGenerateInvoice(m)}
                             data-testid={`button-generate-invoice-${m.id}`}
                           >
