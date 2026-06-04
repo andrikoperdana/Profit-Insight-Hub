@@ -311,3 +311,15 @@ id = "Lgdn6RDTZep3f2ps6C77k"
 uri = "file://exports/SecureProfit-Hub-Fitur-dan-Perhitungan.docx"
 type = "word_document"
 title = "SecureProfit Hub — Dokumen Fitur & Perhitungan"
+
+[[outputs]]
+id = "3RjFVUzkfHDtI6kmwTgZQ"
+uri = "file://exports/SecureProfit-Hub-Features-and-Calculations-EN.docx"
+type = "word_document"
+title = "SecureProfit Hub — Features & Calculations (English, full)"
+
+[[outputs]]
+id = "OjGb-ZYqAasdXoqgEC6f5"
+uri = "file://exports/SecureProfit-Hub-Executive-Summary-EN.docx"
+type = "word_document"
+title = "SecureProfit Hub — Executive Summary (English, 2 pages)"
