@@ -305,3 +305,9 @@ id = "68ogdM9E7HLv4dQhfdMvV"
 uri = "file://exports/Rencana_Integrasi_Xero_SecureProfit_Hub.docx"
 type = "word_document"
 title = "Rencana Integrasi Xero — SecureProfit Hub"
+
+[[outputs]]
+id = "Lgdn6RDTZep3f2ps6C77k"
+uri = "file://exports/SecureProfit-Hub-Fitur-dan-Perhitungan.docx"
+type = "word_document"
+title = "SecureProfit Hub — Dokumen Fitur & Perhitungan"
