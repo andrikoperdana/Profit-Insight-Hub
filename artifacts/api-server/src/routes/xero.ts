@@ -298,7 +298,7 @@ router.post(
       // Re-check the claim under the lock (the initial read happened before it).
       const fresh = await prisma.billingMilestone.findUnique({
         where: { id: milestone.id },
-        select: { xeroInvoiceId: true, invoiceNumber: true },
+        select: { xeroInvoiceId: true, invoiceNumber: true, status: true },
       });
       if (fresh?.xeroInvoiceId) {
         res.status(409).json({ error: "This milestone was already pushed to Xero" });
@@ -338,6 +338,7 @@ router.post(
         lineDescription: `${milestone.project.name} — ${milestone.name}`,
         unitAmount: dpp,
         taxAmount: vat,
+        taxRate: vatPct,
       });
 
       const updated = await prisma.billingMilestone.update({
@@ -345,7 +346,10 @@ router.post(
         data: {
           xeroInvoiceId: created.invoiceId,
           xeroInvoiceNumber: created.invoiceNumber ?? invoiceNumber,
-          status: milestone.status === "PLANNED" ? "INVOICED" : milestone.status,
+          status:
+            (fresh?.status ?? milestone.status) === "PLANNED"
+              ? "INVOICED"
+              : (fresh?.status ?? milestone.status),
           invoicedAt,
         },
       });
@@ -371,7 +375,12 @@ router.post(
         return;
       }
       req.log.error({ err, milestoneId: milestone.id }, "Xero invoice push failed");
-      res.status(502).json({ error: "Failed to push invoice to Xero" });
+      const detail = (err as { xeroDetail?: string })?.xeroDetail;
+      res.status(502).json({
+        error: detail
+          ? `Failed to push invoice to Xero: ${detail}`
+          : "Failed to push invoice to Xero",
+      });
     } finally {
       await releaseMilestoneLock(milestone.id).catch((err) => {
         req.log.warn({ err, milestoneId: milestone.id }, "Failed to release Xero milestone lock");

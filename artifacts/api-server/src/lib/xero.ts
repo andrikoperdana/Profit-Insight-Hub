@@ -26,6 +26,11 @@ const API_BASE = "https://api.xero.com/api.xro/2.0";
 const SCOPES = [
   "accounting.invoices",
   "accounting.contacts",
+  // Read-only access to the chart of accounts + tax rates so invoice line items
+  // can be stamped with a valid revenue AccountCode and TaxType (both mandatory
+  // for AUTHORISED ACCREC invoices). Adding this scope requires re-consent: an
+  // existing connection must disconnect + reconnect before discovery works.
+  "accounting.settings.read",
   "offline_access",
 ].join(" ");
 
@@ -241,6 +246,7 @@ export async function completeConnection(
       },
       "Xero organisation changed on reconnect — cleared stale contact/invoice ids",
     );
+    clearXeroChartCache();
   } else {
     await upsertConnection;
   }
@@ -274,6 +280,7 @@ export async function disconnect(): Promise<void> {
     where: { id: CONNECTION_ID },
     data: { disconnectedAt: new Date() },
   });
+  clearXeroChartCache();
 }
 
 export class XeroNotConnectedError extends Error {
@@ -344,9 +351,127 @@ async function xeroApi<T>(
   if (!resp.ok) {
     const text = await resp.text().catch(() => "");
     logger.warn({ path, status: resp.status, text: text.slice(0, 500) }, "Xero API error");
-    throw new Error(`Xero API ${path} failed (${resp.status}): ${text.slice(0, 300)}`);
+    // Extract Xero's structured ValidationErrors so the failure reason survives
+    // back to the UI instead of being swallowed by a generic 502.
+    let detail = text.slice(0, 300);
+    try {
+      const parsed = JSON.parse(text) as {
+        Message?: string;
+        Elements?: Array<{
+          ValidationErrors?: Array<{ Message?: string }>;
+          LineItems?: Array<{ ValidationErrors?: Array<{ Message?: string }> }>;
+        }>;
+      };
+      const msgs: string[] = [];
+      for (const el of parsed.Elements ?? []) {
+        for (const ve of el.ValidationErrors ?? []) if (ve.Message) msgs.push(ve.Message);
+        for (const li of el.LineItems ?? [])
+          for (const ve of li.ValidationErrors ?? []) if (ve.Message) msgs.push(ve.Message);
+      }
+      if (msgs.length === 0 && parsed.Message) msgs.push(parsed.Message);
+      if (msgs.length) detail = [...new Set(msgs)].join("; ");
+    } catch {
+      // Non-JSON body — fall back to the raw text slice above.
+    }
+    const err = new Error(`Xero API ${path} failed (${resp.status}): ${detail}`) as Error & {
+      xeroStatus?: number;
+      xeroDetail?: string;
+    };
+    err.xeroStatus = resp.status;
+    err.xeroDetail = detail;
+    throw err;
   }
   return (await resp.json()) as T;
+}
+
+// --- Chart of accounts / tax rates (for invoice line items) ----------------
+
+interface XeroAccount {
+  Code?: string;
+  Name?: string;
+  Type?: string;
+  Class?: string;
+  Status?: string;
+}
+
+interface XeroTaxRate {
+  TaxType?: string;
+  Name?: string;
+  EffectiveRate?: number;
+  Status?: string;
+  CanApplyToRevenue?: boolean;
+}
+
+const CHART_TTL_MS = 30 * 60_000;
+const chartCache = new Map<
+  string,
+  { at: number; accounts: XeroAccount[]; taxRates: XeroTaxRate[] }
+>();
+
+/** Drop any cached chart-of-accounts data (e.g. after an org switch). */
+export function clearXeroChartCache(): void {
+  chartCache.clear();
+}
+
+async function getChart(): Promise<{ accounts: XeroAccount[]; taxRates: XeroTaxRate[] }> {
+  const { tenantId } = await getValidAccessToken();
+  const cached = chartCache.get(tenantId);
+  if (cached && Date.now() - cached.at < CHART_TTL_MS) return cached;
+  const [a, t] = await Promise.all([
+    xeroApi<{ Accounts: XeroAccount[] }>("/Accounts"),
+    xeroApi<{ TaxRates: XeroTaxRate[] }>("/TaxRates"),
+  ]);
+  const value = { at: Date.now(), accounts: a.Accounts ?? [], taxRates: t.TaxRates ?? [] };
+  chartCache.set(tenantId, value);
+  return value;
+}
+
+/**
+ * Choose the revenue account code to post sales invoice lines to. An explicit
+ * XERO_SALES_ACCOUNT_CODE env wins; otherwise prefer Xero's default "Sales"
+ * (code 200), then any SALES-type account, then the first active revenue
+ * account.
+ */
+function pickSalesAccountCode(accounts: XeroAccount[]): string {
+  const override = process.env["XERO_SALES_ACCOUNT_CODE"]?.trim();
+  if (override) return override;
+  const active = accounts.filter(
+    (a) => a.Status === "ACTIVE" && a.Class === "REVENUE" && a.Code,
+  );
+  const chosen =
+    active.find((a) => a.Code === "200") ??
+    active.find((a) => a.Type === "SALES") ??
+    active[0];
+  if (!chosen?.Code) {
+    throw new Error(
+      "No active revenue account found in Xero to post the invoice line to. " +
+        "Add a sales/revenue account in Xero, or set XERO_SALES_ACCOUNT_CODE.",
+    );
+  }
+  return chosen.Code;
+}
+
+/**
+ * Choose the output (sales) tax type whose effective rate matches the project's
+ * VAT percentage, so the explicit TaxAmount we send agrees with Xero. An
+ * explicit XERO_SALES_TAX_TYPE env wins.
+ */
+function pickSalesTaxType(taxRates: XeroTaxRate[], ratePct: number): string {
+  const override = process.env["XERO_SALES_TAX_TYPE"]?.trim();
+  if (override) return override;
+  const active = taxRates.filter((t) => t.Status === "ACTIVE" && t.CanApplyToRevenue);
+  const matches = active.filter(
+    (t) => Math.abs((t.EffectiveRate ?? -1) - ratePct) < 0.001,
+  );
+  const chosen =
+    matches.find((t) => /output|sales|keluaran/i.test(t.Name ?? "")) ?? matches[0];
+  if (!chosen?.TaxType) {
+    throw new Error(
+      `No active Xero sales tax rate at ${ratePct}% was found. Create an output ` +
+        `VAT rate at ${ratePct}% in Xero (Settings → Tax rates), or set XERO_SALES_TAX_TYPE.`,
+    );
+  }
+  return chosen.TaxType;
 }
 
 // --- Contacts --------------------------------------------------------------
@@ -405,6 +530,8 @@ export interface InvoiceInput {
   // project currency.
   unitAmount: number;
   taxAmount: number;
+  // VAT percentage for the line, used to pick a matching Xero output tax type.
+  taxRate?: number;
 }
 
 interface XeroInvoice {
@@ -423,13 +550,22 @@ function xeroDate(d: Date): string {
 
 /**
  * Create an ACCREC (accounts receivable) sales invoice in Xero with a single
- * line item. We send the line as tax-exclusive with an explicit TaxAmount so
- * the gross matches the milestone total regardless of Xero's tax defaults.
+ * line item. The line is tax-exclusive (UnitAmount = DPP) with a discovered
+ * TaxType whose rate matches the project VAT, so Xero computes the tax itself
+ * and the gross still equals the milestone total. We deliberately do NOT send
+ * an explicit TaxAmount: a 0.01 rounding difference vs Xero's own calculation
+ * would trip a validation rejection.
  */
 export async function createInvoice(input: InvoiceInput): Promise<{
   invoiceId: string;
   invoiceNumber: string | null;
 }> {
+  // AUTHORISED ACCREC line items must carry a revenue AccountCode and a TaxType;
+  // discover both from the connected org's chart of accounts / tax rates.
+  const chart = await getChart();
+  const accountCode = pickSalesAccountCode(chart.accounts);
+  const taxType = pickSalesTaxType(chart.taxRates, input.taxRate ?? 11);
+  logger.info({ accountCode, taxType }, "Xero invoice line configuration");
   const invoice: Record<string, unknown> = {
     Type: "ACCREC",
     Contact: { ContactID: input.contactId },
@@ -444,7 +580,8 @@ export async function createInvoice(input: InvoiceInput): Promise<{
         Description: input.lineDescription,
         Quantity: 1,
         UnitAmount: Number(input.unitAmount.toFixed(2)),
-        TaxAmount: Number(input.taxAmount.toFixed(2)),
+        AccountCode: accountCode,
+        TaxType: taxType,
       },
     ],
   };

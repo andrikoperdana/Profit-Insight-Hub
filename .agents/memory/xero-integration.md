@@ -100,6 +100,30 @@ Xero's unique-name error). `getConnectionInfo`/`getValidAccessToken` must treat 
 **Why:** hard-deleting on disconnect loses the org memory, so the disconnect→connect
 path (the only reconnect UX) couldn't detect the switch and left stale ids.
 
+## Invoice line items need AccountCode + TaxType (and the scope to discover them)
+AUTHORISED ACCREC invoices fail Xero 400 ValidationException ("Account code or ID must be
+specified" + "The TaxType field is mandatory") unless every LineItem carries a revenue
+`AccountCode` and a `TaxType`. Reading `/Accounts` and `/TaxRates` to discover valid values
+requires the `accounting.settings.read` scope — `accounting.invoices`/`contacts` alone give
+401 on those endpoints. **Why:** the minimal-scope push omitted both fields and both scopes.
+**How to apply:** keep `accounting.settings.read` in SCOPES; discover a revenue account
+(prefer code 200 / SALES type) and a tax type whose EffectiveRate matches the project VAT,
+cache per-tenant, allow env overrides. Adding a scope needs the user to disconnect+reconnect
+(re-consent) before discovery works.
+
+## Don't send an explicit TaxAmount alongside a TaxType
+Let Xero compute the tax from the matched TaxType (rate == project VAT). Sending both an
+explicit `TaxAmount` and a `TaxType` risks a 0.01 rounding-mismatch validation rejection.
+Tax-exclusive UnitAmount=DPP + an N% TaxType yields gross = DPP×(1+N%) which still equals
+the milestone total for both VAT-inclusive and VAT-exclusive contracts.
+
+## App wraps every Xero failure as 502 — surface ValidationErrors
+The push route returns 502 on any Xero error, so a 400 ValidationException shows as "HTTP
+502" in the UI. Parse `Elements[].ValidationErrors` (and `LineItems[].ValidationErrors`)
+into the error detail and pass it through, or the real reason is invisible. Note the failed
+push leaves the milestone with a reserved invoiceNumber + INVOICED status but null
+xeroInvoiceId; retry is safe (number reused, status preserved, guard is on xeroInvoiceId).
+
 ## OAuth state must fail closed
 `/api/xero/callback` is intentionally unauthenticated and site-gate-bypassed; it trusts
 only the HMAC-signed `state`. The signing secret (`SESSION_SECRET`) must have **no
