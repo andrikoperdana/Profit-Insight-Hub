@@ -1,13 +1,16 @@
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import {
   useListBillingMilestones,
   useCreateBillingMilestone,
   useUpdateBillingMilestone,
   useDeleteBillingMilestone,
   usePushMilestoneToXero,
+  useListProjectWorkstreams,
   getListBillingMilestonesQueryKey,
+  getListProjectWorkstreamsQueryKey,
   type BillingMilestone,
   type BillingMilestoneStatus,
+  type ProjectWorkstream,
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -34,7 +37,7 @@ import { formatDate, formatIDR } from "@/lib/format";
 import { EmptyState } from "@/components/common/EmptyState";
 import { WorkstreamPicker } from "./components/WorkstreamPicker";
 import { downloadAuthed, postAuthed } from "@/lib/exports";
-import { Plus, Trash2, Pencil, Loader2, Receipt, AlertCircle, FileText, Download, Link2 } from "lucide-react";
+import { Plus, Trash2, Pencil, Loader2, Receipt, AlertCircle, FileText, Download, Link2, Layers } from "lucide-react";
 
 const STATUS_LABEL: Record<BillingMilestoneStatus, string> = {
   PLANNED: "Planned",
@@ -83,6 +86,13 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
 
   const { data: milestones, isLoading } = useListBillingMilestones(projectId, {
     query: { queryKey: getListBillingMilestonesQueryKey(projectId) },
+  });
+
+  const { data: workstreams } = useListProjectWorkstreams(projectId, {
+    query: {
+      queryKey: getListProjectWorkstreamsQueryKey(projectId),
+      enabled: !!projectId && !!project.useWorkstreams,
+    },
   });
 
   const isManager =
@@ -199,6 +209,167 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
     return { totalPct, planned, invoicedGross, paidGross, invoicedDPP, invoicedVat, paidVat, outstandingVat };
   }, [milestones, project.contractValue, vatPercent, includesVat]);
 
+  const wsMap = useMemo(() => {
+    const m = new Map<string, ProjectWorkstream>();
+    for (const w of workstreams ?? []) m.set(w.id, w);
+    return m;
+  }, [workstreams]);
+
+  // Group milestones by Business Unit (via their workstream). Falls back to a
+  // single "Unassigned" bucket when a milestone has no workstream / BU.
+  const groups = useMemo(() => {
+    type Group = {
+      key: string;
+      label: string;
+      sortOrder: number;
+      items: BillingMilestone[];
+      totalGross: number;
+      invoicedGross: number;
+      paidGross: number;
+    };
+    const map = new Map<string, Group>();
+    for (const m of milestones ?? []) {
+      const ws = m.workstreamId ? wsMap.get(m.workstreamId) : undefined;
+      const key = ws?.businessUnitId ?? ws?.id ?? "__none";
+      const label = ws?.businessUnitName ?? ws?.name ?? "Unassigned";
+      let g = map.get(key);
+      if (!g) {
+        g = { key, label, sortOrder: ws?.sortOrder ?? 9999, items: [], totalGross: 0, invoicedGross: 0, paidGross: 0 };
+        map.set(key, g);
+      }
+      g.items.push(m);
+      if (m.status !== "CANCELLED") {
+        const { gross } = splitVat(amountFor(m), vatPercent, includesVat);
+        g.totalGross += gross;
+        if (m.status === "INVOICED" || m.status === "PAID") g.invoicedGross += gross;
+        if (m.status === "PAID") g.paidGross += gross;
+      }
+    }
+    return Array.from(map.values()).sort(
+      (a, b) => a.sortOrder - b.sortOrder || a.label.localeCompare(b.label),
+    );
+  }, [milestones, wsMap, vatPercent, includesVat, project.contractValue]);
+
+  // Only render BU section headers when the plan actually spans business units.
+  const grouped = groups.length > 1 || (groups.length === 1 && groups[0].key !== "__none");
+
+  const indexOf = useMemo(() => {
+    const m = new Map<string, number>();
+    let i = 0;
+    const src = grouped ? groups.flatMap((g) => g.items) : milestones ?? [];
+    for (const ms of src) m.set(ms.id, ++i);
+    return m;
+  }, [grouped, groups, milestones]);
+
+  function renderRow(m: BillingMilestone) {
+    const split = splitVat(amountFor(m), vatPercent, includesVat);
+    return (
+      <TableRow key={m.id} className="hover:bg-muted/30 align-top">
+        <TableCell className="text-muted-foreground font-mono text-xs">{indexOf.get(m.id)}</TableCell>
+        <TableCell>
+          <div className="font-medium">{m.name}</div>
+          {m.description && (
+            <div className="text-xs text-muted-foreground line-clamp-2 mt-0.5">{m.description}</div>
+          )}
+        </TableCell>
+        <TableCell className="text-right font-mono">{m.percentage.toFixed(1)}%</TableCell>
+        <TableCell className="text-right font-mono text-xs">{formatIDR(split.dpp)}</TableCell>
+        <TableCell className="text-right font-mono text-xs text-amber-400">{formatIDR(split.vat)}</TableCell>
+        <TableCell className="text-right font-mono font-semibold">{formatIDR(split.gross)}</TableCell>
+        <TableCell className="text-xs whitespace-nowrap">{m.dueDate ? formatDate(m.dueDate) : "—"}</TableCell>
+        <TableCell>
+          <Badge variant="outline" className={STATUS_STYLE[m.status]}>
+            {STATUS_LABEL[m.status]}
+          </Badge>
+        </TableCell>
+        <TableCell className="text-xs font-mono">
+          {m.invoiceNumber ?? "—"}
+          {m.xeroInvoiceId && (
+            <span className="mt-0.5 flex items-center gap-1 text-[10px] text-emerald-500">
+              <Link2 className="h-3 w-3" /> Xero{m.xeroInvoiceNumber ? ` ${m.xeroInvoiceNumber}` : ""}
+            </span>
+          )}
+        </TableCell>
+        <TableCell>
+          <div className="flex items-center justify-end gap-1.5">
+            {canPushXero && !m.xeroInvoiceId && m.status !== "CANCELLED" && (
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={busyId === m.id || !canInvoiceNow}
+                title={!canInvoiceNow ? notInvoiceableReason : undefined}
+                onClick={() => {
+                  setBusyId(m.id);
+                  pushToXero.mutate({ milestoneId: m.id });
+                }}
+                data-testid={`button-send-xero-${m.id}`}
+              >
+                {busyId === m.id ? (
+                  <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                ) : (
+                  <Link2 className="h-3.5 w-3.5 mr-1.5" />
+                )}
+                Send to Xero
+              </Button>
+            )}
+            {isManager && m.status === "PLANNED" && (
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={busyId === m.id || !canInvoiceNow}
+                title={!canInvoiceNow ? notInvoiceableReason : undefined}
+                onClick={() => handleGenerateInvoice(m)}
+                data-testid={`button-generate-invoice-${m.id}`}
+              >
+                {busyId === m.id ? (
+                  <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                ) : (
+                  <FileText className="h-3.5 w-3.5 mr-1.5" />
+                )}
+                Generate Invoice
+              </Button>
+            )}
+            {(m.status === "INVOICED" || m.status === "PAID") && (
+              <Button
+                size="sm"
+                variant="ghost"
+                disabled={busyId === m.id}
+                onClick={() => handleDownloadInvoice(m)}
+                data-testid={`button-download-invoice-${m.id}`}
+              >
+                {busyId === m.id ? (
+                  <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                ) : (
+                  <Download className="h-3.5 w-3.5 mr-1.5" />
+                )}
+                Invoice
+              </Button>
+            )}
+            {isManager && (
+              <>
+                <Button size="icon" variant="ghost" onClick={() => setEditRow(m)}>
+                  <Pencil className="h-4 w-4" />
+                </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="text-destructive hover:text-destructive"
+                  onClick={() => {
+                    if (confirm(`Delete milestone "${m.name}"?`)) {
+                      deleteMutation.mutate({ milestoneId: m.id });
+                    }
+                  }}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </>
+            )}
+          </div>
+        </TableCell>
+      </TableRow>
+    );
+  }
+
   return (
     <div className="space-y-4">
       <div className="grid gap-3 grid-cols-2 md:grid-cols-4">
@@ -280,114 +451,51 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {milestones.map((m, idx) => {
-                  const split = splitVat(amountFor(m), vatPercent, includesVat);
-                  return (
-                  <TableRow key={m.id} className="hover:bg-muted/30 align-top">
-                    <TableCell className="text-muted-foreground font-mono text-xs">{idx + 1}</TableCell>
-                    <TableCell>
-                      <div className="font-medium">{m.name}</div>
-                      {m.description && (
-                        <div className="text-xs text-muted-foreground line-clamp-2 mt-0.5">{m.description}</div>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right font-mono">{m.percentage.toFixed(1)}%</TableCell>
-                    <TableCell className="text-right font-mono text-xs">{formatIDR(split.dpp)}</TableCell>
-                    <TableCell className="text-right font-mono text-xs text-amber-400">{formatIDR(split.vat)}</TableCell>
-                    <TableCell className="text-right font-mono font-semibold">{formatIDR(split.gross)}</TableCell>
-                    <TableCell className="text-xs whitespace-nowrap">{m.dueDate ? formatDate(m.dueDate) : "—"}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className={STATUS_STYLE[m.status]}>
-                        {STATUS_LABEL[m.status]}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-xs font-mono">
-                      {m.invoiceNumber ?? "—"}
-                      {m.xeroInvoiceId && (
-                        <span className="mt-0.5 flex items-center gap-1 text-[10px] text-emerald-500">
-                          <Link2 className="h-3 w-3" /> Xero{m.xeroInvoiceNumber ? ` ${m.xeroInvoiceNumber}` : ""}
-                        </span>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center justify-end gap-1.5">
-                        {canPushXero && !m.xeroInvoiceId && m.status !== "CANCELLED" && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            disabled={busyId === m.id || !canInvoiceNow}
-                            title={!canInvoiceNow ? notInvoiceableReason : undefined}
-                            onClick={() => {
-                              setBusyId(m.id);
-                              pushToXero.mutate({ milestoneId: m.id });
-                            }}
-                            data-testid={`button-send-xero-${m.id}`}
-                          >
-                            {busyId === m.id ? (
-                              <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
-                            ) : (
-                              <Link2 className="h-3.5 w-3.5 mr-1.5" />
-                            )}
-                            Send to Xero
-                          </Button>
-                        )}
-                        {isManager && m.status === "PLANNED" && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            disabled={busyId === m.id || !canInvoiceNow}
-                            title={!canInvoiceNow ? notInvoiceableReason : undefined}
-                            onClick={() => handleGenerateInvoice(m)}
-                            data-testid={`button-generate-invoice-${m.id}`}
-                          >
-                            {busyId === m.id ? (
-                              <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
-                            ) : (
-                              <FileText className="h-3.5 w-3.5 mr-1.5" />
-                            )}
-                            Generate Invoice
-                          </Button>
-                        )}
-                        {(m.status === "INVOICED" || m.status === "PAID") && (
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            disabled={busyId === m.id}
-                            onClick={() => handleDownloadInvoice(m)}
-                            data-testid={`button-download-invoice-${m.id}`}
-                          >
-                            {busyId === m.id ? (
-                              <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
-                            ) : (
-                              <Download className="h-3.5 w-3.5 mr-1.5" />
-                            )}
-                            Invoice
-                          </Button>
-                        )}
-                        {isManager && (
-                          <>
-                            <Button size="icon" variant="ghost" onClick={() => setEditRow(m)}>
-                              <Pencil className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              size="icon"
-                              variant="ghost"
-                              className="text-destructive hover:text-destructive"
-                              onClick={() => {
-                                if (confirm(`Delete milestone "${m.name}"?`)) {
-                                  deleteMutation.mutate({ milestoneId: m.id });
-                                }
-                              }}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </>
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                  );
-                })}
+                {grouped
+                  ? groups.map((g) => {
+                      const paidPct = g.totalGross > 0 ? (g.paidGross / g.totalGross) * 100 : 0;
+                      const invoicedPct = g.totalGross > 0 ? (g.invoicedGross / g.totalGross) * 100 : 0;
+                      return (
+                        <Fragment key={g.key}>
+                          <TableRow className="bg-muted/50 hover:bg-muted/50 border-t-2 border-border">
+                            <TableCell colSpan={10} className="py-2">
+                              <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-1.5">
+                                <div className="flex items-center gap-2">
+                                  <Layers className="h-3.5 w-3.5 text-primary" />
+                                  <span className="font-semibold">{g.label}</span>
+                                  <span className="text-xs font-normal text-muted-foreground">
+                                    {formatIDR(g.totalGross)} total · {formatIDR(g.invoicedGross)} invoiced
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <div className="h-1.5 w-28 rounded-full bg-muted overflow-hidden">
+                                    <div
+                                      className="h-full bg-blue-500/40"
+                                      style={{ width: `${Math.min(100, invoicedPct)}%` }}
+                                    >
+                                      <div
+                                        className="h-full bg-emerald-500"
+                                        style={{
+                                          width: invoicedPct > 0 ? `${Math.min(100, (paidPct / invoicedPct) * 100)}%` : "0%",
+                                        }}
+                                      />
+                                    </div>
+                                  </div>
+                                  <span className="text-xs font-mono font-semibold text-emerald-500 whitespace-nowrap">
+                                    {paidPct.toFixed(0)}% paid
+                                  </span>
+                                  <span className="text-xs text-muted-foreground whitespace-nowrap">
+                                    ({formatIDR(g.paidGross)} / {formatIDR(g.totalGross)})
+                                  </span>
+                                </div>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                          {g.items.map((m) => renderRow(m))}
+                        </Fragment>
+                      );
+                    })
+                  : (milestones ?? []).map((m) => renderRow(m))}
               </TableBody>
             </Table>
           )}
