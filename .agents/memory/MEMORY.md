@@ -10,3 +10,4 @@
 - [Dashboard portfolio aggregation select](dashboard-aggregation-select.md) — aggregate every project with the narrow projectMetricsSelect, never the heavy projectInclude (avatars/RAID/billing waste).
 - [ProjectResource dual pending states](resource-approval-states.md) — two acceptedAt=null states (principal-proposed→PM accepts, PM-added-supervised→Principal accepts); guard edit auto-accept with !pendingPrincipalApproval.
 - [Zod body validation middleware](zod-body-validation.md) — generated zod is structural-only (keep semantic/non-empty guards); adding a 2nd handler widens req.params (wrap in String()) and degrades Prisma include inference.
+- [Production DB remote latency & batch writes](prod-db-remote-latency.md) — prod is a remote Neon (Singapore); chunk write scripts into <2min batches (bash caps at 120s; backgrounded procs die on tool return).

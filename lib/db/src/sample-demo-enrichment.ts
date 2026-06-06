@@ -139,9 +139,25 @@ async function main() {
     orderBy: { order: "asc" },
   });
 
+  // Pool of delivery staff used to gap-fill staffing on under-resourced demo projects.
+  const konPool = await prisma.user.findMany({
+    where: { role: "KONSULTAN", isActive: true },
+    orderBy: { createdAt: "asc" },
+    select: { id: true, role: true, seniority: true },
+  });
+  const twPool = await prisma.user.findMany({
+    where: { role: "TECHNICAL_WRITER", isActive: true },
+    orderBy: { createdAt: "asc" },
+    select: { id: true, role: true, seniority: true },
+  });
+  const rateForSeniority = (s: string | null | undefined) =>
+    s === "PRINCIPAL" ? 6_000_000 : s === "SENIOR" ? 4_500_000 : s === "MID" ? 3_000_000 : 2_000_000;
+
+  const onlyCodes = (process.env.ONLY_CODES ?? "").split(",").map((s) => s.trim()).filter(Boolean);
   const projects = await prisma.project.findMany({
     where: {
       deletedAt: null,
+      ...(onlyCodes.length ? { code: { in: onlyCodes } } : {}),
       OR: [
         { code: { startsWith: "SPH-WS-" } },
         { code: { startsWith: "SPH-2026-" }, status: { in: ["ACTIVE", "COMPLETE"] } },
@@ -182,9 +198,9 @@ async function main() {
     }
     if (weeks.length === 0) weeks.push(wStart);
 
-    const resources = p.resources;
     const wsList = p.workstreams;
     const wsFor = (rid: string | null) => rid ?? (wsList[0]?.id ?? null);
+    const isDemoRes = (r: { roleInProject: string | null }) => !!r.roleInProject && r.roleInProject.includes(ZWSP);
 
     // ---- wipe prior demo rows (marker only) ----
     await prisma.timesheet.deleteMany({ where: { projectId: p.id, description: { contains: ZWSP } } });
@@ -195,6 +211,60 @@ async function main() {
     await prisma.projectReport.deleteMany({ where: { projectId: p.id, note: { contains: ZWSP } } });
     await prisma.surveyResponse.deleteMany({ where: { projectId: p.id, submitterName: { contains: ZWSP } } });
     await prisma.activity.deleteMany({ where: { projectId: p.id, message: { contains: ZWSP } } });
+    await prisma.projectResource.deleteMany({ where: { projectId: p.id, roleInProject: { contains: ZWSP } } });
+
+    // ---- staffing gap-fill ----
+    // Keep real (non-demo) resources; re-create demo staffing so under-resourced
+    // projects produce realistic labour cost (and thus realistic margins) and a
+    // populated Resources tab. Well-staffed projects are left untouched.
+    type WorkRes = { userId: string; dailyRate: number; plannedMandays: number; roleInProject: string | null; workstreamId: string | null; user: { role: string } };
+    const realResources: WorkRes[] = p.resources
+      .filter((r) => !isDemoRes(r))
+      .map((r) => ({ userId: r.userId, dailyRate: r.dailyRate, plannedMandays: r.plannedMandays, roleInProject: r.roleInProject, workstreamId: r.workstreamId, user: { role: r.user.role } }));
+    const usedUserIds = new Set(realResources.map((r) => r.userId));
+    const existingRealCost = realResources.reduce((a, r) => a + (r.dailyRate > 0 && r.plannedMandays > 0 ? r.plannedMandays * completion * r.dailyRate : 0), 0);
+
+    const targetMargin = isImpl ? 0.5 + seeded(p.code, 11) * 0.12 : 0.66 + seeded(p.code, 12) * 0.16;
+    // Mirror the APPROVED-expense amounts created below so labour only fills the
+    // remaining cost budget (impl projects carry a large LICENSE expense).
+    const estApprovedExpenses =
+      (8 + Math.round(seeded(p.code, 1) * 17)) * 1_000_000 +
+      (12 + Math.round(seeded(p.code, 2) * 18)) * 1_000_000 +
+      (isImpl ? (140 + Math.round(seeded(p.code, 5) * 180)) * 1_000_000 : 0);
+    const desiredResourceCost = Math.max(p.contractValue * (1 - targetMargin) - estApprovedExpenses, p.contractValue * 0.05);
+    const gap = desiredResourceCost - existingRealCost;
+
+    const resources: WorkRes[] = [...realResources];
+    if (gap > p.contractValue * 0.03) {
+      const kon = konPool.filter((u) => !usedUserIds.has(u.id)).slice(0, 2);
+      const tw = twPool.filter((u) => !usedUserIds.has(u.id)).slice(0, 1);
+      const picks = [
+        ...kon.map((u) => ({ u, label: "Konsultan", weight: 0 })),
+        ...tw.map((u) => ({ u, label: "Technical Writer", weight: 0 })),
+      ];
+      if (picks.length) {
+        const weights = picks.length === 3 ? [0.45, 0.35, 0.2] : picks.length === 2 ? [0.6, 0.4] : [1];
+        for (let i = 0; i < picks.length; i++) {
+          const u = picks[i].u;
+          const rate = rateForSeniority(u.seniority);
+          const mandays = Math.max(1, Math.round((gap * weights[i]) / (Math.max(0.1, completion) * rate)));
+          const role = `${picks[i].label}${ZWSP}`;
+          await prisma.projectResource.create({
+            data: {
+              projectId: p.id,
+              workstreamId: wsList[0]?.id ?? null,
+              userId: u.id,
+              roleInProject: role,
+              plannedMandays: mandays,
+              dailyRate: rate,
+              acceptedAt: NOW,
+            },
+          });
+          resources.push({ userId: u.id, dailyRate: rate, plannedMandays: mandays, roleInProject: role, workstreamId: wsList[0]?.id ?? null, user: { role: u.role } });
+          usedUserIds.add(u.id);
+        }
+      }
+    }
 
     // ---- WBS tasks ----
     const phases: { title: string; subs: string[] }[] = [
