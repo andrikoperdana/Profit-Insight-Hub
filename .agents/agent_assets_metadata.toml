@@ -323,3 +323,9 @@ id = "OjGb-ZYqAasdXoqgEC6f5"
 uri = "file://exports/SecureProfit-Hub-Executive-Summary-EN.docx"
 type = "word_document"
 title = "SecureProfit Hub — Executive Summary (English, 2 pages)"
+
+[[outputs]]
+id = "ZnWxpmMmL9KMQZIPzXKJL"
+uri = "file://backup/secureprofit-hub-backup.tar.gz"
+type = "unspecified"
+title = "SecureProfit Hub — Backup (Source Code + Database)"
