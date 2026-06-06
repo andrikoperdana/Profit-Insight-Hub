@@ -33,23 +33,37 @@ const documentCreateMock = vi.fn((_a: unknown) => Promise.resolve<unknown>(null)
 const documentFindUniqueMock = vi.fn((_a: unknown) => Promise.resolve<unknown>(null));
 const documentDeleteMock = vi.fn((_a: unknown) => Promise.resolve<unknown>(null));
 const documentFindManyMock = vi.fn((_a: unknown) => Promise.resolve<unknown[]>([]));
+const documentFindFirstMock = vi.fn((_a: unknown) => Promise.resolve<unknown>(null));
+const documentUpdateMock = vi.fn((_a: unknown) => Promise.resolve<unknown>({}));
 const activityCreateMock = vi.fn((_a: unknown) => Promise.resolve<unknown>({}));
 
-vi.mock("@workspace/db", () => ({
-  prisma: {
-    project: {
-      findUnique: (a: unknown) => projectFindUniqueMock(a),
-      update: vi.fn(async () => ({})),
-    },
+vi.mock("@workspace/db", () => {
+  const tx = {
     document: {
       create: (a: unknown) => documentCreateMock(a),
-      findUnique: (a: unknown) => documentFindUniqueMock(a),
-      findMany: (a: unknown) => documentFindManyMock(a),
-      delete: (a: unknown) => documentDeleteMock(a),
+      findFirst: (a: unknown) => documentFindFirstMock(a),
+      update: (a: unknown) => documentUpdateMock(a),
     },
-    activity: { create: (a: unknown) => activityCreateMock(a) },
-  },
-}));
+  };
+  return {
+    prisma: {
+      project: {
+        findUnique: (a: unknown) => projectFindUniqueMock(a),
+        update: vi.fn(async () => ({})),
+      },
+      document: {
+        create: (a: unknown) => documentCreateMock(a),
+        findUnique: (a: unknown) => documentFindUniqueMock(a),
+        findFirst: (a: unknown) => documentFindFirstMock(a),
+        findMany: (a: unknown) => documentFindManyMock(a),
+        update: (a: unknown) => documentUpdateMock(a),
+        delete: (a: unknown) => documentDeleteMock(a),
+      },
+      activity: { create: (a: unknown) => activityCreateMock(a) },
+      $transaction: (fn: (t: typeof tx) => unknown) => Promise.resolve(fn(tx)),
+    },
+  };
+});
 
 vi.mock("../../lib/audit.js", () => ({
   recordAudit: vi.fn(async () => {}),
