@@ -244,6 +244,10 @@ export interface BillingMilestone {
   invoiceNumber?: string | null;
   xeroInvoiceId?: string | null;
   xeroInvoiceNumber?: string | null;
+  xeroAmountDue?: number | null;
+  xeroAmountPaid?: number | null;
+  xeroAmountCredited?: number | null;
+  xeroSyncedAt?: string | null;
   invoicedAt?: string | null;
   paidAt?: string | null;
   sortOrder: number;

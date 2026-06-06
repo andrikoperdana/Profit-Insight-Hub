@@ -5,6 +5,7 @@ import {
   useUpdateBillingMilestone,
   useDeleteBillingMilestone,
   usePushMilestoneToXero,
+  useSyncXeroPayments,
   useListProjectWorkstreams,
   getListBillingMilestonesQueryKey,
   getListProjectWorkstreamsQueryKey,
@@ -37,7 +38,7 @@ import { formatDate, formatIDR } from "@/lib/format";
 import { EmptyState } from "@/components/common/EmptyState";
 import { WorkstreamPicker } from "./components/WorkstreamPicker";
 import { downloadAuthed, postAuthed } from "@/lib/exports";
-import { Plus, Trash2, Pencil, Loader2, Receipt, AlertCircle, FileText, Download, Link2, Layers } from "lucide-react";
+import { Plus, Trash2, Pencil, Loader2, Receipt, AlertCircle, FileText, Download, Link2, Layers, RefreshCw } from "lucide-react";
 
 const STATUS_LABEL: Record<BillingMilestoneStatus, string> = {
   PLANNED: "Planned",
@@ -104,6 +105,10 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
     user?.role === "FINANCE" ||
     (user?.role === "PROJECT_MANAGER" && project.pmId === user.id);
 
+  // The pull-from-Xero endpoint is gated to MANAGEMENT/FINANCE only, so the
+  // button must follow the same allowlist or PMs would hit a 403.
+  const canSyncXero = user?.role === "MANAGEMENT" || user?.role === "FINANCE";
+
   // A project can only be invoiced once it is running (ACTIVE) or beyond. Before
   // that (DRAFT / OBSERVATION / NO_NEED_CONSULTANT) invoicing actions are blocked.
   const canInvoiceNow = canInvoiceProjectStatus(project.status);
@@ -131,6 +136,23 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
       onError: (e: any) =>
         toast({ title: "Send to Xero failed", description: e?.message, variant: "destructive" }),
       onSettled: () => setBusyId(null),
+    },
+  });
+
+  const syncFromXero = useSyncXeroPayments({
+    mutation: {
+      onSuccess: (res) => {
+        toast({
+          title: "Synced from Xero",
+          description:
+            res.updated > 0
+              ? `Checked ${res.checked} invoice(s); ${res.updated} marked as paid.`
+              : `Checked ${res.checked} invoice(s); payment figures refreshed.`,
+        });
+        invalidate();
+      },
+      onError: (e: any) =>
+        toast({ title: "Sync from Xero failed", description: e?.message, variant: "destructive" }),
     },
   });
 
@@ -289,6 +311,19 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
               <Link2 className="h-3 w-3" /> Xero{m.xeroInvoiceNumber ? ` ${m.xeroInvoiceNumber}` : ""}
             </span>
           )}
+          {m.xeroInvoiceId && m.xeroSyncedAt && (
+            <span className="mt-0.5 flex flex-col gap-0.5 text-[10px]">
+              {(m.xeroAmountPaid ?? 0) > 0 && (
+                <span className="text-emerald-500">Paid {formatIDR(m.xeroAmountPaid!)}</span>
+              )}
+              {(m.xeroAmountDue ?? 0) > 0 && (
+                <span className="text-amber-500">Outstanding {formatIDR(m.xeroAmountDue!)}</span>
+              )}
+              {(m.xeroAmountCredited ?? 0) > 0 && (
+                <span className="text-sky-500">Credited {formatIDR(m.xeroAmountCredited!)}</span>
+              )}
+            </span>
+          )}
         </TableCell>
         <TableCell>
           <div className="flex items-center justify-end gap-1.5">
@@ -416,11 +451,29 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
               Plan billing milestones and their share of the contract value. Example: 30% DP, 40% Mid, 30% After BAST.
             </CardDescription>
           </div>
-          {isManager && (
-            <Button onClick={() => setCreateOpen(true)} data-testid="button-new-milestone">
-              <Plus className="h-4 w-4 mr-2" /> New Milestone
-            </Button>
-          )}
+          <div className="flex items-center gap-2">
+            {canSyncXero && (
+              <Button
+                variant="outline"
+                onClick={() => syncFromXero.mutate()}
+                disabled={syncFromXero.isPending}
+                title="Pull the latest payment status, outstanding balance and credit notes from Xero"
+                data-testid="button-sync-xero"
+              >
+                {syncFromXero.isPending ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                )}
+                Sync from Xero
+              </Button>
+            )}
+            {isManager && (
+              <Button onClick={() => setCreateOpen(true)} data-testid="button-new-milestone">
+                <Plus className="h-4 w-4 mr-2" /> New Milestone
+              </Button>
+            )}
+          </div>
         </CardHeader>
         <CardContent className="p-0">
           {isLoading ? (

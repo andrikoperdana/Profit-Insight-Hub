@@ -612,6 +612,10 @@ model BillingMilestone {
   invoiceNumber String?                 @unique
   xeroInvoiceId String?
   xeroInvoiceNumber String?
+  xeroAmountDue      Float?
+  xeroAmountPaid     Float?
+  xeroAmountCredited Float?
+  xeroSyncedAt       DateTime?
   invoicedAt    DateTime?
   paidAt        DateTime?
   sortOrder     Int                     @default(0)

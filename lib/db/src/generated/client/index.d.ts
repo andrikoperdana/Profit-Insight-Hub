@@ -29523,12 +29523,18 @@ export namespace Prisma {
   export type BillingMilestoneAvgAggregateOutputType = {
     percentage: number | null
     amount: number | null
+    xeroAmountDue: number | null
+    xeroAmountPaid: number | null
+    xeroAmountCredited: number | null
     sortOrder: number | null
   }
 
   export type BillingMilestoneSumAggregateOutputType = {
     percentage: number | null
     amount: number | null
+    xeroAmountDue: number | null
+    xeroAmountPaid: number | null
+    xeroAmountCredited: number | null
     sortOrder: number | null
   }
 
@@ -29545,6 +29551,10 @@ export namespace Prisma {
     invoiceNumber: string | null
     xeroInvoiceId: string | null
     xeroInvoiceNumber: string | null
+    xeroAmountDue: number | null
+    xeroAmountPaid: number | null
+    xeroAmountCredited: number | null
+    xeroSyncedAt: Date | null
     invoicedAt: Date | null
     paidAt: Date | null
     sortOrder: number | null
@@ -29565,6 +29575,10 @@ export namespace Prisma {
     invoiceNumber: string | null
     xeroInvoiceId: string | null
     xeroInvoiceNumber: string | null
+    xeroAmountDue: number | null
+    xeroAmountPaid: number | null
+    xeroAmountCredited: number | null
+    xeroSyncedAt: Date | null
     invoicedAt: Date | null
     paidAt: Date | null
     sortOrder: number | null
@@ -29585,6 +29599,10 @@ export namespace Prisma {
     invoiceNumber: number
     xeroInvoiceId: number
     xeroInvoiceNumber: number
+    xeroAmountDue: number
+    xeroAmountPaid: number
+    xeroAmountCredited: number
+    xeroSyncedAt: number
     invoicedAt: number
     paidAt: number
     sortOrder: number
@@ -29597,12 +29615,18 @@ export namespace Prisma {
   export type BillingMilestoneAvgAggregateInputType = {
     percentage?: true
     amount?: true
+    xeroAmountDue?: true
+    xeroAmountPaid?: true
+    xeroAmountCredited?: true
     sortOrder?: true
   }
 
   export type BillingMilestoneSumAggregateInputType = {
     percentage?: true
     amount?: true
+    xeroAmountDue?: true
+    xeroAmountPaid?: true
+    xeroAmountCredited?: true
     sortOrder?: true
   }
 
@@ -29619,6 +29643,10 @@ export namespace Prisma {
     invoiceNumber?: true
     xeroInvoiceId?: true
     xeroInvoiceNumber?: true
+    xeroAmountDue?: true
+    xeroAmountPaid?: true
+    xeroAmountCredited?: true
+    xeroSyncedAt?: true
     invoicedAt?: true
     paidAt?: true
     sortOrder?: true
@@ -29639,6 +29667,10 @@ export namespace Prisma {
     invoiceNumber?: true
     xeroInvoiceId?: true
     xeroInvoiceNumber?: true
+    xeroAmountDue?: true
+    xeroAmountPaid?: true
+    xeroAmountCredited?: true
+    xeroSyncedAt?: true
     invoicedAt?: true
     paidAt?: true
     sortOrder?: true
@@ -29659,6 +29691,10 @@ export namespace Prisma {
     invoiceNumber?: true
     xeroInvoiceId?: true
     xeroInvoiceNumber?: true
+    xeroAmountDue?: true
+    xeroAmountPaid?: true
+    xeroAmountCredited?: true
+    xeroSyncedAt?: true
     invoicedAt?: true
     paidAt?: true
     sortOrder?: true
@@ -29766,6 +29802,10 @@ export namespace Prisma {
     invoiceNumber: string | null
     xeroInvoiceId: string | null
     xeroInvoiceNumber: string | null
+    xeroAmountDue: number | null
+    xeroAmountPaid: number | null
+    xeroAmountCredited: number | null
+    xeroSyncedAt: Date | null
     invoicedAt: Date | null
     paidAt: Date | null
     sortOrder: number
@@ -29805,6 +29845,10 @@ export namespace Prisma {
     invoiceNumber?: boolean
     xeroInvoiceId?: boolean
     xeroInvoiceNumber?: boolean
+    xeroAmountDue?: boolean
+    xeroAmountPaid?: boolean
+    xeroAmountCredited?: boolean
+    xeroSyncedAt?: boolean
     invoicedAt?: boolean
     paidAt?: boolean
     sortOrder?: boolean
@@ -29829,6 +29873,10 @@ export namespace Prisma {
     invoiceNumber?: boolean
     xeroInvoiceId?: boolean
     xeroInvoiceNumber?: boolean
+    xeroAmountDue?: boolean
+    xeroAmountPaid?: boolean
+    xeroAmountCredited?: boolean
+    xeroSyncedAt?: boolean
     invoicedAt?: boolean
     paidAt?: boolean
     sortOrder?: boolean
@@ -29851,6 +29899,10 @@ export namespace Prisma {
     invoiceNumber?: boolean
     xeroInvoiceId?: boolean
     xeroInvoiceNumber?: boolean
+    xeroAmountDue?: boolean
+    xeroAmountPaid?: boolean
+    xeroAmountCredited?: boolean
+    xeroSyncedAt?: boolean
     invoicedAt?: boolean
     paidAt?: boolean
     sortOrder?: boolean
@@ -29889,6 +29941,10 @@ export namespace Prisma {
       invoiceNumber: string | null
       xeroInvoiceId: string | null
       xeroInvoiceNumber: string | null
+      xeroAmountDue: number | null
+      xeroAmountPaid: number | null
+      xeroAmountCredited: number | null
+      xeroSyncedAt: Date | null
       invoicedAt: Date | null
       paidAt: Date | null
       sortOrder: number
@@ -30302,6 +30358,10 @@ export namespace Prisma {
     readonly invoiceNumber: FieldRef<"BillingMilestone", 'String'>
     readonly xeroInvoiceId: FieldRef<"BillingMilestone", 'String'>
     readonly xeroInvoiceNumber: FieldRef<"BillingMilestone", 'String'>
+    readonly xeroAmountDue: FieldRef<"BillingMilestone", 'Float'>
+    readonly xeroAmountPaid: FieldRef<"BillingMilestone", 'Float'>
+    readonly xeroAmountCredited: FieldRef<"BillingMilestone", 'Float'>
+    readonly xeroSyncedAt: FieldRef<"BillingMilestone", 'DateTime'>
     readonly invoicedAt: FieldRef<"BillingMilestone", 'DateTime'>
     readonly paidAt: FieldRef<"BillingMilestone", 'DateTime'>
     readonly sortOrder: FieldRef<"BillingMilestone", 'Int'>
@@ -48562,6 +48622,10 @@ export namespace Prisma {
     invoiceNumber: 'invoiceNumber',
     xeroInvoiceId: 'xeroInvoiceId',
     xeroInvoiceNumber: 'xeroInvoiceNumber',
+    xeroAmountDue: 'xeroAmountDue',
+    xeroAmountPaid: 'xeroAmountPaid',
+    xeroAmountCredited: 'xeroAmountCredited',
+    xeroSyncedAt: 'xeroSyncedAt',
     invoicedAt: 'invoicedAt',
     paidAt: 'paidAt',
     sortOrder: 'sortOrder',
@@ -51476,6 +51540,10 @@ export namespace Prisma {
     invoiceNumber?: StringNullableFilter<"BillingMilestone"> | string | null
     xeroInvoiceId?: StringNullableFilter<"BillingMilestone"> | string | null
     xeroInvoiceNumber?: StringNullableFilter<"BillingMilestone"> | string | null
+    xeroAmountDue?: FloatNullableFilter<"BillingMilestone"> | number | null
+    xeroAmountPaid?: FloatNullableFilter<"BillingMilestone"> | number | null
+    xeroAmountCredited?: FloatNullableFilter<"BillingMilestone"> | number | null
+    xeroSyncedAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     invoicedAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     paidAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     sortOrder?: IntFilter<"BillingMilestone"> | number
@@ -51499,6 +51567,10 @@ export namespace Prisma {
     invoiceNumber?: SortOrderInput | SortOrder
     xeroInvoiceId?: SortOrderInput | SortOrder
     xeroInvoiceNumber?: SortOrderInput | SortOrder
+    xeroAmountDue?: SortOrderInput | SortOrder
+    xeroAmountPaid?: SortOrderInput | SortOrder
+    xeroAmountCredited?: SortOrderInput | SortOrder
+    xeroSyncedAt?: SortOrderInput | SortOrder
     invoicedAt?: SortOrderInput | SortOrder
     paidAt?: SortOrderInput | SortOrder
     sortOrder?: SortOrder
@@ -51525,6 +51597,10 @@ export namespace Prisma {
     status?: EnumBillingMilestoneStatusFilter<"BillingMilestone"> | $Enums.BillingMilestoneStatus
     xeroInvoiceId?: StringNullableFilter<"BillingMilestone"> | string | null
     xeroInvoiceNumber?: StringNullableFilter<"BillingMilestone"> | string | null
+    xeroAmountDue?: FloatNullableFilter<"BillingMilestone"> | number | null
+    xeroAmountPaid?: FloatNullableFilter<"BillingMilestone"> | number | null
+    xeroAmountCredited?: FloatNullableFilter<"BillingMilestone"> | number | null
+    xeroSyncedAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     invoicedAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     paidAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     sortOrder?: IntFilter<"BillingMilestone"> | number
@@ -51548,6 +51624,10 @@ export namespace Prisma {
     invoiceNumber?: SortOrderInput | SortOrder
     xeroInvoiceId?: SortOrderInput | SortOrder
     xeroInvoiceNumber?: SortOrderInput | SortOrder
+    xeroAmountDue?: SortOrderInput | SortOrder
+    xeroAmountPaid?: SortOrderInput | SortOrder
+    xeroAmountCredited?: SortOrderInput | SortOrder
+    xeroSyncedAt?: SortOrderInput | SortOrder
     invoicedAt?: SortOrderInput | SortOrder
     paidAt?: SortOrderInput | SortOrder
     sortOrder?: SortOrder
@@ -51576,6 +51656,10 @@ export namespace Prisma {
     invoiceNumber?: StringNullableWithAggregatesFilter<"BillingMilestone"> | string | null
     xeroInvoiceId?: StringNullableWithAggregatesFilter<"BillingMilestone"> | string | null
     xeroInvoiceNumber?: StringNullableWithAggregatesFilter<"BillingMilestone"> | string | null
+    xeroAmountDue?: FloatNullableWithAggregatesFilter<"BillingMilestone"> | number | null
+    xeroAmountPaid?: FloatNullableWithAggregatesFilter<"BillingMilestone"> | number | null
+    xeroAmountCredited?: FloatNullableWithAggregatesFilter<"BillingMilestone"> | number | null
+    xeroSyncedAt?: DateTimeNullableWithAggregatesFilter<"BillingMilestone"> | Date | string | null
     invoicedAt?: DateTimeNullableWithAggregatesFilter<"BillingMilestone"> | Date | string | null
     paidAt?: DateTimeNullableWithAggregatesFilter<"BillingMilestone"> | Date | string | null
     sortOrder?: IntWithAggregatesFilter<"BillingMilestone"> | number
@@ -55494,6 +55578,10 @@ export namespace Prisma {
     invoiceNumber?: string | null
     xeroInvoiceId?: string | null
     xeroInvoiceNumber?: string | null
+    xeroAmountDue?: number | null
+    xeroAmountPaid?: number | null
+    xeroAmountCredited?: number | null
+    xeroSyncedAt?: Date | string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
@@ -55517,6 +55605,10 @@ export namespace Prisma {
     invoiceNumber?: string | null
     xeroInvoiceId?: string | null
     xeroInvoiceNumber?: string | null
+    xeroAmountDue?: number | null
+    xeroAmountPaid?: number | null
+    xeroAmountCredited?: number | null
+    xeroSyncedAt?: Date | string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
@@ -55536,6 +55628,10 @@ export namespace Prisma {
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroAmountDue?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountPaid?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountCredited?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -55559,6 +55655,10 @@ export namespace Prisma {
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroAmountDue?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountPaid?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountCredited?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -55580,6 +55680,10 @@ export namespace Prisma {
     invoiceNumber?: string | null
     xeroInvoiceId?: string | null
     xeroInvoiceNumber?: string | null
+    xeroAmountDue?: number | null
+    xeroAmountPaid?: number | null
+    xeroAmountCredited?: number | null
+    xeroSyncedAt?: Date | string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
@@ -55598,6 +55702,10 @@ export namespace Prisma {
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroAmountDue?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountPaid?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountCredited?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -55618,6 +55726,10 @@ export namespace Prisma {
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroAmountDue?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountPaid?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountCredited?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -59192,6 +59304,10 @@ export namespace Prisma {
     invoiceNumber?: SortOrder
     xeroInvoiceId?: SortOrder
     xeroInvoiceNumber?: SortOrder
+    xeroAmountDue?: SortOrder
+    xeroAmountPaid?: SortOrder
+    xeroAmountCredited?: SortOrder
+    xeroSyncedAt?: SortOrder
     invoicedAt?: SortOrder
     paidAt?: SortOrder
     sortOrder?: SortOrder
@@ -59202,6 +59318,9 @@ export namespace Prisma {
   export type BillingMilestoneAvgOrderByAggregateInput = {
     percentage?: SortOrder
     amount?: SortOrder
+    xeroAmountDue?: SortOrder
+    xeroAmountPaid?: SortOrder
+    xeroAmountCredited?: SortOrder
     sortOrder?: SortOrder
   }
 
@@ -59218,6 +59337,10 @@ export namespace Prisma {
     invoiceNumber?: SortOrder
     xeroInvoiceId?: SortOrder
     xeroInvoiceNumber?: SortOrder
+    xeroAmountDue?: SortOrder
+    xeroAmountPaid?: SortOrder
+    xeroAmountCredited?: SortOrder
+    xeroSyncedAt?: SortOrder
     invoicedAt?: SortOrder
     paidAt?: SortOrder
     sortOrder?: SortOrder
@@ -59238,6 +59361,10 @@ export namespace Prisma {
     invoiceNumber?: SortOrder
     xeroInvoiceId?: SortOrder
     xeroInvoiceNumber?: SortOrder
+    xeroAmountDue?: SortOrder
+    xeroAmountPaid?: SortOrder
+    xeroAmountCredited?: SortOrder
+    xeroSyncedAt?: SortOrder
     invoicedAt?: SortOrder
     paidAt?: SortOrder
     sortOrder?: SortOrder
@@ -59248,6 +59375,9 @@ export namespace Prisma {
   export type BillingMilestoneSumOrderByAggregateInput = {
     percentage?: SortOrder
     amount?: SortOrder
+    xeroAmountDue?: SortOrder
+    xeroAmountPaid?: SortOrder
+    xeroAmountCredited?: SortOrder
     sortOrder?: SortOrder
   }
 
@@ -70009,6 +70139,10 @@ export namespace Prisma {
     invoiceNumber?: string | null
     xeroInvoiceId?: string | null
     xeroInvoiceNumber?: string | null
+    xeroAmountDue?: number | null
+    xeroAmountPaid?: number | null
+    xeroAmountCredited?: number | null
+    xeroSyncedAt?: Date | string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
@@ -70030,6 +70164,10 @@ export namespace Prisma {
     invoiceNumber?: string | null
     xeroInvoiceId?: string | null
     xeroInvoiceNumber?: string | null
+    xeroAmountDue?: number | null
+    xeroAmountPaid?: number | null
+    xeroAmountCredited?: number | null
+    xeroSyncedAt?: Date | string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
@@ -70949,6 +71087,10 @@ export namespace Prisma {
     invoiceNumber?: StringNullableFilter<"BillingMilestone"> | string | null
     xeroInvoiceId?: StringNullableFilter<"BillingMilestone"> | string | null
     xeroInvoiceNumber?: StringNullableFilter<"BillingMilestone"> | string | null
+    xeroAmountDue?: FloatNullableFilter<"BillingMilestone"> | number | null
+    xeroAmountPaid?: FloatNullableFilter<"BillingMilestone"> | number | null
+    xeroAmountCredited?: FloatNullableFilter<"BillingMilestone"> | number | null
+    xeroSyncedAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     invoicedAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     paidAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     sortOrder?: IntFilter<"BillingMilestone"> | number
@@ -71894,6 +72036,10 @@ export namespace Prisma {
     invoiceNumber?: string | null
     xeroInvoiceId?: string | null
     xeroInvoiceNumber?: string | null
+    xeroAmountDue?: number | null
+    xeroAmountPaid?: number | null
+    xeroAmountCredited?: number | null
+    xeroSyncedAt?: Date | string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
@@ -71915,6 +72061,10 @@ export namespace Prisma {
     invoiceNumber?: string | null
     xeroInvoiceId?: string | null
     xeroInvoiceNumber?: string | null
+    xeroAmountDue?: number | null
+    xeroAmountPaid?: number | null
+    xeroAmountCredited?: number | null
+    xeroSyncedAt?: Date | string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
@@ -74725,6 +74875,10 @@ export namespace Prisma {
     invoiceNumber?: string | null
     xeroInvoiceId?: string | null
     xeroInvoiceNumber?: string | null
+    xeroAmountDue?: number | null
+    xeroAmountPaid?: number | null
+    xeroAmountCredited?: number | null
+    xeroSyncedAt?: Date | string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
@@ -74747,6 +74901,10 @@ export namespace Prisma {
     invoiceNumber?: string | null
     xeroInvoiceId?: string | null
     xeroInvoiceNumber?: string | null
+    xeroAmountDue?: number | null
+    xeroAmountPaid?: number | null
+    xeroAmountCredited?: number | null
+    xeroSyncedAt?: Date | string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
@@ -75074,6 +75232,10 @@ export namespace Prisma {
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroAmountDue?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountPaid?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountCredited?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -75096,6 +75258,10 @@ export namespace Prisma {
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroAmountDue?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountPaid?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountCredited?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -88453,6 +88619,10 @@ export namespace Prisma {
     invoiceNumber?: string | null
     xeroInvoiceId?: string | null
     xeroInvoiceNumber?: string | null
+    xeroAmountDue?: number | null
+    xeroAmountPaid?: number | null
+    xeroAmountCredited?: number | null
+    xeroSyncedAt?: Date | string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
@@ -88861,6 +89031,10 @@ export namespace Prisma {
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroAmountDue?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountPaid?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountCredited?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -88882,6 +89056,10 @@ export namespace Prisma {
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroAmountDue?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountPaid?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountCredited?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -88902,6 +89080,10 @@ export namespace Prisma {
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroAmountDue?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountPaid?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountCredited?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -89210,6 +89392,10 @@ export namespace Prisma {
     invoiceNumber?: string | null
     xeroInvoiceId?: string | null
     xeroInvoiceNumber?: string | null
+    xeroAmountDue?: number | null
+    xeroAmountPaid?: number | null
+    xeroAmountCredited?: number | null
+    xeroSyncedAt?: Date | string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
     sortOrder?: number
@@ -89422,6 +89608,10 @@ export namespace Prisma {
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroAmountDue?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountPaid?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountCredited?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -89443,6 +89633,10 @@ export namespace Prisma {
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroAmountDue?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountPaid?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountCredited?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
@@ -89463,6 +89657,10 @@ export namespace Prisma {
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceId?: NullableStringFieldUpdateOperationsInput | string | null
     xeroInvoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    xeroAmountDue?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountPaid?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroAmountCredited?: NullableFloatFieldUpdateOperationsInput | number | null
+    xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number

@@ -1,13 +1,37 @@
 ---
 name: Xero accounting integration
-description: Durable correctness/security rules for the one-way Xero (OAuth2 + Accounting API) integration — invoice push idempotency, payment-paid detection, OAuth state.
+description: Durable correctness/security rules for the Xero (OAuth2 + Accounting API) integration — invoice push idempotency, payment-paid detection, two-way amount snapshot, OAuth state.
 ---
 
 # Xero integration rules
 
-One-way integration (manual SDK-less REST): push BillingMilestones → ACCREC sales
-invoices, sync Clients → Xero Contacts, pull payment status → mark milestone PAID.
+Mostly-push integration (manual SDK-less REST): push BillingMilestones → ACCREC sales
+invoices, sync Clients → Xero Contacts, and pull a read-only financial snapshot back
+(payment status, outstanding/paid/credited amounts, invoice-number edits).
 Single tenant, singleton `XeroConnection` row. 30-min poller + manual triggers.
+
+## Pull-back snapshot reuses /Invoices, no extra scope or CreditNotes endpoint
+The amounts pulled back onto BillingMilestone (`xeroAmountDue/Paid/Credited`,
+`xeroSyncedAt`) all come from the SAME `GET /Invoices?IDs=` call already used for PAID
+detection: invoice total = `AmountDue + AmountPaid + AmountCredited`, so credit notes
+are read via the invoice's `AmountCredited` — no separate `/CreditNotes` call and no
+new scope beyond `accounting.invoices`. `runPaymentSync` persists this snapshot for
+every polled milestone (not just fully-paid ones) and updates `xeroInvoiceNumber` when
+Xero staff edited it after issue.
+**Why:** treating credit notes as a separate feature would have added scope + endpoint
+churn for data already present on the invoice payload.
+
+## Poller scope must include recently-PAID rows, or the snapshot freezes
+`runPaymentSync` polls `INVOICED`/`PLANNED` **plus** `PAID` rows whose `paidAt` is
+within a 180-day lookback. PAID is terminal, so without the lookback branch a
+milestone's invoice-number edits and post-payment credit notes would never refresh
+again. Already-PAID rows only get their snapshot refreshed — never re-stamp `paidAt`
+or re-flip status (guard `st.fullyPaid && m.status !== "PAID"`).
+**Why:** invoice-number corrections and credit notes commonly land AFTER payment.
+**How to apply:** the manual "Sync from Xero" button is gated to MANAGEMENT/FINANCE
+to match the `POST /xero/sync-payments` ADMIN_ROLES allowlist — the broader
+`canPushXero` (incl. PM-of-project) is for the per-row PUSH action, not the pull; do
+not reuse it for the sync button or PMs hit 403.
 
 ## Invoice push must be idempotent under concurrency
 Pushing a milestone to Xero creates an external side effect that cannot be rolled

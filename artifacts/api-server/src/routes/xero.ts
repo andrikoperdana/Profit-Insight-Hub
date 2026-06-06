@@ -417,12 +417,19 @@ router.post(
 // --- Pull payment status: mark fully-paid Xero invoices as PAID ------------
 
 export async function runPaymentSync(): Promise<{ checked: number; updated: number }> {
+  // Recently-paid milestones are still polled so that invoice-number edits and
+  // credit notes applied in Xero after payment keep their snapshot accurate,
+  // bounded by a lookback window to keep the polled set small.
+  const paidLookback = new Date(Date.now() - 180 * 24 * 60 * 60 * 1000);
   const pending = await prisma.billingMilestone.findMany({
     where: {
       xeroInvoiceId: { not: null },
-      status: { in: ["INVOICED", "PLANNED"] },
+      OR: [
+        { status: { in: ["INVOICED", "PLANNED"] } },
+        { status: "PAID", paidAt: { gte: paidLookback } },
+      ],
     },
-    select: { id: true, xeroInvoiceId: true },
+    select: { id: true, xeroInvoiceId: true, xeroInvoiceNumber: true, status: true },
   });
   if (pending.length === 0) return { checked: 0, updated: 0 };
 
@@ -435,13 +442,28 @@ export async function runPaymentSync(): Promise<{ checked: number; updated: numb
     const statuses = await getInvoiceStatuses(ids);
     for (const m of slice) {
       const st = statuses.get(m.xeroInvoiceId!);
-      if (st?.fullyPaid) {
-        await prisma.billingMilestone.update({
-          where: { id: m.id },
-          data: { status: "PAID", paidAt: new Date() },
-        });
+      if (!st) continue;
+      // Always refresh the financial snapshot pulled from Xero (outstanding
+      // balance after partial payments, total paid, total credited via credit
+      // notes) and the official invoice number, which Xero accounting staff may
+      // have edited after the invoice was issued.
+      const data: Record<string, unknown> = {
+        xeroAmountDue: st.amountDue,
+        xeroAmountPaid: st.amountPaid,
+        xeroAmountCredited: st.amountCredited,
+        xeroSyncedAt: new Date(),
+      };
+      if (st.invoiceNumber && st.invoiceNumber !== m.xeroInvoiceNumber) {
+        data.xeroInvoiceNumber = st.invoiceNumber;
+      }
+      // Only Xero's explicit PAID status flips a not-yet-paid milestone to PAID;
+      // already-PAID rows just get their snapshot refreshed (no re-stamp).
+      if (st.fullyPaid && m.status !== "PAID") {
+        data.status = "PAID";
+        data.paidAt = new Date();
         updated++;
       }
+      await prisma.billingMilestone.update({ where: { id: m.id }, data });
     }
   }
   return { checked: pending.length, updated };

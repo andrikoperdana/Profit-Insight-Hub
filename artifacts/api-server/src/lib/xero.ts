@@ -586,6 +586,7 @@ interface XeroInvoice {
   Status?: string;
   AmountDue?: number;
   AmountPaid?: number;
+  AmountCredited?: number;
   Total?: number;
 }
 
@@ -643,9 +644,11 @@ export async function createInvoice(input: InvoiceInput): Promise<{
 
 export interface XeroInvoiceStatus {
   invoiceId: string;
+  invoiceNumber: string | null;
   status: string | null;
   amountDue: number | null;
   amountPaid: number | null;
+  amountCredited: number | null;
   fullyPaid: boolean;
 }
 
@@ -666,9 +669,11 @@ export async function getInvoiceStatuses(
   for (const inv of result.Invoices ?? []) {
     out.set(inv.InvoiceID, {
       invoiceId: inv.InvoiceID,
+      invoiceNumber: inv.InvoiceNumber ?? null,
       status: inv.Status ?? null,
       amountDue: inv.AmountDue ?? null,
       amountPaid: inv.AmountPaid ?? null,
+      amountCredited: inv.AmountCredited ?? null,
       // Only Xero's explicit PAID status counts. AmountDue can be 0 for
       // VOIDED/DELETED/credited invoices too, which must not be treated as paid.
       fullyPaid: inv.Status === "PAID",

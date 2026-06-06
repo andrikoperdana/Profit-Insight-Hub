@@ -2479,6 +2479,10 @@ components:
         invoiceNumber: { type: string, nullable: true }
         xeroInvoiceId: { type: string, nullable: true }
         xeroInvoiceNumber: { type: string, nullable: true }
+        xeroAmountDue: { type: number, nullable: true }
+        xeroAmountPaid: { type: number, nullable: true }
+        xeroAmountCredited: { type: number, nullable: true }
+        xeroSyncedAt: { type: string, nullable: true }
         invoicedAt: { type: string, nullable: true }
         paidAt: { type: string, nullable: true }
         sortOrder: { type: integer }
