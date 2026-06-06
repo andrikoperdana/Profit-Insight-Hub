@@ -367,6 +367,24 @@ export const UpdateProjectReportResponse = zod.object({
     })
     .nullish(),
   healthReasons: zod.array(zod.string()).nullish(),
+  profitOutlook: zod
+    .object({
+      status: zod.enum(["PROFIT", "THIN", "LOSS_RISK"]).optional(),
+      contractValue: zod.number().optional(),
+      estimatedCost: zod.number().optional(),
+      estimatedProfit: zod.number().optional(),
+      estimatedMarginPct: zod.number().optional(),
+      actualCost: zod.number().optional(),
+      actualProfit: zod.number().optional(),
+      actualMarginPct: zod.number().optional(),
+      forecastCost: zod.number().optional(),
+      forecastProfit: zod.number().optional(),
+      forecastMarginPct: zod.number().optional(),
+    })
+    .nullish()
+    .describe(
+      "Plain-language profit\/loss outlook. Null for callers without financial visibility.",
+    ),
   spkFileUrl: zod.string().nullish(),
   spkFileName: zod.string().nullish(),
   contractFileUrl: zod.string().nullish(),
@@ -1241,6 +1259,24 @@ export const ListProjectsResponseItem = zod.object({
     })
     .nullish(),
   healthReasons: zod.array(zod.string()).nullish(),
+  profitOutlook: zod
+    .object({
+      status: zod.enum(["PROFIT", "THIN", "LOSS_RISK"]).optional(),
+      contractValue: zod.number().optional(),
+      estimatedCost: zod.number().optional(),
+      estimatedProfit: zod.number().optional(),
+      estimatedMarginPct: zod.number().optional(),
+      actualCost: zod.number().optional(),
+      actualProfit: zod.number().optional(),
+      actualMarginPct: zod.number().optional(),
+      forecastCost: zod.number().optional(),
+      forecastProfit: zod.number().optional(),
+      forecastMarginPct: zod.number().optional(),
+    })
+    .nullish()
+    .describe(
+      "Plain-language profit\/loss outlook. Null for callers without financial visibility.",
+    ),
   spkFileUrl: zod.string().nullish(),
   spkFileName: zod.string().nullish(),
   contractFileUrl: zod.string().nullish(),
@@ -1384,6 +1420,24 @@ export const GetProjectResponse = zod
       })
       .nullish(),
     healthReasons: zod.array(zod.string()).nullish(),
+    profitOutlook: zod
+      .object({
+        status: zod.enum(["PROFIT", "THIN", "LOSS_RISK"]).optional(),
+        contractValue: zod.number().optional(),
+        estimatedCost: zod.number().optional(),
+        estimatedProfit: zod.number().optional(),
+        estimatedMarginPct: zod.number().optional(),
+        actualCost: zod.number().optional(),
+        actualProfit: zod.number().optional(),
+        actualMarginPct: zod.number().optional(),
+        forecastCost: zod.number().optional(),
+        forecastProfit: zod.number().optional(),
+        forecastMarginPct: zod.number().optional(),
+      })
+      .nullish()
+      .describe(
+        "Plain-language profit\/loss outlook. Null for callers without financial visibility.",
+      ),
     spkFileUrl: zod.string().nullish(),
     spkFileName: zod.string().nullish(),
     contractFileUrl: zod.string().nullish(),
@@ -1598,6 +1652,24 @@ export const UpdateProjectResponse = zod.object({
     })
     .nullish(),
   healthReasons: zod.array(zod.string()).nullish(),
+  profitOutlook: zod
+    .object({
+      status: zod.enum(["PROFIT", "THIN", "LOSS_RISK"]).optional(),
+      contractValue: zod.number().optional(),
+      estimatedCost: zod.number().optional(),
+      estimatedProfit: zod.number().optional(),
+      estimatedMarginPct: zod.number().optional(),
+      actualCost: zod.number().optional(),
+      actualProfit: zod.number().optional(),
+      actualMarginPct: zod.number().optional(),
+      forecastCost: zod.number().optional(),
+      forecastProfit: zod.number().optional(),
+      forecastMarginPct: zod.number().optional(),
+    })
+    .nullish()
+    .describe(
+      "Plain-language profit\/loss outlook. Null for callers without financial visibility.",
+    ),
   spkFileUrl: zod.string().nullish(),
   spkFileName: zod.string().nullish(),
   contractFileUrl: zod.string().nullish(),
@@ -1642,6 +1714,21 @@ export const GetProjectFinancialsResponse = zod.object({
   netActualProfit: zod.number().optional(),
   netMarginPct: zod.number().optional(),
   overheadMultiplier: zod.number().optional(),
+  profitOutlook: zod
+    .object({
+      status: zod.enum(["PROFIT", "THIN", "LOSS_RISK"]).optional(),
+      contractValue: zod.number().optional(),
+      estimatedCost: zod.number().optional(),
+      estimatedProfit: zod.number().optional(),
+      estimatedMarginPct: zod.number().optional(),
+      actualCost: zod.number().optional(),
+      actualProfit: zod.number().optional(),
+      actualMarginPct: zod.number().optional(),
+      forecastCost: zod.number().optional(),
+      forecastProfit: zod.number().optional(),
+      forecastMarginPct: zod.number().optional(),
+    })
+    .nullish(),
   monthly: zod
     .array(
       zod.object({
@@ -1888,6 +1975,24 @@ export const ListProjectsNeedingResourceResponseItem = zod.object({
     })
     .nullish(),
   healthReasons: zod.array(zod.string()).nullish(),
+  profitOutlook: zod
+    .object({
+      status: zod.enum(["PROFIT", "THIN", "LOSS_RISK"]).optional(),
+      contractValue: zod.number().optional(),
+      estimatedCost: zod.number().optional(),
+      estimatedProfit: zod.number().optional(),
+      estimatedMarginPct: zod.number().optional(),
+      actualCost: zod.number().optional(),
+      actualProfit: zod.number().optional(),
+      actualMarginPct: zod.number().optional(),
+      forecastCost: zod.number().optional(),
+      forecastProfit: zod.number().optional(),
+      forecastMarginPct: zod.number().optional(),
+    })
+    .nullish()
+    .describe(
+      "Plain-language profit\/loss outlook. Null for callers without financial visibility.",
+    ),
   spkFileUrl: zod.string().nullish(),
   spkFileName: zod.string().nullish(),
   contractFileUrl: zod.string().nullish(),
@@ -4478,6 +4583,24 @@ export const GetTopProjectsResponseItem = zod.object({
     })
     .nullish(),
   healthReasons: zod.array(zod.string()).nullish(),
+  profitOutlook: zod
+    .object({
+      status: zod.enum(["PROFIT", "THIN", "LOSS_RISK"]).optional(),
+      contractValue: zod.number().optional(),
+      estimatedCost: zod.number().optional(),
+      estimatedProfit: zod.number().optional(),
+      estimatedMarginPct: zod.number().optional(),
+      actualCost: zod.number().optional(),
+      actualProfit: zod.number().optional(),
+      actualMarginPct: zod.number().optional(),
+      forecastCost: zod.number().optional(),
+      forecastProfit: zod.number().optional(),
+      forecastMarginPct: zod.number().optional(),
+    })
+    .nullish()
+    .describe(
+      "Plain-language profit\/loss outlook. Null for callers without financial visibility.",
+    ),
   spkFileUrl: zod.string().nullish(),
   spkFileName: zod.string().nullish(),
   contractFileUrl: zod.string().nullish(),

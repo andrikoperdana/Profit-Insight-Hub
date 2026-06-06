@@ -63,6 +63,7 @@ import { useAuth } from "@/lib/auth";
 import { RoleLabels, canViewProjectFinancials } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
 import BudgetConsumptionCard from "@/components/projects/BudgetConsumptionCard";
+import { ProfitOutlookCompact, type ProfitOutlook } from "@/components/projects/ProfitOutlookPanel";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -471,6 +472,7 @@ function OverviewTab({ project }: { project: any }) {
                           label={project.healthLabel ?? null}
                           reasons={project.healthReasons ?? null}
                           components={(project as any).healthComponents ?? null}
+                          showLabel
                         />
                       </div>
                     )}
@@ -478,6 +480,11 @@ function OverviewTab({ project }: { project: any }) {
                       <ul className="text-[11px] text-muted-foreground space-y-0.5 list-disc list-inside pl-1">
                         {project.healthReasons.slice(0, 4).map((r: string, i: number) => <li key={i}>{r}</li>)}
                       </ul>
+                    )}
+                    {(project as any).profitOutlook && (
+                      <div className="pt-3 border-t border-border">
+                        <ProfitOutlookCompact outlook={(project as any).profitOutlook as ProfitOutlook} />
+                      </div>
                     )}
                   </>
                 ) : null}

@@ -57,18 +57,26 @@ const HEALTH_LABELS: Record<keyof HealthComponents, string> = {
   schedule: "Schedule",
 };
 
+const HEALTH_FRIENDLY: Record<"HEALTHY" | "AT_RISK" | "CRITICAL", string> = {
+  HEALTHY: "Healthy",
+  AT_RISK: "At Risk",
+  CRITICAL: "Critical",
+};
+
 export function HealthBadge({
   score,
   label,
   reasons,
   components,
   className,
+  showLabel,
 }: {
   score: number | null | undefined;
   label?: "HEALTHY" | "AT_RISK" | "CRITICAL" | null;
   reasons?: string[] | null;
   components?: HealthComponents | null;
   className?: string;
+  showLabel?: boolean;
 }) {
   if (score == null) return <span className="text-muted-foreground">-</span>;
   const colorClass =
@@ -77,6 +85,7 @@ export function HealthBadge({
       : label === "AT_RISK"
         ? "bg-amber-500/10 text-amber-500 border-amber-500/30"
         : "bg-red-500/10 text-red-500 border-red-500/30";
+  const friendly = label ? HEALTH_FRIENDLY[label] : null;
 
   const rows = components
     ? (Object.keys(HEALTH_MAX) as (keyof HealthComponents)[]).map((k) => ({
@@ -100,11 +109,19 @@ export function HealthBadge({
             variant="outline"
             className={cn(
               "font-bold tabular-nums cursor-pointer hover:opacity-90",
+              showLabel && "gap-1.5",
               colorClass,
               className,
             )}
           >
-            {score}
+            {showLabel && friendly ? (
+              <>
+                <span>{friendly}</span>
+                <span className="font-mono opacity-70">{score}/100</span>
+              </>
+            ) : (
+              score
+            )}
           </Badge>
         </button>
       </PopoverTrigger>

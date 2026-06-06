@@ -57,6 +57,7 @@ import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
 import { LoadingPage } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
 import { PdfUploadField, type PdfFileData } from "@/components/common/PdfUploadField";
+import { ProfitOutlookPanel, type ProfitOutlook } from "@/components/projects/ProfitOutlookPanel";
 import { useAuth } from "@/lib/auth";
 import { RoleLabels, canViewProjectFinancials } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
@@ -97,6 +98,9 @@ function FinancialsTab({ projectId }: { projectId: string }) {
 
   return (
     <div className="space-y-6">
+      {f.profitOutlook && (
+        <ProfitOutlookPanel outlook={f.profitOutlook as ProfitOutlook} />
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <FinancialCard
           icon={<DollarSign className="h-4 w-4 text-primary" />}

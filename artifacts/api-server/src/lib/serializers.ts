@@ -205,6 +205,7 @@ export function serializeProject(project: ProjectWithRelations, callerRole?: str
   const m = computeMetrics(project);
   const includeFinancials = canViewProjectFinancials(callerRole ?? "MANAGEMENT");
   const health = includeFinancials ? computeHealthScore(project, m) : null;
+  const profitOutlook = includeFinancials ? computeProfitOutlook(project, m) : null;
   const financials = includeFinancials
     ? {
         contractValue: project.contractValue,
@@ -283,6 +284,7 @@ export function serializeProject(project: ProjectWithRelations, callerRole?: str
     healthLabel: health?.label ?? null,
     healthComponents: health?.components ?? null,
     healthReasons: health?.reasons ?? null,
+    profitOutlook,
     lastStatusReason: project.lastStatusReason ?? null,
     useWorkstreams: (project as any).useWorkstreams ?? false,
     createdAt: project.createdAt.toISOString(),
@@ -440,5 +442,101 @@ export function computeHealthScore(
       schedule: schedulePts,
     },
     reasons,
+  };
+}
+
+// --- Profit outlook --------------------------------------------------------
+// A plain-language "will this project make a profit?" view that compares three
+// snapshots: the initial estimate captured at intake, the actual result so far,
+// and the projected final result. Used by the Profit Outlook panel.
+
+export type ProfitOutlookStatus = "PROFIT" | "THIN" | "LOSS_RISK";
+
+export interface ProfitOutlook {
+  status: ProfitOutlookStatus;
+  contractValue: number;
+  estimatedCost: number;
+  estimatedProfit: number;
+  estimatedMarginPct: number;
+  actualCost: number;
+  actualProfit: number;
+  actualMarginPct: number;
+  forecastCost: number;
+  forecastProfit: number;
+  forecastMarginPct: number;
+}
+
+// A project whose projected final margin is below this percentage is flagged as
+// having a "thin" margin; a projected loss is flagged as a loss risk.
+const THIN_MARGIN_PCT = 10;
+
+/**
+ * Linear burn-rate projection of the final cost: scale the observed average
+ * daily rate across the full planned mandays, then add fixed expenses. Returns
+ * the burn-rate forecast regardless of whether any work has been logged yet.
+ */
+export function computeBurnRateForecast(
+  project: ProjectWithRelations,
+  metrics: ProjectMetrics,
+): { forecastCost: number; forecastProfit: number } {
+  const projectedMandays = Math.max(project.plannedMandays, metrics.actualMandays);
+  const avgRate =
+    metrics.actualMandays > 0
+      ? metrics.resourceCost / metrics.actualMandays
+      : project.resources.length > 0
+        ? project.resources.reduce((s, r) => s + r.dailyRate, 0) / project.resources.length
+        : 0;
+  const forecastCost = projectedMandays * avgRate + metrics.additionalCost;
+  const forecastProfit = project.contractValue - forecastCost;
+  return { forecastCost, forecastProfit };
+}
+
+export function computeProfitOutlook(
+  project: ProjectWithRelations,
+  metrics: ProjectMetrics,
+): ProfitOutlook {
+  const contractValue = project.contractValue;
+  const estimatedCost = project.estimatedCost;
+  const estimatedProfit = contractValue - estimatedCost;
+  const actualCost = metrics.actualCost;
+  const actualProfit = metrics.actualProfit;
+
+  // Projected final outcome: once any work is logged, project forward from the
+  // burn rate; before any actuals exist the best estimate of the final result
+  // is the initial estimate captured at intake (avoids reporting near-100%
+  // profit just because no cost has accrued yet).
+  let forecastCost: number;
+  let forecastProfit: number;
+  if (metrics.actualMandays > 0) {
+    const f = computeBurnRateForecast(project, metrics);
+    forecastCost = f.forecastCost;
+    forecastProfit = f.forecastProfit;
+  } else {
+    forecastCost = estimatedCost;
+    forecastProfit = estimatedProfit;
+  }
+
+  const pct = (profit: number) => (contractValue > 0 ? (profit / contractValue) * 100 : 0);
+  const estimatedMarginPct = pct(estimatedProfit);
+  const actualMarginPct = pct(actualProfit);
+  const forecastMarginPct = pct(forecastProfit);
+
+  let status: ProfitOutlookStatus;
+  if (forecastProfit < 0) status = "LOSS_RISK";
+  else if (forecastMarginPct < THIN_MARGIN_PCT) status = "THIN";
+  else status = "PROFIT";
+
+  return {
+    status,
+    contractValue,
+    estimatedCost,
+    estimatedProfit,
+    estimatedMarginPct,
+    actualCost,
+    actualProfit,
+    actualMarginPct,
+    forecastCost,
+    forecastProfit,
+    forecastMarginPct,
   };
 }

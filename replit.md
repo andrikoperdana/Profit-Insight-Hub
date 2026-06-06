@@ -63,6 +63,9 @@ Editable by MGMT/assigned-PM/Sales-owner unless noted. Each tab has its own rout
 - `additionalCost` = Σ APPROVED `ProjectExpense.amount`
 - `actualCost = resourceCost + additionalCost`; `actualProfit = contractValue − actualCost`; `marginPct = actualProfit / contractValue × 100`
 - Forecast: linear projection from burn rate. `/api/projects/:id/financials` aggregates approved timesheets per month vs contract value spread across active months.
+- **Forecast single source of truth**: `computeBurnRateForecast()` + `computeProfitOutlook()` (serializers.ts). `/financials`, `/whatif` base, and `serializeProject.profitOutlook` all derive forecastCost/forecastProfit from these — never recompute inline. When `actualMandays === 0` the forecast falls back to the intake estimate (avoids reporting ~100% profit before any cost accrues).
+- **Profit Outlook** (`computeProfitOutlook`): plain-language "will this profit?" view comparing Initial Estimate → Actual (so far) → Projected (final), each with profit/loss IDR + margin %. Status `PROFIT` / `THIN` (forecast margin < `THIN_MARGIN_PCT` 10%) / `LOSS_RISK` (forecast profit < 0). Returned as `profitOutlook` on Project (null for `FINANCIALS_BLOCKED_ROLES`) and ProjectFinancials. FE: `ProfitOutlookPanel` (full, top of FinancialsTab) + `ProfitOutlookCompact` (OverviewTab).
+- **Project Health** (`computeHealthScore`, 0-100, HEALTHY/AT_RISK/CRITICAL; margin30/raid20/expenses15/billing20/schedule15) surfaced via `HealthBadge` (pass `showLabel` for friendly "At Risk · 72/100" form). Both Health + Outlook gated by `canViewProjectFinancials`.
 
 ## Hierarchy & Principal
 

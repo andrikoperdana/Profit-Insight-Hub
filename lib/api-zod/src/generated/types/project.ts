@@ -8,6 +8,7 @@
 import type { ProjectHealthComponents } from "./projectHealthComponents";
 import type { ProjectHealthLabel } from "./projectHealthLabel";
 import type { ProjectKind } from "./projectKind";
+import type { ProjectProfitOutlook } from "./projectProfitOutlook";
 import type { ProjectStatus } from "./projectStatus";
 
 export interface Project {
@@ -63,6 +64,8 @@ export interface Project {
   healthLabel?: ProjectHealthLabel;
   healthComponents?: ProjectHealthComponents;
   healthReasons?: string[] | null;
+  /** Plain-language profit/loss outlook. Null for callers without financial visibility. */
+  profitOutlook?: ProjectProfitOutlook;
   spkFileUrl?: string | null;
   spkFileName?: string | null;
   contractFileUrl?: string | null;

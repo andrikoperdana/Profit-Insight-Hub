@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { MonthlyFinancialPoint } from "./monthlyFinancialPoint";
+import type { ProjectFinancialsProfitOutlook } from "./projectFinancialsProfitOutlook";
 
 export interface ProjectFinancials {
   projectId: string;
@@ -31,5 +32,6 @@ export interface ProjectFinancials {
   netActualProfit?: number;
   netMarginPct?: number;
   overheadMultiplier?: number;
+  profitOutlook?: ProjectFinancialsProfitOutlook;
   monthly?: MonthlyFinancialPoint[];
 }

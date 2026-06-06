@@ -7,6 +7,7 @@ import {
   serializeProject,
   projectInclude,
   computeMetrics,
+  computeProfitOutlook,
   canViewProjectFinancials,
   canViewDailyRate,
 } from "../lib/serializers.js";
@@ -834,10 +835,14 @@ router.get("/projects/:id/whatif", async (req, res) => {
     return;
   }
   const m = computeMetrics(p);
-  // Forecast labor rate uses ONLY resource (timesheet) cost so that fixed
+  // Base forecast comes from the shared Profit Outlook so the What-If "base"
+  // always matches the Forecasted Final Profit shown elsewhere in Financials
+  // (including the no-actuals fallback to the intake estimate).
+  const outlook = computeProfitOutlook(p, m);
+  // Marginal labor rate uses ONLY resource (timesheet) cost so that fixed
   // one-off additional expenses (software/hardware purchases) are not
   // converted into a pseudo daily-rate and double-extrapolated across
-  // future mandays. Additional expenses are added on top as a fixed term.
+  // future mandays. Added mandays are charged at this rate on top of the base.
   const avgRate =
     m.actualMandays > 0
       ? m.resourceCost / m.actualMandays
@@ -846,13 +851,12 @@ router.get("/projects/:id/whatif", async (req, res) => {
         : 0;
 
   const baseProjectedMandays = Math.max(p.plannedMandays, m.actualMandays);
-  const baseForecastCost = baseProjectedMandays * avgRate + m.additionalCost;
-  const baseForecastProfit = p.contractValue - baseForecastCost;
-  const baseMarginPct =
-    p.contractValue > 0 ? (baseForecastProfit / p.contractValue) * 100 : 0;
+  const baseForecastCost = outlook.forecastCost;
+  const baseForecastProfit = outlook.forecastProfit;
+  const baseMarginPct = outlook.forecastMarginPct;
 
   const scenarioMandays = baseProjectedMandays + addMandays;
-  const scenarioCost = scenarioMandays * avgRate + m.additionalCost;
+  const scenarioCost = baseForecastCost + addMandays * avgRate;
   const scenarioProfit = p.contractValue - scenarioCost;
   const scenarioMarginPct =
     p.contractValue > 0 ? (scenarioProfit / p.contractValue) * 100 : 0;
@@ -928,20 +932,12 @@ router.get("/projects/:id/financials", async (req, res) => {
 
   const burnRatePct = m.burnRatePct;
 
-  // Forecast: linear projection — if you've burned X% of mandays,
-  // assume cost scales to fully consume planned mandays at current rate.
-  // Use resourceCost (timesheet-derived) for rate so fixed additional
-  // expenses (software/hardware) are not extrapolated; add them as a
-  // fixed term to the forecast total.
-  const projectedMandays = Math.max(p.plannedMandays, m.actualMandays);
-  const avgRate =
-    m.actualMandays > 0
-      ? m.resourceCost / m.actualMandays
-      : p.resources.length > 0
-        ? p.resources.reduce((s, r) => s + r.dailyRate, 0) / p.resources.length
-        : 0;
-  const forecastCost = projectedMandays * avgRate + m.additionalCost;
-  const forecastProfit = p.contractValue - forecastCost;
+  // Forecast & plain-language profit outlook share one source of truth. The
+  // outlook projects forward from the burn rate once work is logged, and falls
+  // back to the intake estimate before any actuals exist.
+  const profitOutlook = computeProfitOutlook(p, m);
+  const forecastCost = profitOutlook.forecastCost;
+  const forecastProfit = profitOutlook.forecastProfit;
 
   // Monthly aggregation of approved timesheets
   const monthlyMap = new Map<string, { cost: number; revenue: number }>();
@@ -996,6 +992,7 @@ router.get("/projects/:id/financials", async (req, res) => {
     netActualProfit: m.netActualProfit,
     netMarginPct: m.netMarginPct,
     overheadMultiplier: m.overheadMultiplier,
+    profitOutlook,
     monthly,
   });
 });

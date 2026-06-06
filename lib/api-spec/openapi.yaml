@@ -2988,6 +2988,22 @@ components:
           type: array
           nullable: true
           items: { type: string }
+        profitOutlook:
+          type: object
+          nullable: true
+          description: Plain-language profit/loss outlook. Null for callers without financial visibility.
+          properties:
+            status: { type: string, enum: [PROFIT, THIN, LOSS_RISK] }
+            contractValue: { type: number }
+            estimatedCost: { type: number }
+            estimatedProfit: { type: number }
+            estimatedMarginPct: { type: number }
+            actualCost: { type: number }
+            actualProfit: { type: number }
+            actualMarginPct: { type: number }
+            forecastCost: { type: number }
+            forecastProfit: { type: number }
+            forecastMarginPct: { type: number }
         spkFileUrl: { type: string, nullable: true }
         spkFileName: { type: string, nullable: true }
         contractFileUrl: { type: string, nullable: true }
@@ -3640,6 +3656,21 @@ components:
         netActualProfit: { type: number }
         netMarginPct: { type: number }
         overheadMultiplier: { type: number }
+        profitOutlook:
+          type: object
+          nullable: true
+          properties:
+            status: { type: string, enum: [PROFIT, THIN, LOSS_RISK] }
+            contractValue: { type: number }
+            estimatedCost: { type: number }
+            estimatedProfit: { type: number }
+            estimatedMarginPct: { type: number }
+            actualCost: { type: number }
+            actualProfit: { type: number }
+            actualMarginPct: { type: number }
+            forecastCost: { type: number }
+            forecastProfit: { type: number }
+            forecastMarginPct: { type: number }
         monthly:
           type: array
           items: { $ref: "#/components/schemas/MonthlyFinancialPoint" }

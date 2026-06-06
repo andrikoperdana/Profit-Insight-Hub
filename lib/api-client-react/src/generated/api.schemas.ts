@@ -694,6 +694,32 @@ export type ProjectHealthComponents = {
   schedule?: number;
 } | null;
 
+export type ProjectProfitOutlookStatus =
+  (typeof ProjectProfitOutlookStatus)[keyof typeof ProjectProfitOutlookStatus];
+
+export const ProjectProfitOutlookStatus = {
+  PROFIT: "PROFIT",
+  THIN: "THIN",
+  LOSS_RISK: "LOSS_RISK",
+} as const;
+
+/**
+ * Plain-language profit/loss outlook. Null for callers without financial visibility.
+ */
+export type ProjectProfitOutlook = {
+  status?: ProjectProfitOutlookStatus;
+  contractValue?: number;
+  estimatedCost?: number;
+  estimatedProfit?: number;
+  estimatedMarginPct?: number;
+  actualCost?: number;
+  actualProfit?: number;
+  actualMarginPct?: number;
+  forecastCost?: number;
+  forecastProfit?: number;
+  forecastMarginPct?: number;
+} | null;
+
 export interface Project {
   id: string;
   code: string;
@@ -747,6 +773,8 @@ export interface Project {
   healthLabel?: ProjectHealthLabel;
   healthComponents?: ProjectHealthComponents;
   healthReasons?: string[] | null;
+  /** Plain-language profit/loss outlook. Null for callers without financial visibility. */
+  profitOutlook?: ProjectProfitOutlook;
   spkFileUrl?: string | null;
   spkFileName?: string | null;
   contractFileUrl?: string | null;
@@ -1439,6 +1467,29 @@ export interface CreateDocumentBody {
   notes?: string;
 }
 
+export type ProjectFinancialsProfitOutlookStatus =
+  (typeof ProjectFinancialsProfitOutlookStatus)[keyof typeof ProjectFinancialsProfitOutlookStatus];
+
+export const ProjectFinancialsProfitOutlookStatus = {
+  PROFIT: "PROFIT",
+  THIN: "THIN",
+  LOSS_RISK: "LOSS_RISK",
+} as const;
+
+export type ProjectFinancialsProfitOutlook = {
+  status?: ProjectFinancialsProfitOutlookStatus;
+  contractValue?: number;
+  estimatedCost?: number;
+  estimatedProfit?: number;
+  estimatedMarginPct?: number;
+  actualCost?: number;
+  actualProfit?: number;
+  actualMarginPct?: number;
+  forecastCost?: number;
+  forecastProfit?: number;
+  forecastMarginPct?: number;
+} | null;
+
 export interface MonthlyFinancialPoint {
   month: string;
   cost: number;
@@ -1469,6 +1520,7 @@ export interface ProjectFinancials {
   netActualProfit?: number;
   netMarginPct?: number;
   overheadMultiplier?: number;
+  profitOutlook?: ProjectFinancialsProfitOutlook;
   monthly?: MonthlyFinancialPoint[];
 }
 
