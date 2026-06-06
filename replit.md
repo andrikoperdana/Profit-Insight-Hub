@@ -37,7 +37,7 @@ Management (PMO Director), Project Manager, Sales, Konsultan, Technical Writer, 
 
 **COMPLETE transition gate** (same handler; all roles): any non-COMPLETE→COMPLETE move requires all tasks DONE, no `Timesheet` in SUBMITTED, no `ProjectExpense` in PENDING, no `BillingMilestone` still PLANNED, no `ProjectRaidItem` still OPEN, and ≥1 latest BAST `Document`. `statusChangeReason` already enforced earlier. Fails 400 `COMPLETION_REQUIREMENTS_INCOMPLETE` with a `missing[]` list.
 
-Intake: Sales fills 4-field form at `/projects/new` (server forces `status=DRAFT`, `salesId`, `pmId=null`). MGMT assigns PM (409 if already set). PM uses `DraftCompletionCard` to fill description/dates/revenue/mandays/cost → OBSERVATION.
+Intake: Sales fills the form at `/projects/new` (server forces `status=DRAFT`, `salesId`, `pmId=null`). Form includes a **required Resource Requirements** section: budget-only rows (role, headcount, mandays/person, daily rate — no person picker; no `ProjectResource` created) that compute total mandays + initial estimated cost/profit, sent as `estimatedCost`/`plannedMandays` on both create paths (manual `POST /api/projects` and `POST /api/leads/:id/convert`). Server enforces `plannedMandays > 0` for Sales create and for lead convert so the initial cost can't be bypassed. PM later assigns real people in the Resources tab. MGMT assigns PM (409 if already set). PM uses `DraftCompletionCard` to fill/adjust description/dates/revenue/mandays/cost → OBSERVATION.
 
 `PATCH /api/projects/:id` (`routes/projects.ts`):
 - **SALES** (own only): on DRAFT may edit `{code,name,description,clientId,contractValue}`; on other statuses same fields, no people/client/status changes.

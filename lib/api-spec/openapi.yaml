@@ -2879,6 +2879,8 @@ components:
         contractValue: { type: number, nullable: true }
         vatPercent: { type: number, nullable: true }
         contractValueIncludesVat: { type: boolean, nullable: true }
+        estimatedCost: { type: number, nullable: true }
+        plannedMandays: { type: number, nullable: true }
         description: { type: string, nullable: true }
         spkFileUrl: { type: string, nullable: true }
         spkFileName: { type: string, nullable: true }

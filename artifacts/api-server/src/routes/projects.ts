@@ -210,6 +210,13 @@ router.post("/projects", requireRole(...writeRoles), validateBody(CreateProjectB
   // Sales-role submissions are always DRAFT, owned by the submitting Sales,
   // and cannot pre-assign a PM. PMO Director assigns the PM later.
   const isSales = req.user!.role === "SALES";
+  // Sales intake must capture initial resource requirements so the project has
+  // an initial estimated cost/profit at creation time. Enforce server-side so
+  // the requirement cannot be bypassed by calling the API directly.
+  if (isSales && !(pm > 0)) {
+    res.status(400).json({ error: "Resource requirements are required: planned mandays must be greater than 0" });
+    return;
+  }
   const status: ProjectStatus = isSales
     ? "DRAFT"
     : ((b.status as ProjectStatus) || "DRAFT");

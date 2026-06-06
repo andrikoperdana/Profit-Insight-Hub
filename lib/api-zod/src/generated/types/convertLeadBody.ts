@@ -13,6 +13,8 @@ export interface ConvertLeadBody {
   contractValue?: number | null;
   vatPercent?: number | null;
   contractValueIncludesVat?: boolean | null;
+  estimatedCost?: number | null;
+  plannedMandays?: number | null;
   description?: string | null;
   spkFileUrl?: string | null;
   spkFileName?: string | null;

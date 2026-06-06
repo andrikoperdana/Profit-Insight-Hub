@@ -77,6 +77,13 @@ export default function NewProject() {
 /* Sales: minimal intake form (Project Name + SPK + Client)           */
 /* ------------------------------------------------------------------ */
 
+const salesResourceRowSchema = z.object({
+  role: z.string().min(1, "Role required"),
+  headcount: z.coerce.number().min(1, "At least 1"),
+  mandaysPerPerson: z.coerce.number().min(0.5, "At least 0.5"),
+  dailyRate: z.coerce.number().min(0, "Daily rate must be >= 0"),
+});
+
 const salesIntakeSchema = z.object({
   code: z.string().min(2, "SPK/PO Number is required"),
   name: z.string().min(3, "Project name is required"),
@@ -84,6 +91,7 @@ const salesIntakeSchema = z.object({
   contractValue: z.coerce.number().min(0, "Project value cannot be negative"),
   vatPercent: z.coerce.number().min(0).max(100),
   contractValueIncludesVat: z.boolean(),
+  resources: z.array(salesResourceRowSchema).min(1, "Add at least one resource requirement"),
 });
 type SalesIntake = z.infer<typeof salesIntakeSchema>;
 
@@ -142,8 +150,32 @@ function SalesIntakeForm() {
 
   const form = useForm<SalesIntake>({
     resolver: zodResolver(salesIntakeSchema),
-    defaultValues: { code: "", name: "", clientId: "", contractValue: 0, vatPercent: 11, contractValueIncludesVat: true },
+    defaultValues: {
+      code: "",
+      name: "",
+      clientId: "",
+      contractValue: 0,
+      vatPercent: 11,
+      contractValueIncludesVat: true,
+      resources: [{ role: "KONSULTAN", headcount: 1, mandaysPerPerson: 10, dailyRate: ROLE_RATES.KONSULTAN.rate }],
+    },
   });
+
+  const { fields, append, remove } = useFieldArray({ control: form.control, name: "resources" });
+
+  const watchedResources = form.watch("resources");
+  const totals = (watchedResources || []).reduce(
+    (acc, r) => {
+      const head = Number(r.headcount || 0);
+      const md = Number(r.mandaysPerPerson || 0);
+      const rate = Number(r.dailyRate || 0);
+      const totalMandays = head * md;
+      acc.mandays += totalMandays;
+      acc.cost += totalMandays * rate;
+      return acc;
+    },
+    { mandays: 0, cost: 0 },
+  );
 
   const [spkFile, setSpkFile] = useState<{ url: string; name: string } | null>(null);
   const [contractFile, setContractFile] = useState<{ url: string; name: string } | null>(null);
@@ -173,6 +205,8 @@ function SalesIntakeForm() {
           contractValue: data.contractValue,
           vatPercent: data.vatPercent,
           contractValueIncludesVat: data.contractValueIncludesVat,
+          estimatedCost: totals.cost,
+          plannedMandays: totals.mandays,
           description: description || null,
           spkFileUrl: spkFile?.url ?? null,
           spkFileName: spkFile?.name ?? null,
@@ -190,6 +224,8 @@ function SalesIntakeForm() {
         contractValue: data.contractValue,
         vatPercent: data.vatPercent,
         contractValueIncludesVat: data.contractValueIncludesVat,
+        estimatedCost: totals.cost,
+        plannedMandays: totals.mandays,
         status: ProjectStatus.DRAFT,
         description: description || undefined,
         spkFileUrl: spkFile?.url ?? null,
@@ -205,6 +241,8 @@ function SalesIntakeForm() {
   const watchedIncludes = form.watch("contractValueIncludesVat");
   const dppPreview = watchedIncludes ? watchedCv / (1 + watchedVat / 100) : watchedCv;
   const ppnPreview = watchedIncludes ? watchedCv - dppPreview : watchedCv * (watchedVat / 100);
+  const estimatedProfit = watchedCv - totals.cost;
+  const marginPct = watchedCv > 0 ? (estimatedProfit / watchedCv) * 100 : 0;
 
   if (loadingClients) return <LoadingPage />;
 
@@ -414,6 +452,129 @@ function SalesIntakeForm() {
                 onChange={setContractFile}
                 testId="upload-intake-contract"
               />
+            </CardContent>
+          </Card>
+
+          <Card className="border-border shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between gap-4">
+              <div>
+                <CardTitle>Resource Requirements</CardTitle>
+                <CardDescription>
+                  Enter the team you expect to use and their rates. This sets the project's initial estimated cost and profit. The assigned PM can adjust resources later as the project runs.
+                </CardDescription>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="shrink-0"
+                onClick={() => append({ role: "KONSULTAN", headcount: 1, mandaysPerPerson: 5, dailyRate: ROLE_RATES.KONSULTAN.rate })}
+                data-testid="button-add-resource-row"
+              >
+                <Plus className="h-4 w-4 mr-2" /> Add Row
+              </Button>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-muted/50 text-muted-foreground">
+                    <tr>
+                      <th className="text-left p-2 font-medium">Role</th>
+                      <th className="text-right p-2 font-medium w-28">Headcount</th>
+                      <th className="text-right p-2 font-medium w-32">Mandays/Person</th>
+                      <th className="text-right p-2 font-medium w-40">Daily Rate</th>
+                      <th className="text-right p-2 font-medium w-40">Subtotal Cost</th>
+                      <th className="w-12"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {fields.map((f, idx) => {
+                      const r = watchedResources?.[idx];
+                      const head = Number(r?.headcount || 0);
+                      const md = Number(r?.mandaysPerPerson || 0);
+                      const rate = Number(r?.dailyRate || 0);
+                      const subtotal = head * md * rate;
+                      return (
+                        <tr key={f.id} className="border-t border-border">
+                          <td className="p-2">
+                            <FormField
+                              control={form.control}
+                              name={`resources.${idx}.role`}
+                              render={({ field }) => (
+                                <Select
+                                  onValueChange={(v) => {
+                                    field.onChange(v);
+                                    const defaultRate = ROLE_RATES[v]?.rate;
+                                    if (defaultRate !== undefined) {
+                                      form.setValue(`resources.${idx}.dailyRate`, defaultRate, { shouldDirty: true });
+                                    }
+                                  }}
+                                  value={field.value}
+                                >
+                                  <SelectTrigger className="h-9" data-testid={`select-resource-role-${idx}`}><SelectValue /></SelectTrigger>
+                                  <SelectContent>
+                                    {Object.entries(ROLE_RATES).map(([key, v]) => (
+                                      <SelectItem key={key} value={key}>{v.label}</SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              )}
+                            />
+                          </td>
+                          <td className="p-2">
+                            <FormField
+                              control={form.control}
+                              name={`resources.${idx}.headcount`}
+                              render={({ field }) => (
+                                <Input type="number" min={1} step={1} className="h-9 text-right font-mono" {...field} />
+                              )}
+                            />
+                          </td>
+                          <td className="p-2">
+                            <FormField
+                              control={form.control}
+                              name={`resources.${idx}.mandaysPerPerson`}
+                              render={({ field }) => (
+                                <Input type="number" min={0.5} step={0.5} className="h-9 text-right font-mono" {...field} />
+                              )}
+                            />
+                          </td>
+                          <td className="p-2">
+                            <FormField
+                              control={form.control}
+                              name={`resources.${idx}.dailyRate`}
+                              render={({ field }) => (
+                                <Input type="number" min={0} step={50000} className="h-9 text-right font-mono" data-testid={`input-daily-rate-${idx}`} {...field} />
+                              )}
+                            />
+                          </td>
+                          <td className="p-2 text-right font-mono">{formatIDR(subtotal)}</td>
+                          <td className="p-2">
+                            <Button type="button" variant="ghost" size="icon" onClick={() => fields.length > 1 && remove(idx)} disabled={fields.length === 1}>
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              {form.formState.errors.resources?.message && (
+                <p className="text-sm text-destructive">{form.formState.errors.resources.message}</p>
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 pt-4 border-t border-border">
+                <SummaryStat label="Total Mandays" value={`${totals.mandays.toFixed(1)}`} />
+                <SummaryStat label="Estimated Operational Cost" value={formatIDR(totals.cost)} mono />
+                <SummaryStat label="Revenue" value={formatIDR(watchedCv)} mono />
+                <SummaryStat
+                  label="Estimated Profit"
+                  value={`${formatIDR(estimatedProfit)} (${marginPct.toFixed(1)}%)`}
+                  mono
+                  highlight={estimatedProfit >= 0 ? "good" : "bad"}
+                />
+              </div>
             </CardContent>
           </Card>
 

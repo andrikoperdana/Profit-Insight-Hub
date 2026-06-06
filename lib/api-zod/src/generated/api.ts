@@ -1094,6 +1094,8 @@ export const ConvertLeadBody = zod.object({
   contractValue: zod.number().nullish(),
   vatPercent: zod.number().nullish(),
   contractValueIncludesVat: zod.boolean().nullish(),
+  estimatedCost: zod.number().nullish(),
+  plannedMandays: zod.number().nullish(),
   description: zod.string().nullish(),
   spkFileUrl: zod.string().nullish(),
   spkFileName: zod.string().nullish(),

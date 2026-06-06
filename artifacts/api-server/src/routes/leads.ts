@@ -526,6 +526,26 @@ router.post("/leads/:id/convert", requireRole("SALES"), async (req: AuthedReques
       return;
     }
   }
+  if (body.estimatedCost !== undefined && body.estimatedCost !== null && body.estimatedCost !== "") {
+    const ec = Number(body.estimatedCost);
+    if (Number.isNaN(ec) || ec < 0) {
+      res.status(400).json({ error: "estimatedCost must be a non-negative number" });
+      return;
+    }
+  }
+  // Lead conversion is Sales-only and must capture initial resource requirements
+  // (planned mandays) so the converted project has an initial estimated cost.
+  const convertPlannedMandays = Number(body.plannedMandays);
+  if (
+    body.plannedMandays === undefined ||
+    body.plannedMandays === null ||
+    body.plannedMandays === "" ||
+    Number.isNaN(convertPlannedMandays) ||
+    !(convertPlannedMandays > 0)
+  ) {
+    res.status(400).json({ error: "Resource requirements are required: planned mandays must be greater than 0" });
+    return;
+  }
   let validatedSpkUrl: string | null | undefined = undefined;
   let validatedContractUrl: string | null | undefined = undefined;
   try {
@@ -575,6 +595,14 @@ router.post("/leads/:id/convert", requireRole("SALES"), async (req: AuthedReques
         typeof body.description === "string" && body.description.trim().length > 0
           ? body.description
           : fresh.notes || null;
+      const estimatedCostOverride =
+        body.estimatedCost !== undefined && body.estimatedCost !== null && body.estimatedCost !== ""
+          ? Number(body.estimatedCost)
+          : null;
+      const plannedMandaysOverride =
+        body.plannedMandays !== undefined && body.plannedMandays !== null && body.plannedMandays !== ""
+          ? Number(body.plannedMandays)
+          : null;
 
       const project = await tx.project.create({
         data: {
@@ -588,6 +616,12 @@ router.post("/leads/:id/convert", requireRole("SALES"), async (req: AuthedReques
               ? contractValueOverride
               : fresh.estimatedValue,
           description: descriptionOverride,
+          ...(estimatedCostOverride !== null && !Number.isNaN(estimatedCostOverride)
+            ? { estimatedCost: estimatedCostOverride }
+            : {}),
+          ...(plannedMandaysOverride !== null && !Number.isNaN(plannedMandaysOverride)
+            ? { plannedMandays: plannedMandaysOverride }
+            : {}),
           ...(vatPercent !== undefined && !Number.isNaN(vatPercent) ? { vatPercent } : {}),
           ...(contractValueIncludesVat !== undefined ? { contractValueIncludesVat } : {}),
           ...(validatedSpkUrl !== undefined ? { spkFileUrl: validatedSpkUrl } : {}),
