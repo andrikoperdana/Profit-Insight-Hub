@@ -65,6 +65,7 @@ export type AuditAction =
   | "xero.disconnected"
   | "client.xero_synced"
   | "invoice_settings.updated"
+  | "app_settings.updated"
   | "project.report_updated"
   | "project_report.created"
   | "project_report.updated"
@@ -109,6 +110,7 @@ export type EntityType =
   | "ProjectWorkstream"
   | "ProjectReport"
   | "InvoiceSetting"
+  | "AppSetting"
   | "Client"
   | "XeroConnection"
   | "System";

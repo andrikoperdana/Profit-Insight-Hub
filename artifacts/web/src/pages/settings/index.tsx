@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LoadingPage } from "@/components/common/Loading";
-import { Calendar, Copy, RefreshCw, Check, KeyRound, Upload, Trash2, Link2, Unlink, Loader2 } from "lucide-react";
+import { Calendar, Copy, RefreshCw, Check, KeyRound, Upload, Trash2, Link2, Unlink, Loader2, SlidersHorizontal } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const AVATAR_MAX_BYTES = 300 * 1024;
@@ -468,6 +468,117 @@ function XeroIntegrationCard() {
   );
 }
 
+interface AppSettingsShape {
+  defaultVatPercent: number;
+  timesheetBackdateDays: number;
+}
+
+function BusinessRulesCard() {
+  const { toast } = useToast();
+  const [vat, setVat] = useState("");
+  const [days, setDays] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const s = await customFetch<AppSettingsShape>("/api/app-settings");
+        if (!active) return;
+        setVat(String(s.defaultVatPercent));
+        setDays(String(s.timesheetBackdateDays));
+      } catch (e: any) {
+        if (active) toast({ title: "Failed to load business rules", description: e?.message, variant: "destructive" });
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [toast]);
+
+  const save = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (saving) return;
+    const vatNum = Number(vat);
+    const daysNum = Number(days);
+    if (!Number.isFinite(vatNum) || vatNum < 0 || vatNum > 100) {
+      toast({ title: "Invalid VAT", description: "Default VAT must be between 0 and 100.", variant: "destructive" });
+      return;
+    }
+    if (!Number.isInteger(daysNum) || daysNum < 0 || daysNum > 60) {
+      toast({ title: "Invalid limit", description: "Timesheet backdate days must be a whole number between 0 and 60.", variant: "destructive" });
+      return;
+    }
+    setSaving(true);
+    try {
+      await customFetch("/api/app-settings", {
+        method: "PUT",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ defaultVatPercent: vatNum, timesheetBackdateDays: daysNum }),
+      });
+      toast({ title: "Business rules saved", description: "New defaults apply to future entries." });
+    } catch (e: any) {
+      toast({ title: "Failed to save", description: e?.message ?? "Unknown error", variant: "destructive" });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <Card className="border-border shadow-sm">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <SlidersHorizontal className="h-5 w-5 text-primary" /> Business Rules
+        </CardTitle>
+        <CardDescription>
+          Configure organisation-wide defaults. The VAT percent applies to newly created projects;
+          the timesheet limit controls how many working days back staff may log time.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {loading ? (
+          <p className="text-sm text-muted-foreground">Loading…</p>
+        ) : (
+          <form className="space-y-4 max-w-md" onSubmit={save}>
+            <div className="space-y-1.5">
+              <Label htmlFor="default-vat">Default VAT (%)</Label>
+              <Input
+                id="default-vat"
+                type="number"
+                min={0}
+                max={100}
+                step="0.1"
+                value={vat}
+                onChange={(e) => setVat(e.target.value)}
+                data-testid="input-default-vat"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="timesheet-days">Timesheet backdate limit (working days)</Label>
+              <Input
+                id="timesheet-days"
+                type="number"
+                min={0}
+                max={60}
+                step="1"
+                value={days}
+                onChange={(e) => setDays(e.target.value)}
+                data-testid="input-timesheet-days"
+              />
+            </div>
+            <Button type="submit" disabled={saving} data-testid="button-save-business-rules">
+              {saving ? "Saving…" : "Save Business Rules"}
+            </Button>
+          </form>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function Settings() {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -476,6 +587,7 @@ export default function Settings() {
   });
 
   const canManageXero = user?.role === "MANAGEMENT" || user?.role === "FINANCE";
+  const canManageBusinessRules = user?.role === "MANAGEMENT";
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -532,6 +644,8 @@ export default function Settings() {
           </div>
         </CardContent>
       </Card>
+
+      {canManageBusinessRules && <BusinessRulesCard />}
 
       {canManageXero && <XeroIntegrationCard />}
 

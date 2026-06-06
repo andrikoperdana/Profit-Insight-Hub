@@ -223,6 +223,12 @@ model Project {
   closingChecklist   ProjectClosingChecklistItem[]
   workstreams     ProjectWorkstream[]
   reports         ProjectReport[]
+
+  @@index([pmId])
+  @@index([salesId])
+  @@index([clientId])
+  @@index([status])
+  @@index([deletedAt])
 }
 
 model ProjectReport {
@@ -962,6 +968,14 @@ model InvoiceSetting {
   bankAccountNumber String
   updatedAt         DateTime @updatedAt
   updatedById       String?
+}
+
+model AppSetting {
+  id                    String   @id @default("default")
+  defaultVatPercent     Float    @default(11)
+  timesheetBackdateDays Int      @default(5)
+  updatedAt             DateTime @updatedAt
+  updatedById           String?
 }
 
 model XeroConnection {

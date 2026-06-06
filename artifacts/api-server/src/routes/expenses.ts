@@ -1,6 +1,8 @@
 import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
+import { validateBody } from "../middlewares/validate.js";
+import { AddProjectExpenseBody } from "@workspace/api-zod";
 import { recordAudit } from "../lib/audit.js";
 import { canViewProjectFinancials } from "../lib/serializers.js";
 import { notifyUser } from "../lib/notifications.js";
@@ -199,6 +201,7 @@ router.get("/projects/:id/expenses", async (req, res) => {
 router.post(
   "/projects/:id/expenses",
   requireRole(...submitRoles),
+  validateBody(AddProjectExpenseBody),
   async (req, res) => {
     const projectId = String(req.params.id);
     const userId = req.user!.sub;

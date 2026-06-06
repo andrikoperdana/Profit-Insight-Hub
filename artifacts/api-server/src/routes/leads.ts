@@ -1,6 +1,9 @@
 import { Router, type IRouter, type Request, type Response } from "express";
+import { parse as parseCsvSync } from "csv-parse/sync";
 import { prisma, type Prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
+import { validateBody } from "../middlewares/validate.js";
+import { CreateLeadBody, UpdateLeadBody } from "@workspace/api-zod";
 import { notifyOnceDailyForLead } from "../lib/leadNotifications.js";
 import { validatePdfDataUrl, sanitizeFileName } from "../lib/projectValidators.js";
 
@@ -265,45 +268,16 @@ const IMPORT_COLUMNS = [
   "notes",
 ] as const;
 
+// Parse CSV with a battle-tested library so quoted fields, escaped quotes,
+// embedded commas/newlines, ragged rows, and Excel BOMs are handled correctly.
 function parseCsv(text: string): string[][] {
-  const rows: string[][] = [];
-  let field = "";
-  let row: string[] = [];
-  let inQuotes = false;
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i];
-    if (inQuotes) {
-      if (c === '"') {
-        if (text[i + 1] === '"') {
-          field += '"';
-          i++;
-        } else {
-          inQuotes = false;
-        }
-      } else {
-        field += c;
-      }
-    } else {
-      if (c === '"') {
-        inQuotes = true;
-      } else if (c === ",") {
-        row.push(field);
-        field = "";
-      } else if (c === "\n" || c === "\r") {
-        if (c === "\r" && text[i + 1] === "\n") i++;
-        row.push(field);
-        rows.push(row);
-        row = [];
-        field = "";
-      } else {
-        field += c;
-      }
-    }
-  }
-  if (field.length > 0 || row.length > 0) {
-    row.push(field);
-    rows.push(row);
-  }
+  const rows = parseCsvSync(text, {
+    bom: true,
+    relax_column_count: true,
+    relax_quotes: true,
+    skip_empty_lines: true,
+    trim: false,
+  }) as string[][];
   return rows.filter((r) => r.some((cell) => cell.trim() !== ""));
 }
 
@@ -416,7 +390,7 @@ router.post("/leads/import", requireRole("SALES", "MANAGEMENT"), async (req: Aut
   });
 });
 
-router.post("/leads", requireRole("SALES"), async (req: AuthedRequest, res: Response) => {
+router.post("/leads", requireRole("SALES"), validateBody(CreateLeadBody), async (req: AuthedRequest, res: Response) => {
   const body = req.body || {};
   const err = validate(body, false);
   if (err) {
@@ -446,7 +420,7 @@ router.post("/leads", requireRole("SALES"), async (req: AuthedRequest, res: Resp
   res.status(201).json(serialize(lead));
 });
 
-router.patch("/leads/:id", requireRole("SALES"), async (req: AuthedRequest, res: Response) => {
+router.patch("/leads/:id", requireRole("SALES"), validateBody(UpdateLeadBody), async (req: AuthedRequest, res: Response) => {
   const body = req.body || {};
   const err = validate(body, true);
   if (err) {

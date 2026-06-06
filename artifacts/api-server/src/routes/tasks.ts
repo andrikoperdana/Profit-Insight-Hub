@@ -1,6 +1,8 @@
 import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
+import { validateBody } from "../middlewares/validate.js";
+import { CreateProjectTaskBody, UpdateTaskBody } from "@workspace/api-zod";
 import { recordAudit } from "../lib/audit.js";
 import {
   ALLOWED_STATUSES,
@@ -57,8 +59,8 @@ router.get("/projects/:id/tasks", async (req, res) => {
   res.json(tasks.map(serializeTask));
 });
 
-router.post("/projects/:id/tasks", async (req, res) => {
-  const projectId = req.params.id;
+router.post("/projects/:id/tasks", validateBody(CreateProjectTaskBody), async (req, res) => {
+  const projectId = String(req.params.id);
   const userId = req.user!.sub;
   const role = req.user!.role;
   const project = await prisma.project.findUnique({
@@ -258,11 +260,11 @@ router.get("/tasks/mine", async (req, res) => {
   res.json(tasks.map(serializeTask));
 });
 
-router.patch("/tasks/:taskId", async (req, res) => {
+router.patch("/tasks/:taskId", validateBody(UpdateTaskBody), async (req, res) => {
   const userId = req.user!.sub;
   const role = req.user!.role;
   const before = await prisma.task.findUnique({
-    where: { id: req.params.taskId },
+    where: { id: String(req.params.taskId) },
     include: taskInclude,
   });
   if (!before) {

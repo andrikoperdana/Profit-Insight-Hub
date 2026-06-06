@@ -8,3 +8,4 @@
 - [Sandbox vs shell env](sandbox-vs-shell-env.md) — code_execution sandbox can't read Replit Secrets (even after restart); use a /tmp .mjs run via bash; prod writes only via live API behind site gate.
 - [Xero integration rules](xero-integration.md) — invoice push needs per-milestone advisory lock + reserve invoiceNumber before the Xero call; mark PAID only on Status==="PAID"; OAuth state secret fails closed; token refresh serializes cross-instance via pg_advisory_xact_lock + bounded HTTP.
 - [Dashboard portfolio aggregation select](dashboard-aggregation-select.md) — aggregate every project with the narrow projectMetricsSelect, never the heavy projectInclude (avatars/RAID/billing waste).
+- [Zod body validation middleware](zod-body-validation.md) — generated zod is structural-only (keep semantic/non-empty guards); adding a 2nd handler widens req.params (wrap in String()) and degrades Prisma include inference.

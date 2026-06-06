@@ -1,6 +1,8 @@
 import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
+import { validateBody } from "../middlewares/validate.js";
+import { CreateBillingMilestoneBody, UpdateBillingMilestoneBody } from "@workspace/api-zod";
 import { recordAudit } from "../lib/audit.js";
 import { canViewAllProjects, canInvoiceProjectStatus } from "../lib/roles.js";
 import { validateWorkstreamId } from "../lib/workstreams.js";
@@ -267,8 +269,8 @@ router.get("/projects/:id/billing-milestones", async (req, res) => {
   res.json(rows.map(serialize));
 });
 
-router.post("/projects/:id/billing-milestones", async (req, res) => {
-  const projectId = req.params.id;
+router.post("/projects/:id/billing-milestones", validateBody(CreateBillingMilestoneBody), async (req, res) => {
+  const projectId = String(req.params.id);
   const userId = req.user!.sub;
   const role = req.user!.role;
   const project = await prisma.project.findUnique({
@@ -348,11 +350,11 @@ router.post("/projects/:id/billing-milestones", async (req, res) => {
   res.status(201).json(serialize(created));
 });
 
-router.patch("/billing-milestones/:milestoneId", async (req, res) => {
+router.patch("/billing-milestones/:milestoneId", validateBody(UpdateBillingMilestoneBody), async (req, res) => {
   const userId = req.user!.sub;
   const role = req.user!.role;
   const before = await prisma.billingMilestone.findUnique({
-    where: { id: req.params.milestoneId },
+    where: { id: String(req.params.milestoneId) },
     include: { project: { select: { id: true, pmId: true, status: true } } },
   });
   if (!before) {

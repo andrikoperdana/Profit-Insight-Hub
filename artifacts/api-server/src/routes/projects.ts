@@ -1,6 +1,8 @@
 import { Router, type IRouter } from "express";
 import { prisma, type ProjectStatus } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
+import { validateBody } from "../middlewares/validate.js";
+import { CreateProjectBody, UpdateProjectBody } from "@workspace/api-zod";
 import {
   serializeProject,
   projectInclude,
@@ -9,6 +11,7 @@ import {
   canViewDailyRate,
 } from "../lib/serializers.js";
 import { recordAudit } from "../lib/audit.js";
+import { getAppSettings } from "../lib/app-settings.js";
 import { issueSurveyTokenIfMissing } from "../lib/surveyDefaults.js";
 import { notifyUsers } from "../lib/notifications.js";
 import { userCanAccessProject } from "../lib/projectAccess.js";
@@ -178,9 +181,11 @@ router.get("/projects/:id", async (req, res) => {
   });
 });
 
-router.post("/projects", requireRole(...writeRoles), async (req, res) => {
+router.post("/projects", requireRole(...writeRoles), validateBody(CreateProjectBody), async (req, res) => {
   const b = req.body || {};
-  if (!b.code || !b.name || !b.clientId) {
+  // Zod guarantees these are present strings; reject empty/whitespace-only values
+  // before they reach Prisma (clientId is an FK).
+  if (!String(b.code).trim() || !String(b.name).trim() || !String(b.clientId).trim()) {
     res.status(400).json({ error: "code, name, clientId required" });
     return;
   }
@@ -191,7 +196,7 @@ router.post("/projects", requireRole(...writeRoles), async (req, res) => {
     res.status(400).json({ error: "contractValue, estimatedCost, plannedMandays must be non-negative" });
     return;
   }
-  let vatPercent = 11;
+  let vatPercent = (await getAppSettings()).defaultVatPercent;
   if (b.vatPercent !== undefined && b.vatPercent !== null && b.vatPercent !== "") {
     const v = Number(b.vatPercent);
     if (!Number.isFinite(v) || v < 0 || v > 100) {
@@ -289,7 +294,7 @@ router.post("/projects", requireRole(...writeRoles), async (req, res) => {
   res.status(201).json(serializeProject(created, req.user?.role));
 });
 
-router.patch("/projects/:id", requireRole(...writeRoles), async (req, res) => {
+router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdateProjectBody), async (req, res) => {
   const b = req.body || {};
   const beforeProj = await prisma.project.findUnique({
     where: { id: String(req.params.id) },

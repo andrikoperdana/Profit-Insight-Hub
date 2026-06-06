@@ -4,6 +4,9 @@ import { requireAuth } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
 import { notifyUser } from "../lib/notifications.js";
 import { validateWorkstreamId } from "../lib/workstreams.js";
+import { getAppSettings } from "../lib/app-settings.js";
+import { validateBody } from "../middlewares/validate.js";
+import { CreateTimesheetBody, CreateBulkTimesheetsBody } from "@workspace/api-zod";
 
 const MAX_HOURS_PER_ENTRY = 24;
 
@@ -108,10 +111,11 @@ function earliestAllowedWorkDate(today: Date, businessDays: number): Date {
   return d;
 }
 
-router.post("/timesheets", async (req, res) => {
+router.post("/timesheets", validateBody(CreateTimesheetBody), async (req, res) => {
   const { projectId, workDate, hours, description, taskId, workstreamId } = req.body || {};
-  if (!projectId || !workDate || hours == null) {
-    res.status(400).json({ error: "projectId, workDate, hours required" });
+  // Zod guarantees presence + types; reject empty/whitespace strings before DB use.
+  if (!String(projectId).trim() || !String(workDate).trim()) {
+    res.status(400).json({ error: "projectId, workDate required" });
     return;
   }
   const hoursNum = Number(hours);
@@ -133,10 +137,11 @@ router.post("/timesheets", async (req, res) => {
     res.status(400).json({ error: "workDate cannot be in the future" });
     return;
   }
-  const earliest = earliestAllowedWorkDate(today, 5);
+  const backdateDays = (await getAppSettings()).timesheetBackdateDays;
+  const earliest = earliestAllowedWorkDate(today, backdateDays);
   if (work < earliest) {
     res.status(400).json({
-      error: `workDate must be within the last 5 working days (on or after ${earliest.toISOString().slice(0, 10)})`,
+      error: `workDate must be within the last ${backdateDays} working days (on or after ${earliest.toISOString().slice(0, 10)})`,
     });
     return;
   }
@@ -234,7 +239,7 @@ router.post("/timesheets", async (req, res) => {
   res.status(201).json(serialize(ts));
 });
 
-router.post("/timesheets/bulk", async (req, res) => {
+router.post("/timesheets/bulk", validateBody(CreateBulkTimesheetsBody), async (req, res) => {
   const entries = Array.isArray(req.body?.entries) ? req.body.entries : null;
   if (!entries || entries.length === 0) {
     res.status(400).json({ error: "entries[] required" });
@@ -260,7 +265,8 @@ router.post("/timesheets/bulk", async (req, res) => {
     projs.forEach((p) => projectPmMap.set(p.id, p.pmId));
   }
   const todayStart = startOfDay(new Date());
-  const earliest = earliestAllowedWorkDate(todayStart, 5);
+  const backdateDays = (await getAppSettings()).timesheetBackdateDays;
+  const earliest = earliestAllowedWorkDate(todayStart, backdateDays);
   const results: Array<{ index: number; ok: boolean; id?: string | null; error?: string | null }> = [];
   let created = 0;
   let failed = 0;

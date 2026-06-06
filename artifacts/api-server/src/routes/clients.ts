@@ -1,6 +1,8 @@
 import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
+import { validateBody } from "../middlewares/validate.js";
+import { CreateClientBody } from "@workspace/api-zod";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -60,7 +62,7 @@ function validateClientFields(b: Record<string, unknown>, partial: boolean): str
   return null;
 }
 
-router.post("/clients", requireRole(...clientWriteRoles), async (req, res) => {
+router.post("/clients", requireRole(...clientWriteRoles), validateBody(CreateClientBody), async (req, res) => {
   const body = req.body || {};
   const err = validateClientFields(body, false);
   if (err) {
