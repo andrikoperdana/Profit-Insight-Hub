@@ -2193,6 +2193,43 @@ export interface CreateLeaveBody {
   note?: string | null;
 }
 
+export type WorkHoursPeriodStatus =
+  (typeof WorkHoursPeriodStatus)[keyof typeof WorkHoursPeriodStatus];
+
+export const WorkHoursPeriodStatus = {
+  MET: "MET",
+  ON_TRACK: "ON_TRACK",
+  BEHIND: "BEHIND",
+  AT_RISK: "AT_RISK",
+} as const;
+
+export interface WorkHoursPeriod {
+  loggedHours: number;
+  pendingHours: number;
+  approvedHours: number;
+  targetHours: number;
+  expectedToDateHours: number;
+  remainingHours: number;
+  leaveDays: number;
+  status: WorkHoursPeriodStatus;
+}
+
+export interface WorkHoursSummary {
+  userId: string;
+  userName: string;
+  role: string;
+  businessUnitName?: string | null;
+  required: boolean;
+  week: WorkHoursPeriod;
+  month: WorkHoursPeriod;
+  year: WorkHoursPeriod;
+}
+
+export interface WorkHoursTeam {
+  scopeLabel: string;
+  members: WorkHoursSummary[];
+}
+
 export type WorkstreamStatus =
   (typeof WorkstreamStatus)[keyof typeof WorkstreamStatus];
 

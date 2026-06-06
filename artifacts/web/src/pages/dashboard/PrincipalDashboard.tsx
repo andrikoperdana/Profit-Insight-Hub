@@ -25,6 +25,7 @@ import { ProjectStatusBadge } from "@/components/common/Badges";
 import { RoleLabels, PRINCIPAL_TO_REPORT_ROLE } from "@/lib/roles";
 import { UserPlus, Users, ClipboardCheck } from "lucide-react";
 import MyExpensesCard from "@/components/dashboard/MyExpensesCard";
+import WorkHoursCard from "@/components/WorkHoursCard";
 
 export default function PrincipalDashboard() {
   const { user } = useAuth();
@@ -131,6 +132,8 @@ export default function PrincipalDashboard() {
   return (
     <div className="space-y-6">
       <WelcomeBanner subtitle={`Supervising ${supervisedRole ? RoleLabels[supervisedRole] : ""} delivery — propose resources where PMs need staffing.`} />
+
+      <WorkHoursCard />
 
       {canApprove && (
         <Card className="border-border shadow-sm">

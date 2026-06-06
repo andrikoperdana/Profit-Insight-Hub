@@ -91,6 +91,7 @@ export default function Sidebar() {
     ...(canSeeExpenses ? [{ href: "/expenses", label: "Expenses", icon: Receipt }] : []),
     ...(isPM || isHr || isPrincipal ? [{ href: "/resource-planning", label: "Resource Planning", icon: Grid3x3 }] : []),
     ...(isPM || isHr || isPrincipal ? [{ href: "/bench", label: "Bench Report", icon: UserCog }] : []),
+    ...(user?.role === "MANAGEMENT" || isHr || isPrincipal ? [{ href: "/work-hours", label: "Work Hours", icon: Clock }] : []),
     ...(isPM || isHr ? [{ href: "/skill-matrix", label: "Skill Matrix", icon: Award }] : []),
     ...(isPM ? [{ href: "/task-templates", label: "Task Templates", icon: ListChecks }] : []),
     ...(isPM || user?.role === "SALES" ? [{ href: "/project-templates", label: "Project Templates", icon: ListChecks }] : []),

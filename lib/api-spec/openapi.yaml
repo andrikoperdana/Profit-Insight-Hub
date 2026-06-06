@@ -1751,6 +1751,28 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/SuccessMessage" }
 
+  /work-hours/me:
+    get:
+      operationId: getWorkHoursMe
+      tags: [work-hours]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/WorkHoursSummary" }
+
+  /work-hours/team:
+    get:
+      operationId: getWorkHoursTeam
+      tags: [work-hours]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/WorkHoursTeam" }
+
   /timesheets/{id}/submit:
     post:
       operationId: submitTimesheet
@@ -4378,6 +4400,41 @@ components:
         endDate: { type: string }
         type: { type: string, enum: [ANNUAL, SICK, TRAINING, UNPAID, OTHER] }
         note: { type: string, nullable: true }
+
+    WorkHoursPeriod:
+      type: object
+      required: [loggedHours, pendingHours, approvedHours, targetHours, expectedToDateHours, remainingHours, leaveDays, status]
+      properties:
+        loggedHours: { type: number }
+        pendingHours: { type: number }
+        approvedHours: { type: number }
+        targetHours: { type: number }
+        expectedToDateHours: { type: number }
+        remainingHours: { type: number }
+        leaveDays: { type: number }
+        status: { type: string, enum: [MET, ON_TRACK, BEHIND, AT_RISK] }
+
+    WorkHoursSummary:
+      type: object
+      required: [userId, userName, role, required, week, month, year]
+      properties:
+        userId: { type: string }
+        userName: { type: string }
+        role: { type: string }
+        businessUnitName: { type: string, nullable: true }
+        required: { type: boolean }
+        week: { $ref: "#/components/schemas/WorkHoursPeriod" }
+        month: { $ref: "#/components/schemas/WorkHoursPeriod" }
+        year: { $ref: "#/components/schemas/WorkHoursPeriod" }
+
+    WorkHoursTeam:
+      type: object
+      required: [scopeLabel, members]
+      properties:
+        scopeLabel: { type: string }
+        members:
+          type: array
+          items: { $ref: "#/components/schemas/WorkHoursSummary" }
 
     WorkstreamStatus: { type: string, enum: [ACTIVE, ON_HOLD, COMPLETED, CANCELLED] }
 

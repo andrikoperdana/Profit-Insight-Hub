@@ -3815,6 +3815,87 @@ export const DeleteLeaveResponse = zod.object({
   message: zod.string().optional(),
 });
 
+export const GetWorkHoursMeResponse = zod.object({
+  userId: zod.string(),
+  userName: zod.string(),
+  role: zod.string(),
+  businessUnitName: zod.string().nullish(),
+  required: zod.boolean(),
+  week: zod.object({
+    loggedHours: zod.number(),
+    pendingHours: zod.number(),
+    approvedHours: zod.number(),
+    targetHours: zod.number(),
+    expectedToDateHours: zod.number(),
+    remainingHours: zod.number(),
+    leaveDays: zod.number(),
+    status: zod.enum(["MET", "ON_TRACK", "BEHIND", "AT_RISK"]),
+  }),
+  month: zod.object({
+    loggedHours: zod.number(),
+    pendingHours: zod.number(),
+    approvedHours: zod.number(),
+    targetHours: zod.number(),
+    expectedToDateHours: zod.number(),
+    remainingHours: zod.number(),
+    leaveDays: zod.number(),
+    status: zod.enum(["MET", "ON_TRACK", "BEHIND", "AT_RISK"]),
+  }),
+  year: zod.object({
+    loggedHours: zod.number(),
+    pendingHours: zod.number(),
+    approvedHours: zod.number(),
+    targetHours: zod.number(),
+    expectedToDateHours: zod.number(),
+    remainingHours: zod.number(),
+    leaveDays: zod.number(),
+    status: zod.enum(["MET", "ON_TRACK", "BEHIND", "AT_RISK"]),
+  }),
+});
+
+export const GetWorkHoursTeamResponse = zod.object({
+  scopeLabel: zod.string(),
+  members: zod.array(
+    zod.object({
+      userId: zod.string(),
+      userName: zod.string(),
+      role: zod.string(),
+      businessUnitName: zod.string().nullish(),
+      required: zod.boolean(),
+      week: zod.object({
+        loggedHours: zod.number(),
+        pendingHours: zod.number(),
+        approvedHours: zod.number(),
+        targetHours: zod.number(),
+        expectedToDateHours: zod.number(),
+        remainingHours: zod.number(),
+        leaveDays: zod.number(),
+        status: zod.enum(["MET", "ON_TRACK", "BEHIND", "AT_RISK"]),
+      }),
+      month: zod.object({
+        loggedHours: zod.number(),
+        pendingHours: zod.number(),
+        approvedHours: zod.number(),
+        targetHours: zod.number(),
+        expectedToDateHours: zod.number(),
+        remainingHours: zod.number(),
+        leaveDays: zod.number(),
+        status: zod.enum(["MET", "ON_TRACK", "BEHIND", "AT_RISK"]),
+      }),
+      year: zod.object({
+        loggedHours: zod.number(),
+        pendingHours: zod.number(),
+        approvedHours: zod.number(),
+        targetHours: zod.number(),
+        expectedToDateHours: zod.number(),
+        remainingHours: zod.number(),
+        leaveDays: zod.number(),
+        status: zod.enum(["MET", "ON_TRACK", "BEHIND", "AT_RISK"]),
+      }),
+    }),
+  ),
+});
+
 export const SubmitTimesheetParams = zod.object({
   id: zod.coerce.string(),
 });

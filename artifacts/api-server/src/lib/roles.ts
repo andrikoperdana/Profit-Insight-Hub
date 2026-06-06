@@ -90,3 +90,28 @@ const INVOICEABLE_PROJECT_STATUSES = new Set<string>([
 export function canInvoiceProjectStatus(status: string | null | undefined): boolean {
   return !!status && INVOICEABLE_PROJECT_STATUSES.has(status);
 }
+
+// Roles required to log a full 40h work week. Delivery roles (Consultant,
+// Technical Writer), Project Managers, and all Principal supervisors are held
+// to the weekly hours target; Admin Project, Sales, Finance, HR, Management,
+// and Site Admin are exempt. Mirrors `WORK_HOURS_REQUIRED_ROLES` on the web
+// frontend — keep the two lists identical.
+const WORK_HOURS_REQUIRED_ROLES = new Set<string>([
+  "PROJECT_MANAGER",
+  "KONSULTAN",
+  "TECHNICAL_WRITER",
+  "PRINCIPAL_KONSULTAN",
+  "PRINCIPAL_TECHNICAL_WRITER",
+  "PRINCIPAL_ADMIN_PROJECT",
+]);
+
+export function isWorkHoursRequiredRole(role: string | null | undefined): boolean {
+  return !!role && WORK_HOURS_REQUIRED_ROLES.has(role);
+}
+
+// Roles that may view other people's work-hours compliance. HR sees everyone,
+// Management sees Project Managers, and each Principal sees their own
+// supervisees. Scope itself is enforced in `routes/work-hours.ts`.
+export function canViewWorkHoursTeam(role: string | null | undefined): boolean {
+  return role === "HR" || role === "MANAGEMENT" || isPrincipalRole(role);
+}

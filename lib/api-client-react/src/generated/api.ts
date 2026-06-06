@@ -143,6 +143,8 @@ import type {
   UserLeave,
   UtilizationRow,
   VatRecap,
+  WorkHoursSummary,
+  WorkHoursTeam,
   XeroClientSyncResult,
   XeroConnectUrl,
   XeroInvoiceResult,
@@ -9127,6 +9129,142 @@ export const useDeleteLeave = <
 > => {
   return useMutation(getDeleteLeaveMutationOptions(options));
 };
+
+export const getGetWorkHoursMeUrl = () => {
+  return `/api/work-hours/me`;
+};
+
+export const getWorkHoursMe = async (
+  options?: RequestInit,
+): Promise<WorkHoursSummary> => {
+  return customFetch<WorkHoursSummary>(getGetWorkHoursMeUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetWorkHoursMeQueryKey = () => {
+  return [`/api/work-hours/me`] as const;
+};
+
+export const getGetWorkHoursMeQueryOptions = <
+  TData = Awaited<ReturnType<typeof getWorkHoursMe>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getWorkHoursMe>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetWorkHoursMeQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getWorkHoursMe>>> = ({
+    signal,
+  }) => getWorkHoursMe({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getWorkHoursMe>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetWorkHoursMeQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getWorkHoursMe>>
+>;
+export type GetWorkHoursMeQueryError = ErrorType<unknown>;
+
+export function useGetWorkHoursMe<
+  TData = Awaited<ReturnType<typeof getWorkHoursMe>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getWorkHoursMe>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetWorkHoursMeQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getGetWorkHoursTeamUrl = () => {
+  return `/api/work-hours/team`;
+};
+
+export const getWorkHoursTeam = async (
+  options?: RequestInit,
+): Promise<WorkHoursTeam> => {
+  return customFetch<WorkHoursTeam>(getGetWorkHoursTeamUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetWorkHoursTeamQueryKey = () => {
+  return [`/api/work-hours/team`] as const;
+};
+
+export const getGetWorkHoursTeamQueryOptions = <
+  TData = Awaited<ReturnType<typeof getWorkHoursTeam>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getWorkHoursTeam>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetWorkHoursTeamQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getWorkHoursTeam>>
+  > = ({ signal }) => getWorkHoursTeam({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getWorkHoursTeam>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetWorkHoursTeamQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getWorkHoursTeam>>
+>;
+export type GetWorkHoursTeamQueryError = ErrorType<unknown>;
+
+export function useGetWorkHoursTeam<
+  TData = Awaited<ReturnType<typeof getWorkHoursTeam>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getWorkHoursTeam>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetWorkHoursTeamQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
 
 export const getSubmitTimesheetUrl = (id: string) => {
   return `/api/timesheets/${id}/submit`;

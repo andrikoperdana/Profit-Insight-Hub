@@ -101,3 +101,26 @@ export function canInvoiceProjectStatus(status?: string | null): boolean {
     status === "CLOSED"
   );
 }
+
+// Roles required to log a full 40h work week. Mirrors the server's
+// `WORK_HOURS_REQUIRED_ROLES` — keep the two lists identical. Admin Project,
+// Sales, Finance, HR, Management, and Site Admin are exempt.
+const WORK_HOURS_REQUIRED_ROLES: UserRole[] = [
+  UserRole.PROJECT_MANAGER,
+  UserRole.KONSULTAN,
+  UserRole.TECHNICAL_WRITER,
+  UserRole.PRINCIPAL_KONSULTAN,
+  UserRole.PRINCIPAL_TECHNICAL_WRITER,
+  UserRole.PRINCIPAL_ADMIN_PROJECT,
+];
+
+export function isWorkHoursRequiredRole(role?: UserRole | null): boolean {
+  return !!role && WORK_HOURS_REQUIRED_ROLES.includes(role);
+}
+
+// Roles that may view other people's work-hours compliance: HR (all required
+// staff), Management (Project Managers), and Principals (their supervisees).
+// Mirrors `canViewWorkHoursTeam` on the server.
+export function canViewWorkHoursTeam(role?: UserRole | null): boolean {
+  return role === UserRole.HR || role === UserRole.MANAGEMENT || isPrincipalRole(role);
+}

@@ -43,6 +43,7 @@ import raidRouter from "./raid.js";
 import performanceReviewsRouter from "./performance-reviews.js";
 import workstreamsRouter from "./workstreams.js";
 import projectReportsRouter from "./project-reports.js";
+import workHoursRouter from "./work-hours.js";
 import xeroRouter from "./xero.js";
 import clientPortalRouter from "./client-portal.js";
 
@@ -104,5 +105,6 @@ router.use(raidRouter);
 router.use(performanceReviewsRouter);
 router.use(workstreamsRouter);
 router.use(projectReportsRouter);
+router.use(workHoursRouter);
 
 export default router;

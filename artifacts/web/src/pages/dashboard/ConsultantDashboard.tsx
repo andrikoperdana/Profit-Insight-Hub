@@ -41,6 +41,7 @@ import {
 import WelcomeBanner from "@/components/dashboard/WelcomeBanner";
 import MyExpensesCard from "@/components/dashboard/MyExpensesCard";
 import WeeklyEntryDialog from "@/pages/timesheets/WeeklyEntryDialog";
+import WorkHoursCard from "@/components/WorkHoursCard";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
@@ -95,6 +96,8 @@ export default function ConsultantDashboard() {
   return (
     <div className="space-y-6">
       <WelcomeBanner subtitle="Log today's hours so your PM can approve them quickly." />
+
+      <WorkHoursCard />
 
       <QuickLogCard loggedToday={loggedToday} />
 

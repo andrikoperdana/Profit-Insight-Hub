@@ -44,6 +44,7 @@ const SkillDevelopmentPage = lazy(() => import("@/pages/skill-development"));
 const ReportsIndex = lazy(() => import("@/pages/reports"));
 const ReportRunner = lazy(() => import("@/pages/reports/[id]"));
 const LeavesPage = lazy(() => import("@/pages/leaves"));
+const WorkHoursPage = lazy(() => import("@/pages/work-hours"));
 const OrgChartPage = lazy(() => import("@/pages/org-chart"));
 const MyTasksPage = lazy(() => import("@/pages/my-tasks"));
 const MyTimesheetsPage = lazy(() => import("@/pages/my-timesheets"));
@@ -168,6 +169,7 @@ function Router() {
         <Route path="/project-templates" component={() => <ProtectedRoute component={ProjectTemplatesPage} />} />
         <Route path="/skill-development" component={() => <ProtectedRoute component={SkillDevelopmentPage} />} />
         <Route path="/leaves" component={() => <ProtectedRoute component={LeavesPage} />} />
+        <Route path="/work-hours" component={() => <ProtectedRoute component={WorkHoursPage} allowRoles={["HR","MANAGEMENT","PRINCIPAL_KONSULTAN","PRINCIPAL_TECHNICAL_WRITER","PRINCIPAL_ADMIN_PROJECT"]} />} />
         <Route path="/org-chart" component={() => <ProtectedRoute component={OrgChartPage} />} />
         <Route path="/my-tasks" component={() => <ProtectedRoute component={MyTasksPage} allowRoles={MY_VIEW_ROLES} />} />
         <Route path="/my-timesheets" component={() => <ProtectedRoute component={MyTimesheetsPage} allowRoles={MY_VIEW_ROLES} />} />
