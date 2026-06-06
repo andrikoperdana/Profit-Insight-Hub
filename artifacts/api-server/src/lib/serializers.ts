@@ -366,7 +366,16 @@ export function computeHealthScore(
   project: ProjectWithRelations,
   metrics: ProjectMetrics,
 ): HealthScore | null {
-  if (project.status === "DRAFT" || project.status === "CLOSED") return null;
+  // Health measures execution health (margin erosion vs actuals, overdue
+  // billing/schedule, open RAID, pending expenses). It is only meaningful once
+  // delivery has started, so it is withheld until ACTIVE. DRAFT/OBSERVATION are
+  // still planning phases; CLOSED is archived.
+  if (
+    project.status === "DRAFT" ||
+    project.status === "OBSERVATION" ||
+    project.status === "CLOSED"
+  )
+    return null;
   const reasons: string[] = [];
   const now = Date.now();
 
