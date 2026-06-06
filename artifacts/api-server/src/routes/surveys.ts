@@ -76,12 +76,24 @@ function computeAggregates(
 // PUBLIC ROUTES (no authentication)
 // =====================================================================
 
+function surveyLinkUnavailable(project: {
+  deletedAt: Date | null;
+  status: string;
+  surveyEnabled: boolean;
+  surveyExpiresAt: Date | null;
+}): boolean {
+  if (project.deletedAt || project.status !== "CLOSED") return true;
+  if (!project.surveyEnabled) return true;
+  if (project.surveyExpiresAt && project.surveyExpiresAt.getTime() < Date.now()) return true;
+  return false;
+}
+
 router.get("/public/surveys/:token", async (req, res) => {
   const project = await prisma.project.findUnique({
     where: { surveyToken: req.params.token },
     include: { client: true },
   });
-  if (!project || project.deletedAt || project.status !== "CLOSED") {
+  if (!project || surveyLinkUnavailable(project)) {
     res.status(404).json({ error: "Survey not available" });
     return;
   }
@@ -107,7 +119,7 @@ router.post("/public/surveys/:token", async (req, res) => {
   const project = await prisma.project.findUnique({
     where: { surveyToken: req.params.token },
   });
-  if (!project || project.deletedAt || project.status !== "CLOSED") {
+  if (!project || surveyLinkUnavailable(project)) {
     res.status(404).json({ error: "Survey not available" });
     return;
   }
@@ -356,7 +368,7 @@ router.put("/survey/template", requireAuth, requireRole("MANAGEMENT"), async (re
 router.get("/projects/:id/survey", requireAuth, async (req, res) => {
   const project = await prisma.project.findUnique({
     where: { id: String(req.params.id) },
-    select: { id: true, code: true, name: true, status: true, pmId: true, deletedAt: true, surveyToken: true },
+    select: { id: true, code: true, name: true, status: true, pmId: true, deletedAt: true, surveyToken: true, surveyEnabled: true, surveyExpiresAt: true },
   });
   if (!project || project.deletedAt) {
     res.status(404).json({ error: "Not found" });
@@ -390,9 +402,17 @@ router.get("/projects/:id/survey", requireAuth, async (req, res) => {
   const proto = (req.get("x-forwarded-proto") || (req.secure ? "https" : "http")).split(",")[0];
   const publicUrl = token ? `${proto}://${host}/survey/${token}` : null;
 
+  const now = Date.now();
+  const expired = !!project.surveyExpiresAt && project.surveyExpiresAt.getTime() < now;
+  const linkActive = project.status === "CLOSED" && project.surveyEnabled && !expired && !!token;
+
   res.json({
     project: { id: project.id, code: project.code, name: project.name, status: project.status },
     surveyAvailable: project.status === "CLOSED",
+    surveyEnabled: project.surveyEnabled,
+    surveyExpiresAt: project.surveyExpiresAt ? project.surveyExpiresAt.toISOString() : null,
+    surveyExpired: expired,
+    linkActive,
     surveyToken: token,
     publicUrl,
     questions: allQuestions.map((q) => ({
@@ -412,6 +432,92 @@ router.get("/projects/:id/survey", requireAuth, async (req, res) => {
       questionsSnapshot: r.questionsSnapshot,
       createdAt: r.createdAt.toISOString(),
     })),
+  });
+});
+
+// Manage survey share settings — enable/disable, expiry, regenerate.
+// MANAGEMENT or the owning PM. Mirrors the client-portal share controls.
+router.put("/projects/:id/survey-share", requireAuth, async (req, res) => {
+  const project = await prisma.project.findUnique({
+    where: { id: String(req.params.id) },
+    select: {
+      id: true, code: true, pmId: true, deletedAt: true,
+      surveyToken: true, surveyEnabled: true, surveyExpiresAt: true,
+    },
+  });
+  if (!project || project.deletedAt) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  const role = req.user!.role;
+  if (role !== "MANAGEMENT" && !(role === "PROJECT_MANAGER" && project.pmId === req.user!.sub)) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+
+  const body = req.body ?? {};
+  const data: {
+    surveyEnabled?: boolean;
+    surveyToken?: string;
+    surveyExpiresAt?: Date | null;
+  } = {};
+
+  // Enable / disable — issue a token the first time the link is enabled.
+  if (typeof body.enabled === "boolean") {
+    data.surveyEnabled = body.enabled;
+    if (body.enabled && !project.surveyToken) {
+      data.surveyToken = randomBytes(24).toString("base64url");
+    }
+  }
+
+  // Regenerate — mint a fresh token, invalidating the old link immediately.
+  if (body.regenerate === true) {
+    data.surveyToken = randomBytes(24).toString("base64url");
+  }
+
+  // Expiry — ISO date string, or null to clear.
+  if (body.expiresAt === null) {
+    data.surveyExpiresAt = null;
+  } else if (typeof body.expiresAt === "string" && body.expiresAt.trim()) {
+    const d = new Date(body.expiresAt);
+    if (Number.isNaN(d.getTime())) {
+      res.status(400).json({ error: "Invalid expiresAt date" });
+      return;
+    }
+    data.surveyExpiresAt = d;
+  }
+
+  if (Object.keys(data).length === 0) {
+    res.status(400).json({ error: "Nothing to update" });
+    return;
+  }
+
+  const updated = await prisma.project.update({
+    where: { id: project.id },
+    data,
+    select: { surveyToken: true, surveyEnabled: true, surveyExpiresAt: true },
+  });
+
+  await recordAudit(req, {
+    action: "project.updated",
+    entityType: "Project",
+    entityId: project.id,
+    description: "Updated customer survey share settings",
+    before: {
+      surveyEnabled: project.surveyEnabled,
+      surveyExpiresAt: project.surveyExpiresAt,
+    },
+    after: {
+      surveyEnabled: updated.surveyEnabled,
+      surveyExpiresAt: updated.surveyExpiresAt,
+      regenerated: body.regenerate === true,
+    },
+  });
+
+  res.json({
+    surveyEnabled: updated.surveyEnabled,
+    surveyToken: updated.surveyEnabled ? updated.surveyToken : null,
+    surveyExpiresAt: updated.surveyExpiresAt ? updated.surveyExpiresAt.toISOString() : null,
   });
 });
 

@@ -34,3 +34,10 @@ malformed, disabled, expired, DRAFT, soft-deleted) through one path returning an
 404 body+headers. No length/format pre-check before the DB lookup — a distinct early return is
 a token-existence oracle. Payload must be a hand-written whitelist (never reuse projectInclude
 / financials serializers) so cost/margin/rate/documents can't leak.
+
+**Survey vs portal share controls:** both the survey link and client portal now expose
+enable/disable + expiry + regenerate (MGMT or owning-PM). Survey gate = `surveyEnabled`
+(`@default(true)`, preserving the old "auto-on when CLOSED" behavior) + `surveyExpiresAt`,
+funneled through `surveyLinkUnavailable()` in both `/public/surveys/:token` handlers. Known
+gap: the survey public endpoints still lack the portal's `noindex`/`no-store` headers and
+rate limiting (intentionally left out of scope) — mirror them if hardening the survey link.

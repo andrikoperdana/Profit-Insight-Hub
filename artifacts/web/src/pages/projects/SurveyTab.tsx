@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { customFetch } from "@workspace/api-client-react";
 import {
   RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar,
@@ -7,10 +7,13 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/lib/auth";
 import { downloadAuthed } from "@/lib/exports";
-import { Link2, Copy, ExternalLink, Download, MessageSquare, Star } from "lucide-react";
+import { Link2, Copy, ExternalLink, Download, MessageSquare, Star, RefreshCw } from "lucide-react";
 
 type Question = { key: string; text: string; type: "RATING" | "TEXT"; order: number; required: boolean };
 type Aggregate = { key: string; text: string; order: number; average: number; responseCount: number };
@@ -25,6 +28,10 @@ type Response = {
 type SurveyData = {
   project: { id: string; code: string; name: string; status: string };
   surveyAvailable: boolean;
+  surveyEnabled: boolean;
+  surveyExpiresAt: string | null;
+  surveyExpired: boolean;
+  linkActive: boolean;
   surveyToken: string | null;
   publicUrl: string | null;
   questions: Question[];
@@ -32,16 +39,43 @@ type SurveyData = {
   responses: Response[];
 };
 
+function toDateInput(iso: string | null): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return d.toISOString().slice(0, 10);
+}
+
 export default function SurveyTab({ projectId }: { projectId: string }) {
   const { user } = useAuth();
   const { toast } = useToast();
   const role = user?.role;
   const canView = role === "MANAGEMENT" || role === "PROJECT_MANAGER";
 
+  const qc = useQueryClient();
+
   const { data, isLoading, error } = useQuery<SurveyData>({
     queryKey: ["/projects", projectId, "survey"],
     queryFn: () => customFetch<SurveyData>(`/api/projects/${projectId}/survey`),
     enabled: !!projectId && canView,
+  });
+
+  const share = useMutation({
+    mutationFn: (payload: { enabled?: boolean; expiresAt?: string | null; regenerate?: boolean }) =>
+      customFetch(`/api/projects/${projectId}/survey-share`, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["/projects", projectId, "survey"] });
+    },
+    onError: (e: unknown) => {
+      toast({
+        title: "Update failed",
+        description: e instanceof Error ? e.message : "Could not update survey link settings",
+        variant: "destructive",
+      });
+    },
   });
 
   if (!canView) {
@@ -134,16 +168,86 @@ export default function SurveyTab({ projectId }: { projectId: string }) {
             </Badge>
           </div>
         </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="flex flex-col sm:flex-row gap-2">
-            <code className="flex-1 px-3 py-2 rounded bg-muted text-sm break-all font-mono">{url}</code>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={copyLink}><Copy className="h-4 w-4 mr-2" />Copy</Button>
-              <Button variant="outline" asChild>
-                <a href={url} target="_blank" rel="noreferrer"><ExternalLink className="h-4 w-4 mr-2" />Preview Survey</a>
-              </Button>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <Label className="text-base">Enable survey link</Label>
+              <p className="text-xs text-muted-foreground">Turn the public survey link on or off.</p>
             </div>
+            <Switch
+              checked={data.surveyEnabled}
+              disabled={share.isPending}
+              onCheckedChange={(v) => share.mutate({ enabled: v })}
+              data-testid="switch-survey-share"
+            />
           </div>
+
+          {data.surveyEnabled && (
+            <>
+              {data.surveyExpired && (
+                <p className="text-xs text-destructive">
+                  This link has expired. Update or clear the expiry date to make it work again.
+                </p>
+              )}
+              <div className="flex flex-col sm:flex-row gap-2">
+                <code className="flex-1 px-3 py-2 rounded bg-muted text-sm break-all font-mono">{url}</code>
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={copyLink}><Copy className="h-4 w-4 mr-2" />Copy</Button>
+                  <Button variant="outline" asChild>
+                    <a href={url} target="_blank" rel="noreferrer"><ExternalLink className="h-4 w-4 mr-2" />Preview Survey</a>
+                  </Button>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="survey-expiry">Expiry date (optional)</Label>
+                <div className="flex items-center gap-2">
+                  <Input
+                    id="survey-expiry"
+                    type="date"
+                    className="w-auto"
+                    value={toDateInput(data.surveyExpiresAt)}
+                    disabled={share.isPending}
+                    onChange={(e) => share.mutate({ expiresAt: e.target.value ? e.target.value : null })}
+                    data-testid="input-survey-expiry"
+                  />
+                  {data.surveyExpiresAt && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      disabled={share.isPending}
+                      onClick={() => share.mutate({ expiresAt: null })}
+                    >
+                      Clear
+                    </Button>
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  After this date the link stops working until you update it.
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between pt-3 border-t border-border">
+                <div>
+                  <Label className="text-base">Regenerate link</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Creates a new link and immediately disables the old one.
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2"
+                  disabled={share.isPending}
+                  onClick={() => share.mutate({ regenerate: true })}
+                  data-testid="button-regenerate-survey"
+                >
+                  <RefreshCw className="h-4 w-4" />
+                  Regenerate
+                </Button>
+              </div>
+            </>
+          )}
         </CardContent>
       </Card>
 

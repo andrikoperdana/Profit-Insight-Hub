@@ -209,7 +209,9 @@ model Project {
 
   useWorkstreams Boolean @default(false)
 
-  surveyToken String? @unique
+  surveyToken     String?   @unique
+  surveyEnabled   Boolean   @default(true)
+  surveyExpiresAt DateTime?
 
   clientShareToken     String?   @unique
   clientShareEnabled   Boolean   @default(false)

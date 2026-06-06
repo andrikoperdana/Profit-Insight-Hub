@@ -8532,6 +8532,8 @@ export namespace Prisma {
     updatedAt: Date | null
     useWorkstreams: boolean | null
     surveyToken: string | null
+    surveyEnabled: boolean | null
+    surveyExpiresAt: Date | null
     clientShareToken: string | null
     clientShareEnabled: boolean | null
     clientShareExpiresAt: Date | null
@@ -8571,6 +8573,8 @@ export namespace Prisma {
     updatedAt: Date | null
     useWorkstreams: boolean | null
     surveyToken: string | null
+    surveyEnabled: boolean | null
+    surveyExpiresAt: Date | null
     clientShareToken: string | null
     clientShareEnabled: boolean | null
     clientShareExpiresAt: Date | null
@@ -8610,6 +8614,8 @@ export namespace Prisma {
     updatedAt: number
     useWorkstreams: number
     surveyToken: number
+    surveyEnabled: number
+    surveyExpiresAt: number
     clientShareToken: number
     clientShareEnabled: number
     clientShareExpiresAt: number
@@ -8667,6 +8673,8 @@ export namespace Prisma {
     updatedAt?: true
     useWorkstreams?: true
     surveyToken?: true
+    surveyEnabled?: true
+    surveyExpiresAt?: true
     clientShareToken?: true
     clientShareEnabled?: true
     clientShareExpiresAt?: true
@@ -8706,6 +8714,8 @@ export namespace Prisma {
     updatedAt?: true
     useWorkstreams?: true
     surveyToken?: true
+    surveyEnabled?: true
+    surveyExpiresAt?: true
     clientShareToken?: true
     clientShareEnabled?: true
     clientShareExpiresAt?: true
@@ -8745,6 +8755,8 @@ export namespace Prisma {
     updatedAt?: true
     useWorkstreams?: true
     surveyToken?: true
+    surveyEnabled?: true
+    surveyExpiresAt?: true
     clientShareToken?: true
     clientShareEnabled?: true
     clientShareExpiresAt?: true
@@ -8871,6 +8883,8 @@ export namespace Prisma {
     updatedAt: Date
     useWorkstreams: boolean
     surveyToken: string | null
+    surveyEnabled: boolean
+    surveyExpiresAt: Date | null
     clientShareToken: string | null
     clientShareEnabled: boolean
     clientShareExpiresAt: Date | null
@@ -8929,6 +8943,8 @@ export namespace Prisma {
     updatedAt?: boolean
     useWorkstreams?: boolean
     surveyToken?: boolean
+    surveyEnabled?: boolean
+    surveyExpiresAt?: boolean
     clientShareToken?: boolean
     clientShareEnabled?: boolean
     clientShareExpiresAt?: boolean
@@ -8987,6 +9003,8 @@ export namespace Prisma {
     updatedAt?: boolean
     useWorkstreams?: boolean
     surveyToken?: boolean
+    surveyEnabled?: boolean
+    surveyExpiresAt?: boolean
     clientShareToken?: boolean
     clientShareEnabled?: boolean
     clientShareExpiresAt?: boolean
@@ -9031,6 +9049,8 @@ export namespace Prisma {
     updatedAt?: boolean
     useWorkstreams?: boolean
     surveyToken?: boolean
+    surveyEnabled?: boolean
+    surveyExpiresAt?: boolean
     clientShareToken?: boolean
     clientShareEnabled?: boolean
     clientShareExpiresAt?: boolean
@@ -9121,6 +9141,8 @@ export namespace Prisma {
       updatedAt: Date
       useWorkstreams: boolean
       surveyToken: string | null
+      surveyEnabled: boolean
+      surveyExpiresAt: Date | null
       clientShareToken: string | null
       clientShareEnabled: boolean
       clientShareExpiresAt: Date | null
@@ -9568,6 +9590,8 @@ export namespace Prisma {
     readonly updatedAt: FieldRef<"Project", 'DateTime'>
     readonly useWorkstreams: FieldRef<"Project", 'Boolean'>
     readonly surveyToken: FieldRef<"Project", 'String'>
+    readonly surveyEnabled: FieldRef<"Project", 'Boolean'>
+    readonly surveyExpiresAt: FieldRef<"Project", 'DateTime'>
     readonly clientShareToken: FieldRef<"Project", 'String'>
     readonly clientShareEnabled: FieldRef<"Project", 'Boolean'>
     readonly clientShareExpiresAt: FieldRef<"Project", 'DateTime'>
@@ -48342,6 +48366,8 @@ export namespace Prisma {
     updatedAt: 'updatedAt',
     useWorkstreams: 'useWorkstreams',
     surveyToken: 'surveyToken',
+    surveyEnabled: 'surveyEnabled',
+    surveyExpiresAt: 'surveyExpiresAt',
     clientShareToken: 'clientShareToken',
     clientShareEnabled: 'clientShareEnabled',
     clientShareExpiresAt: 'clientShareExpiresAt'
@@ -49699,6 +49725,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Project"> | Date | string
     useWorkstreams?: BoolFilter<"Project"> | boolean
     surveyToken?: StringNullableFilter<"Project"> | string | null
+    surveyEnabled?: BoolFilter<"Project"> | boolean
+    surveyExpiresAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     clientShareToken?: StringNullableFilter<"Project"> | string | null
     clientShareEnabled?: BoolFilter<"Project"> | boolean
     clientShareExpiresAt?: DateTimeNullableFilter<"Project"> | Date | string | null
@@ -49756,6 +49784,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     useWorkstreams?: SortOrder
     surveyToken?: SortOrderInput | SortOrder
+    surveyEnabled?: SortOrder
+    surveyExpiresAt?: SortOrderInput | SortOrder
     clientShareToken?: SortOrderInput | SortOrder
     clientShareEnabled?: SortOrder
     clientShareExpiresAt?: SortOrderInput | SortOrder
@@ -49817,6 +49847,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
     useWorkstreams?: BoolFilter<"Project"> | boolean
+    surveyEnabled?: BoolFilter<"Project"> | boolean
+    surveyExpiresAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     clientShareEnabled?: BoolFilter<"Project"> | boolean
     clientShareExpiresAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     client?: XOR<ClientRelationFilter, ClientWhereInput>
@@ -49873,6 +49905,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     useWorkstreams?: SortOrder
     surveyToken?: SortOrderInput | SortOrder
+    surveyEnabled?: SortOrder
+    surveyExpiresAt?: SortOrderInput | SortOrder
     clientShareToken?: SortOrderInput | SortOrder
     clientShareEnabled?: SortOrder
     clientShareExpiresAt?: SortOrderInput | SortOrder
@@ -49920,6 +49954,8 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
     useWorkstreams?: BoolWithAggregatesFilter<"Project"> | boolean
     surveyToken?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    surveyEnabled?: BoolWithAggregatesFilter<"Project"> | boolean
+    surveyExpiresAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     clientShareToken?: StringNullableWithAggregatesFilter<"Project"> | string | null
     clientShareEnabled?: BoolWithAggregatesFilter<"Project"> | boolean
     clientShareExpiresAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
@@ -53606,6 +53642,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -53663,6 +53701,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -53710,6 +53750,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -53767,6 +53809,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -53819,6 +53863,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -53853,6 +53899,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -53892,6 +53940,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -58116,6 +58166,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     useWorkstreams?: SortOrder
     surveyToken?: SortOrder
+    surveyEnabled?: SortOrder
+    surveyExpiresAt?: SortOrder
     clientShareToken?: SortOrder
     clientShareEnabled?: SortOrder
     clientShareExpiresAt?: SortOrder
@@ -58163,6 +58215,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     useWorkstreams?: SortOrder
     surveyToken?: SortOrder
+    surveyEnabled?: SortOrder
+    surveyExpiresAt?: SortOrder
     clientShareToken?: SortOrder
     clientShareEnabled?: SortOrder
     clientShareExpiresAt?: SortOrder
@@ -58202,6 +58256,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     useWorkstreams?: SortOrder
     surveyToken?: SortOrder
+    surveyEnabled?: SortOrder
+    surveyExpiresAt?: SortOrder
     clientShareToken?: SortOrder
     clientShareEnabled?: SortOrder
     clientShareExpiresAt?: SortOrder
@@ -66336,6 +66392,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -66391,6 +66449,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -66448,6 +66508,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -66503,6 +66565,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -66560,6 +66624,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -66615,6 +66681,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -66672,6 +66740,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -66727,6 +66797,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -68367,6 +68439,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Project"> | Date | string
     useWorkstreams?: BoolFilter<"Project"> | boolean
     surveyToken?: StringNullableFilter<"Project"> | string | null
+    surveyEnabled?: BoolFilter<"Project"> | boolean
+    surveyExpiresAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     clientShareToken?: StringNullableFilter<"Project"> | string | null
     clientShareEnabled?: BoolFilter<"Project"> | boolean
     clientShareExpiresAt?: DateTimeNullableFilter<"Project"> | Date | string | null
@@ -69285,6 +69359,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -69340,6 +69416,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -71345,6 +71423,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -71401,6 +71481,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -71631,6 +71713,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -71687,6 +71771,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -71913,6 +71999,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -71969,6 +72057,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -72348,6 +72438,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -72404,6 +72496,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -72581,6 +72675,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -72637,6 +72733,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -72699,6 +72797,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -72755,6 +72855,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73041,6 +73143,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -73097,6 +73201,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -73444,6 +73550,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73500,6 +73608,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73849,6 +73959,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -73905,6 +74017,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -74303,6 +74417,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -74359,6 +74475,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -74765,6 +74883,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -74821,6 +74941,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -75140,6 +75262,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -75196,6 +75320,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -75487,6 +75613,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -75543,6 +75671,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -75722,6 +75852,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -75778,6 +75910,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -75947,6 +76081,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -76003,6 +76139,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -76350,6 +76488,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -76406,6 +76546,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -78720,6 +78862,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -78776,6 +78920,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -78961,6 +79107,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -79017,6 +79165,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -79063,6 +79213,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -79119,6 +79271,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -79709,6 +79863,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -79765,6 +79921,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -80493,6 +80651,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -80549,6 +80709,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -80708,6 +80870,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -80764,6 +80928,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -83995,6 +84161,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -84051,6 +84219,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -84347,6 +84517,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -84403,6 +84575,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -85268,6 +85442,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -85324,6 +85500,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -85556,6 +85734,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -85612,6 +85792,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -85848,6 +86030,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -85886,6 +86070,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -85924,6 +86110,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -85962,6 +86150,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -86747,6 +86937,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -86802,6 +86994,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -86853,6 +87047,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -86887,6 +87083,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -86942,6 +87140,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -86993,6 +87193,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -87027,6 +87229,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -87082,6 +87286,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -87133,6 +87339,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -87167,6 +87375,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -87222,6 +87432,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -87273,6 +87485,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -88593,6 +88807,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -88652,6 +88868,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -88707,6 +88925,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -88758,6 +88978,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
