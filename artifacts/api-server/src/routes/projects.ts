@@ -468,6 +468,83 @@ router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdatePro
     }
   }
 
+  // ACTIVE transition gate: a project may only be activated once it is fully
+  // set up. We validate the EFFECTIVE state (incoming body overrides stored
+  // values) so a PATCH that fills fields and flips status in one call still
+  // works. Applies to every role (MANAGEMENT included) and to any non-ACTIVE
+  // -> ACTIVE move. Required: core Overview fields, an assigned PM, at least
+  // one staffed team member, billing milestones totalling 100%, at least one
+  // task, and at least one RAID item.
+  if (b.status === "ACTIVE" && beforeProj.status !== "ACTIVE") {
+    const pid = String(req.params.id);
+    const missing: string[] = [];
+
+    // Surface the same explicit date-format errors used later in the handler,
+    // so a malformed date isn't masked as a generic "missing" requirement.
+    if (b.startDate !== undefined && b.startDate && parseSafeDate(b.startDate) === null) {
+      res.status(400).json({ error: "startDate must be a valid YYYY-MM-DD date" });
+      return;
+    }
+    if (b.endDate !== undefined && b.endDate && parseSafeDate(b.endDate) === null) {
+      res.status(400).json({ error: "endDate must be a valid YYYY-MM-DD date" });
+      return;
+    }
+
+    const effClientId = b.clientId !== undefined ? b.clientId : beforeProj.clientId;
+    const effDescription =
+      b.description !== undefined ? b.description : beforeProj.description;
+    const effStartDate =
+      b.startDate !== undefined ? parseSafeDate(b.startDate) : beforeProj.startDate;
+    const effEndDate =
+      b.endDate !== undefined ? parseSafeDate(b.endDate) : beforeProj.endDate;
+    const effContractValue =
+      b.contractValue !== undefined ? Number(b.contractValue) : beforeProj.contractValue;
+    const effPlannedMandays =
+      b.plannedMandays !== undefined ? Number(b.plannedMandays) : beforeProj.plannedMandays;
+    const effEstimatedCost =
+      b.estimatedCost !== undefined ? Number(b.estimatedCost) : beforeProj.estimatedCost;
+    const effPmId = b.pmId !== undefined ? b.pmId : beforeProj.pmId;
+
+    if (!effClientId) missing.push("Client");
+    if (!effDescription || !String(effDescription).trim()) missing.push("Description");
+    if (!effStartDate) missing.push("Start date");
+    if (!effEndDate) missing.push("End date");
+    if (!(Number(effContractValue) > 0)) missing.push("Revenue (contract value)");
+    if (!(Number(effPlannedMandays) > 0)) missing.push("Planned mandays");
+    if (!(Number(effEstimatedCost) > 0)) missing.push("Estimated cost");
+    if (!effPmId) missing.push("Project Manager");
+
+    const [resourceCount, taskCount, raidCount, milestones] = await Promise.all([
+      prisma.projectResource.count({ where: { projectId: pid } }),
+      prisma.task.count({ where: { projectId: pid } }),
+      prisma.projectRaidItem.count({ where: { projectId: pid } }),
+      prisma.billingMilestone.findMany({
+        where: { projectId: pid },
+        select: { percentage: true },
+      }),
+    ]);
+
+    if (resourceCount === 0) missing.push("At least one team member in Resources");
+    if (taskCount === 0) missing.push("At least one task");
+    if (raidCount === 0) missing.push("At least one RAID item");
+
+    const totalPct = milestones.reduce((sum, m) => sum + (m.percentage || 0), 0);
+    if (milestones.length === 0) {
+      missing.push("Billing milestones (Terms of Payment)");
+    } else if (Math.abs(totalPct - 100) > 0.01) {
+      missing.push(`Billing milestones must total 100% (currently ${+totalPct.toFixed(2)}%)`);
+    }
+
+    if (missing.length > 0) {
+      res.status(400).json({
+        error: `Cannot activate this project yet. Please complete the following first: ${missing.join("; ")}.`,
+        code: "ACTIVATION_REQUIREMENTS_INCOMPLETE",
+        missing,
+      });
+      return;
+    }
+  }
+
   const data: Record<string, unknown> = {};
   if (b.code !== undefined) data.code = String(b.code);
   if (b.name !== undefined) data.name = String(b.name);
