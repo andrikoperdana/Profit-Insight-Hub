@@ -22,4 +22,5 @@ export type ProjectProfitOutlook = {
   forecastCost?: number;
   forecastProfit?: number;
   forecastMarginPct?: number;
+  progressPct?: number;
 } | null;

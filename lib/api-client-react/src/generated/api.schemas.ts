@@ -701,6 +701,7 @@ export const ProjectProfitOutlookStatus = {
   PROFIT: "PROFIT",
   THIN: "THIN",
   LOSS_RISK: "LOSS_RISK",
+  EARLY: "EARLY",
 } as const;
 
 /**
@@ -718,6 +719,7 @@ export type ProjectProfitOutlook = {
   forecastCost?: number;
   forecastProfit?: number;
   forecastMarginPct?: number;
+  progressPct?: number;
 } | null;
 
 export interface Project {
@@ -1474,6 +1476,7 @@ export const ProjectFinancialsProfitOutlookStatus = {
   PROFIT: "PROFIT",
   THIN: "THIN",
   LOSS_RISK: "LOSS_RISK",
+  EARLY: "EARLY",
 } as const;
 
 export type ProjectFinancialsProfitOutlook = {
@@ -1488,6 +1491,7 @@ export type ProjectFinancialsProfitOutlook = {
   forecastCost?: number;
   forecastProfit?: number;
   forecastMarginPct?: number;
+  progressPct?: number;
 } | null;
 
 export interface MonthlyFinancialPoint {

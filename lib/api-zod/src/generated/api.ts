@@ -369,7 +369,7 @@ export const UpdateProjectReportResponse = zod.object({
   healthReasons: zod.array(zod.string()).nullish(),
   profitOutlook: zod
     .object({
-      status: zod.enum(["PROFIT", "THIN", "LOSS_RISK"]).optional(),
+      status: zod.enum(["PROFIT", "THIN", "LOSS_RISK", "EARLY"]).optional(),
       contractValue: zod.number().optional(),
       estimatedCost: zod.number().optional(),
       estimatedProfit: zod.number().optional(),
@@ -380,6 +380,7 @@ export const UpdateProjectReportResponse = zod.object({
       forecastCost: zod.number().optional(),
       forecastProfit: zod.number().optional(),
       forecastMarginPct: zod.number().optional(),
+      progressPct: zod.number().optional(),
     })
     .nullish()
     .describe(
@@ -1261,7 +1262,7 @@ export const ListProjectsResponseItem = zod.object({
   healthReasons: zod.array(zod.string()).nullish(),
   profitOutlook: zod
     .object({
-      status: zod.enum(["PROFIT", "THIN", "LOSS_RISK"]).optional(),
+      status: zod.enum(["PROFIT", "THIN", "LOSS_RISK", "EARLY"]).optional(),
       contractValue: zod.number().optional(),
       estimatedCost: zod.number().optional(),
       estimatedProfit: zod.number().optional(),
@@ -1272,6 +1273,7 @@ export const ListProjectsResponseItem = zod.object({
       forecastCost: zod.number().optional(),
       forecastProfit: zod.number().optional(),
       forecastMarginPct: zod.number().optional(),
+      progressPct: zod.number().optional(),
     })
     .nullish()
     .describe(
@@ -1422,7 +1424,7 @@ export const GetProjectResponse = zod
     healthReasons: zod.array(zod.string()).nullish(),
     profitOutlook: zod
       .object({
-        status: zod.enum(["PROFIT", "THIN", "LOSS_RISK"]).optional(),
+        status: zod.enum(["PROFIT", "THIN", "LOSS_RISK", "EARLY"]).optional(),
         contractValue: zod.number().optional(),
         estimatedCost: zod.number().optional(),
         estimatedProfit: zod.number().optional(),
@@ -1433,6 +1435,7 @@ export const GetProjectResponse = zod
         forecastCost: zod.number().optional(),
         forecastProfit: zod.number().optional(),
         forecastMarginPct: zod.number().optional(),
+        progressPct: zod.number().optional(),
       })
       .nullish()
       .describe(
@@ -1654,7 +1657,7 @@ export const UpdateProjectResponse = zod.object({
   healthReasons: zod.array(zod.string()).nullish(),
   profitOutlook: zod
     .object({
-      status: zod.enum(["PROFIT", "THIN", "LOSS_RISK"]).optional(),
+      status: zod.enum(["PROFIT", "THIN", "LOSS_RISK", "EARLY"]).optional(),
       contractValue: zod.number().optional(),
       estimatedCost: zod.number().optional(),
       estimatedProfit: zod.number().optional(),
@@ -1665,6 +1668,7 @@ export const UpdateProjectResponse = zod.object({
       forecastCost: zod.number().optional(),
       forecastProfit: zod.number().optional(),
       forecastMarginPct: zod.number().optional(),
+      progressPct: zod.number().optional(),
     })
     .nullish()
     .describe(
@@ -1716,7 +1720,7 @@ export const GetProjectFinancialsResponse = zod.object({
   overheadMultiplier: zod.number().optional(),
   profitOutlook: zod
     .object({
-      status: zod.enum(["PROFIT", "THIN", "LOSS_RISK"]).optional(),
+      status: zod.enum(["PROFIT", "THIN", "LOSS_RISK", "EARLY"]).optional(),
       contractValue: zod.number().optional(),
       estimatedCost: zod.number().optional(),
       estimatedProfit: zod.number().optional(),
@@ -1727,6 +1731,7 @@ export const GetProjectFinancialsResponse = zod.object({
       forecastCost: zod.number().optional(),
       forecastProfit: zod.number().optional(),
       forecastMarginPct: zod.number().optional(),
+      progressPct: zod.number().optional(),
     })
     .nullish(),
   monthly: zod
@@ -1977,7 +1982,7 @@ export const ListProjectsNeedingResourceResponseItem = zod.object({
   healthReasons: zod.array(zod.string()).nullish(),
   profitOutlook: zod
     .object({
-      status: zod.enum(["PROFIT", "THIN", "LOSS_RISK"]).optional(),
+      status: zod.enum(["PROFIT", "THIN", "LOSS_RISK", "EARLY"]).optional(),
       contractValue: zod.number().optional(),
       estimatedCost: zod.number().optional(),
       estimatedProfit: zod.number().optional(),
@@ -1988,6 +1993,7 @@ export const ListProjectsNeedingResourceResponseItem = zod.object({
       forecastCost: zod.number().optional(),
       forecastProfit: zod.number().optional(),
       forecastMarginPct: zod.number().optional(),
+      progressPct: zod.number().optional(),
     })
     .nullish()
     .describe(
@@ -4585,7 +4591,7 @@ export const GetTopProjectsResponseItem = zod.object({
   healthReasons: zod.array(zod.string()).nullish(),
   profitOutlook: zod
     .object({
-      status: zod.enum(["PROFIT", "THIN", "LOSS_RISK"]).optional(),
+      status: zod.enum(["PROFIT", "THIN", "LOSS_RISK", "EARLY"]).optional(),
       contractValue: zod.number().optional(),
       estimatedCost: zod.number().optional(),
       estimatedProfit: zod.number().optional(),
@@ -4596,6 +4602,7 @@ export const GetTopProjectsResponseItem = zod.object({
       forecastCost: zod.number().optional(),
       forecastProfit: zod.number().optional(),
       forecastMarginPct: zod.number().optional(),
+      progressPct: zod.number().optional(),
     })
     .nullish()
     .describe(

@@ -459,7 +459,7 @@ export function computeHealthScore(
 // snapshots: the initial estimate captured at intake, the actual result so far,
 // and the projected final result. Used by the Profit Outlook panel.
 
-export type ProfitOutlookStatus = "PROFIT" | "THIN" | "LOSS_RISK";
+export type ProfitOutlookStatus = "PROFIT" | "THIN" | "LOSS_RISK" | "EARLY";
 
 export interface ProfitOutlook {
   status: ProfitOutlookStatus;
@@ -473,11 +473,19 @@ export interface ProfitOutlook {
   forecastCost: number;
   forecastProfit: number;
   forecastMarginPct: number;
+  // Percentage of planned work completed so far (mandays burn). Drives the
+  // "X% of work done" caption and the "too early to tell" guard.
+  progressPct: number;
 }
 
 // A project whose projected final margin is below this percentage is flagged as
 // having a "thin" margin; a projected loss is flagged as a loss risk.
 const THIN_MARGIN_PCT = 10;
+
+// Below this much logged progress the burn-rate sample is too small to trust, so
+// the projection is shown as "too early to tell" instead of a hard profit/loss
+// verdict (avoids alarming verdicts from one or two early high-rate timesheets).
+const EARLY_PROGRESS_PCT = 20;
 
 /**
  * Linear burn-rate projection of the final cost: scale the observed average
@@ -529,11 +537,21 @@ export function computeProfitOutlook(
   const estimatedMarginPct = pct(estimatedProfit);
   const actualMarginPct = pct(actualProfit);
   const forecastMarginPct = pct(forecastProfit);
+  const progressPct = metrics.burnRatePct;
 
+  // Once work is logged but still below the early threshold, the burn-rate
+  // sample is too small to extrapolate confidently, so hold off on a hard
+  // profit/loss verdict and surface "too early to tell" instead.
   let status: ProfitOutlookStatus;
-  if (forecastProfit < 0) status = "LOSS_RISK";
-  else if (forecastMarginPct < THIN_MARGIN_PCT) status = "THIN";
-  else status = "PROFIT";
+  if (metrics.actualMandays > 0 && progressPct < EARLY_PROGRESS_PCT) {
+    status = "EARLY";
+  } else if (forecastProfit < 0) {
+    status = "LOSS_RISK";
+  } else if (forecastMarginPct < THIN_MARGIN_PCT) {
+    status = "THIN";
+  } else {
+    status = "PROFIT";
+  }
 
   return {
     status,
@@ -547,5 +565,6 @@ export function computeProfitOutlook(
     forecastCost,
     forecastProfit,
     forecastMarginPct,
+    progressPct,
   };
 }

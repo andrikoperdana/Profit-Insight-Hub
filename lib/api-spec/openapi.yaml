@@ -2993,7 +2993,7 @@ components:
           nullable: true
           description: Plain-language profit/loss outlook. Null for callers without financial visibility.
           properties:
-            status: { type: string, enum: [PROFIT, THIN, LOSS_RISK] }
+            status: { type: string, enum: [PROFIT, THIN, LOSS_RISK, EARLY] }
             contractValue: { type: number }
             estimatedCost: { type: number }
             estimatedProfit: { type: number }
@@ -3004,6 +3004,7 @@ components:
             forecastCost: { type: number }
             forecastProfit: { type: number }
             forecastMarginPct: { type: number }
+            progressPct: { type: number }
         spkFileUrl: { type: string, nullable: true }
         spkFileName: { type: string, nullable: true }
         contractFileUrl: { type: string, nullable: true }
@@ -3660,7 +3661,7 @@ components:
           type: object
           nullable: true
           properties:
-            status: { type: string, enum: [PROFIT, THIN, LOSS_RISK] }
+            status: { type: string, enum: [PROFIT, THIN, LOSS_RISK, EARLY] }
             contractValue: { type: number }
             estimatedCost: { type: number }
             estimatedProfit: { type: number }
@@ -3671,6 +3672,7 @@ components:
             forecastCost: { type: number }
             forecastProfit: { type: number }
             forecastMarginPct: { type: number }
+            progressPct: { type: number }
         monthly:
           type: array
           items: { $ref: "#/components/schemas/MonthlyFinancialPoint" }

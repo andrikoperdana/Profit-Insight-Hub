@@ -1,11 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, TrendingDown, AlertTriangle, MinusCircle } from "lucide-react";
+import { TrendingUp, TrendingDown, AlertTriangle, MinusCircle, HelpCircle } from "lucide-react";
 import { formatIDR, formatPct } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 export type ProfitOutlook = {
-  status: "PROFIT" | "THIN" | "LOSS_RISK";
+  status: "PROFIT" | "THIN" | "LOSS_RISK" | "EARLY";
   contractValue: number;
   estimatedCost: number;
   estimatedProfit: number;
@@ -16,6 +16,7 @@ export type ProfitOutlook = {
   forecastCost: number;
   forecastProfit: number;
   forecastMarginPct: number;
+  progressPct: number;
 };
 
 const STATUS_META: Record<
@@ -37,7 +38,20 @@ const STATUS_META: Record<
     badgeClass: "bg-red-500/10 text-red-500 border-red-500/30",
     icon: <TrendingDown className="h-3.5 w-3.5" />,
   },
+  EARLY: {
+    label: "Too Early to Tell",
+    badgeClass: "bg-slate-500/10 text-slate-400 border-slate-500/30",
+    icon: <HelpCircle className="h-3.5 w-3.5" />,
+  },
 };
+
+/**
+ * Caption explaining that the projection is a burn-rate extrapolation, plus how
+ * much of the work is actually done so far (small samples are unreliable).
+ */
+function projectionCaption(progressPct: number) {
+  return `Projection based on current spending rate · ${Math.round(progressPct)}% of work done`;
+}
 
 function StatusBadge({ status }: { status: ProfitOutlook["status"] }) {
   const meta = STATUS_META[status];
@@ -144,6 +158,12 @@ export function ProfitOutlookPanel({ outlook }: { outlook: ProfitOutlook }) {
             highlight
           />
         </div>
+        <p className="mt-3 text-[11px] text-muted-foreground">
+          {projectionCaption(outlook.progressPct)}
+          {outlook.status === "EARLY"
+            ? " — still early, so this forecast may swing as more work is logged."
+            : ""}
+        </p>
       </CardContent>
     </Card>
   );
@@ -168,6 +188,9 @@ export function ProfitOutlookCompact({ outlook }: { outlook: ProfitOutlook }) {
           {formatIDR(outlook.forecastProfit)} ({formatPct(outlook.forecastMarginPct)})
         </span>
       </div>
+      <p className="text-[11px] text-muted-foreground leading-snug">
+        {projectionCaption(outlook.progressPct)}
+      </p>
     </div>
   );
 }

@@ -13,4 +13,5 @@ export const ProjectProfitOutlookStatus = {
   PROFIT: "PROFIT",
   THIN: "THIN",
   LOSS_RISK: "LOSS_RISK",
+  EARLY: "EARLY",
 } as const;
