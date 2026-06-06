@@ -545,6 +545,46 @@ router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdatePro
     }
   }
 
+  // COMPLETE transition gate: a project may only be marked complete once
+  // delivery and its operational/financial data are wrapped up. Applies to
+  // every role and to any non-COMPLETE -> COMPLETE move. (statusChangeReason
+  // is already enforced above.) Required: all tasks Done, no timesheets
+  // awaiting approval, no pending expenses, every billing milestone at least
+  // invoiced (none still PLANNED), no open RAID items, and an uploaded BAST.
+  if (b.status === "COMPLETE" && beforeProj.status !== "COMPLETE") {
+    const pid = String(req.params.id);
+    const missing: string[] = [];
+
+    const [openTasks, pendingTimesheets, pendingExpenses, plannedMilestones, openRaid, bastCount] =
+      await Promise.all([
+        prisma.task.count({ where: { projectId: pid, status: { not: "DONE" } } }),
+        prisma.timesheet.count({ where: { projectId: pid, status: "SUBMITTED" } }),
+        prisma.projectExpense.count({ where: { projectId: pid, status: "PENDING" } }),
+        prisma.billingMilestone.count({ where: { projectId: pid, status: "PLANNED" } }),
+        prisma.projectRaidItem.count({ where: { projectId: pid, status: "OPEN" } }),
+        prisma.document.count({ where: { projectId: pid, type: "BAST", isLatest: true } }),
+      ]);
+
+    if (openTasks > 0) missing.push(`All tasks must be Done (${openTasks} not yet Done)`);
+    if (pendingTimesheets > 0)
+      missing.push(`No timesheets awaiting approval (${pendingTimesheets} still pending)`);
+    if (pendingExpenses > 0)
+      missing.push(`No pending expenses (${pendingExpenses} still pending)`);
+    if (plannedMilestones > 0)
+      missing.push(`All billing milestones must be invoiced (${plannedMilestones} still planned)`);
+    if (openRaid > 0) missing.push(`All RAID items must be resolved (${openRaid} still open)`);
+    if (bastCount === 0) missing.push("A signed handover document (BAST) must be uploaded");
+
+    if (missing.length > 0) {
+      res.status(400).json({
+        error: `Cannot mark this project as complete yet. Please resolve the following first: ${missing.join("; ")}.`,
+        code: "COMPLETION_REQUIREMENTS_INCOMPLETE",
+        missing,
+      });
+      return;
+    }
+  }
+
   const data: Record<string, unknown> = {};
   if (b.code !== undefined) data.code = String(b.code);
   if (b.name !== undefined) data.name = String(b.name);

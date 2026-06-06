@@ -35,6 +35,8 @@ Management (PMO Director), Project Manager, Sales, Konsultan, Technical Writer, 
 
 **ACTIVE transition gate** (`routes/projects.ts` PATCH, mirrors the CLOSED gate; all roles incl. MGMT): any non-ACTIVE→ACTIVE move requires, validated against effective state (incoming body overrides stored) — core Overview fields (client, description, start/end date, contractValue>0, plannedMandays>0, estimatedCost>0), assigned `pmId`, ≥1 `ProjectResource`, ≥1 `Task`, ≥1 `ProjectRaidItem`, and `BillingMilestone` percentages summing to 100%. Fails 400 `ACTIVATION_REQUIREMENTS_INCOMPLETE` with a `missing[]` list.
 
+**COMPLETE transition gate** (same handler; all roles): any non-COMPLETE→COMPLETE move requires all tasks DONE, no `Timesheet` in SUBMITTED, no `ProjectExpense` in PENDING, no `BillingMilestone` still PLANNED, no `ProjectRaidItem` still OPEN, and ≥1 latest BAST `Document`. `statusChangeReason` already enforced earlier. Fails 400 `COMPLETION_REQUIREMENTS_INCOMPLETE` with a `missing[]` list.
+
 Intake: Sales fills 4-field form at `/projects/new` (server forces `status=DRAFT`, `salesId`, `pmId=null`). MGMT assigns PM (409 if already set). PM uses `DraftCompletionCard` to fill description/dates/revenue/mandays/cost → OBSERVATION.
 
 `PATCH /api/projects/:id` (`routes/projects.ts`):
