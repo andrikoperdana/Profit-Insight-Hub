@@ -171,6 +171,42 @@ For each entry you can:
 The dashboard "Pending Approval Aging" widget highlights entries older than 48
 hours so nothing slips through.
 
+### 4.3 Work Hours Compliance
+
+Some roles are expected to log a full work week. The required roles are
+**Project Manager, Konsultan, Technical Writer**, and the three **Principal**
+supervisors. Each of them must log **40 hours per week** (8 hours × Monday to
+Friday). Other roles (Admin Project, Sales, Finance, HR, Management, Site Admin)
+are exempt and do not see this feature.
+
+**Your own view.** If you are a required role, a **Work Hours** card appears on
+your dashboard showing logged hours vs. target for **this week, this month, and
+this year**, plus any hours still **pending approval** (shown separately because
+only approved hours count once reviewed). A status tells you where you stand:
+
+* **On Target** — you have met the target.
+* **On Track** — you are keeping pace with the days elapsed so far.
+* **Slightly Behind** / **Behind** — you are falling short and should catch up.
+
+**Leave lowers the target.** Recorded leave (Annual, Sick, etc.) reduces the
+target by 8 hours for each leave business day — so a week with one approved
+leave day expects 32 hours instead of 40. Use the **Log Leave** button on the
+card (the same leave dialog used elsewhere) to record time off. Overlapping
+leave entries never double-count.
+
+**Supervisor view (`Work Hours` page).** Open **Work Hours** from the sidebar to
+see a compliance table for your team — name, role, business unit, and logged vs.
+target hours for week/month/year with a status badge. Scope depends on your role:
+
+* **HR** sees all required staff.
+* **Management** sees the Project Managers.
+* **Principals** see only the people they supervise.
+
+**Download.** The Work Hours page header has **CSV** and **Excel** buttons that
+download the full team table (one row per person, all week/month/year columns).
+The download always respects your scope — you only ever export the rows you are
+allowed to see.
+
 ---
 
 ## 5. Resources & Capacity

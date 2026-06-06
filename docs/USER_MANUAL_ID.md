@@ -191,6 +191,26 @@ Project Manager melihat antrian timesheet pada menu **Approval Inbox** (sidebar 
 
 Hanya jam yang berstatus **APPROVED** yang ikut dihitung pada **Actual Mandays** dan biaya proyek. Hal ini memastikan laporan keuangan mencerminkan pekerjaan yang sah.
 
+### 7.4 Kepatuhan Jam Kerja (Work Hours Compliance)
+
+Beberapa peran diwajibkan mencatat jam kerja penuh. Peran wajib lapor adalah **Project Manager, Konsultan, Technical Writer**, dan ketiga **Principal**. Mereka harus mencatat **40 jam per minggu** (8 jam × Senin–Jumat). Peran lain (Admin Project, Sales, Finance, HR, Management, Site Admin) dikecualikan dan tidak melihat fitur ini.
+
+**Tampilan pribadi.** Bila Anda termasuk peran wajib lapor, sebuah kartu **Work Hours** muncul di dashboard Anda. Kartu ini menampilkan jam tercatat vs. target untuk **minggu, bulan, dan tahun** berjalan, ditambah jam yang masih **menunggu persetujuan** (ditampilkan terpisah karena hanya jam APPROVED yang dihitung final). Status menunjukkan posisi Anda:
+
+* **On Target** — target sudah tercapai.
+* **On Track** — masih sesuai dengan jumlah hari yang sudah berjalan.
+* **Slightly Behind** / **Behind** — kurang dari target, perlu dikejar.
+
+**Cuti menurunkan target.** Cuti yang tercatat (Tahunan, Sakit, dll.) menurunkan target sebesar 8 jam untuk setiap hari kerja cuti — jadi satu minggu dengan satu hari cuti hanya menargetkan 32 jam, bukan 40 jam. Gunakan tombol **Log Leave** pada kartu (dialog cuti yang sama dengan menu lain) untuk mencatat cuti. Cuti yang tumpang tindih tidak akan dihitung ganda.
+
+**Tampilan atasan (halaman `Work Hours`).** Buka menu **Work Hours** di sidebar untuk melihat tabel kepatuhan tim — nama, peran, business unit, serta jam tercatat vs. target untuk minggu/bulan/tahun dengan badge status. Cakupan bergantung peran Anda:
+
+* **HR** melihat seluruh staf wajib lapor.
+* **Management** melihat para Project Manager.
+* **Principal** hanya melihat anggota yang ia bawahi.
+
+**Unduh data.** Di bagian atas halaman Work Hours tersedia tombol **CSV** dan **Excel** untuk mengunduh seluruh tabel tim (satu baris per orang, lengkap dengan kolom minggu/bulan/tahun). Hasil unduhan selalu mengikuti cakupan Anda — Anda hanya mengekspor baris yang berhak Anda lihat.
+
 ---
 
 ## Bagian 8 — Dokumen: BAST & Invoice (Auto-Close)
