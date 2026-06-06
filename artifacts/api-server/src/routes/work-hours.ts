@@ -8,6 +8,7 @@ import {
   type WorkHoursEntry,
   type WorkHoursLeave,
 } from "../lib/work-hours.js";
+import { workHoursCsv, workHoursXlsx, type WorkHoursMemberRow } from "../lib/work-hours-export.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -72,15 +73,14 @@ router.get("/work-hours/me", async (req, res) => {
   );
 });
 
-// GET /api/work-hours/team — compliance for the people the caller supervises.
-// HR sees all required-role staff, Management sees Project Managers, and each
-// Principal sees their own supervisees.
-router.get("/work-hours/team", async (req, res) => {
-  const role = req.user!.role;
-  if (!canViewWorkHoursTeam(role)) {
-    res.status(403).json({ error: "Forbidden" });
-    return;
-  }
+// Build the scoped team compliance report for a supervisor. HR sees all
+// required-role staff, Management sees Project Managers, and each Principal
+// sees their own supervisees. Returns null when the caller is not allowed.
+async function buildTeamReport(
+  role: string,
+  sub: string,
+): Promise<{ scopeLabel: string; members: ReturnType<typeof buildSummary>[] } | null> {
+  if (!canViewWorkHoursTeam(role)) return null;
 
   let scopeLabel: string;
   const where: Prisma.UserWhereInput = { deletedAt: null, isActive: true };
@@ -101,7 +101,7 @@ router.get("/work-hours/team", async (req, res) => {
     scopeLabel = "Project Managers";
   } else {
     // Principal: only their direct supervisees.
-    where.principalId = req.user!.sub;
+    where.principalId = sub;
     scopeLabel = "My team";
   }
 
@@ -113,8 +113,7 @@ router.get("/work-hours/team", async (req, res) => {
 
   const now = new Date();
   if (members.length === 0) {
-    res.json({ scopeLabel, members: [] });
-    return;
+    return { scopeLabel, members: [] };
   }
 
   const { start, end } = overallRange(now);
@@ -153,7 +152,61 @@ router.get("/work-hours/team", async (req, res) => {
     ),
   );
 
-  res.json({ scopeLabel, members: result });
+  return { scopeLabel, members: result };
+}
+
+// GET /api/work-hours/team — compliance for the people the caller supervises.
+router.get("/work-hours/team", async (req, res) => {
+  const report = await buildTeamReport(req.user!.role, req.user!.sub);
+  if (!report) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  res.json(report);
+});
+
+// GET /api/work-hours/team/export?format=csv|xlsx — download the scoped team
+// report. Not in OpenAPI; fetched as a bearer-authenticated blob by the client.
+router.get("/work-hours/team/export", async (req, res) => {
+  const report = await buildTeamReport(req.user!.role, req.user!.sub);
+  if (!report) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+
+  const format = String(req.query.format || "csv").toLowerCase();
+  if (!["csv", "xlsx"].includes(format)) {
+    res.status(400).json({ error: "INVALID_FORMAT" });
+    return;
+  }
+
+  const rows: WorkHoursMemberRow[] = report.members.map((m) => ({
+    userName: m.userName,
+    role: m.role,
+    businessUnitName: m.businessUnitName,
+    required: m.required,
+    week: m.week,
+    month: m.month,
+    year: m.year,
+  }));
+
+  const stamp = new Date().toISOString().slice(0, 10);
+  try {
+    if (format === "csv") {
+      const csv = workHoursCsv(rows);
+      res.setHeader("Content-Type", "text/csv; charset=utf-8");
+      res.setHeader("Content-Disposition", `attachment; filename="work-hours-${stamp}.csv"`);
+      res.send("\uFEFF" + csv);
+      return;
+    }
+    const buf = await workHoursXlsx(rows, report.scopeLabel);
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    res.setHeader("Content-Disposition", `attachment; filename="work-hours-${stamp}.xlsx"`);
+    res.send(buf);
+  } catch (err) {
+    req.log.error({ err, format }, "work-hours export failed");
+    res.status(500).json({ error: "WORK_HOURS_EXPORT_FAILED" });
+  }
 });
 
 export default router;

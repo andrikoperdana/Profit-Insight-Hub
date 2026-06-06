@@ -8,6 +8,7 @@ import {
 } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
@@ -15,7 +16,7 @@ import {
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import { Clock } from "lucide-react";
+import { Clock, Download } from "lucide-react";
 import { RoleLabels } from "@/lib/roles";
 import type { UserRole } from "@workspace/api-client-react";
 
@@ -59,6 +60,28 @@ export default function WorkHoursTeamPage() {
 
   const members: WorkHoursSummary[] = data?.members ?? [];
 
+  function downloadExport(format: "csv" | "xlsx") {
+    const token = localStorage.getItem("auth_token");
+    fetch(`/api/work-hours/team/export?format=${format}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    })
+      .then((r) => {
+        if (!r.ok) throw new Error("export failed");
+        return r.blob();
+      })
+      .then((blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `work-hours-${new Date().toISOString().slice(0, 10)}.${format}`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      })
+      .catch(() => alert("Failed to download work hours report."));
+  }
+
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     return members.filter((m) => {
@@ -87,15 +110,39 @@ export default function WorkHoursTeamPage() {
 
   return (
     <div className="p-6 space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          <Clock className="h-6 w-6 text-primary" />
-          Work Hours Compliance
-        </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          {data?.scopeLabel ? `${data.scopeLabel} — ` : ""}
-          tracking the 40 hours/week target. Recorded leave lowers each person's target.
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold flex items-center gap-2">
+            <Clock className="h-6 w-6 text-primary" />
+            Work Hours Compliance
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            {data?.scopeLabel ? `${data.scopeLabel} — ` : ""}
+            tracking the 40 hours/week target. Recorded leave lowers each person's target.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => downloadExport("csv")}
+            disabled={members.length === 0}
+            data-testid="button-export-work-hours-csv"
+          >
+            <Download className="h-4 w-4 mr-1.5" />
+            CSV
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => downloadExport("xlsx")}
+            disabled={members.length === 0}
+            data-testid="button-export-work-hours-xlsx"
+          >
+            <Download className="h-4 w-4 mr-1.5" />
+            Excel
+          </Button>
+        </div>
       </div>
 
       <div className="grid gap-3 md:grid-cols-4">
