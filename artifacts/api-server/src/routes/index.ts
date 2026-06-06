@@ -44,6 +44,7 @@ import performanceReviewsRouter from "./performance-reviews.js";
 import workstreamsRouter from "./workstreams.js";
 import projectReportsRouter from "./project-reports.js";
 import xeroRouter from "./xero.js";
+import clientPortalRouter from "./client-portal.js";
 
 const router: IRouter = Router();
 
@@ -58,6 +59,12 @@ router.use("/calendar", calendarFeedRouter);
 // callback would otherwise be intercepted by the first sub-router whose top-level
 // requireAuth runs for every request, returning 401 before reaching the handler.
 router.use(xeroRouter);
+// Mounted BEFORE the blanket-auth routers below for the same reason as
+// xeroRouter: the public client-portal endpoint (GET /public/client-portal/:token)
+// has no Bearer token and must reach its handler before any sub-router whose
+// top-level requireAuth would 401 it. Its management endpoints apply auth
+// per-route, so this ordering is safe.
+router.use(clientPortalRouter);
 router.use(usersRouter);
 router.use(clientsRouter);
 router.use(projectsRouter);

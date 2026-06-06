@@ -210,6 +210,11 @@ model Project {
   useWorkstreams Boolean   @default(false)
 
   surveyToken    String?   @unique
+
+  clientShareToken     String?   @unique
+  clientShareEnabled   Boolean   @default(false)
+  clientShareExpiresAt DateTime?
+
   resources       ProjectResource[]
   timesheets      Timesheet[]
   documents       Document[]

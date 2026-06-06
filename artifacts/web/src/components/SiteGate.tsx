@@ -14,13 +14,20 @@ type GateStatus = { enabled: boolean; authorized: boolean };
  * set HttpOnly by the server, so this is just the UI in front of it.
  */
 export function SiteGate({ children }: { children: ReactNode }) {
-  const [status, setStatus] = useState<GateStatus | null>(null);
+  // Public, no-login pages (client portal, customer survey) must never show the
+  // front-door password popup — they are meant to be opened by external people
+  // who don't have site credentials. The API enforces their own access rules.
+  const isPublicPath = /\/(portal|survey)\//.test(window.location.pathname);
+  const [status, setStatus] = useState<GateStatus | null>(
+    isPublicPath ? { enabled: false, authorized: true } : null,
+  );
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (isPublicPath) return;
     let active = true;
     fetch(`${API_BASE}/site-gate/status`, { credentials: "same-origin" })
       .then((r) => (r.ok ? r.json() : { enabled: false, authorized: true }))

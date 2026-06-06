@@ -19,3 +19,18 @@ enforced by middleware on `/api` (403 + `X-Site-Gate: required`, exempting `/hea
 
 **How to apply:** if asked to add/replace a front gate, keep it cookie-based (or use Replit
 deployment password protection), never Basic Auth, or you'll break Bearer JWT.
+
+## Public no-login pages (client portal, survey)
+
+Public pages opened by external people who have no site credentials must bypass the gate on
+**both** sides or they hit the popup/403:
+- Server: site-gate middleware exempts paths under `/api/public/*`; mount the public router
+  before the blanket-auth routers.
+- Web: `SiteGate.tsx` short-circuits (renders children, skips the status fetch) when
+  `window.location.pathname` matches a public route (`/portal/`, `/survey/`).
+
+**Fail-closed rule for public token endpoints:** funnel every failure mode (unknown token,
+malformed, disabled, expired, DRAFT, soft-deleted) through one path returning an **identical**
+404 body+headers. No length/format pre-check before the DB lookup — a distinct early return is
+a token-existence oracle. Payload must be a hand-written whitelist (never reuse projectInclude
+/ financials serializers) so cost/margin/rate/documents can't leak.

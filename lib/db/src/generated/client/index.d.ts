@@ -8532,6 +8532,9 @@ export namespace Prisma {
     updatedAt: Date | null
     useWorkstreams: boolean | null
     surveyToken: string | null
+    clientShareToken: string | null
+    clientShareEnabled: boolean | null
+    clientShareExpiresAt: Date | null
   }
 
   export type ProjectMaxAggregateOutputType = {
@@ -8568,6 +8571,9 @@ export namespace Prisma {
     updatedAt: Date | null
     useWorkstreams: boolean | null
     surveyToken: string | null
+    clientShareToken: string | null
+    clientShareEnabled: boolean | null
+    clientShareExpiresAt: Date | null
   }
 
   export type ProjectCountAggregateOutputType = {
@@ -8604,6 +8610,9 @@ export namespace Prisma {
     updatedAt: number
     useWorkstreams: number
     surveyToken: number
+    clientShareToken: number
+    clientShareEnabled: number
+    clientShareExpiresAt: number
     _all: number
   }
 
@@ -8658,6 +8667,9 @@ export namespace Prisma {
     updatedAt?: true
     useWorkstreams?: true
     surveyToken?: true
+    clientShareToken?: true
+    clientShareEnabled?: true
+    clientShareExpiresAt?: true
   }
 
   export type ProjectMaxAggregateInputType = {
@@ -8694,6 +8706,9 @@ export namespace Prisma {
     updatedAt?: true
     useWorkstreams?: true
     surveyToken?: true
+    clientShareToken?: true
+    clientShareEnabled?: true
+    clientShareExpiresAt?: true
   }
 
   export type ProjectCountAggregateInputType = {
@@ -8730,6 +8745,9 @@ export namespace Prisma {
     updatedAt?: true
     useWorkstreams?: true
     surveyToken?: true
+    clientShareToken?: true
+    clientShareEnabled?: true
+    clientShareExpiresAt?: true
     _all?: true
   }
 
@@ -8853,6 +8871,9 @@ export namespace Prisma {
     updatedAt: Date
     useWorkstreams: boolean
     surveyToken: string | null
+    clientShareToken: string | null
+    clientShareEnabled: boolean
+    clientShareExpiresAt: Date | null
     _count: ProjectCountAggregateOutputType | null
     _avg: ProjectAvgAggregateOutputType | null
     _sum: ProjectSumAggregateOutputType | null
@@ -8908,6 +8929,9 @@ export namespace Prisma {
     updatedAt?: boolean
     useWorkstreams?: boolean
     surveyToken?: boolean
+    clientShareToken?: boolean
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: boolean
     client?: boolean | ClientDefaultArgs<ExtArgs>
     sales?: boolean | Project$salesArgs<ExtArgs>
     pm?: boolean | Project$pmArgs<ExtArgs>
@@ -8963,6 +8987,9 @@ export namespace Prisma {
     updatedAt?: boolean
     useWorkstreams?: boolean
     surveyToken?: boolean
+    clientShareToken?: boolean
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: boolean
     client?: boolean | ClientDefaultArgs<ExtArgs>
     sales?: boolean | Project$salesArgs<ExtArgs>
     pm?: boolean | Project$pmArgs<ExtArgs>
@@ -9004,6 +9031,9 @@ export namespace Prisma {
     updatedAt?: boolean
     useWorkstreams?: boolean
     surveyToken?: boolean
+    clientShareToken?: boolean
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: boolean
   }
 
   export type ProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9091,6 +9121,9 @@ export namespace Prisma {
       updatedAt: Date
       useWorkstreams: boolean
       surveyToken: string | null
+      clientShareToken: string | null
+      clientShareEnabled: boolean
+      clientShareExpiresAt: Date | null
     }, ExtArgs["result"]["project"]>
     composites: {}
   }
@@ -9535,6 +9568,9 @@ export namespace Prisma {
     readonly updatedAt: FieldRef<"Project", 'DateTime'>
     readonly useWorkstreams: FieldRef<"Project", 'Boolean'>
     readonly surveyToken: FieldRef<"Project", 'String'>
+    readonly clientShareToken: FieldRef<"Project", 'String'>
+    readonly clientShareEnabled: FieldRef<"Project", 'Boolean'>
+    readonly clientShareExpiresAt: FieldRef<"Project", 'DateTime'>
   }
     
 
@@ -48305,7 +48341,10 @@ export namespace Prisma {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     useWorkstreams: 'useWorkstreams',
-    surveyToken: 'surveyToken'
+    surveyToken: 'surveyToken',
+    clientShareToken: 'clientShareToken',
+    clientShareEnabled: 'clientShareEnabled',
+    clientShareExpiresAt: 'clientShareExpiresAt'
   };
 
   export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
@@ -49660,6 +49699,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Project"> | Date | string
     useWorkstreams?: BoolFilter<"Project"> | boolean
     surveyToken?: StringNullableFilter<"Project"> | string | null
+    clientShareToken?: StringNullableFilter<"Project"> | string | null
+    clientShareEnabled?: BoolFilter<"Project"> | boolean
+    clientShareExpiresAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     client?: XOR<ClientRelationFilter, ClientWhereInput>
     sales?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     pm?: XOR<UserNullableRelationFilter, UserWhereInput> | null
@@ -49714,6 +49756,9 @@ export namespace Prisma {
     updatedAt?: SortOrder
     useWorkstreams?: SortOrder
     surveyToken?: SortOrderInput | SortOrder
+    clientShareToken?: SortOrderInput | SortOrder
+    clientShareEnabled?: SortOrder
+    clientShareExpiresAt?: SortOrderInput | SortOrder
     client?: ClientOrderByWithRelationInput
     sales?: UserOrderByWithRelationInput
     pm?: UserOrderByWithRelationInput
@@ -49738,6 +49783,7 @@ export namespace Prisma {
     id?: string
     code?: string
     surveyToken?: string
+    clientShareToken?: string
     AND?: ProjectWhereInput | ProjectWhereInput[]
     OR?: ProjectWhereInput[]
     NOT?: ProjectWhereInput | ProjectWhereInput[]
@@ -49771,6 +49817,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
     useWorkstreams?: BoolFilter<"Project"> | boolean
+    clientShareEnabled?: BoolFilter<"Project"> | boolean
+    clientShareExpiresAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     client?: XOR<ClientRelationFilter, ClientWhereInput>
     sales?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     pm?: XOR<UserNullableRelationFilter, UserWhereInput> | null
@@ -49789,7 +49837,7 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemListRelationFilter
     workstreams?: ProjectWorkstreamListRelationFilter
     reports?: ProjectReportListRelationFilter
-  }, "id" | "code" | "surveyToken">
+  }, "id" | "code" | "surveyToken" | "clientShareToken">
 
   export type ProjectOrderByWithAggregationInput = {
     id?: SortOrder
@@ -49825,6 +49873,9 @@ export namespace Prisma {
     updatedAt?: SortOrder
     useWorkstreams?: SortOrder
     surveyToken?: SortOrderInput | SortOrder
+    clientShareToken?: SortOrderInput | SortOrder
+    clientShareEnabled?: SortOrder
+    clientShareExpiresAt?: SortOrderInput | SortOrder
     _count?: ProjectCountOrderByAggregateInput
     _avg?: ProjectAvgOrderByAggregateInput
     _max?: ProjectMaxOrderByAggregateInput
@@ -49869,6 +49920,9 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
     useWorkstreams?: BoolWithAggregatesFilter<"Project"> | boolean
     surveyToken?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    clientShareToken?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    clientShareEnabled?: BoolWithAggregatesFilter<"Project"> | boolean
+    clientShareExpiresAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
   }
 
   export type ProjectReportWhereInput = {
@@ -53552,6 +53606,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
@@ -53606,6 +53663,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
     documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
@@ -53650,6 +53710,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
@@ -53704,6 +53767,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
@@ -53753,6 +53819,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
   }
 
   export type ProjectUpdateManyMutationInput = {
@@ -53784,6 +53853,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProjectUncheckedUpdateManyInput = {
@@ -53820,6 +53892,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProjectReportCreateInput = {
@@ -58041,6 +58116,9 @@ export namespace Prisma {
     updatedAt?: SortOrder
     useWorkstreams?: SortOrder
     surveyToken?: SortOrder
+    clientShareToken?: SortOrder
+    clientShareEnabled?: SortOrder
+    clientShareExpiresAt?: SortOrder
   }
 
   export type ProjectAvgOrderByAggregateInput = {
@@ -58085,6 +58163,9 @@ export namespace Prisma {
     updatedAt?: SortOrder
     useWorkstreams?: SortOrder
     surveyToken?: SortOrder
+    clientShareToken?: SortOrder
+    clientShareEnabled?: SortOrder
+    clientShareExpiresAt?: SortOrder
   }
 
   export type ProjectMinOrderByAggregateInput = {
@@ -58121,6 +58202,9 @@ export namespace Prisma {
     updatedAt?: SortOrder
     useWorkstreams?: SortOrder
     surveyToken?: SortOrder
+    clientShareToken?: SortOrder
+    clientShareEnabled?: SortOrder
+    clientShareExpiresAt?: SortOrder
   }
 
   export type ProjectSumOrderByAggregateInput = {
@@ -66252,6 +66336,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
@@ -66304,6 +66391,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
     documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
@@ -66358,6 +66448,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
@@ -66410,6 +66503,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
     documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
@@ -66464,6 +66560,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
@@ -66516,6 +66615,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
     documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
@@ -66570,6 +66672,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
@@ -66622,6 +66727,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
     documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
@@ -68259,6 +68367,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Project"> | Date | string
     useWorkstreams?: BoolFilter<"Project"> | boolean
     surveyToken?: StringNullableFilter<"Project"> | string | null
+    clientShareToken?: StringNullableFilter<"Project"> | string | null
+    clientShareEnabled?: BoolFilter<"Project"> | boolean
+    clientShareExpiresAt?: DateTimeNullableFilter<"Project"> | Date | string | null
   }
 
   export type ProjectUpsertWithWhereUniqueWithoutPmInput = {
@@ -69174,6 +69285,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
@@ -69226,6 +69340,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
     documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
@@ -71228,6 +71345,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
@@ -71281,6 +71401,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
     documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
@@ -71508,6 +71631,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
@@ -71561,6 +71687,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
@@ -71784,6 +71913,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
@@ -71837,6 +71969,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
     documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
@@ -72213,6 +72348,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
@@ -72266,6 +72404,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
@@ -72440,6 +72581,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
@@ -72493,6 +72637,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
     documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
@@ -72552,6 +72699,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
@@ -72605,6 +72755,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
@@ -72888,6 +73041,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
@@ -72941,6 +73097,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
     documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
     activities?: ActivityUncheckedCreateNestedManyWithoutProjectInput
@@ -73285,6 +73444,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
@@ -73338,6 +73500,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutProjectNestedInput
@@ -73684,6 +73849,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
@@ -73737,6 +73905,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
     activities?: ActivityUncheckedCreateNestedManyWithoutProjectInput
@@ -74132,6 +74303,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
@@ -74185,6 +74359,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutProjectNestedInput
@@ -74588,6 +74765,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
@@ -74641,6 +74821,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
     activities?: ActivityUncheckedCreateNestedManyWithoutProjectInput
@@ -74957,6 +75140,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
@@ -75010,6 +75196,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutProjectNestedInput
@@ -75298,6 +75487,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
@@ -75351,6 +75543,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
     documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
@@ -75527,6 +75722,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
@@ -75580,6 +75778,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
@@ -75746,6 +75947,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
@@ -75799,6 +76003,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
     documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
@@ -76143,6 +76350,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
@@ -76196,6 +76406,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
@@ -78507,6 +78720,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
@@ -78560,6 +78776,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
     documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
@@ -78742,6 +78961,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
@@ -78795,6 +79017,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
@@ -78838,6 +79063,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
@@ -78891,6 +79119,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
     documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
@@ -79478,6 +79709,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
@@ -79531,6 +79765,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
@@ -80256,6 +80493,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
@@ -80309,6 +80549,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
     documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
@@ -80465,6 +80708,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
@@ -80518,6 +80764,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
@@ -83746,6 +83995,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
@@ -83799,6 +84051,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
     documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
@@ -84092,6 +84347,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
@@ -84145,6 +84403,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
@@ -85007,6 +85268,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     client: ClientCreateNestedOneWithoutProjectsInput
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
@@ -85060,6 +85324,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
     documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
@@ -85289,6 +85556,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
@@ -85342,6 +85612,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
@@ -85575,6 +85848,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
   }
 
   export type ProjectCreateManyPmInput = {
@@ -85610,6 +85886,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
   }
 
   export type ProjectCreateManyTechnicalWriterInput = {
@@ -85645,6 +85924,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
   }
 
   export type ProjectCreateManyAdminProjectInput = {
@@ -85680,6 +85962,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
   }
 
   export type ProjectResourceCreateManyUserInput = {
@@ -86462,6 +86747,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
@@ -86514,6 +86802,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
@@ -86562,6 +86853,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProjectUpdateWithoutPmInput = {
@@ -86593,6 +86887,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
@@ -86645,6 +86942,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
@@ -86693,6 +86993,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProjectUpdateWithoutTechnicalWriterInput = {
@@ -86724,6 +87027,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
@@ -86776,6 +87082,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
@@ -86824,6 +87133,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProjectUpdateWithoutAdminProjectInput = {
@@ -86855,6 +87167,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
@@ -86907,6 +87222,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
@@ -86955,6 +87273,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProjectResourceUpdateWithoutUserInput = {
@@ -88272,6 +88593,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     useWorkstreams?: boolean
     surveyToken?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
   }
 
   export type LeadCreateManyClientInput = {
@@ -88328,6 +88652,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
@@ -88380,6 +88707,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
@@ -88428,6 +88758,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type LeadUpdateWithoutClientInput = {

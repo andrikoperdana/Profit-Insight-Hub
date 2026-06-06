@@ -52,6 +52,7 @@ const PerformanceReviewsListPage = lazy(() => import("@/pages/performance-review
 const PerformanceReviewDetailPage = lazy(() => import("@/pages/performance-reviews/[id]"));
 const SurveyTemplateEditor = lazy(() => import("@/pages/settings/SurveyTemplate"));
 const PublicSurveyPage = lazy(() => import("@/pages/survey/[token]"));
+const PublicClientPortal = lazy(() => import("@/pages/portal/[token]"));
 import { ThemeProvider } from "@/lib/theme";
 
 // Personal "My …" views are open to delivery roles, their Principal
@@ -133,6 +134,7 @@ function Router() {
       <Switch>
         <Route path="/login" component={Login} />
         <Route path="/survey/:token" component={PublicSurveyPage} />
+        <Route path="/portal/:token" component={PublicClientPortal} />
         <Route path="/settings/survey-template" component={() => <ProtectedRoute component={SurveyTemplateEditor} />} />
         <Route path="/" component={() => <ProtectedRoute component={Dashboard} />} />
         <Route path="/projects" component={() => <ProtectedRoute component={ProjectsList} denyRoles={["HR"]} />} />

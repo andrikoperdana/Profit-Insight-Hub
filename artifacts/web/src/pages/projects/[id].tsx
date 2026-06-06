@@ -54,6 +54,7 @@ import {
 } from "lucide-react";
 import { formatIDR, formatDate, formatPct } from "@/lib/format";
 import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
+import { ClientShareDialog } from "@/pages/projects/ClientShareDialog";
 import { LoadingPage } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
 import { PdfUploadField, type PdfFileData } from "@/components/common/PdfUploadField";
@@ -178,7 +179,8 @@ export default function ProjectDetail() {
           </div>
         </div>
         {canChangeStatus && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            {project.status !== ProjectStatus.DRAFT && <ClientShareDialog projectId={project.id} />}
             <span className="text-xs text-muted-foreground uppercase tracking-wide">Change Status</span>
             <Select
               value={project.status}

@@ -43,6 +43,10 @@ app.use("/api", (req, res, next) => {
   // Xero redirects the browser back to this callback with no app cookies;
   // it authenticates via a signed OAuth state, so it must bypass the gate.
   if (p === "/xero/callback") return next();
+  // Public, token-gated endpoints (client portal, customer survey) are designed
+  // to be reachable without a session — they must bypass the front-door gate.
+  // Each is individually protected by an unguessable token.
+  if (p.startsWith("/public/")) return next();
   if (verifyGateToken(readGateCookie(req.headers.cookie))) return next();
   res.setHeader("X-Site-Gate", "required");
   res.status(403).json({ error: "site_gate_required" });
