@@ -329,3 +329,9 @@ id = "ZnWxpmMmL9KMQZIPzXKJL"
 uri = "file://backup/secureprofit-hub-backup.tar.gz"
 type = "unspecified"
 title = "SecureProfit Hub — Backup (Source Code + Database)"
+
+[[outputs]]
+id = "fy23EmIj0Viw3L1_3gq02"
+uri = "file://attached_assets/SecureProfit-Hub-Features-and-Calculations-EN-updated.docx"
+type = "word_document"
+title = "SecureProfit Hub — Features & Calculations (Updated)"
