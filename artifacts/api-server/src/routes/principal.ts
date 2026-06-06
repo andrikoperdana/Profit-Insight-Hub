@@ -211,4 +211,60 @@ router.get("/principal/team-projects", async (req, res) => {
   res.json(result);
 });
 
+// Lists ProjectResource rows awaiting the calling Principal's approval — i.e.
+// PM-added supervised users (KONSULTAN / TECHNICAL_WRITER) where the resource
+// user's principalId === caller. Backs the PrincipalDashboard approvals card.
+router.get("/principal/pending-resource-approvals", async (req, res) => {
+  const callerRole = req.user!.role;
+  const callerId = req.user!.sub;
+  if (callerRole !== "PRINCIPAL_KONSULTAN" && callerRole !== "PRINCIPAL_TECHNICAL_WRITER") {
+    res.status(403).json({ error: "Only Principal roles may use this endpoint" });
+    return;
+  }
+  const rows = await prisma.projectResource.findMany({
+    where: {
+      pendingPrincipalApproval: true,
+      user: { principalId: callerId },
+      project: { deletedAt: null },
+    },
+    orderBy: { proposedAt: "desc" },
+    select: {
+      id: true,
+      plannedMandays: true,
+      dailyRate: true,
+      roleInProject: true,
+      proposedAt: true,
+      user: { select: { id: true, name: true, role: true } },
+      proposedBy: { select: { id: true, name: true } },
+      project: {
+        select: {
+          id: true,
+          code: true,
+          name: true,
+          status: true,
+          client: { select: { id: true, name: true } },
+        },
+      },
+    },
+  });
+  res.json(
+    rows.map((r) => ({
+      id: r.id,
+      userId: r.user.id,
+      userName: r.user.name,
+      userRole: r.user.role,
+      roleInProject: r.roleInProject,
+      plannedMandays: r.plannedMandays,
+      proposedAt: r.proposedAt ? r.proposedAt.toISOString() : null,
+      proposedById: r.proposedBy?.id ?? null,
+      proposedByName: r.proposedBy?.name ?? null,
+      projectId: r.project.id,
+      projectCode: r.project.code,
+      projectName: r.project.name,
+      projectStatus: r.project.status,
+      clientName: r.project.client?.name ?? null,
+    })),
+  );
+});
+
 export default router;

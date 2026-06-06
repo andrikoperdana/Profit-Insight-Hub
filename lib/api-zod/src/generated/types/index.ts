@@ -116,6 +116,7 @@ export * from "./logSkillProgressionBody";
 export * from "./logTaskTimeBody";
 export * from "./monthlyFinancialPoint";
 export * from "./notification";
+export * from "./pendingResourceApproval";
 export * from "./performanceReview";
 export * from "./performanceReviewDetail";
 export * from "./performanceReviewMetrics";

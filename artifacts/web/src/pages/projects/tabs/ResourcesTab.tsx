@@ -17,6 +17,8 @@ import {
   useAddProjectResource,
   useProposeProjectResource,
   useRemoveProjectResource,
+  useAcceptProjectResource,
+  useRejectProjectResource,
   getListProjectResourcesQueryKey,
   useListAvailableUsers,
   useListActiveAllUsers,
@@ -94,6 +96,11 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
     user?.role === "PRINCIPAL_TECHNICAL_WRITER" ? "TECHNICAL_WRITER" :
     user?.role === "PRINCIPAL_ADMIN_PROJECT" ? "ADMIN_PROJECT" : null;
   const canPrincipalManageRow = (r: any) => principalSupervises != null && r.userRole === principalSupervises;
+  // True when the current Principal directly supervises the row's user (used to
+  // gate the Approve/Decline actions on pending-approval rows). The server is
+  // authoritative; this just hides controls the caller can't action.
+  const isRowPrincipalApprover = (r: any) =>
+    canPrincipalManageRow(r) && (supervisees ?? []).some((u: any) => u.id === r.userId);
   const projectIsAssignable = project.status === "OBSERVATION" || project.status === "ACTIVE";
   const canPrincipalEditAp =
     user?.role === "PRINCIPAL_ADMIN_PROJECT" && projectIsAssignable;
@@ -174,6 +181,24 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
         invalidate();
       },
       onError: (e: any) => toast({ title: "Failed", description: e?.message ?? "Could not remove resource", variant: "destructive" }),
+    },
+  });
+  const acceptMutation = useAcceptProjectResource({
+    mutation: {
+      onSuccess: () => {
+        toast({ title: "Assignment approved", description: "The team member is now active on this project." });
+        invalidate();
+      },
+      onError: (e: any) => toast({ title: "Failed", description: e?.message ?? "Could not approve assignment", variant: "destructive" }),
+    },
+  });
+  const rejectMutation = useRejectProjectResource({
+    mutation: {
+      onSuccess: () => {
+        toast({ title: "Assignment declined", description: "The proposed assignment was removed." });
+        invalidate();
+      },
+      onError: (e: any) => toast({ title: "Failed", description: e?.message ?? "Could not decline assignment", variant: "destructive" }),
     },
   });
 
@@ -438,7 +463,14 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                     const pct = planned > 0 ? (actual / planned) * 100 : 0;
                     return (
                       <tr key={r.id ?? r.userId} className="border-b border-border/40 hover:bg-muted/30">
-                        <td className="py-2 pr-3 font-medium">{r.userName ?? "—"}</td>
+                        <td className="py-2 pr-3 font-medium">
+                          {r.userName ?? "—"}
+                          {r.pendingPrincipalApproval && (
+                            <Badge variant="outline" className="ml-2 text-[10px] border-amber-500/50 text-amber-500">
+                              Pending Principal approval
+                            </Badge>
+                          )}
+                        </td>
                         <td className="py-2 pr-3">{r.roleInProject ?? <span className="text-muted-foreground italic">not set</span>}</td>
                         <td className="py-2 pr-3"><Badge variant="outline" className="text-[10px]">{RoleLabels[r.userRole as keyof typeof RoleLabels] ?? r.userRole}</Badge></td>
                         <td className="py-2 pr-3 text-right font-mono">{planned.toFixed(1)}</td>
@@ -454,20 +486,49 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                         {showRate && <td className="py-2 pr-3 text-right font-mono">{formatIDR(planned * (r.dailyRate ?? 0))}</td>}
                         {(canEdit || canPrincipalManageRow(r)) && (
                           <td className="py-2 pr-3 text-right">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
-                              disabled={removeMutation.isPending}
-                              onClick={() => {
-                                if (confirm(`Remove ${r.userName} from this project?`)) {
-                                  removeMutation.mutate({ resourceId: r.id });
-                                }
-                              }}
-                              title="Remove from project"
-                            >
-                              <Trash2 className="h-3.5 w-3.5" />
-                            </Button>
+                            {r.pendingPrincipalApproval && isRowPrincipalApprover(r) ? (
+                              <div className="flex justify-end gap-1">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-7 w-7 p-0 text-muted-foreground hover:text-emerald-500"
+                                  disabled={acceptMutation.isPending || rejectMutation.isPending}
+                                  onClick={() => acceptMutation.mutate({ resourceId: r.id })}
+                                  title="Approve assignment"
+                                >
+                                  <CheckCircle2 className="h-3.5 w-3.5" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
+                                  disabled={acceptMutation.isPending || rejectMutation.isPending}
+                                  onClick={() => {
+                                    if (confirm(`Decline the assignment of ${r.userName}?`)) {
+                                      rejectMutation.mutate({ resourceId: r.id });
+                                    }
+                                  }}
+                                  title="Decline assignment"
+                                >
+                                  <X className="h-3.5 w-3.5" />
+                                </Button>
+                              </div>
+                            ) : (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
+                                disabled={removeMutation.isPending}
+                                onClick={() => {
+                                  if (confirm(`Remove ${r.userName} from this project?`)) {
+                                    removeMutation.mutate({ resourceId: r.id });
+                                  }
+                                }}
+                                title="Remove from project"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </Button>
+                            )}
                           </td>
                         )}
                       </tr>
@@ -556,7 +617,14 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                     const pct = planned > 0 ? (actual / planned) * 100 : 0;
                     return (
                       <tr key={r.id ?? r.userId} className="border-b border-border/40 hover:bg-muted/30">
-                        <td className="py-2 pr-3 font-medium">{r.userName ?? "—"}</td>
+                        <td className="py-2 pr-3 font-medium">
+                          {r.userName ?? "—"}
+                          {r.pendingPrincipalApproval && (
+                            <Badge variant="outline" className="ml-2 text-[10px] border-amber-500/50 text-amber-500">
+                              Pending Principal approval
+                            </Badge>
+                          )}
+                        </td>
                         <td className="py-2 pr-3">{r.roleInProject ?? <span className="text-muted-foreground italic">not set</span>}</td>
                         <td className="py-2 pr-3"><Badge variant="outline" className="text-[10px]">{RoleLabels[r.userRole as keyof typeof RoleLabels] ?? r.userRole}</Badge></td>
                         <td className="py-2 pr-3 text-right font-mono">{planned.toFixed(1)}</td>
@@ -572,20 +640,49 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                         {showRate && <td className="py-2 pr-3 text-right font-mono">{formatIDR(planned * (r.dailyRate ?? 0))}</td>}
                         {(canEdit || canPrincipalManageRow(r)) && (
                           <td className="py-2 pr-3 text-right">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
-                              disabled={removeMutation.isPending}
-                              onClick={() => {
-                                if (confirm(`Remove ${r.userName} from this project?`)) {
-                                  removeMutation.mutate({ resourceId: r.id });
-                                }
-                              }}
-                              title="Remove from project"
-                            >
-                              <Trash2 className="h-3.5 w-3.5" />
-                            </Button>
+                            {r.pendingPrincipalApproval && isRowPrincipalApprover(r) ? (
+                              <div className="flex justify-end gap-1">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-7 w-7 p-0 text-muted-foreground hover:text-emerald-500"
+                                  disabled={acceptMutation.isPending || rejectMutation.isPending}
+                                  onClick={() => acceptMutation.mutate({ resourceId: r.id })}
+                                  title="Approve assignment"
+                                >
+                                  <CheckCircle2 className="h-3.5 w-3.5" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
+                                  disabled={acceptMutation.isPending || rejectMutation.isPending}
+                                  onClick={() => {
+                                    if (confirm(`Decline the assignment of ${r.userName}?`)) {
+                                      rejectMutation.mutate({ resourceId: r.id });
+                                    }
+                                  }}
+                                  title="Decline assignment"
+                                >
+                                  <X className="h-3.5 w-3.5" />
+                                </Button>
+                              </div>
+                            ) : (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
+                                disabled={removeMutation.isPending}
+                                onClick={() => {
+                                  if (confirm(`Remove ${r.userName} from this project?`)) {
+                                    removeMutation.mutate({ resourceId: r.id });
+                                  }
+                                }}
+                                title="Remove from project"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </Button>
+                            )}
                           </td>
                         )}
                       </tr>
@@ -668,7 +765,14 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                     const actual = r.actualMandays ?? 0;
                     return (
                       <tr key={r.id ?? r.userId} className="border-b border-border/40 hover:bg-muted/30">
-                        <td className="py-2 pr-3 font-medium">{r.userName ?? "—"}</td>
+                        <td className="py-2 pr-3 font-medium">
+                          {r.userName ?? "—"}
+                          {r.pendingPrincipalApproval && (
+                            <Badge variant="outline" className="ml-2 text-[10px] border-amber-500/50 text-amber-500">
+                              Pending Principal approval
+                            </Badge>
+                          )}
+                        </td>
                         <td className="py-2 pr-3">
                           {r.roleInProject ?? <span className="text-muted-foreground italic">not set</span>}
                         </td>

@@ -90,6 +90,7 @@ import type {
   LogTaskTimeBody,
   LoginBody,
   Notification,
+  PendingResourceApproval,
   PerformanceReview,
   PerformanceReviewDetail,
   PerformanceReviewProjectRating,
@@ -3998,6 +3999,163 @@ export const useAcceptProjectResource = <
 > => {
   return useMutation(getAcceptProjectResourceMutationOptions(options));
 };
+
+export const getRejectProjectResourceUrl = (resourceId: string) => {
+  return `/api/resources/${resourceId}/reject`;
+};
+
+export const rejectProjectResource = async (
+  resourceId: string,
+  options?: RequestInit,
+): Promise<SuccessMessage> => {
+  return customFetch<SuccessMessage>(getRejectProjectResourceUrl(resourceId), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getRejectProjectResourceMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof rejectProjectResource>>,
+    TError,
+    { resourceId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof rejectProjectResource>>,
+  TError,
+  { resourceId: string },
+  TContext
+> => {
+  const mutationKey = ["rejectProjectResource"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof rejectProjectResource>>,
+    { resourceId: string }
+  > = (props) => {
+    const { resourceId } = props ?? {};
+
+    return rejectProjectResource(resourceId, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RejectProjectResourceMutationResult = NonNullable<
+  Awaited<ReturnType<typeof rejectProjectResource>>
+>;
+
+export type RejectProjectResourceMutationError = ErrorType<unknown>;
+
+export const useRejectProjectResource = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof rejectProjectResource>>,
+    TError,
+    { resourceId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof rejectProjectResource>>,
+  TError,
+  { resourceId: string },
+  TContext
+> => {
+  return useMutation(getRejectProjectResourceMutationOptions(options));
+};
+
+/**
+ * Lists ProjectResource rows awaiting the calling Principal's approval —
+PM-added supervised users (KONSULTAN / TECHNICAL_WRITER) whose
+principalId equals the caller.
+
+ */
+export const getListPendingResourceApprovalsUrl = () => {
+  return `/api/principal/pending-resource-approvals`;
+};
+
+export const listPendingResourceApprovals = async (
+  options?: RequestInit,
+): Promise<PendingResourceApproval[]> => {
+  return customFetch<PendingResourceApproval[]>(
+    getListPendingResourceApprovalsUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getListPendingResourceApprovalsQueryKey = () => {
+  return [`/api/principal/pending-resource-approvals`] as const;
+};
+
+export const getListPendingResourceApprovalsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listPendingResourceApprovals>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listPendingResourceApprovals>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getListPendingResourceApprovalsQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listPendingResourceApprovals>>
+  > = ({ signal }) =>
+    listPendingResourceApprovals({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listPendingResourceApprovals>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListPendingResourceApprovalsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listPendingResourceApprovals>>
+>;
+export type ListPendingResourceApprovalsQueryError = ErrorType<unknown>;
+
+export function useListPendingResourceApprovals<
+  TData = Awaited<ReturnType<typeof listPendingResourceApprovals>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listPendingResourceApprovals>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListPendingResourceApprovalsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
 
 export const getListProjectsNeedingResourceUrl = () => {
   return `/api/principal/projects-needing-resource`;

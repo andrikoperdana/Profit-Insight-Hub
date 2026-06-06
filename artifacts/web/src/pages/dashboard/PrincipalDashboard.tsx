@@ -6,6 +6,9 @@ import {
   useProposeProjectResource,
   useUpdateProject,
   useListAvailableUsers,
+  useListPendingResourceApprovals,
+  useAcceptProjectResource,
+  useRejectProjectResource,
   ProjectStatus,
 } from "@workspace/api-client-react";
 import { useAuth } from "@/lib/auth";
@@ -20,7 +23,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { ProjectStatusBadge } from "@/components/common/Badges";
 import { RoleLabels, PRINCIPAL_TO_REPORT_ROLE } from "@/lib/roles";
-import { UserPlus, Users } from "lucide-react";
+import { UserPlus, Users, ClipboardCheck } from "lucide-react";
 import MyExpensesCard from "@/components/dashboard/MyExpensesCard";
 
 export default function PrincipalDashboard() {
@@ -41,6 +44,36 @@ export default function PrincipalDashboard() {
   // KONSULTAN and TECHNICAL_WRITER principals propose via ProjectResource (multi-pick;
   // PM accepts later). ADMIN_PROJECT is the only remaining single-pick on Project.
   const isSinglePickPrincipal = user?.role === "PRINCIPAL_ADMIN_PROJECT";
+  // Only KONSULTAN / TECHNICAL_WRITER principals receive PM-initiated approval
+  // requests (Admin Project staffing is single-pick on Project, no approval).
+  const canApprove =
+    user?.role === "PRINCIPAL_KONSULTAN" || user?.role === "PRINCIPAL_TECHNICAL_WRITER";
+
+  const { data: pendingApprovals, isLoading: loadingApprovals, refetch: refetchApprovals } =
+    useListPendingResourceApprovals({
+      query: { enabled: canApprove, queryKey: ["pending-resource-approvals"] },
+    } as any);
+
+  const acceptMutation = useAcceptProjectResource({
+    mutation: {
+      onSuccess: () => {
+        toast({ title: "Assignment approved", description: "The team member is now active on the project." });
+        refetchApprovals();
+      },
+      onError: (e: any) =>
+        toast({ variant: "destructive", title: "Could not approve", description: e?.message ?? "Unknown error" }),
+    },
+  });
+  const rejectMutation = useRejectProjectResource({
+    mutation: {
+      onSuccess: () => {
+        toast({ title: "Assignment declined", description: "The proposed assignment was removed." });
+        refetchApprovals();
+      },
+      onError: (e: any) =>
+        toast({ variant: "destructive", title: "Could not decline", description: e?.message ?? "Unknown error" }),
+    },
+  });
 
   const propose = useProposeProjectResource({
     mutation: {
@@ -98,6 +131,85 @@ export default function PrincipalDashboard() {
   return (
     <div className="space-y-6">
       <WelcomeBanner subtitle={`Supervising ${supervisedRole ? RoleLabels[supervisedRole] : ""} delivery — propose resources where PMs need staffing.`} />
+
+      {canApprove && (
+        <Card className="border-border shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <ClipboardCheck className="h-4 w-4 text-primary" />
+              Pending approvals
+              {(pendingApprovals?.length ?? 0) > 0 && (
+                <Badge variant="outline" className="ml-1 border-amber-500/50 text-amber-500">
+                  {pendingApprovals?.length}
+                </Badge>
+              )}
+            </CardTitle>
+            <CardDescription>
+              A PM has requested to assign one of your supervisees to a project. Approve to activate the assignment, or decline to remove it.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {loadingApprovals ? (
+              <p className="text-sm text-muted-foreground">Loading…</p>
+            ) : (pendingApprovals?.length ?? 0) === 0 ? (
+              <p className="text-sm text-muted-foreground italic">No assignments awaiting your approval.</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="text-left text-xs text-muted-foreground border-b border-border">
+                      <th className="py-2 pr-3 font-medium">Team member</th>
+                      <th className="py-2 pr-3 font-medium">Project</th>
+                      <th className="py-2 pr-3 font-medium">Requested by</th>
+                      <th className="py-2 pr-3 font-medium text-right">Planned (md)</th>
+                      <th className="py-2 pr-3 font-medium text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(pendingApprovals ?? []).map((a: any) => (
+                      <tr key={a.id} className="border-b border-border/40 hover:bg-muted/30">
+                        <td className="py-2 pr-3 font-medium">{a.userName}</td>
+                        <td className="py-2 pr-3">
+                          <Link href={`/projects/${a.projectId}`} className="text-primary hover:underline">
+                            {a.projectCode} · {a.projectName}
+                          </Link>
+                        </td>
+                        <td className="py-2 pr-3">{a.proposedByName ?? "—"}</td>
+                        <td className="py-2 pr-3 text-right font-mono">{(a.plannedMandays ?? 0).toFixed(1)}</td>
+                        <td className="py-2 pr-3 text-right">
+                          <div className="flex justify-end gap-2">
+                            <Button
+                              size="sm"
+                              disabled={acceptMutation.isPending || rejectMutation.isPending}
+                              onClick={() => acceptMutation.mutate({ resourceId: a.id })}
+                              data-testid={`button-approve-${a.id}`}
+                            >
+                              Approve
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              disabled={acceptMutation.isPending || rejectMutation.isPending}
+                              onClick={() => {
+                                if (confirm(`Decline the assignment of ${a.userName}?`)) {
+                                  rejectMutation.mutate({ resourceId: a.id });
+                                }
+                              }}
+                              data-testid={`button-decline-${a.id}`}
+                            >
+                              Decline
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       <Card className="border-border shadow-sm">
         <CardHeader>

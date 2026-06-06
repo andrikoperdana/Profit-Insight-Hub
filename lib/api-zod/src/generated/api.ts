@@ -1434,6 +1434,7 @@ export const GetProjectResponse = zod
             proposedByName: zod.string().nullish(),
             proposedAt: zod.string().nullish(),
             acceptedAt: zod.string().nullish(),
+            pendingPrincipalApproval: zod.boolean().optional(),
           }),
         )
         .optional(),
@@ -1684,6 +1685,7 @@ export const ListProjectResourcesResponseItem = zod.object({
   proposedByName: zod.string().nullish(),
   proposedAt: zod.string().nullish(),
   acceptedAt: zod.string().nullish(),
+  pendingPrincipalApproval: zod.boolean().optional(),
 });
 export const ListProjectResourcesResponse = zod.array(
   ListProjectResourcesResponseItem,
@@ -1751,6 +1753,56 @@ export const AcceptProjectResourceResponse = zod.object({
   success: zod.boolean(),
   message: zod.string().optional(),
 });
+
+export const RejectProjectResourceParams = zod.object({
+  resourceId: zod.coerce.string(),
+});
+
+export const RejectProjectResourceResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+/**
+ * Lists ProjectResource rows awaiting the calling Principal's approval —
+PM-added supervised users (KONSULTAN / TECHNICAL_WRITER) whose
+principalId equals the caller.
+
+ */
+export const ListPendingResourceApprovalsResponseItem = zod.object({
+  id: zod.string(),
+  userId: zod.string(),
+  userName: zod.string(),
+  userRole: zod
+    .enum([
+      "MANAGEMENT",
+      "PROJECT_MANAGER",
+      "SALES",
+      "KONSULTAN",
+      "TECHNICAL_WRITER",
+      "ADMIN_PROJECT",
+      "PRINCIPAL_KONSULTAN",
+      "PRINCIPAL_TECHNICAL_WRITER",
+      "PRINCIPAL_ADMIN_PROJECT",
+      "FINANCE",
+      "HR",
+      "SITE_ADMIN",
+    ])
+    .optional(),
+  roleInProject: zod.string().nullish(),
+  plannedMandays: zod.number(),
+  proposedAt: zod.string().nullish(),
+  proposedById: zod.string().nullish(),
+  proposedByName: zod.string().nullish(),
+  projectId: zod.string(),
+  projectCode: zod.string().optional(),
+  projectName: zod.string(),
+  projectStatus: zod.string().optional(),
+  clientName: zod.string().nullish(),
+});
+export const ListPendingResourceApprovalsResponse = zod.array(
+  ListPendingResourceApprovalsResponseItem,
+);
 
 export const ListProjectsNeedingResourceResponseItem = zod.object({
   id: zod.string(),

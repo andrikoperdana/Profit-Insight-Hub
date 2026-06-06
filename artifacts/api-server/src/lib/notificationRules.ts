@@ -1,5 +1,6 @@
 import { prisma } from "@workspace/db";
 import { notifyUser } from "./notifications.js";
+import { getAppSettings } from "./app-settings.js";
 
 /**
  * Notification rules engine.
@@ -47,12 +48,14 @@ function formatIDRShort(n: number): string {
 }
 
 /**
- * Rule 1: Billing milestones with dueDate within next 7 days, still PLANNED
- * or INVOICED. Notify PM of project and adminProject (if assigned).
+ * Rule 1: Billing milestones with dueDate within the configurable
+ * invoiceDueSoonDays horizon, still PLANNED or INVOICED. Notify PM of
+ * project and adminProject (if assigned).
  */
 async function checkInvoicesDueSoon(): Promise<number> {
+  const { invoiceDueSoonDays } = await getAppSettings();
   const now = new Date();
-  const horizon = new Date(now.getTime() + 7 * ONE_DAY_MS);
+  const horizon = new Date(now.getTime() + invoiceDueSoonDays * ONE_DAY_MS);
   const milestones = await prisma.billingMilestone.findMany({
     where: {
       status: { in: ["PLANNED", "INVOICED"] },
@@ -83,10 +86,11 @@ async function checkInvoicesDueSoon(): Promise<number> {
 }
 
 /**
- * Rule 2: Active/Observation projects where actual cost > 80% of contract
- * value. Notify PM + all MANAGEMENT users.
+ * Rule 2: Active/Observation projects where actual cost exceeds the
+ * configurable budgetOverrunPct of contract value. Notify PM + all MANAGEMENT users.
  */
 async function checkProjectOverrun(): Promise<number> {
+  const { budgetOverrunPct } = await getAppSettings();
   const projects = await prisma.project.findMany({
     where: { deletedAt: null, status: { in: ["ACTIVE", "OBSERVATION", "PAUSE"] }, contractValue: { gt: 0 } },
     select: {
@@ -126,7 +130,7 @@ async function checkProjectOverrun(): Promise<number> {
   for (const p of projects) {
     const actual = costByProject.get(p.id) ?? 0;
     const pct = (actual / p.contractValue) * 100;
-    if (pct < 80) continue;
+    if (pct < budgetOverrunPct) continue;
     const link = `/projects/${p.id}`;
     const title = pct >= 100 ? `Budget exceeded: ${p.name}` : `Budget nearing limit: ${p.name}`;
     const message = `Actual cost has reached ${pct.toFixed(0)}% of the contract value (${formatIDRShort(actual)} / ${formatIDRShort(p.contractValue)}).`;
@@ -139,12 +143,12 @@ async function checkProjectOverrun(): Promise<number> {
 }
 
 /**
- * Rule 3: KONSULTAN/TECHNICAL_WRITER who haven't submitted a timesheet in 3+
- * days (no DRAFT or SUBMITTED/APPROVED with workDate within last 3 days).
- * Notify the user themselves + their PM (via principal/manager).
+ * Rule 3: KONSULTAN/TECHNICAL_WRITER who haven't submitted a timesheet within
+ * the configurable lateTimesheetDays window. Notify the user themselves + their Principal.
  */
 async function checkLateTimesheets(): Promise<number> {
-  const cutoff = new Date(Date.now() - 3 * ONE_DAY_MS);
+  const { lateTimesheetDays } = await getAppSettings();
+  const cutoff = new Date(Date.now() - lateTimesheetDays * ONE_DAY_MS);
   const users = await prisma.user.findMany({
     where: { deletedAt: null, role: { in: ["KONSULTAN", "TECHNICAL_WRITER"] } },
     select: { id: true, name: true, principalId: true },
@@ -161,7 +165,7 @@ async function checkLateTimesheets(): Promise<number> {
     if (await notifyOnceDaily({ userId: u.id, type: "TIMESHEET_LATE", title, message, link: "/timesheets" })) created++;
     if (u.principalId) {
       const pTitle = `Timesheet overdue: ${u.name}`;
-      const pMsg = `${u.name} has not submitted a timesheet in the last 3 days.`;
+      const pMsg = `${u.name} has not submitted a timesheet in the last ${lateTimesheetDays} day${lateTimesheetDays === 1 ? "" : "s"}.`;
       if (await notifyOnceDaily({ userId: u.principalId, type: "TIMESHEET_LATE_REPORT", title: pTitle, message: pMsg, link: `/timesheets?userId=${u.id}` })) created++;
     }
   }
@@ -169,10 +173,12 @@ async function checkLateTimesheets(): Promise<number> {
 }
 
 /**
- * Rule 4: Active/Observation projects with margin (contractValue - actualCost) / contractValue < 15%.
+ * Rule 4: Active/Observation projects with margin
+ * (contractValue - actualCost) / contractValue below the configurable lowMarginPct.
  * Notify PM + MANAGEMENT.
  */
 async function checkLowMargin(): Promise<number> {
+  const { lowMarginPct } = await getAppSettings();
   const projects = await prisma.project.findMany({
     where: { deletedAt: null, status: { in: ["ACTIVE", "OBSERVATION", "PAUSE"] }, contractValue: { gt: 0 } },
     select: {
@@ -208,7 +214,7 @@ async function checkLowMargin(): Promise<number> {
     if (actual === 0) continue; // skip "0 cost" projects
     const profit = p.contractValue - actual;
     const marginPct = (profit / p.contractValue) * 100;
-    if (marginPct >= 15) continue;
+    if (marginPct >= lowMarginPct) continue;
     const title = marginPct < 0 ? `Negative margin: ${p.name}` : `Thin margin: ${p.name}`;
     const message = `Current margin is ${marginPct.toFixed(1)}% (${formatIDRShort(profit)} of ${formatIDRShort(p.contractValue)}).`;
     const link = `/projects/${p.id}`;

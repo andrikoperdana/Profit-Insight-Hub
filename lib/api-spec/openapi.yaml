@@ -726,6 +726,36 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/SuccessMessage" }
 
+  /resources/{resourceId}/reject:
+    post:
+      operationId: rejectProjectResource
+      tags: [resources]
+      parameters:
+        - { name: resourceId, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /principal/pending-resource-approvals:
+    get:
+      operationId: listPendingResourceApprovals
+      tags: [principal]
+      description: |
+        Lists ProjectResource rows awaiting the calling Principal's approval —
+        PM-added supervised users (KONSULTAN / TECHNICAL_WRITER) whose
+        principalId equals the caller.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/PendingResourceApproval" }
+
   /principal/projects-needing-resource:
     get:
       operationId: listProjectsNeedingResource
@@ -3359,6 +3389,26 @@ components:
         proposedByName: { type: string, nullable: true }
         proposedAt: { type: string, nullable: true }
         acceptedAt: { type: string, nullable: true }
+        pendingPrincipalApproval: { type: boolean }
+
+    PendingResourceApproval:
+      type: object
+      required: [id, userId, userName, projectId, projectName, plannedMandays]
+      properties:
+        id: { type: string }
+        userId: { type: string }
+        userName: { type: string }
+        userRole: { $ref: "#/components/schemas/UserRole" }
+        roleInProject: { type: string, nullable: true }
+        plannedMandays: { type: number }
+        proposedAt: { type: string, nullable: true }
+        proposedById: { type: string, nullable: true }
+        proposedByName: { type: string, nullable: true }
+        projectId: { type: string }
+        projectCode: { type: string }
+        projectName: { type: string }
+        projectStatus: { type: string }
+        clientName: { type: string, nullable: true }
 
     AddResourceBody:
       type: object

@@ -15538,6 +15538,7 @@ export namespace Prisma {
     proposedById: string | null
     proposedAt: Date | null
     acceptedAt: Date | null
+    pendingPrincipalApproval: boolean | null
     createdAt: Date | null
   }
 
@@ -15552,6 +15553,7 @@ export namespace Prisma {
     proposedById: string | null
     proposedAt: Date | null
     acceptedAt: Date | null
+    pendingPrincipalApproval: boolean | null
     createdAt: Date | null
   }
 
@@ -15566,6 +15568,7 @@ export namespace Prisma {
     proposedById: number
     proposedAt: number
     acceptedAt: number
+    pendingPrincipalApproval: number
     createdAt: number
     _all: number
   }
@@ -15592,6 +15595,7 @@ export namespace Prisma {
     proposedById?: true
     proposedAt?: true
     acceptedAt?: true
+    pendingPrincipalApproval?: true
     createdAt?: true
   }
 
@@ -15606,6 +15610,7 @@ export namespace Prisma {
     proposedById?: true
     proposedAt?: true
     acceptedAt?: true
+    pendingPrincipalApproval?: true
     createdAt?: true
   }
 
@@ -15620,6 +15625,7 @@ export namespace Prisma {
     proposedById?: true
     proposedAt?: true
     acceptedAt?: true
+    pendingPrincipalApproval?: true
     createdAt?: true
     _all?: true
   }
@@ -15721,6 +15727,7 @@ export namespace Prisma {
     proposedById: string | null
     proposedAt: Date | null
     acceptedAt: Date | null
+    pendingPrincipalApproval: boolean
     createdAt: Date
     _count: ProjectResourceCountAggregateOutputType | null
     _avg: ProjectResourceAvgAggregateOutputType | null
@@ -15754,6 +15761,7 @@ export namespace Prisma {
     proposedById?: boolean
     proposedAt?: boolean
     acceptedAt?: boolean
+    pendingPrincipalApproval?: boolean
     createdAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     workstream?: boolean | ProjectResource$workstreamArgs<ExtArgs>
@@ -15772,6 +15780,7 @@ export namespace Prisma {
     proposedById?: boolean
     proposedAt?: boolean
     acceptedAt?: boolean
+    pendingPrincipalApproval?: boolean
     createdAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     workstream?: boolean | ProjectResource$workstreamArgs<ExtArgs>
@@ -15790,6 +15799,7 @@ export namespace Prisma {
     proposedById?: boolean
     proposedAt?: boolean
     acceptedAt?: boolean
+    pendingPrincipalApproval?: boolean
     createdAt?: boolean
   }
 
@@ -15825,6 +15835,7 @@ export namespace Prisma {
       proposedById: string | null
       proposedAt: Date | null
       acceptedAt: Date | null
+      pendingPrincipalApproval: boolean
       createdAt: Date
     }, ExtArgs["result"]["projectResource"]>
     composites: {}
@@ -16233,6 +16244,7 @@ export namespace Prisma {
     readonly proposedById: FieldRef<"ProjectResource", 'String'>
     readonly proposedAt: FieldRef<"ProjectResource", 'DateTime'>
     readonly acceptedAt: FieldRef<"ProjectResource", 'DateTime'>
+    readonly pendingPrincipalApproval: FieldRef<"ProjectResource", 'Boolean'>
     readonly createdAt: FieldRef<"ProjectResource", 'DateTime'>
   }
     
@@ -46245,17 +46257,29 @@ export namespace Prisma {
   export type AppSettingAvgAggregateOutputType = {
     defaultVatPercent: number | null
     timesheetBackdateDays: number | null
+    lowMarginPct: number | null
+    budgetOverrunPct: number | null
+    invoiceDueSoonDays: number | null
+    lateTimesheetDays: number | null
   }
 
   export type AppSettingSumAggregateOutputType = {
     defaultVatPercent: number | null
     timesheetBackdateDays: number | null
+    lowMarginPct: number | null
+    budgetOverrunPct: number | null
+    invoiceDueSoonDays: number | null
+    lateTimesheetDays: number | null
   }
 
   export type AppSettingMinAggregateOutputType = {
     id: string | null
     defaultVatPercent: number | null
     timesheetBackdateDays: number | null
+    lowMarginPct: number | null
+    budgetOverrunPct: number | null
+    invoiceDueSoonDays: number | null
+    lateTimesheetDays: number | null
     updatedAt: Date | null
     updatedById: string | null
   }
@@ -46264,6 +46288,10 @@ export namespace Prisma {
     id: string | null
     defaultVatPercent: number | null
     timesheetBackdateDays: number | null
+    lowMarginPct: number | null
+    budgetOverrunPct: number | null
+    invoiceDueSoonDays: number | null
+    lateTimesheetDays: number | null
     updatedAt: Date | null
     updatedById: string | null
   }
@@ -46272,6 +46300,10 @@ export namespace Prisma {
     id: number
     defaultVatPercent: number
     timesheetBackdateDays: number
+    lowMarginPct: number
+    budgetOverrunPct: number
+    invoiceDueSoonDays: number
+    lateTimesheetDays: number
     updatedAt: number
     updatedById: number
     _all: number
@@ -46281,17 +46313,29 @@ export namespace Prisma {
   export type AppSettingAvgAggregateInputType = {
     defaultVatPercent?: true
     timesheetBackdateDays?: true
+    lowMarginPct?: true
+    budgetOverrunPct?: true
+    invoiceDueSoonDays?: true
+    lateTimesheetDays?: true
   }
 
   export type AppSettingSumAggregateInputType = {
     defaultVatPercent?: true
     timesheetBackdateDays?: true
+    lowMarginPct?: true
+    budgetOverrunPct?: true
+    invoiceDueSoonDays?: true
+    lateTimesheetDays?: true
   }
 
   export type AppSettingMinAggregateInputType = {
     id?: true
     defaultVatPercent?: true
     timesheetBackdateDays?: true
+    lowMarginPct?: true
+    budgetOverrunPct?: true
+    invoiceDueSoonDays?: true
+    lateTimesheetDays?: true
     updatedAt?: true
     updatedById?: true
   }
@@ -46300,6 +46344,10 @@ export namespace Prisma {
     id?: true
     defaultVatPercent?: true
     timesheetBackdateDays?: true
+    lowMarginPct?: true
+    budgetOverrunPct?: true
+    invoiceDueSoonDays?: true
+    lateTimesheetDays?: true
     updatedAt?: true
     updatedById?: true
   }
@@ -46308,6 +46356,10 @@ export namespace Prisma {
     id?: true
     defaultVatPercent?: true
     timesheetBackdateDays?: true
+    lowMarginPct?: true
+    budgetOverrunPct?: true
+    invoiceDueSoonDays?: true
+    lateTimesheetDays?: true
     updatedAt?: true
     updatedById?: true
     _all?: true
@@ -46403,6 +46455,10 @@ export namespace Prisma {
     id: string
     defaultVatPercent: number
     timesheetBackdateDays: number
+    lowMarginPct: number
+    budgetOverrunPct: number
+    invoiceDueSoonDays: number
+    lateTimesheetDays: number
     updatedAt: Date
     updatedById: string | null
     _count: AppSettingCountAggregateOutputType | null
@@ -46430,6 +46486,10 @@ export namespace Prisma {
     id?: boolean
     defaultVatPercent?: boolean
     timesheetBackdateDays?: boolean
+    lowMarginPct?: boolean
+    budgetOverrunPct?: boolean
+    invoiceDueSoonDays?: boolean
+    lateTimesheetDays?: boolean
     updatedAt?: boolean
     updatedById?: boolean
   }, ExtArgs["result"]["appSetting"]>
@@ -46438,6 +46498,10 @@ export namespace Prisma {
     id?: boolean
     defaultVatPercent?: boolean
     timesheetBackdateDays?: boolean
+    lowMarginPct?: boolean
+    budgetOverrunPct?: boolean
+    invoiceDueSoonDays?: boolean
+    lateTimesheetDays?: boolean
     updatedAt?: boolean
     updatedById?: boolean
   }, ExtArgs["result"]["appSetting"]>
@@ -46446,6 +46510,10 @@ export namespace Prisma {
     id?: boolean
     defaultVatPercent?: boolean
     timesheetBackdateDays?: boolean
+    lowMarginPct?: boolean
+    budgetOverrunPct?: boolean
+    invoiceDueSoonDays?: boolean
+    lateTimesheetDays?: boolean
     updatedAt?: boolean
     updatedById?: boolean
   }
@@ -46458,6 +46526,10 @@ export namespace Prisma {
       id: string
       defaultVatPercent: number
       timesheetBackdateDays: number
+      lowMarginPct: number
+      budgetOverrunPct: number
+      invoiceDueSoonDays: number
+      lateTimesheetDays: number
       updatedAt: Date
       updatedById: string | null
     }, ExtArgs["result"]["appSetting"]>
@@ -46856,6 +46928,10 @@ export namespace Prisma {
     readonly id: FieldRef<"AppSetting", 'String'>
     readonly defaultVatPercent: FieldRef<"AppSetting", 'Float'>
     readonly timesheetBackdateDays: FieldRef<"AppSetting", 'Int'>
+    readonly lowMarginPct: FieldRef<"AppSetting", 'Float'>
+    readonly budgetOverrunPct: FieldRef<"AppSetting", 'Float'>
+    readonly invoiceDueSoonDays: FieldRef<"AppSetting", 'Int'>
+    readonly lateTimesheetDays: FieldRef<"AppSetting", 'Int'>
     readonly updatedAt: FieldRef<"AppSetting", 'DateTime'>
     readonly updatedById: FieldRef<"AppSetting", 'String'>
   }
@@ -48276,6 +48352,7 @@ export namespace Prisma {
     proposedById: 'proposedById',
     proposedAt: 'proposedAt',
     acceptedAt: 'acceptedAt',
+    pendingPrincipalApproval: 'pendingPrincipalApproval',
     createdAt: 'createdAt'
   };
 
@@ -48751,6 +48828,10 @@ export namespace Prisma {
     id: 'id',
     defaultVatPercent: 'defaultVatPercent',
     timesheetBackdateDays: 'timesheetBackdateDays',
+    lowMarginPct: 'lowMarginPct',
+    budgetOverrunPct: 'budgetOverrunPct',
+    invoiceDueSoonDays: 'invoiceDueSoonDays',
+    lateTimesheetDays: 'lateTimesheetDays',
     updatedAt: 'updatedAt',
     updatedById: 'updatedById'
   };
@@ -50219,6 +50300,7 @@ export namespace Prisma {
     proposedById?: StringNullableFilter<"ProjectResource"> | string | null
     proposedAt?: DateTimeNullableFilter<"ProjectResource"> | Date | string | null
     acceptedAt?: DateTimeNullableFilter<"ProjectResource"> | Date | string | null
+    pendingPrincipalApproval?: BoolFilter<"ProjectResource"> | boolean
     createdAt?: DateTimeFilter<"ProjectResource"> | Date | string
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
     workstream?: XOR<ProjectWorkstreamNullableRelationFilter, ProjectWorkstreamWhereInput> | null
@@ -50237,6 +50319,7 @@ export namespace Prisma {
     proposedById?: SortOrderInput | SortOrder
     proposedAt?: SortOrderInput | SortOrder
     acceptedAt?: SortOrderInput | SortOrder
+    pendingPrincipalApproval?: SortOrder
     createdAt?: SortOrder
     project?: ProjectOrderByWithRelationInput
     workstream?: ProjectWorkstreamOrderByWithRelationInput
@@ -50259,6 +50342,7 @@ export namespace Prisma {
     proposedById?: StringNullableFilter<"ProjectResource"> | string | null
     proposedAt?: DateTimeNullableFilter<"ProjectResource"> | Date | string | null
     acceptedAt?: DateTimeNullableFilter<"ProjectResource"> | Date | string | null
+    pendingPrincipalApproval?: BoolFilter<"ProjectResource"> | boolean
     createdAt?: DateTimeFilter<"ProjectResource"> | Date | string
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
     workstream?: XOR<ProjectWorkstreamNullableRelationFilter, ProjectWorkstreamWhereInput> | null
@@ -50277,6 +50361,7 @@ export namespace Prisma {
     proposedById?: SortOrderInput | SortOrder
     proposedAt?: SortOrderInput | SortOrder
     acceptedAt?: SortOrderInput | SortOrder
+    pendingPrincipalApproval?: SortOrder
     createdAt?: SortOrder
     _count?: ProjectResourceCountOrderByAggregateInput
     _avg?: ProjectResourceAvgOrderByAggregateInput
@@ -50299,6 +50384,7 @@ export namespace Prisma {
     proposedById?: StringNullableWithAggregatesFilter<"ProjectResource"> | string | null
     proposedAt?: DateTimeNullableWithAggregatesFilter<"ProjectResource"> | Date | string | null
     acceptedAt?: DateTimeNullableWithAggregatesFilter<"ProjectResource"> | Date | string | null
+    pendingPrincipalApproval?: BoolWithAggregatesFilter<"ProjectResource"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"ProjectResource"> | Date | string
   }
 
@@ -52832,6 +52918,10 @@ export namespace Prisma {
     id?: StringFilter<"AppSetting"> | string
     defaultVatPercent?: FloatFilter<"AppSetting"> | number
     timesheetBackdateDays?: IntFilter<"AppSetting"> | number
+    lowMarginPct?: FloatFilter<"AppSetting"> | number
+    budgetOverrunPct?: FloatFilter<"AppSetting"> | number
+    invoiceDueSoonDays?: IntFilter<"AppSetting"> | number
+    lateTimesheetDays?: IntFilter<"AppSetting"> | number
     updatedAt?: DateTimeFilter<"AppSetting"> | Date | string
     updatedById?: StringNullableFilter<"AppSetting"> | string | null
   }
@@ -52840,6 +52930,10 @@ export namespace Prisma {
     id?: SortOrder
     defaultVatPercent?: SortOrder
     timesheetBackdateDays?: SortOrder
+    lowMarginPct?: SortOrder
+    budgetOverrunPct?: SortOrder
+    invoiceDueSoonDays?: SortOrder
+    lateTimesheetDays?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrderInput | SortOrder
   }
@@ -52851,6 +52945,10 @@ export namespace Prisma {
     NOT?: AppSettingWhereInput | AppSettingWhereInput[]
     defaultVatPercent?: FloatFilter<"AppSetting"> | number
     timesheetBackdateDays?: IntFilter<"AppSetting"> | number
+    lowMarginPct?: FloatFilter<"AppSetting"> | number
+    budgetOverrunPct?: FloatFilter<"AppSetting"> | number
+    invoiceDueSoonDays?: IntFilter<"AppSetting"> | number
+    lateTimesheetDays?: IntFilter<"AppSetting"> | number
     updatedAt?: DateTimeFilter<"AppSetting"> | Date | string
     updatedById?: StringNullableFilter<"AppSetting"> | string | null
   }, "id">
@@ -52859,6 +52957,10 @@ export namespace Prisma {
     id?: SortOrder
     defaultVatPercent?: SortOrder
     timesheetBackdateDays?: SortOrder
+    lowMarginPct?: SortOrder
+    budgetOverrunPct?: SortOrder
+    invoiceDueSoonDays?: SortOrder
+    lateTimesheetDays?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrderInput | SortOrder
     _count?: AppSettingCountOrderByAggregateInput
@@ -52875,6 +52977,10 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"AppSetting"> | string
     defaultVatPercent?: FloatWithAggregatesFilter<"AppSetting"> | number
     timesheetBackdateDays?: IntWithAggregatesFilter<"AppSetting"> | number
+    lowMarginPct?: FloatWithAggregatesFilter<"AppSetting"> | number
+    budgetOverrunPct?: FloatWithAggregatesFilter<"AppSetting"> | number
+    invoiceDueSoonDays?: IntWithAggregatesFilter<"AppSetting"> | number
+    lateTimesheetDays?: IntWithAggregatesFilter<"AppSetting"> | number
     updatedAt?: DateTimeWithAggregatesFilter<"AppSetting"> | Date | string
     updatedById?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
   }
@@ -54181,6 +54287,7 @@ export namespace Prisma {
     dailyRate?: number
     proposedAt?: Date | string | null
     acceptedAt?: Date | string | null
+    pendingPrincipalApproval?: boolean
     createdAt?: Date | string
     project: ProjectCreateNestedOneWithoutResourcesInput
     workstream?: ProjectWorkstreamCreateNestedOneWithoutResourcesInput
@@ -54199,6 +54306,7 @@ export namespace Prisma {
     proposedById?: string | null
     proposedAt?: Date | string | null
     acceptedAt?: Date | string | null
+    pendingPrincipalApproval?: boolean
     createdAt?: Date | string
   }
 
@@ -54209,6 +54317,7 @@ export namespace Prisma {
     dailyRate?: FloatFieldUpdateOperationsInput | number
     proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutResourcesNestedInput
     workstream?: ProjectWorkstreamUpdateOneWithoutResourcesNestedInput
@@ -54227,6 +54336,7 @@ export namespace Prisma {
     proposedById?: NullableStringFieldUpdateOperationsInput | string | null
     proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -54241,6 +54351,7 @@ export namespace Prisma {
     proposedById?: string | null
     proposedAt?: Date | string | null
     acceptedAt?: Date | string | null
+    pendingPrincipalApproval?: boolean
     createdAt?: Date | string
   }
 
@@ -54251,6 +54362,7 @@ export namespace Prisma {
     dailyRate?: FloatFieldUpdateOperationsInput | number
     proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -54265,6 +54377,7 @@ export namespace Prisma {
     proposedById?: NullableStringFieldUpdateOperationsInput | string | null
     proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -56963,6 +57076,10 @@ export namespace Prisma {
     id?: string
     defaultVatPercent?: number
     timesheetBackdateDays?: number
+    lowMarginPct?: number
+    budgetOverrunPct?: number
+    invoiceDueSoonDays?: number
+    lateTimesheetDays?: number
     updatedAt?: Date | string
     updatedById?: string | null
   }
@@ -56971,6 +57088,10 @@ export namespace Prisma {
     id?: string
     defaultVatPercent?: number
     timesheetBackdateDays?: number
+    lowMarginPct?: number
+    budgetOverrunPct?: number
+    invoiceDueSoonDays?: number
+    lateTimesheetDays?: number
     updatedAt?: Date | string
     updatedById?: string | null
   }
@@ -56979,6 +57100,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     defaultVatPercent?: FloatFieldUpdateOperationsInput | number
     timesheetBackdateDays?: IntFieldUpdateOperationsInput | number
+    lowMarginPct?: FloatFieldUpdateOperationsInput | number
+    budgetOverrunPct?: FloatFieldUpdateOperationsInput | number
+    invoiceDueSoonDays?: IntFieldUpdateOperationsInput | number
+    lateTimesheetDays?: IntFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -56987,6 +57112,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     defaultVatPercent?: FloatFieldUpdateOperationsInput | number
     timesheetBackdateDays?: IntFieldUpdateOperationsInput | number
+    lowMarginPct?: FloatFieldUpdateOperationsInput | number
+    budgetOverrunPct?: FloatFieldUpdateOperationsInput | number
+    invoiceDueSoonDays?: IntFieldUpdateOperationsInput | number
+    lateTimesheetDays?: IntFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -56995,6 +57124,10 @@ export namespace Prisma {
     id?: string
     defaultVatPercent?: number
     timesheetBackdateDays?: number
+    lowMarginPct?: number
+    budgetOverrunPct?: number
+    invoiceDueSoonDays?: number
+    lateTimesheetDays?: number
     updatedAt?: Date | string
     updatedById?: string | null
   }
@@ -57003,6 +57136,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     defaultVatPercent?: FloatFieldUpdateOperationsInput | number
     timesheetBackdateDays?: IntFieldUpdateOperationsInput | number
+    lowMarginPct?: FloatFieldUpdateOperationsInput | number
+    budgetOverrunPct?: FloatFieldUpdateOperationsInput | number
+    invoiceDueSoonDays?: IntFieldUpdateOperationsInput | number
+    lateTimesheetDays?: IntFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -57011,6 +57148,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     defaultVatPercent?: FloatFieldUpdateOperationsInput | number
     timesheetBackdateDays?: IntFieldUpdateOperationsInput | number
+    lowMarginPct?: FloatFieldUpdateOperationsInput | number
+    budgetOverrunPct?: FloatFieldUpdateOperationsInput | number
+    invoiceDueSoonDays?: IntFieldUpdateOperationsInput | number
+    lateTimesheetDays?: IntFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -58300,6 +58441,7 @@ export namespace Prisma {
     proposedById?: SortOrder
     proposedAt?: SortOrder
     acceptedAt?: SortOrder
+    pendingPrincipalApproval?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -58319,6 +58461,7 @@ export namespace Prisma {
     proposedById?: SortOrder
     proposedAt?: SortOrder
     acceptedAt?: SortOrder
+    pendingPrincipalApproval?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -58333,6 +58476,7 @@ export namespace Prisma {
     proposedById?: SortOrder
     proposedAt?: SortOrder
     acceptedAt?: SortOrder
+    pendingPrincipalApproval?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -60046,6 +60190,10 @@ export namespace Prisma {
     id?: SortOrder
     defaultVatPercent?: SortOrder
     timesheetBackdateDays?: SortOrder
+    lowMarginPct?: SortOrder
+    budgetOverrunPct?: SortOrder
+    invoiceDueSoonDays?: SortOrder
+    lateTimesheetDays?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrder
   }
@@ -60053,12 +60201,20 @@ export namespace Prisma {
   export type AppSettingAvgOrderByAggregateInput = {
     defaultVatPercent?: SortOrder
     timesheetBackdateDays?: SortOrder
+    lowMarginPct?: SortOrder
+    budgetOverrunPct?: SortOrder
+    invoiceDueSoonDays?: SortOrder
+    lateTimesheetDays?: SortOrder
   }
 
   export type AppSettingMaxOrderByAggregateInput = {
     id?: SortOrder
     defaultVatPercent?: SortOrder
     timesheetBackdateDays?: SortOrder
+    lowMarginPct?: SortOrder
+    budgetOverrunPct?: SortOrder
+    invoiceDueSoonDays?: SortOrder
+    lateTimesheetDays?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrder
   }
@@ -60067,6 +60223,10 @@ export namespace Prisma {
     id?: SortOrder
     defaultVatPercent?: SortOrder
     timesheetBackdateDays?: SortOrder
+    lowMarginPct?: SortOrder
+    budgetOverrunPct?: SortOrder
+    invoiceDueSoonDays?: SortOrder
+    lateTimesheetDays?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrder
   }
@@ -60074,6 +60234,10 @@ export namespace Prisma {
   export type AppSettingSumOrderByAggregateInput = {
     defaultVatPercent?: SortOrder
     timesheetBackdateDays?: SortOrder
+    lowMarginPct?: SortOrder
+    budgetOverrunPct?: SortOrder
+    invoiceDueSoonDays?: SortOrder
+    lateTimesheetDays?: SortOrder
   }
 
   export type XeroConnectionCountOrderByAggregateInput = {
@@ -66360,6 +66524,7 @@ export namespace Prisma {
     dailyRate?: number
     proposedAt?: Date | string | null
     acceptedAt?: Date | string | null
+    pendingPrincipalApproval?: boolean
     createdAt?: Date | string
     project: ProjectCreateNestedOneWithoutResourcesInput
     workstream?: ProjectWorkstreamCreateNestedOneWithoutResourcesInput
@@ -66376,6 +66541,7 @@ export namespace Prisma {
     proposedById?: string | null
     proposedAt?: Date | string | null
     acceptedAt?: Date | string | null
+    pendingPrincipalApproval?: boolean
     createdAt?: Date | string
   }
 
@@ -66396,6 +66562,7 @@ export namespace Prisma {
     dailyRate?: number
     proposedAt?: Date | string | null
     acceptedAt?: Date | string | null
+    pendingPrincipalApproval?: boolean
     createdAt?: Date | string
     project: ProjectCreateNestedOneWithoutResourcesInput
     workstream?: ProjectWorkstreamCreateNestedOneWithoutResourcesInput
@@ -66412,6 +66579,7 @@ export namespace Prisma {
     dailyRate?: number
     proposedAt?: Date | string | null
     acceptedAt?: Date | string | null
+    pendingPrincipalApproval?: boolean
     createdAt?: Date | string
   }
 
@@ -68041,6 +68209,7 @@ export namespace Prisma {
     proposedById?: StringNullableFilter<"ProjectResource"> | string | null
     proposedAt?: DateTimeNullableFilter<"ProjectResource"> | Date | string | null
     acceptedAt?: DateTimeNullableFilter<"ProjectResource"> | Date | string | null
+    pendingPrincipalApproval?: BoolFilter<"ProjectResource"> | boolean
     createdAt?: DateTimeFilter<"ProjectResource"> | Date | string
   }
 
@@ -69552,6 +69721,7 @@ export namespace Prisma {
     dailyRate?: number
     proposedAt?: Date | string | null
     acceptedAt?: Date | string | null
+    pendingPrincipalApproval?: boolean
     createdAt?: Date | string
     workstream?: ProjectWorkstreamCreateNestedOneWithoutResourcesInput
     user: UserCreateNestedOneWithoutResourcesInput
@@ -69568,6 +69738,7 @@ export namespace Prisma {
     proposedById?: string | null
     proposedAt?: Date | string | null
     acceptedAt?: Date | string | null
+    pendingPrincipalApproval?: boolean
     createdAt?: Date | string
   }
 
@@ -71579,6 +71750,7 @@ export namespace Prisma {
     dailyRate?: number
     proposedAt?: Date | string | null
     acceptedAt?: Date | string | null
+    pendingPrincipalApproval?: boolean
     createdAt?: Date | string
     project: ProjectCreateNestedOneWithoutResourcesInput
     user: UserCreateNestedOneWithoutResourcesInput
@@ -71595,6 +71767,7 @@ export namespace Prisma {
     proposedById?: string | null
     proposedAt?: Date | string | null
     acceptedAt?: Date | string | null
+    pendingPrincipalApproval?: boolean
     createdAt?: Date | string
   }
 
@@ -85353,6 +85526,7 @@ export namespace Prisma {
     proposedById?: string | null
     proposedAt?: Date | string | null
     acceptedAt?: Date | string | null
+    pendingPrincipalApproval?: boolean
     createdAt?: Date | string
   }
 
@@ -85366,6 +85540,7 @@ export namespace Prisma {
     dailyRate?: number
     proposedAt?: Date | string | null
     acceptedAt?: Date | string | null
+    pendingPrincipalApproval?: boolean
     createdAt?: Date | string
   }
 
@@ -86623,6 +86798,7 @@ export namespace Prisma {
     dailyRate?: FloatFieldUpdateOperationsInput | number
     proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutResourcesNestedInput
     workstream?: ProjectWorkstreamUpdateOneWithoutResourcesNestedInput
@@ -86639,6 +86815,7 @@ export namespace Prisma {
     proposedById?: NullableStringFieldUpdateOperationsInput | string | null
     proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -86652,6 +86829,7 @@ export namespace Prisma {
     proposedById?: NullableStringFieldUpdateOperationsInput | string | null
     proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -86662,6 +86840,7 @@ export namespace Prisma {
     dailyRate?: FloatFieldUpdateOperationsInput | number
     proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutResourcesNestedInput
     workstream?: ProjectWorkstreamUpdateOneWithoutResourcesNestedInput
@@ -86678,6 +86857,7 @@ export namespace Prisma {
     dailyRate?: FloatFieldUpdateOperationsInput | number
     proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -86691,6 +86871,7 @@ export namespace Prisma {
     dailyRate?: FloatFieldUpdateOperationsInput | number
     proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -88170,6 +88351,7 @@ export namespace Prisma {
     proposedById?: string | null
     proposedAt?: Date | string | null
     acceptedAt?: Date | string | null
+    pendingPrincipalApproval?: boolean
     createdAt?: Date | string
   }
 
@@ -88361,6 +88543,7 @@ export namespace Prisma {
     dailyRate?: FloatFieldUpdateOperationsInput | number
     proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workstream?: ProjectWorkstreamUpdateOneWithoutResourcesNestedInput
     user?: UserUpdateOneRequiredWithoutResourcesNestedInput
@@ -88377,6 +88560,7 @@ export namespace Prisma {
     proposedById?: NullableStringFieldUpdateOperationsInput | string | null
     proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -88390,6 +88574,7 @@ export namespace Prisma {
     proposedById?: NullableStringFieldUpdateOperationsInput | string | null
     proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -88974,6 +89159,7 @@ export namespace Prisma {
     proposedById?: string | null
     proposedAt?: Date | string | null
     acceptedAt?: Date | string | null
+    pendingPrincipalApproval?: boolean
     createdAt?: Date | string
   }
 
@@ -89073,6 +89259,7 @@ export namespace Prisma {
     dailyRate?: FloatFieldUpdateOperationsInput | number
     proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutResourcesNestedInput
     user?: UserUpdateOneRequiredWithoutResourcesNestedInput
@@ -89089,6 +89276,7 @@ export namespace Prisma {
     proposedById?: NullableStringFieldUpdateOperationsInput | string | null
     proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -89102,6 +89290,7 @@ export namespace Prisma {
     proposedById?: NullableStringFieldUpdateOperationsInput | string | null
     proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

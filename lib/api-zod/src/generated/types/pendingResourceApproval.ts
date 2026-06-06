@@ -7,20 +7,19 @@
  */
 import type { UserRole } from "./userRole";
 
-export interface ProjectResource {
+export interface PendingResourceApproval {
   id: string;
-  projectId: string;
-  workstreamId?: string | null;
   userId: string;
   userName: string;
   userRole?: UserRole;
   roleInProject?: string | null;
   plannedMandays: number;
-  actualMandays: number;
-  dailyRate: number;
+  proposedAt?: string | null;
   proposedById?: string | null;
   proposedByName?: string | null;
-  proposedAt?: string | null;
-  acceptedAt?: string | null;
-  pendingPrincipalApproval?: boolean;
+  projectId: string;
+  projectCode?: string;
+  projectName: string;
+  projectStatus?: string;
+  clientName?: string | null;
 }

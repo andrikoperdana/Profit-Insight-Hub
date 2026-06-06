@@ -38,6 +38,8 @@ export type AuditAction =
   | "resource.removed"
   | "resource.proposed"
   | "resource.accepted"
+  | "resource.approval_requested"
+  | "resource.rejected"
   | "survey.submitted"
   | "survey.template_updated"
   | "survey.seed_demo"

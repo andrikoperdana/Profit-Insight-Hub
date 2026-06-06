@@ -471,12 +471,20 @@ function XeroIntegrationCard() {
 interface AppSettingsShape {
   defaultVatPercent: number;
   timesheetBackdateDays: number;
+  lowMarginPct: number;
+  budgetOverrunPct: number;
+  invoiceDueSoonDays: number;
+  lateTimesheetDays: number;
 }
 
 function BusinessRulesCard() {
   const { toast } = useToast();
   const [vat, setVat] = useState("");
   const [days, setDays] = useState("");
+  const [lowMargin, setLowMargin] = useState("");
+  const [budgetOverrun, setBudgetOverrun] = useState("");
+  const [invoiceDueSoon, setInvoiceDueSoon] = useState("");
+  const [lateTimesheet, setLateTimesheet] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -488,6 +496,10 @@ function BusinessRulesCard() {
         if (!active) return;
         setVat(String(s.defaultVatPercent));
         setDays(String(s.timesheetBackdateDays));
+        setLowMargin(String(s.lowMarginPct));
+        setBudgetOverrun(String(s.budgetOverrunPct));
+        setInvoiceDueSoon(String(s.invoiceDueSoonDays));
+        setLateTimesheet(String(s.lateTimesheetDays));
       } catch (e: any) {
         if (active) toast({ title: "Failed to load business rules", description: e?.message, variant: "destructive" });
       } finally {
@@ -504,6 +516,10 @@ function BusinessRulesCard() {
     if (saving) return;
     const vatNum = Number(vat);
     const daysNum = Number(days);
+    const lowMarginNum = Number(lowMargin);
+    const budgetOverrunNum = Number(budgetOverrun);
+    const invoiceDueSoonNum = Number(invoiceDueSoon);
+    const lateTimesheetNum = Number(lateTimesheet);
     if (!Number.isFinite(vatNum) || vatNum < 0 || vatNum > 100) {
       toast({ title: "Invalid VAT", description: "Default VAT must be between 0 and 100.", variant: "destructive" });
       return;
@@ -512,14 +528,37 @@ function BusinessRulesCard() {
       toast({ title: "Invalid limit", description: "Timesheet backdate days must be a whole number between 0 and 60.", variant: "destructive" });
       return;
     }
+    if (!Number.isFinite(lowMarginNum) || lowMarginNum < 0 || lowMarginNum > 100) {
+      toast({ title: "Invalid threshold", description: "Low-margin alert must be between 0 and 100.", variant: "destructive" });
+      return;
+    }
+    if (!Number.isFinite(budgetOverrunNum) || budgetOverrunNum < 0 || budgetOverrunNum > 100) {
+      toast({ title: "Invalid threshold", description: "Budget overrun alert must be between 0 and 100.", variant: "destructive" });
+      return;
+    }
+    if (!Number.isInteger(invoiceDueSoonNum) || invoiceDueSoonNum < 1 || invoiceDueSoonNum > 90) {
+      toast({ title: "Invalid window", description: "Invoice due-soon window must be a whole number between 1 and 90.", variant: "destructive" });
+      return;
+    }
+    if (!Number.isInteger(lateTimesheetNum) || lateTimesheetNum < 1 || lateTimesheetNum > 30) {
+      toast({ title: "Invalid window", description: "Late timesheet window must be a whole number between 1 and 30.", variant: "destructive" });
+      return;
+    }
     setSaving(true);
     try {
       await customFetch("/api/app-settings", {
         method: "PUT",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ defaultVatPercent: vatNum, timesheetBackdateDays: daysNum }),
+        body: JSON.stringify({
+          defaultVatPercent: vatNum,
+          timesheetBackdateDays: daysNum,
+          lowMarginPct: lowMarginNum,
+          budgetOverrunPct: budgetOverrunNum,
+          invoiceDueSoonDays: invoiceDueSoonNum,
+          lateTimesheetDays: lateTimesheetNum,
+        }),
       });
-      toast({ title: "Business rules saved", description: "New defaults apply to future entries." });
+      toast({ title: "Business rules saved", description: "New defaults and alert thresholds apply going forward." });
     } catch (e: any) {
       toast({ title: "Failed to save", description: e?.message ?? "Unknown error", variant: "destructive" });
     } finally {
@@ -534,41 +573,101 @@ function BusinessRulesCard() {
           <SlidersHorizontal className="h-5 w-5 text-primary" /> Business Rules
         </CardTitle>
         <CardDescription>
-          Configure organisation-wide defaults. The VAT percent applies to newly created projects;
-          the timesheet limit controls how many working days back staff may log time.
+          Configure organisation-wide defaults and alert thresholds. Defaults apply to new projects
+          and timesheet entries; the alert thresholds drive the in-app notification checks.
         </CardDescription>
       </CardHeader>
       <CardContent>
         {loading ? (
           <p className="text-sm text-muted-foreground">Loading…</p>
         ) : (
-          <form className="space-y-4 max-w-md" onSubmit={save}>
-            <div className="space-y-1.5">
-              <Label htmlFor="default-vat">Default VAT (%)</Label>
-              <Input
-                id="default-vat"
-                type="number"
-                min={0}
-                max={100}
-                step="0.1"
-                value={vat}
-                onChange={(e) => setVat(e.target.value)}
-                data-testid="input-default-vat"
-              />
+          <form className="space-y-6 max-w-md" onSubmit={save}>
+            <div className="space-y-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Defaults</p>
+              <div className="space-y-1.5">
+                <Label htmlFor="default-vat">Default VAT (%)</Label>
+                <Input
+                  id="default-vat"
+                  type="number"
+                  min={0}
+                  max={100}
+                  step="0.1"
+                  value={vat}
+                  onChange={(e) => setVat(e.target.value)}
+                  data-testid="input-default-vat"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="timesheet-days">Timesheet backdate limit (working days)</Label>
+                <Input
+                  id="timesheet-days"
+                  type="number"
+                  min={0}
+                  max={60}
+                  step="1"
+                  value={days}
+                  onChange={(e) => setDays(e.target.value)}
+                  data-testid="input-timesheet-days"
+                />
+              </div>
             </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="timesheet-days">Timesheet backdate limit (working days)</Label>
-              <Input
-                id="timesheet-days"
-                type="number"
-                min={0}
-                max={60}
-                step="1"
-                value={days}
-                onChange={(e) => setDays(e.target.value)}
-                data-testid="input-timesheet-days"
-              />
+
+            <div className="space-y-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Notification alert thresholds</p>
+              <div className="space-y-1.5">
+                <Label htmlFor="low-margin">Low-margin alert when margin below (%)</Label>
+                <Input
+                  id="low-margin"
+                  type="number"
+                  min={0}
+                  max={100}
+                  step="0.1"
+                  value={lowMargin}
+                  onChange={(e) => setLowMargin(e.target.value)}
+                  data-testid="input-low-margin"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="budget-overrun">Budget overrun alert when cost above (% of contract)</Label>
+                <Input
+                  id="budget-overrun"
+                  type="number"
+                  min={0}
+                  max={100}
+                  step="1"
+                  value={budgetOverrun}
+                  onChange={(e) => setBudgetOverrun(e.target.value)}
+                  data-testid="input-budget-overrun"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="invoice-due-soon">Invoice due-soon window (days)</Label>
+                <Input
+                  id="invoice-due-soon"
+                  type="number"
+                  min={1}
+                  max={90}
+                  step="1"
+                  value={invoiceDueSoon}
+                  onChange={(e) => setInvoiceDueSoon(e.target.value)}
+                  data-testid="input-invoice-due-soon"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="late-timesheet">Late timesheet window (days)</Label>
+                <Input
+                  id="late-timesheet"
+                  type="number"
+                  min={1}
+                  max={30}
+                  step="1"
+                  value={lateTimesheet}
+                  onChange={(e) => setLateTimesheet(e.target.value)}
+                  data-testid="input-late-timesheet"
+                />
+              </div>
             </div>
+
             <Button type="submit" disabled={saving} data-testid="button-save-business-rules">
               {saving ? "Saving…" : "Save Business Rules"}
             </Button>

@@ -336,21 +336,22 @@ model AuditLog {
 }
 
 model ProjectResource {
-  id             String             @id @default(cuid())
-  projectId      String
-  project        Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  workstreamId   String?
-  workstream     ProjectWorkstream? @relation(fields: [workstreamId], references: [id], onDelete: SetNull)
-  userId         String
-  user           User               @relation(fields: [userId], references: [id])
-  roleInProject  String?
-  plannedMandays Float              @default(0)
-  dailyRate      Float              @default(0)
-  proposedById   String?
-  proposedBy     User?              @relation("ResourceProposer", fields: [proposedById], references: [id])
-  proposedAt     DateTime?
-  acceptedAt     DateTime?
-  createdAt      DateTime           @default(now())
+  id                       String             @id @default(cuid())
+  projectId                String
+  project                  Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  workstreamId             String?
+  workstream               ProjectWorkstream? @relation(fields: [workstreamId], references: [id], onDelete: SetNull)
+  userId                   String
+  user                     User               @relation(fields: [userId], references: [id])
+  roleInProject            String?
+  plannedMandays           Float              @default(0)
+  dailyRate                Float              @default(0)
+  proposedById             String?
+  proposedBy               User?              @relation("ResourceProposer", fields: [proposedById], references: [id])
+  proposedAt               DateTime?
+  acceptedAt               DateTime?
+  pendingPrincipalApproval Boolean            @default(false)
+  createdAt                DateTime           @default(now())
 
   @@unique([projectId, userId])
 }
@@ -974,6 +975,10 @@ model AppSetting {
   id                    String   @id @default("default")
   defaultVatPercent     Float    @default(11)
   timesheetBackdateDays Int      @default(5)
+  lowMarginPct          Float    @default(15)
+  budgetOverrunPct      Float    @default(80)
+  invoiceDueSoonDays    Int      @default(7)
+  lateTimesheetDays     Int      @default(3)
   updatedAt             DateTime @updatedAt
   updatedById           String?
 }

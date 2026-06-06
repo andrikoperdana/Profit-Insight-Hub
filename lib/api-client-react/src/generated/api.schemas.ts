@@ -1021,6 +1021,7 @@ export interface ProjectResource {
   proposedByName?: string | null;
   proposedAt?: string | null;
   acceptedAt?: string | null;
+  pendingPrincipalApproval?: boolean;
 }
 
 export interface Document {
@@ -1230,6 +1231,23 @@ export interface Notification {
   link?: string | null;
   readAt?: string | null;
   createdAt: string;
+}
+
+export interface PendingResourceApproval {
+  id: string;
+  userId: string;
+  userName: string;
+  userRole?: UserRole;
+  roleInProject?: string | null;
+  plannedMandays: number;
+  proposedAt?: string | null;
+  proposedById?: string | null;
+  proposedByName?: string | null;
+  projectId: string;
+  projectCode?: string;
+  projectName: string;
+  projectStatus?: string;
+  clientName?: string | null;
 }
 
 export interface AddResourceBody {

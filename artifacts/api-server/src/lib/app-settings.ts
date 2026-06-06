@@ -11,11 +11,19 @@ export const APP_SETTINGS_ID = "default";
 export interface AppSettings {
   defaultVatPercent: number;
   timesheetBackdateDays: number;
+  lowMarginPct: number;
+  budgetOverrunPct: number;
+  invoiceDueSoonDays: number;
+  lateTimesheetDays: number;
 }
 
 export const DEFAULT_APP_SETTINGS: AppSettings = {
   defaultVatPercent: 11,
   timesheetBackdateDays: 5,
+  lowMarginPct: 15,
+  budgetOverrunPct: 80,
+  invoiceDueSoonDays: 7,
+  lateTimesheetDays: 3,
 };
 
 const CACHE_TTL_MS = 60_000;
@@ -38,6 +46,22 @@ export async function getAppSettings(): Promise<AppSettings> {
       typeof row?.timesheetBackdateDays === "number"
         ? row.timesheetBackdateDays
         : DEFAULT_APP_SETTINGS.timesheetBackdateDays,
+    lowMarginPct:
+      typeof row?.lowMarginPct === "number"
+        ? row.lowMarginPct
+        : DEFAULT_APP_SETTINGS.lowMarginPct,
+    budgetOverrunPct:
+      typeof row?.budgetOverrunPct === "number"
+        ? row.budgetOverrunPct
+        : DEFAULT_APP_SETTINGS.budgetOverrunPct,
+    invoiceDueSoonDays:
+      typeof row?.invoiceDueSoonDays === "number"
+        ? row.invoiceDueSoonDays
+        : DEFAULT_APP_SETTINGS.invoiceDueSoonDays,
+    lateTimesheetDays:
+      typeof row?.lateTimesheetDays === "number"
+        ? row.lateTimesheetDays
+        : DEFAULT_APP_SETTINGS.lateTimesheetDays,
   };
   cache = { value, expiresAt: now + CACHE_TTL_MS };
   return value;
