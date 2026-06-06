@@ -55,21 +55,6 @@ function friendlyTaskStatus(status: string): string {
   }
 }
 
-function friendlyBillingStatus(status: string): string {
-  switch (status) {
-    case "PLANNED":
-      return "Upcoming";
-    case "INVOICED":
-      return "Invoiced";
-    case "PAID":
-      return "Paid";
-    case "CANCELLED":
-      return "Cancelled";
-    default:
-      return status;
-  }
-}
-
 // ---------------------------------------------------------------------------
 // Lightweight in-memory rate limit for the public endpoint. Keyed by IP, this
 // is only a basic abuse deterrent (the token itself is the real gate). It is a
@@ -142,17 +127,6 @@ router.get("/public/client-portal/:token", async (req, res) => {
         },
         orderBy: [{ startDate: "asc" }, { createdAt: "asc" }],
       },
-      billingMilestones: {
-        select: {
-          id: true,
-          name: true,
-          percentage: true,
-          amount: true,
-          dueDate: true,
-          status: true,
-        },
-        orderBy: [{ sortOrder: "asc" }, { dueDate: "asc" }],
-      },
     },
   });
 
@@ -196,14 +170,6 @@ router.get("/public/client-portal/:token", async (req, res) => {
       progressPct: t.progressPercent ?? 0,
       startDate: t.startDate,
       endDate: t.endDate,
-    })),
-    billing: project.billingMilestones.map((b) => ({
-      id: b.id,
-      name: b.name,
-      percentage: b.percentage,
-      amount: b.amount,
-      dueDate: b.dueDate,
-      status: friendlyBillingStatus(b.status),
     })),
   });
 });

@@ -4,7 +4,7 @@ import { customFetch } from "@workspace/api-client-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Shield, CalendarDays, CheckCircle2, Circle, Clock } from "lucide-react";
-import { formatIDR, formatDate } from "@/lib/format";
+import { formatDate } from "@/lib/format";
 
 type Milestone = {
   id: string;
@@ -13,15 +13,6 @@ type Milestone = {
   progressPct: number;
   startDate: string | null;
   endDate: string | null;
-};
-
-type Billing = {
-  id: string;
-  name: string;
-  percentage: number | string;
-  amount: number | string;
-  dueDate: string | null;
-  status: string;
 };
 
 type PortalData = {
@@ -34,21 +25,12 @@ type PortalData = {
     endDate: string | null;
   };
   milestones: Milestone[];
-  billing: Billing[];
 };
 
 function MilestoneIcon({ progressPct }: { progressPct: number }) {
   if (progressPct >= 100) return <CheckCircle2 className="h-5 w-5 text-primary" />;
   if (progressPct > 0) return <Clock className="h-5 w-5 text-amber-400" />;
   return <Circle className="h-5 w-5 text-muted-foreground/50" />;
-}
-
-function billingTone(status: string): string {
-  const s = status.toLowerCase();
-  if (s === "paid") return "text-primary";
-  if (s === "invoiced") return "text-amber-400";
-  if (s === "cancelled") return "text-muted-foreground line-through";
-  return "text-muted-foreground";
 }
 
 export default function PublicClientPortal() {
@@ -86,7 +68,7 @@ export default function PublicClientPortal() {
     );
   }
 
-  const { project, milestones, billing } = data;
+  const { project, milestones } = data;
 
   return (
     <div className="min-h-screen bg-background py-8 px-4">
@@ -157,35 +139,6 @@ export default function PublicClientPortal() {
                   </li>
                 ))}
               </ul>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card className="border-border">
-          <CardHeader>
-            <CardTitle className="text-lg">Invoice & Payment Status</CardTitle>
-            <CardDescription>Billing milestones and their current payment status.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {billing.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No billing milestones have been set up yet.</p>
-            ) : (
-              <div className="divide-y divide-border">
-                {billing.map((b) => (
-                  <div key={b.id} className="flex items-center justify-between gap-4 py-3">
-                    <div className="min-w-0">
-                      <div className="font-medium text-foreground truncate">{b.name}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {Number(b.percentage)}% · Due {formatDate(b.dueDate)}
-                      </div>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <div className="font-semibold text-foreground">{formatIDR(Number(b.amount))}</div>
-                      <div className={`text-xs font-medium ${billingTone(b.status)}`}>{b.status}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
             )}
           </CardContent>
         </Card>
