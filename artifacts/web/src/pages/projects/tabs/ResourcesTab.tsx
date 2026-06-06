@@ -398,6 +398,14 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
         );
       })()}
 
+      <div className="flex items-start gap-2 rounded-md border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
+        <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-primary" />
+        <p>
+          Selecting a resource here is for cost and planning purposes only. A Consultant or Technical Writer who has a Principal
+          becomes active on the project only after their Principal approves the assignment.
+        </p>
+      </div>
+
       <Card className="border-border shadow-sm">
         <CardHeader className="flex flex-row items-start justify-between gap-4">
           <div>
