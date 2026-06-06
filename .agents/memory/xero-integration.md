@@ -140,6 +140,24 @@ into the error detail and pass it through, or the real reason is invisible. Note
 push leaves the milestone with a reserved invoiceNumber + INVOICED status but null
 xeroInvoiceId; retry is safe (number reused, status preserved, guard is on xeroInvoiceId).
 
+## Token refresh must serialize ACROSS instances, not just in-process
+Xero rotates the refresh token on every refresh, so two parallel refreshes
+invalidate each other. A per-process `refreshInFlight` promise only dedupes
+within one instance; under autoscale two instances can still refresh at once.
+- Serialize cross-instance with a **transaction-level** advisory lock
+  (`pg_advisory_xact_lock`) inside `prisma.$transaction`, then RE-READ the
+  connection under the lock and skip the HTTP refresh if another refresher
+  already rotated the token. Use a transaction (xact) lock, NOT session-level
+  `pg_advisory_lock`/`unlock` in separate `$queryRaw` calls — Prisma's pool can
+  run lock and unlock on different connections, so a session lock may never
+  release. The xact lock is connection-pinned and auto-releases on commit.
+- The refresh holds the lock across an external HTTP call, so **bound the HTTP
+  call** (AbortController timeout, e.g. 12s) safely under the transaction
+  `timeout` (e.g. 20s); a hung Xero endpoint then aborts cleanly instead of
+  stalling the open transaction toward its timeout.
+**Why:** parallel token rotation desyncs the stored refresh token and breaks all
+later Xero calls until a manual reconnect.
+
 ## OAuth state must fail closed
 `/api/xero/callback` is intentionally unauthenticated and site-gate-bypassed; it trusts
 only the HMAC-signed `state`. The signing secret (`SESSION_SECRET`) must have **no

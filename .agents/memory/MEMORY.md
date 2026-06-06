@@ -6,4 +6,5 @@
 - [Generated hook query options require queryKey](codegen-hook-querykey.md) — Orval hooks force an explicit `queryKey` inside any `{query:{...}}` options object; don't use `as any`, pass a stable key.
 - [Workflow restart orphans hold ports](workflow-orphan-ports.md) — failed restarts leave reparented vite/node holding the port (strictPort decks then can't rebind); kill orphans by /proc cwd, not pkill -f.
 - [Sandbox vs shell env](sandbox-vs-shell-env.md) — code_execution sandbox can't read Replit Secrets (even after restart); use a /tmp .mjs run via bash; prod writes only via live API behind site gate.
-- [Xero integration rules](xero-integration.md) — invoice push needs per-milestone advisory lock + reserve invoiceNumber before the Xero call; mark PAID only on Status==="PAID"; OAuth state secret fails closed.
+- [Xero integration rules](xero-integration.md) — invoice push needs per-milestone advisory lock + reserve invoiceNumber before the Xero call; mark PAID only on Status==="PAID"; OAuth state secret fails closed; token refresh serializes cross-instance via pg_advisory_xact_lock + bounded HTTP.
+- [Dashboard portfolio aggregation select](dashboard-aggregation-select.md) — aggregate every project with the narrow projectMetricsSelect, never the heavy projectInclude (avatars/RAID/billing waste).

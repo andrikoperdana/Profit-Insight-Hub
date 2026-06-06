@@ -127,15 +127,34 @@ interface TokenResponse {
   expires_in: number;
 }
 
-async function requestToken(body: URLSearchParams): Promise<TokenResponse> {
-  const resp = await fetch(TOKEN_URL, {
-    method: "POST",
-    headers: {
-      Authorization: basicAuthHeader(),
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: body.toString(),
-  });
+async function requestToken(
+  body: URLSearchParams,
+  timeoutMs = 12_000,
+): Promise<TokenResponse> {
+  // Bound the call so it can never outlast the refresh transaction's advisory
+  // lock (see doRefresh): a hung Xero endpoint aborts here with a clean error
+  // instead of stalling the open transaction toward its timeout.
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  let resp: Response;
+  try {
+    resp = await fetch(TOKEN_URL, {
+      method: "POST",
+      headers: {
+        Authorization: basicAuthHeader(),
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: body.toString(),
+      signal: controller.signal,
+    });
+  } catch (err) {
+    if ((err as Error).name === "AbortError") {
+      throw new Error(`Xero token request timed out after ${timeoutMs}ms`);
+    }
+    throw err;
+  } finally {
+    clearTimeout(timer);
+  }
   if (!resp.ok) {
     const text = await resp.text().catch(() => "");
     throw new Error(`Xero token request failed (${resp.status}): ${text.slice(0, 300)}`);
@@ -290,28 +309,51 @@ export class XeroNotConnectedError extends Error {
   }
 }
 
-// Serialize token refreshes: concurrent API calls that all see an expired
-// token must not each fire a refresh (Xero rotates the refresh token, so
-// parallel refreshes would invalidate one another).
+// Serialize token refreshes. Xero rotates the refresh token on every refresh,
+// so two concurrent refreshes invalidate one another. We guard on two levels:
+//   - in-process: a shared `refreshInFlight` promise so concurrent callers in
+//     THIS instance fire a single refresh.
+//   - cross-instance: a Postgres transaction-level advisory lock so two
+//     autoscale instances never refresh in parallel. A transaction-scoped lock
+//     (`pg_advisory_xact_lock`) is held on the single pinned connection of the
+//     interactive transaction and auto-releases on commit/rollback, unlike
+//     session-level locks which Prisma's pool can split across connections.
+const XERO_TOKEN_LOCK_NS = 0x58524f; // "XRO"
+const XERO_TOKEN_LOCK_KEY = 1; // singleton XeroConnection token refresh
 let refreshInFlight: Promise<{ accessToken: string; tenantId: string }> | null = null;
 
-async function doRefresh(refreshToken: string): Promise<{ accessToken: string; tenantId: string }> {
-  const token = await requestToken(
-    new URLSearchParams({
-      grant_type: "refresh_token",
-      refresh_token: refreshToken,
-    }),
-  );
-  const expiresAt = new Date(Date.now() + token.expires_in * 1000);
-  const updated = await prisma.xeroConnection.update({
-    where: { id: CONNECTION_ID },
-    data: {
-      accessToken: token.access_token,
-      refreshToken: token.refresh_token,
-      expiresAt,
+async function doRefresh(): Promise<{ accessToken: string; tenantId: string }> {
+  return prisma.$transaction(
+    async (tx) => {
+      // Block until any concurrent refresher (this or another instance) releases
+      // the lock at its transaction end.
+      await tx.$queryRaw`SELECT pg_advisory_xact_lock(${XERO_TOKEN_LOCK_NS}::int4, ${XERO_TOKEN_LOCK_KEY}::int4)`;
+      // Re-read under the lock: another refresher may have just rotated the token,
+      // in which case we return the fresh one without calling Xero again.
+      const conn = await tx.xeroConnection.findUnique({ where: { id: CONNECTION_ID } });
+      if (!conn || conn.disconnectedAt) throw new XeroNotConnectedError();
+      if (conn.expiresAt.getTime() - Date.now() > EXPIRY_BUFFER_MS) {
+        return { accessToken: conn.accessToken, tenantId: conn.tenantId };
+      }
+      const token = await requestToken(
+        new URLSearchParams({
+          grant_type: "refresh_token",
+          refresh_token: conn.refreshToken,
+        }),
+      );
+      const expiresAt = new Date(Date.now() + token.expires_in * 1000);
+      const updated = await tx.xeroConnection.update({
+        where: { id: CONNECTION_ID },
+        data: {
+          accessToken: token.access_token,
+          refreshToken: token.refresh_token,
+          expiresAt,
+        },
+      });
+      return { accessToken: updated.accessToken, tenantId: updated.tenantId };
     },
-  });
-  return { accessToken: updated.accessToken, tenantId: updated.tenantId };
+    { timeout: 20_000 },
+  );
 }
 
 /**
@@ -326,7 +368,7 @@ export async function getValidAccessToken(): Promise<{ accessToken: string; tena
     return { accessToken: conn.accessToken, tenantId: conn.tenantId };
   }
   if (!refreshInFlight) {
-    refreshInFlight = doRefresh(conn.refreshToken).finally(() => {
+    refreshInFlight = doRefresh().finally(() => {
       refreshInFlight = null;
     });
   }

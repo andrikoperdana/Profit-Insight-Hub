@@ -1,7 +1,7 @@
 import type { Prisma } from "@workspace/db";
 import { getOverheadMultiplier } from "./overhead.js";
 
-type ProjectWithRelations = Prisma.ProjectGetPayload<{
+export type ProjectWithRelations = Prisma.ProjectGetPayload<{
   include: {
     client: true;
     sales: true;
@@ -300,6 +300,37 @@ export const projectInclude = {
   expenses: true,
   raidItems: true,
   billingMilestones: true,
+} as const;
+
+/**
+ * Minimal selection containing only the fields `computeMetrics` reads. Use this
+ * for portfolio aggregations (e.g. dashboard summary / profit-trend) instead of
+ * `projectInclude`, which eagerly loads full user rows (including base64
+ * avatars), RAID items, billing milestones, etc. for every project — large
+ * payloads that aggregation never needs. Numbers are identical because the same
+ * `computeMetrics` runs over the result.
+ */
+export const projectMetricsSelect = {
+  id: true,
+  status: true,
+  contractValue: true,
+  plannedMandays: true,
+  estimatedCost: true,
+  vatPercent: true,
+  contractValueIncludesVat: true,
+  currency: true,
+  exchangeRate: true,
+  resources: { select: { userId: true, dailyRate: true } },
+  timesheets: {
+    select: {
+      hours: true,
+      status: true,
+      userId: true,
+      workDate: true,
+      user: { select: { dailyRate: true } },
+    },
+  },
+  expenses: { select: { amount: true, status: true } },
 } as const;
 
 /**

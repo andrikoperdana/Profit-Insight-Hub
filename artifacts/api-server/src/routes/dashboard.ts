@@ -4,9 +4,11 @@ import { requireAuth } from "../middlewares/auth.js";
 import {
   serializeProject,
   projectInclude,
+  projectMetricsSelect,
   computeMetrics,
   canViewProjectFinancials,
 } from "../lib/serializers.js";
+import type { ProjectWithRelations } from "../lib/serializers.js";
 import { isPrincipalRole } from "../lib/roles.js";
 import { TtlCache } from "../lib/ttlCache.js";
 
@@ -31,7 +33,12 @@ function requireFinancialView(req: any, res: any): boolean {
 router.get("/dashboard/summary", async (req, res) => {
   if (!requireFinancialView(req, res)) return;
   // Executive KPIs are commercial; exclude non-billable INTERNAL/PRESALES/TRAINING.
-  const projects = await prisma.project.findMany({ where: { deletedAt: null, kind: "CLIENT" }, include: projectInclude });
+  // Use the metrics-only select (not projectInclude) so we don't pull full user
+  // rows / RAID / billing relations for every project just to aggregate.
+  const projects = (await prisma.project.findMany({
+    where: { deletedAt: null, kind: "CLIENT" },
+    select: projectMetricsSelect,
+  })) as unknown as ProjectWithRelations[];
   const totalProjects = projects.length;
   const activeProjects = projects.filter((p) => p.status === "ACTIVE").length;
   let totalContractValue = 0;
@@ -94,7 +101,10 @@ router.get("/dashboard/profit-trend", async (req, res) => {
   if (!requireFinancialView(req, res)) return;
   // Group approved timesheets by month for cost; spread project contract value
   // Only CLIENT projects contribute to commercial profit trend.
-  const projects = await prisma.project.findMany({ where: { deletedAt: null, kind: "CLIENT" }, include: projectInclude });
+  const projects = (await prisma.project.findMany({
+    where: { deletedAt: null, kind: "CLIENT" },
+    select: projectMetricsSelect,
+  })) as unknown as ProjectWithRelations[];
   const monthly = new Map<string, { revenue: number; cost: number }>();
 
   for (const p of projects) {
