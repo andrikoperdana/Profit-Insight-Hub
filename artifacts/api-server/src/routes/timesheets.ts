@@ -402,7 +402,15 @@ router.post("/timesheets/:id/submit", async (req, res) => {
     data: { status: "SUBMITTED", rejectionReason: null },
     include: tsInclude,
   });
-  if (ts.project.pmId && ts.project.pmId !== ts.userId) {
+  // Only notify the PM on a real transition into SUBMITTED (avoids re-notifying
+  // when submit is called again on an already-submitted entry). Compare the PM
+  // against the actor, not the entry owner, so MGMT submitting on behalf of a
+  // PM-owned entry still notifies that PM.
+  if (
+    existing.status !== "SUBMITTED" &&
+    ts.project.pmId &&
+    ts.project.pmId !== req.user!.sub
+  ) {
     await notifyUser({
       userId: ts.project.pmId,
       type: "timesheet.submitted",
@@ -497,6 +505,10 @@ router.post("/timesheets/:id/approve", async (req, res) => {
   }
   if (role === "PROJECT_MANAGER" && existing.project.pmId !== req.user!.sub) {
     res.status(403).json({ error: "Not your project" });
+    return;
+  }
+  if (existing.status !== "SUBMITTED") {
+    res.status(409).json({ error: `Cannot approve a timesheet in ${existing.status} state` });
     return;
   }
   const ts = await prisma.timesheet.update({
