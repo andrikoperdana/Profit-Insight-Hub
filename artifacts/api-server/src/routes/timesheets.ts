@@ -236,6 +236,16 @@ router.post("/timesheets", validateBody(CreateTimesheetBody), async (req, res) =
     after: serialize(ts),
   });
 
+  if (!isAutoApprove && ts.project.pmId && ts.project.pmId !== req.user!.sub) {
+    await notifyUser({
+      userId: ts.project.pmId,
+      type: "timesheet.submitted",
+      title: "Timesheet awaiting approval",
+      message: `${ts.user.name} submitted ${ts.hours}h on ${ts.project.name} for your approval.`,
+      link: "/approvals",
+    });
+  }
+
   res.status(201).json(serialize(ts));
 });
 
@@ -257,12 +267,16 @@ router.post("/timesheets/bulk", validateBody(CreateBulkTimesheetsBody), async (r
   // on projects they actually manage.
   const projectIds: string[] = Array.from(new Set(entries.map((e: any) => String(e?.projectId || "")).filter(Boolean)));
   const projectPmMap = new Map<string, string | null>();
+  const projectNameMap = new Map<string, string>();
   if (projectIds.length > 0) {
     const projs = await prisma.project.findMany({
       where: { id: { in: projectIds } },
-      select: { id: true, pmId: true },
+      select: { id: true, pmId: true, name: true },
     });
-    projs.forEach((p) => projectPmMap.set(p.id, p.pmId));
+    projs.forEach((p) => {
+      projectPmMap.set(p.id, p.pmId);
+      projectNameMap.set(p.id, p.name);
+    });
   }
   const todayStart = startOfDay(new Date());
   const backdateDays = (await getAppSettings()).timesheetBackdateDays;
@@ -270,6 +284,7 @@ router.post("/timesheets/bulk", validateBody(CreateBulkTimesheetsBody), async (r
   const results: Array<{ index: number; ok: boolean; id?: string | null; error?: string | null }> = [];
   let created = 0;
   let failed = 0;
+  const submittedByProject = new Map<string, number>();
   for (let i = 0; i < entries.length; i++) {
     const e = entries[i];
     try {
@@ -339,6 +354,9 @@ router.post("/timesheets/bulk", validateBody(CreateBulkTimesheetsBody), async (r
       });
       results.push({ index: i, ok: true, id: ts.id });
       created++;
+      if (!entryAutoApprove) {
+        submittedByProject.set(projectId, (submittedByProject.get(projectId) ?? 0) + 1);
+      }
     } catch (err) {
       results.push({ index: i, ok: false, error: err instanceof Error ? err.message : "Unknown error" });
       failed++;
@@ -350,6 +368,20 @@ router.post("/timesheets/bulk", validateBody(CreateBulkTimesheetsBody), async (r
     entityId: userId,
     description: `Bulk timesheet entry: ${created} created, ${failed} failed`,
   });
+  await Promise.all(
+    Array.from(submittedByProject.entries()).map(([pid, count]) => {
+      const pmId = projectPmMap.get(pid);
+      if (!pmId || pmId === userId) return Promise.resolve();
+      const name = projectNameMap.get(pid) ?? "a project";
+      return notifyUser({
+        userId: pmId,
+        type: "timesheet.submitted",
+        title: "Timesheets awaiting approval",
+        message: `${count} timesheet ${count === 1 ? "entry was" : "entries were"} submitted on ${name} for your approval.`,
+        link: "/approvals",
+      });
+    }),
+  );
   res.status(201).json({ created, failed, results });
 });
 
@@ -370,6 +402,15 @@ router.post("/timesheets/:id/submit", async (req, res) => {
     data: { status: "SUBMITTED", rejectionReason: null },
     include: tsInclude,
   });
+  if (ts.project.pmId && ts.project.pmId !== ts.userId) {
+    await notifyUser({
+      userId: ts.project.pmId,
+      type: "timesheet.submitted",
+      title: "Timesheet awaiting approval",
+      message: `${ts.user.name} resubmitted ${ts.hours}h on ${ts.project.name} for your approval.`,
+      link: "/approvals",
+    });
+  }
   res.json(serialize(ts));
 });
 
@@ -392,7 +433,7 @@ router.post("/timesheets/bulk-approve", async (req, res) => {
         ? { project: { pmId: req.user!.sub } }
         : {}),
     },
-    select: { id: true, projectId: true },
+    select: { id: true, projectId: true, userId: true },
   });
   const allowedIds = candidates.map((c) => c.id);
   if (allowedIds.length === 0) {
@@ -421,6 +462,22 @@ router.post("/timesheets/bulk-approve", async (req, res) => {
     description: `Bulk approved ${allowedIds.length} timesheet(s)`,
     after: { ids: allowedIds, count: allowedIds.length },
   });
+  const approvedByUser = new Map<string, number>();
+  for (const c of candidates) {
+    if (c.userId === req.user!.sub) continue;
+    approvedByUser.set(c.userId, (approvedByUser.get(c.userId) ?? 0) + 1);
+  }
+  await Promise.all(
+    Array.from(approvedByUser.entries()).map(([uid, count]) =>
+      notifyUser({
+        userId: uid,
+        type: "timesheet.approved",
+        title: "Timesheets approved",
+        message: `${count} of your timesheet ${count === 1 ? "entry was" : "entries were"} approved.`,
+        link: "/timesheets",
+      }),
+    ),
+  );
   res.json({ approved: allowedIds.length, ids: allowedIds });
 });
 
@@ -467,6 +524,15 @@ router.post("/timesheets/:id/approve", async (req, res) => {
     before: { status: existing.status },
     after: { status: ts.status, approvedAt: ts.approvedAt },
   });
+  if (ts.userId !== req.user!.sub) {
+    await notifyUser({
+      userId: ts.userId,
+      type: "timesheet.approved",
+      title: "Timesheet approved",
+      message: `Your ${ts.hours}h entry on ${ts.project.name} was approved.`,
+      link: "/timesheets",
+    });
+  }
   res.json(serialize(ts));
 });
 
