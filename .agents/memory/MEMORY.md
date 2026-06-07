@@ -13,5 +13,6 @@
 - [Sample timesheet hours stacking](sample-data-hours-stacking.md) — demo generators stacked the same user across days/projects → impossible Work Hours totals; capUserDailyHours enforces ≤8h/day (synthetic-only, exact allocator, UTC-Monday week key).
 - [Production DB remote latency & batch writes](prod-db-remote-latency.md) — prod is a remote Neon (Singapore); chunk write scripts into <2min batches (bash caps at 120s; backgrounded procs die on tool return).
 - [Work-hours leave target reduction](work-hours-leave-union.md) — reduce the weekly hours target by a union of distinct leave business days, never a per-interval sum (overlaps double-count).
+- [Shared fetch RN guards](mobile-fetch-rn-guards.md) — browser-only side effects in custom-fetch must use isBrowserDom() (window+localStorage+location); `typeof window` alone crashes the Expo native app.
 - [Expo dev-workflow port probe & verification](expo-dev-workflow-verification.md) — restart_workflow can falsely report DIDNT_OPEN_A_PORT for Expo even when Metro binds; verify by curl-compiling the web bundle, not by retrying restart.
 - [Phone-only timer per user](mobile-timer-per-user.md) — a device-local AsyncStorage running-timer must be keyed by user id or it leaks across accounts on a shared phone.

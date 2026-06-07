@@ -69,6 +69,18 @@ function isRequest(input: RequestInfo | URL): input is Request {
   return typeof Request !== "undefined" && input instanceof Request;
 }
 
+// True only in a real browser DOM. React Native defines a global `window` but
+// has no `localStorage`/`window.location`, so guarding browser-only side effects
+// (gate reload, 401 redirect) with `typeof window` alone crashes the mobile app
+// ("Property 'localStorage' doesn't exist"). Require localStorage + location too.
+function isBrowserDom(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    typeof localStorage !== "undefined" &&
+    typeof window.location !== "undefined"
+  );
+}
+
 function resolveMethod(input: RequestInfo | URL, explicitMethod?: string): string {
   if (explicitMethod) return explicitMethod.toUpperCase();
   if (isRequest(input)) return input.method.toUpperCase();
@@ -406,12 +418,12 @@ export async function customFetch<T = unknown>(
   if (
     response.status === 403 &&
     response.headers.get("x-site-gate") === "required" &&
-    typeof window !== "undefined"
+    isBrowserDom()
   ) {
     window.location.reload();
   }
 
-  if (response.status === 401 && typeof window !== "undefined") {
+  if (response.status === 401 && isBrowserDom()) {
     // If we're not already on the login page, redirect
     if (!window.location.pathname.includes("/login")) {
       localStorage.removeItem("auth_token");
