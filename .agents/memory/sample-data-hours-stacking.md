@@ -36,7 +36,18 @@ hours are reserved in the day budget — so it never mutates real data. Pass
   `getTime()` and never collapsed into one weekly-cap bucket.
 - Proportional scaling with `round()`/`Math.max(0.5,...)` does NOT guarantee
   ≤cap (rows that floor to 0.5 keep the day above cap forever). Use integer
-  half-hour units + largest-remainder so the day sums to exactly the cap.
+  half-hour units + largest-remainder so the day sums to exactly the cap. The
+  budget→units conversion must FLOOR (`Math.floor(budget*2 + 1e-9)`), never
+  round — a non-0.5 budget (e.g. 0.3h) would otherwise inflate to 0.5h and
+  break the cap when reserved human hours leave a fractional remainder.
+
+**Prod cleanup nuance (not in seed code):** prod accumulated unmarked rows two
+ways — (1) base-seed rows predating the marker fix, identifiable by a fixed set
+of literal descriptions ("PCI audit fieldwork", "Evidence collection", etc.),
+and (2) genuine human test entries (free-text / gibberish). A one-off cleanup
+must treat marker OR known-seed-description as generator-origin and cap only
+those; never blanket-cap, or you mutate real human rows. Confirm by enumerating
+distinct descriptions before writing.
 
 **Side-effect note:** project resourceCost/margin is derived from timesheets at
 read time, so scaling synthetic hours also shifts demo financials — intended,

@@ -30,7 +30,10 @@ export function allocateDailyHours(hours: number[], budget: number): number[] {
   if (total <= budget) return hours.slice();
   if (budget <= 0) return hours.map(() => 0);
 
-  const budgetUnits = Math.round(budget * 2); // half-hour units
+  // Floor to half-hour units (never inflate): rounding up could let the
+  // allocation exceed a non-0.5 budget (e.g. 0.3h -> 0.5h). A tiny epsilon
+  // absorbs floating-point noise on exact multiples (e.g. 5.7*2 = 11.3999...).
+  const budgetUnits = Math.floor(budget * 2 + 1e-9); // half-hour units
   const raw = hours.map((h) => (h / total) * budgetUnits);
   const floors = raw.map((x) => Math.floor(x));
   const used = floors.reduce((s, x) => s + x, 0);
