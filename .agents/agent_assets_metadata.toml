@@ -341,3 +341,9 @@ id = "fy23EmIj0Viw3L1_3gq02"
 uri = "file://attached_assets/SecureProfit-Hub-Features-and-Calculations-EN-updated.docx"
 type = "word_document"
 title = "SecureProfit Hub — Features & Calculations (Updated)"
+
+[[outputs]]
+id = "-t8456zQ_WlvY4NqcrqLu"
+uri = "file://exports/panduan-android.jpg"
+type = "image"
+title = "Panduan Android - SecureProfit (siap di-share)"
