@@ -53,7 +53,9 @@ export default function Sidebar() {
   const main: NavLink[] = [
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
     ...(isSiteAdmin || isHr ? [] : [{ href: "/projects", label: "Projects", icon: Briefcase }]),
-    ...(isSiteAdmin || isFinance || isHr ? [] : [{ href: "/timesheets", label: "Time Tracking", icon: Clock }]),
+    ...(isSiteAdmin || isFinance || isHr || user?.role === "MANAGEMENT" || user?.role === "SALES"
+      ? []
+      : [{ href: "/timesheets", label: "Time Tracking", icon: Clock }]),
   ];
 
   const canSeeExpenses =
@@ -80,7 +82,11 @@ export default function Sidebar() {
     ...(canSeeMyViews
       ? [
           { href: "/my-tasks", label: "My Tasks", icon: CheckSquare },
-          { href: "/my-timesheets", label: "My Timesheet", icon: Clock },
+          // Sales is exempt from time tracking, so they don't get the personal
+          // timesheet view (mirrors Finance/HR not needing to log hours).
+          ...(user?.role === "SALES"
+            ? []
+            : [{ href: "/my-timesheets", label: "My Timesheet", icon: Clock }]),
           { href: "/my-expenses", label: "My Expenses", icon: Receipt },
         ]
       : []),

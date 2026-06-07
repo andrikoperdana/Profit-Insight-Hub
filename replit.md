@@ -97,6 +97,8 @@ Server `requireRole` (`middlewares/auth.ts`):
 - **Sales**: write clients/projects
 - **Konsultan/TW**: log own timesheets only
 - **Admin Project**: documents/invoices
+
+**Time tracking menu visibility** (`Sidebar.tsx`): the "Time Tracking" (`/timesheets`) link is hidden for Site Admin, Finance, HR, **and now Management + Sales** — these roles don't log their own hours. Sales also loses the "My Timesheet" personal view (kept My Tasks/My Expenses). Routes stay reachable (no `allowRoles` change) so PM/MGMT team-oversight isn't broken; this is a UI-menu change only.
 - **Finance**: read-only all Projects/Clients/Reports(+exports)/VAT Recap + MGMT-style dashboard; may upload/delete INVOICE+CONTRACT docs only. No timesheet/billing/expense writes.
 - **HR**: people-ops only — HR Dashboard, Employees (`/users` read + edit non-sensitive fields only, no create/delete), Org Chart, Leaves (view), Skill Matrix (read), Skills/BU CRUD, Bench, Capacity (read), Resource Planning (read). Hard-denied Projects, Timesheets, and financial dashboard endpoints (`canViewProjectFinancials` includes HR in `FINANCIALS_BLOCKED_ROLES`); retains `/dashboard/utilization-trend` + `/dashboard/resource-utilization-detail`.
 
