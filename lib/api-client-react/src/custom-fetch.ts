@@ -358,8 +358,10 @@ export async function customFetch<T = unknown>(
     headers.set("accept", DEFAULT_JSON_ACCEPT);
   }
 
-  // Attach bearer token from localStorage
-  if (!headers.has("authorization")) {
+  // Attach bearer token from localStorage (web only — React Native has no
+  // localStorage global, so guard the access to avoid a ReferenceError there;
+  // native bundles supply the token via setAuthTokenGetter below instead).
+  if (!headers.has("authorization") && typeof localStorage !== "undefined") {
     const token = localStorage.getItem("auth_token");
     if (token) {
       headers.set("authorization", `Bearer ${token}`);
