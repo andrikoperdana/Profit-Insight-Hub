@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   useGetWorkHoursTeam,
   getGetWorkHoursTeamQueryKey,
@@ -50,9 +50,12 @@ function PeriodCell({ period }: { period: WorkHoursPeriod }) {
   );
 }
 
+const PAGE_SIZE = 20;
+
 export default function WorkHoursTeamPage() {
   const [search, setSearch] = useState("");
   const [weekStatus, setWeekStatus] = useState<string>("ALL");
+  const [page, setPage] = useState(1);
 
   const { data, isLoading } = useGetWorkHoursTeam({
     query: { queryKey: getGetWorkHoursTeamQueryKey() },
@@ -99,6 +102,17 @@ export default function WorkHoursTeamPage() {
       return true;
     });
   }, [members, search, weekStatus]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [search, weekStatus]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const paged = useMemo(
+    () => filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE),
+    [filtered, currentPage],
+  );
 
   const kpi = useMemo(() => {
     const required = members.filter((m) => m.required);
@@ -198,7 +212,7 @@ export default function WorkHoursTeamPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filtered.map((m) => (
+                  {paged.map((m) => (
                     <TableRow key={m.userId} data-testid={`row-work-hours-${m.userId}`}>
                       <TableCell className="font-medium text-sm">{m.userName}</TableCell>
                       <TableCell className="text-xs text-muted-foreground">
@@ -214,6 +228,35 @@ export default function WorkHoursTeamPage() {
                   ))}
                 </TableBody>
               </Table>
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-3">
+                <p className="text-xs text-muted-foreground">
+                  Showing {(currentPage - 1) * PAGE_SIZE + 1}–
+                  {Math.min(currentPage * PAGE_SIZE, filtered.length)} of {filtered.length}
+                </p>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage <= 1}
+                    data-testid="button-work-hours-prev"
+                  >
+                    Previous
+                  </Button>
+                  <span className="text-xs text-muted-foreground">
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={currentPage >= totalPages}
+                    data-testid="button-work-hours-next"
+                  >
+                    Next
+                  </Button>
+                </div>
+              </div>
             </div>
           )}
         </CardContent>
