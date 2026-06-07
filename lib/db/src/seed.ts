@@ -318,8 +318,12 @@ export async function runSeed() {
   tsData.push({ projectId: p1.id, userId: rian.id, date: recent, hours: 6, desc: "Risk assessment workshop", status: "SUBMITTED" });
   tsData.push({ projectId: p1.id, userId: ayu.id,  date: recent, hours: 4, desc: "Documentation review", status: "DRAFT" });
 
+  // Tag base-seed timesheet rows with the invisible synthetic marker (U+200B)
+  // so the daily-hours cap and any syntheticOnly pass can recognize and adjust
+  // them. Without this, these generator rows look like real human entries and
+  // stack with the other generators into impossible per-day totals.
   for (const ts of tsData) {
-    await prisma.timesheet.create({ data: { projectId: ts.projectId, userId: ts.userId, workDate: ts.date, hours: ts.hours, description: ts.desc, status: ts.status, approvedById: ts.status === "APPROVED" ? sari.id : null, approvedAt: ts.status === "APPROVED" ? ts.date : null } });
+    await prisma.timesheet.create({ data: { projectId: ts.projectId, userId: ts.userId, workDate: ts.date, hours: ts.hours, description: `${ts.desc}\u200B`, status: ts.status, approvedById: ts.status === "APPROVED" ? sari.id : null, approvedAt: ts.status === "APPROVED" ? ts.date : null } });
   }
 
   const tinyPdfDataUrl = "data:application/pdf;base64,JVBERi0xLjQKJcKlwrHDqwoxIDAgb2JqCjw8L1R5cGUvQ2F0YWxvZy9QYWdlcyAyIDAgUj4+CmVuZG9iago=";
