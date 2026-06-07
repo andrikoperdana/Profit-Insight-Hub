@@ -47,6 +47,11 @@ app.use("/api", (req, res, next) => {
   // to be reachable without a session — they must bypass the front-door gate.
   // Each is individually protected by an unguessable token.
   if (p.startsWith("/public/")) return next();
+  // The Expo mobile app has no UI to enter the shared gate credentials, so it
+  // tags every request with this header to bypass the front-door gate. The web
+  // app never sets it, so the website stays gated. Per-user JWT auth still
+  // applies to every /api route below, so data remains protected either way.
+  if (req.get("x-secureprofit-client") === "mobile") return next();
   if (verifyGateToken(readGateCookie(req.headers.cookie))) return next();
   res.setHeader("X-Site-Gate", "required");
   res.status(403).json({ error: "site_gate_required" });

@@ -26,6 +26,7 @@ const DEFAULT_JSON_ACCEPT = "application/json, application/problem+json";
 
 let _baseUrl: string | null = null;
 let _authTokenGetter: AuthTokenGetter | null = null;
+let _clientId: string | null = null;
 
 /**
  * Set a base URL that is prepended to every relative request URL
@@ -51,6 +52,17 @@ export function setBaseUrl(url: string | null): void {
  */
 export function setAuthTokenGetter(getter: AuthTokenGetter | null): void {
   _authTokenGetter = getter;
+}
+
+/**
+ * Register a client identifier sent as the `X-SecureProfit-Client` header on
+ * every request. The Expo mobile bundle sets this to `"mobile"` so the server's
+ * front-door site gate can let mobile traffic through while the web app (which
+ * never sets it) stays gated. Per-user JWT auth still applies regardless.
+ * Pass `null` to clear.
+ */
+export function setClientId(id: string | null): void {
+  _clientId = id;
 }
 
 function isRequest(input: RequestInfo | URL): input is Request {
@@ -356,6 +368,13 @@ export async function customFetch<T = unknown>(
 
   if (responseType === "json" && !headers.has("accept")) {
     headers.set("accept", DEFAULT_JSON_ACCEPT);
+  }
+
+  // Identify the calling client (the Expo mobile bundle sets "mobile"). The
+  // server's front-door site gate uses this to let mobile traffic through while
+  // keeping the web app gated. Per-user JWT auth still applies to all requests.
+  if (_clientId && !headers.has("x-secureprofit-client")) {
+    headers.set("x-secureprofit-client", _clientId);
   }
 
   // Attach bearer token from localStorage (web only — React Native has no

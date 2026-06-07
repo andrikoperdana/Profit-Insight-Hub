@@ -20,6 +20,22 @@ enforced by middleware on `/api` (403 + `X-Site-Gate: required`, exempting `/hea
 **How to apply:** if asked to add/replace a front gate, keep it cookie-based (or use Replit
 deployment password protection), never Basic Auth, or you'll break Bearer JWT.
 
+## Mobile app bypasses the gate (web stays gated)
+
+The Expo mobile bundle has no UI to enter the shared gate credentials, so it
+identifies itself with header `X-SecureProfit-Client: mobile` (set via
+`setClientId("mobile")` in `artifacts/mobile/app/_layout.tsx`; the setter lives in
+`lib/api-client-react/src/custom-fetch.ts` and is exported from the barrel). The
+`/api` gate middleware exempts requests carrying that header, so mobile traffic
+passes while the website (which never sets it) stays gated.
+
+**Why:** the user wanted the web front gate kept but mobile login to work.
+**Tradeoff (accepted):** the header is client-set and spoofable, so the gate is now
+a web-UI deterrent, not a universal `/api` anti-probing barrier. This is acceptable
+because per-user JWT auth still guards every route and `/api/auth/login` is already
+rate-limited (5 failed attempts / 15 min per IP+email). If stronger non-web gating
+is ever needed, replace the static header with a signed/short-lived attestation.
+
 ## Public no-login pages (client portal, survey)
 
 Public pages opened by external people who have no site credentials must bypass the gate on
