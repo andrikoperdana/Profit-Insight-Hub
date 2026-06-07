@@ -347,3 +347,15 @@ id = "-t8456zQ_WlvY4NqcrqLu"
 uri = "file://exports/panduan-android.jpg"
 type = "image"
 title = "Panduan Android - SecureProfit (siap di-share)"
+
+[[outputs]]
+id = "gBgayBqWZaVBzFghqAEwo"
+uri = "file://exports/Panduan-Alur-Project-SecureProfit-Hub-ID.pdf"
+type = "pdf"
+title = "Panduan Alur Project (Bahasa Indonesia)"
+
+[[outputs]]
+id = "TR30Kz7ZYvJ80WrBCWAyM"
+uri = "file://exports/SecureProfit-Hub-Project-Flow-Guide-EN.pdf"
+type = "pdf"
+title = "Project Flow Guide (English)"

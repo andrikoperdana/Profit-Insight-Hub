@@ -8,6 +8,7 @@
     "fit-gap": "tsx ./src/fit-gap-psohub.ts",
     "role-doc": "tsx ./src/role-features-doc.ts",
     "flow-doc": "tsx ./src/proses-flow-doc.ts",
+    "project-flow-pdf": "tsx ./src/gen-project-flow-pdf.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {
@@ -16,5 +17,9 @@
     "html-to-docx": "^1.8.0",
     "marked": "^18.0.2",
     "tsx": "catalog:"
+  },
+  "dependencies": {
+    "@types/pdfkit": "^0.17.6",
+    "pdfkit": "^0.18.0"
   }
 }

@@ -892,6 +892,13 @@ importers:
         version: 4.21.0
 
   scripts:
+    dependencies:
+      '@types/pdfkit':
+        specifier: ^0.17.6
+        version: 0.17.6
+      pdfkit:
+        specifier: ^0.18.0
+        version: 0.18.0
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -11898,7 +11905,7 @@ snapshots:
   metro-source-map@0.83.3:
     dependencies:
       '@babel/traverse': 7.29.0
-      '@babel/traverse--for-generate-function-map': '@babel/traverse@7.29.0'
+      '@babel/traverse--for-generate-function-map': '@babel/traverse@7.29.7'
       '@babel/types': 7.29.0
       flow-enums-runtime: 0.0.6
       invariant: 2.2.4
