@@ -91,7 +91,7 @@ export default function Sidebar() {
         ]
       : []),
     ...(canSeeLeads ? [{ href: "/leads", label: "Sales Pipeline", icon: Target }] : []),
-    ...(isPM ? [{ href: "/approvals", label: "Approval Inbox", icon: Inbox }] : []),
+    ...(user?.role === "PROJECT_MANAGER" ? [{ href: "/approvals", label: "Approval Inbox", icon: Inbox }] : []),
     ...(canViewResources(user?.role) ? [{ href: "/resources", label: "Resources", icon: UserCog }] : []),
     ...(isPM || isHr ? [{ href: "/capacity", label: "Capacity Planning", icon: CalendarRange }] : []),
     ...(canSeeExpenses ? [{ href: "/expenses", label: "Expenses", icon: Receipt }] : []),

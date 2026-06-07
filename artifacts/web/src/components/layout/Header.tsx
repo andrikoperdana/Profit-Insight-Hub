@@ -53,7 +53,8 @@ export default function Header() {
   });
   const unreadNotifs = (notifications ?? []).filter((n: any) => !n.readAt);
 
-  const isPM = !!user && (user.role === "PROJECT_MANAGER" || user.role === "MANAGEMENT");
+  // Only PMs handle the approval inbox — MGMT does not approve timesheets.
+  const isPM = !!user && user.role === "PROJECT_MANAGER";
   const isAdminProject = user?.role === "ADMIN_PROJECT";
   const isConsultant = user?.role === "KONSULTAN" || user?.role === "TECHNICAL_WRITER";
 
