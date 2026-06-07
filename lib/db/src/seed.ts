@@ -5,6 +5,7 @@ import { ensureSampleTaskTemplates } from "./sample-task-templates.js";
 import { ensureSampleProjectTemplates } from "./sample-project-templates.js";
 import { ensureSampleWorkstreamProjects } from "./sample-workstream-projects.js";
 import { ensureSamplePerformanceReviews } from "./sample-performance-reviews.js";
+import { capUserDailyHours } from "./cap-daily-hours.js";
 
 // Idempotent additive Principal hierarchy patch — runs even when database is
 // already seeded, so we can introduce the supervisor model on top of an
@@ -197,6 +198,8 @@ export async function runSeed() {
     await ensureSampleWorkstreamProjects();
     await ensureSamplePerformanceReviews();
     await ensureInvoiceSetting();
+    const capped = await capUserDailyHours();
+    console.log(`Normalized ${capped} timesheet row(s) to <= 8h/user/day.`);
     console.log("Principals + hierarchy + BU/Skills + Internal client + all sample data ensured.");
     return;
   }
@@ -341,6 +344,9 @@ export async function runSeed() {
   await ensureSampleWorkstreamProjects();
   await ensureSamplePerformanceReviews();
   await ensureInvoiceSetting();
+  // Fresh wipe-and-seed: the whole dataset is synthetic, so cap everything.
+  const capped = await capUserDailyHours({ syntheticOnly: false });
+  console.log(`Normalized ${capped} timesheet row(s) to <= 8h/user/day.`);
 
   console.log("Seed complete.");
 }

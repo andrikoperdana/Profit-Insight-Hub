@@ -139,6 +139,8 @@ Per-role: MANAGEMENT (executive KPIs, profit trend, aging, at-risk, `PMAllocatio
 
 Seed (`lib/db/src/seed.ts`): idempotent helpers `ensurePrincipals`, `ensureBusinessUnitsAndSkills`, `ensureSampleReportData` run every invocation. Sample data (2nd PM, billing milestones across aging buckets, mixed-status expenses, recent timesheets) is tagged `[sample]` for safe re-runs.
 
+**Sample timesheet hours cap** (`lib/db/src/cap-daily-hours.ts`): three generators (base seed, `sample-report-data.ts`, `sample-demo-enrichment.ts`) can each log the same user on overlapping days/projects, which previously stacked into impossible totals (300h+/week) that broke Work Hours Compliance. `capUserDailyHours()` runs as the final step of both `seed.ts` and `sample-demo-enrichment.ts` and scales any (user, UTC day) over 8h down to exactly 8h via an exact largest-remainder half-hour allocator (`allocateDailyHours`). It is `syntheticOnly` by default — it only reduces generator-tagged rows (U+200B marker or `[sample]`) and reserves real human-entered hours in the day budget, so re-running against a DB with real data never mutates real timesheets. `sample-demo-enrichment.ts` additionally plans timesheets per-user-per-week (UTC-Monday key) capped to 40h/week and distributed across Mon-Fri ≤8h/day, headroom-aware against existing rows.
+
 ## Seed credentials (password: `password123`)
 
 - Main (`@secureprofit.id`): `management@` (Adi Wibowo), `pm@` (Sari Pratiwi), `pm2@` (Yusuf Maulana — from sample data), `sales@` (Budi Santoso), `konsultan@` (Rian Hidayat), `konsultan2@` (Dewi Lestari), `writer@` (Ayu Wulandari), `admin@` (Tono Setiawan), `finance@` (Maya Anggraini), `siteadmin@` (Rina Kartika).

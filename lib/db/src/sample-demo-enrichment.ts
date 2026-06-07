@@ -1,4 +1,5 @@
 import { prisma } from "./index.js";
+import { capUserDailyHours } from "./cap-daily-hours.js";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 
 // ---------------------------------------------------------------------------
@@ -173,6 +174,27 @@ async function main() {
 
   console.log(`Enriching ${projects.length} project(s). NOW=${NOW.toISOString().slice(0, 10)}\n`);
 
+  // Timesheets are NOT created inside the per-project loop. Doing so stamped a
+  // whole week of hours on a single date and let a consultant accrue a full
+  // week on every one of their concurrent projects (e.g. 8 projects -> 300+h
+  // logged in one week, breaking Work Hours Compliance). Instead we collect a
+  // plan here and, after all projects are built, generate timesheets per user:
+  // capped to a realistic weekly total and spread across business days.
+  type TsPlan = {
+    userId: string;
+    projectId: string;
+    projectCode: string;
+    workstreamId: string | null;
+    taskId: string | null;
+    dailyRate: number;
+    roleInProject: string | null;
+    weeks: Date[];
+    perWeek: number;
+  };
+  const tsPlan: TsPlan[] = [];
+  const projMeta: { id: string; code: string; status: string; contractValue: number }[] = [];
+  const expCostByProject = new Map<string, number>();
+
   for (const p of projects) {
     const isComplete = p.status === "COMPLETE";
     const isImpl = /SOC|SIEM|implement|hardening|migrasi|migration|tier/i.test(p.name);
@@ -332,35 +354,23 @@ async function main() {
       phaseIdx++;
     }
 
-    // ---- timesheets (APPROVED) ----
-    let resourceCost = 0;
-    let tsCount = 0;
+    // ---- timesheets (collected; generated per-user in a capped post-pass) ----
     for (const r of resources) {
       if (!r.dailyRate || r.dailyRate <= 0 || !r.plannedMandays) continue;
       const totalHours = r.plannedMandays * completion * 8;
-      let perWeek = round(clamp(totalHours / weeks.length, 0, 45));
+      const perWeek = round(clamp(totalHours / weeks.length, 0, 45));
       if (perWeek < 1) continue;
-      const linkedTask = execSubByResource.get(r.userId) ?? null;
-      for (const wk of weeks) {
-        const h = round(perWeek * (0.85 + seeded(p.code + r.userId + wk.toISOString(), 7) * 0.3));
-        if (h < 1) continue;
-        await prisma.timesheet.create({
-          data: {
-            projectId: p.id,
-            workstreamId: wsFor(r.workstreamId),
-            userId: r.userId,
-            taskId: linkedTask,
-            workDate: wk,
-            hours: h,
-            description: tag(`${r.roleInProject ?? "Consulting"} work — week of ${wk.toISOString().slice(0, 10)}`),
-            status: "APPROVED",
-            approvedById: approver.id,
-            approvedAt: addDays(wk, 5),
-          },
-        });
-        resourceCost += (h / 8) * r.dailyRate;
-        tsCount++;
-      }
+      tsPlan.push({
+        userId: r.userId,
+        projectId: p.id,
+        projectCode: p.code,
+        workstreamId: wsFor(r.workstreamId),
+        taskId: execSubByResource.get(r.userId) ?? null,
+        dailyRate: r.dailyRate,
+        roleInProject: r.roleInProject ?? null,
+        weeks: weeks.slice(),
+        perWeek,
+      });
     }
 
     // ---- expenses ----
@@ -411,6 +421,8 @@ async function main() {
       });
       if (e.status === "APPROVED") additionalCost += e.amount;
     }
+    expCostByProject.set(p.id, additionalCost);
+    projMeta.push({ id: p.id, code: p.code, status: p.status, contractValue: p.contractValue });
 
     // ---- RAID ----
     const raidCount = 4 + Math.round(seeded(p.code, 8) * 2);
@@ -535,7 +547,7 @@ async function main() {
     // ---- activity trail ----
     const acts = [
       `Project "${p.name}" status reviewed`,
-      `${tsCount} timesheet entries approved`,
+      `Weekly timesheets approved`,
       `Status report submitted for ${p.code}`,
     ];
     for (const m of acts) {
@@ -544,12 +556,128 @@ async function main() {
       });
     }
 
-    const actualCost = resourceCost + additionalCost;
-    const margin = p.contractValue > 0 ? ((p.contractValue - actualCost) / p.contractValue) * 100 : 0;
+  }
+
+  // ---- timesheets: realistic per-user daily distribution ----
+  // Each user gets at most WEEKLY_CAP hours per week (summed across every
+  // project they touch), packed into business days at no more than DAILY_CAP
+  // per day. This keeps Work Hours Compliance sane while preserving roughly the
+  // same total logged effort the cost/margin demo relies on.
+  const DAILY_CAP = 8;
+  const WEEKLY_CAP = 40;
+  const round1 = (n: number) => Math.round(n * 2) / 2;
+
+  type WeekEntry = {
+    projectId: string;
+    workstreamId: string | null;
+    taskId: string | null;
+    dailyRate: number;
+    roleInProject: string | null;
+    hours: number;
+  };
+  const byUserWeek = new Map<string, Map<number, WeekEntry[]>>();
+  for (const pl of tsPlan) {
+    for (const wk of pl.weeks) {
+      const hours = round1(pl.perWeek * (0.85 + seeded(pl.projectCode + pl.userId + wk.toISOString(), 7) * 0.3));
+      if (hours < 1) continue;
+      let wm = byUserWeek.get(pl.userId);
+      if (!wm) { wm = new Map(); byUserWeek.set(pl.userId, wm); }
+      // Normalize to the UTC calendar Monday so the same week from different
+      // projects (whose start dates carry different times of day) collapses
+      // into ONE bucket — otherwise the weekly cap never applies.
+      const key = Date.UTC(wk.getUTCFullYear(), wk.getUTCMonth(), wk.getUTCDate());
+      const arr = wm.get(key) ?? [];
+      arr.push({ projectId: pl.projectId, workstreamId: pl.workstreamId, taskId: pl.taskId, dailyRate: pl.dailyRate, roleInProject: pl.roleInProject, hours });
+      wm.set(key, arr);
+    }
+  }
+
+  const resourceCostByProject = new Map<string, number>();
+  const tsCountByProject = new Map<string, number>();
+  let totalTs = 0;
+
+  // Headroom awareness: other generators (base seed, sample-report-data) also
+  // create approved timesheets for these users. The demo's per-project rows
+  // were already deleted above, so everything still in the table is from those
+  // other layers. We only fill the REMAINING capacity up to DAILY_CAP/day and
+  // WEEKLY_CAP/week so the combined total never blows past a realistic week.
+  const existingRows = await prisma.timesheet.findMany({
+    where: { status: { not: "REJECTED" } },
+    select: { userId: true, workDate: true, hours: true },
+  });
+  const dayKey = (uid: string, d: Date) =>
+    `${uid}|${Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())}`;
+  const existingByUserDay = new Map<string, number>();
+  for (const r of existingRows) {
+    const k = dayKey(r.userId, r.workDate);
+    existingByUserDay.set(k, (existingByUserDay.get(k) ?? 0) + r.hours);
+  }
+
+  for (const [userId, wm] of byUserWeek) {
+    for (const [weekMs, entries] of wm) {
+      // Business days (Mon-Fri) of this week that are not in the future.
+      const monday = new Date(weekMs);
+      const days: Date[] = [];
+      for (let i = 0; i < 5; i++) {
+        const d = addDays(monday, i);
+        if (d <= NOW) days.push(d);
+      }
+      if (days.length === 0) continue;
+      // Pre-existing hours already logged by other generators this week.
+      const dayLoad = days.map((d) => existingByUserDay.get(dayKey(userId, d)) ?? 0);
+      const existingWeek = dayLoad.reduce((s, h) => s + h, 0);
+      // Cap demo hours to whatever headroom is left under the weekly cap.
+      const headroomWeek = Math.max(0, WEEKLY_CAP - existingWeek);
+      const total = entries.reduce((s, e) => s + e.hours, 0);
+      if (total > headroomWeek) {
+        const scale = headroomWeek / total;
+        for (const e of entries) e.hours = round1(e.hours * scale);
+      }
+      if (headroomWeek < 0.5) continue;
+      // Greedy pack larger projects first; each day holds at most DAILY_CAP h.
+      entries.sort((a, b) => b.hours - a.hours);
+      for (const e of entries) {
+        let remaining = e.hours;
+        for (let di = 0; di < days.length && remaining > 0.001; di++) {
+          const free = DAILY_CAP - dayLoad[di];
+          if (free <= 0) continue;
+          const put = round1(Math.min(remaining, free));
+          if (put < 0.5) continue;
+          await prisma.timesheet.create({
+            data: {
+              projectId: e.projectId,
+              workstreamId: e.workstreamId,
+              userId,
+              taskId: e.taskId,
+              workDate: days[di],
+              hours: put,
+              description: tag(`${e.roleInProject ?? "Consulting"} work — ${days[di].toISOString().slice(0, 10)}`),
+              status: "APPROVED",
+              approvedById: approver.id,
+              approvedAt: addDays(days[di], 3),
+            },
+          });
+          dayLoad[di] += put;
+          remaining -= put;
+          resourceCostByProject.set(e.projectId, (resourceCostByProject.get(e.projectId) ?? 0) + (put / 8) * e.dailyRate);
+          tsCountByProject.set(e.projectId, (tsCountByProject.get(e.projectId) ?? 0) + 1);
+          totalTs++;
+        }
+      }
+    }
+  }
+  console.log(`\nCreated ${totalTs} timesheet entries (<= ${WEEKLY_CAP}h/user/week, <= ${DAILY_CAP}h/day).`);
+
+  for (const pm of projMeta) {
+    const actualCost = (resourceCostByProject.get(pm.id) ?? 0) + (expCostByProject.get(pm.id) ?? 0);
+    const margin = pm.contractValue > 0 ? ((pm.contractValue - actualCost) / pm.contractValue) * 100 : 0;
     console.log(
-      `  ${p.code} [${p.status}] ts=${tsCount} cost=${(actualCost / 1e6).toFixed(0)}M / CV=${(p.contractValue / 1e6).toFixed(0)}M -> margin ${margin.toFixed(0)}%`,
+      `  ${pm.code} [${pm.status}] ts=${tsCountByProject.get(pm.id) ?? 0} cost=${(actualCost / 1e6).toFixed(0)}M / CV=${(pm.contractValue / 1e6).toFixed(0)}M -> margin ${margin.toFixed(0)}%`,
     );
   }
+
+  const capped = await capUserDailyHours();
+  console.log(`Normalized ${capped} timesheet row(s) to <= 8h/user/day (across all generators).`);
 
   console.log("\nDone.");
 }
