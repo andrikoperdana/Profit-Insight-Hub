@@ -359,3 +359,15 @@ id = "TR30Kz7ZYvJ80WrBCWAyM"
 uri = "file://exports/SecureProfit-Hub-Project-Flow-Guide-EN.pdf"
 type = "pdf"
 title = "Project Flow Guide (English)"
+
+[[outputs]]
+id = "Quhs-ORQwAEsrWJBCvMPA"
+uri = "file://exports/SecureProfitHub-Dashboard-Menu-Guide-ID.docx"
+type = "word_document"
+title = "Panduan Dashboard & Menu (Bahasa Indonesia)"
+
+[[outputs]]
+id = "xHjOW1_-RUH7OEFjM_YyY"
+uri = "file://exports/SecureProfitHub-Dashboard-Menu-Guide-EN.docx"
+type = "word_document"
+title = "Dashboard & Menu Guide (English)"
