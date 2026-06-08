@@ -64,6 +64,7 @@ export default function Login() {
   };
 
   const seedUsers = [
+    { email: "superadmin@itsecasia.com", role: "Super Admin" },
     { email: "management@itsecasia.com", role: "PMO Director" },
     { email: "pm@itsecasia.com", role: "Project Manager" },
     { email: "sales@itsecasia.com", role: "Sales" },
