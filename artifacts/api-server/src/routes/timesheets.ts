@@ -147,16 +147,10 @@ router.post("/timesheets", validateBody(CreateTimesheetBody), async (req, res) =
   }
 
   const role = req.user!.role;
-  // Auto-approve only if MGMT, or PM-of-this-project. PMs logging on a project
-  // they don't manage must still go through approval.
-  let isAutoApprove = role === "MANAGEMENT" || role === "SUPER_ADMIN";
-  if (!isAutoApprove && role === "PROJECT_MANAGER") {
-    const proj = await prisma.project.findUnique({
-      where: { id: String(projectId) },
-      select: { pmId: true },
-    });
-    isAutoApprove = proj?.pmId === req.user!.sub;
-  }
+  // PMs don't need timesheet approval: their own hours are auto-approved on any
+  // project, the same as MGMT (PMs are approvers themselves).
+  const isAutoApprove =
+    role === "MANAGEMENT" || role === "SUPER_ADMIN" || role === "PROJECT_MANAGER";
   const status = isAutoApprove ? "APPROVED" : "SUBMITTED";
 
   // Optional task linkage: validate the task belongs to this project AND the
@@ -263,8 +257,9 @@ router.post("/timesheets/bulk", validateBody(CreateBulkTimesheetsBody), async (r
   const userId = req.user!.sub;
   const isMgmt = role === "MANAGEMENT" || role === "SUPER_ADMIN";
   const isPm = role === "PROJECT_MANAGER";
-  // Pre-fetch pmId for every referenced project so PMs only auto-approve hours
-  // on projects they actually manage.
+  // Pre-fetch each referenced project's pmId/name for submission notifications.
+  // (PMs auto-approve their own hours on any project, so this no longer gates
+  // PM approval — it's only used to notify the project PM about others' entries.)
   const projectIds: string[] = Array.from(new Set(entries.map((e: any) => String(e?.projectId || "")).filter(Boolean)));
   const projectPmMap = new Map<string, string | null>();
   const projectNameMap = new Map<string, string>();
@@ -337,7 +332,7 @@ router.post("/timesheets/bulk", validateBody(CreateBulkTimesheetsBody), async (r
         }
         resolvedWsId = wsCheck.workstreamId;
       }
-      const entryAutoApprove = isMgmt || (isPm && projectPmMap.get(projectId) === userId);
+      const entryAutoApprove = isMgmt || isPm;
       const ts = await prisma.timesheet.create({
         data: {
           projectId,
@@ -397,20 +392,22 @@ router.post("/timesheets/:id/submit", async (req, res) => {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
+  // Only DRAFT/REJECTED entries can be (re)submitted. An APPROVED entry must
+  // never revert to SUBMITTED — that would drag already-approved hours back
+  // into the approval flow (e.g. a PM's own auto-approved timesheet).
+  if (existing.status !== "DRAFT" && existing.status !== "REJECTED") {
+    res.status(409).json({ error: "Only draft or rejected timesheets can be submitted" });
+    return;
+  }
   const ts = await prisma.timesheet.update({
     where: { id: req.params.id },
-    data: { status: "SUBMITTED", rejectionReason: null },
+    data: { status: "SUBMITTED", rejectionReason: null, approvedById: null, approvedAt: null },
     include: tsInclude,
   });
-  // Only notify the PM on a real transition into SUBMITTED (avoids re-notifying
-  // when submit is called again on an already-submitted entry). Compare the PM
-  // against the actor, not the entry owner, so MGMT submitting on behalf of a
-  // PM-owned entry still notifies that PM.
-  if (
-    existing.status !== "SUBMITTED" &&
-    ts.project.pmId &&
-    ts.project.pmId !== req.user!.sub
-  ) {
+  // Notify the project PM about the (re)submission. Compare the PM against the
+  // actor, not the entry owner, so MGMT submitting on behalf of a PM-owned entry
+  // still notifies that PM, but the PM submitting their own entry does not.
+  if (ts.project.pmId && ts.project.pmId !== req.user!.sub) {
     await notifyUser({
       userId: ts.project.pmId,
       type: "timesheet.submitted",
