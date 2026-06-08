@@ -427,6 +427,20 @@ export async function customFetch<T = unknown>(
     // If we're not already on the login page, redirect
     if (!window.location.pathname.includes("/login")) {
       localStorage.removeItem("auth_token");
+      localStorage.removeItem("auth_user");
+      // Flag the expiry and remember where the user was, so the login page can
+      // show a "session expired" message and return them here after re-auth.
+      // Keys must match the web app's lib/session.ts (this shared lib cannot
+      // import from the web artifact).
+      try {
+        sessionStorage.setItem("session_expired", "1");
+        const here = window.location.pathname + window.location.search;
+        if (!here.includes("/login")) {
+          sessionStorage.setItem("post_login_redirect", here);
+        }
+      } catch {
+        /* ignore sessionStorage errors */
+      }
       window.location.href = import.meta.env.BASE_URL + "login";
     }
   }

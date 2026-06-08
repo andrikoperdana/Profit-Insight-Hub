@@ -7,7 +7,7 @@ if (!SECRET_RAW) {
   throw new Error("SESSION_SECRET must be set");
 }
 const SECRET: Secret = SECRET_RAW;
-const EXPIRES_IN: SignOptions["expiresIn"] = "7d";
+const EXPIRES_IN: SignOptions["expiresIn"] = "1d";
 
 export interface JwtPayload {
   sub: string;

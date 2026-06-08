@@ -1,11 +1,13 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Shield } from "lucide-react";
+import { Shield, Clock } from "lucide-react";
 import { useLocation } from "wouter";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLogin } from "@workspace/api-client-react";
 import { useAuth } from "@/lib/auth";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { consumeSessionExpired, consumePostLoginRedirect } from "@/lib/session";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -31,10 +33,15 @@ export default function Login() {
   const { login: setAuth, isAuthenticated } = useAuth();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  // Read-and-clear once on mount so the notice shows after an expiry redirect
+  // and the remembered destination survives effect re-runs (the helpers are
+  // destructive read-and-clear, so they must only be called once).
+  const [sessionExpired] = useState(() => consumeSessionExpired());
+  const [postLoginRedirect] = useState(() => consumePostLoginRedirect());
 
   useEffect(() => {
-    if (isAuthenticated) setLocation("/");
-  }, [isAuthenticated, setLocation]);
+    if (isAuthenticated) setLocation(postLoginRedirect);
+  }, [isAuthenticated, setLocation, postLoginRedirect]);
   
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -92,6 +99,16 @@ export default function Login() {
           <h1 className="text-3xl font-bold tracking-tight text-foreground">SecureProfit Hub</h1>
           <p className="text-muted-foreground text-sm">IT Security Projects, Operations & Margins Console</p>
         </div>
+
+        {sessionExpired && (
+          <Alert className="bg-card/80 backdrop-blur-sm border-primary/30">
+            <Clock className="h-4 w-4" />
+            <AlertTitle>Session expired</AlertTitle>
+            <AlertDescription>
+              Your session has ended. Please sign in again to continue.
+            </AlertDescription>
+          </Alert>
+        )}
 
         <Card className="border-border/50 shadow-xl bg-card/80 backdrop-blur-sm">
           <CardHeader>

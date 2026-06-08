@@ -19,3 +19,4 @@
 - [Phone-only timer per user](mobile-timer-per-user.md) — a device-local AsyncStorage running-timer must be keyed by user id or it leaks across accounts on a shared phone.
 - [PM timesheet auto-approval & submit guard](timesheet-pm-auto-approve.md) — a PM's own hours auto-approve on ANY project (like MGMT); /submit must only allow DRAFT/REJECTED→SUBMITTED so APPROVED never reverts.
 - [Non-commercial project exemptions](non-commercial-project-exemptions.md) — kind!=CLIENT (INTERNAL/PRESALES/TRAINING) skip billing-milestone+BAST gates; gate uses effective kind honored only for MGMT/SUPER_ADMIN; hide Billing/Report tabs, Financials goes cost-only.
+- [Session-expiry sessionStorage keys](session-expiry-keys.md) — session_expired/post_login_redirect keys duplicated across web session.ts and shared custom-fetch.ts (can't import); change in lockstep; consume read-and-clear once via lazy useState.
