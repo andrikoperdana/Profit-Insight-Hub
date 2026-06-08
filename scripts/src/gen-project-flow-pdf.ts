@@ -58,7 +58,7 @@ const C = {
 const ID: Doc = {
   title: "Panduan Alur Project",
   subtitle: "SecureProfit Hub — urutan pengisian data dari intake hingga penutupan",
-  meta: "Dokumen internal tim  •  Edisi 7 Juni 2026",
+  meta: "Dokumen internal tim  •  Edisi 8 Juni 2026",
   chainLabel: "Siklus status project:",
   chain: "DRAFT  >  OBSERVATION  >  ACTIVE  >  COMPLETE  >  CLOSED      (opsional: PAUSE)",
   footer: "Panduan Alur Project — SecureProfit Hub",
@@ -178,7 +178,7 @@ const ID: Doc = {
 const EN: Doc = {
   title: "Project Flow Guide",
   subtitle: "SecureProfit Hub — the correct order of data entry from intake to closure",
-  meta: "Internal team document  •  Edition 7 June 2026",
+  meta: "Internal team document  •  Edition 8 June 2026",
   chainLabel: "Project status lifecycle:",
   chain: "DRAFT  >  OBSERVATION  >  ACTIVE  >  COMPLETE  >  CLOSED      (optional: PAUSE)",
   footer: "Project Flow Guide — SecureProfit Hub",
