@@ -308,7 +308,7 @@ function cover(): Paragraph[] {
     }),
     new Paragraph({
       alignment: AlignmentType.CENTER,
-      children: [new TextRun({ text: t("Versi 1.2", "Version 1.2"), size: 22, font: FONT })],
+      children: [new TextRun({ text: t("Versi 1.3", "Version 1.3"), size: 22, font: FONT })],
     }),
     new Paragraph({
       alignment: AlignmentType.CENTER,
@@ -353,6 +353,7 @@ function dashboardGeneral(): (Paragraph | Table)[] {
     p(t("Pada contoh gambar (akun PM), kotak-kotak yang tampil adalah:", "In the example image (a PM account), the boxes shown are:")),
     labelled(t("Welcome banner", "Welcome banner"), t("Sapaan, role, tanggal, dan ringkasan singkat status hari ini.", "Greeting, role, date, and a short summary of today's status.")),
     labelled("Work Hours Compliance", t("Pencapaian jam kerja Anda minggu/bulan/tahun ini terhadap target.", "Your work-hours achievement this week/month/year against target.")),
+    labelled("My Tasks", t("Daftar task yang ditugaskan ke Anda saat PM ikut menjadi resource proyek, beserta status dan tombol \"Log\" untuk mencatat jam kerja pada task.", "List of tasks assigned to you when the PM is staffed as a project resource, with status and a \"Log\" button to record hours on the task.")),
     labelled("Reports", t("Pintasan ke kumpulan laporan siap ekspor.", "Shortcut to the library of export-ready reports.")),
     labelled("Expenses Awaiting Approval", t("Jumlah dan nilai biaya proyek yang menunggu persetujuan Anda.", "Count and value of project expenses awaiting your approval.")),
     labelled("Approval Inbox", t("Ringkasan timesheet yang menunggu di-approve, dengan tombol \"Approve All\".", "Summary of timesheets awaiting approval, with an \"Approve All\" button.")),
@@ -396,6 +397,7 @@ function dashboardPerRole(): (Paragraph | Table)[] {
       intro: t("Fokus pada proyek yang dikelola dan antrian persetujuan (lihat rincian Bagian 2.1).", "Focused on managed projects and the approval queue (see Section 2.1 for details)."),
       items: [
         ["My Active Projects / My Team Size / Weighted Margin / Total Revenue", t("KPI portofolio pribadi PM.", "The PM's personal portfolio KPIs.")],
+        ["My Tasks", t("Task yang ditugaskan ke Anda saat ikut menjadi resource proyek, lengkap dengan tombol \"Log\" untuk mencatat jam.", "Tasks assigned to you when staffed as a project resource, with a \"Log\" button to record hours.")],
         ["Approval Inbox + Approve All", t("Timesheet tim yang menunggu, bisa disetujui sekaligus.", "Team timesheets awaiting action, approvable in bulk.")],
         ["Expenses Awaiting Approval", t("Biaya proyek yang menunggu persetujuan.", "Project expenses awaiting approval.")],
         ["Revenue vs Profit / My Team Utilization", t("Grafik profit per proyek dan tabel utilisasi tim.", "Per-project profit chart and team-utilization table.")],
