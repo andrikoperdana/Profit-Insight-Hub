@@ -316,13 +316,13 @@ title = "Rencana Integrasi Xero — SecureProfit Hub"
 id = "Lgdn6RDTZep3f2ps6C77k"
 uri = "file://exports/SecureProfit-Hub-Fitur-dan-Perhitungan.docx"
 type = "word_document"
-title = "SecureProfit Hub — Fitur & Perhitungan (versi Indonesia, diperbarui)"
+title = "Referensi Fitur & Perhitungan (Indonesia)"
 
 [[outputs]]
 id = "3RjFVUzkfHDtI6kmwTgZQ"
 uri = "file://exports/SecureProfit-Hub-Features-and-Calculations-EN.docx"
 type = "word_document"
-title = "SecureProfit Hub — Features & Calculations (updated)"
+title = "Feature & Calculation Reference (English)"
 
 [[outputs]]
 id = "OjGb-ZYqAasdXoqgEC6f5"
