@@ -375,7 +375,7 @@ router.get("/projects/:id/survey", requireAuth, async (req, res) => {
     return;
   }
   const role = req.user!.role;
-  if (role !== "MANAGEMENT" && !(role === "PROJECT_MANAGER" && project.pmId === req.user!.sub)) {
+  if (role !== "MANAGEMENT" && role !== "SUPER_ADMIN" && !(role === "PROJECT_MANAGER" && project.pmId === req.user!.sub)) {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
@@ -450,7 +450,7 @@ router.put("/projects/:id/survey-share", requireAuth, async (req, res) => {
     return;
   }
   const role = req.user!.role;
-  if (role !== "MANAGEMENT" && !(role === "PROJECT_MANAGER" && project.pmId === req.user!.sub)) {
+  if (role !== "MANAGEMENT" && role !== "SUPER_ADMIN" && !(role === "PROJECT_MANAGER" && project.pmId === req.user!.sub)) {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
@@ -832,7 +832,7 @@ async function loadProjectSurvey(projectId: string) {
 }
 
 function canViewProjectSurvey(role: string, pmId: string | null, userId: string) {
-  return role === "MANAGEMENT" || role === "AUDITOR" || (role === "PROJECT_MANAGER" && pmId === userId);
+  return role === "MANAGEMENT" || role === "SUPER_ADMIN" || role === "AUDITOR" || (role === "PROJECT_MANAGER" && pmId === userId);
 }
 
 // ---- Per-project Excel export ----

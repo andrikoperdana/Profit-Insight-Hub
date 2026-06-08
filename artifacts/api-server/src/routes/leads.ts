@@ -118,7 +118,7 @@ function serializeActivity(a: ActivityForSerialize) {
 function scope(req: AuthedRequest): Record<string, unknown> | null {
   const role = req.user.role;
   if (role === "SALES") return { ownerId: req.user.sub };
-  if (role === "MANAGEMENT") return {};
+  if (role === "MANAGEMENT" || role === "SUPER_ADMIN") return {};
   return null;
 }
 
@@ -161,7 +161,7 @@ router.get("/leads", async (req: AuthedRequest, res: Response) => {
 
 router.get("/leads/analytics", async (req: AuthedRequest, res: Response) => {
   const role = req.user.role;
-  if (role !== "SALES" && role !== "MANAGEMENT") {
+  if (role !== "SALES" && role !== "MANAGEMENT" && role !== "SUPER_ADMIN") {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
@@ -683,7 +683,7 @@ async function loadLeadForActivity(req: AuthedRequest, res: Response): Promise<N
       res.status(403).json({ error: "Forbidden" });
       return null;
     }
-  } else if (role !== "MANAGEMENT") {
+  } else if (role !== "MANAGEMENT" && role !== "SUPER_ADMIN") {
     res.status(403).json({ error: "Forbidden" });
     return null;
   }

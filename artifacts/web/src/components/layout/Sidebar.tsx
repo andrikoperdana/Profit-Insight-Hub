@@ -40,12 +40,18 @@ export default function Sidebar() {
   const [location] = useLocation();
   const { user, logout } = useAuth();
 
-  const isPM = user?.role === "PROJECT_MANAGER" || user?.role === "MANAGEMENT";
+  // Super Admin is the top-level god account: it sees every menu item. We OR
+  // `sa` into each "include" condition; the few "exclude" conditions (Projects,
+  // Time Tracking) intentionally don't reference `sa`, so they stay visible.
+  const sa = user?.role === "SUPER_ADMIN";
+
+  const isPM = sa || user?.role === "PROJECT_MANAGER" || user?.role === "MANAGEMENT";
 
   const isSiteAdmin = user?.role === "SITE_ADMIN";
   const isFinance = user?.role === "FINANCE";
   const isHr = user?.role === "HR";
   const isPrincipal =
+    sa ||
     user?.role === "PRINCIPAL_KONSULTAN" ||
     user?.role === "PRINCIPAL_TECHNICAL_WRITER" ||
     user?.role === "PRINCIPAL_ADMIN_PROJECT";
@@ -59,17 +65,19 @@ export default function Sidebar() {
   ];
 
   const canSeeExpenses =
+    sa ||
     user?.role === "MANAGEMENT" ||
     user?.role === "PROJECT_MANAGER" ||
     user?.role === "SALES";
 
-  const canSeeLeads = user?.role === "SALES";
+  const canSeeLeads = sa || user?.role === "SALES";
 
   // "My …" personal views — for delivery roles (Konsultan, TW, Admin Project)
   // and their Principal supervisors, plus Sales. Gives them a paginated +
   // exportable history of their own work without needing to dig into each
   // project tab.
   const canSeeMyViews =
+    sa ||
     user?.role === "KONSULTAN" ||
     user?.role === "TECHNICAL_WRITER" ||
     user?.role === "ADMIN_PROJECT" ||
@@ -91,13 +99,13 @@ export default function Sidebar() {
         ]
       : []),
     ...(canSeeLeads ? [{ href: "/leads", label: "Sales Pipeline", icon: Target }] : []),
-    ...(user?.role === "PROJECT_MANAGER" ? [{ href: "/approvals", label: "Approval Inbox", icon: Inbox }] : []),
+    ...(sa || user?.role === "PROJECT_MANAGER" ? [{ href: "/approvals", label: "Approval Inbox", icon: Inbox }] : []),
     ...(canViewResources(user?.role) ? [{ href: "/resources", label: "Resources", icon: UserCog }] : []),
     ...(isPM || isHr ? [{ href: "/capacity", label: "Capacity Planning", icon: CalendarRange }] : []),
     ...(canSeeExpenses ? [{ href: "/expenses", label: "Expenses", icon: Receipt }] : []),
     ...(isPM || isHr || isPrincipal ? [{ href: "/resource-planning", label: "Resource Planning", icon: Grid3x3 }] : []),
     ...(isPM || isHr || isPrincipal ? [{ href: "/bench", label: "Bench Report", icon: UserCog }] : []),
-    ...(user?.role === "MANAGEMENT" || isHr || isPrincipal ? [{ href: "/work-hours", label: "Work Hours", icon: Clock }] : []),
+    ...(sa || user?.role === "MANAGEMENT" || isHr || isPrincipal ? [{ href: "/work-hours", label: "Work Hours", icon: Clock }] : []),
     ...(isPM || isHr ? [{ href: "/skill-matrix", label: "Skill Matrix", icon: Award }] : []),
     ...(isPM ? [{ href: "/task-templates", label: "Task Templates", icon: ListChecks }] : []),
     ...(isPM || user?.role === "SALES" ? [{ href: "/project-templates", label: "Project Templates", icon: ListChecks }] : []),
@@ -126,17 +134,17 @@ export default function Sidebar() {
     ...(canViewAllUsers(user?.role) && !isHr ? [{ href: "/users", label: "Users", icon: Users }] : []),
     ...(canManageUsers(user?.role) ? [{ href: "/business-units", label: "Business Units", icon: Network }] : []),
     ...(canManageUsers(user?.role) ? [{ href: "/skills", label: "Skills", icon: Award }] : []),
-    ...(user?.role === "MANAGEMENT" ? [{ href: "/business-intelligence", label: "Business Intelligence", icon: TrendingUp }] : []),
-    ...(user?.role === "MANAGEMENT" ||
+    ...(sa || user?.role === "MANAGEMENT" ? [{ href: "/business-intelligence", label: "Business Intelligence", icon: TrendingUp }] : []),
+    ...(sa || user?.role === "MANAGEMENT" ||
         user?.role === "PRINCIPAL_KONSULTAN" ||
         user?.role === "PRINCIPAL_TECHNICAL_WRITER" ||
         user?.role === "PRINCIPAL_ADMIN_PROJECT"
       ? [{ href: "/top-performers", label: "Top Performers", icon: Trophy }]
       : []),
-    ...(user?.role === "MANAGEMENT" || isFinance ? [{ href: "/vat-recap", label: "VAT Recap", icon: Receipt }] : []),
-    ...(user?.role === "MANAGEMENT" || isFinance ? [{ href: "/invoice-settings", label: "Invoice Settings", icon: FileText }] : []),
-    ...(user?.role === "MANAGEMENT" || user?.role === "SALES" ? [{ href: "/survey-results", label: "Survey Results", icon: ClipboardList }] : []),
-    ...(user?.role === "MANAGEMENT" ? [{ href: "/settings/survey-template", label: "Survey Template", icon: ClipboardList }] : []),
+    ...(sa || user?.role === "MANAGEMENT" || isFinance ? [{ href: "/vat-recap", label: "VAT Recap", icon: Receipt }] : []),
+    ...(sa || user?.role === "MANAGEMENT" || isFinance ? [{ href: "/invoice-settings", label: "Invoice Settings", icon: FileText }] : []),
+    ...(sa || user?.role === "MANAGEMENT" || user?.role === "SALES" ? [{ href: "/survey-results", label: "Survey Results", icon: ClipboardList }] : []),
+    ...(sa || user?.role === "MANAGEMENT" ? [{ href: "/settings/survey-template", label: "Survey Template", icon: ClipboardList }] : []),
     ...(canViewAuditLogs(user?.role) ? [{ href: "/audit-logs", label: "Audit Log", icon: ScrollText }] : []),
   ];
 

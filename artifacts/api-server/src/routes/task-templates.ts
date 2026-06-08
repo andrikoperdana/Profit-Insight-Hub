@@ -194,7 +194,7 @@ router.post(
       return;
     }
     const role = req.user!.role;
-    if (role !== "MANAGEMENT" && !(role === "PROJECT_MANAGER" && project.pmId === req.user!.sub)) {
+    if (role !== "MANAGEMENT" && role !== "SUPER_ADMIN" && !(role === "PROJECT_MANAGER" && project.pmId === req.user!.sub)) {
       res.status(403).json({ error: "Forbidden" });
       return;
     }

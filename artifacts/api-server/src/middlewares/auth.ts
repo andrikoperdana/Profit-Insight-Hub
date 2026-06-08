@@ -55,6 +55,11 @@ export function requireRole(...roles: UserRole[]) {
       res.status(401).json({ error: "Unauthorized" });
       return;
     }
+    // Super Admin is the top-level god account: it passes every role guard.
+    if (req.user.role === "SUPER_ADMIN") {
+      next();
+      return;
+    }
     if (!roles.includes(req.user.role)) {
       res.status(403).json({ error: "Forbidden" });
       return;

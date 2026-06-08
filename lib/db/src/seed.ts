@@ -18,6 +18,7 @@ async function ensurePrincipals(passwordDefault: string) {
     { email: "siteadmin@itsecasia.com",        name: "Rina Kartika",        role: "SITE_ADMIN",                  title: "Site Administrator" },
     { email: "finance@itsecasia.com",          name: "Maya Anggraini",      role: "FINANCE",                     title: "Finance Manager" },
     { email: "hr@itsecasia.com",               name: "Sinta Permata",       role: "HR",                          title: "HR Manager" },
+    { email: "superadmin@itsecasia.com",       name: "Super Admin",         role: "SUPER_ADMIN",                 title: "Super Administrator" },
   ];
   for (const p of newPrincipals) {
     await prisma.user.upsert({

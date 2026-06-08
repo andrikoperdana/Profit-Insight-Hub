@@ -21,7 +21,7 @@ async function canWriteWorkstream(
   projectId: string,
   user: { sub: string; role: string },
 ): Promise<boolean> {
-  if (user.role === "MANAGEMENT") return true;
+  if (user.role === "MANAGEMENT" || user.role === "SUPER_ADMIN") return true;
   if (user.role !== "PROJECT_MANAGER") return false;
   const project = await prisma.project.findUnique({
     where: { id: projectId },

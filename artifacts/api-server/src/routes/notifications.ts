@@ -68,7 +68,7 @@ router.post("/notifications/read-all", async (req, res) => {
  */
 router.post("/notifications/run-checks", async (req, res) => {
   const role = req.user!.role;
-  if (role !== "MANAGEMENT") {
+  if (role !== "MANAGEMENT" && role !== "SUPER_ADMIN") {
     res.status(403).json({ error: "Forbidden" });
     return;
   }

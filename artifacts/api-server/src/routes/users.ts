@@ -65,13 +65,13 @@ router.get("/users", async (req, res) => {
   // Only roles that legitimately need it: SITE_ADMIN, MANAGEMENT, PROJECT_MANAGER, SALES (project intake).
   // Other roles should use /users/active-all, /users/under-supervision, or /users/available.
   const allowed =
-    role === "SITE_ADMIN" || role === "MANAGEMENT" ||
+    role === "SITE_ADMIN" || role === "MANAGEMENT" || role === "SUPER_ADMIN" ||
     role === "PROJECT_MANAGER" || role === "SALES" || role === "HR";
   if (!allowed) {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
-  const includeDeleted = req.query.includeDeleted === "true" && role === "SITE_ADMIN";
+  const includeDeleted = req.query.includeDeleted === "true" && (role === "SITE_ADMIN" || role === "SUPER_ADMIN");
   const q = typeof req.query.q === "string" ? req.query.q.trim() : "";
   const where: import("@workspace/db").Prisma.UserWhereInput = includeDeleted ? {} : { deletedAt: null };
   if (q) {
@@ -124,7 +124,7 @@ router.get("/users/under-supervision", async (req, res) => {
 
 router.get("/users/active-all", async (req, res) => {
   const role = req.user!.role;
-  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER") {
+  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER" && role !== "SUPER_ADMIN") {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
@@ -161,7 +161,7 @@ router.get("/users/available", async (req, res) => {
   }
   // MGMT/PM see all of a role; Principals see only the role they supervise (their own supervisees).
   let scopeWhere: any = { role, deletedAt: null, isActive: true };
-  if (callerRole === "MANAGEMENT" || callerRole === "PROJECT_MANAGER") {
+  if (callerRole === "MANAGEMENT" || callerRole === "SUPER_ADMIN" || callerRole === "PROJECT_MANAGER") {
     // no extra filter
   } else if (callerRole.startsWith("PRINCIPAL_")) {
     const reportRole = PRINCIPAL_TO_REPORT_ROLE[callerRole];
@@ -238,7 +238,7 @@ router.get("/users/:id/project-assignments", async (req, res) => {
   // existence (or non-existence) of the target id as an oracle. Only roles
   // that can plausibly view someone else's assignments proceed past this gate.
   const isSelf = callerId === targetId;
-  const ALWAYS_ALLOWED = new Set(["MANAGEMENT", "HR", "SITE_ADMIN", "FINANCE"]);
+  const ALWAYS_ALLOWED = new Set(["MANAGEMENT", "SUPER_ADMIN", "HR", "SITE_ADMIN", "FINANCE"]);
   const isAlwaysAllowed = ALWAYS_ALLOWED.has(callerRole);
   const isPrincipalCaller = callerRole.startsWith("PRINCIPAL_");
   const isPmCaller = callerRole === "PROJECT_MANAGER";
@@ -443,7 +443,7 @@ router.post(
 router.patch("/users/:id", async (req, res) => {
   const targetId = req.params.id;
   const isSelf = req.user!.sub === targetId;
-  const isAdmin = req.user!.role === "SITE_ADMIN";
+  const isAdmin = req.user!.role === "SITE_ADMIN" || req.user!.role === "SUPER_ADMIN";
   const isHr = req.user!.role === "HR";
   if (!isSelf && !isAdmin && !isHr) {
     res.status(403).json({ error: "Forbidden" });
@@ -473,7 +473,15 @@ router.patch("/users/:id", async (req, res) => {
       return;
     }
   }
-  if (role !== undefined && !ALL_ROLES.includes(role as UserRole)) {
+  // SUPER_ADMIN is seed-only and intentionally absent from ALL_ROLES, so it can
+  // never be assigned to a user via the API. But the seeded super-admin account
+  // must remain editable — allow a no-op role payload that matches the target's
+  // existing SUPER_ADMIN role (the web form always sends `role`).
+  if (
+    role !== undefined &&
+    role !== before.role &&
+    !ALL_ROLES.includes(role as UserRole)
+  ) {
     res.status(400).json({ error: `role must be one of ${ALL_ROLES.join(", ")}` });
     return;
   }

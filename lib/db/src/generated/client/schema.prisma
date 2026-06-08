@@ -22,6 +22,7 @@ enum UserRole {
   FINANCE
   HR
   SITE_ADMIN
+  SUPER_ADMIN
 }
 
 enum ProjectKind {

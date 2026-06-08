@@ -44,7 +44,7 @@ router.get("/leaves", async (req, res) => {
     if (startDate) (where.AND as Prisma.UserLeaveWhereInput[]).push({ endDate: { gte: new Date(startDate) } });
   }
   // Non-MGMT/PM can only see own leaves
-  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER" && role !== "HR") {
+  if (role !== "MANAGEMENT" && role !== "SUPER_ADMIN" && role !== "PROJECT_MANAGER" && role !== "HR") {
     where.userId = req.user!.sub;
   }
   const list = await prisma.userLeave.findMany({
@@ -75,7 +75,7 @@ router.post("/leaves", async (req, res) => {
   const role = req.user!.role;
   let targetUserId = req.user!.sub;
   if (userId && userId !== req.user!.sub) {
-    if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER") {
+    if (role !== "MANAGEMENT" && role !== "SUPER_ADMIN" && role !== "PROJECT_MANAGER") {
       res.status(403).json({ error: "cannot log leave for other users" });
       return;
     }
@@ -111,7 +111,7 @@ router.delete("/leaves/:id", async (req, res) => {
     return;
   }
   const role = req.user!.role;
-  if (existing.userId !== req.user!.sub && role !== "MANAGEMENT" && role !== "PROJECT_MANAGER") {
+  if (existing.userId !== req.user!.sub && role !== "MANAGEMENT" && role !== "SUPER_ADMIN" && role !== "PROJECT_MANAGER") {
     res.status(403).json({ error: "Forbidden" });
     return;
   }

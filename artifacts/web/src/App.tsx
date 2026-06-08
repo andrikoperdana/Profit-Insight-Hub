@@ -108,6 +108,16 @@ function ProtectedRoute({
     return null;
   }
 
+  // Super Admin is the top-level god account: it bypasses every route gate
+  // (both deny and allow lists) so it can reach any page.
+  if (user?.role === "SUPER_ADMIN") {
+    return (
+      <Layout>
+        <Component />
+      </Layout>
+    );
+  }
+
   // Hard-deny: redirect users whose role is explicitly disallowed for this
   // route to the dashboard (their landing page). Mirrors server-side gating
   // so URL bar / bookmarks can't reach a forbidden page even if the API

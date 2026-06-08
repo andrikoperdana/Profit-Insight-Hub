@@ -31,7 +31,7 @@ router.get("/projects", async (req, res) => {
   const status = req.query.status as ProjectStatus | undefined;
   const role = req.user!.role;
   const userId = req.user!.sub;
-  const includeDeleted = req.query.includeDeleted === "true" && role === "MANAGEMENT";
+  const includeDeleted = req.query.includeDeleted === "true" && (role === "MANAGEMENT" || role === "SUPER_ADMIN");
   const where: any = includeDeleted ? {} : { deletedAt: null };
   if (status) where.status = status;
   // Role-based scoping: PM sees own projects; Sales sees own projects.
@@ -246,7 +246,7 @@ router.post("/projects", requireRole(...writeRoles), validateBody(CreateProjectB
   // Only MANAGEMENT can flag a project as non-commercial
   // (INTERNAL / PRESALES / TRAINING). Sales & PM intake always = CLIENT.
   const kind: "CLIENT" | "INTERNAL" | "PRESALES" | "TRAINING" =
-    (req.user!.role === "MANAGEMENT" &&
+    ((req.user!.role === "MANAGEMENT" || req.user!.role === "SUPER_ADMIN") &&
       (b.kind === "INTERNAL" || b.kind === "PRESALES" || b.kind === "TRAINING"))
       ? b.kind
       : "CLIENT";
@@ -603,7 +603,7 @@ router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdatePro
   if (b.technicalWriterId !== undefined) data.technicalWriterId = b.technicalWriterId || null;
   if (b.adminProjectId !== undefined) data.adminProjectId = b.adminProjectId || null;
   if (b.status !== undefined) data.status = b.status as ProjectStatus;
-  if (b.kind !== undefined && role === "MANAGEMENT") {
+  if (b.kind !== undefined && (role === "MANAGEMENT" || role === "SUPER_ADMIN")) {
     if (b.kind !== "CLIENT" && b.kind !== "INTERNAL" && b.kind !== "PRESALES" && b.kind !== "TRAINING") {
       res.status(400).json({ error: "kind must be CLIENT, INTERNAL, PRESALES, or TRAINING" });
       return;
@@ -769,6 +769,7 @@ router.patch("/projects/:id/report", async (req, res) => {
   }
   const allowed =
     role === "MANAGEMENT" ||
+    role === "SUPER_ADMIN" ||
     (role === "PROJECT_MANAGER" && project.pmId === userId) ||
     (role === "TECHNICAL_WRITER" && project.technicalWriterId === userId);
   if (!allowed) {

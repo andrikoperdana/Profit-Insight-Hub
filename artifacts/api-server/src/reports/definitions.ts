@@ -63,10 +63,10 @@ const profitabilityPerProject: ReportDefinition = {
   name: "Profitability per Project",
   description: "Margin & profit per project, filterable by status / PM / period. Sorted by worst margin first.",
   category: "profitability",
-  scope: ["MANAGEMENT", "PROJECT_MANAGER", "FINANCE"],
+  scope: ["MANAGEMENT", "SUPER_ADMIN", "PROJECT_MANAGER", "FINANCE"],
   filters: [
     { key: "status", label: "Status", type: "select", optionsSource: "projectStatuses" },
-    { key: "pmId", label: "PM", type: "select", optionsSource: "pms", scope: ["MANAGEMENT", "FINANCE"] },
+    { key: "pmId", label: "PM", type: "select", optionsSource: "pms", scope: ["MANAGEMENT", "SUPER_ADMIN", "FINANCE"] },
     { key: "clientId", label: "Client", type: "select", optionsSource: "clients" },
     { key: "startFrom", label: "Start From", type: "date" },
     { key: "startTo", label: "Start To", type: "date" },
@@ -87,7 +87,7 @@ const profitabilityPerProject: ReportDefinition = {
     const where: any = { deletedAt: null, kind: "CLIENT" };
     if (ctx.user.role === "PROJECT_MANAGER") where.pmId = ctx.user.sub;
     if (ctx.filters.status) where.status = ctx.filters.status;
-    if (ctx.filters.pmId && ctx.user.role === "MANAGEMENT") where.pmId = ctx.filters.pmId;
+    if (ctx.filters.pmId && (ctx.user.role === "MANAGEMENT" || ctx.user.role === "SUPER_ADMIN")) where.pmId = ctx.filters.pmId;
     if (ctx.filters.clientId) where.clientId = ctx.filters.clientId;
     const from = parseDateOrUndefined(ctx.filters.startFrom);
     const to = parseDateOrUndefined(ctx.filters.startTo);
@@ -125,7 +125,7 @@ const marginTrendByBu: ReportDefinition = {
   name: "Margin Trend per Business Unit",
   description: "Monthly margin & profit trend per Business Unit (grouped by the project PM's BU).",
   category: "profitability",
-  scope: ["MANAGEMENT", "FINANCE"],
+  scope: ["MANAGEMENT", "SUPER_ADMIN", "FINANCE"],
   filters: [
     { key: "year", label: "Year", type: "year", optionsSource: "yearList", defaultValue: String(new Date().getFullYear()) },
     { key: "businessUnitId", label: "Business Unit", type: "select", optionsSource: "businessUnits" },
@@ -203,7 +203,7 @@ const profitabilityPerClient: ReportDefinition = {
   name: "Profitability per Client",
   description: "Total revenue, cost, profit, and margin per client. Sorted by largest profit first.",
   category: "profitability",
-  scope: ["MANAGEMENT", "FINANCE"],
+  scope: ["MANAGEMENT", "SUPER_ADMIN", "FINANCE"],
   filters: [
     { key: "status", label: "Project Status", type: "select", optionsSource: "projectStatuses" },
     { key: "startFrom", label: "Start From", type: "date" },
@@ -270,7 +270,7 @@ const resourceUtilization: ReportDefinition = {
   name: "Resource Utilization",
   description: "Consultant / Technical Writer utilization for a given period — planned vs actual mandays plus active project count.",
   category: "operations",
-  scope: ["MANAGEMENT", "PROJECT_MANAGER", "FINANCE"],
+  scope: ["MANAGEMENT", "SUPER_ADMIN", "PROJECT_MANAGER", "FINANCE"],
   filters: [
     { key: "from", label: "Period From", type: "date", defaultValue: new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1).toISOString().slice(0, 10) },
     { key: "to", label: "Period To", type: "date", defaultValue: new Date().toISOString().slice(0, 10) },
@@ -391,10 +391,10 @@ const projectBurnRate: ReportDefinition = {
   name: "Project Burn Rate & Mandays Variance",
   description: "Planned vs actual mandays variance per active project. Ranked by variance (over-budget first).",
   category: "operations",
-  scope: ["MANAGEMENT", "PROJECT_MANAGER", "FINANCE"],
+  scope: ["MANAGEMENT", "SUPER_ADMIN", "PROJECT_MANAGER", "FINANCE"],
   filters: [
     { key: "status", label: "Status", type: "select", optionsSource: "projectStatuses", defaultValue: "ACTIVE" },
-    { key: "pmId", label: "PM", type: "select", optionsSource: "pms", scope: ["MANAGEMENT", "FINANCE"] },
+    { key: "pmId", label: "PM", type: "select", optionsSource: "pms", scope: ["MANAGEMENT", "SUPER_ADMIN", "FINANCE"] },
   ],
   columns: [
     { key: "code", label: "Code", type: "string", width: 90 },
@@ -412,7 +412,7 @@ const projectBurnRate: ReportDefinition = {
     const where: any = { deletedAt: null };
     if (ctx.user.role === "PROJECT_MANAGER") where.pmId = ctx.user.sub;
     where.status = ctx.filters.status || "ACTIVE";
-    if (ctx.filters.pmId && ctx.user.role === "MANAGEMENT") where.pmId = ctx.filters.pmId;
+    if (ctx.filters.pmId && (ctx.user.role === "MANAGEMENT" || ctx.user.role === "SUPER_ADMIN")) where.pmId = ctx.filters.pmId;
     const projects = await prisma.project.findMany({ where, include: projectInclude });
     const today = new Date();
     const rows: ReportRow[] = (projects as any[]).map((p) => {
@@ -448,7 +448,7 @@ const pmWorkload: ReportDefinition = {
   name: "PM Workload & Allocation",
   description: "Workload per PM — projects by status, total contract value, average margin.",
   category: "operations",
-  scope: ["MANAGEMENT", "FINANCE"],
+  scope: ["MANAGEMENT", "SUPER_ADMIN", "FINANCE"],
   filters: [],
   columns: [
     { key: "pmName", label: "PM", type: "string", width: 160 },
@@ -504,7 +504,7 @@ const billingAging: ReportDefinition = {
   name: "Billing Status Aging",
   description: "Billing milestones with overdue aging buckets. Longest unpaid sorted first.",
   category: "cashflow",
-  scope: ["MANAGEMENT", "PROJECT_MANAGER", "FINANCE"],
+  scope: ["MANAGEMENT", "SUPER_ADMIN", "PROJECT_MANAGER", "FINANCE"],
   filters: [
     { key: "status", label: "Status", type: "select", optionsSource: "billingStatuses" },
     { key: "agingBucket", label: "Aging Bucket", type: "select", optionsSource: "agingBuckets" },
@@ -580,7 +580,7 @@ const cashInflowForecast: ReportDefinition = {
   name: "Cash Inflow Forecast",
   description: "Monthly cash inflow forecast based on billing milestones (PLANNED + INVOICED).",
   category: "cashflow",
-  scope: ["MANAGEMENT", "FINANCE"],
+  scope: ["MANAGEMENT", "SUPER_ADMIN", "FINANCE"],
   filters: [
     { key: "year", label: "Year", type: "year", optionsSource: "yearList", defaultValue: String(new Date().getFullYear()) },
     { key: "clientId", label: "Client", type: "select", optionsSource: "clients" },
@@ -655,7 +655,7 @@ const expenseReport: ReportDefinition = {
   name: "Expense Report per Project",
   description: "Full expense list with submitter, category, approval status and approver.",
   category: "cashflow",
-  scope: ["MANAGEMENT", "PROJECT_MANAGER", "FINANCE"],
+  scope: ["MANAGEMENT", "SUPER_ADMIN", "PROJECT_MANAGER", "FINANCE"],
   filters: [
     { key: "from", label: "From", type: "date" },
     { key: "to", label: "To", type: "date" },
@@ -728,7 +728,7 @@ const ppnDetail: ReportDefinition = {
   name: "VAT Detail per Invoice",
   description: "DPP & VAT 11% breakdown per invoice for monthly VAT tax filing. Filter by year / month / status.",
   category: "compliance",
-  scope: ["MANAGEMENT", "FINANCE"],
+  scope: ["MANAGEMENT", "SUPER_ADMIN", "FINANCE"],
   filters: [
     { key: "year", label: "Year", type: "year", optionsSource: "yearList", defaultValue: String(new Date().getFullYear()) },
     { key: "month", label: "Month", type: "select", options: Array.from({ length: 12 }, (_, i) => ({ value: String(i + 1), label: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][i]! })) },
@@ -809,7 +809,7 @@ const internalInitiativeCost: ReportDefinition = {
   description:
     "Non-commercial projects (INTERNAL/PRESALES/TRAINING): budget, actual cost, % budget used, and mandays per initiative.",
   category: "operations",
-  scope: ["MANAGEMENT", "FINANCE"],
+  scope: ["MANAGEMENT", "SUPER_ADMIN", "FINANCE"],
   filters: [
     { key: "kind", label: "Kind", type: "select", optionsSource: "internalProjectKinds" },
     { key: "status", label: "Status", type: "select", optionsSource: "projectStatuses" },

@@ -18,6 +18,7 @@ const PRINCIPAL_ROLES = new Set([
 
 const PERFORMANCE_REVIEW_ROLES = new Set<string>([
   "MANAGEMENT",
+  "SUPER_ADMIN",
   "PROJECT_MANAGER",
   ...PRINCIPAL_ROLES,
 ]);
@@ -43,6 +44,13 @@ router.use("/performance-reviews", requirePerfReviewRole);
 
 // Returns the set of subject userIds the caller is allowed to review.
 async function allowedSubjectIds(user: { sub: string; role: string }): Promise<string[]> {
+  if (user.role === "SUPER_ADMIN") {
+    const everyone = await prisma.user.findMany({
+      where: { isActive: true, deletedAt: null },
+      select: { id: true },
+    });
+    return everyone.map((u) => u.id);
+  }
   if (user.role === "MANAGEMENT") {
     const pms = await prisma.user.findMany({
       where: { role: "PROJECT_MANAGER" },
@@ -289,7 +297,7 @@ async function canEditReview(
   // within their reviewable scope. MGMT may also edit reviews of PM subjects
   // even if another MGMT user authored them.
   if (!(await canReviewSubject(review.userId, user))) return false;
-  if (user.role === "MANAGEMENT") return true;
+  if (user.role === "MANAGEMENT" || user.role === "SUPER_ADMIN") return true;
   return review.reviewerId === user.sub;
 }
 
@@ -354,7 +362,7 @@ router.post("/performance-reviews", async (req, res) => {
     return;
   }
   let reviewerId = user.sub;
-  if (body.reviewerId && user.role === "MANAGEMENT") {
+  if (body.reviewerId && (user.role === "MANAGEMENT" || user.role === "SUPER_ADMIN")) {
     reviewerId = String(body.reviewerId);
     const r = await prisma.user.findUnique({ where: { id: reviewerId }, select: { id: true, role: true } });
     if (!r) { res.status(400).json({ error: "reviewerId not found" }); return; }
@@ -447,7 +455,7 @@ router.delete("/performance-reviews/:id", async (req, res) => {
   const id = String(req.params.id);
   const before = await prisma.performanceReview.findUnique({ where: { id } });
   if (!before) { res.status(404).json({ error: "Review not found" }); return; }
-  if (req.user!.role !== "MANAGEMENT" || !(await canReviewSubject(before.userId, req.user!))) {
+  if ((req.user!.role !== "MANAGEMENT" && req.user!.role !== "SUPER_ADMIN") || !(await canReviewSubject(before.userId, req.user!))) {
     res.status(403).json({ error: "Only Management can delete reviews, and only for Project Manager subjects" });
     return;
   }
@@ -541,7 +549,7 @@ router.post("/performance-reviews/:id/project-ratings", async (req, res) => {
   // to the review subject within the review period (via approved timesheet
   // or an active resource assignment). This blocks PMs from rating
   // unrelated subjects with their own projects.
-  const isMgmt = req.user!.role === "MANAGEMENT";
+  const isMgmt = req.user!.role === "MANAGEMENT" || req.user!.role === "SUPER_ADMIN";
   const canWrite = isMgmt || (await userCanWriteProject(projectId, req.user!));
   if (!canWrite) {
     res.status(403).json({ error: "Only the project's PM or Management can rate this project" });
@@ -613,7 +621,7 @@ router.delete("/performance-reviews/:id/project-ratings/:ratingId", async (req, 
     res.status(403).json({ error: "Forbidden" });
     return;
   }
-  const isMgmt = req.user!.role === "MANAGEMENT";
+  const isMgmt = req.user!.role === "MANAGEMENT" || req.user!.role === "SUPER_ADMIN";
   const isOwner = rating.ratedById === req.user!.sub;
   if (!isMgmt && !isOwner) {
     res.status(403).json({ error: "Only the rater or Management can delete this rating" });

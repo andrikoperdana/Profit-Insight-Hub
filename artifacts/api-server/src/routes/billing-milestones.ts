@@ -72,7 +72,7 @@ async function canViewProject(
   // invoice-planning gates). MANAGEMENT + FINANCE see everything for
   // reconciliation; ADMIN_PROJECT needs cross-project visibility into
   // closing documents/invoices.
-  if (role === "MANAGEMENT" || role === "FINANCE" || role === "ADMIN_PROJECT") return true;
+  if (role === "MANAGEMENT" || role === "SUPER_ADMIN" || role === "FINANCE" || role === "ADMIN_PROJECT") return true;
   // canViewAllProjects intentionally NOT used here — see comment above.
   void canViewAllProjects;
   if (role === "PROJECT_MANAGER" && project.pmId === userId) return true;
@@ -88,7 +88,7 @@ async function canViewProject(
 }
 
 function canManage(role: string, project: { pmId: string | null }, userId: string): boolean {
-  if (role === "MANAGEMENT") return true;
+  if (role === "MANAGEMENT" || role === "SUPER_ADMIN") return true;
   if (role === "PROJECT_MANAGER" && project.pmId === userId) return true;
   return false;
 }
@@ -132,7 +132,7 @@ function serialize(m: any) {
  * Restricted to MANAGEMENT (commercial figures).
  */
 router.get("/billing-milestones/vat-recap", async (req, res) => {
-  if (req.user?.role !== "MANAGEMENT" && req.user?.role !== "FINANCE") {
+  if (req.user?.role !== "MANAGEMENT" && req.user?.role !== "FINANCE" && req.user?.role !== "SUPER_ADMIN") {
     // Kept as an explicit two-role gate (not `canViewAllProjects`) because
     // SITE_ADMIN must not see commercial VAT figures.
     res.status(403).json({ error: "Only Management or Finance can view VAT recap" });

@@ -119,7 +119,7 @@ const include = {
 } as const;
 
 async function canWrite(projectId: string, user: { sub: string; role: string }): Promise<boolean> {
-  if (user.role === "MANAGEMENT") return true;
+  if (user.role === "MANAGEMENT" || user.role === "SUPER_ADMIN") return true;
   const p = await prisma.project.findUnique({
     where: { id: projectId },
     select: { pmId: true, technicalWriterId: true },

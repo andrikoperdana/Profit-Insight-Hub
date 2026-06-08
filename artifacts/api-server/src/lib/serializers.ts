@@ -195,6 +195,7 @@ export function canViewProjectFinancials(role: string | null | undefined): boole
 const DAILY_RATE_ALLOWED_ROLES = new Set<string>([
   "MANAGEMENT",
   "PROJECT_MANAGER",
+  "SUPER_ADMIN",
 ]);
 
 export function canViewDailyRate(role: string | null | undefined): boolean {

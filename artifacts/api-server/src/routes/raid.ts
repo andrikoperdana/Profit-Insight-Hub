@@ -9,7 +9,7 @@ import { prisma as prismaForRaid } from "@workspace/db";
 // RAID writes are strictly limited to MANAGEMENT or the project's assigned PM,
 // regardless of what `userCanWriteProject` allows for other endpoints.
 async function canWriteRaid(projectId: string, user: { sub: string; role: string }): Promise<boolean> {
-  if (user.role === "MANAGEMENT") return true;
+  if (user.role === "MANAGEMENT" || user.role === "SUPER_ADMIN") return true;
   if (user.role !== "PROJECT_MANAGER") return false;
   const project = await prismaForRaid.project.findUnique({
     where: { id: projectId },

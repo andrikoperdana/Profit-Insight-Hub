@@ -1,7 +1,7 @@
 import { prisma } from "@workspace/db";
 
 export const ALLOWED_STATUSES = new Set(["TODO", "IN_PROGRESS", "BLOCKED", "DONE"]);
-export const PM_ROLES = new Set(["MANAGEMENT", "PROJECT_MANAGER"]);
+export const PM_ROLES = new Set(["MANAGEMENT", "SUPER_ADMIN", "PROJECT_MANAGER"]);
 
 export type TaskWithRelations = {
   id: string;
@@ -240,7 +240,7 @@ export function parseDateOrNull(value: unknown): Date | null | undefined {
 }
 
 export function canManageProjectTasks(role: string, project: { pmId: string | null }, userId: string): boolean {
-  if (role === "MANAGEMENT") return true;
+  if (role === "MANAGEMENT" || role === "SUPER_ADMIN") return true;
   if (role === "PROJECT_MANAGER" && project.pmId === userId) return true;
   return false;
 }
@@ -250,7 +250,7 @@ export async function canViewProject(
   userId: string | undefined,
   project: { pmId: string | null; salesId: string | null; id: string },
 ): Promise<boolean> {
-  if (role === "MANAGEMENT" || role === "ADMIN_PROJECT" || role === "FINANCE") return true;
+  if (role === "MANAGEMENT" || role === "SUPER_ADMIN" || role === "ADMIN_PROJECT" || role === "FINANCE") return true;
   if (role === "PROJECT_MANAGER" && project.pmId === userId) return true;
   if (role === "SALES" && project.salesId === userId) return true;
   if (role === "KONSULTAN" || role === "TECHNICAL_WRITER") {

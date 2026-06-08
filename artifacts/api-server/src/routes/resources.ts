@@ -32,7 +32,7 @@ async function canWriteResourceFor(opts: {
   targetUserId: string;
 }): Promise<{ ok: true } | { ok: false; status: number; error: string }> {
   const { callerRole, callerId, projectId, targetUserId } = opts;
-  if (callerRole === "MANAGEMENT") return { ok: true };
+  if (callerRole === "MANAGEMENT" || callerRole === "SUPER_ADMIN") return { ok: true };
   if (callerRole === "PROJECT_MANAGER") {
     const proj = await prisma.project.findUnique({ where: { id: projectId }, select: { pmId: true } });
     if (!proj) return { ok: false, status: 404, error: "Project not found" };
@@ -65,7 +65,7 @@ router.get("/projects/:id/resources", async (req, res) => {
     res.status(404).json({ error: "Project not found" });
     return;
   }
-  const broad = role === "MANAGEMENT" || role === "ADMIN_PROJECT" || (role && role.startsWith("PRINCIPAL_"));
+  const broad = role === "MANAGEMENT" || role === "SUPER_ADMIN" || role === "ADMIN_PROJECT" || (role && role.startsWith("PRINCIPAL_"));
   let allowed = !!broad;
   if (!allowed && role === "PROJECT_MANAGER" && project.pmId === userId) allowed = true;
   if (!allowed && role === "SALES" && project.salesId === userId) allowed = true;
@@ -186,7 +186,7 @@ async function upsertResource(req: any, res: any, opts: { propose: boolean }) {
   // must be approved by that Principal first (pendingPrincipalApproval=true,
   // acceptedAt=null). Principal writes via /propose are proposed (awaiting PM).
   const callerRole = req.user!.role as UserRole;
-  const isPmOrMgmt = callerRole === "MANAGEMENT" || callerRole === "PROJECT_MANAGER";
+  const isPmOrMgmt = callerRole === "MANAGEMENT" || callerRole === "SUPER_ADMIN" || callerRole === "PROJECT_MANAGER";
   const needsPrincipalApproval =
     !opts.propose &&
     callerRole === "PROJECT_MANAGER" &&
@@ -490,7 +490,7 @@ router.post(
       const isThisPrincipal =
         (callerRole === "PRINCIPAL_KONSULTAN" || callerRole === "PRINCIPAL_TECHNICAL_WRITER") &&
         user?.principalId === req.user!.sub;
-      if (callerRole !== "MANAGEMENT" && !isThisPrincipal) {
+      if (callerRole !== "MANAGEMENT" && callerRole !== "SUPER_ADMIN" && !isThisPrincipal) {
         res.status(403).json({ error: "Only this resource's Principal may approve this assignment" });
         return;
       }
@@ -519,7 +519,7 @@ router.post(
     }
 
     // Principal-proposed row: PM-of-project or MGMT (existing behavior).
-    if (callerRole !== "MANAGEMENT" && callerRole !== "PROJECT_MANAGER") {
+    if (callerRole !== "MANAGEMENT" && callerRole !== "SUPER_ADMIN" && callerRole !== "PROJECT_MANAGER") {
       res.status(403).json({ error: "Only the assigned PM may accept this proposal" });
       return;
     }
@@ -565,13 +565,13 @@ router.post(
       const isThisPrincipal =
         (callerRole === "PRINCIPAL_KONSULTAN" || callerRole === "PRINCIPAL_TECHNICAL_WRITER") &&
         before.user.principalId === req.user!.sub;
-      if (callerRole !== "MANAGEMENT" && !isThisPrincipal) {
+      if (callerRole !== "MANAGEMENT" && callerRole !== "SUPER_ADMIN" && !isThisPrincipal) {
         res.status(403).json({ error: "Only this resource's Principal may decline this assignment" });
         return;
       }
     } else if (before.proposedAt && !before.acceptedAt) {
       // Principal-proposed row → PM-of-project or MGMT declines.
-      if (callerRole !== "MANAGEMENT" && callerRole !== "PROJECT_MANAGER") {
+      if (callerRole !== "MANAGEMENT" && callerRole !== "SUPER_ADMIN" && callerRole !== "PROJECT_MANAGER") {
         res.status(403).json({ error: "Only the assigned PM may decline this proposal" });
         return;
       }

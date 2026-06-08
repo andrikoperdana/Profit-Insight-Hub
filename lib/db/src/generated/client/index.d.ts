@@ -225,7 +225,8 @@ export namespace $Enums {
   PRINCIPAL_ADMIN_PROJECT: 'PRINCIPAL_ADMIN_PROJECT',
   FINANCE: 'FINANCE',
   HR: 'HR',
-  SITE_ADMIN: 'SITE_ADMIN'
+  SITE_ADMIN: 'SITE_ADMIN',
+  SUPER_ADMIN: 'SUPER_ADMIN'
 };
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]

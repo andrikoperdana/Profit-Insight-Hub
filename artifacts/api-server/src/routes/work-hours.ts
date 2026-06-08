@@ -84,7 +84,7 @@ async function buildTeamReport(
 
   let scopeLabel: string;
   const where: Prisma.UserWhereInput = { deletedAt: null, isActive: true };
-  if (role === "HR") {
+  if (role === "HR" || role === "SUPER_ADMIN") {
     where.role = {
       in: [
         "PROJECT_MANAGER",

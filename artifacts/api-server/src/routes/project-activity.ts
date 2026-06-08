@@ -9,7 +9,7 @@ router.use(requireAuth);
 // and the assigned PM of the project (matches UI gating on the project page).
 async function canViewActivity(req: any, projectId: string): Promise<boolean> {
   const role = req.user.role;
-  if (role === "MANAGEMENT" || role === "SITE_ADMIN") return true;
+  if (role === "MANAGEMENT" || role === "SUPER_ADMIN" || role === "SITE_ADMIN") return true;
   if (role !== "PROJECT_MANAGER") return false;
   const p = await prisma.project.findUnique({
     where: { id: projectId },

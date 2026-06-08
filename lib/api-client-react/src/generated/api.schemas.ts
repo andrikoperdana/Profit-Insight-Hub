@@ -68,6 +68,7 @@ export const UserRole = {
   FINANCE: "FINANCE",
   HR: "HR",
   SITE_ADMIN: "SITE_ADMIN",
+  SUPER_ADMIN: "SUPER_ADMIN",
 } as const;
 
 export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus];

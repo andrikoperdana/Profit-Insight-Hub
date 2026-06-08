@@ -45,6 +45,7 @@ router.use(requireAuth);
 // the PM-of-project (or MGMT) makes the call to approve/reject.
 const submitRoles = [
   "MANAGEMENT",
+  "SUPER_ADMIN",
   "PROJECT_MANAGER",
   "SALES",
   "KONSULTAN",
@@ -55,7 +56,7 @@ const submitRoles = [
   "PRINCIPAL_ADMIN_PROJECT",
 ] as const;
 // Only MGMT and PM-of-project can approve/reject expenses.
-const approverRoles = ["MANAGEMENT", "PROJECT_MANAGER"] as const;
+const approverRoles = ["MANAGEMENT", "SUPER_ADMIN", "PROJECT_MANAGER"] as const;
 
 const ALLOWED_CATEGORIES = new Set([
   "SOFTWARE",
@@ -135,7 +136,7 @@ router.get("/projects/:id/expenses", async (req, res) => {
     res.status(404).json({ error: "Project not found" });
     return;
   }
-  const isGlobal = role === "MANAGEMENT" || role === "ADMIN_PROJECT" || role === "SITE_ADMIN";
+  const isGlobal = role === "MANAGEMENT" || role === "SUPER_ADMIN" || role === "ADMIN_PROJECT" || role === "SITE_ADMIN";
   if (!isGlobal) {
     let allowed =
       (role === "PROJECT_MANAGER" && project.pmId === userId) ||
@@ -170,6 +171,7 @@ router.get("/projects/:id/expenses", async (req, res) => {
   // they have no need to see each other's pending or approved expense lines.
   const isFullView =
     role === "MANAGEMENT" ||
+    role === "SUPER_ADMIN" ||
     role === "SITE_ADMIN" ||
     role === "FINANCE" ||
     (role === "PROJECT_MANAGER" && project.pmId === userId);
@@ -310,7 +312,7 @@ router.post(
     // MGMT auto-approves on submit (they have approval power anyway and a
     // self-approval round-trip would just be busywork). All other roles enter
     // PENDING and require a PM/MGMT to approve before it counts as cost.
-    const isAutoApproved = role === "MANAGEMENT";
+    const isAutoApproved = role === "MANAGEMENT" || role === "SUPER_ADMIN";
     const expense = await prisma.projectExpense.create({
       data: {
         projectId,
@@ -368,6 +370,7 @@ router.delete(
     // PENDING (once approved or rejected the audit trail must be preserved).
     const isManager =
       role === "MANAGEMENT" ||
+      role === "SUPER_ADMIN" ||
       (role === "PROJECT_MANAGER" && before.project.pmId === userId);
     if (!isManager) {
       if (before.createdById !== userId) {
@@ -443,7 +446,7 @@ router.get("/expenses", async (req, res) => {
   const userId = req.user!.sub;
   // Explicit allowlist — broader financial roles like ADMIN_PROJECT/SITE_ADMIN
   // do not need cross-project commercial expense visibility.
-  const allowed = role === "MANAGEMENT" || role === "PROJECT_MANAGER" || role === "SALES";
+  const allowed = role === "MANAGEMENT" || role === "SUPER_ADMIN" || role === "PROJECT_MANAGER" || role === "SALES";
   if (!allowed) {
     res.status(403).json({ error: "Forbidden" });
     return;
@@ -626,7 +629,7 @@ router.get("/expenses/:expenseId/receipt", async (req, res) => {
   }
   const isCreator = expense.createdById === userId;
   const isPmOfProject = role === "PROJECT_MANAGER" && expense.project.pmId === userId;
-  if (!(role === "MANAGEMENT" || isPmOfProject || isCreator)) {
+  if (!(role === "MANAGEMENT" || role === "SUPER_ADMIN" || isPmOfProject || isCreator)) {
     res.status(403).json({ error: "You can only download receipts for your own expenses" });
     return;
   }

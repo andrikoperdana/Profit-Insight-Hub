@@ -11,7 +11,7 @@ function dayKey(d: Date): string {
 
 router.get("/capacity/calendar", async (req, res) => {
   const role = req.user!.role;
-  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER" && role !== "HR") {
+  if (role !== "MANAGEMENT" && role !== "SUPER_ADMIN" && role !== "PROJECT_MANAGER" && role !== "HR") {
     res.status(403).json({ error: "Forbidden" });
     return;
   }

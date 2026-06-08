@@ -10,7 +10,7 @@ router.use(requireAuth);
 // (principalId === actor).
 async function canManageGoals(actor: { sub: string; role: string }, subjectUserId: string): Promise<boolean> {
   if (actor.sub === subjectUserId) return true;
-  if (["MANAGEMENT", "HR", "SITE_ADMIN"].includes(actor.role)) return true;
+  if (["MANAGEMENT", "HR", "SITE_ADMIN", "SUPER_ADMIN"].includes(actor.role)) return true;
   if (actor.role === "PROJECT_MANAGER") {
     const subj = await prisma.user.findUnique({ where: { id: subjectUserId }, select: { managerId: true } });
     return subj?.managerId === actor.sub;
@@ -69,7 +69,7 @@ router.get("/skill-development/goals", async (req, res) => {
       return;
     }
     where.userId = userId;
-  } else if (!["MANAGEMENT", "HR", "SITE_ADMIN"].includes(me.role)) {
+  } else if (!["MANAGEMENT", "HR", "SITE_ADMIN", "SUPER_ADMIN"].includes(me.role)) {
     where.userId = me.sub;
   }
   if (status) where.status = status;
@@ -185,7 +185,7 @@ router.get("/skill-development/progression", async (req, res) => {
       return;
     }
     where.userId = userId;
-  } else if (!["MANAGEMENT", "HR", "SITE_ADMIN"].includes(me.role)) {
+  } else if (!["MANAGEMENT", "HR", "SITE_ADMIN", "SUPER_ADMIN"].includes(me.role)) {
     where.userId = me.sub;
   }
   const logs = await prisma.skillProgressionLog.findMany({

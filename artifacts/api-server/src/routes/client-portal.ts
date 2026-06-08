@@ -199,7 +199,7 @@ async function loadProjectForShare(
   }
   const role = req.user!.role;
   const isOwnerPm = role === "PROJECT_MANAGER" && project.pmId === req.user!.sub;
-  if (role !== "MANAGEMENT" && !isOwnerPm) {
+  if (role !== "MANAGEMENT" && role !== "SUPER_ADMIN" && !isOwnerPm) {
     res.status(403).json({ error: "Forbidden" });
     return null;
   }

@@ -258,6 +258,7 @@ router.post(
     }
     const isManager =
       role === "MANAGEMENT" ||
+      role === "SUPER_ADMIN" ||
       role === "FINANCE" ||
       (role === "PROJECT_MANAGER" && milestone.project.pmId === userId);
     if (!isManager) {

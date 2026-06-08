@@ -65,7 +65,7 @@ router.get("/timesheets", async (req, res) => {
   } else if (scope === "approval") {
     // PMs see SUBMITTED for projects where they are PM
     where.status = "SUBMITTED";
-    if (role !== "MANAGEMENT") {
+    if (role !== "MANAGEMENT" && role !== "SUPER_ADMIN") {
       where.project = { pmId: req.user!.sub };
     }
   } else {
@@ -73,8 +73,8 @@ router.get("/timesheets", async (req, res) => {
     // a broader view is forced down to their own entries so PRINCIPAL_*,
     // FINANCE, SITE_ADMIN and any future role cannot read cross-team
     // timesheets by passing ?scope=all.
-    if (role === "MANAGEMENT") {
-      // MANAGEMENT sees all
+    if (role === "MANAGEMENT" || role === "SUPER_ADMIN") {
+      // MANAGEMENT and SUPER_ADMIN see all
     } else if (role === "PROJECT_MANAGER") {
       where.OR = [
         { userId: req.user!.sub },
@@ -149,7 +149,7 @@ router.post("/timesheets", validateBody(CreateTimesheetBody), async (req, res) =
   const role = req.user!.role;
   // Auto-approve only if MGMT, or PM-of-this-project. PMs logging on a project
   // they don't manage must still go through approval.
-  let isAutoApprove = role === "MANAGEMENT";
+  let isAutoApprove = role === "MANAGEMENT" || role === "SUPER_ADMIN";
   if (!isAutoApprove && role === "PROJECT_MANAGER") {
     const proj = await prisma.project.findUnique({
       where: { id: String(projectId) },
@@ -261,7 +261,7 @@ router.post("/timesheets/bulk", validateBody(CreateBulkTimesheetsBody), async (r
   }
   const role = req.user!.role;
   const userId = req.user!.sub;
-  const isMgmt = role === "MANAGEMENT";
+  const isMgmt = role === "MANAGEMENT" || role === "SUPER_ADMIN";
   const isPm = role === "PROJECT_MANAGER";
   // Pre-fetch pmId for every referenced project so PMs only auto-approve hours
   // on projects they actually manage.
@@ -393,7 +393,7 @@ router.post("/timesheets/:id/submit", async (req, res) => {
     res.status(404).json({ error: "Not found" });
     return;
   }
-  if (existing.userId !== req.user!.sub && req.user!.role !== "MANAGEMENT") {
+  if (existing.userId !== req.user!.sub && req.user!.role !== "MANAGEMENT" && req.user!.role !== "SUPER_ADMIN") {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
@@ -424,7 +424,7 @@ router.post("/timesheets/:id/submit", async (req, res) => {
 
 router.post("/timesheets/bulk-approve", async (req, res) => {
   const role = req.user!.role;
-  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER") {
+  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER" && role !== "SUPER_ADMIN") {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
@@ -491,7 +491,7 @@ router.post("/timesheets/bulk-approve", async (req, res) => {
 
 router.post("/timesheets/:id/approve", async (req, res) => {
   const role = req.user!.role;
-  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER") {
+  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER" && role !== "SUPER_ADMIN") {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
@@ -550,7 +550,7 @@ router.post("/timesheets/:id/approve", async (req, res) => {
 
 router.post("/timesheets/:id/reject", async (req, res) => {
   const role = req.user!.role;
-  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER") {
+  if (role !== "MANAGEMENT" && role !== "PROJECT_MANAGER" && role !== "SUPER_ADMIN") {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
@@ -615,12 +615,13 @@ router.delete("/timesheets/:id", async (req, res) => {
   }
   if (
     existing.userId !== req.user!.sub &&
-    req.user!.role !== "MANAGEMENT"
+    req.user!.role !== "MANAGEMENT" &&
+    req.user!.role !== "SUPER_ADMIN"
   ) {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
-  if (existing.status === "APPROVED" && req.user!.role !== "MANAGEMENT") {
+  if (existing.status === "APPROVED" && req.user!.role !== "MANAGEMENT" && req.user!.role !== "SUPER_ADMIN") {
     res.status(400).json({ error: "Cannot delete approved timesheet" });
     return;
   }

@@ -13,6 +13,7 @@ export const RoleLabels: Record<UserRole, string> = {
   [UserRole.FINANCE]: "Finance",
   [UserRole.HR]: "HR",
   [UserRole.SITE_ADMIN]: "Site Admin",
+  [UserRole.SUPER_ADMIN]: "Super Admin",
 };
 
 // Mapping from a Principal role to the delivery role they supervise.
@@ -26,35 +27,47 @@ export function isPrincipalRole(role?: UserRole | string | null): boolean {
   return typeof role === "string" && role.startsWith("PRINCIPAL_");
 }
 
+// Super Admin is the top-level god account: it sees every menu and is granted
+// every capability below. Mirrors `isSuperAdmin` on the API server.
+export function isSuperAdmin(role?: UserRole | string | null): boolean {
+  return role === UserRole.SUPER_ADMIN;
+}
+
 export function canCreateProject(role?: UserRole): boolean {
-  return role === UserRole.MANAGEMENT || role === UserRole.PROJECT_MANAGER || role === UserRole.SALES;
+  return (
+    isSuperAdmin(role) ||
+    role === UserRole.MANAGEMENT ||
+    role === UserRole.PROJECT_MANAGER ||
+    role === UserRole.SALES
+  );
 }
 
 export function canManageUsers(role?: UserRole): boolean {
-  return role === UserRole.SITE_ADMIN;
+  return isSuperAdmin(role) || role === UserRole.SITE_ADMIN;
 }
 
 // HR can view all users and edit non-sensitive personnel fields
 // (title, dailyRate, seniority, businessUnit, manager, principal, skills) —
 // but NOT create/delete users, change role, reset passwords, or toggle isActive.
 export function canViewAllUsers(role?: UserRole): boolean {
-  return role === UserRole.SITE_ADMIN || role === UserRole.HR;
+  return isSuperAdmin(role) || role === UserRole.SITE_ADMIN || role === UserRole.HR;
 }
 
 export function canEditPersonnel(role?: UserRole): boolean {
-  return role === UserRole.SITE_ADMIN || role === UserRole.HR;
+  return isSuperAdmin(role) || role === UserRole.SITE_ADMIN || role === UserRole.HR;
 }
 
 export function canViewAuditLogs(role?: UserRole): boolean {
-  return role === UserRole.SITE_ADMIN;
+  return isSuperAdmin(role) || role === UserRole.SITE_ADMIN;
 }
 
 export function canManageClients(role?: UserRole): boolean {
-  return role === UserRole.SALES;
+  return isSuperAdmin(role) || role === UserRole.SALES;
 }
 
 export function canViewResources(role?: UserRole): boolean {
   return (
+    isSuperAdmin(role) ||
     role === UserRole.MANAGEMENT ||
     role === UserRole.PROJECT_MANAGER ||
     isPrincipalRole(role)
@@ -64,6 +77,7 @@ export function canViewResources(role?: UserRole): boolean {
 // Delivery roles + Principals never see commercial figures.
 export function canViewProjectFinancials(role?: UserRole): boolean {
   if (!role) return false;
+  if (isSuperAdmin(role)) return true;
   if (role === UserRole.TECHNICAL_WRITER || role === UserRole.KONSULTAN) return false;
   if (role === UserRole.HR) return false;
   if (isPrincipalRole(role)) return false;
@@ -73,7 +87,7 @@ export function canViewProjectFinancials(role?: UserRole): boolean {
 // Daily rate on project resources is restricted to MGMT and PM only.
 // Mirrors `canViewDailyRate` on the server.
 export function canViewDailyRate(role?: UserRole): boolean {
-  return role === UserRole.MANAGEMENT || role === UserRole.PROJECT_MANAGER;
+  return isSuperAdmin(role) || role === UserRole.MANAGEMENT || role === UserRole.PROJECT_MANAGER;
 }
 
 // RAID log is restricted to the core project delivery team: Management,
@@ -82,6 +96,7 @@ export function canViewDailyRate(role?: UserRole): boolean {
 // Mirrors `canViewRaid` on the server.
 export function canViewRaid(role?: UserRole): boolean {
   return (
+    isSuperAdmin(role) ||
     role === UserRole.MANAGEMENT ||
     role === UserRole.PROJECT_MANAGER ||
     role === UserRole.KONSULTAN ||
@@ -122,5 +137,10 @@ export function isWorkHoursRequiredRole(role?: UserRole | null): boolean {
 // staff), Management (Project Managers), and Principals (their supervisees).
 // Mirrors `canViewWorkHoursTeam` on the server.
 export function canViewWorkHoursTeam(role?: UserRole | null): boolean {
-  return role === UserRole.HR || role === UserRole.MANAGEMENT || isPrincipalRole(role);
+  return (
+    isSuperAdmin(role) ||
+    role === UserRole.HR ||
+    role === UserRole.MANAGEMENT ||
+    isPrincipalRole(role)
+  );
 }

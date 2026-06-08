@@ -12,6 +12,7 @@ export type Role =
   | "FINANCE"
   | "HR"
   | "SITE_ADMIN"
+  | "SUPER_ADMIN"
   | "PRINCIPAL_KONSULTAN"
   | "PRINCIPAL_TECHNICAL_WRITER"
   | "PRINCIPAL_ADMIN_PROJECT";
@@ -20,12 +21,22 @@ export function isPrincipalRole(role: string | null | undefined): boolean {
   return !!role && role.startsWith("PRINCIPAL_");
 }
 
+// Super Admin is the top-level god account: it bypasses every route guard
+// (see requireRole) and is granted full visibility/management rights wherever
+// a capability or data-scoping decision is made. Treat it as a superset of
+// every other role. The only deliberate exception is that it stays exempt from
+// the weekly work-hours logging requirement.
+export function isSuperAdmin(role: string | null | undefined): boolean {
+  return role === "SUPER_ADMIN";
+}
+
 // Roles that read every project regardless of assignment. They never filter
 // by pmId/salesId/resource membership when listing or fetching a project.
 // FINANCE has read-all rights for reconciliation; SITE_ADMIN for support.
 const PROJECT_FULL_VIEWERS = new Set<string>([
   "MANAGEMENT",
   "SITE_ADMIN",
+  "SUPER_ADMIN",
   "FINANCE",
 ]);
 
@@ -36,7 +47,7 @@ export function canViewAllProjects(role: string | null | undefined): boolean {
 // Roles that may mutate the project record itself (status, dates, contract
 // value, etc.) — distinct from "may upload an invoice on this project".
 // PM is allowed only when they lead the project (caller checks pmId).
-const PROJECT_RECORD_WRITERS = new Set<string>(["MANAGEMENT"]);
+const PROJECT_RECORD_WRITERS = new Set<string>(["MANAGEMENT", "SUPER_ADMIN"]);
 
 export function canWriteAnyProject(role: string | null | undefined): boolean {
   return !!role && PROJECT_RECORD_WRITERS.has(role);
@@ -46,7 +57,7 @@ export function canWriteAnyProject(role: string | null | undefined): boolean {
 // CONTRACT documents on any project. They are NOT a project owner. Callers
 // must still gate by document type. See `routes/documents.ts`.
 export function isFinanceDocumentRole(role: string | null | undefined): boolean {
-  return role === "FINANCE";
+  return role === "FINANCE" || isSuperAdmin(role);
 }
 
 // Delivery roles whose project visibility flows from being staffed on the
@@ -64,6 +75,7 @@ export function isDeliveryAssignmentRole(role: string | null | undefined): boole
 // by `userCanAccessProject`. Mirrors `canViewRaid` on the web frontend.
 const RAID_VIEW_ROLES = new Set<string>([
   "MANAGEMENT",
+  "SUPER_ADMIN",
   "PROJECT_MANAGER",
   "KONSULTAN",
   "PRINCIPAL_KONSULTAN",
@@ -113,5 +125,5 @@ export function isWorkHoursRequiredRole(role: string | null | undefined): boolea
 // Management sees Project Managers, and each Principal sees their own
 // supervisees. Scope itself is enforced in `routes/work-hours.ts`.
 export function canViewWorkHoursTeam(role: string | null | undefined): boolean {
-  return role === "HR" || role === "MANAGEMENT" || isPrincipalRole(role);
+  return role === "HR" || role === "MANAGEMENT" || isSuperAdmin(role) || isPrincipalRole(role);
 }
