@@ -85,13 +85,104 @@ type WhatIfResp = {
   deltaProfit: number;
 };
 
-function FinancialsTab({ projectId }: { projectId: string }) {
+function FinancialsTab({ projectId, isCommercial = true }: { projectId: string; isCommercial?: boolean }) {
   const { data: f, isLoading } = useGetProjectFinancials(projectId, {
     query: { queryKey: getGetProjectFinancialsQueryKey(projectId), enabled: !!projectId },
   });
 
   if (isLoading) return <LoadingPage />;
   if (!f) return <EmptyState title="No financial data" description="Financial data is unavailable for this project." />;
+
+  if (!isCommercial) {
+    const budget = f.estimatedCost ?? 0;
+    const actual = f.actualCost ?? 0;
+    const remaining = budget - actual;
+    const remainingPositive = remaining >= 0;
+    const usedPct = budget > 0 ? Math.min((actual / budget) * 100, 100) : 0;
+    return (
+      <div className="space-y-6">
+        <div className="rounded-md border border-sky-500/30 bg-sky-500/5 p-3 text-sm text-sky-200">
+          Internal project &mdash; cost tracking only. This project has no client
+          revenue, so the figures below monitor internal cost against the planned
+          budget (no profit or margin).
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <FinancialCard
+            icon={<DollarSign className="h-4 w-4 text-primary" />}
+            label="Budget (Estimated Cost)"
+            value={formatIDR(budget)}
+            subtitle="Planned internal cost"
+          />
+          <FinancialCard
+            icon={<Activity className="h-4 w-4 text-amber-500" />}
+            label="Actual Cost"
+            value={formatIDR(actual)}
+            subtitle="From approved timesheets × rate + expenses"
+          />
+          <FinancialCard
+            icon={<Activity className="h-4 w-4 text-amber-500" />}
+            label="Accrued Cost"
+            value={formatIDR(f.accruedCost ?? 0)}
+            subtitle="Includes SUBMITTED + APPROVED timesheets"
+          />
+          <FinancialCard
+            icon={remainingPositive ? <TrendingUp className="h-4 w-4 text-primary" /> : <TrendingDown className="h-4 w-4 text-destructive" />}
+            label="Remaining Budget"
+            value={formatIDR(remaining)}
+            subtitle={remainingPositive ? "Within budget" : "Over budget"}
+            tone={remainingPositive ? "good" : "bad"}
+            progress={usedPct}
+          />
+          <FinancialCard
+            icon={<Flame className="h-4 w-4 text-amber-500" />}
+            label="Burn Rate"
+            value={`${(f.burnRatePct ?? 0).toFixed(1)}%`}
+            subtitle={`${(f.actualMandays ?? 0).toFixed(1)} / ${(f.plannedMandays ?? 0).toFixed(1)} mandays`}
+            progress={Math.min(f.burnRatePct ?? 0, 100)}
+          />
+          <FinancialCard
+            icon={<Activity className="h-4 w-4 text-muted-foreground" />}
+            label="Forecasted Final Cost"
+            value={formatIDR(f.forecastCost ?? 0)}
+            subtitle="Projected cost at completion"
+          />
+        </div>
+
+        <Card className="border-border shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-base">Monthly Cost</CardTitle>
+            <CardDescription>Approved timesheet cost per month.</CardDescription>
+          </CardHeader>
+          <CardContent className="h-[320px]">
+            {!f.monthly?.length ? (
+              <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
+                No approved timesheets yet — chart will populate as cost accrues.
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={f.monthly} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="finCostOnly" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="hsl(var(--destructive))" stopOpacity={0.35} />
+                      <stop offset="95%" stopColor="hsl(var(--destructive))" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                  <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(v) => `Rp ${(v / 1_000_000).toFixed(0)}M`} />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
+                  <RechartsTooltip
+                    contentStyle={{ backgroundColor: "hsl(var(--card))", borderColor: "hsl(var(--border))", borderRadius: "8px" }}
+                    formatter={(v: number) => formatIDR(v)}
+                  />
+                  <Area type="monotone" dataKey="cost" name="Cost" stroke="hsl(var(--destructive))" fillOpacity={1} fill="url(#finCostOnly)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const profitPositive = (f.actualProfit ?? 0) >= 0;
   const forecastPositive = (f.forecastProfit ?? 0) >= 0;

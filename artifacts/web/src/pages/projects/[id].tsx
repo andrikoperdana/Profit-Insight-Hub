@@ -154,6 +154,7 @@ export default function ProjectDetail() {
   }
 
   const canChangeStatus = user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER";
+  const isCommercial = project.kind === "CLIENT";
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
@@ -226,6 +227,34 @@ export default function ProjectDetail() {
                   sudah siap melanjutkan, ubah status kembali ke{" "}
                   <span className="font-medium">Active</span> melalui pilihan
                   Change Status di atas. Alasan penjedaan ditampilkan di bawah.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {!isCommercial && (
+        <div className="rounded-md border border-sky-500/30 bg-sky-500/5 p-4 text-sm text-sky-200">
+          <div className="flex items-start gap-3">
+            <Building2 className="h-5 w-5 mt-0.5 shrink-0" />
+            <div className="space-y-2">
+              <div className="space-y-1">
+                <p className="font-semibold">Internal project &mdash; no client billing</p>
+                <p className="text-sky-200/80">
+                  This is an internal / non-commercial project, so client
+                  billing, invoicing, and the signed handover document (BAST)
+                  are not required to activate or complete it. The Financials
+                  tab tracks internal cost only (no revenue or margin).
+                </p>
+              </div>
+              <div className="space-y-1 border-t border-sky-500/20 pt-2">
+                <p className="font-semibold">Project internal &mdash; tanpa tagihan klien</p>
+                <p className="text-sky-200/80">
+                  Ini project internal / non-komersial, sehingga Billing,
+                  invoice, dan dokumen serah-terima (BAST) tidak diwajibkan
+                  untuk mengaktifkan atau menyelesaikan project. Tab Financials
+                  hanya memantau biaya internal (tanpa pendapatan atau margin).
                 </p>
               </div>
             </div>
@@ -320,10 +349,10 @@ export default function ProjectDetail() {
           {(user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER") && (
             <TabsTrigger value="timesheets" data-testid="tab-trigger-timesheets">Timesheets</TabsTrigger>
           )}
-          {canViewProjectFinancials(user?.role) && (
+          {isCommercial && canViewProjectFinancials(user?.role) && (
             <TabsTrigger value="billing" data-testid="tab-trigger-billing">Billing</TabsTrigger>
           )}
-          {(user?.role === "MANAGEMENT" ||
+          {isCommercial && (user?.role === "MANAGEMENT" ||
             (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id) ||
             (user?.role === "TECHNICAL_WRITER" && project.technicalWriterId === user?.id) ||
             (user?.role === "ADMIN_PROJECT" && project.adminProjectId === user?.id)) && (
@@ -368,7 +397,7 @@ export default function ProjectDetail() {
         </TabsContent>
         {canViewProjectFinancials(user?.role) && (
           <TabsContent value="financials" className="pt-4 m-0">
-            <FinancialsTab projectId={id} />
+            <FinancialsTab projectId={id} isCommercial={isCommercial} />
           </TabsContent>
         )}
         <TabsContent value="resources" className="pt-4 m-0">
@@ -382,14 +411,16 @@ export default function ProjectDetail() {
             <TimesheetsTab projectId={id} project={project} />
           </TabsContent>
         )}
-        {canViewProjectFinancials(user?.role) && (
+        {isCommercial && canViewProjectFinancials(user?.role) && (
           <TabsContent value="billing" className="pt-4 m-0">
             <BillingTab projectId={id} project={project} />
           </TabsContent>
         )}
-        <TabsContent value="report" className="pt-4 m-0">
-          <ReportTab projectId={id} project={project} />
-        </TabsContent>
+        {isCommercial && (
+          <TabsContent value="report" className="pt-4 m-0">
+            <ReportTab projectId={id} project={project} />
+          </TabsContent>
+        )}
         <TabsContent value="documents" className="pt-4 m-0">
           <DocumentsTab projectId={id} projectStatus={project.status} />
         </TabsContent>

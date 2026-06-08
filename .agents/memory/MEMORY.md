@@ -17,3 +17,4 @@
 - [Shared fetch RN guards](mobile-fetch-rn-guards.md) — browser-only side effects in custom-fetch must use isBrowserDom() (window+localStorage+location); `typeof window` alone crashes the Expo native app.
 - [Expo dev-workflow port probe & verification](expo-dev-workflow-verification.md) — restart_workflow can falsely report DIDNT_OPEN_A_PORT for Expo even when Metro binds; verify by curl-compiling the web bundle, not by retrying restart.
 - [Phone-only timer per user](mobile-timer-per-user.md) — a device-local AsyncStorage running-timer must be keyed by user id or it leaks across accounts on a shared phone.
+- [Non-commercial project exemptions](non-commercial-project-exemptions.md) — kind!=CLIENT (INTERNAL/PRESALES/TRAINING) skip billing-milestone+BAST gates; gate uses effective kind honored only for MGMT/SUPER_ADMIN; hide Billing/Report tabs, Financials goes cost-only.

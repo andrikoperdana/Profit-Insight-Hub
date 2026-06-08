@@ -476,13 +476,26 @@ router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdatePro
     }
   }
 
+  // Non-commercial projects (INTERNAL / PRESALES / TRAINING) run internally
+  // with no client invoice, so they are exempt from the billing- and
+  // BAST-related lifecycle requirements. Use the EFFECTIVE kind so a PATCH
+  // that flips kind (MGMT/SUPER_ADMIN only) and status in one call is honoured.
+  const effKindForGate =
+    b.kind !== undefined &&
+    (role === "MANAGEMENT" || role === "SUPER_ADMIN") &&
+    ["CLIENT", "INTERNAL", "PRESALES", "TRAINING"].includes(String(b.kind))
+      ? String(b.kind)
+      : beforeProj.kind;
+  const isNonCommercialProject = effKindForGate !== "CLIENT";
+
   // ACTIVE transition gate: a project may only be activated once it is fully
   // set up. We validate the EFFECTIVE state (incoming body overrides stored
   // values) so a PATCH that fills fields and flips status in one call still
   // works. Applies to every role (MANAGEMENT included) and to any non-ACTIVE
   // -> ACTIVE move. Required: core Overview fields, an assigned PM, at least
   // one staffed team member, billing milestones totalling 100%, at least one
-  // task, and at least one RAID item.
+  // task, and at least one RAID item. Non-commercial projects skip the
+  // revenue and billing-milestone checks.
   if (b.status === "ACTIVE" && beforeProj.status !== "ACTIVE") {
     const pid = String(req.params.id);
     const missing: string[] = [];
@@ -517,7 +530,7 @@ router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdatePro
     if (!effDescription || !String(effDescription).trim()) missing.push("Description");
     if (!effStartDate) missing.push("Start date");
     if (!effEndDate) missing.push("End date");
-    if (!(Number(effContractValue) > 0)) missing.push("Revenue (contract value)");
+    if (!isNonCommercialProject && !(Number(effContractValue) > 0)) missing.push("Revenue (contract value)");
     if (!(Number(effPlannedMandays) > 0)) missing.push("Planned mandays");
     if (!(Number(effEstimatedCost) > 0)) missing.push("Estimated cost");
     if (!effPmId) missing.push("Project Manager");
@@ -536,11 +549,13 @@ router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdatePro
     if (taskCount === 0) missing.push("At least one task");
     if (raidCount === 0) missing.push("At least one RAID item");
 
-    const totalPct = milestones.reduce((sum, m) => sum + (m.percentage || 0), 0);
-    if (milestones.length === 0) {
-      missing.push("Billing milestones (Terms of Payment)");
-    } else if (Math.abs(totalPct - 100) > 0.01) {
-      missing.push(`Billing milestones must total 100% (currently ${+totalPct.toFixed(2)}%)`);
+    if (!isNonCommercialProject) {
+      const totalPct = milestones.reduce((sum, m) => sum + (m.percentage || 0), 0);
+      if (milestones.length === 0) {
+        missing.push("Billing milestones (Terms of Payment)");
+      } else if (Math.abs(totalPct - 100) > 0.01) {
+        missing.push(`Billing milestones must total 100% (currently ${+totalPct.toFixed(2)}%)`);
+      }
     }
 
     if (missing.length > 0) {
@@ -578,10 +593,11 @@ router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdatePro
       missing.push(`No timesheets awaiting approval (${pendingTimesheets} still pending)`);
     if (pendingExpenses > 0)
       missing.push(`No pending expenses (${pendingExpenses} still pending)`);
-    if (plannedMilestones > 0)
+    if (!isNonCommercialProject && plannedMilestones > 0)
       missing.push(`All billing milestones must be invoiced (${plannedMilestones} still planned)`);
     if (openRaid > 0) missing.push(`All RAID items must be resolved (${openRaid} still open)`);
-    if (bastCount === 0) missing.push("A signed handover document (BAST) must be uploaded");
+    if (!isNonCommercialProject && bastCount === 0)
+      missing.push("A signed handover document (BAST) must be uploaded");
 
     if (missing.length > 0) {
       res.status(400).json({
