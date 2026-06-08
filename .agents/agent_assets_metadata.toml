@@ -352,13 +352,13 @@ title = "Panduan Android - SecureProfit (siap di-share)"
 id = "gBgayBqWZaVBzFghqAEwo"
 uri = "file://exports/Panduan-Alur-Project-SecureProfit-Hub-ID.pdf"
 type = "pdf"
-title = "Panduan Alur Project (Bahasa Indonesia)"
+title = "Panduan Alur Project (Indonesia) — Edisi 8 Juni 2026"
 
 [[outputs]]
 id = "TR30Kz7ZYvJ80WrBCWAyM"
 uri = "file://exports/SecureProfit-Hub-Project-Flow-Guide-EN.pdf"
 type = "pdf"
-title = "Project Flow Guide (English)"
+title = "Project Flow Guide (English) — Edition 8 June 2026"
 
 [[outputs]]
 id = "Quhs-ORQwAEsrWJBCvMPA"

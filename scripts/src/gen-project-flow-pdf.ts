@@ -124,6 +124,7 @@ const ID: Doc = {
       "Minimal 1 RAID item",
       "Total persentase Billing Milestone = 100%",
     ] },
+    { t: "note", text: "Untuk project non-klien (Internal/Presales/Training), syarat Contract Value > 0 dan total Billing Milestone 100% dilewati — lihat Catatan Khusus 1 di akhir dokumen." },
 
     // ---- Fase 5 ----
     { t: "phase", num: 5, title: "Project Berjalan", color: C.running },
@@ -160,6 +161,7 @@ const ID: Doc = {
       "Minimal 1 dokumen BAST (versi terbaru) sudah diunggah",
       "Status Change Reason terisi",
     ] },
+    { t: "note", text: "Untuk project non-klien, syarat menutup Billing Milestone PLANNED dan mengunggah dokumen BAST dilewati — lihat Catatan Khusus 1 di akhir dokumen." },
 
     // ---- Fase 7 ----
     { t: "phase", num: 7, title: "Penutupan Project", color: C.closed },
@@ -168,6 +170,28 @@ const ID: Doc = {
     { t: "h", text: "Langkah" },
     { t: "b", text: "Setelah COMPLETE dan seluruh dokumen penutupan lengkap, ubah Status menjadi CLOSED." },
     { t: "note", text: "Status PAUSE dapat digunakan bila project dihentikan sementara, lalu dilanjutkan kembali ke ACTIVE. Sebagian tab (mis. Financials/Billing) tidak terlihat oleh role tertentu sesuai hak akses." },
+
+    // ---- Catatan Khusus 1: Project Internal ----
+    { t: "space", h: 6 },
+    { t: "h", text: "Catatan Khusus 1 — Project Internal (Non-Klien)" },
+    { t: "p", text: "Selain project untuk klien, ada jenis project INTERNAL, PRESALES, dan TRAINING — yaitu project non-komersial yang tidak menagih ke klien. Jenis project ini hanya dapat ditetapkan oleh Management atau Super Admin (mis. lewat opsi Internal Project saat membuat project)." },
+    { t: "b", text: "Tab Billing dan Report disembunyikan untuk project non-klien karena tidak ada penagihan ke klien." },
+    { t: "b", text: "Tab Financials tetap tampil, tetapi berubah menjadi pemantauan biaya internal: Budget (Estimated Cost), Actual Cost, Accrued Cost, Remaining Budget, Burn Rate, dan Forecasted Final Cost — tanpa angka pendapatan, profit, atau margin." },
+    { t: "gate", title: "Syarat yang DILEWATI untuk project non-klien", items: [
+      "Saat ACTIVE: Contract Value > 0 tidak diwajibkan",
+      "Saat ACTIVE: total persentase Billing Milestone 100% tidak diwajibkan",
+      "Saat COMPLETE: tidak perlu menutup Billing Milestone berstatus PLANNED",
+      "Saat COMPLETE: dokumen BAST tidak diwajibkan",
+    ] },
+    { t: "note", text: "Syarat lainnya tetap berlaku untuk semua jenis project: Overview inti, PM, minimal 1 Resource/Task/RAID, Estimated Cost > 0, Planned Mandays > 0, semua Task DONE, tidak ada Timesheet SUBMITTED, tidak ada Expense PENDING, serta Status Change Reason terisi." },
+
+    // ---- Catatan Khusus 2: Status PAUSE ----
+    { t: "space", h: 6 },
+    { t: "h", text: "Catatan Khusus 2 — Status PAUSE (Penghentian Sementara)" },
+    { t: "p", text: "PAUSE dipakai saat project dihentikan sementara — misalnya menunggu konfirmasi, dokumen, atau pembayaran dari klien — tanpa membatalkan project. Saat hambatan teratasi, project dilanjutkan kembali ke ACTIVE." },
+    { t: "b", text: "Selama PAUSE, sebaiknya tidak ada pencatatan jam kerja atau biaya baru sampai project dilanjutkan." },
+    { t: "b", text: "PAUSE bersifat sementara dan tidak sama dengan COMPLETE atau CLOSED; seluruh data project tetap utuh." },
+    { t: "b", text: "Halaman project menampilkan banner penjelasan saat status PAUSE agar tim memahami kondisinya." },
   ],
 };
 
@@ -244,6 +268,7 @@ const EN: Doc = {
       "At least 1 RAID item",
       "Billing Milestone percentages total 100%",
     ] },
+    { t: "note", text: "For non-client projects (Internal/Presales/Training), the Contract Value > 0 and 100% Billing Milestone requirements are waived — see Special Note 1 at the end of this document." },
 
     // ---- Phase 5 ----
     { t: "phase", num: 5, title: "Project In Progress", color: C.running },
@@ -280,6 +305,7 @@ const EN: Doc = {
       "At least 1 BAST document (latest version) uploaded",
       "Status Change Reason filled in",
     ] },
+    { t: "note", text: "For non-client projects, closing PLANNED Billing Milestones and uploading a BAST document are waived — see Special Note 1 at the end of this document." },
 
     // ---- Phase 7 ----
     { t: "phase", num: 7, title: "Project Closure", color: C.closed },
@@ -288,6 +314,28 @@ const EN: Doc = {
     { t: "h", text: "Steps" },
     { t: "b", text: "After COMPLETE and once all closing documents are in place, change the Status to CLOSED." },
     { t: "note", text: "The PAUSE status can be used when a project is temporarily halted, then resumed back to ACTIVE. Some tabs (e.g. Financials/Billing) are hidden from certain roles based on access rights." },
+
+    // ---- Special Note 1: Internal projects ----
+    { t: "space", h: 6 },
+    { t: "h", text: "Special Note 1 — Internal (Non-Client) Projects" },
+    { t: "p", text: "Besides client projects, there are INTERNAL, PRESALES, and TRAINING projects — non-commercial projects with no client to invoice. This project kind can only be set by Management or Super Admin (e.g. via the Internal Project option when creating a project)." },
+    { t: "b", text: "The Billing and Report tabs are hidden for non-client projects because there is no client billing." },
+    { t: "b", text: "The Financials tab stays visible but changes into internal cost tracking: Budget (Estimated Cost), Actual Cost, Accrued Cost, Remaining Budget, Burn Rate, and Forecasted Final Cost — with no revenue, profit, or margin figures." },
+    { t: "gate", title: "Requirements WAIVED for non-client projects", items: [
+      "At ACTIVE: Contract Value > 0 is not required",
+      "At ACTIVE: Billing Milestone percentages totalling 100% is not required",
+      "At COMPLETE: no need to close PLANNED Billing Milestones",
+      "At COMPLETE: a BAST document is not required",
+    ] },
+    { t: "note", text: "All other requirements still apply to every project kind: core Overview, PM, at least 1 Resource/Task/RAID, Estimated Cost > 0, Planned Mandays > 0, all Tasks DONE, no SUBMITTED Timesheet, no PENDING Expense, and Status Change Reason filled in." },
+
+    // ---- Special Note 2: PAUSE status ----
+    { t: "space", h: 6 },
+    { t: "h", text: "Special Note 2 — PAUSE Status (Temporary Hold)" },
+    { t: "p", text: "PAUSE is used when a project is temporarily halted — for example waiting on client confirmation, documents, or payment — without cancelling it. Once the blocker is resolved, the project resumes to ACTIVE." },
+    { t: "b", text: "While PAUSED, ideally no new work hours or costs are logged until the project resumes." },
+    { t: "b", text: "PAUSE is temporary and is not the same as COMPLETE or CLOSED; all project data stays intact." },
+    { t: "b", text: "The project page shows an explanatory banner while the status is PAUSE so the team understands the situation." },
   ],
 };
 
