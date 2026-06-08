@@ -174,7 +174,15 @@ const ID: Doc = {
     // ---- Catatan Khusus 1: Project Internal ----
     { t: "space", h: 6 },
     { t: "h", text: "Catatan Khusus 1 — Project Internal (Non-Klien)" },
-    { t: "p", text: "Selain project untuk klien, ada jenis project INTERNAL, PRESALES, dan TRAINING — yaitu project non-komersial yang tidak menagih ke klien. Jenis project ini hanya dapat ditetapkan oleh Management atau Super Admin (mis. lewat opsi Internal Project saat membuat project)." },
+    { t: "p", text: "Selain project untuk klien, ada jenis project non-komersial yang tidak menagih ke klien: INTERNAL, PRESALES, dan TRAINING. Project ini tetap perlu dipantau effort (mandays) dan biayanya walaupun tidak menghasilkan pendapatan. Alur status tetap sama (DRAFT → OBSERVATION → ACTIVE → COMPLETE → CLOSED); yang berbeda hanya syarat penagihan dan BAST yang dilewati." },
+    { t: "h", text: "Jenis project non-klien" },
+    { t: "b", text: "INTERNAL — pekerjaan internal perusahaan, mis. pengembangan tools/produk internal, riset, atau kegiatan operasional tim." },
+    { t: "b", text: "PRESALES — aktivitas sebelum kontrak, mis. penyusunan proposal, Proof of Concept (PoC), atau demo untuk calon klien." },
+    { t: "b", text: "TRAINING — kegiatan pelatihan atau sertifikasi internal tim." },
+    { t: "h", text: "Cara membuat project internal" },
+    { t: "b", text: "Hanya Management atau Super Admin yang dapat membuat atau menetapkannya. Pada Projects > New Project, aktifkan opsi Internal Project (jenis non-klien)." },
+    { t: "b", text: "Field Client dan Contract Value tidak wajib karena tidak ada klien penagih. Biaya internal tetap dihitung dari Estimated Cost serta Timesheet dan Expense yang sudah APPROVED." },
+    { t: "h", text: "Yang berbeda di tampilan" },
     { t: "b", text: "Tab Billing dan Report disembunyikan untuk project non-klien karena tidak ada penagihan ke klien." },
     { t: "b", text: "Tab Financials tetap tampil, tetapi berubah menjadi pemantauan biaya internal: Budget (Estimated Cost), Actual Cost, Accrued Cost, Remaining Budget, Burn Rate, dan Forecasted Final Cost — tanpa angka pendapatan, profit, atau margin." },
     { t: "gate", title: "Syarat yang DILEWATI untuk project non-klien", items: [
@@ -318,7 +326,15 @@ const EN: Doc = {
     // ---- Special Note 1: Internal projects ----
     { t: "space", h: 6 },
     { t: "h", text: "Special Note 1 — Internal (Non-Client) Projects" },
-    { t: "p", text: "Besides client projects, there are INTERNAL, PRESALES, and TRAINING projects — non-commercial projects with no client to invoice. This project kind can only be set by Management or Super Admin (e.g. via the Internal Project option when creating a project)." },
+    { t: "p", text: "Besides client projects, there are non-commercial project kinds with no client to invoice: INTERNAL, PRESALES, and TRAINING. These still need their effort (mandays) and cost tracked even though they earn no revenue. The status flow stays the same (DRAFT → OBSERVATION → ACTIVE → COMPLETE → CLOSED); only the billing and BAST requirements are waived." },
+    { t: "h", text: "Non-client project kinds" },
+    { t: "b", text: "INTERNAL — internal company work, e.g. building internal tools/products, research, or team operations." },
+    { t: "b", text: "PRESALES — pre-contract activity, e.g. preparing proposals, a Proof of Concept (PoC), or a demo for a prospective client." },
+    { t: "b", text: "TRAINING — internal team training or certification activities." },
+    { t: "h", text: "How to create an internal project" },
+    { t: "b", text: "Only Management or Super Admin can create or set it. On Projects > New Project, enable the Internal Project option (non-client kind)." },
+    { t: "b", text: "The Client and Contract Value fields are not required because there is no client to invoice. Internal cost is still computed from Estimated Cost plus APPROVED Timesheets and Expenses." },
+    { t: "h", text: "What looks different" },
     { t: "b", text: "The Billing and Report tabs are hidden for non-client projects because there is no client billing." },
     { t: "b", text: "The Financials tab stays visible but changes into internal cost tracking: Budget (Estimated Cost), Actual Cost, Accrued Cost, Remaining Budget, Burn Rate, and Forecasted Final Cost — with no revenue, profit, or margin figures." },
     { t: "gate", title: "Requirements WAIVED for non-client projects", items: [
