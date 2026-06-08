@@ -709,8 +709,8 @@ export default function Settings() {
     query: { enabled: !!user, queryKey: ["me"] }
   });
 
-  const canManageXero = user?.role === "MANAGEMENT" || user?.role === "FINANCE";
-  const canManageBusinessRules = user?.role === "MANAGEMENT";
+  const canManageXero = user?.role === "MANAGEMENT" || user?.role === "FINANCE" || user?.role === "SUPER_ADMIN";
+  const canManageBusinessRules = user?.role === "MANAGEMENT" || user?.role === "SUPER_ADMIN";
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
