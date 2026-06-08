@@ -56,10 +56,12 @@ const PublicSurveyPage = lazy(() => import("@/pages/survey/[token]"));
 const PublicClientPortal = lazy(() => import("@/pages/portal/[token]"));
 import { ThemeProvider } from "@/lib/theme";
 
-// Personal "My …" views are open to delivery roles, their Principal
-// supervisors, and Sales. Kept identical to Sidebar's `canSeeMyViews` so the
-// URL-bar policy and the visible menu policy never drift.
+// Personal "My …" views are open to PMs (who can be staffed as a project
+// resource and assigned tasks), delivery roles, their Principal supervisors,
+// and Sales. Kept identical to Sidebar's `canSeeMyViews` so the URL-bar policy
+// and the visible menu policy never drift.
 const MY_VIEW_ROLES = [
+  "PROJECT_MANAGER",
   "KONSULTAN",
   "TECHNICAL_WRITER",
   "ADMIN_PROJECT",

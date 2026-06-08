@@ -72,12 +72,13 @@ export default function Sidebar() {
 
   const canSeeLeads = sa || user?.role === "SALES";
 
-  // "My …" personal views — for delivery roles (Konsultan, TW, Admin Project)
-  // and their Principal supervisors, plus Sales. Gives them a paginated +
-  // exportable history of their own work without needing to dig into each
-  // project tab.
+  // "My …" personal views — for PMs (who can be staffed onto a project and
+  // assigned tasks), delivery roles (Konsultan, TW, Admin Project) and their
+  // Principal supervisors, plus Sales. Gives them a paginated + exportable
+  // history of their own work without needing to dig into each project tab.
   const canSeeMyViews =
     sa ||
+    user?.role === "PROJECT_MANAGER" ||
     user?.role === "KONSULTAN" ||
     user?.role === "TECHNICAL_WRITER" ||
     user?.role === "ADMIN_PROJECT" ||

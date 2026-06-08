@@ -187,9 +187,9 @@ function menuGroups(): MenuGroup[] {
     {
       heading: "OPERATIONS",
       items: [
-        { label: "My Tasks", roles: ["SALES", "KONTW", "AP", "PRIN"], fn: t("Daftar task yang ditugaskan kepada Anda beserta statusnya.", "List of tasks assigned to you and their status.") },
-        { label: "My Timesheet", roles: ["KONTW", "AP", "PRIN"], fn: t("Riwayat timesheet pribadi Anda.", "Your personal timesheet history.") },
-        { label: "My Expenses", roles: ["SALES", "KONTW", "AP", "PRIN"], fn: t("Pengajuan biaya (expense) pribadi Anda dan statusnya.", "Your personal expense submissions and their status.") },
+        { label: "My Tasks", roles: ["PM", "SALES", "KONTW", "AP", "PRIN"], fn: t("Daftar task yang ditugaskan kepada Anda beserta statusnya. PM yang ikut menjadi resource & ditugaskan task juga melihat menu ini.", "List of tasks assigned to you and their status. PMs who are staffed as a resource and assigned tasks also see this menu.") },
+        { label: "My Timesheet", roles: ["PM", "KONTW", "AP", "PRIN"], fn: t("Riwayat timesheet pribadi Anda.", "Your personal timesheet history.") },
+        { label: "My Expenses", roles: ["PM", "SALES", "KONTW", "AP", "PRIN"], fn: t("Pengajuan biaya (expense) pribadi Anda dan statusnya.", "Your personal expense submissions and their status.") },
         { label: "Sales Pipeline", roles: ["SALES"], fn: t("Papan kanban lead/prospek penjualan dari kontak awal sampai konversi menjadi proyek.", "Sales lead/prospect kanban board from first contact to conversion into a project.") },
         { label: "Approval Inbox", roles: ["PM"], fn: t("Kotak persetujuan timesheet tim untuk di-approve/reject oleh PM.", "Inbox of team timesheets for the PM to approve/reject.") },
         { label: "Resources", roles: ["MGMT", "PM", "PRIN"], fn: t("Mengatur penempatan orang (staffing) pada proyek.", "Manage staffing (people assignment) on projects.") },
@@ -249,9 +249,9 @@ function matrixRows(): { label: string; roles: Set<string> }[] {
     { label: "Dashboard", roles: expand(["ALL"]) },
     { label: "Projects", roles: expand(["MGMT", "PM", "SALES", "KONTW", "AP", "FIN", "PRIN"]) },
     { label: "Time Tracking", roles: expand(["PM", "KONTW", "AP", "PRIN"]) },
-    { label: "My Tasks", roles: expand(["SALES", "KONTW", "AP", "PRIN"]) },
-    { label: "My Timesheet", roles: expand(["KONTW", "AP", "PRIN"]) },
-    { label: "My Expenses", roles: expand(["SALES", "KONTW", "AP", "PRIN"]) },
+    { label: "My Tasks", roles: expand(["PM", "SALES", "KONTW", "AP", "PRIN"]) },
+    { label: "My Timesheet", roles: expand(["PM", "KONTW", "AP", "PRIN"]) },
+    { label: "My Expenses", roles: expand(["PM", "SALES", "KONTW", "AP", "PRIN"]) },
     { label: "Sales Pipeline", roles: expand(["SALES"]) },
     { label: "Approval Inbox", roles: expand(["PM"]) },
     { label: "Resources", roles: expand(["MGMT", "PM", "PRIN"]) },
@@ -308,7 +308,7 @@ function cover(): Paragraph[] {
     }),
     new Paragraph({
       alignment: AlignmentType.CENTER,
-      children: [new TextRun({ text: t("Versi 1.1", "Version 1.1"), size: 22, font: FONT })],
+      children: [new TextRun({ text: t("Versi 1.2", "Version 1.2"), size: 22, font: FONT })],
     }),
     new Paragraph({
       alignment: AlignmentType.CENTER,

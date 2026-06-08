@@ -57,6 +57,7 @@ import {
 } from "recharts";
 import WelcomeBanner from "@/components/dashboard/WelcomeBanner";
 import WorkHoursCard from "@/components/WorkHoursCard";
+import MyTasksCard from "@/components/dashboard/MyTasksCard";
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 function SpkMissingIcon() {
@@ -221,6 +222,8 @@ export default function PMDashboard() {
       <WelcomeBanner subtitle="Snapshot of your active projects, approval queue, and team status." />
 
       <WorkHoursCard />
+
+      <MyTasksCard />
 
       <Link href="/reports">
         <Card className="cursor-pointer border-primary/30 bg-primary/5 hover:border-primary/60 transition" data-testid="card-reports-shortcut">
