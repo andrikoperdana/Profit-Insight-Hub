@@ -308,7 +308,7 @@ function cover(): Paragraph[] {
     }),
     new Paragraph({
       alignment: AlignmentType.CENTER,
-      children: [new TextRun({ text: t("Versi 1.0", "Version 1.0"), size: 22, font: FONT })],
+      children: [new TextRun({ text: t("Versi 1.1", "Version 1.1"), size: 22, font: FONT })],
     }),
     new Paragraph({
       alignment: AlignmentType.CENTER,
@@ -503,6 +503,66 @@ function sidebarSection(): (Paragraph | Table)[] {
   return out;
 }
 
+function projectNotesSection(): (Paragraph | Table)[] {
+  return [
+    h1(t("4. Catatan: Jenis Project & Status", "4. Notes: Project Kinds & Status")),
+    p(t(
+      "Bagian ini melengkapi panduan menu dengan dua hal yang memengaruhi tampilan di dalam detail proyek: jenis project non-klien (internal) dan status PAUSE.",
+      "This section supplements the menu guide with two things that affect what you see inside a project's detail page: non-client (internal) project kinds and the PAUSE status.",
+    )),
+
+    h2(t("4.1 Project non-klien (internal)", "4.1 Non-client (internal) projects")),
+    p(t(
+      "Selain project untuk klien, ada jenis project non-komersial yang tidak menagih ke klien: INTERNAL, PRESALES, dan TRAINING. Project ini tetap perlu dipantau effort (mandays) dan biayanya walaupun tidak menghasilkan pendapatan. Alur statusnya sama (DRAFT → OBSERVATION → ACTIVE → COMPLETE → CLOSED); yang berbeda hanya syarat penagihan dan BAST yang dilewati.",
+      "Besides client projects, there are non-commercial project kinds with no client to invoice: INTERNAL, PRESALES, and TRAINING. These still need their effort (mandays) and cost tracked even though they earn no revenue. The status flow is the same (DRAFT → OBSERVATION → ACTIVE → COMPLETE → CLOSED); only the billing and BAST requirements are waived.",
+    )),
+    h3(t("Jenis project non-klien", "Non-client project kinds")),
+    labelled("INTERNAL", t("pekerjaan internal perusahaan, mis. pengembangan tools/produk internal, riset, atau kegiatan operasional tim.", "internal company work, e.g. building internal tools/products, research, or team operations.")),
+    labelled("PRESALES", t("aktivitas sebelum kontrak, mis. penyusunan proposal, Proof of Concept (PoC), atau demo untuk calon klien.", "pre-contract activity, e.g. preparing proposals, a Proof of Concept (PoC), or a demo for a prospective client.")),
+    labelled("TRAINING", t("kegiatan pelatihan atau sertifikasi internal tim.", "internal team training or certification activities.")),
+    h3(t("Cara membuat", "How to create")),
+    bullet(t(
+      "Hanya Management (atau Super Admin) yang dapat menetapkan project sebagai non-klien. Pada Projects > New Project, pilih client khusus bernama \"Internal\" — jenis project otomatis menjadi Internal dan kolom nilai berubah menjadi Internal Budget.",
+      "Only Management (or Super Admin) can mark a project as non-client. On Projects > New Project, choose the special client named \"Internal\" — the project kind automatically becomes Internal and the value field changes to Internal Budget.",
+    )),
+    bullet(t(
+      "Client tetap dipilih (yaitu client \"Internal\"); dokumen komersial seperti SPK, kontrak, dan PPN tidak digunakan. Biaya internal tetap dihitung dari Estimated Cost serta Timesheet dan Expense yang sudah APPROVED.",
+      "A client is still selected (the \"Internal\" client); commercial documents such as the SPK, contract, and VAT are not used. Internal cost is still computed from Estimated Cost plus APPROVED Timesheets and Expenses.",
+    )),
+    h3(t("Yang berbeda di tampilan", "What looks different")),
+    bullet(t(
+      "Tab Billing dan Report disembunyikan untuk project non-klien karena tidak ada penagihan ke klien.",
+      "The Billing and Report tabs are hidden for non-client projects because there is no client billing.",
+    )),
+    bullet(t(
+      "Tab Financials tetap tampil, tetapi berubah menjadi pemantauan biaya internal: Budget (Estimated Cost), Actual Cost, Accrued Cost, Remaining Budget, Burn Rate, dan Forecasted Final Cost — tanpa angka pendapatan, profit, atau margin.",
+      "The Financials tab stays visible but changes into internal cost tracking: Budget (Estimated Cost), Actual Cost, Accrued Cost, Remaining Budget, Burn Rate, and Forecasted Final Cost — with no revenue, profit, or margin figures.",
+    )),
+    bullet(t(
+      "Saat ACTIVE syarat Contract Value > 0 dan total Billing Milestone 100% dilewati; saat COMPLETE tidak perlu menutup Billing Milestone PLANNED dan tidak perlu dokumen BAST.",
+      "At ACTIVE the Contract Value > 0 and 100% Billing Milestone requirements are waived; at COMPLETE there is no need to close PLANNED Billing Milestones and no BAST document is required.",
+    )),
+
+    h2(t("4.2 Status PAUSE (jeda sementara)", "4.2 PAUSE status (temporary hold)")),
+    p(t(
+      "PAUSE dipakai bila project dihentikan sementara — misalnya menunggu konfirmasi klien, dokumen, atau pembayaran — tanpa membatalkannya. Setelah hambatan selesai, project dilanjutkan kembali ke ACTIVE.",
+      "PAUSE is used when a project is temporarily halted — for example waiting on client confirmation, documents, or payment — without cancelling it. Once the blocker is resolved, the project resumes to ACTIVE.",
+    )),
+    bullet(t(
+      "Selama PAUSE, idealnya tidak ada jam kerja atau biaya baru yang dicatat sampai project dilanjutkan.",
+      "While PAUSED, ideally no new work hours or costs are logged until the project resumes.",
+    )),
+    bullet(t(
+      "PAUSE bersifat sementara dan berbeda dari COMPLETE atau CLOSED; seluruh data project tetap utuh.",
+      "PAUSE is temporary and is not the same as COMPLETE or CLOSED; all project data stays intact.",
+    )),
+    bullet(t(
+      "Halaman project menampilkan banner penjelasan selama status PAUSE agar tim memahami situasinya.",
+      "The project page shows an explanatory banner while the status is PAUSE so the team understands the situation.",
+    )),
+  ];
+}
+
 function matrixSection(): (Paragraph | Table)[] {
   const headerLabels = [
     t("Menu", "Menu"),
@@ -549,7 +609,7 @@ function matrixSection(): (Paragraph | Table)[] {
     rows: [head, ...bodyRows],
   });
   return [
-    h1(t("4. Tabel Matriks: Menu vs Role", "4. Matrix: Menu vs Role")),
+    h1(t("5. Tabel Matriks: Menu vs Role", "5. Matrix: Menu vs Role")),
     p(t(
       "Tanda \u2713 berarti role tersebut melihat menu itu; tanda \u2013 berarti tidak. \"Kon/TW\" = Konsultan & Technical Writer; \"Princ.\" mencakup ketiga jenis Principal.",
       "A \u2713 means that role sees the menu; a \u2013 means it does not. \"Kon/TW\" = Konsultan & Technical Writer; \"Princ.\" covers all three Principal types.",
@@ -578,6 +638,7 @@ async function buildDoc(lang: Lang): Promise<void> {
           ...dashboardGeneral(),
           ...dashboardPerRole(),
           ...sidebarSection(),
+          ...projectNotesSection(),
         ],
       },
       {
