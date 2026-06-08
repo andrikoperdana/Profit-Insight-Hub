@@ -50,7 +50,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   ArrowLeft, Building2, User, Calendar, DollarSign, TrendingUp, TrendingDown,
   Activity, Flame, Upload, FileText, Trash2, CheckCircle2, AlertCircle, Plus,
-  Pencil, AlertTriangle, Paperclip, X,
+  Pencil, AlertTriangle, Paperclip, X, PauseCircle,
 } from "lucide-react";
 import { formatIDR, formatDate, formatPct } from "@/lib/format";
 import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
@@ -202,6 +202,24 @@ export default function ProjectDetail() {
           </div>
         )}
       </div>
+
+      {project.status === ProjectStatus.PAUSE && (
+        <div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-4 text-sm text-amber-200">
+          <div className="flex items-start gap-3">
+            <PauseCircle className="h-5 w-5 mt-0.5 shrink-0" />
+            <div className="space-y-1">
+              <p className="font-semibold">This project is paused</p>
+              <p className="text-amber-200/80">
+                Work on this project is temporarily on hold. The team can keep
+                viewing data, but the project is not progressing while paused.
+                When you are ready to continue, change the status back to{" "}
+                <span className="font-medium">Active</span> using the Change
+                Status selector above. The reason for pausing is shown below.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {project.lastStatusReason && (
         <div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-3 text-sm text-amber-200">
