@@ -207,15 +207,27 @@ export default function ProjectDetail() {
         <div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-4 text-sm text-amber-200">
           <div className="flex items-start gap-3">
             <PauseCircle className="h-5 w-5 mt-0.5 shrink-0" />
-            <div className="space-y-1">
-              <p className="font-semibold">This project is paused</p>
-              <p className="text-amber-200/80">
-                Work on this project is temporarily on hold. The team can keep
-                viewing data, but the project is not progressing while paused.
-                When you are ready to continue, change the status back to{" "}
-                <span className="font-medium">Active</span> using the Change
-                Status selector above. The reason for pausing is shown below.
-              </p>
+            <div className="space-y-2">
+              <div className="space-y-1">
+                <p className="font-semibold">This project is paused</p>
+                <p className="text-amber-200/80">
+                  Work on this project is temporarily on hold. The team can keep
+                  viewing data, but the project is not progressing while paused.
+                  When you are ready to continue, change the status back to{" "}
+                  <span className="font-medium">Active</span> using the Change
+                  Status selector above. The reason for pausing is shown below.
+                </p>
+              </div>
+              <div className="space-y-1 border-t border-amber-500/20 pt-2">
+                <p className="font-semibold">Project ini sedang dijeda (Pause)</p>
+                <p className="text-amber-200/80">
+                  Pekerjaan pada project ini dihentikan sementara. Tim masih bisa
+                  melihat data, tetapi project tidak berjalan selama dijeda. Bila
+                  sudah siap melanjutkan, ubah status kembali ke{" "}
+                  <span className="font-medium">Active</span> melalui pilihan
+                  Change Status di atas. Alasan penjedaan ditampilkan di bawah.
+                </p>
+              </div>
             </div>
           </div>
         </div>
