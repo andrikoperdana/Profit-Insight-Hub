@@ -10,6 +10,7 @@ import {
 } from "@workspace/db";
 import { runPaymentSync } from "./routes/xero.js";
 import { xeroConfigured } from "./lib/xero.js";
+import { getAppSettings } from "./lib/app-settings.js";
 
 const rawPort = process.env["PORT"];
 
@@ -64,17 +65,39 @@ const server = app.listen(port, (err?: Error) => {
   logger.info({ port }, "Server listening");
 });
 
+// Keep the database connection warm. Serverless Postgres (Neon) autosuspends
+// its compute after a short idle window; the first request after a suspend then
+// pays a multi-second cold-start. A lightweight periodic ping keeps the compute
+// awake so user-facing requests stay fast. Interval is overridable via
+// DB_KEEPALIVE_MS (set to 0 to disable). Default 4 min stays under the typical
+// 5 min autosuspend window.
+const rawKeepalive = process.env["DB_KEEPALIVE_MS"];
+const keepaliveMs = rawKeepalive !== undefined ? Number(rawKeepalive) : 4 * 60_000;
+if (Number.isFinite(keepaliveMs) && keepaliveMs > 0) {
+  const keepalive = setInterval(() => {
+    prisma
+      .$queryRaw`SELECT 1`
+      .catch((err) => logger.warn({ err }, "DB keepalive ping failed (continuing)"));
+  }, keepaliveMs);
+  keepalive.unref();
+}
+
 // Poll Xero for invoice payment status and mark fully-paid milestones PAID.
-// Manual sync is still available from the UI; this just keeps things fresh
-// without webhooks. No-op until Xero is configured + connected (runPaymentSync
-// short-circuits when there are no pushed invoices, and getValidAccessToken
-// throws harmlessly if disconnected).
+// Manual sync is still available from the UI regardless of this setting; this
+// just keeps things fresh without webhooks. Gated behind the AppSetting
+// `xeroAutoSyncEnabled` (default OFF) so the background poll never runs unless
+// an operator explicitly turns it on. No-op until Xero is configured +
+// connected (runPaymentSync short-circuits when there are no pushed invoices,
+// and getValidAccessToken throws harmlessly if disconnected).
 const XERO_POLL_MS = 30 * 60_000;
 if (xeroConfigured()) {
   const poll = setInterval(() => {
-    runPaymentSync()
-      .then((r) => {
-        if (r.updated > 0) logger.info(r, "Xero payment poll updated milestones");
+    getAppSettings()
+      .then((settings) => {
+        if (!settings.xeroAutoSyncEnabled) return;
+        return runPaymentSync().then((r) => {
+          if (r.updated > 0) logger.info(r, "Xero payment poll updated milestones");
+        });
       })
       .catch((err) => logger.warn({ err }, "Xero payment poll failed (continuing)"));
   }, XERO_POLL_MS);

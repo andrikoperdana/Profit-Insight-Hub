@@ -46400,6 +46400,7 @@ export namespace Prisma {
     budgetOverrunPct: number | null
     invoiceDueSoonDays: number | null
     lateTimesheetDays: number | null
+    xeroAutoSyncEnabled: boolean | null
     updatedAt: Date | null
     updatedById: string | null
   }
@@ -46412,6 +46413,7 @@ export namespace Prisma {
     budgetOverrunPct: number | null
     invoiceDueSoonDays: number | null
     lateTimesheetDays: number | null
+    xeroAutoSyncEnabled: boolean | null
     updatedAt: Date | null
     updatedById: string | null
   }
@@ -46424,6 +46426,7 @@ export namespace Prisma {
     budgetOverrunPct: number
     invoiceDueSoonDays: number
     lateTimesheetDays: number
+    xeroAutoSyncEnabled: number
     updatedAt: number
     updatedById: number
     _all: number
@@ -46456,6 +46459,7 @@ export namespace Prisma {
     budgetOverrunPct?: true
     invoiceDueSoonDays?: true
     lateTimesheetDays?: true
+    xeroAutoSyncEnabled?: true
     updatedAt?: true
     updatedById?: true
   }
@@ -46468,6 +46472,7 @@ export namespace Prisma {
     budgetOverrunPct?: true
     invoiceDueSoonDays?: true
     lateTimesheetDays?: true
+    xeroAutoSyncEnabled?: true
     updatedAt?: true
     updatedById?: true
   }
@@ -46480,6 +46485,7 @@ export namespace Prisma {
     budgetOverrunPct?: true
     invoiceDueSoonDays?: true
     lateTimesheetDays?: true
+    xeroAutoSyncEnabled?: true
     updatedAt?: true
     updatedById?: true
     _all?: true
@@ -46579,6 +46585,7 @@ export namespace Prisma {
     budgetOverrunPct: number
     invoiceDueSoonDays: number
     lateTimesheetDays: number
+    xeroAutoSyncEnabled: boolean
     updatedAt: Date
     updatedById: string | null
     _count: AppSettingCountAggregateOutputType | null
@@ -46610,6 +46617,7 @@ export namespace Prisma {
     budgetOverrunPct?: boolean
     invoiceDueSoonDays?: boolean
     lateTimesheetDays?: boolean
+    xeroAutoSyncEnabled?: boolean
     updatedAt?: boolean
     updatedById?: boolean
   }, ExtArgs["result"]["appSetting"]>
@@ -46622,6 +46630,7 @@ export namespace Prisma {
     budgetOverrunPct?: boolean
     invoiceDueSoonDays?: boolean
     lateTimesheetDays?: boolean
+    xeroAutoSyncEnabled?: boolean
     updatedAt?: boolean
     updatedById?: boolean
   }, ExtArgs["result"]["appSetting"]>
@@ -46634,6 +46643,7 @@ export namespace Prisma {
     budgetOverrunPct?: boolean
     invoiceDueSoonDays?: boolean
     lateTimesheetDays?: boolean
+    xeroAutoSyncEnabled?: boolean
     updatedAt?: boolean
     updatedById?: boolean
   }
@@ -46650,6 +46660,7 @@ export namespace Prisma {
       budgetOverrunPct: number
       invoiceDueSoonDays: number
       lateTimesheetDays: number
+      xeroAutoSyncEnabled: boolean
       updatedAt: Date
       updatedById: string | null
     }, ExtArgs["result"]["appSetting"]>
@@ -47052,6 +47063,7 @@ export namespace Prisma {
     readonly budgetOverrunPct: FieldRef<"AppSetting", 'Float'>
     readonly invoiceDueSoonDays: FieldRef<"AppSetting", 'Int'>
     readonly lateTimesheetDays: FieldRef<"AppSetting", 'Int'>
+    readonly xeroAutoSyncEnabled: FieldRef<"AppSetting", 'Boolean'>
     readonly updatedAt: FieldRef<"AppSetting", 'DateTime'>
     readonly updatedById: FieldRef<"AppSetting", 'String'>
   }
@@ -48961,6 +48973,7 @@ export namespace Prisma {
     budgetOverrunPct: 'budgetOverrunPct',
     invoiceDueSoonDays: 'invoiceDueSoonDays',
     lateTimesheetDays: 'lateTimesheetDays',
+    xeroAutoSyncEnabled: 'xeroAutoSyncEnabled',
     updatedAt: 'updatedAt',
     updatedById: 'updatedById'
   };
@@ -53096,6 +53109,7 @@ export namespace Prisma {
     budgetOverrunPct?: FloatFilter<"AppSetting"> | number
     invoiceDueSoonDays?: IntFilter<"AppSetting"> | number
     lateTimesheetDays?: IntFilter<"AppSetting"> | number
+    xeroAutoSyncEnabled?: BoolFilter<"AppSetting"> | boolean
     updatedAt?: DateTimeFilter<"AppSetting"> | Date | string
     updatedById?: StringNullableFilter<"AppSetting"> | string | null
   }
@@ -53108,6 +53122,7 @@ export namespace Prisma {
     budgetOverrunPct?: SortOrder
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
+    xeroAutoSyncEnabled?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrderInput | SortOrder
   }
@@ -53123,6 +53138,7 @@ export namespace Prisma {
     budgetOverrunPct?: FloatFilter<"AppSetting"> | number
     invoiceDueSoonDays?: IntFilter<"AppSetting"> | number
     lateTimesheetDays?: IntFilter<"AppSetting"> | number
+    xeroAutoSyncEnabled?: BoolFilter<"AppSetting"> | boolean
     updatedAt?: DateTimeFilter<"AppSetting"> | Date | string
     updatedById?: StringNullableFilter<"AppSetting"> | string | null
   }, "id">
@@ -53135,6 +53151,7 @@ export namespace Prisma {
     budgetOverrunPct?: SortOrder
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
+    xeroAutoSyncEnabled?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrderInput | SortOrder
     _count?: AppSettingCountOrderByAggregateInput
@@ -53155,6 +53172,7 @@ export namespace Prisma {
     budgetOverrunPct?: FloatWithAggregatesFilter<"AppSetting"> | number
     invoiceDueSoonDays?: IntWithAggregatesFilter<"AppSetting"> | number
     lateTimesheetDays?: IntWithAggregatesFilter<"AppSetting"> | number
+    xeroAutoSyncEnabled?: BoolWithAggregatesFilter<"AppSetting"> | boolean
     updatedAt?: DateTimeWithAggregatesFilter<"AppSetting"> | Date | string
     updatedById?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
   }
@@ -57317,6 +57335,7 @@ export namespace Prisma {
     budgetOverrunPct?: number
     invoiceDueSoonDays?: number
     lateTimesheetDays?: number
+    xeroAutoSyncEnabled?: boolean
     updatedAt?: Date | string
     updatedById?: string | null
   }
@@ -57329,6 +57348,7 @@ export namespace Prisma {
     budgetOverrunPct?: number
     invoiceDueSoonDays?: number
     lateTimesheetDays?: number
+    xeroAutoSyncEnabled?: boolean
     updatedAt?: Date | string
     updatedById?: string | null
   }
@@ -57341,6 +57361,7 @@ export namespace Prisma {
     budgetOverrunPct?: FloatFieldUpdateOperationsInput | number
     invoiceDueSoonDays?: IntFieldUpdateOperationsInput | number
     lateTimesheetDays?: IntFieldUpdateOperationsInput | number
+    xeroAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -57353,6 +57374,7 @@ export namespace Prisma {
     budgetOverrunPct?: FloatFieldUpdateOperationsInput | number
     invoiceDueSoonDays?: IntFieldUpdateOperationsInput | number
     lateTimesheetDays?: IntFieldUpdateOperationsInput | number
+    xeroAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -57365,6 +57387,7 @@ export namespace Prisma {
     budgetOverrunPct?: number
     invoiceDueSoonDays?: number
     lateTimesheetDays?: number
+    xeroAutoSyncEnabled?: boolean
     updatedAt?: Date | string
     updatedById?: string | null
   }
@@ -57377,6 +57400,7 @@ export namespace Prisma {
     budgetOverrunPct?: FloatFieldUpdateOperationsInput | number
     invoiceDueSoonDays?: IntFieldUpdateOperationsInput | number
     lateTimesheetDays?: IntFieldUpdateOperationsInput | number
+    xeroAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -57389,6 +57413,7 @@ export namespace Prisma {
     budgetOverrunPct?: FloatFieldUpdateOperationsInput | number
     invoiceDueSoonDays?: IntFieldUpdateOperationsInput | number
     lateTimesheetDays?: IntFieldUpdateOperationsInput | number
+    xeroAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -60464,6 +60489,7 @@ export namespace Prisma {
     budgetOverrunPct?: SortOrder
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
+    xeroAutoSyncEnabled?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrder
   }
@@ -60485,6 +60511,7 @@ export namespace Prisma {
     budgetOverrunPct?: SortOrder
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
+    xeroAutoSyncEnabled?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrder
   }
@@ -60497,6 +60524,7 @@ export namespace Prisma {
     budgetOverrunPct?: SortOrder
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
+    xeroAutoSyncEnabled?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrder
   }

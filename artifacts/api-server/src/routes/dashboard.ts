@@ -20,6 +20,14 @@ router.use(requireAuth);
 // short window; 30s matches the frontend React Query staleTime.
 const utilizationDetailCache = new TtlCache<unknown>(30_000);
 
+// Read-only portfolio aggregations (summary KPIs, profit trend, status mix,
+// approval aging, utilization trend). These re-scan the whole project/timesheet
+// set on every call and are hit by every dashboard load. Cache per caller scope
+// for a short window matching the frontend React Query staleTime (30s). Keys
+// MUST encode any scope that changes the result (role, pmId, query params) so
+// one caller never serves another's payload.
+const aggregationCache = new TtlCache<unknown>(30_000);
+
 // Roles that must NOT see commercial portfolio figures via dashboard endpoints.
 // Mirrors the financials masking in serializers.ts.
 function requireFinancialView(req: any, res: any): boolean {
@@ -32,6 +40,12 @@ function requireFinancialView(req: any, res: any): boolean {
 
 router.get("/dashboard/summary", async (req, res) => {
   if (!requireFinancialView(req, res)) return;
+  // Portfolio totals are identical for every financial-viewer role.
+  const cached = aggregationCache.get("summary");
+  if (cached) {
+    res.json(cached);
+    return;
+  }
   // Executive KPIs are commercial; exclude non-billable INTERNAL/PRESALES/TRAINING.
   // Use the metrics-only select (not projectInclude) so we don't pull full user
   // rows / RAID / billing relations for every project just to aggregate.
@@ -78,7 +92,7 @@ router.get("/dashboard/summary", async (req, res) => {
     totalContractValue > 0 ? (totalActualProfit / totalContractValue) * 100 : 0;
   const weightedNetMarginPct =
     totalRevenueNet > 0 ? (totalNetActualProfit / totalRevenueNet) * 100 : 0;
-  res.json({
+  const payload = {
     totalProjects,
     activeProjects,
     totalContractValue,
@@ -94,11 +108,18 @@ router.get("/dashboard/summary", async (req, res) => {
     weightedNetMarginPct,
     pendingTimesheets,
     totalMandays,
-  });
+  };
+  aggregationCache.set("summary", payload);
+  res.json(payload);
 });
 
 router.get("/dashboard/profit-trend", async (req, res) => {
   if (!requireFinancialView(req, res)) return;
+  const cachedTrend = aggregationCache.get("profit-trend");
+  if (cachedTrend) {
+    res.json(cachedTrend);
+    return;
+  }
   // Group approved timesheets by month for cost; spread project contract value
   // Only CLIENT projects contribute to commercial profit trend.
   const projects = (await prisma.project.findMany({
@@ -135,29 +156,34 @@ router.get("/dashboard/profit-trend", async (req, res) => {
     }
   }
   const sorted = Array.from(monthly.keys()).sort();
-  res.json(
-    sorted.map((month) => {
-      const v = monthly.get(month)!;
-      return { month, revenue: v.revenue, cost: v.cost, profit: v.revenue - v.cost };
-    }),
-  );
+  const trendPayload = sorted.map((month) => {
+    const v = monthly.get(month)!;
+    return { month, revenue: v.revenue, cost: v.cost, profit: v.revenue - v.cost };
+  });
+  aggregationCache.set("profit-trend", trendPayload);
+  res.json(trendPayload);
 });
 
 router.get("/dashboard/status-breakdown", async (req, res) => {
   if (!requireFinancialView(req, res)) return;
+  const cachedBreakdown = aggregationCache.get("status-breakdown");
+  if (cachedBreakdown) {
+    res.json(cachedBreakdown);
+    return;
+  }
   const grouped = await prisma.project.groupBy({
     by: ["status"],
     where: { deletedAt: null },
     _count: { _all: true },
     _sum: { contractValue: true },
   });
-  res.json(
-    grouped.map((g) => ({
-      status: g.status,
-      count: g._count._all,
-      value: g._sum.contractValue ?? 0,
-    })),
-  );
+  const breakdownPayload = grouped.map((g) => ({
+    status: g.status,
+    count: g._count._all,
+    value: g._sum.contractValue ?? 0,
+  }));
+  aggregationCache.set("status-breakdown", breakdownPayload);
+  res.json(breakdownPayload);
 });
 
 router.get("/dashboard/top-projects", async (req, res) => {
@@ -192,6 +218,12 @@ router.get("/dashboard/pending-aging", async (req, res) => {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
+  const agingKey = `pending-aging:${role}:${role === "PROJECT_MANAGER" ? req.user!.sub : "all"}`;
+  const cachedAging = aggregationCache.get(agingKey);
+  if (cachedAging) {
+    res.json(cachedAging);
+    return;
+  }
   const where: any = { status: "SUBMITTED" };
   if (role === "PROJECT_MANAGER") where.project = { pmId: req.user!.sub };
   const list = await prisma.timesheet.findMany({
@@ -213,7 +245,7 @@ router.get("/dashboard/pending-aging", async (req, res) => {
   const aged = list.filter(
     (t) => now - t.createdAt.getTime() > 48 * 60 * 60 * 1000,
   );
-  res.json({
+  const agingPayload = {
     pendingTotal: list.length,
     overdueCount: aged.length,
     oldestHours,
@@ -238,11 +270,19 @@ router.get("/dashboard/pending-aging", async (req, res) => {
       submittedAt: t.createdAt.toISOString(),
       hoursWaiting: Math.round((now - t.createdAt.getTime()) / (60 * 60 * 1000)),
     })),
-  });
+  };
+  aggregationCache.set(agingKey, agingPayload);
+  res.json(agingPayload);
 });
 
 router.get("/dashboard/utilization-trend", async (req, res) => {
   const days = Math.min(Math.max(parseInt(String(req.query.days ?? 30), 10) || 30, 7), 90);
+  const utilKey = `utilization-trend:${days}`;
+  const cachedUtil = aggregationCache.get(utilKey);
+  if (cachedUtil) {
+    res.json(cachedUtil);
+    return;
+  }
   const today = new Date();
   const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   const since = new Date(startOfDay);
@@ -279,7 +319,9 @@ router.get("/dashboard/utilization-trend", async (req, res) => {
     const pct = cap > 0 ? (hrs / cap) * 100 : 0;
     trend.push({ date: k, utilizationPct: pct, hours: hrs });
   }
-  res.json({ days, headcount, trend });
+  const utilPayload = { days, headcount, trend };
+  aggregationCache.set(utilKey, utilPayload);
+  res.json(utilPayload);
 });
 
 router.get("/dashboard/resource-utilization-detail", async (req, res) => {

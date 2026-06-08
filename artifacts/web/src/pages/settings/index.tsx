@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { LoadingPage } from "@/components/common/Loading";
 import { Calendar, Copy, RefreshCw, Check, KeyRound, Upload, Trash2, Link2, Unlink, Loader2, SlidersHorizontal } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -475,6 +476,7 @@ interface AppSettingsShape {
   budgetOverrunPct: number;
   invoiceDueSoonDays: number;
   lateTimesheetDays: number;
+  xeroAutoSyncEnabled: boolean;
 }
 
 function BusinessRulesCard() {
@@ -485,6 +487,7 @@ function BusinessRulesCard() {
   const [budgetOverrun, setBudgetOverrun] = useState("");
   const [invoiceDueSoon, setInvoiceDueSoon] = useState("");
   const [lateTimesheet, setLateTimesheet] = useState("");
+  const [xeroAutoSync, setXeroAutoSync] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -500,6 +503,7 @@ function BusinessRulesCard() {
         setBudgetOverrun(String(s.budgetOverrunPct));
         setInvoiceDueSoon(String(s.invoiceDueSoonDays));
         setLateTimesheet(String(s.lateTimesheetDays));
+        setXeroAutoSync(Boolean(s.xeroAutoSyncEnabled));
       } catch (e: any) {
         if (active) toast({ title: "Failed to load business rules", description: e?.message, variant: "destructive" });
       } finally {
@@ -556,6 +560,7 @@ function BusinessRulesCard() {
           budgetOverrunPct: budgetOverrunNum,
           invoiceDueSoonDays: invoiceDueSoonNum,
           lateTimesheetDays: lateTimesheetNum,
+          xeroAutoSyncEnabled: xeroAutoSync,
         }),
       });
       toast({ title: "Business rules saved", description: "New defaults and alert thresholds apply going forward." });
@@ -664,6 +669,25 @@ function BusinessRulesCard() {
                   value={lateTimesheet}
                   onChange={(e) => setLateTimesheet(e.target.value)}
                   data-testid="input-late-timesheet"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Integrations</p>
+              <div className="flex items-start justify-between gap-4 rounded-md border border-border p-3">
+                <div className="space-y-0.5">
+                  <Label htmlFor="xero-auto-sync">Xero automatic payment sync</Label>
+                  <p className="text-xs text-muted-foreground">
+                    When on, the server checks Xero every 30 minutes and marks fully-paid milestones as paid.
+                    Leave off to avoid background load; manual sync from the Xero card still works.
+                  </p>
+                </div>
+                <Switch
+                  id="xero-auto-sync"
+                  checked={xeroAutoSync}
+                  onCheckedChange={setXeroAutoSync}
+                  data-testid="switch-xero-auto-sync"
                 />
               </div>
             </div>

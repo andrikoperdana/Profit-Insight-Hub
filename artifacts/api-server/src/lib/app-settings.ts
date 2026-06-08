@@ -15,6 +15,7 @@ export interface AppSettings {
   budgetOverrunPct: number;
   invoiceDueSoonDays: number;
   lateTimesheetDays: number;
+  xeroAutoSyncEnabled: boolean;
 }
 
 export const DEFAULT_APP_SETTINGS: AppSettings = {
@@ -24,6 +25,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   budgetOverrunPct: 80,
   invoiceDueSoonDays: 7,
   lateTimesheetDays: 3,
+  xeroAutoSyncEnabled: false,
 };
 
 const CACHE_TTL_MS = 60_000;
@@ -62,6 +64,10 @@ export async function getAppSettings(): Promise<AppSettings> {
       typeof row?.lateTimesheetDays === "number"
         ? row.lateTimesheetDays
         : DEFAULT_APP_SETTINGS.lateTimesheetDays,
+    xeroAutoSyncEnabled:
+      typeof row?.xeroAutoSyncEnabled === "boolean"
+        ? row.xeroAutoSyncEnabled
+        : DEFAULT_APP_SETTINGS.xeroAutoSyncEnabled,
   };
   cache = { value, expiresAt: now + CACHE_TTL_MS };
   return value;

@@ -181,6 +181,21 @@ within one instance; under autoscale two instances can still refresh at once.
   stalling the open transaction toward its timeout.
 **Why:** parallel token rotation desyncs the stored refresh token and breaks all
 later Xero calls until a manual reconnect.
+- Call `pg_advisory_xact_lock` via `tx.$executeRaw`, NOT `tx.$queryRaw`. The lock
+  function returns `void`, and Prisma's `$queryRaw` tries to deserialize a result
+  set — a `void` column fails deserialization and drops the connection (this surfaced
+  as a repeating ~30-min poller error that leaked pool connections). `$executeRaw`
+  expects no rows and is correct for advisory-lock calls.
+
+## Background payment poller is gated behind an AppSetting, default OFF
+The 30-min `runPaymentSync` poller only runs when `getAppSettings().xeroAutoSyncEnabled`
+is true (`AppSetting.xeroAutoSyncEnabled Boolean @default(false)`, toggled in Settings →
+Business Rules, MANAGEMENT-only). **Why:** the poll added steady background DB/HTTP load
+(and, while the $queryRaw bug existed, recurring connection drops) that the org didn't
+always want; manual "Sync from Xero" still works regardless. **How to apply:** never
+re-enable the poll unconditionally; keep the default OFF. The PUT `/api/app-settings`
+validator treats `xeroAutoSyncEnabled` as OPTIONAL (preserve stored value when omitted) so
+a stale client sending the old payload shape doesn't 400 or silently reset it.
 
 ## OAuth state must fail closed
 `/api/xero/callback` is intentionally unauthenticated and site-gate-bypassed; it trusts

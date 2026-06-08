@@ -60,7 +60,18 @@ router.put("/app-settings", requireRole(...MANAGE_ROLES), async (req, res) => {
     return;
   }
 
+  if (body.xeroAutoSyncEnabled !== undefined && typeof body.xeroAutoSyncEnabled !== "boolean") {
+    res.status(400).json({ error: "xeroAutoSyncEnabled must be true or false" });
+    return;
+  }
+
   const before = await prisma.appSetting.findUnique({ where: { id: APP_SETTINGS_ID } });
+  // Optional field: when omitted (e.g. an older client/stale tab), preserve the
+  // current stored value rather than rejecting or silently resetting it.
+  const xeroAutoSyncEnabled =
+    typeof body.xeroAutoSyncEnabled === "boolean"
+      ? body.xeroAutoSyncEnabled
+      : (before?.xeroAutoSyncEnabled ?? false);
   const data = {
     defaultVatPercent: vat,
     timesheetBackdateDays: days,
@@ -68,6 +79,7 @@ router.put("/app-settings", requireRole(...MANAGE_ROLES), async (req, res) => {
     budgetOverrunPct,
     invoiceDueSoonDays,
     lateTimesheetDays,
+    xeroAutoSyncEnabled,
     updatedById: req.user?.sub ?? null,
   };
   const saved = await prisma.appSetting.upsert({
@@ -81,7 +93,7 @@ router.put("/app-settings", requireRole(...MANAGE_ROLES), async (req, res) => {
     action: "app_settings.updated",
     entityType: "AppSetting",
     entityId: saved.id,
-    description: `Updated business rules (default VAT ${saved.defaultVatPercent}%, timesheet backdate ${saved.timesheetBackdateDays} working days, low-margin alert <${saved.lowMarginPct}%, budget overrun >${saved.budgetOverrunPct}%, invoice due-soon ${saved.invoiceDueSoonDays}d, late timesheet ${saved.lateTimesheetDays}d)`,
+    description: `Updated business rules (default VAT ${saved.defaultVatPercent}%, timesheet backdate ${saved.timesheetBackdateDays} working days, low-margin alert <${saved.lowMarginPct}%, budget overrun >${saved.budgetOverrunPct}%, invoice due-soon ${saved.invoiceDueSoonDays}d, late timesheet ${saved.lateTimesheetDays}d, Xero auto-sync ${saved.xeroAutoSyncEnabled ? "enabled" : "disabled"})`,
     before,
     after: saved,
   });

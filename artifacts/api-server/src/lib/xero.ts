@@ -327,7 +327,7 @@ async function doRefresh(): Promise<{ accessToken: string; tenantId: string }> {
     async (tx) => {
       // Block until any concurrent refresher (this or another instance) releases
       // the lock at its transaction end.
-      await tx.$queryRaw`SELECT pg_advisory_xact_lock(${XERO_TOKEN_LOCK_NS}::int4, ${XERO_TOKEN_LOCK_KEY}::int4)`;
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(${XERO_TOKEN_LOCK_NS}::int4, ${XERO_TOKEN_LOCK_KEY}::int4)`;
       // Re-read under the lock: another refresher may have just rotated the token,
       // in which case we return the fresh one without calling Xero again.
       const conn = await tx.xeroConnection.findUnique({ where: { id: CONNECTION_ID } });

@@ -990,6 +990,7 @@ model AppSetting {
   budgetOverrunPct      Float    @default(80)
   invoiceDueSoonDays    Int      @default(7)
   lateTimesheetDays     Int      @default(3)
+  xeroAutoSyncEnabled   Boolean  @default(false)
   updatedAt             DateTime @updatedAt
   updatedById           String?
 }
