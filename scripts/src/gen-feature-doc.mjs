@@ -242,7 +242,7 @@ children.push(
     ["Peran", "Tanggung jawab utama"],
     [
       ["Management (PMO Director)", "Akses penuh: seluruh project, persetujuan, dan semua angka finansial."],
-      ["Project Manager (PM)", "Mengelola project sendiri, sumber daya, dan menyetujui timesheet timnya."],
+      ["Project Manager (PM)", "Mengelola project sendiri, sumber daya, dan menyetujui timesheet timnya. Dapat pula mencatat timesheet sendiri yang otomatis disetujui (tanpa perlu persetujuan terpisah)."],
       ["Sales", "Membuat klien & project (intake), mengelola data komersial project sendiri."],
       ["Konsultan", "Mencatat timesheet sendiri dan memperbarui status tugas."],
       ["Technical Writer", "Sama seperti konsultan untuk pekerjaan penulisan/laporan."],
@@ -298,7 +298,7 @@ children.push(h1("5. Fitur Utama per Modul"));
 children.push(h2("5.1 Dashboard per Peran"));
 children.push(p("Setiap peran memperoleh dashboard yang disesuaikan dengan kebutuhannya:"));
 children.push(bullet("Management: KPI eksekutif, tren profit, aging penagihan, project berisiko, alokasi PM."));
-children.push(bullet("Project Manager: project aktif, kotak persetujuan, utilisasi, revenue vs profit, peringatan."));
+children.push(bullet("Project Manager: project aktif, kotak persetujuan, utilisasi, revenue vs profit, peringatan, dan kartu My Tasks pribadi."));
 children.push(bullet("Sales: pipeline, revenue per klien, tren profitabilitas."));
 children.push(bullet("Konsultan/TW: ajakan mencatat waktu, tren, dan daftar tugas saya."));
 children.push(bullet("Admin Project: kotak dokumen penutupan."));

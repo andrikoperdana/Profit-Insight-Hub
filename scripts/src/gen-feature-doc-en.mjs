@@ -225,7 +225,7 @@ full.push(
     ["Role", "Main responsibility"],
     [
       ["Management (PMO Director)", "Full access: all projects, approvals, and every financial figure."],
-      ["Project Manager (PM)", "Manages own projects, resources, and approves their team's timesheets."],
+      ["Project Manager (PM)", "Manages own projects, resources, and approves their team's timesheets. May also log their own timesheets, which are auto-approved (no separate approval needed)."],
       ["Sales", "Creates clients & projects (intake); manages commercial data of own projects."],
       ["Consultant", "Logs own timesheets and updates task status."],
       ["Technical Writer", "Same as consultant, for writing/reporting work."],
@@ -272,7 +272,7 @@ full.push(h1("5. Core Features by Module"));
 full.push(h2("5.1 Role-Based Dashboards"));
 full.push(p("Each role gets a dashboard tailored to its needs:"));
 full.push(bullet("Management: executive KPIs, profit trend, billing aging, at-risk projects, PM allocation."));
-full.push(bullet("Project Manager: active projects, approval inbox, utilization, revenue vs profit, alerts."));
+full.push(bullet("Project Manager: active projects, approval inbox, utilization, revenue vs profit, alerts, and a personal My Tasks card."));
 full.push(bullet("Sales: pipeline, revenue per client, profitability trend."));
 full.push(bullet("Consultant/TW: log-time prompt, trend, and my-tasks list."));
 full.push(bullet("Project Admin: closing-document inbox."));
