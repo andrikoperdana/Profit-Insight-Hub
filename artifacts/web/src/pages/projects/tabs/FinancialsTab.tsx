@@ -126,7 +126,7 @@ function FinancialsTab({ projectId, isCommercial = true }: { projectId: string; 
             subtitle="Includes SUBMITTED + APPROVED timesheets"
           />
           <FinancialCard
-            icon={remainingPositive ? <TrendingUp className="h-4 w-4 text-primary" /> : <TrendingDown className="h-4 w-4 text-destructive" />}
+            icon={remainingPositive ? <TrendingUp className="h-4 w-4 text-success" /> : <TrendingDown className="h-4 w-4 text-destructive" />}
             label="Remaining Budget"
             value={formatIDR(remaining)}
             subtitle={remainingPositive ? "Within budget" : "Over budget"}
@@ -234,28 +234,28 @@ function FinancialsTab({ projectId, isCommercial = true }: { projectId: string; 
           subtitle="Includes SUBMITTED + APPROVED timesheets"
         />
         <FinancialCard
-          icon={profitPositive ? <TrendingUp className="h-4 w-4 text-primary" /> : <TrendingDown className="h-4 w-4 text-destructive" />}
+          icon={profitPositive ? <TrendingUp className="h-4 w-4 text-success" /> : <TrendingDown className="h-4 w-4 text-destructive" />}
           label="Actual Profit / Loss"
           value={formatIDR(f.actualProfit ?? 0)}
           subtitle={`${formatPct(f.marginPct ?? 0)} gross margin`}
           tone={profitPositive ? "good" : "bad"}
         />
         <FinancialCard
-          icon={(f.netActualProfit ?? 0) >= 0 ? <TrendingUp className="h-4 w-4 text-primary" /> : <TrendingDown className="h-4 w-4 text-destructive" />}
+          icon={(f.netActualProfit ?? 0) >= 0 ? <TrendingUp className="h-4 w-4 text-success" /> : <TrendingDown className="h-4 w-4 text-destructive" />}
           label="Net Profit (after overhead)"
           value={formatIDR(f.netActualProfit ?? 0)}
           subtitle={`Loaded cost: ${formatIDR(f.netActualCost ?? 0)} (overhead ×${(f.overheadMultiplier ?? 1).toFixed(2)})`}
           tone={(f.netActualProfit ?? 0) >= 0 ? "good" : "bad"}
         />
         <FinancialCard
-          icon={(f.netMarginPct ?? 0) >= 0 ? <TrendingUp className="h-4 w-4 text-primary" /> : <TrendingDown className="h-4 w-4 text-destructive" />}
+          icon={(f.netMarginPct ?? 0) >= 0 ? <TrendingUp className="h-4 w-4 text-success" /> : <TrendingDown className="h-4 w-4 text-destructive" />}
           label="Net Margin"
           value={formatPct(f.netMarginPct ?? 0)}
           subtitle={`Net profit ÷ DPP · overhead ×${(f.overheadMultiplier ?? 1).toFixed(2)}`}
           tone={(f.netMarginPct ?? 0) >= 0 ? "good" : "bad"}
         />
         <FinancialCard
-          icon={forecastPositive ? <TrendingUp className="h-4 w-4 text-primary" /> : <TrendingDown className="h-4 w-4 text-destructive" />}
+          icon={forecastPositive ? <TrendingUp className="h-4 w-4 text-success" /> : <TrendingDown className="h-4 w-4 text-destructive" />}
           label="Forecasted Final Profit"
           value={formatIDR(f.forecastProfit ?? 0)}
           subtitle={`Projected cost: ${formatIDR(f.forecastCost ?? 0)}`}
@@ -269,7 +269,7 @@ function FinancialsTab({ projectId, isCommercial = true }: { projectId: string; 
           progress={Math.min(f.burnRatePct ?? 0, 100)}
         />
         <FinancialCard
-          icon={(f.marginPct ?? 0) >= 0 ? <TrendingUp className="h-4 w-4 text-primary" /> : <TrendingDown className="h-4 w-4 text-destructive" />}
+          icon={(f.marginPct ?? 0) >= 0 ? <TrendingUp className="h-4 w-4 text-success" /> : <TrendingDown className="h-4 w-4 text-destructive" />}
           label="Gross Margin"
           value={formatPct(f.marginPct ?? 0)}
           subtitle="Actual profit ÷ gross revenue"
@@ -336,7 +336,7 @@ function FinancialCard({ icon, label, value, subtitle, tone, progress }: {
   progress?: number;
 }) {
   const valueColor =
-    tone === "good" ? "text-primary" :
+    tone === "good" ? "text-success" :
     tone === "bad" ? "text-destructive" :
     "text-foreground";
   return (
@@ -367,7 +367,7 @@ function WhatIfCard({ projectId, avgRateHint }: { projectId: string; avgRateHint
   const baseMargin = data?.base.marginPct ?? 0;
   const scenarioMargin = data?.scenario.marginPct ?? 0;
   const delta = scenarioMargin - baseMargin;
-  const tone = scenarioMargin >= 0 ? "text-primary" : "text-destructive";
+  const tone = scenarioMargin >= 0 ? "text-success" : "text-destructive";
 
   return (
     <Card className="border-border shadow-sm">
@@ -433,7 +433,7 @@ function WhatIfCard({ projectId, avgRateHint }: { projectId: string; avgRateHint
             </p>
             <p className="text-[10px] text-muted-foreground mt-1">
               vs base {formatPct(baseMargin)} ·{" "}
-              <span className={delta >= 0 ? "text-primary" : "text-destructive"}>
+              <span className={delta >= 0 ? "text-success" : "text-destructive"}>
                 {delta >= 0 ? "+" : ""}
                 {formatPct(delta)}
               </span>

@@ -1550,7 +1550,7 @@ function FullProjectForm() {
 
 function SummaryStat({ label, value, mono, highlight }: { label: string; value: string; mono?: boolean; highlight?: "good" | "bad" }) {
   const color =
-    highlight === "good" ? "text-primary" :
+    highlight === "good" ? "text-success" :
       highlight === "bad" ? "text-destructive" :
         "text-foreground";
   return (

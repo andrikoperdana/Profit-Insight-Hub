@@ -623,7 +623,7 @@ export default function PMDashboard() {
                         {formatIDR(p.contractValue)}
                       </TableCell>
                       <TableCell
-                        className={`text-right font-mono text-sm ${(p.actualProfit ?? 0) >= 0 ? "text-primary" : "text-destructive"}`}
+                        className={`text-right font-mono text-sm ${(p.actualProfit ?? 0) >= 0 ? "text-success" : "text-destructive"}`}
                       >
                         {formatIDR(p.actualProfit ?? 0)}
                       </TableCell>

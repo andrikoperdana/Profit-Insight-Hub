@@ -224,8 +224,8 @@ export default function BusinessIntelligencePage() {
                       <TableCell className="text-right">{r.projectCount}</TableCell>
                       <TableCell className="text-right">{formatIDR(r.revenue)}</TableCell>
                       <TableCell className="text-right">{formatIDR(r.cost)}</TableCell>
-                      <TableCell className={`text-right font-semibold ${r.profit >= 0 ? "text-primary" : "text-destructive"}`}>{formatIDR(r.profit)}</TableCell>
-                      <TableCell className={`text-right ${r.avgMarginPct >= 20 ? "text-primary" : r.avgMarginPct >= 0 ? "text-amber-400" : "text-destructive"}`}>{formatPct(r.avgMarginPct)}</TableCell>
+                      <TableCell className={`text-right font-semibold ${r.profit >= 0 ? "text-success" : "text-destructive"}`}>{formatIDR(r.profit)}</TableCell>
+                      <TableCell className={`text-right ${r.avgMarginPct >= 20 ? "text-success" : r.avgMarginPct >= 0 ? "text-amber-400" : "text-destructive"}`}>{formatPct(r.avgMarginPct)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -283,8 +283,8 @@ export default function BusinessIntelligencePage() {
                         <TableCell className="text-right">{t.projectCount}</TableCell>
                         <TableCell className="text-right">{t.teamSize}</TableCell>
                         <TableCell className="text-right">{formatIDR(t.revenue)}</TableCell>
-                        <TableCell className={`text-right font-semibold ${t.profit >= 0 ? "text-primary" : "text-destructive"}`}>{formatIDR(t.profit)}</TableCell>
-                        <TableCell className={`text-right ${t.avgMarginPct >= 20 ? "text-primary" : "text-amber-400"}`}>{formatPct(t.avgMarginPct)}</TableCell>
+                        <TableCell className={`text-right font-semibold ${t.profit >= 0 ? "text-success" : "text-destructive"}`}>{formatIDR(t.profit)}</TableCell>
+                        <TableCell className={`text-right ${t.avgMarginPct >= 20 ? "text-success" : "text-amber-400"}`}>{formatPct(t.avgMarginPct)}</TableCell>
                         <TableCell className="text-right">{formatPct(t.avgUtilizationPct)}</TableCell>
                       </TableRow>
                     ))}
@@ -327,7 +327,7 @@ export default function BusinessIntelligencePage() {
                   {m.shortage > 0 ? (
                     <Badge variant="destructive" className="gap-1"><AlertTriangle className="h-3 w-3" /> Shortage</Badge>
                   ) : (
-                    <Badge variant="secondary" className="gap-1 text-primary"><TrendingUp className="h-3 w-3" /> OK</Badge>
+                    <Badge variant="secondary" className="gap-1 text-success"><TrendingUp className="h-3 w-3" /> OK</Badge>
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">Demand: {m.totalDemandMandays.toFixed(1)} md · Capacity: {m.capacityMandays} md</p>
@@ -373,7 +373,7 @@ export default function BusinessIntelligencePage() {
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <p className={`font-semibold ${p.profit >= 0 ? "text-primary" : "text-destructive"}`}>{formatIDR(p.profit)}</p>
+                    <p className={`font-semibold ${p.profit >= 0 ? "text-success" : "text-destructive"}`}>{formatIDR(p.profit)}</p>
                     <p className="text-xs text-muted-foreground">{formatPct(p.marginPct)}</p>
                   </div>
                 </div>
@@ -397,8 +397,8 @@ function HealthCard({ icon, label, value, positive, subtitle }: { icon: React.Re
           {icon} {label}
         </div>
         <div className="mt-1 flex items-baseline gap-2">
-          <p className={`text-xl md:text-2xl font-bold ${positive ? "text-primary" : "text-destructive"}`}>{value}</p>
-          {positive ? <TrendingUp className="h-4 w-4 text-primary" /> : <TrendingDown className="h-4 w-4 text-destructive" />}
+          <p className={`text-xl md:text-2xl font-bold ${positive ? "text-success" : "text-destructive"}`}>{value}</p>
+          {positive ? <TrendingUp className="h-4 w-4 text-success" /> : <TrendingDown className="h-4 w-4 text-destructive" />}
         </div>
         {subtitle && <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>}
       </CardContent>

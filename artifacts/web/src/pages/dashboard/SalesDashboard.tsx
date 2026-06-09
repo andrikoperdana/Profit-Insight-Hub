@@ -347,7 +347,7 @@ export default function SalesDashboard() {
                     <TableCell>{p.clientName ?? "-"}</TableCell>
                     <TableCell><ProjectStatusBadge status={p.status} /></TableCell>
                     <TableCell className="text-right font-mono text-sm">{formatIDR(p.contractValue)}</TableCell>
-                    <TableCell className={`text-right font-mono text-sm ${(p.actualProfit ?? 0) >= 0 ? "text-primary" : "text-destructive"}`}>{formatIDR(p.actualProfit ?? 0)}</TableCell>
+                    <TableCell className={`text-right font-mono text-sm ${(p.actualProfit ?? 0) >= 0 ? "text-success" : "text-destructive"}`}>{formatIDR(p.actualProfit ?? 0)}</TableCell>
                     <TableCell className="text-center"><MarginBadge marginPct={p.marginPct} /></TableCell>
                   </TableRow>
                 ))}
