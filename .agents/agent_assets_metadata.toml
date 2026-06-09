@@ -377,3 +377,9 @@ id = "7-SHnDXlRUL7rKbetBX2p"
 uri = "file://exports/Fit-Gap-PSOhub-SecureProfit-Hub-2026-06-09.docx"
 type = "word_document"
 title = "Fit-Gap Analysis: SecureProfit Hub vs PSOhub (9 Juni 2026)"
+
+[[outputs]]
+id = "MR-UJdn6zCS9AtDLRu5lB"
+uri = "file://exports/Fit-Gap-PSOhub-SecureProfit-Hub-2026-06-09-EN.docx"
+type = "word_document"
+title = "Fit-Gap Analysis: SecureProfit Hub vs PSOhub (English, June 9, 2026)"
