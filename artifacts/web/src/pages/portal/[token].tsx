@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { CalendarDays, CheckCircle2, Circle, Clock } from "lucide-react";
 import itsecLogo from "@assets/Logo_Cybersecurity_Delivered_White_1781007162611.png";
+import itsecLogoDark from "@assets/Logo_Cybersecurity_Delivered_1781007513207.png";
 import { formatDate } from "@/lib/format";
 
 type Milestone = {
@@ -75,7 +76,8 @@ export default function PublicClientPortal() {
     <div className="min-h-screen bg-background py-8 px-4">
       <div className="max-w-3xl mx-auto space-y-6">
         <div className="flex items-center gap-3">
-          <img src={itsecLogo} alt="ITSEC" className="h-8 w-auto" />
+          <img src={itsecLogoDark} alt="ITSEC" className="h-8 w-auto block dark:hidden" />
+          <img src={itsecLogo} alt="ITSEC" className="h-8 w-auto hidden dark:block" />
           <span className="font-bold text-lg text-foreground">SecureProfit Hub</span>
         </div>
 

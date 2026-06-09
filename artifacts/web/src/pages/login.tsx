@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Clock } from "lucide-react";
 import itsecLogo from "@assets/Logo_Cybersecurity_Delivered_White_1781007162611.png";
+import itsecLogoDark from "@assets/Logo_Cybersecurity_Delivered_1781007513207.png";
 import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
 import { useLogin } from "@workspace/api-client-react";
@@ -94,7 +95,8 @@ export default function Login() {
       
       <div className="z-10 w-full max-w-md space-y-8">
         <div className="flex flex-col items-center justify-center space-y-2 text-center">
-          <img src={itsecLogo} alt="ITSEC — Cybersecurity Delivered" className="h-16 w-auto mb-2" />
+          <img src={itsecLogoDark} alt="ITSEC — Cybersecurity Delivered" className="h-16 w-auto mb-2 block dark:hidden" />
+          <img src={itsecLogo} alt="ITSEC — Cybersecurity Delivered" className="h-16 w-auto mb-2 hidden dark:block" />
           <h1 className="text-xl font-bold tracking-tight text-foreground">SecureProfit Hub</h1>
           <p className="text-muted-foreground text-sm">IT Security Projects, Operations & Margins Console</p>
         </div>

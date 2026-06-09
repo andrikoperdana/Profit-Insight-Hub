@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import itsecLogo from "@assets/Logo_Cybersecurity_Delivered_White_1781007162611.png";
+import itsecLogoDark from "@assets/Logo_Cybersecurity_Delivered_1781007513207.png";
 
 const API_BASE = import.meta.env.BASE_URL + "api";
 
@@ -77,7 +78,8 @@ export function SiteGate({ children }: { children: ReactNode }) {
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-sm rounded-xl border border-border bg-card p-8 shadow-2xl">
         <div className="mb-6 text-center">
-          <img src={itsecLogo} alt="ITSEC" className="mx-auto mb-3 h-10 w-auto" />
+          <img src={itsecLogoDark} alt="ITSEC" className="mx-auto mb-3 h-10 w-auto block dark:hidden" />
+          <img src={itsecLogo} alt="ITSEC" className="mx-auto mb-3 h-10 w-auto hidden dark:block" />
           <h1 className="text-lg font-semibold text-foreground">SecureProfit Hub</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             This site is private. Enter the access credentials to continue.
