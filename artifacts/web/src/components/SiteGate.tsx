@@ -2,8 +2,8 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import itsecLogo from "@assets/Logo_Cybersecurity_Delivered_White_1781007162611.png";
-import itsecLogoDark from "@assets/Logo_Cybersecurity_Delivered_1781007513207.png";
+import itsecLogo from "@assets/Logo_ITSEC_RedE_White.png";
+import itsecLogoDark from "@assets/Logo_ITSEC_RedE_Dark.png";
 
 const API_BASE = import.meta.env.BASE_URL + "api";
 

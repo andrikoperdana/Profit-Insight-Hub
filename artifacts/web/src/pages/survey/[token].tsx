@@ -8,8 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Star, CheckCircle2 } from "lucide-react";
-import itsecLogo from "@assets/Logo_Cybersecurity_Delivered_White_1781007162611.png";
-import itsecLogoDark from "@assets/Logo_Cybersecurity_Delivered_1781007513207.png";
+import itsecLogo from "@assets/Logo_ITSEC_RedE_White.png";
+import itsecLogoDark from "@assets/Logo_ITSEC_RedE_Dark.png";
 
 type Question = { key: string; text: string; type: "RATING" | "TEXT"; required: boolean; order: number };
 type SurveyForm = {

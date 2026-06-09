@@ -4,8 +4,8 @@ import { customFetch } from "@workspace/api-client-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { CalendarDays, CheckCircle2, Circle, Clock } from "lucide-react";
-import itsecLogo from "@assets/Logo_Cybersecurity_Delivered_White_1781007162611.png";
-import itsecLogoDark from "@assets/Logo_Cybersecurity_Delivered_1781007513207.png";
+import itsecLogo from "@assets/Logo_ITSEC_RedE_White.png";
+import itsecLogoDark from "@assets/Logo_ITSEC_RedE_Dark.png";
 import { formatDate } from "@/lib/format";
 
 type Milestone = {
