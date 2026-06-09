@@ -371,3 +371,9 @@ id = "xHjOW1_-RUH7OEFjM_YyY"
 uri = "file://exports/SecureProfitHub-Dashboard-Menu-Guide-EN.docx"
 type = "word_document"
 title = "Dashboard & Menu Guide (English) — Version 1.3"
+
+[[outputs]]
+id = "7-SHnDXlRUL7rKbetBX2p"
+uri = "file://exports/Fit-Gap-PSOhub-SecureProfit-Hub-2026-06-09.docx"
+type = "word_document"
+title = "Fit-Gap Analysis: SecureProfit Hub vs PSOhub (9 Juni 2026)"
