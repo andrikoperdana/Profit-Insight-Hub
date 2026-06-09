@@ -9,7 +9,6 @@ import {
   Building2,
   Settings,
   LogOut,
-  Shield,
   Inbox,
   UserCog,
   CalendarRange,
@@ -33,6 +32,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import itsecMark from "@assets/ITSEC_Favicon_1781007162610.png";
 
 type NavLink = { href: string; label: string; icon: typeof LayoutDashboard };
 
@@ -157,8 +157,8 @@ export default function Sidebar() {
     <aside className="w-64 bg-sidebar border-r border-sidebar-border hidden md:flex flex-col h-screen sticky top-0">
       {/* Brand */}
       <div className="h-16 flex items-center px-5 border-b border-sidebar-border">
-        <div className="relative h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center mr-3 ring-1 ring-primary/30">
-          <Shield className="w-5 h-5 text-primary" />
+        <div className="relative h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center mr-3 ring-1 ring-primary/30 p-1.5">
+          <img src={itsecMark} alt="ITSEC" className="w-full h-full object-contain" />
           <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-primary animate-pulse" />
         </div>
         <div className="leading-tight">

@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Shield, Clock } from "lucide-react";
+import { Clock } from "lucide-react";
+import itsecLogo from "@assets/Logo_Cybersecurity_Delivered_White_1781007162611.png";
 import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
 import { useLogin } from "@workspace/api-client-react";
@@ -93,10 +94,8 @@ export default function Login() {
       
       <div className="z-10 w-full max-w-md space-y-8">
         <div className="flex flex-col items-center justify-center space-y-2 text-center">
-          <div className="bg-primary/10 p-4 rounded-full border border-primary/20 mb-4 shadow-[0_0_15px_rgba(22,163,74,0.3)]">
-            <Shield className="h-10 w-10 text-primary" />
-          </div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">SecureProfit Hub</h1>
+          <img src={itsecLogo} alt="ITSEC — Cybersecurity Delivered" className="h-16 w-auto mb-2" />
+          <h1 className="text-xl font-bold tracking-tight text-foreground">SecureProfit Hub</h1>
           <p className="text-muted-foreground text-sm">IT Security Projects, Operations & Margins Console</p>
         </div>
 

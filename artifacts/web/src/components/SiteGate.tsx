@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import itsecLogo from "@assets/Logo_Cybersecurity_Delivered_White_1781007162611.png";
 
 const API_BASE = import.meta.env.BASE_URL + "api";
 
@@ -76,22 +77,7 @@ export function SiteGate({ children }: { children: ReactNode }) {
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-sm rounded-xl border border-border bg-card p-8 shadow-2xl">
         <div className="mb-6 text-center">
-          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
-          </div>
+          <img src={itsecLogo} alt="ITSEC" className="mx-auto mb-3 h-10 w-auto" />
           <h1 className="text-lg font-semibold text-foreground">SecureProfit Hub</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             This site is private. Enter the access credentials to continue.

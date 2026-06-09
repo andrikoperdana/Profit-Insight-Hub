@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Star, Shield, CheckCircle2 } from "lucide-react";
+import { Star, CheckCircle2 } from "lucide-react";
+import itsecLogo from "@assets/Logo_Cybersecurity_Delivered_White_1781007162611.png";
 
 type Question = { key: string; text: string; type: "RATING" | "TEXT"; required: boolean; order: number };
 type SurveyForm = {
@@ -135,9 +136,9 @@ export default function PublicSurveyPage() {
   return (
     <div className="min-h-screen bg-background py-8 px-4">
       <div className="max-w-2xl mx-auto">
-        <div className="flex items-center gap-2 mb-6 text-primary">
-          <Shield className="h-6 w-6" />
-          <span className="font-bold text-lg">SecureProfit Hub</span>
+        <div className="flex items-center gap-3 mb-6">
+          <img src={itsecLogo} alt="ITSEC" className="h-8 w-auto" />
+          <span className="font-bold text-lg text-foreground">SecureProfit Hub</span>
         </div>
 
         <Card className="border-border">
