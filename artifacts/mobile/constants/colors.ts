@@ -1,6 +1,6 @@
 /**
  * Design tokens for the mobile app — synced from the sibling web artifact's
- * dark "cyber-green" theme (artifacts/web/src/index.css `.dark`).
+ * dark "ITSEC Red" theme (artifacts/web/src/index.css `.dark`).
  *
  * The app is dark-only, so the same palette is used for both the light and
  * dark keys. This forces a consistent appearance regardless of the device's
@@ -9,44 +9,44 @@
 
 const dark = {
   // Legacy aliases (kept for backward compatibility)
-  text: "#E1E7EF",
-  tint: "#22C55E",
+  text: "#F5F5F5",
+  tint: "#E10E19",
 
   // Core surfaces
-  background: "#030711",
-  foreground: "#E1E7EF",
+  background: "#0A0A0A",
+  foreground: "#F5F5F5",
 
   // Cards / elevated surfaces
-  card: "#0B1424",
-  cardForeground: "#E1E7EF",
+  card: "#121212",
+  cardForeground: "#F5F5F5",
 
-  // Primary action color (emerald / cyber-green)
-  primary: "#22C55E",
-  primaryForeground: "#04140A",
+  // Primary action color (ITSEC red)
+  primary: "#E10E19",
+  primaryForeground: "#FFFFFF",
 
   // Secondary / less-emphasis interactive surfaces
-  secondary: "#111B2E",
-  secondaryForeground: "#E1E7EF",
+  secondary: "#242424",
+  secondaryForeground: "#FAFAFA",
 
   // Muted / subdued elements (dividers, timestamps, placeholders)
-  muted: "#111B2E",
-  mutedForeground: "#94A3B8",
+  muted: "#242424",
+  mutedForeground: "#A3A3A3",
 
   // Accent highlights (badges, selected items, focus rings)
-  accent: "#162236",
-  accentForeground: "#E1E7EF",
+  accent: "#292929",
+  accentForeground: "#FAFAFA",
 
   // Destructive actions (delete, reject, error states)
-  destructive: "#EF4444",
+  destructive: "#BE2D2D",
   destructiveForeground: "#FFFFFF",
 
   // Status colors
-  warning: "#F59E0B",
-  info: "#38BDF8",
+  warning: "#F59F0A",
+  info: "#3EBAF4",
 
   // Borders and input outlines
-  border: "#1D2839",
-  input: "#1D2839",
+  border: "#262626",
+  input: "#262626",
 };
 
 const colors = {
