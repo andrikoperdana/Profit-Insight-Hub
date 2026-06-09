@@ -1,5 +1,5 @@
-import { Feather } from "@expo/vector-icons";
 import { useLogin } from "@workspace/api-client-react";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -15,6 +15,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button, TextField } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
 import { useAuth } from "@/contexts/auth";
+
+const itsecLogo = require("../assets/images/itsec-logo-white.png");
 
 export default function LoginScreen() {
   const colors = useColors();
@@ -64,14 +66,12 @@ export default function LoginScreen() {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <View
-          style={[
-            styles.logo,
-            { backgroundColor: `${colors.primary}1A`, borderRadius: colors.radius },
-          ]}
-        >
-          <Feather name="shield" size={36} color={colors.primary} />
-        </View>
+        <Image
+          source={itsecLogo}
+          style={styles.logo}
+          contentFit="contain"
+          accessibilityLabel="ITSEC — Cybersecurity Delivered"
+        />
         <Text style={[styles.title, { color: colors.foreground }]}>
           SecureProfit Hub
         </Text>
@@ -124,10 +124,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logo: {
-    width: 76,
-    height: 76,
-    alignItems: "center",
-    justifyContent: "center",
+    width: 200,
+    height: 64,
     marginBottom: 20,
   },
   title: { fontSize: 26, fontFamily: "Inter_700Bold" },
