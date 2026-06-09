@@ -84,7 +84,7 @@ export default function LoginScreen() {
             label="Email"
             value={email}
             onChangeText={setEmail}
-            placeholder="you@secureprofit.id"
+            placeholder="you@itsecasia.com"
             keyboardType="email-address"
             testID="login-email"
           />
