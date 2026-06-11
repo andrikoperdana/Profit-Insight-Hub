@@ -107,8 +107,10 @@ type PdPhone = { value?: string; primary?: boolean };
 type PdRefObject = {
   value?: number;
   name?: string;
-  email?: PdEmail[];
-  phone?: PdPhone[];
+  // Pipedrive is inconsistent: person/org refs return contact fields as an
+  // array of {value, primary}; the user (owner) ref returns a plain string.
+  email?: PdEmail[] | string;
+  phone?: PdPhone[] | string;
 };
 type PdRef = number | PdRefObject | null | undefined;
 
@@ -173,6 +175,20 @@ async function pdListAll<T>(
 // Mapping helpers
 // ---------------------------------------------------------------------------
 
+/**
+ * Pull a single contact value from a Pipedrive ref field. Person/org refs use
+ * an array of {value, primary}; the user (owner) ref uses a plain string. Empty
+ * strings (Pipedrive's placeholder for "no value") are normalized to null.
+ */
+function pickRefContact(
+  v: PdEmail[] | PdPhone[] | string | null | undefined,
+): string | null {
+  if (v == null) return null;
+  if (typeof v === "string") return v.trim() || null;
+  const primary = v.find((x) => x.primary)?.value;
+  return (primary || v[0]?.value || "").trim() || null;
+}
+
 function refParts(ref: PdRef): {
   id: number | null;
   name: string | null;
@@ -181,15 +197,11 @@ function refParts(ref: PdRef): {
 } {
   if (ref == null) return { id: null, name: null, email: null, phone: null };
   if (typeof ref === "number") return { id: ref, name: null, email: null, phone: null };
-  const email =
-    ref.email?.find((e) => e.primary)?.value ?? ref.email?.[0]?.value ?? null;
-  const phone =
-    ref.phone?.find((p) => p.primary)?.value ?? ref.phone?.[0]?.value ?? null;
   return {
     id: typeof ref.value === "number" ? ref.value : null,
     name: ref.name ?? null,
-    email: email ?? null,
-    phone: phone ?? null,
+    email: pickRefContact(ref.email),
+    phone: pickRefContact(ref.phone),
   };
 }
 
