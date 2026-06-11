@@ -1,3 +1,4 @@
+import { Feather } from "@expo/vector-icons";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AddProjectExpenseBodyCategory,
@@ -7,11 +8,16 @@ import {
   useListExpenses,
   useListProjects,
 } from "@workspace/api-client-react";
+import * as DocumentPicker from "expo-document-picker";
+import { File } from "expo-file-system";
+import * as ImagePicker from "expo-image-picker";
 import React, { useMemo, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   KeyboardAvoidingView,
+  Linking,
   Modal,
   Platform,
   Pressable,
@@ -41,6 +47,36 @@ import { canViewTeamExpenses } from "@/lib/roles";
 const MY_EXPENSES_KEY = ["my-expenses", "mobile"] as const;
 
 type ExpenseView = "mine" | "team";
+
+// Mirror the server's evidence validation (routes/expenses.ts): accept a PDF or
+// an image (png/jpeg/webp) up to ~8MB raw, sent as a base64 data URL.
+const ALLOWED_EVIDENCE_MIME = /^(application\/pdf|image\/(png|jpe?g|webp))$/i;
+const MAX_EVIDENCE_BYTES = 8 * 1024 * 1024;
+
+type EvidenceFile = { url: string; name: string };
+
+// Resolve a usable MIME type from the picker's reported type, falling back to
+// the file extension so camera/document results without a mimeType still pass.
+function resolveEvidenceMime(
+  name: string | null | undefined,
+  mimeType: string | null | undefined,
+): string | null {
+  if (mimeType && ALLOWED_EVIDENCE_MIME.test(mimeType)) return mimeType.toLowerCase();
+  const ext = name?.split(".").pop()?.toLowerCase();
+  switch (ext) {
+    case "pdf":
+      return "application/pdf";
+    case "png":
+      return "image/png";
+    case "jpg":
+    case "jpeg":
+      return "image/jpeg";
+    case "webp":
+      return "image/webp";
+    default:
+      return null;
+  }
+}
 
 type ExpenseStatus = "PENDING" | "APPROVED" | "REJECTED";
 
@@ -402,6 +438,8 @@ function SubmitExpenseModal({
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [spentAt, setSpentAt] = useState(todayYMD());
+  const [evidence, setEvidence] = useState<EvidenceFile | null>(null);
+  const [attaching, setAttaching] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Role-scoped on the server: only the projects this user is involved in.
@@ -419,6 +457,8 @@ function SubmitExpenseModal({
     setDescription("");
     setAmount("");
     setSpentAt(todayYMD());
+    setEvidence(null);
+    setAttaching(false);
     setError(null);
   };
 
@@ -464,8 +504,111 @@ function SubmitExpenseModal({
         description: description.trim(),
         amount: amt,
         spentAt: spentAt || undefined,
+        evidenceUrl: evidence?.url,
+        evidenceFileName: evidence?.name,
       },
     });
+  }
+
+  // Read a picked file into a base64 data URL, validating type and size against
+  // the server's limits so we fail fast with a friendly message on the phone.
+  async function attachFromAsset(asset: {
+    uri: string;
+    name: string | null | undefined;
+    mimeType: string | null | undefined;
+    size: number | null | undefined;
+  }) {
+    setError(null);
+    const mime = resolveEvidenceMime(asset.name, asset.mimeType);
+    if (!mime) {
+      setError("Unsupported file. Attach a PDF or image (PNG, JPEG, or WebP).");
+      return;
+    }
+    if (typeof asset.size === "number" && asset.size > MAX_EVIDENCE_BYTES) {
+      setError("File too large. The receipt must be 8 MB or smaller.");
+      return;
+    }
+    setAttaching(true);
+    try {
+      const base64 = await new File(asset.uri).base64();
+      // Roughly recover the raw byte count from the base64 string length.
+      const approxBytes = Math.floor((base64.length * 3) / 4);
+      if (approxBytes > MAX_EVIDENCE_BYTES) {
+        setError("File too large. The receipt must be 8 MB or smaller.");
+        return;
+      }
+      const fallbackExt = mime === "application/pdf" ? "pdf" : mime.split("/")[1];
+      setEvidence({
+        url: `data:${mime};base64,${base64}`,
+        name: asset.name?.trim() || `receipt.${fallbackExt}`,
+      });
+    } catch {
+      setError("Could not read the selected file. Please try again.");
+    } finally {
+      setAttaching(false);
+    }
+  }
+
+  async function handleTakePhoto() {
+    setError(null);
+    try {
+      const perm = await ImagePicker.requestCameraPermissionsAsync();
+      if (!perm.granted) {
+        if (!perm.canAskAgain && Platform.OS !== "web") {
+          Alert.alert(
+            "Camera access needed",
+            "Enable camera access in Settings to take a receipt photo.",
+            [
+              { text: "Cancel", style: "cancel" },
+              {
+                text: "Open Settings",
+                onPress: () => {
+                  void Linking.openSettings().catch(() => {});
+                },
+              },
+            ],
+          );
+        } else {
+          setError("Camera permission is required to take a photo.");
+        }
+        return;
+      }
+      const result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ["images"],
+        quality: 0.7,
+      });
+      if (result.canceled) return;
+      const a = result.assets[0];
+      await attachFromAsset({
+        uri: a.uri,
+        name: a.fileName ?? `receipt-${Date.now()}.jpg`,
+        mimeType: a.mimeType ?? "image/jpeg",
+        size: a.fileSize,
+      });
+    } catch {
+      setError("Could not open the camera. Please try again.");
+    }
+  }
+
+  async function handlePickFile() {
+    setError(null);
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: ["application/pdf", "image/png", "image/jpeg", "image/webp"],
+        copyToCacheDirectory: true,
+        multiple: false,
+      });
+      if (result.canceled) return;
+      const a = result.assets[0];
+      await attachFromAsset({
+        uri: a.uri,
+        name: a.name,
+        mimeType: a.mimeType,
+        size: a.size,
+      });
+    } catch {
+      setError("Could not open the file picker. Please try again.");
+    }
   }
 
   return (
@@ -553,6 +696,71 @@ function SubmitExpenseModal({
               testID="input-expense-date"
             />
 
+            <View style={styles.fieldWrap}>
+              <Text style={[styles.fieldLabel, { color: colors.mutedForeground }]}>
+                Receipt (optional)
+              </Text>
+              {evidence ? (
+                <View
+                  style={[
+                    styles.evidenceRow,
+                    { borderColor: colors.border, borderRadius: colors.radius },
+                  ]}
+                >
+                  <Feather name="paperclip" size={16} color={colors.primary} />
+                  <Text
+                    style={[styles.evidenceName, { color: colors.foreground }]}
+                    numberOfLines={1}
+                  >
+                    {evidence.name}
+                  </Text>
+                  <Pressable
+                    onPress={() => setEvidence(null)}
+                    hitSlop={10}
+                    testID="button-remove-receipt"
+                  >
+                    <Feather name="x" size={18} color={colors.mutedForeground} />
+                  </Pressable>
+                </View>
+              ) : attaching ? (
+                <View
+                  style={[
+                    styles.evidenceRow,
+                    { borderColor: colors.border, borderRadius: colors.radius },
+                  ]}
+                >
+                  <ActivityIndicator color={colors.primary} />
+                  <Text style={[styles.evidenceName, { color: colors.mutedForeground }]}>
+                    Reading file…
+                  </Text>
+                </View>
+              ) : (
+                <View style={styles.evidenceButtons}>
+                  <View style={{ flex: 1 }}>
+                    <Button
+                      label="Take Photo"
+                      icon="camera"
+                      variant="ghost"
+                      onPress={handleTakePhoto}
+                      testID="button-take-photo"
+                    />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Button
+                      label="Choose File"
+                      icon="upload"
+                      variant="ghost"
+                      onPress={handlePickFile}
+                      testID="button-choose-file"
+                    />
+                  </View>
+                </View>
+              )}
+              <Text style={[styles.evidenceHint, { color: colors.mutedForeground }]}>
+                PDF or image (PNG, JPEG, WebP), up to 8 MB.
+              </Text>
+            </View>
+
             {error ? (
               <Text style={[styles.error, { color: colors.destructive }]}>
                 {error}
@@ -614,6 +822,19 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   badgeText: { fontSize: 11, fontFamily: "Inter_700Bold", letterSpacing: 0.5 },
+  fieldWrap: { gap: 6 },
+  fieldLabel: { fontSize: 13, fontFamily: "Inter_500Medium" },
+  evidenceButtons: { flexDirection: "row", gap: 12 },
+  evidenceRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    borderWidth: 1,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+  },
+  evidenceName: { flex: 1, fontSize: 14, fontFamily: "Inter_500Medium" },
+  evidenceHint: { fontSize: 12, fontFamily: "Inter_400Regular" },
   modalHeader: {
     flexDirection: "row",
     alignItems: "center",

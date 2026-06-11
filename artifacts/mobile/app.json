@@ -33,7 +33,13 @@
         }
       ],
       "expo-font",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Allow SecureProfit to use the camera to photograph expense receipts."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
