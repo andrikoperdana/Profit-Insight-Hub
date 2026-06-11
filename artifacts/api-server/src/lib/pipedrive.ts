@@ -213,6 +213,47 @@ function pdDate(s: string | null | undefined): Date | null {
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
+// Pipedrive deals come in mixed currencies (the account has IDR/SGD/USD/AUD/...
+// deals). The rest of the app — projects, billing, financials — is IDR-only and
+// every amount is rendered with formatIDR, so a foreign deal.value stored as-is
+// shows up as a nonsensical "Rp 16.000" for what is really S$16,000. Convert to
+// IDR at import using approximate rates. These are pipeline ESTIMATES, not
+// accounting figures, so static rates are acceptable; adjust as the market moves.
+const CURRENCY_TO_IDR: Record<string, number> = {
+  IDR: 1,
+  USD: 16000,
+  SGD: 12000,
+  AUD: 10500,
+  EUR: 17500,
+  GBP: 20500,
+  MYR: 3500,
+  JPY: 105,
+  CNY: 2250,
+  HKD: 2050,
+  PHP: 285,
+  THB: 460,
+};
+
+/**
+ * Convert a Pipedrive deal value (denominated in `currency`) to IDR. Missing or
+ * IDR currency passes through unchanged; an unknown currency is imported as-is
+ * (logged) rather than dropped, so no estimate is silently lost.
+ */
+function dealValueToIdr(value: number | undefined, currency: string | undefined): number {
+  if (typeof value !== "number" || !Number.isFinite(value)) return 0;
+  const code = (currency ?? "").trim().toUpperCase();
+  if (!code || code === "IDR") return Math.round(value);
+  const rate = CURRENCY_TO_IDR[code];
+  if (rate === undefined) {
+    logger.warn(
+      { currency: code },
+      "pipedrive: unknown deal currency; importing value without IDR conversion",
+    );
+    return Math.round(value);
+  }
+  return Math.round(value * rate);
+}
+
 const STAGE_DEFAULT_PROBABILITY: Record<LeadStage, number> = {
   NEW: 20,
   QUALIFIED: 40,
@@ -345,7 +386,7 @@ export async function importDeal(deal: PdDeal, ctx: SyncContext): Promise<Import
     // Pipedrive-owned fields (written on both create and update).
     const owned = {
       title: deal.title ?? `Pipedrive Deal ${dealId}`,
-      estimatedValue: typeof deal.value === "number" ? deal.value : 0,
+      estimatedValue: dealValueToIdr(deal.value, deal.currency),
       expectedCloseDate: pdDate(deal.expected_close_date),
       stage: stage as Prisma.LeadCreateInput["stage"],
       wonAt,
