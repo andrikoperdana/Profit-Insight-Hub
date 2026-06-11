@@ -3,7 +3,7 @@ import { parse as parseCsvSync } from "csv-parse/sync";
 import { prisma, type Prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { validateBody } from "../middlewares/validate.js";
-import { CreateLeadBody, UpdateLeadBody } from "@workspace/api-zod";
+import { CreateLeadBody, UpdateLeadBody, ReassignLeadsBody } from "@workspace/api-zod";
 import { notifyOnceDailyForLead } from "../lib/leadNotifications.js";
 import { validatePdfDataUrl, sanitizeFileName } from "../lib/projectValidators.js";
 
@@ -162,6 +162,75 @@ router.get("/leads", async (req: AuthedRequest, res: Response) => {
     }),
   );
 });
+
+// Candidate owners for the reassign picker. Available to anyone who can
+// reassign (SALES for their own leads, MGMT/SUPER_ADMIN for any). SALES cannot
+// call /users/active-all, so this dedicated endpoint exposes only active Sales
+// users (id/name/email) — the only valid lead owners.
+router.get(
+  "/leads/sales-users",
+  requireRole("SALES", "MANAGEMENT"),
+  async (_req: AuthedRequest, res: Response) => {
+    const users = await prisma.user.findMany({
+      where: { role: "SALES", isActive: true, deletedAt: null },
+      orderBy: { name: "asc" },
+      select: { id: true, name: true, email: true },
+    });
+    res.json(users);
+  },
+);
+
+// Reassign one or many leads to a new Sales owner. Single-lead reassign is just
+// this with a one-element leadIds. SALES may only move leads they own; MGMT and
+// SUPER_ADMIN may move any. The new owner must be an active Sales user.
+router.post(
+  "/leads/reassign",
+  requireRole("SALES", "MANAGEMENT"),
+  validateBody(ReassignLeadsBody),
+  async (req: AuthedRequest, res: Response) => {
+    const body = (req.body ?? {}) as { leadIds?: unknown; ownerId?: unknown };
+    const leadIds = Array.isArray(body.leadIds)
+      ? Array.from(new Set(body.leadIds.map((x) => String(x)).filter(Boolean)))
+      : [];
+    const ownerId = typeof body.ownerId === "string" ? body.ownerId : "";
+    if (leadIds.length === 0) {
+      res.status(400).json({ error: "Select at least one lead to reassign." });
+      return;
+    }
+    if (!ownerId) {
+      res.status(400).json({ error: "A new owner is required." });
+      return;
+    }
+    const owner = await prisma.user.findFirst({
+      where: { id: ownerId, role: "SALES", isActive: true, deletedAt: null },
+      select: { id: true },
+    });
+    if (!owner) {
+      res.status(400).json({ error: "The new owner must be an active Sales user." });
+      return;
+    }
+    const leadsToMove = await prisma.lead.findMany({
+      where: { id: { in: leadIds }, deletedAt: null },
+      select: { id: true, ownerId: true },
+    });
+    if (leadsToMove.length === 0) {
+      res.status(404).json({ error: "No matching leads found." });
+      return;
+    }
+    if (req.user.role === "SALES") {
+      const foreign = leadsToMove.some((l) => l.ownerId !== req.user.sub);
+      if (foreign) {
+        res.status(403).json({ error: "You can only reassign your own leads." });
+        return;
+      }
+    }
+    const result = await prisma.lead.updateMany({
+      where: { id: { in: leadsToMove.map((l) => l.id) }, deletedAt: null },
+      data: { ownerId },
+    });
+    res.json({ count: result.count });
+  },
+);
 
 router.get("/leads/analytics", async (req: AuthedRequest, res: Response) => {
   const role = req.user.role;

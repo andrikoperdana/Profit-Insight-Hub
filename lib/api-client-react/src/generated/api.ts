@@ -75,6 +75,7 @@ import type {
   Lead,
   LeadActivity,
   LeadAnalytics,
+  LeadOwnerOption,
   ListAvailableUsersParams,
   ListLeavesParams,
   ListPerformanceReviewsParams,
@@ -108,6 +109,8 @@ import type {
   ProjectResource,
   ProjectTemplate,
   ProjectWorkstream,
+  ReassignLeadsBody,
+  ReassignLeadsResult,
   RejectProjectExpenseBody,
   RejectTimesheetBody,
   ReportFilterOption,
@@ -2648,6 +2651,154 @@ export const useImportLeads = <
   TContext
 > => {
   return useMutation(getImportLeadsMutationOptions(options));
+};
+
+export const getListSalesUsersUrl = () => {
+  return `/api/leads/sales-users`;
+};
+
+export const listSalesUsers = async (
+  options?: RequestInit,
+): Promise<LeadOwnerOption[]> => {
+  return customFetch<LeadOwnerOption[]>(getListSalesUsersUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListSalesUsersQueryKey = () => {
+  return [`/api/leads/sales-users`] as const;
+};
+
+export const getListSalesUsersQueryOptions = <
+  TData = Awaited<ReturnType<typeof listSalesUsers>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listSalesUsers>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListSalesUsersQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listSalesUsers>>> = ({
+    signal,
+  }) => listSalesUsers({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listSalesUsers>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListSalesUsersQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listSalesUsers>>
+>;
+export type ListSalesUsersQueryError = ErrorType<unknown>;
+
+export function useListSalesUsers<
+  TData = Awaited<ReturnType<typeof listSalesUsers>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listSalesUsers>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListSalesUsersQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getReassignLeadsUrl = () => {
+  return `/api/leads/reassign`;
+};
+
+export const reassignLeads = async (
+  reassignLeadsBody: ReassignLeadsBody,
+  options?: RequestInit,
+): Promise<ReassignLeadsResult> => {
+  return customFetch<ReassignLeadsResult>(getReassignLeadsUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(reassignLeadsBody),
+  });
+};
+
+export const getReassignLeadsMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof reassignLeads>>,
+    TError,
+    { data: BodyType<ReassignLeadsBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof reassignLeads>>,
+  TError,
+  { data: BodyType<ReassignLeadsBody> },
+  TContext
+> => {
+  const mutationKey = ["reassignLeads"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof reassignLeads>>,
+    { data: BodyType<ReassignLeadsBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return reassignLeads(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ReassignLeadsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof reassignLeads>>
+>;
+export type ReassignLeadsMutationBody = BodyType<ReassignLeadsBody>;
+export type ReassignLeadsMutationError = ErrorType<unknown>;
+
+export const useReassignLeads = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof reassignLeads>>,
+    TError,
+    { data: BodyType<ReassignLeadsBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof reassignLeads>>,
+  TError,
+  { data: BodyType<ReassignLeadsBody> },
+  TContext
+> => {
+  return useMutation(getReassignLeadsMutationOptions(options));
 };
 
 export const getConvertLeadUrl = (id: string) => {

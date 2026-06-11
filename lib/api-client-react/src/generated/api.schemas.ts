@@ -698,6 +698,21 @@ export interface ImportLeadsResult {
   errors: ImportLeadRowError[];
 }
 
+export interface LeadOwnerOption {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export interface ReassignLeadsBody {
+  leadIds: string[];
+  ownerId: string;
+}
+
+export interface ReassignLeadsResult {
+  count: number;
+}
+
 export interface ConvertLeadBody {
   code?: string;
   clientName?: string;

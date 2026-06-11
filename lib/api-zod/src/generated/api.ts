@@ -1117,6 +1117,22 @@ export const ImportLeadsResponse = zod.object({
   ),
 });
 
+export const ListSalesUsersResponseItem = zod.object({
+  id: zod.string(),
+  name: zod.string(),
+  email: zod.string(),
+});
+export const ListSalesUsersResponse = zod.array(ListSalesUsersResponseItem);
+
+export const ReassignLeadsBody = zod.object({
+  leadIds: zod.array(zod.string()),
+  ownerId: zod.string(),
+});
+
+export const ReassignLeadsResponse = zod.object({
+  count: zod.number(),
+});
+
 export const ConvertLeadParams = zod.object({
   id: zod.coerce.string(),
 });

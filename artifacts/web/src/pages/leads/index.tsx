@@ -7,11 +7,13 @@ import {
   useConvertLead,
   useImportLeads,
   useListClients,
-  useListUsers,
+  useListSalesUsers,
+  useReassignLeads,
   useListLeadActivities,
   useCreateLeadActivity,
   useDeleteLeadActivity,
   getListLeadsQueryKey,
+  getGetLeadsAnalyticsQueryKey,
   getListLeadActivitiesQueryKey,
   type Lead,
   type LeadActivity,
@@ -33,8 +35,9 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Checkbox } from "@/components/ui/checkbox";
 import { formatIDR } from "@/lib/format";
-import { Plus, Trash2, ArrowRight, Briefcase, AlertTriangle, LayoutGrid, List as ListIcon, Upload } from "lucide-react";
+import { Plus, Trash2, ArrowRight, Briefcase, AlertTriangle, LayoutGrid, List as ListIcon, Upload, UserCog } from "lucide-react";
 
 const STAGES: { key: LeadStage; label: string; color: string }[] = [
   { key: "NEW" as LeadStage, label: "New", color: "border-slate-500/40 bg-slate-500/5" },
@@ -114,23 +117,26 @@ export default function LeadsPage() {
   const qc = useQueryClient();
   const role = user?.role;
   const isMgmt = role === "MANAGEMENT";
+  const isSuperAdmin = role === "SUPER_ADMIN";
   const isSales = role === "SALES";
-  const isAllowed = !!user && (isSales || isMgmt);
+  const isAllowed = !!user && (isSales || isMgmt || isSuperAdmin);
   const canWrite = isSales;
   const canImport = isSales || isMgmt;
+  // Who may reassign: MGMT/Super Admin can move any lead; Sales only their own.
+  const canReassignAny = isMgmt || isSuperAdmin;
+  const canReassign = (l: Lead) => canReassignAny || (isSales && l.ownerId === user?.id);
 
   const { data: leads, isLoading } = useListLeads({ query: { enabled: isAllowed } } as any);
   const { data: clients } = useListClients();
-  const { data: allUsers } = useListUsers({ query: { enabled: isMgmt } } as any);
-  const usersData = useMemo(
-    () => (allUsers ?? []).filter((u) => u.role === "SALES"),
-    [allUsers],
-  );
+  // Active Sales users, valid reassign targets. Works for SALES too (unlike
+  // /users/active-all), and also backs the MGMT/Super Admin owner filter.
+  const { data: salesUsers } = useListSalesUsers({ query: { enabled: isAllowed } } as any);
   const create = useCreateLead();
   const update = useUpdateLead();
   const del = useDeleteLead();
   const convert = useConvertLead();
   const importLeads = useImportLeads();
+  const reassign = useReassignLeads();
   const createActivity = useCreateLeadActivity();
   const delActivity = useDeleteLeadActivity();
 
@@ -156,6 +162,11 @@ export default function LeadsPage() {
   const [lostCompetitor, setLostCompetitor] = useState("");
   const [lostNotes, setLostNotes] = useState("");
   const [drawerLead, setDrawerLead] = useState<Lead | null>(null);
+  // Bulk selection (list view) + the reassign dialog. reassignIds drives a
+  // single dialog reused for per-lead and bulk reassignment.
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [reassignIds, setReassignIds] = useState<string[] | null>(null);
+  const [reassignOwnerId, setReassignOwnerId] = useState("");
   const [isImportOpen, setImportOpen] = useState(false);
   const [importCsv, setImportCsv] = useState("");
   const [importFileName, setImportFileName] = useState("");
@@ -220,12 +231,35 @@ export default function LeadsPage() {
     [filteredLeads, safeListPage],
   );
 
-  // Reset paging whenever the active filters change.
+  // Reset paging + clear bulk selection whenever the active filters change.
   const filterKey = `${params.get("stages") || ""}|${ownerFilter}|${sourceFilter}|${fromFilter}|${toFilter}`;
   useEffect(() => {
     setListPage(1);
     setColLimits({});
+    setSelectedIds(new Set());
   }, [filterKey]);
+
+  // Leads in the current filtered set the caller is allowed to reassign.
+  const reassignableFiltered = useMemo(
+    () => filteredLeads.filter((l) => canReassign(l)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [filteredLeads, canReassignAny, isSales, user?.id],
+  );
+  const allFilteredSelected =
+    reassignableFiltered.length > 0 && reassignableFiltered.every((l) => selectedIds.has(l.id));
+
+  function toggleSelect(id: string) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function toggleSelectAllFiltered() {
+    setSelectedIds(allFilteredSelected ? new Set() : new Set(reassignableFiltered.map((l) => l.id)));
+  }
 
   function openCreate() {
     setEditingId(null);
@@ -351,6 +385,30 @@ export default function LeadsPage() {
     }
   }
 
+  function openReassign(ids: string[]) {
+    if (ids.length === 0) return;
+    setReassignIds(ids);
+    setReassignOwnerId("");
+  }
+
+  async function handleReassign() {
+    if (!reassignIds || reassignIds.length === 0 || !reassignOwnerId) return;
+    try {
+      const r = await reassign.mutateAsync({ data: { leadIds: reassignIds, ownerId: reassignOwnerId } });
+      qc.invalidateQueries({ queryKey: getListLeadsQueryKey() });
+      qc.invalidateQueries({ queryKey: getGetLeadsAnalyticsQueryKey() });
+      toast({
+        title: r.count === 1 ? "Lead reassigned" : `${r.count} leads reassigned`,
+      });
+      setReassignIds(null);
+      setReassignOwnerId("");
+      setSelectedIds(new Set());
+      setDrawerLead(null);
+    } catch (e: any) {
+      toast({ title: "Failed to reassign", description: e?.message, variant: "destructive" });
+    }
+  }
+
   function openConvert(l: Lead) {
     setConvertingLead(l);
     setConvertCode(`LEAD-${l.id.slice(-6).toUpperCase()}`);
@@ -405,7 +463,7 @@ export default function LeadsPage() {
             <div className="text-lg font-bold text-primary">{formatIDR(pipelineValue)}</div>
           </div>
           <div className="flex border rounded-md overflow-hidden">
-            <Button size="sm" variant={view === "board" ? "default" : "ghost"} className="rounded-none" onClick={() => setParams({ view: "board" })} data-testid="button-view-board">
+            <Button size="sm" variant={view === "board" ? "default" : "ghost"} className="rounded-none" onClick={() => { setSelectedIds(new Set()); setParams({ view: "board" }); }} data-testid="button-view-board">
               <LayoutGrid className="h-4 w-4" />
             </Button>
             <Button size="sm" variant={view === "list" ? "default" : "ghost"} className="rounded-none" onClick={() => setParams({ view: "list" })} data-testid="button-view-list">
@@ -458,14 +516,14 @@ export default function LeadsPage() {
               })}
             </div>
           </div>
-          {isMgmt && (
+          {canReassignAny && (
             <div className="min-w-[180px]">
               <Label className="text-xs text-muted-foreground">Owner</Label>
               <Select value={ownerFilter || "_all"} onValueChange={(v) => setParams({ owner: v === "_all" ? null : v })}>
                 <SelectTrigger><SelectValue placeholder="All" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="_all">All owners</SelectItem>
-                  {(usersData ?? []).map((u) => (
+                  {(salesUsers ?? []).map((u) => (
                     <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>
                   ))}
                 </SelectContent>
@@ -619,9 +677,37 @@ export default function LeadsPage() {
       ) : (
         <Card className="border-border">
           <CardContent className="p-0">
+            {selectedIds.size > 0 && (
+              <div className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 border-b border-border bg-muted/30">
+                <div className="text-sm font-medium">{selectedIds.size} selected</div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    onClick={() => openReassign(Array.from(selectedIds))}
+                    data-testid="button-bulk-reassign"
+                  >
+                    <UserCog className="h-4 w-4 mr-1" /> Reassign owner
+                  </Button>
+                  <Button size="sm" variant="ghost" onClick={() => setSelectedIds(new Set())}>
+                    Clear
+                  </Button>
+                </div>
+              </div>
+            )}
             <Table>
               <TableHeader>
                 <TableRow>
+                  {canReassignAny || isSales ? (
+                    <TableHead className="w-10">
+                      <Checkbox
+                        checked={allFilteredSelected}
+                        onCheckedChange={() => toggleSelectAllFiltered()}
+                        disabled={reassignableFiltered.length === 0}
+                        aria-label="Select all filtered leads"
+                        data-testid="checkbox-select-all"
+                      />
+                    </TableHead>
+                  ) : null}
                   <TableHead>Title</TableHead>
                   <TableHead>Client</TableHead>
                   <TableHead>Stage</TableHead>
@@ -635,6 +721,18 @@ export default function LeadsPage() {
               <TableBody>
                 {pagedLeads.map((l) => (
                   <TableRow key={l.id} className="cursor-pointer hover:bg-muted/30" onClick={() => setDrawerLead(l)}>
+                    {canReassignAny || isSales ? (
+                      <TableCell className="w-10" onClick={(e) => e.stopPropagation()}>
+                        {canReassign(l) && (
+                          <Checkbox
+                            checked={selectedIds.has(l.id)}
+                            onCheckedChange={() => toggleSelect(l.id)}
+                            aria-label={`Select ${l.title}`}
+                            data-testid={`checkbox-lead-${l.id}`}
+                          />
+                        )}
+                      </TableCell>
+                    ) : null}
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <span className="font-medium">{l.title}</span>
@@ -653,14 +751,26 @@ export default function LeadsPage() {
                     <TableCell className="text-sm">{l.ownerName ?? "—"}</TableCell>
                     <TableCell className="text-sm">{l.expectedCloseDate ? l.expectedCloseDate.slice(0, 10) : "—"}</TableCell>
                     <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
-                      {canWrite && (
-                        <Button size="sm" variant="ghost" onClick={() => openEdit(l)}>Edit</Button>
-                      )}
+                      <div className="flex items-center justify-end gap-1">
+                        {canReassign(l) && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => openReassign([l.id])}
+                            data-testid={`button-reassign-${l.id}`}
+                          >
+                            <UserCog className="h-4 w-4" />
+                          </Button>
+                        )}
+                        {canWrite && (
+                          <Button size="sm" variant="ghost" onClick={() => openEdit(l)}>Edit</Button>
+                        )}
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
                 {filteredLeads.length === 0 && (
-                  <TableRow><TableCell colSpan={8} className="text-center text-muted-foreground py-8">No leads.</TableCell></TableRow>
+                  <TableRow><TableCell colSpan={canReassignAny || isSales ? 9 : 8} className="text-center text-muted-foreground py-8">No leads.</TableCell></TableRow>
                 )}
               </TableBody>
             </Table>
@@ -735,8 +845,21 @@ export default function LeadsPage() {
                       <div className="whitespace-pre-wrap text-sm">{drawerLead.notes}</div>
                     </div>
                   )}
-                  {canWrite && (
-                    <Button className="mt-3" onClick={() => { openEdit(drawerLead); setDrawerLead(null); }}>Edit lead</Button>
+                  {(canWrite || canReassign(drawerLead)) && (
+                    <div className="flex items-center gap-2 mt-3">
+                      {canWrite && (
+                        <Button onClick={() => { openEdit(drawerLead); setDrawerLead(null); }}>Edit lead</Button>
+                      )}
+                      {canReassign(drawerLead) && (
+                        <Button
+                          variant="outline"
+                          onClick={() => openReassign([drawerLead.id])}
+                          data-testid="button-drawer-reassign"
+                        >
+                          <UserCog className="h-4 w-4 mr-1" /> Reassign owner
+                        </Button>
+                      )}
+                    </div>
                   )}
                 </TabsContent>
                 <TabsContent value="activities">
@@ -756,6 +879,55 @@ export default function LeadsPage() {
           )}
         </SheetContent>
       </Sheet>
+
+      {/* Reassign owner (per-lead + bulk) */}
+      <Dialog open={!!reassignIds} onOpenChange={(o) => { if (!o) { setReassignIds(null); setReassignOwnerId(""); } }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>
+              {reassignIds && reassignIds.length > 1
+                ? `Reassign ${reassignIds.length} leads`
+                : "Reassign owner"}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <p className="text-sm text-muted-foreground">
+              Choose the Sales person who should own
+              {reassignIds && reassignIds.length > 1 ? " these leads." : " this lead."}
+            </p>
+            <div>
+              <Label className="text-xs text-muted-foreground">New owner</Label>
+              <Select value={reassignOwnerId} onValueChange={setReassignOwnerId}>
+                <SelectTrigger data-testid="select-reassign-owner">
+                  <SelectValue placeholder="Select a Sales owner" />
+                </SelectTrigger>
+                <SelectContent>
+                  {(salesUsers ?? []).map((u) => (
+                    <SelectItem key={u.id} value={u.id}>
+                      <span className="flex flex-col">
+                        <span>{u.name}</span>
+                        <span className="text-xs text-muted-foreground">{u.email}</span>
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => { setReassignIds(null); setReassignOwnerId(""); }}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleReassign}
+              disabled={!reassignOwnerId || reassign.isPending}
+              data-testid="button-confirm-reassign"
+            >
+              {reassign.isPending ? "Reassigning…" : "Reassign"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Form */}
       <Dialog open={isFormOpen} onOpenChange={setFormOpen}>

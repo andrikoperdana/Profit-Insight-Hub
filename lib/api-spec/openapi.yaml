@@ -478,6 +478,35 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/ImportLeadsResult" }
 
+  /leads/sales-users:
+    get:
+      operationId: listSalesUsers
+      tags: [leads]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/LeadOwnerOption" }
+
+  /leads/reassign:
+    post:
+      operationId: reassignLeads
+      tags: [leads]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ReassignLeadsBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ReassignLeadsResult" }
+
   /leads/{id}/convert:
     post:
       operationId: convertLead
@@ -3045,6 +3074,29 @@ components:
         errors:
           type: array
           items: { $ref: "#/components/schemas/ImportLeadRowError" }
+
+    LeadOwnerOption:
+      type: object
+      required: [id, name, email]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        email: { type: string }
+
+    ReassignLeadsBody:
+      type: object
+      required: [leadIds, ownerId]
+      properties:
+        leadIds:
+          type: array
+          items: { type: string }
+        ownerId: { type: string }
+
+    ReassignLeadsResult:
+      type: object
+      required: [count]
+      properties:
+        count: { type: integer }
 
     ConvertLeadBody:
       type: object
