@@ -1,17 +1,15 @@
-import { Feather } from "@expo/vector-icons";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AddProjectExpenseBodyCategory,
   customFetch,
+  getListExpensesQueryKey,
   useAddProjectExpense,
+  useListExpenses,
   useListProjects,
 } from "@workspace/api-client-react";
-import { File, Paths } from "expo-file-system";
-import * as Sharing from "expo-sharing";
 import React, { useMemo, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   FlatList,
   KeyboardAvoidingView,
   Modal,
@@ -25,6 +23,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { ReceiptButton } from "@/components/ReceiptButton";
 import {
   Button,
   Card,
@@ -34,11 +33,14 @@ import {
   TextField,
   type SelectOption,
 } from "@/components/ui";
-import { getCurrentToken } from "@/contexts/auth";
+import { useAuth } from "@/contexts/auth";
 import { useColors } from "@/hooks/useColors";
 import { formatIDR, formatShortDate, todayYMD } from "@/lib/format";
+import { canViewTeamExpenses } from "@/lib/roles";
 
 const MY_EXPENSES_KEY = ["my-expenses", "mobile"] as const;
+
+type ExpenseView = "mine" | "team";
 
 type ExpenseStatus = "PENDING" | "APPROVED" | "REJECTED";
 
@@ -87,61 +89,89 @@ function ExpenseStatusBadge({ status }: { status: ExpenseStatus }) {
   );
 }
 
-// The shared customFetch can't return a binary blob in the React Native
-// runtime, so the receipt PDF is fetched directly with the bearer token, then
-// written to the cache and handed to the OS share sheet. On web there's no
-// share sheet, so we open the PDF in a new browser tab instead.
-async function openReceipt(expenseId: string): Promise<void> {
-  const base = `https://${process.env.EXPO_PUBLIC_DOMAIN}`;
-  const url = `${base}/api/expenses/${expenseId}/receipt`;
-  const token = getCurrentToken();
-  // This bypasses customFetch (no RN blob support), so the bearer token and the
-  // mobile client header that customFetch normally injects must be set by hand —
-  // the front-door site gate rejects /api/* without "x-secureprofit-client".
-  const headers: Record<string, string> = { "x-secureprofit-client": "mobile" };
-  if (token) headers.authorization = `Bearer ${token}`;
-  const res = await fetch(url, { headers });
-  if (!res.ok) {
-    const message =
-      res.status === 409
-        ? "Receipt isn't ready until the claim is approved or rejected."
-        : res.status === 403
-          ? "You can only view receipts for your own expenses."
-          : "Couldn't load the receipt. Please try again.";
-    throw new Error(message);
-  }
-
-  const buffer = await res.arrayBuffer();
-  const bytes = new Uint8Array(buffer);
-
-  if (Platform.OS === "web") {
-    const blob = new Blob([bytes], { type: "application/pdf" });
-    const objectUrl = URL.createObjectURL(blob);
-    window.open(objectUrl, "_blank");
-    // Give the new tab time to read the URL before releasing it.
-    setTimeout(() => URL.revokeObjectURL(objectUrl), 60_000);
-    return;
-  }
-
-  const file = new File(Paths.cache, `expense-receipt-${expenseId}.pdf`);
-  if (file.exists) file.delete();
-  file.create();
-  file.write(bytes);
-
-  if (!(await Sharing.isAvailableAsync())) {
-    throw new Error("Sharing isn't available on this device.");
-  }
-  await Sharing.shareAsync(file.uri, {
-    mimeType: "application/pdf",
-    UTI: "com.adobe.pdf",
-    dialogTitle: "Expense receipt",
-  });
+// A single expense row. Shows the submitter (team view only) and a "View
+// receipt" action whenever the claim is APPROVED/REJECTED — the server only
+// generates the receipt PDF once a claim is closed.
+function ExpenseCard({
+  projectLabel,
+  submitterName,
+  category,
+  spentAt,
+  amount,
+  description,
+  status,
+  rejectionReason,
+  approvedByName,
+  hasReceipt,
+  expenseId,
+}: {
+  projectLabel: string;
+  submitterName?: string | null;
+  category: string;
+  spentAt: string;
+  amount: number;
+  description?: string | null;
+  status: ExpenseStatus;
+  rejectionReason?: string | null;
+  approvedByName?: string | null;
+  hasReceipt: boolean;
+  expenseId: string;
+}) {
+  const colors = useColors();
+  return (
+    <Card style={{ gap: 8 }}>
+      <View style={styles.rowTop}>
+        <Text
+          style={[styles.project, { color: colors.foreground }]}
+          numberOfLines={1}
+        >
+          {projectLabel}
+        </Text>
+        <ExpenseStatusBadge status={status} />
+      </View>
+      {submitterName ? (
+        <Text style={[styles.meta, { color: colors.mutedForeground }]} numberOfLines={1}>
+          {submitterName}
+        </Text>
+      ) : null}
+      <View style={styles.rowMeta}>
+        <Text style={[styles.meta, { color: colors.mutedForeground }]}>
+          {CATEGORY_LABELS[category as AddProjectExpenseBodyCategory] ?? category}{" "}
+          · {formatShortDate(spentAt)}
+        </Text>
+        <Text style={[styles.amount, { color: colors.foreground }]}>
+          {formatIDR(amount)}
+        </Text>
+      </View>
+      {description ? (
+        <Text
+          style={[styles.meta, { color: colors.mutedForeground }]}
+          numberOfLines={2}
+        >
+          {description}
+        </Text>
+      ) : null}
+      {status === "REJECTED" && rejectionReason ? (
+        <Text style={[styles.reject, { color: colors.destructive }]}>
+          Rejected: {rejectionReason}
+        </Text>
+      ) : null}
+      {status === "APPROVED" && approvedByName ? (
+        <Text style={[styles.meta, { color: colors.mutedForeground }]}>
+          Approved by {approvedByName}
+        </Text>
+      ) : null}
+      {hasReceipt ? <ReceiptButton expenseId={expenseId} /> : null}
+    </Card>
+  );
 }
 
 export default function ExpensesScreen() {
   const colors = useColors();
+  const { user } = useAuth();
+  const canSeeTeam = canViewTeamExpenses(user?.role);
   const [submitOpen, setSubmitOpen] = useState(false);
-  const [receiptLoadingId, setReceiptLoadingId] = useState<string | null>(null);
+  const [view, setView] = useState<ExpenseView>("mine");
 
   const q = useQuery<MyExpense[]>({
     queryKey: MY_EXPENSES_KEY,
@@ -149,20 +179,13 @@ export default function ExpensesScreen() {
   });
   const rows = q.data ?? [];
 
-  async function handleViewReceipt(id: string) {
-    if (receiptLoadingId) return;
-    setReceiptLoadingId(id);
-    try {
-      await openReceipt(id);
-    } catch (e) {
-      Alert.alert(
-        "Receipt unavailable",
-        e instanceof Error ? e.message : "Couldn't load the receipt.",
-      );
-    } finally {
-      setReceiptLoadingId(null);
-    }
-  }
+  // Cross-project expenses the user reviews (PM own projects / MGMT all /
+  // SALES own). Only fetched once the Team view is opened by an allowed role.
+  const teamEnabled = canSeeTeam && view === "team";
+  const teamQuery = useListExpenses({
+    query: { enabled: teamEnabled, queryKey: getListExpensesQueryKey() },
+  });
+  const teamRows = teamQuery.data ?? [];
 
   const kpi = useMemo(() => {
     const acc = { total: 0, approved: 0, pending: 0, rejected: 0 };
@@ -174,6 +197,58 @@ export default function ExpensesScreen() {
     }
     return acc;
   }, [rows]);
+
+  if (canSeeTeam && view === "team") {
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.background }}>
+        <ScreenHeader title="Expenses" subtitle="Claims across your projects" />
+        <FlatList
+          data={teamRows}
+          keyExtractor={(e) => e.id}
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={teamQuery.isFetching}
+              onRefresh={() => void teamQuery.refetch()}
+              tintColor={colors.primary}
+            />
+          }
+          ListHeaderComponent={
+            <ViewToggle view={view} onChange={setView} />
+          }
+          renderItem={({ item }) => (
+            <ExpenseCard
+              projectLabel={item.projectName ?? item.projectCode ?? "Project"}
+              submitterName={item.createdByName}
+              category={item.category}
+              spentAt={item.spentAt}
+              amount={item.amount}
+              description={item.description}
+              status={item.status}
+              rejectionReason={item.rejectionReason}
+              approvedByName={item.approvedByName}
+              hasReceipt={item.status === "APPROVED" || item.status === "REJECTED"}
+              expenseId={item.id}
+            />
+          )}
+          ListEmptyComponent={
+            teamQuery.isLoading ? (
+              <View style={styles.loading}>
+                <ActivityIndicator color={colors.primary} />
+              </View>
+            ) : (
+              <EmptyState
+                icon="credit-card"
+                title="No expenses to review"
+                message="Claims filed on your projects will show up here."
+              />
+            )
+          }
+        />
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
@@ -192,6 +267,7 @@ export default function ExpensesScreen() {
         }
         ListHeaderComponent={
           <View style={{ gap: 12, marginBottom: 4 }}>
+            {canSeeTeam ? <ViewToggle view={view} onChange={setView} /> : null}
             <Button
               label="Submit Expense"
               icon="plus"
@@ -208,70 +284,18 @@ export default function ExpensesScreen() {
           </View>
         }
         renderItem={({ item }) => (
-          <Card style={{ gap: 8 }}>
-            <View style={styles.rowTop}>
-              <Text
-                style={[styles.project, { color: colors.foreground }]}
-                numberOfLines={1}
-              >
-                {item.projectName ?? item.projectCode ?? "Project"}
-              </Text>
-              <ExpenseStatusBadge status={item.status} />
-            </View>
-            <View style={styles.rowMeta}>
-              <Text style={[styles.meta, { color: colors.mutedForeground }]}>
-                {CATEGORY_LABELS[item.category as AddProjectExpenseBodyCategory] ??
-                  item.category}{" "}
-                · {formatShortDate(item.spentAt)}
-              </Text>
-              <Text style={[styles.amount, { color: colors.foreground }]}>
-                {formatIDR(item.amount)}
-              </Text>
-            </View>
-            {item.description ? (
-              <Text
-                style={[styles.meta, { color: colors.mutedForeground }]}
-                numberOfLines={2}
-              >
-                {item.description}
-              </Text>
-            ) : null}
-            {item.status === "REJECTED" && item.rejectionReason ? (
-              <Text style={[styles.reject, { color: colors.destructive }]}>
-                Rejected: {item.rejectionReason}
-              </Text>
-            ) : null}
-            {item.status === "APPROVED" && item.approvedByName ? (
-              <Text style={[styles.meta, { color: colors.mutedForeground }]}>
-                Approved by {item.approvedByName}
-              </Text>
-            ) : null}
-            {item.hasReceipt ? (
-              <Pressable
-                onPress={() => void handleViewReceipt(item.id)}
-                disabled={receiptLoadingId !== null}
-                style={({ pressed }) => [
-                  styles.receiptBtn,
-                  { borderColor: colors.border },
-                  pressed && { opacity: 0.6 },
-                  receiptLoadingId !== null && receiptLoadingId !== item.id
-                    ? { opacity: 0.4 }
-                    : null,
-                ]}
-                hitSlop={8}
-                testID={`button-view-receipt-${item.id}`}
-              >
-                {receiptLoadingId === item.id ? (
-                  <ActivityIndicator size="small" color={colors.primary} />
-                ) : (
-                  <Feather name="file-text" size={16} color={colors.primary} />
-                )}
-                <Text style={[styles.receiptBtnText, { color: colors.primary }]}>
-                  {receiptLoadingId === item.id ? "Opening…" : "View receipt"}
-                </Text>
-              </Pressable>
-            ) : null}
-          </Card>
+          <ExpenseCard
+            projectLabel={item.projectName ?? item.projectCode ?? "Project"}
+            category={item.category}
+            spentAt={item.spentAt}
+            amount={item.amount}
+            description={item.description}
+            status={item.status}
+            rejectionReason={item.rejectionReason}
+            approvedByName={item.approvedByName}
+            hasReceipt={item.hasReceipt}
+            expenseId={item.id}
+          />
         )}
         ListEmptyComponent={
           q.isLoading ? (
@@ -292,6 +316,50 @@ export default function ExpensesScreen() {
         visible={submitOpen}
         onClose={() => setSubmitOpen(false)}
       />
+    </View>
+  );
+}
+
+// Segmented control switching between the user's own claims and the
+// cross-project claims they review. Shown only to roles that can see team
+// expenses (PM / MGMT / Sales).
+function ViewToggle({
+  view,
+  onChange,
+}: {
+  view: ExpenseView;
+  onChange: (v: ExpenseView) => void;
+}) {
+  const colors = useColors();
+  const options: { value: ExpenseView; label: string }[] = [
+    { value: "mine", label: "My Expenses" },
+    { value: "team", label: "Team" },
+  ];
+  return (
+    <View style={[styles.toggle, { backgroundColor: colors.muted, borderColor: colors.border }]}>
+      {options.map((opt) => {
+        const active = opt.value === view;
+        return (
+          <Pressable
+            key={opt.value}
+            onPress={() => onChange(opt.value)}
+            style={[
+              styles.toggleItem,
+              active && { backgroundColor: colors.card },
+            ]}
+            testID={`toggle-expenses-${opt.value}`}
+          >
+            <Text
+              style={[
+                styles.toggleText,
+                { color: active ? colors.foreground : colors.mutedForeground },
+              ]}
+            >
+              {opt.label}
+            </Text>
+          </Pressable>
+        );
+      })}
     </View>
   );
 }
@@ -523,19 +591,22 @@ const styles = StyleSheet.create({
   meta: { fontSize: 14, fontFamily: "Inter_400Regular", flexShrink: 1 },
   amount: { fontSize: 16, fontFamily: "Inter_600SemiBold" },
   reject: { fontSize: 13, fontFamily: "Inter_500Medium", lineHeight: 18 },
-  receiptBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    alignSelf: "flex-start",
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderWidth: 1,
-    borderRadius: 10,
-    marginTop: 2,
-  },
-  receiptBtnText: { fontSize: 14, fontFamily: "Inter_600SemiBold" },
   loading: { paddingVertical: 48, alignItems: "center" },
+  toggle: {
+    flexDirection: "row",
+    borderWidth: 1,
+    borderRadius: 12,
+    padding: 4,
+    gap: 4,
+    marginBottom: 4,
+  },
+  toggleItem: {
+    flex: 1,
+    alignItems: "center",
+    paddingVertical: 8,
+    borderRadius: 9,
+  },
+  toggleText: { fontSize: 14, fontFamily: "Inter_600SemiBold" },
   badge: {
     paddingHorizontal: 10,
     paddingVertical: 4,

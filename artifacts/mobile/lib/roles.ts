@@ -26,6 +26,21 @@ export function canApproveTimesheets(role: UserRole | undefined | null): boolean
   return role === "PROJECT_MANAGER";
 }
 
+/**
+ * Roles that can review project expenses beyond their own (the cross-project
+ * GET /api/expenses list). Mirrors the server allowlist: MANAGEMENT, the
+ * project's PM, and SALES (own projects). Used to surface a "Team" expense view
+ * so PMs can pull receipts for claims they review on the go.
+ */
+export function canViewTeamExpenses(role: UserRole | undefined | null): boolean {
+  return (
+    role === "MANAGEMENT" ||
+    role === "SUPER_ADMIN" ||
+    role === "PROJECT_MANAGER" ||
+    role === "SALES"
+  );
+}
+
 /** Friendly label for a role, used in the header greeting. */
 export function roleLabel(role: UserRole | undefined | null): string {
   switch (role) {
