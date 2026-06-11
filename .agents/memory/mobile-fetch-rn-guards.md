@@ -27,3 +27,20 @@ mobile auth UI can show "invalid credentials" itself.
 **Note:** the team runs the app as a native build (Expo), not the Chrome web
 version — `localStorage` only fails to exist in React Native, confirming the
 runtime.
+
+## Raw fetch() that bypasses customFetch must re-add auth + client headers
+
+customFetch has no RN blob/binary support, so binary downloads (e.g. expense
+receipt PDF) use a raw `fetch()`. That path skips everything customFetch injects,
+so it MUST manually set **both** `authorization: Bearer <token>` (from
+`getCurrentToken()`) **and** `x-secureprofit-client: "mobile"`.
+
+**Why:** the front-door site gate (`artifacts/api-server/src/app.ts`) rejects
+`/api/*` with 403 unless there's a valid gate cookie OR the
+`x-secureprofit-client === "mobile"` header. `_layout.tsx` calls
+`setClientId("mobile")`, but that only adds the header inside customFetch — a raw
+fetch silently 403s in any gate-enabled (prod) environment even when authed.
+
+**How to apply:** for any new direct fetch in the mobile app, mirror customFetch's
+header set (bearer + `x-secureprofit-client`). Prefer extracting a shared helper
+if more than one binary endpoint needs it.

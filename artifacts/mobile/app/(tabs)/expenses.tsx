@@ -1,3 +1,4 @@
+import { Feather } from "@expo/vector-icons";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AddProjectExpenseBodyCategory,
@@ -5,9 +6,12 @@ import {
   useAddProjectExpense,
   useListProjects,
 } from "@workspace/api-client-react";
+import { File, Paths } from "expo-file-system";
+import * as Sharing from "expo-sharing";
 import React, { useMemo, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   KeyboardAvoidingView,
   Modal,
@@ -30,6 +34,7 @@ import {
   TextField,
   type SelectOption,
 } from "@/components/ui";
+import { getCurrentToken } from "@/contexts/auth";
 import { useColors } from "@/hooks/useColors";
 import { formatIDR, formatShortDate, todayYMD } from "@/lib/format";
 
@@ -82,15 +87,82 @@ function ExpenseStatusBadge({ status }: { status: ExpenseStatus }) {
   );
 }
 
+// The shared customFetch can't return a binary blob in the React Native
+// runtime, so the receipt PDF is fetched directly with the bearer token, then
+// written to the cache and handed to the OS share sheet. On web there's no
+// share sheet, so we open the PDF in a new browser tab instead.
+async function openReceipt(expenseId: string): Promise<void> {
+  const base = `https://${process.env.EXPO_PUBLIC_DOMAIN}`;
+  const url = `${base}/api/expenses/${expenseId}/receipt`;
+  const token = getCurrentToken();
+  // This bypasses customFetch (no RN blob support), so the bearer token and the
+  // mobile client header that customFetch normally injects must be set by hand —
+  // the front-door site gate rejects /api/* without "x-secureprofit-client".
+  const headers: Record<string, string> = { "x-secureprofit-client": "mobile" };
+  if (token) headers.authorization = `Bearer ${token}`;
+  const res = await fetch(url, { headers });
+  if (!res.ok) {
+    const message =
+      res.status === 409
+        ? "Receipt isn't ready until the claim is approved or rejected."
+        : res.status === 403
+          ? "You can only view receipts for your own expenses."
+          : "Couldn't load the receipt. Please try again.";
+    throw new Error(message);
+  }
+
+  const buffer = await res.arrayBuffer();
+  const bytes = new Uint8Array(buffer);
+
+  if (Platform.OS === "web") {
+    const blob = new Blob([bytes], { type: "application/pdf" });
+    const objectUrl = URL.createObjectURL(blob);
+    window.open(objectUrl, "_blank");
+    // Give the new tab time to read the URL before releasing it.
+    setTimeout(() => URL.revokeObjectURL(objectUrl), 60_000);
+    return;
+  }
+
+  const file = new File(Paths.cache, `expense-receipt-${expenseId}.pdf`);
+  if (file.exists) file.delete();
+  file.create();
+  file.write(bytes);
+
+  if (!(await Sharing.isAvailableAsync())) {
+    throw new Error("Sharing isn't available on this device.");
+  }
+  await Sharing.shareAsync(file.uri, {
+    mimeType: "application/pdf",
+    UTI: "com.adobe.pdf",
+    dialogTitle: "Expense receipt",
+  });
+}
+
 export default function ExpensesScreen() {
   const colors = useColors();
   const [submitOpen, setSubmitOpen] = useState(false);
+  const [receiptLoadingId, setReceiptLoadingId] = useState<string | null>(null);
 
   const q = useQuery<MyExpense[]>({
     queryKey: MY_EXPENSES_KEY,
     queryFn: () => customFetch<MyExpense[]>("/api/expenses/mine?limit=500"),
   });
   const rows = q.data ?? [];
+
+  async function handleViewReceipt(id: string) {
+    if (receiptLoadingId) return;
+    setReceiptLoadingId(id);
+    try {
+      await openReceipt(id);
+    } catch (e) {
+      Alert.alert(
+        "Receipt unavailable",
+        e instanceof Error ? e.message : "Couldn't load the receipt.",
+      );
+    } finally {
+      setReceiptLoadingId(null);
+    }
+  }
 
   const kpi = useMemo(() => {
     const acc = { total: 0, approved: 0, pending: 0, rejected: 0 };
@@ -173,6 +245,31 @@ export default function ExpensesScreen() {
               <Text style={[styles.meta, { color: colors.mutedForeground }]}>
                 Approved by {item.approvedByName}
               </Text>
+            ) : null}
+            {item.hasReceipt ? (
+              <Pressable
+                onPress={() => void handleViewReceipt(item.id)}
+                disabled={receiptLoadingId !== null}
+                style={({ pressed }) => [
+                  styles.receiptBtn,
+                  { borderColor: colors.border },
+                  pressed && { opacity: 0.6 },
+                  receiptLoadingId !== null && receiptLoadingId !== item.id
+                    ? { opacity: 0.4 }
+                    : null,
+                ]}
+                hitSlop={8}
+                testID={`button-view-receipt-${item.id}`}
+              >
+                {receiptLoadingId === item.id ? (
+                  <ActivityIndicator size="small" color={colors.primary} />
+                ) : (
+                  <Feather name="file-text" size={16} color={colors.primary} />
+                )}
+                <Text style={[styles.receiptBtnText, { color: colors.primary }]}>
+                  {receiptLoadingId === item.id ? "Opening…" : "View receipt"}
+                </Text>
+              </Pressable>
             ) : null}
           </Card>
         )}
@@ -426,6 +523,18 @@ const styles = StyleSheet.create({
   meta: { fontSize: 14, fontFamily: "Inter_400Regular", flexShrink: 1 },
   amount: { fontSize: 16, fontFamily: "Inter_600SemiBold" },
   reject: { fontSize: 13, fontFamily: "Inter_500Medium", lineHeight: 18 },
+  receiptBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    alignSelf: "flex-start",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderRadius: 10,
+    marginTop: 2,
+  },
+  receiptBtnText: { fontSize: 14, fontFamily: "Inter_600SemiBold" },
   loading: { paddingVertical: 48, alignItems: "center" },
   badge: {
     paddingHorizontal: 10,
