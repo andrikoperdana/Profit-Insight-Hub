@@ -110,24 +110,18 @@ function SalesIntakeForm() {
   );
   const selectedLead = eligibleLeads.find((l) => l.id === selectedLeadId) || null;
 
-  const createProject = useCreateProject({
-    mutation: {
-      onSuccess: (data) => {
-        toast({
-          title: "Project submitted to PMO",
-          description: `${data.code} • awaiting PM assignment`,
-        });
-        setLocation("/");
-      },
-      onError: (err: any) => {
-        toast({
-          variant: "destructive",
-          title: "Failed to submit project",
-          description: err?.message ?? "Unknown error",
-        });
-      },
-    },
-  });
+  // Sales can only register a project from a won lead in the Sales Pipeline.
+  // If the form is opened without a lead, send the user back to the pipeline.
+  useEffect(() => {
+    if (!initialLeadId) {
+      toast({
+        title: "Start from the Sales Pipeline",
+        description: "Select a won lead to register a new project.",
+      });
+      setLocation("/leads");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const convertLead = useConvertLead({
     mutation: {
@@ -192,42 +186,30 @@ function SalesIntakeForm() {
   }, [selectedLeadId]);
 
   const onSubmit = (data: SalesIntake) => {
-    if (selectedLead) {
-      convertLead.mutate({
-        id: selectedLead.id,
-        data: {
-          code: data.code,
-          clientId: selectedLead.clientId ? undefined : data.clientId || undefined,
-          clientName:
-            selectedLead.clientId || data.clientId
-              ? undefined
-              : selectedLead.prospectiveClientName || data.name,
-          contractValue: data.contractValue,
-          vatPercent: data.vatPercent,
-          contractValueIncludesVat: data.contractValueIncludesVat,
-          estimatedCost: totals.cost,
-          plannedMandays: totals.mandays,
-          description: description || null,
-          spkFileUrl: spkFile?.url ?? null,
-          spkFileName: spkFile?.name ?? null,
-          contractFileUrl: contractFile?.url ?? null,
-          contractFileName: contractFile?.name ?? null,
-        },
+    if (!selectedLead) {
+      toast({
+        variant: "destructive",
+        title: "Select a won lead",
+        description: "Projects must be created from a won lead in the Sales Pipeline.",
       });
+      setLocation("/leads");
       return;
     }
-    createProject.mutate({
+    convertLead.mutate({
+      id: selectedLead.id,
       data: {
         code: data.code,
-        name: data.name,
-        clientId: data.clientId,
+        clientId: selectedLead.clientId ? undefined : data.clientId || undefined,
+        clientName:
+          selectedLead.clientId || data.clientId
+            ? undefined
+            : selectedLead.prospectiveClientName || data.name,
         contractValue: data.contractValue,
         vatPercent: data.vatPercent,
         contractValueIncludesVat: data.contractValueIncludesVat,
         estimatedCost: totals.cost,
         plannedMandays: totals.mandays,
-        status: ProjectStatus.DRAFT,
-        description: description || undefined,
+        description: description || null,
         spkFileUrl: spkFile?.url ?? null,
         spkFileName: spkFile?.name ?? null,
         contractFileUrl: contractFile?.url ?? null,
@@ -244,7 +226,7 @@ function SalesIntakeForm() {
   const estimatedProfit = watchedCv - totals.cost;
   const marginPct = watchedCv > 0 ? (estimatedProfit / watchedCv) * 100 : 0;
 
-  if (loadingClients) return <LoadingPage />;
+  if (!initialLeadId || loadingClients) return <LoadingPage />;
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
@@ -255,7 +237,7 @@ function SalesIntakeForm() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground">Register New Project</h1>
           <p className="text-muted-foreground">
-            Fill in manually, or pick a won lead from the Sales Pipeline to auto-fill. The PMO Director will assign a Project Manager.
+            Pick a won lead from the Sales Pipeline to auto-fill the details. The PMO Director will assign a Project Manager.
           </p>
         </div>
       </div>
@@ -264,23 +246,22 @@ function SalesIntakeForm() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <Card className="border-primary/30 bg-primary/5 shadow-sm">
             <CardHeader>
-              <CardTitle className="text-base">Register from Sales Pipeline (optional)</CardTitle>
+              <CardTitle className="text-base">Register from Sales Pipeline</CardTitle>
               <CardDescription>
-                Pick a lead in won/negotiation stage to auto-fill the name, value, client, and description. The lead will be marked WON automatically after submit.
+                Select a lead in won/negotiation stage to auto-fill the name, value, client, and description. The lead will be marked WON automatically after submit.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-center gap-3">
                 <div className="flex-1">
                   <Select
-                    value={selectedLeadId || "__none__"}
-                    onValueChange={(v) => setSelectedLeadId(v === "__none__" ? "" : v)}
+                    value={selectedLeadId || undefined}
+                    onValueChange={(v) => setSelectedLeadId(v)}
                   >
                     <SelectTrigger data-testid="select-lead-from-pipeline">
-                      <SelectValue placeholder="-- Manual (no lead) --" />
+                      <SelectValue placeholder="Select a won lead from the Sales Pipeline" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="__none__">-- Manual (no lead) --</SelectItem>
                       {eligibleLeads.map((l) => (
                         <SelectItem key={l.id} value={l.id}>
                           [{l.stage}] {l.title} · {formatIDR(l.estimatedValue)}
@@ -290,11 +271,6 @@ function SalesIntakeForm() {
                     </SelectContent>
                   </Select>
                 </div>
-                {selectedLeadId && (
-                  <Button type="button" variant="outline" size="sm" onClick={() => setSelectedLeadId("")}>
-                    Clear selection
-                  </Button>
-                )}
               </div>
               {selectedLead && (
                 <div className="rounded-md border border-primary/30 bg-background/60 p-3 text-xs space-y-1">
@@ -584,15 +560,15 @@ function SalesIntakeForm() {
             </Button>
             <Button
               type="submit"
-              disabled={createProject.isPending || convertLead.isPending}
+              disabled={convertLead.isPending}
               data-testid="button-submit-intake"
             >
-              {createProject.isPending || convertLead.isPending ? (
+              {convertLead.isPending ? (
                 "Submitting..."
               ) : (
                 <>
                   <Send className="mr-2 h-4 w-4" />
-                  {selectedLead ? "Convert Lead & Submit to PMO" : "Submit to PMO"}
+                  Convert Lead &amp; Submit to PMO
                 </>
               )}
             </Button>

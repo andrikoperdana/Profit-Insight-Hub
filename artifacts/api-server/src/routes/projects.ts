@@ -211,6 +211,14 @@ router.post("/projects", requireRole(...writeRoles), validateBody(CreateProjectB
   // Sales-role submissions are always DRAFT, owned by the submitting Sales,
   // and cannot pre-assign a PM. PMO Director assigns the PM later.
   const isSales = req.user!.role === "SALES";
+  // Sales can no longer create projects directly. Every Sales project must
+  // originate from a won lead via the Sales Pipeline lead-convert flow
+  // (POST /api/leads/:id/convert, which creates the project directly). Hard-block
+  // the manual create path here so the rule cannot be bypassed via the API.
+  if (isSales) {
+    res.status(403).json({ error: "Sales must create projects from a won lead in the Sales Pipeline." });
+    return;
+  }
   // Sales intake must capture initial resource requirements so the project has
   // an initial estimated cost/profit at creation time. Enforce server-side so
   // the requirement cannot be bypassed by calling the API directly.

@@ -120,7 +120,7 @@ export default function ProjectsList() {
               {seeding ? "Seeding…" : "Load 9 demo projects"}
             </Button>
           )}
-          {canCreateProject(user?.role) && (
+          {canCreateProject(user?.role) && user?.role !== "SALES" && (
             <Button asChild>
               <Link href="/projects/new">
                 <Plus className="h-4 w-4 mr-2" /> New Project

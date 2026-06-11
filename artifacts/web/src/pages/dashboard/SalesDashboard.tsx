@@ -3,8 +3,7 @@ import { Link } from "wouter";
 import { useAuth } from "@/lib/auth";
 import { useListProjects, ProjectStatus, useGetLeadsAnalytics } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Briefcase, Wallet, TrendingUp, Target, Activity, FilePlus2, Clock, AlertTriangle, FileText, Kanban } from "lucide-react";
+import { Briefcase, Wallet, TrendingUp, Target, Activity, Clock, AlertTriangle, FileText, Kanban } from "lucide-react";
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 function SpkMissingIcon() {
@@ -124,22 +123,6 @@ export default function SalesDashboard() {
   return (
     <div className="space-y-6">
       <WelcomeBanner subtitle="Pipeline and performance for engagements you own." />
-
-      <Card className="border-primary/30 bg-primary/5">
-        <CardContent className="flex items-center justify-between gap-4 py-4">
-          <div>
-            <p className="text-xs uppercase tracking-wide text-primary font-semibold">Register New Project</p>
-            <p className="text-sm text-muted-foreground mt-1">
-              Enter manually (4 fields) or pick from Sales Pipeline — won leads auto-fill the data. PMO will assign a PM.
-            </p>
-          </div>
-          <Link href="/projects/new">
-            <Button data-testid="button-new-project">
-              <FilePlus2 className="h-4 w-4 mr-2" /> New Project
-            </Button>
-          </Link>
-        </CardContent>
-      </Card>
 
       <div className="grid gap-3 md:grid-cols-2">
         <Link href="/leads">
