@@ -32887,6 +32887,7 @@ export namespace Prisma {
     prospectiveClientName: string | null
     industry: string | null
     source: string | null
+    region: string | null
     stage: $Enums.LeadStage | null
     estimatedValue: number | null
     probability: number | null
@@ -32916,6 +32917,7 @@ export namespace Prisma {
     prospectiveClientName: string | null
     industry: string | null
     source: string | null
+    region: string | null
     stage: $Enums.LeadStage | null
     estimatedValue: number | null
     probability: number | null
@@ -32945,6 +32947,7 @@ export namespace Prisma {
     prospectiveClientName: number
     industry: number
     source: number
+    region: number
     stage: number
     estimatedValue: number
     probability: number
@@ -32990,6 +32993,7 @@ export namespace Prisma {
     prospectiveClientName?: true
     industry?: true
     source?: true
+    region?: true
     stage?: true
     estimatedValue?: true
     probability?: true
@@ -33019,6 +33023,7 @@ export namespace Prisma {
     prospectiveClientName?: true
     industry?: true
     source?: true
+    region?: true
     stage?: true
     estimatedValue?: true
     probability?: true
@@ -33048,6 +33053,7 @@ export namespace Prisma {
     prospectiveClientName?: true
     industry?: true
     source?: true
+    region?: true
     stage?: true
     estimatedValue?: true
     probability?: true
@@ -33164,6 +33170,7 @@ export namespace Prisma {
     prospectiveClientName: string | null
     industry: string | null
     source: string | null
+    region: string | null
     stage: $Enums.LeadStage
     estimatedValue: number
     probability: number
@@ -33212,6 +33219,7 @@ export namespace Prisma {
     prospectiveClientName?: boolean
     industry?: boolean
     source?: boolean
+    region?: boolean
     stage?: boolean
     estimatedValue?: boolean
     probability?: boolean
@@ -33245,6 +33253,7 @@ export namespace Prisma {
     prospectiveClientName?: boolean
     industry?: boolean
     source?: boolean
+    region?: boolean
     stage?: boolean
     estimatedValue?: boolean
     probability?: boolean
@@ -33276,6 +33285,7 @@ export namespace Prisma {
     prospectiveClientName?: boolean
     industry?: boolean
     source?: boolean
+    region?: boolean
     stage?: boolean
     estimatedValue?: boolean
     probability?: boolean
@@ -33323,6 +33333,7 @@ export namespace Prisma {
       prospectiveClientName: string | null
       industry: string | null
       source: string | null
+      region: string | null
       stage: $Enums.LeadStage
       estimatedValue: number
       probability: number
@@ -33745,6 +33756,7 @@ export namespace Prisma {
     readonly prospectiveClientName: FieldRef<"Lead", 'String'>
     readonly industry: FieldRef<"Lead", 'String'>
     readonly source: FieldRef<"Lead", 'String'>
+    readonly region: FieldRef<"Lead", 'String'>
     readonly stage: FieldRef<"Lead", 'LeadStage'>
     readonly estimatedValue: FieldRef<"Lead", 'Float'>
     readonly probability: FieldRef<"Lead", 'Int'>
@@ -49900,6 +49912,7 @@ export namespace Prisma {
     prospectiveClientName: 'prospectiveClientName',
     industry: 'industry',
     source: 'source',
+    region: 'region',
     stage: 'stage',
     estimatedValue: 'estimatedValue',
     probability: 'probability',
@@ -53087,6 +53100,7 @@ export namespace Prisma {
     prospectiveClientName?: StringNullableFilter<"Lead"> | string | null
     industry?: StringNullableFilter<"Lead"> | string | null
     source?: StringNullableFilter<"Lead"> | string | null
+    region?: StringNullableFilter<"Lead"> | string | null
     stage?: EnumLeadStageFilter<"Lead"> | $Enums.LeadStage
     estimatedValue?: FloatFilter<"Lead"> | number
     probability?: IntFilter<"Lead"> | number
@@ -53119,6 +53133,7 @@ export namespace Prisma {
     prospectiveClientName?: SortOrderInput | SortOrder
     industry?: SortOrderInput | SortOrder
     source?: SortOrderInput | SortOrder
+    region?: SortOrderInput | SortOrder
     stage?: SortOrder
     estimatedValue?: SortOrder
     probability?: SortOrder
@@ -53156,6 +53171,7 @@ export namespace Prisma {
     prospectiveClientName?: StringNullableFilter<"Lead"> | string | null
     industry?: StringNullableFilter<"Lead"> | string | null
     source?: StringNullableFilter<"Lead"> | string | null
+    region?: StringNullableFilter<"Lead"> | string | null
     stage?: EnumLeadStageFilter<"Lead"> | $Enums.LeadStage
     estimatedValue?: FloatFilter<"Lead"> | number
     probability?: IntFilter<"Lead"> | number
@@ -53186,6 +53202,7 @@ export namespace Prisma {
     prospectiveClientName?: SortOrderInput | SortOrder
     industry?: SortOrderInput | SortOrder
     source?: SortOrderInput | SortOrder
+    region?: SortOrderInput | SortOrder
     stage?: SortOrder
     estimatedValue?: SortOrder
     probability?: SortOrder
@@ -53223,6 +53240,7 @@ export namespace Prisma {
     prospectiveClientName?: StringNullableWithAggregatesFilter<"Lead"> | string | null
     industry?: StringNullableWithAggregatesFilter<"Lead"> | string | null
     source?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    region?: StringNullableWithAggregatesFilter<"Lead"> | string | null
     stage?: EnumLeadStageWithAggregatesFilter<"Lead"> | $Enums.LeadStage
     estimatedValue?: FloatWithAggregatesFilter<"Lead"> | number
     probability?: IntWithAggregatesFilter<"Lead"> | number
@@ -57285,6 +57303,7 @@ export namespace Prisma {
     prospectiveClientName?: string | null
     industry?: string | null
     source?: string | null
+    region?: string | null
     stage?: $Enums.LeadStage
     estimatedValue?: number
     probability?: number
@@ -57316,6 +57335,7 @@ export namespace Prisma {
     prospectiveClientName?: string | null
     industry?: string | null
     source?: string | null
+    region?: string | null
     stage?: $Enums.LeadStage
     estimatedValue?: number
     probability?: number
@@ -57345,6 +57365,7 @@ export namespace Prisma {
     prospectiveClientName?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
     estimatedValue?: FloatFieldUpdateOperationsInput | number
     probability?: IntFieldUpdateOperationsInput | number
@@ -57376,6 +57397,7 @@ export namespace Prisma {
     prospectiveClientName?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
     estimatedValue?: FloatFieldUpdateOperationsInput | number
     probability?: IntFieldUpdateOperationsInput | number
@@ -57406,6 +57428,7 @@ export namespace Prisma {
     prospectiveClientName?: string | null
     industry?: string | null
     source?: string | null
+    region?: string | null
     stage?: $Enums.LeadStage
     estimatedValue?: number
     probability?: number
@@ -57434,6 +57457,7 @@ export namespace Prisma {
     prospectiveClientName?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
     estimatedValue?: FloatFieldUpdateOperationsInput | number
     probability?: IntFieldUpdateOperationsInput | number
@@ -57462,6 +57486,7 @@ export namespace Prisma {
     prospectiveClientName?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
     estimatedValue?: FloatFieldUpdateOperationsInput | number
     probability?: IntFieldUpdateOperationsInput | number
@@ -61046,6 +61071,7 @@ export namespace Prisma {
     prospectiveClientName?: SortOrder
     industry?: SortOrder
     source?: SortOrder
+    region?: SortOrder
     stage?: SortOrder
     estimatedValue?: SortOrder
     probability?: SortOrder
@@ -61082,6 +61108,7 @@ export namespace Prisma {
     prospectiveClientName?: SortOrder
     industry?: SortOrder
     source?: SortOrder
+    region?: SortOrder
     stage?: SortOrder
     estimatedValue?: SortOrder
     probability?: SortOrder
@@ -61111,6 +61138,7 @@ export namespace Prisma {
     prospectiveClientName?: SortOrder
     industry?: SortOrder
     source?: SortOrder
+    region?: SortOrder
     stage?: SortOrder
     estimatedValue?: SortOrder
     probability?: SortOrder
@@ -68836,6 +68864,7 @@ export namespace Prisma {
     prospectiveClientName?: string | null
     industry?: string | null
     source?: string | null
+    region?: string | null
     stage?: $Enums.LeadStage
     estimatedValue?: number
     probability?: number
@@ -68866,6 +68895,7 @@ export namespace Prisma {
     prospectiveClientName?: string | null
     industry?: string | null
     source?: string | null
+    region?: string | null
     stage?: $Enums.LeadStage
     estimatedValue?: number
     probability?: number
@@ -70377,6 +70407,7 @@ export namespace Prisma {
     prospectiveClientName?: StringNullableFilter<"Lead"> | string | null
     industry?: StringNullableFilter<"Lead"> | string | null
     source?: StringNullableFilter<"Lead"> | string | null
+    region?: StringNullableFilter<"Lead"> | string | null
     stage?: EnumLeadStageFilter<"Lead"> | $Enums.LeadStage
     estimatedValue?: FloatFilter<"Lead"> | number
     probability?: IntFilter<"Lead"> | number
@@ -70958,6 +70989,7 @@ export namespace Prisma {
     prospectiveClientName?: string | null
     industry?: string | null
     source?: string | null
+    region?: string | null
     stage?: $Enums.LeadStage
     estimatedValue?: number
     probability?: number
@@ -70987,6 +71019,7 @@ export namespace Prisma {
     prospectiveClientName?: string | null
     industry?: string | null
     source?: string | null
+    region?: string | null
     stage?: $Enums.LeadStage
     estimatedValue?: number
     probability?: number
@@ -83598,6 +83631,7 @@ export namespace Prisma {
     prospectiveClientName?: string | null
     industry?: string | null
     source?: string | null
+    region?: string | null
     stage?: $Enums.LeadStage
     estimatedValue?: number
     probability?: number
@@ -83628,6 +83662,7 @@ export namespace Prisma {
     prospectiveClientName?: string | null
     industry?: string | null
     source?: string | null
+    region?: string | null
     stage?: $Enums.LeadStage
     estimatedValue?: number
     probability?: number
@@ -83789,6 +83824,7 @@ export namespace Prisma {
     prospectiveClientName?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
     estimatedValue?: FloatFieldUpdateOperationsInput | number
     probability?: IntFieldUpdateOperationsInput | number
@@ -83819,6 +83855,7 @@ export namespace Prisma {
     prospectiveClientName?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
     estimatedValue?: FloatFieldUpdateOperationsInput | number
     probability?: IntFieldUpdateOperationsInput | number
@@ -87871,6 +87908,7 @@ export namespace Prisma {
     prospectiveClientName?: string | null
     industry?: string | null
     source?: string | null
+    region?: string | null
     stage?: $Enums.LeadStage
     estimatedValue?: number
     probability?: number
@@ -89584,6 +89622,7 @@ export namespace Prisma {
     prospectiveClientName?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
     estimatedValue?: FloatFieldUpdateOperationsInput | number
     probability?: IntFieldUpdateOperationsInput | number
@@ -89614,6 +89653,7 @@ export namespace Prisma {
     prospectiveClientName?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
     estimatedValue?: FloatFieldUpdateOperationsInput | number
     probability?: IntFieldUpdateOperationsInput | number
@@ -89643,6 +89683,7 @@ export namespace Prisma {
     prospectiveClientName?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
     estimatedValue?: FloatFieldUpdateOperationsInput | number
     probability?: IntFieldUpdateOperationsInput | number
@@ -90364,6 +90405,7 @@ export namespace Prisma {
     prospectiveClientName?: string | null
     industry?: string | null
     source?: string | null
+    region?: string | null
     stage?: $Enums.LeadStage
     estimatedValue?: number
     probability?: number
@@ -90538,6 +90580,7 @@ export namespace Prisma {
     prospectiveClientName?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
     estimatedValue?: FloatFieldUpdateOperationsInput | number
     probability?: IntFieldUpdateOperationsInput | number
@@ -90567,6 +90610,7 @@ export namespace Prisma {
     prospectiveClientName?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
     estimatedValue?: FloatFieldUpdateOperationsInput | number
     probability?: IntFieldUpdateOperationsInput | number
@@ -90596,6 +90640,7 @@ export namespace Prisma {
     prospectiveClientName?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     source?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: NullableStringFieldUpdateOperationsInput | string | null
     stage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
     estimatedValue?: FloatFieldUpdateOperationsInput | number
     probability?: IntFieldUpdateOperationsInput | number

@@ -879,6 +879,7 @@ export const ListLeadsResponseItem = zod.object({
   prospectiveClientName: zod.string().nullish(),
   industry: zod.string().nullish(),
   source: zod.string().nullish(),
+  region: zod.string().nullish(),
   stage: zod.enum([
     "NEW",
     "QUALIFIED",
@@ -961,6 +962,7 @@ export const UpdateLeadResponse = zod.object({
   prospectiveClientName: zod.string().nullish(),
   industry: zod.string().nullish(),
   source: zod.string().nullish(),
+  region: zod.string().nullish(),
   stage: zod.enum([
     "NEW",
     "QUALIFIED",

@@ -21,6 +21,7 @@ type LeadForSerialize = {
   prospectiveClientName: string | null;
   industry: string | null;
   source: string | null;
+  region: string | null;
   stage: string;
   estimatedValue: number;
   probability: number;
@@ -81,6 +82,7 @@ function serialize(l: LeadForSerialize) {
     prospectiveClientName: l.prospectiveClientName,
     industry: l.industry,
     source: l.source,
+    region: l.region,
     stage: l.stage,
     estimatedValue: l.estimatedValue,
     probability: l.probability,

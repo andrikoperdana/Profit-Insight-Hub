@@ -145,6 +145,7 @@ export default function LeadsPage() {
   const stageFilter = (params.get("stages") || "").split(",").filter(Boolean) as LeadStage[];
   const ownerFilter = params.get("owner") || "";
   const sourceFilter = params.get("source") || "";
+  const regionFilter = params.get("region") || "";
   const fromFilter = params.get("from") || "";
   const toFilter = params.get("to") || "";
 
@@ -191,10 +192,19 @@ export default function LeadsPage() {
     if (stageFilter.length) out = out.filter((l) => stageFilter.includes(l.stage));
     if (ownerFilter) out = out.filter((l) => l.ownerId === ownerFilter);
     if (sourceFilter) out = out.filter((l) => (l.source || "").toLowerCase().includes(sourceFilter.toLowerCase()));
+    if (regionFilter) out = out.filter((l) => (l.region || "") === regionFilter);
     if (fromFilter) out = out.filter((l) => l.expectedCloseDate && l.expectedCloseDate >= fromFilter);
     if (toFilter) out = out.filter((l) => l.expectedCloseDate && l.expectedCloseDate <= toFilter);
     return out;
-  }, [leads, stageFilter, ownerFilter, sourceFilter, fromFilter, toFilter]);
+  }, [leads, stageFilter, ownerFilter, sourceFilter, regionFilter, fromFilter, toFilter]);
+
+  // Region filter options derived from distinct region values present in the
+  // loaded leads (auto-handles regions added in Pipedrive; no dead options).
+  const regionOptions = useMemo(() => {
+    const set = new Set<string>();
+    for (const l of leads ?? []) if (l.region) set.add(l.region);
+    return Array.from(set).sort();
+  }, [leads]);
 
   const grouped = useMemo(() => {
     const out: Record<LeadStage, Lead[]> = {
@@ -232,7 +242,7 @@ export default function LeadsPage() {
   );
 
   // Reset paging + clear bulk selection whenever the active filters change.
-  const filterKey = `${params.get("stages") || ""}|${ownerFilter}|${sourceFilter}|${fromFilter}|${toFilter}`;
+  const filterKey = `${params.get("stages") || ""}|${ownerFilter}|${sourceFilter}|${regionFilter}|${fromFilter}|${toFilter}`;
   useEffect(() => {
     setListPage(1);
     setColLimits({});
@@ -530,6 +540,18 @@ export default function LeadsPage() {
               </Select>
             </div>
           )}
+          <div className="min-w-[170px]">
+            <Label className="text-xs text-muted-foreground">Region</Label>
+            <Select value={regionFilter || "_all"} onValueChange={(v) => setParams({ region: v === "_all" ? null : v })}>
+              <SelectTrigger><SelectValue placeholder="All" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="_all">All regions</SelectItem>
+                {regionOptions.map((r) => (
+                  <SelectItem key={r} value={r}>{r}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           <div className="min-w-[150px]">
             <Label className="text-xs text-muted-foreground">Source</Label>
             <Input value={sourceFilter} onChange={(e) => setParams({ source: e.target.value || null })} placeholder="any" />
@@ -542,8 +564,8 @@ export default function LeadsPage() {
             <Label className="text-xs text-muted-foreground">to</Label>
             <Input type="date" value={toFilter} onChange={(e) => setParams({ to: e.target.value || null })} />
           </div>
-          {(stageFilter.length || ownerFilter || sourceFilter || fromFilter || toFilter) ? (
-            <Button size="sm" variant="ghost" onClick={() => setParams({ stages: null, owner: null, source: null, from: null, to: null })}>
+          {(stageFilter.length || ownerFilter || sourceFilter || regionFilter || fromFilter || toFilter) ? (
+            <Button size="sm" variant="ghost" onClick={() => setParams({ stages: null, owner: null, source: null, region: null, from: null, to: null })}>
               Clear
             </Button>
           ) : null}
@@ -714,6 +736,7 @@ export default function LeadsPage() {
                   <TableHead className="text-right">Value</TableHead>
                   <TableHead className="text-right">Prob</TableHead>
                   <TableHead>Owner</TableHead>
+                  <TableHead>Region</TableHead>
                   <TableHead>Close</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
@@ -749,6 +772,7 @@ export default function LeadsPage() {
                     <TableCell className="text-right font-mono text-sm">{formatIDR(l.estimatedValue)}</TableCell>
                     <TableCell className="text-right text-sm">{l.probability}%</TableCell>
                     <TableCell className="text-sm">{l.ownerName ?? "—"}</TableCell>
+                    <TableCell className="text-sm">{l.region ?? "—"}</TableCell>
                     <TableCell className="text-sm">{l.expectedCloseDate ? l.expectedCloseDate.slice(0, 10) : "—"}</TableCell>
                     <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center justify-end gap-1">
@@ -770,7 +794,7 @@ export default function LeadsPage() {
                   </TableRow>
                 ))}
                 {filteredLeads.length === 0 && (
-                  <TableRow><TableCell colSpan={canReassignAny || isSales ? 9 : 8} className="text-center text-muted-foreground py-8">No leads.</TableCell></TableRow>
+                  <TableRow><TableCell colSpan={canReassignAny || isSales ? 10 : 9} className="text-center text-muted-foreground py-8">No leads.</TableCell></TableRow>
                 )}
               </TableBody>
             </Table>
@@ -833,6 +857,7 @@ export default function LeadsPage() {
                   <Row k="Probability" v={`${drawerLead.probability}%`} />
                   <Row k="Weighted" v={formatIDR(drawerLead.estimatedValue * drawerLead.probability / 100)} />
                   <Row k="Source" v={drawerLead.source || "—"} />
+                  <Row k="Region" v={drawerLead.region || "—"} />
                   <Row k="Industry" v={drawerLead.industry || "—"} />
                   <Row k="Contact" v={drawerLead.contactName ? `${drawerLead.contactName}${drawerLead.contactEmail ? " · " + drawerLead.contactEmail : ""}` : "—"} />
                   <Row k="Owner" v={drawerLead.ownerName || "—"} />

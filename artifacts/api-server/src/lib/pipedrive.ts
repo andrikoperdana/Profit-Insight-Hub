@@ -300,6 +300,50 @@ async function loadSalesByEmail(): Promise<Map<string, string>> {
   return m;
 }
 
+// Pipedrive deal custom-field key for "Region" (enum). Stable per account.
+const REGION_FIELD_KEY = "e6d24cd8f0723cbf5bd39d42b5e0eb7fea929102";
+
+type PdFieldOption = { id?: number; label?: string };
+type PdDealField = { key?: string; options?: PdFieldOption[] };
+
+/**
+ * Pipedrive Region enum: option-id -> label (e.g. 47 -> "Indonesia"), read from
+ * the deal-field definition so a new region added in Pipedrive flows through
+ * automatically. Fail-soft: any error or a missing field yields an empty map,
+ * so a sync never breaks over region metadata. Callers must treat an empty map
+ * as "region unknown" and skip writing region (see importDeal) rather than
+ * overwriting stored values with null.
+ */
+async function loadRegionMap(): Promise<Map<number, string>> {
+  const m = new Map<number, string>();
+  try {
+    const fields = await pdListAll<PdDealField>("/dealFields");
+    const field = fields.find((f) => f.key === REGION_FIELD_KEY);
+    for (const o of field?.options ?? []) {
+      if (typeof o.id === "number" && o.label) m.set(o.id, o.label);
+    }
+  } catch (e) {
+    logger.warn(
+      { err: e },
+      "pipedrive: failed to load Region field options; leads will sync without region",
+    );
+  }
+  return m;
+}
+
+/**
+ * Map a deal's Region custom-field value to its label. Pipedrive returns enum
+ * values inconsistently as a number or a numeric string; null/unset/unmapped
+ * all resolve to null.
+ */
+function resolveRegion(deal: PdDeal, regionMap: Map<number, string>): string | null {
+  const raw = (deal as Record<string, unknown>)[REGION_FIELD_KEY];
+  if (raw === null || raw === undefined || raw === "") return null;
+  const id = Number(String(raw));
+  if (!Number.isFinite(id)) return null;
+  return regionMap.get(id) ?? null;
+}
+
 // ---------------------------------------------------------------------------
 // Import core
 // ---------------------------------------------------------------------------
@@ -313,6 +357,7 @@ export interface SyncContext {
   stageMap: Map<number, LeadStage>;
   ownerEmailMap: Map<number, string>;
   salesByEmail: Map<string, string>;
+  regionMap: Map<number, string>;
   defaultOwnerId: string | null;
 }
 
@@ -384,9 +429,15 @@ export async function importDeal(deal: PdDeal, ctx: SyncContext): Promise<Import
     const lostAt = stage === "LOST" ? (pdDate(deal.lost_time) ?? new Date()) : null;
 
     // Pipedrive-owned fields (written on both create and update).
+    // Only write `region` when the field-options map actually loaded. An empty
+    // map means the /dealFields fetch failed; writing region:null then would
+    // overwrite existing regions on update, and because the same write advances
+    // pipedriveUpdatedAt the stale-write skip would prevent self-healing. So we
+    // omit the key entirely and leave the stored region untouched.
     const owned = {
       title: deal.title ?? `Pipedrive Deal ${dealId}`,
       estimatedValue: dealValueToIdr(deal.value, deal.currency),
+      ...(ctx.regionMap.size > 0 ? { region: resolveRegion(deal, ctx.regionMap) } : {}),
       expectedCloseDate: pdDate(deal.expected_close_date),
       stage: stage as Prisma.LeadCreateInput["stage"],
       wonAt,
@@ -445,16 +496,18 @@ export interface SyncResult {
 }
 
 async function buildContext(): Promise<SyncContext> {
-  const [stageMap, ownerEmailMap, salesByEmail, settings] = await Promise.all([
+  const [stageMap, ownerEmailMap, salesByEmail, regionMap, settings] = await Promise.all([
     loadStageMap(),
     loadOwnerEmailMap(),
     loadSalesByEmail(),
+    loadRegionMap(),
     prisma.appSetting.findUnique({ where: { id: APP_SETTINGS_ID } }),
   ]);
   return {
     stageMap,
     ownerEmailMap,
     salesByEmail,
+    regionMap,
     defaultOwnerId: settings?.pipedriveDefaultOwnerId ?? null,
   };
 }

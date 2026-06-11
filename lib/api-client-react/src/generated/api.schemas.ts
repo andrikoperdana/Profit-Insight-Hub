@@ -549,6 +549,7 @@ export interface Lead {
   prospectiveClientName?: string | null;
   industry?: string | null;
   source?: string | null;
+  region?: string | null;
   stage: LeadStage;
   estimatedValue: number;
   probability: number;

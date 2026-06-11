@@ -685,6 +685,7 @@ model Lead {
   prospectiveClientName String?
   industry           String?
   source             String?
+  region             String?
   stage              LeadStage  @default(NEW)
   estimatedValue     Float      @default(0)
   probability        Int        @default(20)

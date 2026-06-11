@@ -2911,6 +2911,7 @@ components:
         prospectiveClientName: { type: string, nullable: true }
         industry: { type: string, nullable: true }
         source: { type: string, nullable: true }
+        region: { type: string, nullable: true }
         stage: { $ref: "#/components/schemas/LeadStage" }
         estimatedValue: { type: number }
         probability: { type: integer }
