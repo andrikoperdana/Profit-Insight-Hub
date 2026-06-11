@@ -86,7 +86,10 @@ export type AuditAction =
   | "performance_review.project_rating_removed"
   | "workstream.created"
   | "workstream.updated"
-  | "workstream.deleted";
+  | "workstream.deleted"
+  | "pipedrive.synced"
+  | "pipedrive.settings_updated"
+  | "pipedrive.stage_mappings_updated";
 
 export type EntityType =
   | "User"
@@ -115,6 +118,7 @@ export type EntityType =
   | "AppSetting"
   | "Client"
   | "XeroConnection"
+  | "PipedriveStageMapping"
   | "System";
 
 interface AuditInput {

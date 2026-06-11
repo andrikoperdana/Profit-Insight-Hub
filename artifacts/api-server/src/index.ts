@@ -10,7 +10,8 @@ import {
 } from "@workspace/db";
 import { runPaymentSync } from "./routes/xero.js";
 import { xeroConfigured } from "./lib/xero.js";
-import { getAppSettings } from "./lib/app-settings.js";
+import { getAppSettings, APP_SETTINGS_ID } from "./lib/app-settings.js";
+import { runFullSync, PipedriveNotConnectedError } from "./lib/pipedrive.js";
 
 const rawPort = process.env["PORT"];
 
@@ -103,6 +104,31 @@ if (xeroConfigured()) {
   }, XERO_POLL_MS);
   poll.unref();
 }
+
+// Poll Pipedrive for deal changes and import them into the Leads pipeline.
+// Manual "Sync now" is always available from the UI; this just keeps things
+// fresh between webhook pings. Gated behind the AppSetting
+// `pipedriveAutoSyncEnabled` (default OFF) so it never runs unless an operator
+// turns it on, and a harmless no-op until the connector is authorized
+// (runFullSync throws PipedriveNotConnectedError when disconnected).
+const PIPEDRIVE_POLL_MS = 15 * 60_000;
+const pipedrivePoll = setInterval(() => {
+  prisma.appSetting
+    .findUnique({ where: { id: APP_SETTINGS_ID } })
+    .then((settings) => {
+      if (!settings?.pipedriveAutoSyncEnabled) return;
+      return runFullSync().then((r) => {
+        if (r.imported > 0 || r.updated > 0) {
+          logger.info(r, "Pipedrive poll imported deals");
+        }
+      });
+    })
+    .catch((err) => {
+      if (err instanceof PipedriveNotConnectedError) return;
+      logger.warn({ err }, "Pipedrive poll failed (continuing)");
+    });
+}, PIPEDRIVE_POLL_MS);
+pipedrivePoll.unref();
 
 // Graceful shutdown: on deploy rollover / container stop, stop accepting new
 // connections, let in-flight requests finish, close the DB pool cleanly, then

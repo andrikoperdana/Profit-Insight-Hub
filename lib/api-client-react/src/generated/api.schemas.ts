@@ -53,6 +53,76 @@ export interface XeroInvoiceResult {
   invoiceNumber?: string | null;
 }
 
+export interface PipedriveStatus {
+  connected: boolean;
+  autoSyncEnabled: boolean;
+  lastSyncAt?: string | null;
+  defaultOwnerId?: string | null;
+  importedLeadCount: number;
+  linkedClientCount: number;
+  stageMappingCount: number;
+}
+
+export type PipedriveSyncResultErrorsItem = {
+  dealId: number;
+  error: string;
+};
+
+export interface PipedriveSyncResult {
+  imported: number;
+  updated: number;
+  skipped: number;
+  errors: PipedriveSyncResultErrorsItem[];
+}
+
+export type LeadStage = (typeof LeadStage)[keyof typeof LeadStage];
+
+export const LeadStage = {
+  NEW: "NEW",
+  QUALIFIED: "QUALIFIED",
+  PROPOSAL: "PROPOSAL",
+  NEGOTIATION: "NEGOTIATION",
+  WON: "WON",
+  LOST: "LOST",
+} as const;
+
+export interface PipedriveStageMapping {
+  id: string;
+  pipedrivePipelineId: number;
+  pipedriveStageId: number;
+  leadStage: LeadStage;
+  label?: string | null;
+  updatedAt: string;
+}
+
+export interface PipedriveStage {
+  id: number;
+  name?: string | null;
+  pipelineId?: number | null;
+  orderNr?: number | null;
+}
+
+export interface PipedriveStageMappingsResponse {
+  mappings: PipedriveStageMapping[];
+  stages?: PipedriveStage[] | null;
+}
+
+export interface UpdatePipedriveSettingsBody {
+  autoSyncEnabled?: boolean;
+  defaultOwnerId?: string | null;
+}
+
+export type UpdatePipedriveStageMappingsBodyMappingsItem = {
+  pipedrivePipelineId: number;
+  pipedriveStageId: number;
+  leadStage: LeadStage;
+  label?: string | null;
+};
+
+export interface UpdatePipedriveStageMappingsBody {
+  mappings: UpdatePipedriveStageMappingsBodyMappingsItem[];
+}
+
 export type UserRole = (typeof UserRole)[keyof typeof UserRole];
 
 export const UserRole = {
@@ -467,17 +537,6 @@ export interface UpdateUserBody {
   managerId?: string | null;
   principalId?: string | null;
 }
-
-export type LeadStage = (typeof LeadStage)[keyof typeof LeadStage];
-
-export const LeadStage = {
-  NEW: "NEW",
-  QUALIFIED: "QUALIFIED",
-  PROPOSAL: "PROPOSAL",
-  NEGOTIATION: "NEGOTIATION",
-  WON: "WON",
-  LOST: "LOST",
-} as const;
 
 export interface Lead {
   id: string;

@@ -204,6 +204,11 @@ export type InvoiceSetting = $Result.DefaultSelection<Prisma.$InvoiceSettingPayl
  */
 export type AppSetting = $Result.DefaultSelection<Prisma.$AppSettingPayload>
 /**
+ * Model PipedriveStageMapping
+ * 
+ */
+export type PipedriveStageMapping = $Result.DefaultSelection<Prisma.$PipedriveStageMappingPayload>
+/**
  * Model XeroConnection
  * 
  */
@@ -995,6 +1000,16 @@ export class PrismaClient<
   get appSetting(): Prisma.AppSettingDelegate<ExtArgs>;
 
   /**
+   * `prisma.pipedriveStageMapping`: Exposes CRUD operations for the **PipedriveStageMapping** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PipedriveStageMappings
+    * const pipedriveStageMappings = await prisma.pipedriveStageMapping.findMany()
+    * ```
+    */
+  get pipedriveStageMapping(): Prisma.PipedriveStageMappingDelegate<ExtArgs>;
+
+  /**
    * `prisma.xeroConnection`: Exposes CRUD operations for the **XeroConnection** model.
     * Example usage:
     * ```ts
@@ -1482,6 +1497,7 @@ export namespace Prisma {
     PerformanceReviewProjectRating: 'PerformanceReviewProjectRating',
     InvoiceSetting: 'InvoiceSetting',
     AppSetting: 'AppSetting',
+    PipedriveStageMapping: 'PipedriveStageMapping',
     XeroConnection: 'XeroConnection'
   };
 
@@ -1498,7 +1514,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "client" | "project" | "projectReport" | "projectWorkstream" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectClosingChecklistItem" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "skillDevelopmentGoal" | "skillProgressionLog" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "projectTemplate" | "projectTemplateResource" | "projectTemplateMilestone" | "projectTemplateRaidItem" | "notification" | "projectRaidItem" | "performanceReview" | "performanceReviewProjectRating" | "invoiceSetting" | "appSetting" | "xeroConnection"
+      modelProps: "user" | "client" | "project" | "projectReport" | "projectWorkstream" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectClosingChecklistItem" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "skillDevelopmentGoal" | "skillProgressionLog" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "projectTemplate" | "projectTemplateResource" | "projectTemplateMilestone" | "projectTemplateRaidItem" | "notification" | "projectRaidItem" | "performanceReview" | "performanceReviewProjectRating" | "invoiceSetting" | "appSetting" | "pipedriveStageMapping" | "xeroConnection"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4159,6 +4175,76 @@ export namespace Prisma {
           count: {
             args: Prisma.AppSettingCountArgs<ExtArgs>
             result: $Utils.Optional<AppSettingCountAggregateOutputType> | number
+          }
+        }
+      }
+      PipedriveStageMapping: {
+        payload: Prisma.$PipedriveStageMappingPayload<ExtArgs>
+        fields: Prisma.PipedriveStageMappingFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PipedriveStageMappingFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipedriveStageMappingPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PipedriveStageMappingFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipedriveStageMappingPayload>
+          }
+          findFirst: {
+            args: Prisma.PipedriveStageMappingFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipedriveStageMappingPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PipedriveStageMappingFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipedriveStageMappingPayload>
+          }
+          findMany: {
+            args: Prisma.PipedriveStageMappingFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipedriveStageMappingPayload>[]
+          }
+          create: {
+            args: Prisma.PipedriveStageMappingCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipedriveStageMappingPayload>
+          }
+          createMany: {
+            args: Prisma.PipedriveStageMappingCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PipedriveStageMappingCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipedriveStageMappingPayload>[]
+          }
+          delete: {
+            args: Prisma.PipedriveStageMappingDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipedriveStageMappingPayload>
+          }
+          update: {
+            args: Prisma.PipedriveStageMappingUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipedriveStageMappingPayload>
+          }
+          deleteMany: {
+            args: Prisma.PipedriveStageMappingDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PipedriveStageMappingUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PipedriveStageMappingUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipedriveStageMappingPayload>
+          }
+          aggregate: {
+            args: Prisma.PipedriveStageMappingAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePipedriveStageMapping>
+          }
+          groupBy: {
+            args: Prisma.PipedriveStageMappingGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PipedriveStageMappingGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PipedriveStageMappingCountArgs<ExtArgs>
+            result: $Utils.Optional<PipedriveStageMappingCountAggregateOutputType> | number
           }
         }
       }
@@ -7457,8 +7543,18 @@ export namespace Prisma {
 
   export type AggregateClient = {
     _count: ClientCountAggregateOutputType | null
+    _avg: ClientAvgAggregateOutputType | null
+    _sum: ClientSumAggregateOutputType | null
     _min: ClientMinAggregateOutputType | null
     _max: ClientMaxAggregateOutputType | null
+  }
+
+  export type ClientAvgAggregateOutputType = {
+    pipedriveOrgId: number | null
+  }
+
+  export type ClientSumAggregateOutputType = {
+    pipedriveOrgId: number | null
   }
 
   export type ClientMinAggregateOutputType = {
@@ -7469,6 +7565,7 @@ export namespace Prisma {
     phone: string | null
     industry: string | null
     xeroContactId: string | null
+    pipedriveOrgId: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7481,6 +7578,7 @@ export namespace Prisma {
     phone: string | null
     industry: string | null
     xeroContactId: string | null
+    pipedriveOrgId: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7493,11 +7591,20 @@ export namespace Prisma {
     phone: number
     industry: number
     xeroContactId: number
+    pipedriveOrgId: number
     createdAt: number
     updatedAt: number
     _all: number
   }
 
+
+  export type ClientAvgAggregateInputType = {
+    pipedriveOrgId?: true
+  }
+
+  export type ClientSumAggregateInputType = {
+    pipedriveOrgId?: true
+  }
 
   export type ClientMinAggregateInputType = {
     id?: true
@@ -7507,6 +7614,7 @@ export namespace Prisma {
     phone?: true
     industry?: true
     xeroContactId?: true
+    pipedriveOrgId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7519,6 +7627,7 @@ export namespace Prisma {
     phone?: true
     industry?: true
     xeroContactId?: true
+    pipedriveOrgId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7531,6 +7640,7 @@ export namespace Prisma {
     phone?: true
     industry?: true
     xeroContactId?: true
+    pipedriveOrgId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -7574,6 +7684,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: ClientAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ClientSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: ClientMinAggregateInputType
@@ -7604,6 +7726,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: ClientCountAggregateInputType | true
+    _avg?: ClientAvgAggregateInputType
+    _sum?: ClientSumAggregateInputType
     _min?: ClientMinAggregateInputType
     _max?: ClientMaxAggregateInputType
   }
@@ -7616,9 +7740,12 @@ export namespace Prisma {
     phone: string | null
     industry: string | null
     xeroContactId: string | null
+    pipedriveOrgId: number | null
     createdAt: Date
     updatedAt: Date
     _count: ClientCountAggregateOutputType | null
+    _avg: ClientAvgAggregateOutputType | null
+    _sum: ClientSumAggregateOutputType | null
     _min: ClientMinAggregateOutputType | null
     _max: ClientMaxAggregateOutputType | null
   }
@@ -7645,6 +7772,7 @@ export namespace Prisma {
     phone?: boolean
     industry?: boolean
     xeroContactId?: boolean
+    pipedriveOrgId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     projects?: boolean | Client$projectsArgs<ExtArgs>
@@ -7660,6 +7788,7 @@ export namespace Prisma {
     phone?: boolean
     industry?: boolean
     xeroContactId?: boolean
+    pipedriveOrgId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["client"]>
@@ -7672,6 +7801,7 @@ export namespace Prisma {
     phone?: boolean
     industry?: boolean
     xeroContactId?: boolean
+    pipedriveOrgId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
@@ -7697,6 +7827,7 @@ export namespace Prisma {
       phone: string | null
       industry: string | null
       xeroContactId: string | null
+      pipedriveOrgId: number | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["client"]>
@@ -8101,6 +8232,7 @@ export namespace Prisma {
     readonly phone: FieldRef<"Client", 'String'>
     readonly industry: FieldRef<"Client", 'String'>
     readonly xeroContactId: FieldRef<"Client", 'String'>
+    readonly pipedriveOrgId: FieldRef<"Client", 'Int'>
     readonly createdAt: FieldRef<"Client", 'DateTime'>
     readonly updatedAt: FieldRef<"Client", 'DateTime'>
   }
@@ -32734,11 +32866,15 @@ export namespace Prisma {
   export type LeadAvgAggregateOutputType = {
     estimatedValue: number | null
     probability: number | null
+    pipedriveDealId: number | null
+    pipedrivePersonId: number | null
   }
 
   export type LeadSumAggregateOutputType = {
     estimatedValue: number | null
     probability: number | null
+    pipedriveDealId: number | null
+    pipedrivePersonId: number | null
   }
 
   export type LeadMinAggregateOutputType = {
@@ -32763,6 +32899,9 @@ export namespace Prisma {
     wonAt: Date | null
     lostAt: Date | null
     deletedAt: Date | null
+    pipedriveDealId: number | null
+    pipedrivePersonId: number | null
+    pipedriveUpdatedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -32789,6 +32928,9 @@ export namespace Prisma {
     wonAt: Date | null
     lostAt: Date | null
     deletedAt: Date | null
+    pipedriveDealId: number | null
+    pipedrivePersonId: number | null
+    pipedriveUpdatedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -32815,6 +32957,9 @@ export namespace Prisma {
     wonAt: number
     lostAt: number
     deletedAt: number
+    pipedriveDealId: number
+    pipedrivePersonId: number
+    pipedriveUpdatedAt: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -32824,11 +32969,15 @@ export namespace Prisma {
   export type LeadAvgAggregateInputType = {
     estimatedValue?: true
     probability?: true
+    pipedriveDealId?: true
+    pipedrivePersonId?: true
   }
 
   export type LeadSumAggregateInputType = {
     estimatedValue?: true
     probability?: true
+    pipedriveDealId?: true
+    pipedrivePersonId?: true
   }
 
   export type LeadMinAggregateInputType = {
@@ -32853,6 +33002,9 @@ export namespace Prisma {
     wonAt?: true
     lostAt?: true
     deletedAt?: true
+    pipedriveDealId?: true
+    pipedrivePersonId?: true
+    pipedriveUpdatedAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -32879,6 +33031,9 @@ export namespace Prisma {
     wonAt?: true
     lostAt?: true
     deletedAt?: true
+    pipedriveDealId?: true
+    pipedrivePersonId?: true
+    pipedriveUpdatedAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -32905,6 +33060,9 @@ export namespace Prisma {
     wonAt?: true
     lostAt?: true
     deletedAt?: true
+    pipedriveDealId?: true
+    pipedrivePersonId?: true
+    pipedriveUpdatedAt?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -33018,6 +33176,9 @@ export namespace Prisma {
     wonAt: Date | null
     lostAt: Date | null
     deletedAt: Date | null
+    pipedriveDealId: number | null
+    pipedrivePersonId: number | null
+    pipedriveUpdatedAt: Date | null
     createdAt: Date
     updatedAt: Date
     _count: LeadCountAggregateOutputType | null
@@ -33063,6 +33224,9 @@ export namespace Prisma {
     wonAt?: boolean
     lostAt?: boolean
     deletedAt?: boolean
+    pipedriveDealId?: boolean
+    pipedrivePersonId?: boolean
+    pipedriveUpdatedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     client?: boolean | Lead$clientArgs<ExtArgs>
@@ -33093,6 +33257,9 @@ export namespace Prisma {
     wonAt?: boolean
     lostAt?: boolean
     deletedAt?: boolean
+    pipedriveDealId?: boolean
+    pipedrivePersonId?: boolean
+    pipedriveUpdatedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     client?: boolean | Lead$clientArgs<ExtArgs>
@@ -33121,6 +33288,9 @@ export namespace Prisma {
     wonAt?: boolean
     lostAt?: boolean
     deletedAt?: boolean
+    pipedriveDealId?: boolean
+    pipedrivePersonId?: boolean
+    pipedriveUpdatedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
@@ -33165,6 +33335,9 @@ export namespace Prisma {
       wonAt: Date | null
       lostAt: Date | null
       deletedAt: Date | null
+      pipedriveDealId: number | null
+      pipedrivePersonId: number | null
+      pipedriveUpdatedAt: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["lead"]>
@@ -33584,6 +33757,9 @@ export namespace Prisma {
     readonly wonAt: FieldRef<"Lead", 'DateTime'>
     readonly lostAt: FieldRef<"Lead", 'DateTime'>
     readonly deletedAt: FieldRef<"Lead", 'DateTime'>
+    readonly pipedriveDealId: FieldRef<"Lead", 'Int'>
+    readonly pipedrivePersonId: FieldRef<"Lead", 'Int'>
+    readonly pipedriveUpdatedAt: FieldRef<"Lead", 'DateTime'>
     readonly createdAt: FieldRef<"Lead", 'DateTime'>
     readonly updatedAt: FieldRef<"Lead", 'DateTime'>
   }
@@ -46402,6 +46578,10 @@ export namespace Prisma {
     invoiceDueSoonDays: number | null
     lateTimesheetDays: number | null
     xeroAutoSyncEnabled: boolean | null
+    pipedriveAutoSyncEnabled: boolean | null
+    pipedriveLastSyncAt: Date | null
+    pipedriveDefaultOwnerId: string | null
+    pipedriveWebhookSecret: string | null
     updatedAt: Date | null
     updatedById: string | null
   }
@@ -46415,6 +46595,10 @@ export namespace Prisma {
     invoiceDueSoonDays: number | null
     lateTimesheetDays: number | null
     xeroAutoSyncEnabled: boolean | null
+    pipedriveAutoSyncEnabled: boolean | null
+    pipedriveLastSyncAt: Date | null
+    pipedriveDefaultOwnerId: string | null
+    pipedriveWebhookSecret: string | null
     updatedAt: Date | null
     updatedById: string | null
   }
@@ -46428,6 +46612,10 @@ export namespace Prisma {
     invoiceDueSoonDays: number
     lateTimesheetDays: number
     xeroAutoSyncEnabled: number
+    pipedriveAutoSyncEnabled: number
+    pipedriveLastSyncAt: number
+    pipedriveDefaultOwnerId: number
+    pipedriveWebhookSecret: number
     updatedAt: number
     updatedById: number
     _all: number
@@ -46461,6 +46649,10 @@ export namespace Prisma {
     invoiceDueSoonDays?: true
     lateTimesheetDays?: true
     xeroAutoSyncEnabled?: true
+    pipedriveAutoSyncEnabled?: true
+    pipedriveLastSyncAt?: true
+    pipedriveDefaultOwnerId?: true
+    pipedriveWebhookSecret?: true
     updatedAt?: true
     updatedById?: true
   }
@@ -46474,6 +46666,10 @@ export namespace Prisma {
     invoiceDueSoonDays?: true
     lateTimesheetDays?: true
     xeroAutoSyncEnabled?: true
+    pipedriveAutoSyncEnabled?: true
+    pipedriveLastSyncAt?: true
+    pipedriveDefaultOwnerId?: true
+    pipedriveWebhookSecret?: true
     updatedAt?: true
     updatedById?: true
   }
@@ -46487,6 +46683,10 @@ export namespace Prisma {
     invoiceDueSoonDays?: true
     lateTimesheetDays?: true
     xeroAutoSyncEnabled?: true
+    pipedriveAutoSyncEnabled?: true
+    pipedriveLastSyncAt?: true
+    pipedriveDefaultOwnerId?: true
+    pipedriveWebhookSecret?: true
     updatedAt?: true
     updatedById?: true
     _all?: true
@@ -46587,6 +46787,10 @@ export namespace Prisma {
     invoiceDueSoonDays: number
     lateTimesheetDays: number
     xeroAutoSyncEnabled: boolean
+    pipedriveAutoSyncEnabled: boolean
+    pipedriveLastSyncAt: Date | null
+    pipedriveDefaultOwnerId: string | null
+    pipedriveWebhookSecret: string | null
     updatedAt: Date
     updatedById: string | null
     _count: AppSettingCountAggregateOutputType | null
@@ -46619,6 +46823,10 @@ export namespace Prisma {
     invoiceDueSoonDays?: boolean
     lateTimesheetDays?: boolean
     xeroAutoSyncEnabled?: boolean
+    pipedriveAutoSyncEnabled?: boolean
+    pipedriveLastSyncAt?: boolean
+    pipedriveDefaultOwnerId?: boolean
+    pipedriveWebhookSecret?: boolean
     updatedAt?: boolean
     updatedById?: boolean
   }, ExtArgs["result"]["appSetting"]>
@@ -46632,6 +46840,10 @@ export namespace Prisma {
     invoiceDueSoonDays?: boolean
     lateTimesheetDays?: boolean
     xeroAutoSyncEnabled?: boolean
+    pipedriveAutoSyncEnabled?: boolean
+    pipedriveLastSyncAt?: boolean
+    pipedriveDefaultOwnerId?: boolean
+    pipedriveWebhookSecret?: boolean
     updatedAt?: boolean
     updatedById?: boolean
   }, ExtArgs["result"]["appSetting"]>
@@ -46645,6 +46857,10 @@ export namespace Prisma {
     invoiceDueSoonDays?: boolean
     lateTimesheetDays?: boolean
     xeroAutoSyncEnabled?: boolean
+    pipedriveAutoSyncEnabled?: boolean
+    pipedriveLastSyncAt?: boolean
+    pipedriveDefaultOwnerId?: boolean
+    pipedriveWebhookSecret?: boolean
     updatedAt?: boolean
     updatedById?: boolean
   }
@@ -46662,6 +46878,10 @@ export namespace Prisma {
       invoiceDueSoonDays: number
       lateTimesheetDays: number
       xeroAutoSyncEnabled: boolean
+      pipedriveAutoSyncEnabled: boolean
+      pipedriveLastSyncAt: Date | null
+      pipedriveDefaultOwnerId: string | null
+      pipedriveWebhookSecret: string | null
       updatedAt: Date
       updatedById: string | null
     }, ExtArgs["result"]["appSetting"]>
@@ -47065,6 +47285,10 @@ export namespace Prisma {
     readonly invoiceDueSoonDays: FieldRef<"AppSetting", 'Int'>
     readonly lateTimesheetDays: FieldRef<"AppSetting", 'Int'>
     readonly xeroAutoSyncEnabled: FieldRef<"AppSetting", 'Boolean'>
+    readonly pipedriveAutoSyncEnabled: FieldRef<"AppSetting", 'Boolean'>
+    readonly pipedriveLastSyncAt: FieldRef<"AppSetting", 'DateTime'>
+    readonly pipedriveDefaultOwnerId: FieldRef<"AppSetting", 'String'>
+    readonly pipedriveWebhookSecret: FieldRef<"AppSetting", 'String'>
     readonly updatedAt: FieldRef<"AppSetting", 'DateTime'>
     readonly updatedById: FieldRef<"AppSetting", 'String'>
   }
@@ -47352,6 +47576,934 @@ export namespace Prisma {
      * Select specific fields to fetch from the AppSetting
      */
     select?: AppSettingSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PipedriveStageMapping
+   */
+
+  export type AggregatePipedriveStageMapping = {
+    _count: PipedriveStageMappingCountAggregateOutputType | null
+    _avg: PipedriveStageMappingAvgAggregateOutputType | null
+    _sum: PipedriveStageMappingSumAggregateOutputType | null
+    _min: PipedriveStageMappingMinAggregateOutputType | null
+    _max: PipedriveStageMappingMaxAggregateOutputType | null
+  }
+
+  export type PipedriveStageMappingAvgAggregateOutputType = {
+    pipedrivePipelineId: number | null
+    pipedriveStageId: number | null
+  }
+
+  export type PipedriveStageMappingSumAggregateOutputType = {
+    pipedrivePipelineId: number | null
+    pipedriveStageId: number | null
+  }
+
+  export type PipedriveStageMappingMinAggregateOutputType = {
+    id: string | null
+    pipedrivePipelineId: number | null
+    pipedriveStageId: number | null
+    leadStage: $Enums.LeadStage | null
+    label: string | null
+    updatedAt: Date | null
+  }
+
+  export type PipedriveStageMappingMaxAggregateOutputType = {
+    id: string | null
+    pipedrivePipelineId: number | null
+    pipedriveStageId: number | null
+    leadStage: $Enums.LeadStage | null
+    label: string | null
+    updatedAt: Date | null
+  }
+
+  export type PipedriveStageMappingCountAggregateOutputType = {
+    id: number
+    pipedrivePipelineId: number
+    pipedriveStageId: number
+    leadStage: number
+    label: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PipedriveStageMappingAvgAggregateInputType = {
+    pipedrivePipelineId?: true
+    pipedriveStageId?: true
+  }
+
+  export type PipedriveStageMappingSumAggregateInputType = {
+    pipedrivePipelineId?: true
+    pipedriveStageId?: true
+  }
+
+  export type PipedriveStageMappingMinAggregateInputType = {
+    id?: true
+    pipedrivePipelineId?: true
+    pipedriveStageId?: true
+    leadStage?: true
+    label?: true
+    updatedAt?: true
+  }
+
+  export type PipedriveStageMappingMaxAggregateInputType = {
+    id?: true
+    pipedrivePipelineId?: true
+    pipedriveStageId?: true
+    leadStage?: true
+    label?: true
+    updatedAt?: true
+  }
+
+  export type PipedriveStageMappingCountAggregateInputType = {
+    id?: true
+    pipedrivePipelineId?: true
+    pipedriveStageId?: true
+    leadStage?: true
+    label?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PipedriveStageMappingAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PipedriveStageMapping to aggregate.
+     */
+    where?: PipedriveStageMappingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipedriveStageMappings to fetch.
+     */
+    orderBy?: PipedriveStageMappingOrderByWithRelationInput | PipedriveStageMappingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PipedriveStageMappingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipedriveStageMappings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipedriveStageMappings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PipedriveStageMappings
+    **/
+    _count?: true | PipedriveStageMappingCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PipedriveStageMappingAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PipedriveStageMappingSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PipedriveStageMappingMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PipedriveStageMappingMaxAggregateInputType
+  }
+
+  export type GetPipedriveStageMappingAggregateType<T extends PipedriveStageMappingAggregateArgs> = {
+        [P in keyof T & keyof AggregatePipedriveStageMapping]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePipedriveStageMapping[P]>
+      : GetScalarType<T[P], AggregatePipedriveStageMapping[P]>
+  }
+
+
+
+
+  export type PipedriveStageMappingGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PipedriveStageMappingWhereInput
+    orderBy?: PipedriveStageMappingOrderByWithAggregationInput | PipedriveStageMappingOrderByWithAggregationInput[]
+    by: PipedriveStageMappingScalarFieldEnum[] | PipedriveStageMappingScalarFieldEnum
+    having?: PipedriveStageMappingScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PipedriveStageMappingCountAggregateInputType | true
+    _avg?: PipedriveStageMappingAvgAggregateInputType
+    _sum?: PipedriveStageMappingSumAggregateInputType
+    _min?: PipedriveStageMappingMinAggregateInputType
+    _max?: PipedriveStageMappingMaxAggregateInputType
+  }
+
+  export type PipedriveStageMappingGroupByOutputType = {
+    id: string
+    pipedrivePipelineId: number
+    pipedriveStageId: number
+    leadStage: $Enums.LeadStage
+    label: string | null
+    updatedAt: Date
+    _count: PipedriveStageMappingCountAggregateOutputType | null
+    _avg: PipedriveStageMappingAvgAggregateOutputType | null
+    _sum: PipedriveStageMappingSumAggregateOutputType | null
+    _min: PipedriveStageMappingMinAggregateOutputType | null
+    _max: PipedriveStageMappingMaxAggregateOutputType | null
+  }
+
+  type GetPipedriveStageMappingGroupByPayload<T extends PipedriveStageMappingGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PipedriveStageMappingGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PipedriveStageMappingGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PipedriveStageMappingGroupByOutputType[P]>
+            : GetScalarType<T[P], PipedriveStageMappingGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PipedriveStageMappingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    pipedrivePipelineId?: boolean
+    pipedriveStageId?: boolean
+    leadStage?: boolean
+    label?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["pipedriveStageMapping"]>
+
+  export type PipedriveStageMappingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    pipedrivePipelineId?: boolean
+    pipedriveStageId?: boolean
+    leadStage?: boolean
+    label?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["pipedriveStageMapping"]>
+
+  export type PipedriveStageMappingSelectScalar = {
+    id?: boolean
+    pipedrivePipelineId?: boolean
+    pipedriveStageId?: boolean
+    leadStage?: boolean
+    label?: boolean
+    updatedAt?: boolean
+  }
+
+
+  export type $PipedriveStageMappingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PipedriveStageMapping"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      pipedrivePipelineId: number
+      pipedriveStageId: number
+      leadStage: $Enums.LeadStage
+      label: string | null
+      updatedAt: Date
+    }, ExtArgs["result"]["pipedriveStageMapping"]>
+    composites: {}
+  }
+
+  type PipedriveStageMappingGetPayload<S extends boolean | null | undefined | PipedriveStageMappingDefaultArgs> = $Result.GetResult<Prisma.$PipedriveStageMappingPayload, S>
+
+  type PipedriveStageMappingCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<PipedriveStageMappingFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: PipedriveStageMappingCountAggregateInputType | true
+    }
+
+  export interface PipedriveStageMappingDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PipedriveStageMapping'], meta: { name: 'PipedriveStageMapping' } }
+    /**
+     * Find zero or one PipedriveStageMapping that matches the filter.
+     * @param {PipedriveStageMappingFindUniqueArgs} args - Arguments to find a PipedriveStageMapping
+     * @example
+     * // Get one PipedriveStageMapping
+     * const pipedriveStageMapping = await prisma.pipedriveStageMapping.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PipedriveStageMappingFindUniqueArgs>(args: SelectSubset<T, PipedriveStageMappingFindUniqueArgs<ExtArgs>>): Prisma__PipedriveStageMappingClient<$Result.GetResult<Prisma.$PipedriveStageMappingPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one PipedriveStageMapping that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {PipedriveStageMappingFindUniqueOrThrowArgs} args - Arguments to find a PipedriveStageMapping
+     * @example
+     * // Get one PipedriveStageMapping
+     * const pipedriveStageMapping = await prisma.pipedriveStageMapping.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PipedriveStageMappingFindUniqueOrThrowArgs>(args: SelectSubset<T, PipedriveStageMappingFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PipedriveStageMappingClient<$Result.GetResult<Prisma.$PipedriveStageMappingPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first PipedriveStageMapping that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipedriveStageMappingFindFirstArgs} args - Arguments to find a PipedriveStageMapping
+     * @example
+     * // Get one PipedriveStageMapping
+     * const pipedriveStageMapping = await prisma.pipedriveStageMapping.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PipedriveStageMappingFindFirstArgs>(args?: SelectSubset<T, PipedriveStageMappingFindFirstArgs<ExtArgs>>): Prisma__PipedriveStageMappingClient<$Result.GetResult<Prisma.$PipedriveStageMappingPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first PipedriveStageMapping that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipedriveStageMappingFindFirstOrThrowArgs} args - Arguments to find a PipedriveStageMapping
+     * @example
+     * // Get one PipedriveStageMapping
+     * const pipedriveStageMapping = await prisma.pipedriveStageMapping.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PipedriveStageMappingFindFirstOrThrowArgs>(args?: SelectSubset<T, PipedriveStageMappingFindFirstOrThrowArgs<ExtArgs>>): Prisma__PipedriveStageMappingClient<$Result.GetResult<Prisma.$PipedriveStageMappingPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more PipedriveStageMappings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipedriveStageMappingFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PipedriveStageMappings
+     * const pipedriveStageMappings = await prisma.pipedriveStageMapping.findMany()
+     * 
+     * // Get first 10 PipedriveStageMappings
+     * const pipedriveStageMappings = await prisma.pipedriveStageMapping.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const pipedriveStageMappingWithIdOnly = await prisma.pipedriveStageMapping.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PipedriveStageMappingFindManyArgs>(args?: SelectSubset<T, PipedriveStageMappingFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PipedriveStageMappingPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a PipedriveStageMapping.
+     * @param {PipedriveStageMappingCreateArgs} args - Arguments to create a PipedriveStageMapping.
+     * @example
+     * // Create one PipedriveStageMapping
+     * const PipedriveStageMapping = await prisma.pipedriveStageMapping.create({
+     *   data: {
+     *     // ... data to create a PipedriveStageMapping
+     *   }
+     * })
+     * 
+     */
+    create<T extends PipedriveStageMappingCreateArgs>(args: SelectSubset<T, PipedriveStageMappingCreateArgs<ExtArgs>>): Prisma__PipedriveStageMappingClient<$Result.GetResult<Prisma.$PipedriveStageMappingPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many PipedriveStageMappings.
+     * @param {PipedriveStageMappingCreateManyArgs} args - Arguments to create many PipedriveStageMappings.
+     * @example
+     * // Create many PipedriveStageMappings
+     * const pipedriveStageMapping = await prisma.pipedriveStageMapping.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PipedriveStageMappingCreateManyArgs>(args?: SelectSubset<T, PipedriveStageMappingCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PipedriveStageMappings and returns the data saved in the database.
+     * @param {PipedriveStageMappingCreateManyAndReturnArgs} args - Arguments to create many PipedriveStageMappings.
+     * @example
+     * // Create many PipedriveStageMappings
+     * const pipedriveStageMapping = await prisma.pipedriveStageMapping.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PipedriveStageMappings and only return the `id`
+     * const pipedriveStageMappingWithIdOnly = await prisma.pipedriveStageMapping.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PipedriveStageMappingCreateManyAndReturnArgs>(args?: SelectSubset<T, PipedriveStageMappingCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PipedriveStageMappingPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a PipedriveStageMapping.
+     * @param {PipedriveStageMappingDeleteArgs} args - Arguments to delete one PipedriveStageMapping.
+     * @example
+     * // Delete one PipedriveStageMapping
+     * const PipedriveStageMapping = await prisma.pipedriveStageMapping.delete({
+     *   where: {
+     *     // ... filter to delete one PipedriveStageMapping
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PipedriveStageMappingDeleteArgs>(args: SelectSubset<T, PipedriveStageMappingDeleteArgs<ExtArgs>>): Prisma__PipedriveStageMappingClient<$Result.GetResult<Prisma.$PipedriveStageMappingPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one PipedriveStageMapping.
+     * @param {PipedriveStageMappingUpdateArgs} args - Arguments to update one PipedriveStageMapping.
+     * @example
+     * // Update one PipedriveStageMapping
+     * const pipedriveStageMapping = await prisma.pipedriveStageMapping.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PipedriveStageMappingUpdateArgs>(args: SelectSubset<T, PipedriveStageMappingUpdateArgs<ExtArgs>>): Prisma__PipedriveStageMappingClient<$Result.GetResult<Prisma.$PipedriveStageMappingPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more PipedriveStageMappings.
+     * @param {PipedriveStageMappingDeleteManyArgs} args - Arguments to filter PipedriveStageMappings to delete.
+     * @example
+     * // Delete a few PipedriveStageMappings
+     * const { count } = await prisma.pipedriveStageMapping.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PipedriveStageMappingDeleteManyArgs>(args?: SelectSubset<T, PipedriveStageMappingDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PipedriveStageMappings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipedriveStageMappingUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PipedriveStageMappings
+     * const pipedriveStageMapping = await prisma.pipedriveStageMapping.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PipedriveStageMappingUpdateManyArgs>(args: SelectSubset<T, PipedriveStageMappingUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PipedriveStageMapping.
+     * @param {PipedriveStageMappingUpsertArgs} args - Arguments to update or create a PipedriveStageMapping.
+     * @example
+     * // Update or create a PipedriveStageMapping
+     * const pipedriveStageMapping = await prisma.pipedriveStageMapping.upsert({
+     *   create: {
+     *     // ... data to create a PipedriveStageMapping
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PipedriveStageMapping we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PipedriveStageMappingUpsertArgs>(args: SelectSubset<T, PipedriveStageMappingUpsertArgs<ExtArgs>>): Prisma__PipedriveStageMappingClient<$Result.GetResult<Prisma.$PipedriveStageMappingPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of PipedriveStageMappings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipedriveStageMappingCountArgs} args - Arguments to filter PipedriveStageMappings to count.
+     * @example
+     * // Count the number of PipedriveStageMappings
+     * const count = await prisma.pipedriveStageMapping.count({
+     *   where: {
+     *     // ... the filter for the PipedriveStageMappings we want to count
+     *   }
+     * })
+    **/
+    count<T extends PipedriveStageMappingCountArgs>(
+      args?: Subset<T, PipedriveStageMappingCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PipedriveStageMappingCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PipedriveStageMapping.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipedriveStageMappingAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PipedriveStageMappingAggregateArgs>(args: Subset<T, PipedriveStageMappingAggregateArgs>): Prisma.PrismaPromise<GetPipedriveStageMappingAggregateType<T>>
+
+    /**
+     * Group by PipedriveStageMapping.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipedriveStageMappingGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PipedriveStageMappingGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PipedriveStageMappingGroupByArgs['orderBy'] }
+        : { orderBy?: PipedriveStageMappingGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PipedriveStageMappingGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPipedriveStageMappingGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PipedriveStageMapping model
+   */
+  readonly fields: PipedriveStageMappingFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PipedriveStageMapping.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PipedriveStageMappingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PipedriveStageMapping model
+   */ 
+  interface PipedriveStageMappingFieldRefs {
+    readonly id: FieldRef<"PipedriveStageMapping", 'String'>
+    readonly pipedrivePipelineId: FieldRef<"PipedriveStageMapping", 'Int'>
+    readonly pipedriveStageId: FieldRef<"PipedriveStageMapping", 'Int'>
+    readonly leadStage: FieldRef<"PipedriveStageMapping", 'LeadStage'>
+    readonly label: FieldRef<"PipedriveStageMapping", 'String'>
+    readonly updatedAt: FieldRef<"PipedriveStageMapping", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PipedriveStageMapping findUnique
+   */
+  export type PipedriveStageMappingFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipedriveStageMapping
+     */
+    select?: PipedriveStageMappingSelect<ExtArgs> | null
+    /**
+     * Filter, which PipedriveStageMapping to fetch.
+     */
+    where: PipedriveStageMappingWhereUniqueInput
+  }
+
+  /**
+   * PipedriveStageMapping findUniqueOrThrow
+   */
+  export type PipedriveStageMappingFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipedriveStageMapping
+     */
+    select?: PipedriveStageMappingSelect<ExtArgs> | null
+    /**
+     * Filter, which PipedriveStageMapping to fetch.
+     */
+    where: PipedriveStageMappingWhereUniqueInput
+  }
+
+  /**
+   * PipedriveStageMapping findFirst
+   */
+  export type PipedriveStageMappingFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipedriveStageMapping
+     */
+    select?: PipedriveStageMappingSelect<ExtArgs> | null
+    /**
+     * Filter, which PipedriveStageMapping to fetch.
+     */
+    where?: PipedriveStageMappingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipedriveStageMappings to fetch.
+     */
+    orderBy?: PipedriveStageMappingOrderByWithRelationInput | PipedriveStageMappingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PipedriveStageMappings.
+     */
+    cursor?: PipedriveStageMappingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipedriveStageMappings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipedriveStageMappings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PipedriveStageMappings.
+     */
+    distinct?: PipedriveStageMappingScalarFieldEnum | PipedriveStageMappingScalarFieldEnum[]
+  }
+
+  /**
+   * PipedriveStageMapping findFirstOrThrow
+   */
+  export type PipedriveStageMappingFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipedriveStageMapping
+     */
+    select?: PipedriveStageMappingSelect<ExtArgs> | null
+    /**
+     * Filter, which PipedriveStageMapping to fetch.
+     */
+    where?: PipedriveStageMappingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipedriveStageMappings to fetch.
+     */
+    orderBy?: PipedriveStageMappingOrderByWithRelationInput | PipedriveStageMappingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PipedriveStageMappings.
+     */
+    cursor?: PipedriveStageMappingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipedriveStageMappings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipedriveStageMappings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PipedriveStageMappings.
+     */
+    distinct?: PipedriveStageMappingScalarFieldEnum | PipedriveStageMappingScalarFieldEnum[]
+  }
+
+  /**
+   * PipedriveStageMapping findMany
+   */
+  export type PipedriveStageMappingFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipedriveStageMapping
+     */
+    select?: PipedriveStageMappingSelect<ExtArgs> | null
+    /**
+     * Filter, which PipedriveStageMappings to fetch.
+     */
+    where?: PipedriveStageMappingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipedriveStageMappings to fetch.
+     */
+    orderBy?: PipedriveStageMappingOrderByWithRelationInput | PipedriveStageMappingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PipedriveStageMappings.
+     */
+    cursor?: PipedriveStageMappingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipedriveStageMappings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipedriveStageMappings.
+     */
+    skip?: number
+    distinct?: PipedriveStageMappingScalarFieldEnum | PipedriveStageMappingScalarFieldEnum[]
+  }
+
+  /**
+   * PipedriveStageMapping create
+   */
+  export type PipedriveStageMappingCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipedriveStageMapping
+     */
+    select?: PipedriveStageMappingSelect<ExtArgs> | null
+    /**
+     * The data needed to create a PipedriveStageMapping.
+     */
+    data: XOR<PipedriveStageMappingCreateInput, PipedriveStageMappingUncheckedCreateInput>
+  }
+
+  /**
+   * PipedriveStageMapping createMany
+   */
+  export type PipedriveStageMappingCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PipedriveStageMappings.
+     */
+    data: PipedriveStageMappingCreateManyInput | PipedriveStageMappingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PipedriveStageMapping createManyAndReturn
+   */
+  export type PipedriveStageMappingCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipedriveStageMapping
+     */
+    select?: PipedriveStageMappingSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many PipedriveStageMappings.
+     */
+    data: PipedriveStageMappingCreateManyInput | PipedriveStageMappingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PipedriveStageMapping update
+   */
+  export type PipedriveStageMappingUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipedriveStageMapping
+     */
+    select?: PipedriveStageMappingSelect<ExtArgs> | null
+    /**
+     * The data needed to update a PipedriveStageMapping.
+     */
+    data: XOR<PipedriveStageMappingUpdateInput, PipedriveStageMappingUncheckedUpdateInput>
+    /**
+     * Choose, which PipedriveStageMapping to update.
+     */
+    where: PipedriveStageMappingWhereUniqueInput
+  }
+
+  /**
+   * PipedriveStageMapping updateMany
+   */
+  export type PipedriveStageMappingUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PipedriveStageMappings.
+     */
+    data: XOR<PipedriveStageMappingUpdateManyMutationInput, PipedriveStageMappingUncheckedUpdateManyInput>
+    /**
+     * Filter which PipedriveStageMappings to update
+     */
+    where?: PipedriveStageMappingWhereInput
+  }
+
+  /**
+   * PipedriveStageMapping upsert
+   */
+  export type PipedriveStageMappingUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipedriveStageMapping
+     */
+    select?: PipedriveStageMappingSelect<ExtArgs> | null
+    /**
+     * The filter to search for the PipedriveStageMapping to update in case it exists.
+     */
+    where: PipedriveStageMappingWhereUniqueInput
+    /**
+     * In case the PipedriveStageMapping found by the `where` argument doesn't exist, create a new PipedriveStageMapping with this data.
+     */
+    create: XOR<PipedriveStageMappingCreateInput, PipedriveStageMappingUncheckedCreateInput>
+    /**
+     * In case the PipedriveStageMapping was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PipedriveStageMappingUpdateInput, PipedriveStageMappingUncheckedUpdateInput>
+  }
+
+  /**
+   * PipedriveStageMapping delete
+   */
+  export type PipedriveStageMappingDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipedriveStageMapping
+     */
+    select?: PipedriveStageMappingSelect<ExtArgs> | null
+    /**
+     * Filter which PipedriveStageMapping to delete.
+     */
+    where: PipedriveStageMappingWhereUniqueInput
+  }
+
+  /**
+   * PipedriveStageMapping deleteMany
+   */
+  export type PipedriveStageMappingDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PipedriveStageMappings to delete
+     */
+    where?: PipedriveStageMappingWhereInput
+  }
+
+  /**
+   * PipedriveStageMapping without action
+   */
+  export type PipedriveStageMappingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipedriveStageMapping
+     */
+    select?: PipedriveStageMappingSelect<ExtArgs> | null
   }
 
 
@@ -48338,6 +49490,7 @@ export namespace Prisma {
     phone: 'phone',
     industry: 'industry',
     xeroContactId: 'xeroContactId',
+    pipedriveOrgId: 'pipedriveOrgId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -48759,6 +49912,9 @@ export namespace Prisma {
     wonAt: 'wonAt',
     lostAt: 'lostAt',
     deletedAt: 'deletedAt',
+    pipedriveDealId: 'pipedriveDealId',
+    pipedrivePersonId: 'pipedrivePersonId',
+    pipedriveUpdatedAt: 'pipedriveUpdatedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -48975,11 +50131,27 @@ export namespace Prisma {
     invoiceDueSoonDays: 'invoiceDueSoonDays',
     lateTimesheetDays: 'lateTimesheetDays',
     xeroAutoSyncEnabled: 'xeroAutoSyncEnabled',
+    pipedriveAutoSyncEnabled: 'pipedriveAutoSyncEnabled',
+    pipedriveLastSyncAt: 'pipedriveLastSyncAt',
+    pipedriveDefaultOwnerId: 'pipedriveDefaultOwnerId',
+    pipedriveWebhookSecret: 'pipedriveWebhookSecret',
     updatedAt: 'updatedAt',
     updatedById: 'updatedById'
   };
 
   export type AppSettingScalarFieldEnum = (typeof AppSettingScalarFieldEnum)[keyof typeof AppSettingScalarFieldEnum]
+
+
+  export const PipedriveStageMappingScalarFieldEnum: {
+    id: 'id',
+    pipedrivePipelineId: 'pipedrivePipelineId',
+    pipedriveStageId: 'pipedriveStageId',
+    leadStage: 'leadStage',
+    label: 'label',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PipedriveStageMappingScalarFieldEnum = (typeof PipedriveStageMappingScalarFieldEnum)[keyof typeof PipedriveStageMappingScalarFieldEnum]
 
 
   export const XeroConnectionScalarFieldEnum: {
@@ -49635,6 +50807,7 @@ export namespace Prisma {
     phone?: StringNullableFilter<"Client"> | string | null
     industry?: StringNullableFilter<"Client"> | string | null
     xeroContactId?: StringNullableFilter<"Client"> | string | null
+    pipedriveOrgId?: IntNullableFilter<"Client"> | number | null
     createdAt?: DateTimeFilter<"Client"> | Date | string
     updatedAt?: DateTimeFilter<"Client"> | Date | string
     projects?: ProjectListRelationFilter
@@ -49649,6 +50822,7 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     industry?: SortOrderInput | SortOrder
     xeroContactId?: SortOrderInput | SortOrder
+    pipedriveOrgId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     projects?: ProjectOrderByRelationAggregateInput
@@ -49657,6 +50831,7 @@ export namespace Prisma {
 
   export type ClientWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    pipedriveOrgId?: number
     AND?: ClientWhereInput | ClientWhereInput[]
     OR?: ClientWhereInput[]
     NOT?: ClientWhereInput | ClientWhereInput[]
@@ -49670,7 +50845,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Client"> | Date | string
     projects?: ProjectListRelationFilter
     leads?: LeadListRelationFilter
-  }, "id">
+  }, "id" | "pipedriveOrgId">
 
   export type ClientOrderByWithAggregationInput = {
     id?: SortOrder
@@ -49680,11 +50855,14 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     industry?: SortOrderInput | SortOrder
     xeroContactId?: SortOrderInput | SortOrder
+    pipedriveOrgId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ClientCountOrderByAggregateInput
+    _avg?: ClientAvgOrderByAggregateInput
     _max?: ClientMaxOrderByAggregateInput
     _min?: ClientMinOrderByAggregateInput
+    _sum?: ClientSumOrderByAggregateInput
   }
 
   export type ClientScalarWhereWithAggregatesInput = {
@@ -49698,6 +50876,7 @@ export namespace Prisma {
     phone?: StringNullableWithAggregatesFilter<"Client"> | string | null
     industry?: StringNullableWithAggregatesFilter<"Client"> | string | null
     xeroContactId?: StringNullableWithAggregatesFilter<"Client"> | string | null
+    pipedriveOrgId?: IntNullableWithAggregatesFilter<"Client"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"Client"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Client"> | Date | string
   }
@@ -51920,6 +53099,9 @@ export namespace Prisma {
     wonAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
     lostAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
+    pipedriveDealId?: IntNullableFilter<"Lead"> | number | null
+    pipedrivePersonId?: IntNullableFilter<"Lead"> | number | null
+    pipedriveUpdatedAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
     createdAt?: DateTimeFilter<"Lead"> | Date | string
     updatedAt?: DateTimeFilter<"Lead"> | Date | string
     client?: XOR<ClientNullableRelationFilter, ClientWhereInput> | null
@@ -51949,6 +53131,9 @@ export namespace Prisma {
     wonAt?: SortOrderInput | SortOrder
     lostAt?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    pipedriveDealId?: SortOrderInput | SortOrder
+    pipedrivePersonId?: SortOrderInput | SortOrder
+    pipedriveUpdatedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     client?: ClientOrderByWithRelationInput
@@ -51959,6 +53144,7 @@ export namespace Prisma {
   export type LeadWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     convertedProjectId?: string
+    pipedriveDealId?: number
     AND?: LeadWhereInput | LeadWhereInput[]
     OR?: LeadWhereInput[]
     NOT?: LeadWhereInput | LeadWhereInput[]
@@ -51981,12 +53167,14 @@ export namespace Prisma {
     wonAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
     lostAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
+    pipedrivePersonId?: IntNullableFilter<"Lead"> | number | null
+    pipedriveUpdatedAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
     createdAt?: DateTimeFilter<"Lead"> | Date | string
     updatedAt?: DateTimeFilter<"Lead"> | Date | string
     client?: XOR<ClientNullableRelationFilter, ClientWhereInput> | null
     owner?: XOR<UserRelationFilter, UserWhereInput>
     activities?: LeadActivityListRelationFilter
-  }, "id" | "convertedProjectId">
+  }, "id" | "convertedProjectId" | "pipedriveDealId">
 
   export type LeadOrderByWithAggregationInput = {
     id?: SortOrder
@@ -52010,6 +53198,9 @@ export namespace Prisma {
     wonAt?: SortOrderInput | SortOrder
     lostAt?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
+    pipedriveDealId?: SortOrderInput | SortOrder
+    pipedrivePersonId?: SortOrderInput | SortOrder
+    pipedriveUpdatedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: LeadCountOrderByAggregateInput
@@ -52044,6 +53235,9 @@ export namespace Prisma {
     wonAt?: DateTimeNullableWithAggregatesFilter<"Lead"> | Date | string | null
     lostAt?: DateTimeNullableWithAggregatesFilter<"Lead"> | Date | string | null
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Lead"> | Date | string | null
+    pipedriveDealId?: IntNullableWithAggregatesFilter<"Lead"> | number | null
+    pipedrivePersonId?: IntNullableWithAggregatesFilter<"Lead"> | number | null
+    pipedriveUpdatedAt?: DateTimeNullableWithAggregatesFilter<"Lead"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Lead"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Lead"> | Date | string
   }
@@ -53111,6 +54305,10 @@ export namespace Prisma {
     invoiceDueSoonDays?: IntFilter<"AppSetting"> | number
     lateTimesheetDays?: IntFilter<"AppSetting"> | number
     xeroAutoSyncEnabled?: BoolFilter<"AppSetting"> | boolean
+    pipedriveAutoSyncEnabled?: BoolFilter<"AppSetting"> | boolean
+    pipedriveLastSyncAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
+    pipedriveDefaultOwnerId?: StringNullableFilter<"AppSetting"> | string | null
+    pipedriveWebhookSecret?: StringNullableFilter<"AppSetting"> | string | null
     updatedAt?: DateTimeFilter<"AppSetting"> | Date | string
     updatedById?: StringNullableFilter<"AppSetting"> | string | null
   }
@@ -53124,6 +54322,10 @@ export namespace Prisma {
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
     xeroAutoSyncEnabled?: SortOrder
+    pipedriveAutoSyncEnabled?: SortOrder
+    pipedriveLastSyncAt?: SortOrderInput | SortOrder
+    pipedriveDefaultOwnerId?: SortOrderInput | SortOrder
+    pipedriveWebhookSecret?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrderInput | SortOrder
   }
@@ -53140,6 +54342,10 @@ export namespace Prisma {
     invoiceDueSoonDays?: IntFilter<"AppSetting"> | number
     lateTimesheetDays?: IntFilter<"AppSetting"> | number
     xeroAutoSyncEnabled?: BoolFilter<"AppSetting"> | boolean
+    pipedriveAutoSyncEnabled?: BoolFilter<"AppSetting"> | boolean
+    pipedriveLastSyncAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
+    pipedriveDefaultOwnerId?: StringNullableFilter<"AppSetting"> | string | null
+    pipedriveWebhookSecret?: StringNullableFilter<"AppSetting"> | string | null
     updatedAt?: DateTimeFilter<"AppSetting"> | Date | string
     updatedById?: StringNullableFilter<"AppSetting"> | string | null
   }, "id">
@@ -53153,6 +54359,10 @@ export namespace Prisma {
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
     xeroAutoSyncEnabled?: SortOrder
+    pipedriveAutoSyncEnabled?: SortOrder
+    pipedriveLastSyncAt?: SortOrderInput | SortOrder
+    pipedriveDefaultOwnerId?: SortOrderInput | SortOrder
+    pipedriveWebhookSecret?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrderInput | SortOrder
     _count?: AppSettingCountOrderByAggregateInput
@@ -53174,8 +54384,71 @@ export namespace Prisma {
     invoiceDueSoonDays?: IntWithAggregatesFilter<"AppSetting"> | number
     lateTimesheetDays?: IntWithAggregatesFilter<"AppSetting"> | number
     xeroAutoSyncEnabled?: BoolWithAggregatesFilter<"AppSetting"> | boolean
+    pipedriveAutoSyncEnabled?: BoolWithAggregatesFilter<"AppSetting"> | boolean
+    pipedriveLastSyncAt?: DateTimeNullableWithAggregatesFilter<"AppSetting"> | Date | string | null
+    pipedriveDefaultOwnerId?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
+    pipedriveWebhookSecret?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
     updatedAt?: DateTimeWithAggregatesFilter<"AppSetting"> | Date | string
     updatedById?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
+  }
+
+  export type PipedriveStageMappingWhereInput = {
+    AND?: PipedriveStageMappingWhereInput | PipedriveStageMappingWhereInput[]
+    OR?: PipedriveStageMappingWhereInput[]
+    NOT?: PipedriveStageMappingWhereInput | PipedriveStageMappingWhereInput[]
+    id?: StringFilter<"PipedriveStageMapping"> | string
+    pipedrivePipelineId?: IntFilter<"PipedriveStageMapping"> | number
+    pipedriveStageId?: IntFilter<"PipedriveStageMapping"> | number
+    leadStage?: EnumLeadStageFilter<"PipedriveStageMapping"> | $Enums.LeadStage
+    label?: StringNullableFilter<"PipedriveStageMapping"> | string | null
+    updatedAt?: DateTimeFilter<"PipedriveStageMapping"> | Date | string
+  }
+
+  export type PipedriveStageMappingOrderByWithRelationInput = {
+    id?: SortOrder
+    pipedrivePipelineId?: SortOrder
+    pipedriveStageId?: SortOrder
+    leadStage?: SortOrder
+    label?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PipedriveStageMappingWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    pipedriveStageId?: number
+    AND?: PipedriveStageMappingWhereInput | PipedriveStageMappingWhereInput[]
+    OR?: PipedriveStageMappingWhereInput[]
+    NOT?: PipedriveStageMappingWhereInput | PipedriveStageMappingWhereInput[]
+    pipedrivePipelineId?: IntFilter<"PipedriveStageMapping"> | number
+    leadStage?: EnumLeadStageFilter<"PipedriveStageMapping"> | $Enums.LeadStage
+    label?: StringNullableFilter<"PipedriveStageMapping"> | string | null
+    updatedAt?: DateTimeFilter<"PipedriveStageMapping"> | Date | string
+  }, "id" | "pipedriveStageId">
+
+  export type PipedriveStageMappingOrderByWithAggregationInput = {
+    id?: SortOrder
+    pipedrivePipelineId?: SortOrder
+    pipedriveStageId?: SortOrder
+    leadStage?: SortOrder
+    label?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    _count?: PipedriveStageMappingCountOrderByAggregateInput
+    _avg?: PipedriveStageMappingAvgOrderByAggregateInput
+    _max?: PipedriveStageMappingMaxOrderByAggregateInput
+    _min?: PipedriveStageMappingMinOrderByAggregateInput
+    _sum?: PipedriveStageMappingSumOrderByAggregateInput
+  }
+
+  export type PipedriveStageMappingScalarWhereWithAggregatesInput = {
+    AND?: PipedriveStageMappingScalarWhereWithAggregatesInput | PipedriveStageMappingScalarWhereWithAggregatesInput[]
+    OR?: PipedriveStageMappingScalarWhereWithAggregatesInput[]
+    NOT?: PipedriveStageMappingScalarWhereWithAggregatesInput | PipedriveStageMappingScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PipedriveStageMapping"> | string
+    pipedrivePipelineId?: IntWithAggregatesFilter<"PipedriveStageMapping"> | number
+    pipedriveStageId?: IntWithAggregatesFilter<"PipedriveStageMapping"> | number
+    leadStage?: EnumLeadStageWithAggregatesFilter<"PipedriveStageMapping"> | $Enums.LeadStage
+    label?: StringNullableWithAggregatesFilter<"PipedriveStageMapping"> | string | null
+    updatedAt?: DateTimeWithAggregatesFilter<"PipedriveStageMapping"> | Date | string
   }
 
   export type XeroConnectionWhereInput = {
@@ -53548,6 +54821,7 @@ export namespace Prisma {
     phone?: string | null
     industry?: string | null
     xeroContactId?: string | null
+    pipedriveOrgId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectCreateNestedManyWithoutClientInput
@@ -53562,6 +54836,7 @@ export namespace Prisma {
     phone?: string | null
     industry?: string | null
     xeroContactId?: string | null
+    pipedriveOrgId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutClientInput
@@ -53576,6 +54851,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     xeroContactId?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveOrgId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUpdateManyWithoutClientNestedInput
@@ -53590,6 +54866,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     xeroContactId?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveOrgId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutClientNestedInput
@@ -53604,6 +54881,7 @@ export namespace Prisma {
     phone?: string | null
     industry?: string | null
     xeroContactId?: string | null
+    pipedriveOrgId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -53616,6 +54894,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     xeroContactId?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveOrgId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -53628,6 +54907,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     xeroContactId?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveOrgId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -56016,6 +57296,9 @@ export namespace Prisma {
     wonAt?: Date | string | null
     lostAt?: Date | string | null
     deletedAt?: Date | string | null
+    pipedriveDealId?: number | null
+    pipedrivePersonId?: number | null
+    pipedriveUpdatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     client?: ClientCreateNestedOneWithoutLeadsInput
@@ -56045,6 +57328,9 @@ export namespace Prisma {
     wonAt?: Date | string | null
     lostAt?: Date | string | null
     deletedAt?: Date | string | null
+    pipedriveDealId?: number | null
+    pipedrivePersonId?: number | null
+    pipedriveUpdatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     activities?: LeadActivityUncheckedCreateNestedManyWithoutLeadInput
@@ -56070,6 +57356,9 @@ export namespace Prisma {
     wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveDealId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedrivePersonId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedriveUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: ClientUpdateOneWithoutLeadsNestedInput
@@ -56099,6 +57388,9 @@ export namespace Prisma {
     wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveDealId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedrivePersonId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedriveUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     activities?: LeadActivityUncheckedUpdateManyWithoutLeadNestedInput
@@ -56126,6 +57418,9 @@ export namespace Prisma {
     wonAt?: Date | string | null
     lostAt?: Date | string | null
     deletedAt?: Date | string | null
+    pipedriveDealId?: number | null
+    pipedrivePersonId?: number | null
+    pipedriveUpdatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -56150,6 +57445,9 @@ export namespace Prisma {
     wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveDealId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedrivePersonId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedriveUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -56176,6 +57474,9 @@ export namespace Prisma {
     wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveDealId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedrivePersonId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedriveUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -57337,6 +58638,10 @@ export namespace Prisma {
     invoiceDueSoonDays?: number
     lateTimesheetDays?: number
     xeroAutoSyncEnabled?: boolean
+    pipedriveAutoSyncEnabled?: boolean
+    pipedriveLastSyncAt?: Date | string | null
+    pipedriveDefaultOwnerId?: string | null
+    pipedriveWebhookSecret?: string | null
     updatedAt?: Date | string
     updatedById?: string | null
   }
@@ -57350,6 +58655,10 @@ export namespace Prisma {
     invoiceDueSoonDays?: number
     lateTimesheetDays?: number
     xeroAutoSyncEnabled?: boolean
+    pipedriveAutoSyncEnabled?: boolean
+    pipedriveLastSyncAt?: Date | string | null
+    pipedriveDefaultOwnerId?: string | null
+    pipedriveWebhookSecret?: string | null
     updatedAt?: Date | string
     updatedById?: string | null
   }
@@ -57363,6 +58672,10 @@ export namespace Prisma {
     invoiceDueSoonDays?: IntFieldUpdateOperationsInput | number
     lateTimesheetDays?: IntFieldUpdateOperationsInput | number
     xeroAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
+    pipedriveAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
+    pipedriveLastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveDefaultOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -57376,6 +58689,10 @@ export namespace Prisma {
     invoiceDueSoonDays?: IntFieldUpdateOperationsInput | number
     lateTimesheetDays?: IntFieldUpdateOperationsInput | number
     xeroAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
+    pipedriveAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
+    pipedriveLastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveDefaultOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -57389,6 +58706,10 @@ export namespace Prisma {
     invoiceDueSoonDays?: number
     lateTimesheetDays?: number
     xeroAutoSyncEnabled?: boolean
+    pipedriveAutoSyncEnabled?: boolean
+    pipedriveLastSyncAt?: Date | string | null
+    pipedriveDefaultOwnerId?: string | null
+    pipedriveWebhookSecret?: string | null
     updatedAt?: Date | string
     updatedById?: string | null
   }
@@ -57402,6 +58723,10 @@ export namespace Prisma {
     invoiceDueSoonDays?: IntFieldUpdateOperationsInput | number
     lateTimesheetDays?: IntFieldUpdateOperationsInput | number
     xeroAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
+    pipedriveAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
+    pipedriveLastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveDefaultOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -57415,8 +58740,75 @@ export namespace Prisma {
     invoiceDueSoonDays?: IntFieldUpdateOperationsInput | number
     lateTimesheetDays?: IntFieldUpdateOperationsInput | number
     xeroAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
+    pipedriveAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
+    pipedriveLastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveDefaultOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type PipedriveStageMappingCreateInput = {
+    id?: string
+    pipedrivePipelineId: number
+    pipedriveStageId: number
+    leadStage: $Enums.LeadStage
+    label?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type PipedriveStageMappingUncheckedCreateInput = {
+    id?: string
+    pipedrivePipelineId: number
+    pipedriveStageId: number
+    leadStage: $Enums.LeadStage
+    label?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type PipedriveStageMappingUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    pipedrivePipelineId?: IntFieldUpdateOperationsInput | number
+    pipedriveStageId?: IntFieldUpdateOperationsInput | number
+    leadStage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipedriveStageMappingUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    pipedrivePipelineId?: IntFieldUpdateOperationsInput | number
+    pipedriveStageId?: IntFieldUpdateOperationsInput | number
+    leadStage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipedriveStageMappingCreateManyInput = {
+    id?: string
+    pipedrivePipelineId: number
+    pipedriveStageId: number
+    leadStage: $Enums.LeadStage
+    label?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type PipedriveStageMappingUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    pipedrivePipelineId?: IntFieldUpdateOperationsInput | number
+    pipedriveStageId?: IntFieldUpdateOperationsInput | number
+    leadStage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipedriveStageMappingUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    pipedrivePipelineId?: IntFieldUpdateOperationsInput | number
+    pipedriveStageId?: IntFieldUpdateOperationsInput | number
+    leadStage?: EnumLeadStageFieldUpdateOperationsInput | $Enums.LeadStage
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type XeroConnectionCreateInput = {
@@ -58062,6 +59454,17 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type ClientCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -58070,8 +59473,13 @@ export namespace Prisma {
     phone?: SortOrder
     industry?: SortOrder
     xeroContactId?: SortOrder
+    pipedriveOrgId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type ClientAvgOrderByAggregateInput = {
+    pipedriveOrgId?: SortOrder
   }
 
   export type ClientMaxOrderByAggregateInput = {
@@ -58082,6 +59490,7 @@ export namespace Prisma {
     phone?: SortOrder
     industry?: SortOrder
     xeroContactId?: SortOrder
+    pipedriveOrgId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -58094,8 +59503,29 @@ export namespace Prisma {
     phone?: SortOrder
     industry?: SortOrder
     xeroContactId?: SortOrder
+    pipedriveOrgId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type ClientSumOrderByAggregateInput = {
+    pipedriveOrgId?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type EnumProjectStatusFilter<$PrismaModel = never> = {
@@ -59228,17 +60658,6 @@ export namespace Prisma {
     targetLevel?: SortOrder
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type SkillProgressionLogCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -59280,22 +60699,6 @@ export namespace Prisma {
   export type SkillProgressionLogSumOrderByAggregateInput = {
     fromLevel?: SortOrder
     toLevel?: SortOrder
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type ProjectNullableRelationFilter = {
@@ -59655,6 +61058,9 @@ export namespace Prisma {
     wonAt?: SortOrder
     lostAt?: SortOrder
     deletedAt?: SortOrder
+    pipedriveDealId?: SortOrder
+    pipedrivePersonId?: SortOrder
+    pipedriveUpdatedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -59662,6 +61068,8 @@ export namespace Prisma {
   export type LeadAvgOrderByAggregateInput = {
     estimatedValue?: SortOrder
     probability?: SortOrder
+    pipedriveDealId?: SortOrder
+    pipedrivePersonId?: SortOrder
   }
 
   export type LeadMaxOrderByAggregateInput = {
@@ -59686,6 +61094,9 @@ export namespace Prisma {
     wonAt?: SortOrder
     lostAt?: SortOrder
     deletedAt?: SortOrder
+    pipedriveDealId?: SortOrder
+    pipedrivePersonId?: SortOrder
+    pipedriveUpdatedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -59712,6 +61123,9 @@ export namespace Prisma {
     wonAt?: SortOrder
     lostAt?: SortOrder
     deletedAt?: SortOrder
+    pipedriveDealId?: SortOrder
+    pipedrivePersonId?: SortOrder
+    pipedriveUpdatedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -59719,6 +61133,8 @@ export namespace Prisma {
   export type LeadSumOrderByAggregateInput = {
     estimatedValue?: SortOrder
     probability?: SortOrder
+    pipedriveDealId?: SortOrder
+    pipedrivePersonId?: SortOrder
   }
 
   export type EnumLeadStageWithAggregatesFilter<$PrismaModel = never> = {
@@ -60491,6 +61907,10 @@ export namespace Prisma {
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
     xeroAutoSyncEnabled?: SortOrder
+    pipedriveAutoSyncEnabled?: SortOrder
+    pipedriveLastSyncAt?: SortOrder
+    pipedriveDefaultOwnerId?: SortOrder
+    pipedriveWebhookSecret?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrder
   }
@@ -60513,6 +61933,10 @@ export namespace Prisma {
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
     xeroAutoSyncEnabled?: SortOrder
+    pipedriveAutoSyncEnabled?: SortOrder
+    pipedriveLastSyncAt?: SortOrder
+    pipedriveDefaultOwnerId?: SortOrder
+    pipedriveWebhookSecret?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrder
   }
@@ -60526,6 +61950,10 @@ export namespace Prisma {
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
     xeroAutoSyncEnabled?: SortOrder
+    pipedriveAutoSyncEnabled?: SortOrder
+    pipedriveLastSyncAt?: SortOrder
+    pipedriveDefaultOwnerId?: SortOrder
+    pipedriveWebhookSecret?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrder
   }
@@ -60537,6 +61965,43 @@ export namespace Prisma {
     budgetOverrunPct?: SortOrder
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
+  }
+
+  export type PipedriveStageMappingCountOrderByAggregateInput = {
+    id?: SortOrder
+    pipedrivePipelineId?: SortOrder
+    pipedriveStageId?: SortOrder
+    leadStage?: SortOrder
+    label?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PipedriveStageMappingAvgOrderByAggregateInput = {
+    pipedrivePipelineId?: SortOrder
+    pipedriveStageId?: SortOrder
+  }
+
+  export type PipedriveStageMappingMaxOrderByAggregateInput = {
+    id?: SortOrder
+    pipedrivePipelineId?: SortOrder
+    pipedriveStageId?: SortOrder
+    leadStage?: SortOrder
+    label?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PipedriveStageMappingMinOrderByAggregateInput = {
+    id?: SortOrder
+    pipedrivePipelineId?: SortOrder
+    pipedriveStageId?: SortOrder
+    leadStage?: SortOrder
+    label?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PipedriveStageMappingSumOrderByAggregateInput = {
+    pipedrivePipelineId?: SortOrder
+    pipedriveStageId?: SortOrder
   }
 
   export type XeroConnectionCountOrderByAggregateInput = {
@@ -62250,6 +63715,14 @@ export namespace Prisma {
     connectOrCreate?: LeadCreateOrConnectWithoutClientInput | LeadCreateOrConnectWithoutClientInput[]
     createMany?: LeadCreateManyClientInputEnvelope
     connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type ProjectUpdateManyWithoutClientNestedInput = {
@@ -64038,14 +65511,6 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type UserUpdateOneRequiredWithoutSkillProgressionsAsSubjectNestedInput = {
     create?: XOR<UserCreateWithoutSkillProgressionsAsSubjectInput, UserUncheckedCreateWithoutSkillProgressionsAsSubjectInput>
     connectOrCreate?: UserCreateOrConnectWithoutSkillProgressionsAsSubjectInput
@@ -65450,6 +66915,22 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
   export type NestedEnumProjectStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.ProjectStatus | EnumProjectStatusFieldRefInput<$PrismaModel>
     in?: $Enums.ProjectStatus[] | ListEnumProjectStatusFieldRefInput<$PrismaModel>
@@ -65610,22 +67091,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumExpenseStatusFilter<$PrismaModel>
     _max?: NestedEnumExpenseStatusFilter<$PrismaModel>
-  }
-
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumTaskStatusFilter<$PrismaModel = never> = {
@@ -67382,6 +68847,9 @@ export namespace Prisma {
     wonAt?: Date | string | null
     lostAt?: Date | string | null
     deletedAt?: Date | string | null
+    pipedriveDealId?: number | null
+    pipedrivePersonId?: number | null
+    pipedriveUpdatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     client?: ClientCreateNestedOneWithoutLeadsInput
@@ -67409,6 +68877,9 @@ export namespace Prisma {
     wonAt?: Date | string | null
     lostAt?: Date | string | null
     deletedAt?: Date | string | null
+    pipedriveDealId?: number | null
+    pipedrivePersonId?: number | null
+    pipedriveUpdatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     activities?: LeadActivityUncheckedCreateNestedManyWithoutLeadInput
@@ -68918,6 +70389,9 @@ export namespace Prisma {
     wonAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
     lostAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
+    pipedriveDealId?: IntNullableFilter<"Lead"> | number | null
+    pipedrivePersonId?: IntNullableFilter<"Lead"> | number | null
+    pipedriveUpdatedAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
     createdAt?: DateTimeFilter<"Lead"> | Date | string
     updatedAt?: DateTimeFilter<"Lead"> | Date | string
   }
@@ -69495,6 +70969,9 @@ export namespace Prisma {
     wonAt?: Date | string | null
     lostAt?: Date | string | null
     deletedAt?: Date | string | null
+    pipedriveDealId?: number | null
+    pipedrivePersonId?: number | null
+    pipedriveUpdatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     owner: UserCreateNestedOneWithoutLeadsOwnedInput
@@ -69522,6 +70999,9 @@ export namespace Prisma {
     wonAt?: Date | string | null
     lostAt?: Date | string | null
     deletedAt?: Date | string | null
+    pipedriveDealId?: number | null
+    pipedrivePersonId?: number | null
+    pipedriveUpdatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     activities?: LeadActivityUncheckedCreateNestedManyWithoutLeadInput
@@ -69577,6 +71057,7 @@ export namespace Prisma {
     phone?: string | null
     industry?: string | null
     xeroContactId?: string | null
+    pipedriveOrgId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     leads?: LeadCreateNestedManyWithoutClientInput
@@ -69590,6 +71071,7 @@ export namespace Prisma {
     phone?: string | null
     industry?: string | null
     xeroContactId?: string | null
+    pipedriveOrgId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     leads?: LeadUncheckedCreateNestedManyWithoutClientInput
@@ -70643,6 +72125,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     xeroContactId?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveOrgId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leads?: LeadUpdateManyWithoutClientNestedInput
@@ -70656,6 +72139,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     xeroContactId?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveOrgId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leads?: LeadUncheckedUpdateManyWithoutClientNestedInput
@@ -81753,6 +83237,7 @@ export namespace Prisma {
     phone?: string | null
     industry?: string | null
     xeroContactId?: string | null
+    pipedriveOrgId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectCreateNestedManyWithoutClientInput
@@ -81766,6 +83251,7 @@ export namespace Prisma {
     phone?: string | null
     industry?: string | null
     xeroContactId?: string | null
+    pipedriveOrgId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutClientInput
@@ -81944,6 +83430,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     xeroContactId?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveOrgId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUpdateManyWithoutClientNestedInput
@@ -81957,6 +83444,7 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     xeroContactId?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveOrgId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutClientNestedInput
@@ -82121,6 +83609,9 @@ export namespace Prisma {
     wonAt?: Date | string | null
     lostAt?: Date | string | null
     deletedAt?: Date | string | null
+    pipedriveDealId?: number | null
+    pipedrivePersonId?: number | null
+    pipedriveUpdatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     client?: ClientCreateNestedOneWithoutLeadsInput
@@ -82149,6 +83640,9 @@ export namespace Prisma {
     wonAt?: Date | string | null
     lostAt?: Date | string | null
     deletedAt?: Date | string | null
+    pipedriveDealId?: number | null
+    pipedrivePersonId?: number | null
+    pipedriveUpdatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -82306,6 +83800,9 @@ export namespace Prisma {
     wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveDealId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedrivePersonId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedriveUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: ClientUpdateOneWithoutLeadsNestedInput
@@ -82334,6 +83831,9 @@ export namespace Prisma {
     wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveDealId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedrivePersonId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedriveUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -86382,6 +87882,9 @@ export namespace Prisma {
     wonAt?: Date | string | null
     lostAt?: Date | string | null
     deletedAt?: Date | string | null
+    pipedriveDealId?: number | null
+    pipedrivePersonId?: number | null
+    pipedriveUpdatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -88092,6 +89595,9 @@ export namespace Prisma {
     wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveDealId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedrivePersonId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedriveUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     client?: ClientUpdateOneWithoutLeadsNestedInput
@@ -88119,6 +89625,9 @@ export namespace Prisma {
     wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveDealId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedrivePersonId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedriveUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     activities?: LeadActivityUncheckedUpdateManyWithoutLeadNestedInput
@@ -88145,6 +89654,9 @@ export namespace Prisma {
     wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveDealId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedrivePersonId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedriveUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -88864,6 +90376,9 @@ export namespace Prisma {
     wonAt?: Date | string | null
     lostAt?: Date | string | null
     deletedAt?: Date | string | null
+    pipedriveDealId?: number | null
+    pipedrivePersonId?: number | null
+    pipedriveUpdatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -89034,6 +90549,9 @@ export namespace Prisma {
     wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveDealId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedrivePersonId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedriveUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneRequiredWithoutLeadsOwnedNestedInput
@@ -89061,6 +90579,9 @@ export namespace Prisma {
     wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveDealId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedrivePersonId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedriveUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     activities?: LeadActivityUncheckedUpdateManyWithoutLeadNestedInput
@@ -89087,6 +90608,9 @@ export namespace Prisma {
     wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveDealId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedrivePersonId?: NullableIntFieldUpdateOperationsInput | number | null
+    pipedriveUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -91718,6 +93242,10 @@ export namespace Prisma {
      * @deprecated Use AppSettingDefaultArgs instead
      */
     export type AppSettingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = AppSettingDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use PipedriveStageMappingDefaultArgs instead
+     */
+    export type PipedriveStageMappingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PipedriveStageMappingDefaultArgs<ExtArgs>
     /**
      * @deprecated Use XeroConnectionDefaultArgs instead
      */

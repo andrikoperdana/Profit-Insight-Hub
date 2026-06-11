@@ -156,15 +156,16 @@ model User {
 }
 
 model Client {
-  id            String   @id @default(cuid())
-  name          String
-  contactPerson String?
-  email         String?
-  phone         String?
-  industry      String?
-  xeroContactId String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id             String   @id @default(cuid())
+  name           String
+  contactPerson  String?
+  email          String?
+  phone          String?
+  industry       String?
+  xeroContactId  String?
+  pipedriveOrgId Int?     @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   projects Project[]
   leads    Lead[]
@@ -697,6 +698,9 @@ model Lead {
   wonAt                 DateTime?
   lostAt                DateTime?
   deletedAt             DateTime?
+  pipedriveDealId       Int?           @unique
+  pipedrivePersonId     Int?
+  pipedriveUpdatedAt    DateTime?
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @updatedAt
   activities            LeadActivity[]
@@ -984,16 +988,29 @@ model InvoiceSetting {
 }
 
 model AppSetting {
-  id                    String   @id @default("default")
-  defaultVatPercent     Float    @default(11)
-  timesheetBackdateDays Int      @default(5)
-  lowMarginPct          Float    @default(15)
-  budgetOverrunPct      Float    @default(80)
-  invoiceDueSoonDays    Int      @default(7)
-  lateTimesheetDays     Int      @default(3)
-  xeroAutoSyncEnabled   Boolean  @default(false)
-  updatedAt             DateTime @updatedAt
-  updatedById           String?
+  id                       String    @id @default("default")
+  defaultVatPercent        Float     @default(11)
+  timesheetBackdateDays    Int       @default(5)
+  lowMarginPct             Float     @default(15)
+  budgetOverrunPct         Float     @default(80)
+  invoiceDueSoonDays       Int       @default(7)
+  lateTimesheetDays        Int       @default(3)
+  xeroAutoSyncEnabled      Boolean   @default(false)
+  pipedriveAutoSyncEnabled Boolean   @default(false)
+  pipedriveLastSyncAt      DateTime?
+  pipedriveDefaultOwnerId  String?
+  pipedriveWebhookSecret   String?
+  updatedAt                DateTime  @updatedAt
+  updatedById              String?
+}
+
+model PipedriveStageMapping {
+  id                  String    @id @default(cuid())
+  pipedrivePipelineId Int
+  pipedriveStageId    Int       @unique
+  leadStage           LeadStage
+  label               String?
+  updatedAt           DateTime  @updatedAt
 }
 
 model XeroConnection {

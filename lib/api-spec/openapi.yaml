@@ -23,6 +23,7 @@ tags:
   - name: reports
   - name: raid
   - name: performance-reviews
+  - name: pipedrive
 
 paths:
   /reports:
@@ -2297,6 +2298,69 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/XeroInvoiceResult" }
 
+  /pipedrive/status:
+    get:
+      operationId: getPipedriveStatus
+      tags: [pipedrive]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PipedriveStatus" }
+
+  /pipedrive/sync:
+    post:
+      operationId: runPipedriveSync
+      tags: [pipedrive]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PipedriveSyncResult" }
+
+  /pipedrive/settings:
+    put:
+      operationId: updatePipedriveSettings
+      tags: [pipedrive]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpdatePipedriveSettingsBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PipedriveStatus" }
+
+  /pipedrive/stage-mappings:
+    get:
+      operationId: getPipedriveStageMappings
+      tags: [pipedrive]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PipedriveStageMappingsResponse" }
+    put:
+      operationId: updatePipedriveStageMappings
+      tags: [pipedrive]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpdatePipedriveStageMappingsBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PipedriveStageMappingsResponse" }
+
 components:
   schemas:
     HealthStatus:
@@ -2350,6 +2414,94 @@ components:
         xeroInvoiceId: { type: string, nullable: true }
         xeroInvoiceNumber: { type: string, nullable: true }
         invoiceNumber: { type: string, nullable: true }
+
+    PipedriveStatus:
+      type: object
+      required:
+        [
+          connected,
+          autoSyncEnabled,
+          importedLeadCount,
+          linkedClientCount,
+          stageMappingCount,
+        ]
+      properties:
+        connected: { type: boolean }
+        autoSyncEnabled: { type: boolean }
+        lastSyncAt: { type: string, nullable: true }
+        defaultOwnerId: { type: string, nullable: true }
+        importedLeadCount: { type: integer }
+        linkedClientCount: { type: integer }
+        stageMappingCount: { type: integer }
+
+    PipedriveSyncResult:
+      type: object
+      required: [imported, updated, skipped, errors]
+      properties:
+        imported: { type: integer }
+        updated: { type: integer }
+        skipped: { type: integer }
+        errors:
+          type: array
+          items:
+            type: object
+            required: [dealId, error]
+            properties:
+              dealId: { type: integer }
+              error: { type: string }
+
+    PipedriveStageMapping:
+      type: object
+      required: [id, pipedrivePipelineId, pipedriveStageId, leadStage, updatedAt]
+      properties:
+        id: { type: string }
+        pipedrivePipelineId: { type: integer }
+        pipedriveStageId: { type: integer }
+        leadStage: { $ref: "#/components/schemas/LeadStage" }
+        label: { type: string, nullable: true }
+        updatedAt: { type: string }
+
+    PipedriveStage:
+      type: object
+      required: [id]
+      properties:
+        id: { type: integer }
+        name: { type: string, nullable: true }
+        pipelineId: { type: integer, nullable: true }
+        orderNr: { type: integer, nullable: true }
+
+    PipedriveStageMappingsResponse:
+      type: object
+      required: [mappings]
+      properties:
+        mappings:
+          type: array
+          items: { $ref: "#/components/schemas/PipedriveStageMapping" }
+        stages:
+          type: array
+          nullable: true
+          items: { $ref: "#/components/schemas/PipedriveStage" }
+
+    UpdatePipedriveSettingsBody:
+      type: object
+      properties:
+        autoSyncEnabled: { type: boolean }
+        defaultOwnerId: { type: string, nullable: true }
+
+    UpdatePipedriveStageMappingsBody:
+      type: object
+      required: [mappings]
+      properties:
+        mappings:
+          type: array
+          items:
+            type: object
+            required: [pipedrivePipelineId, pipedriveStageId, leadStage]
+            properties:
+              pipedrivePipelineId: { type: integer }
+              pipedriveStageId: { type: integer }
+              leadStage: { $ref: "#/components/schemas/LeadStage" }
+              label: { type: string, nullable: true }
 
     UserRole:
       type: string

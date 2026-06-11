@@ -94,6 +94,9 @@ import type {
   PerformanceReview,
   PerformanceReviewDetail,
   PerformanceReviewProjectRating,
+  PipedriveStageMappingsResponse,
+  PipedriveStatus,
+  PipedriveSyncResult,
   ProfitTrendPoint,
   Project,
   ProjectDetail,
@@ -129,6 +132,8 @@ import type {
   UpdateLeadActivityBody,
   UpdateLeadBody,
   UpdatePerformanceReviewBody,
+  UpdatePipedriveSettingsBody,
+  UpdatePipedriveStageMappingsBody,
   UpdateProjectBody,
   UpdateProjectRaidItemBody,
   UpdateProjectReportBody,
@@ -12224,4 +12229,384 @@ export const usePushMilestoneToXero = <
   TContext
 > => {
   return useMutation(getPushMilestoneToXeroMutationOptions(options));
+};
+
+export const getGetPipedriveStatusUrl = () => {
+  return `/api/pipedrive/status`;
+};
+
+export const getPipedriveStatus = async (
+  options?: RequestInit,
+): Promise<PipedriveStatus> => {
+  return customFetch<PipedriveStatus>(getGetPipedriveStatusUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetPipedriveStatusQueryKey = () => {
+  return [`/api/pipedrive/status`] as const;
+};
+
+export const getGetPipedriveStatusQueryOptions = <
+  TData = Awaited<ReturnType<typeof getPipedriveStatus>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getPipedriveStatus>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetPipedriveStatusQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getPipedriveStatus>>
+  > = ({ signal }) => getPipedriveStatus({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getPipedriveStatus>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetPipedriveStatusQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPipedriveStatus>>
+>;
+export type GetPipedriveStatusQueryError = ErrorType<unknown>;
+
+export function useGetPipedriveStatus<
+  TData = Awaited<ReturnType<typeof getPipedriveStatus>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getPipedriveStatus>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetPipedriveStatusQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getRunPipedriveSyncUrl = () => {
+  return `/api/pipedrive/sync`;
+};
+
+export const runPipedriveSync = async (
+  options?: RequestInit,
+): Promise<PipedriveSyncResult> => {
+  return customFetch<PipedriveSyncResult>(getRunPipedriveSyncUrl(), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getRunPipedriveSyncMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof runPipedriveSync>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof runPipedriveSync>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = ["runPipedriveSync"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof runPipedriveSync>>,
+    void
+  > = () => {
+    return runPipedriveSync(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RunPipedriveSyncMutationResult = NonNullable<
+  Awaited<ReturnType<typeof runPipedriveSync>>
+>;
+
+export type RunPipedriveSyncMutationError = ErrorType<unknown>;
+
+export const useRunPipedriveSync = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof runPipedriveSync>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof runPipedriveSync>>,
+  TError,
+  void,
+  TContext
+> => {
+  return useMutation(getRunPipedriveSyncMutationOptions(options));
+};
+
+export const getUpdatePipedriveSettingsUrl = () => {
+  return `/api/pipedrive/settings`;
+};
+
+export const updatePipedriveSettings = async (
+  updatePipedriveSettingsBody: UpdatePipedriveSettingsBody,
+  options?: RequestInit,
+): Promise<PipedriveStatus> => {
+  return customFetch<PipedriveStatus>(getUpdatePipedriveSettingsUrl(), {
+    ...options,
+    method: "PUT",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updatePipedriveSettingsBody),
+  });
+};
+
+export const getUpdatePipedriveSettingsMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updatePipedriveSettings>>,
+    TError,
+    { data: BodyType<UpdatePipedriveSettingsBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updatePipedriveSettings>>,
+  TError,
+  { data: BodyType<UpdatePipedriveSettingsBody> },
+  TContext
+> => {
+  const mutationKey = ["updatePipedriveSettings"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updatePipedriveSettings>>,
+    { data: BodyType<UpdatePipedriveSettingsBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return updatePipedriveSettings(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdatePipedriveSettingsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updatePipedriveSettings>>
+>;
+export type UpdatePipedriveSettingsMutationBody =
+  BodyType<UpdatePipedriveSettingsBody>;
+export type UpdatePipedriveSettingsMutationError = ErrorType<unknown>;
+
+export const useUpdatePipedriveSettings = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updatePipedriveSettings>>,
+    TError,
+    { data: BodyType<UpdatePipedriveSettingsBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updatePipedriveSettings>>,
+  TError,
+  { data: BodyType<UpdatePipedriveSettingsBody> },
+  TContext
+> => {
+  return useMutation(getUpdatePipedriveSettingsMutationOptions(options));
+};
+
+export const getGetPipedriveStageMappingsUrl = () => {
+  return `/api/pipedrive/stage-mappings`;
+};
+
+export const getPipedriveStageMappings = async (
+  options?: RequestInit,
+): Promise<PipedriveStageMappingsResponse> => {
+  return customFetch<PipedriveStageMappingsResponse>(
+    getGetPipedriveStageMappingsUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getGetPipedriveStageMappingsQueryKey = () => {
+  return [`/api/pipedrive/stage-mappings`] as const;
+};
+
+export const getGetPipedriveStageMappingsQueryOptions = <
+  TData = Awaited<ReturnType<typeof getPipedriveStageMappings>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getPipedriveStageMappings>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetPipedriveStageMappingsQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getPipedriveStageMappings>>
+  > = ({ signal }) => getPipedriveStageMappings({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getPipedriveStageMappings>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetPipedriveStageMappingsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPipedriveStageMappings>>
+>;
+export type GetPipedriveStageMappingsQueryError = ErrorType<unknown>;
+
+export function useGetPipedriveStageMappings<
+  TData = Awaited<ReturnType<typeof getPipedriveStageMappings>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getPipedriveStageMappings>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetPipedriveStageMappingsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getUpdatePipedriveStageMappingsUrl = () => {
+  return `/api/pipedrive/stage-mappings`;
+};
+
+export const updatePipedriveStageMappings = async (
+  updatePipedriveStageMappingsBody: UpdatePipedriveStageMappingsBody,
+  options?: RequestInit,
+): Promise<PipedriveStageMappingsResponse> => {
+  return customFetch<PipedriveStageMappingsResponse>(
+    getUpdatePipedriveStageMappingsUrl(),
+    {
+      ...options,
+      method: "PUT",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(updatePipedriveStageMappingsBody),
+    },
+  );
+};
+
+export const getUpdatePipedriveStageMappingsMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updatePipedriveStageMappings>>,
+    TError,
+    { data: BodyType<UpdatePipedriveStageMappingsBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updatePipedriveStageMappings>>,
+  TError,
+  { data: BodyType<UpdatePipedriveStageMappingsBody> },
+  TContext
+> => {
+  const mutationKey = ["updatePipedriveStageMappings"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updatePipedriveStageMappings>>,
+    { data: BodyType<UpdatePipedriveStageMappingsBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return updatePipedriveStageMappings(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdatePipedriveStageMappingsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updatePipedriveStageMappings>>
+>;
+export type UpdatePipedriveStageMappingsMutationBody =
+  BodyType<UpdatePipedriveStageMappingsBody>;
+export type UpdatePipedriveStageMappingsMutationError = ErrorType<unknown>;
+
+export const useUpdatePipedriveStageMappings = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updatePipedriveStageMappings>>,
+    TError,
+    { data: BodyType<UpdatePipedriveStageMappingsBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updatePipedriveStageMappings>>,
+  TError,
+  { data: BodyType<UpdatePipedriveStageMappingsBody> },
+  TContext
+> => {
+  return useMutation(getUpdatePipedriveStageMappingsMutationOptions(options));
 };

@@ -4943,3 +4943,118 @@ export const PushMilestoneToXeroResponse = zod.object({
   xeroInvoiceNumber: zod.string().nullish(),
   invoiceNumber: zod.string().nullish(),
 });
+
+export const GetPipedriveStatusResponse = zod.object({
+  connected: zod.boolean(),
+  autoSyncEnabled: zod.boolean(),
+  lastSyncAt: zod.string().nullish(),
+  defaultOwnerId: zod.string().nullish(),
+  importedLeadCount: zod.number(),
+  linkedClientCount: zod.number(),
+  stageMappingCount: zod.number(),
+});
+
+export const RunPipedriveSyncResponse = zod.object({
+  imported: zod.number(),
+  updated: zod.number(),
+  skipped: zod.number(),
+  errors: zod.array(
+    zod.object({
+      dealId: zod.number(),
+      error: zod.string(),
+    }),
+  ),
+});
+
+export const UpdatePipedriveSettingsBody = zod.object({
+  autoSyncEnabled: zod.boolean().optional(),
+  defaultOwnerId: zod.string().nullish(),
+});
+
+export const UpdatePipedriveSettingsResponse = zod.object({
+  connected: zod.boolean(),
+  autoSyncEnabled: zod.boolean(),
+  lastSyncAt: zod.string().nullish(),
+  defaultOwnerId: zod.string().nullish(),
+  importedLeadCount: zod.number(),
+  linkedClientCount: zod.number(),
+  stageMappingCount: zod.number(),
+});
+
+export const GetPipedriveStageMappingsResponse = zod.object({
+  mappings: zod.array(
+    zod.object({
+      id: zod.string(),
+      pipedrivePipelineId: zod.number(),
+      pipedriveStageId: zod.number(),
+      leadStage: zod.enum([
+        "NEW",
+        "QUALIFIED",
+        "PROPOSAL",
+        "NEGOTIATION",
+        "WON",
+        "LOST",
+      ]),
+      label: zod.string().nullish(),
+      updatedAt: zod.string(),
+    }),
+  ),
+  stages: zod
+    .array(
+      zod.object({
+        id: zod.number(),
+        name: zod.string().nullish(),
+        pipelineId: zod.number().nullish(),
+        orderNr: zod.number().nullish(),
+      }),
+    )
+    .nullish(),
+});
+
+export const UpdatePipedriveStageMappingsBody = zod.object({
+  mappings: zod.array(
+    zod.object({
+      pipedrivePipelineId: zod.number(),
+      pipedriveStageId: zod.number(),
+      leadStage: zod.enum([
+        "NEW",
+        "QUALIFIED",
+        "PROPOSAL",
+        "NEGOTIATION",
+        "WON",
+        "LOST",
+      ]),
+      label: zod.string().nullish(),
+    }),
+  ),
+});
+
+export const UpdatePipedriveStageMappingsResponse = zod.object({
+  mappings: zod.array(
+    zod.object({
+      id: zod.string(),
+      pipedrivePipelineId: zod.number(),
+      pipedriveStageId: zod.number(),
+      leadStage: zod.enum([
+        "NEW",
+        "QUALIFIED",
+        "PROPOSAL",
+        "NEGOTIATION",
+        "WON",
+        "LOST",
+      ]),
+      label: zod.string().nullish(),
+      updatedAt: zod.string(),
+    }),
+  ),
+  stages: zod
+    .array(
+      zod.object({
+        id: zod.number(),
+        name: zod.string().nullish(),
+        pipelineId: zod.number().nullish(),
+        orderNr: zod.number().nullish(),
+      }),
+    )
+    .nullish(),
+});

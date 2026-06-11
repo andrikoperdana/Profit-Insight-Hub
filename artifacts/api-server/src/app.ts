@@ -43,6 +43,10 @@ app.use("/api", (req, res, next) => {
   // Xero redirects the browser back to this callback with no app cookies;
   // it authenticates via a signed OAuth state, so it must bypass the gate.
   if (p === "/xero/callback") return next();
+  // Pipedrive posts deal-change pings to this webhook with no app cookies; it
+  // authenticates via a shared secret checked in the handler, so it must bypass
+  // the front-door gate.
+  if (p === "/pipedrive/webhook") return next();
   // Public, token-gated endpoints (client portal, customer survey) are designed
   // to be reachable without a session — they must bypass the front-door gate.
   // Each is individually protected by an unguessable token.
