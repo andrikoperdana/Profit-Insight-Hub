@@ -49,6 +49,10 @@ const DEFAULT_PROB: Record<LeadStage, number> = {
   NEW: 10, QUALIFIED: 30, PROPOSAL: 50, NEGOTIATION: 70, WON: 100, LOST: 0,
 } as any;
 
+// Paging: with hundreds of leads (e.g. Pipedrive import), cap how many render at once.
+const COLUMN_PAGE = 25; // board: visible cards per stage column before "Show more"
+const LIST_PAGE = 25; // list: rows per page
+
 const LOST_REASONS = [
   { value: "PRICE", label: "Price" },
   { value: "TIMELINE", label: "Timeline" },
@@ -142,6 +146,8 @@ export default function LeadsPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<FormState>(emptyForm);
   const [dragId, setDragId] = useState<string | null>(null);
+  const [colLimits, setColLimits] = useState<Record<string, number>>({});
+  const [listPage, setListPage] = useState(1);
   const [convertingLead, setConvertingLead] = useState<Lead | null>(null);
   const [convertCode, setConvertCode] = useState("");
   const [convertClientName, setConvertClientName] = useState("");
@@ -205,6 +211,21 @@ export default function LeadsPage() {
       .filter((l) => l.stage !== "WON" && l.stage !== "LOST")
       .reduce((s, l) => s + l.estimatedValue * (l.probability / 100), 0);
   }, [filteredLeads]);
+
+  // List-view pagination (clamped so changing filters can't strand an out-of-range page).
+  const listPageCount = Math.max(1, Math.ceil(filteredLeads.length / LIST_PAGE));
+  const safeListPage = Math.min(listPage, listPageCount);
+  const pagedLeads = useMemo(
+    () => filteredLeads.slice((safeListPage - 1) * LIST_PAGE, safeListPage * LIST_PAGE),
+    [filteredLeads, safeListPage],
+  );
+
+  // Reset paging whenever the active filters change.
+  const filterKey = `${params.get("stages") || ""}|${ownerFilter}|${sourceFilter}|${fromFilter}|${toFilter}`;
+  useEffect(() => {
+    setListPage(1);
+    setColLimits({});
+  }, [filterKey]);
 
   function openCreate() {
     setEditingId(null);
@@ -494,7 +515,7 @@ export default function LeadsPage() {
                 {formatIDR(totals[s.key]?.value ?? 0)} · weighted {formatIDR(totals[s.key]?.weighted ?? 0)}
               </div>
               <div className="space-y-2">
-                {(grouped[s.key] ?? []).map((l) => (
+                {(grouped[s.key] ?? []).slice(0, colLimits[s.key] ?? COLUMN_PAGE).map((l) => (
                   <Card
                     key={l.id}
                     draggable={canWrite}
@@ -573,6 +594,21 @@ export default function LeadsPage() {
                     </CardContent>
                   </Card>
                 ))}
+                {(() => {
+                  const total = (grouped[s.key] ?? []).length;
+                  const shown = Math.min(total, colLimits[s.key] ?? COLUMN_PAGE);
+                  return total > shown ? (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="w-full text-xs text-muted-foreground"
+                      onClick={() => setColLimits((m) => ({ ...m, [s.key]: shown + COLUMN_PAGE }))}
+                      data-testid={`button-showmore-${s.key}`}
+                    >
+                      Show {Math.min(COLUMN_PAGE, total - shown)} more ({total - shown} left)
+                    </Button>
+                  ) : null;
+                })()}
                 {!isLoading && (grouped[s.key] ?? []).length === 0 && (
                   <div className="text-[11px] text-muted-foreground italic">Empty</div>
                 )}
@@ -597,7 +633,7 @@ export default function LeadsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredLeads.map((l) => (
+                {pagedLeads.map((l) => (
                   <TableRow key={l.id} className="cursor-pointer hover:bg-muted/30" onClick={() => setDrawerLead(l)}>
                     <TableCell>
                       <div className="flex items-center gap-2">
@@ -628,6 +664,35 @@ export default function LeadsPage() {
                 )}
               </TableBody>
             </Table>
+            {filteredLeads.length > LIST_PAGE && (
+              <div className="flex items-center justify-between gap-2 px-3 py-2 border-t border-border text-xs text-muted-foreground">
+                <div>
+                  Showing {(safeListPage - 1) * LIST_PAGE + 1}–
+                  {Math.min(safeListPage * LIST_PAGE, filteredLeads.length)} of {filteredLeads.length}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={safeListPage <= 1}
+                    onClick={() => setListPage(safeListPage - 1)}
+                    data-testid="button-list-prev"
+                  >
+                    Prev
+                  </Button>
+                  <span>Page {safeListPage} of {listPageCount}</span>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={safeListPage >= listPageCount}
+                    onClick={() => setListPage(safeListPage + 1)}
+                    data-testid="button-list-next"
+                  >
+                    Next
+                  </Button>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
