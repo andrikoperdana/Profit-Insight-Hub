@@ -43,6 +43,10 @@ const dark = {
   // Status colors
   warning: "#F59F0A",
   info: "#3EBAF4",
+  // Positive / approved status (green). Not part of the red brand palette,
+  // but the palette has no positive token and an approval needs to read
+  // clearly as "good" rather than as the brand/alarm red.
+  success: "#22C55E",
 
   // Borders and input outlines
   border: "#262626",

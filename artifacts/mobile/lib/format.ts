@@ -22,6 +22,23 @@ export function formatHours(hours: number): string {
   return `${hours.toFixed(hours % 1 === 0 ? 0 : 2)}h`;
 }
 
+/**
+ * A whole-Rupiah amount -> "Rp 1.234.567" with Indonesian dot grouping.
+ * Manual grouping (no Intl) so it behaves identically on the React Native
+ * runtime, which may ship without full ICU number formatting.
+ */
+export function formatIDR(n: number | undefined | null): string {
+  if (n == null || Number.isNaN(n)) return "Rp 0";
+  const rounded = Math.round(Math.abs(n));
+  const digits = String(rounded);
+  let grouped = "";
+  for (let i = 0; i < digits.length; i++) {
+    if (i > 0 && (digits.length - i) % 3 === 0) grouped += ".";
+    grouped += digits[i];
+  }
+  return `${n < 0 ? "-" : ""}Rp ${grouped}`;
+}
+
 /** Local Date -> "YYYY-MM-DD". */
 export function ymd(d: Date): string {
   return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;

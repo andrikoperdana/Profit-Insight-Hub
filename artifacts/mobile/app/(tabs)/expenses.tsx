@@ -1,0 +1,451 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  AddProjectExpenseBodyCategory,
+  customFetch,
+  useAddProjectExpense,
+  useListProjects,
+} from "@workspace/api-client-react";
+import React, { useMemo, useState } from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import {
+  Button,
+  Card,
+  EmptyState,
+  ScreenHeader,
+  SelectModal,
+  TextField,
+  type SelectOption,
+} from "@/components/ui";
+import { useColors } from "@/hooks/useColors";
+import { formatIDR, formatShortDate, todayYMD } from "@/lib/format";
+
+const MY_EXPENSES_KEY = ["my-expenses", "mobile"] as const;
+
+type ExpenseStatus = "PENDING" | "APPROVED" | "REJECTED";
+
+type MyExpense = {
+  id: string;
+  projectId: string;
+  projectCode: string | null;
+  projectName: string | null;
+  category: string;
+  description: string;
+  amount: number;
+  spentAt: string;
+  status: ExpenseStatus;
+  rejectionReason: string | null;
+  approvedByName: string | null;
+  approvedAt: string | null;
+  hasReceipt: boolean;
+};
+
+const CATEGORY_LABELS: Record<AddProjectExpenseBodyCategory, string> = {
+  SOFTWARE: "Software",
+  HARDWARE: "Hardware",
+  LICENSE: "License",
+  TRAVEL: "Travel",
+  OTHER: "Other",
+};
+
+const CATEGORY_OPTIONS: SelectOption[] = (
+  Object.keys(CATEGORY_LABELS) as AddProjectExpenseBodyCategory[]
+).map((value) => ({ value, label: CATEGORY_LABELS[value] }));
+
+// The shared StatusBadge only knows timesheet statuses, so expenses get a
+// small local badge mapping PENDING/APPROVED/REJECTED to status tokens.
+function ExpenseStatusBadge({ status }: { status: ExpenseStatus }) {
+  const colors = useColors();
+  const color =
+    status === "APPROVED"
+      ? colors.success
+      : status === "REJECTED"
+        ? colors.destructive
+        : colors.warning;
+  return (
+    <View style={[styles.badge, { backgroundColor: `${color}22` }]}>
+      <Text style={[styles.badgeText, { color }]}>{status}</Text>
+    </View>
+  );
+}
+
+export default function ExpensesScreen() {
+  const colors = useColors();
+  const [submitOpen, setSubmitOpen] = useState(false);
+
+  const q = useQuery<MyExpense[]>({
+    queryKey: MY_EXPENSES_KEY,
+    queryFn: () => customFetch<MyExpense[]>("/api/expenses/mine?limit=500"),
+  });
+  const rows = q.data ?? [];
+
+  const kpi = useMemo(() => {
+    const acc = { total: 0, approved: 0, pending: 0, rejected: 0 };
+    for (const e of rows) {
+      acc.total += e.amount;
+      if (e.status === "APPROVED") acc.approved += e.amount;
+      else if (e.status === "PENDING") acc.pending += e.amount;
+      else if (e.status === "REJECTED") acc.rejected += e.amount;
+    }
+    return acc;
+  }, [rows]);
+
+  return (
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
+      <ScreenHeader title="My Expenses" subtitle="Claims you've filed" />
+      <FlatList
+        data={rows}
+        keyExtractor={(e) => e.id}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={q.isFetching}
+            onRefresh={() => void q.refetch()}
+            tintColor={colors.primary}
+          />
+        }
+        ListHeaderComponent={
+          <View style={{ gap: 12, marginBottom: 4 }}>
+            <Button
+              label="Submit Expense"
+              icon="plus"
+              onPress={() => setSubmitOpen(true)}
+            />
+            <View style={styles.kpiRow}>
+              <KpiCard label="Total" value={formatIDR(kpi.total)} color={colors.foreground} />
+              <KpiCard label="Approved" value={formatIDR(kpi.approved)} color={colors.success} />
+            </View>
+            <View style={styles.kpiRow}>
+              <KpiCard label="Pending" value={formatIDR(kpi.pending)} color={colors.warning} />
+              <KpiCard label="Rejected" value={formatIDR(kpi.rejected)} color={colors.destructive} />
+            </View>
+          </View>
+        }
+        renderItem={({ item }) => (
+          <Card style={{ gap: 8 }}>
+            <View style={styles.rowTop}>
+              <Text
+                style={[styles.project, { color: colors.foreground }]}
+                numberOfLines={1}
+              >
+                {item.projectName ?? item.projectCode ?? "Project"}
+              </Text>
+              <ExpenseStatusBadge status={item.status} />
+            </View>
+            <View style={styles.rowMeta}>
+              <Text style={[styles.meta, { color: colors.mutedForeground }]}>
+                {CATEGORY_LABELS[item.category as AddProjectExpenseBodyCategory] ??
+                  item.category}{" "}
+                · {formatShortDate(item.spentAt)}
+              </Text>
+              <Text style={[styles.amount, { color: colors.foreground }]}>
+                {formatIDR(item.amount)}
+              </Text>
+            </View>
+            {item.description ? (
+              <Text
+                style={[styles.meta, { color: colors.mutedForeground }]}
+                numberOfLines={2}
+              >
+                {item.description}
+              </Text>
+            ) : null}
+            {item.status === "REJECTED" && item.rejectionReason ? (
+              <Text style={[styles.reject, { color: colors.destructive }]}>
+                Rejected: {item.rejectionReason}
+              </Text>
+            ) : null}
+            {item.status === "APPROVED" && item.approvedByName ? (
+              <Text style={[styles.meta, { color: colors.mutedForeground }]}>
+                Approved by {item.approvedByName}
+              </Text>
+            ) : null}
+          </Card>
+        )}
+        ListEmptyComponent={
+          q.isLoading ? (
+            <View style={styles.loading}>
+              <ActivityIndicator color={colors.primary} />
+            </View>
+          ) : (
+            <EmptyState
+              icon="credit-card"
+              title="No expenses yet"
+              message="Tap Submit Expense to file your first claim."
+            />
+          )
+        }
+      />
+
+      <SubmitExpenseModal
+        visible={submitOpen}
+        onClose={() => setSubmitOpen(false)}
+      />
+    </View>
+  );
+}
+
+function KpiCard({
+  label,
+  value,
+  color,
+}: {
+  label: string;
+  value: string;
+  color: string;
+}) {
+  const colors = useColors();
+  return (
+    <Card style={{ flex: 1, gap: 4 }}>
+      <Text style={[styles.kpiValue, { color }]} numberOfLines={1} adjustsFontSizeToFit>
+        {value}
+      </Text>
+      <Text style={[styles.kpiLabel, { color: colors.mutedForeground }]}>
+        {label}
+      </Text>
+    </Card>
+  );
+}
+
+function SubmitExpenseModal({
+  visible,
+  onClose,
+}: {
+  visible: boolean;
+  onClose: () => void;
+}) {
+  const colors = useColors();
+  const insets = useSafeAreaInsets();
+  const qc = useQueryClient();
+
+  const [projectId, setProjectId] = useState<string | null>(null);
+  const [category, setCategory] = useState<AddProjectExpenseBodyCategory>("SOFTWARE");
+  const [description, setDescription] = useState("");
+  const [amount, setAmount] = useState("");
+  const [spentAt, setSpentAt] = useState(todayYMD());
+  const [error, setError] = useState<string | null>(null);
+
+  // Role-scoped on the server: only the projects this user is involved in.
+  const projectsQuery = useListProjects(undefined, {
+    query: { enabled: visible, queryKey: ["projects", "mobile-expense-submit"] },
+  });
+  const projectOptions: SelectOption[] = (projectsQuery.data ?? []).map((p) => ({
+    value: p.id,
+    label: `${p.code} — ${p.name}`,
+  }));
+
+  const reset = () => {
+    setProjectId(null);
+    setCategory("SOFTWARE");
+    setDescription("");
+    setAmount("");
+    setSpentAt(todayYMD());
+    setError(null);
+  };
+
+  const close = () => {
+    reset();
+    onClose();
+  };
+
+  const addMutation = useAddProjectExpense({
+    mutation: {
+      onSuccess: () => {
+        void qc.invalidateQueries({ queryKey: MY_EXPENSES_KEY });
+        close();
+      },
+      onError: (e: unknown) =>
+        setError(e instanceof Error ? e.message : "Failed to submit expense."),
+    },
+  });
+
+  function handleSubmit() {
+    setError(null);
+    if (!projectId) {
+      setError("Please select a project.");
+      return;
+    }
+    if (!description.trim()) {
+      setError("Please enter a description.");
+      return;
+    }
+    const amt = Number(amount);
+    if (!Number.isFinite(amt) || amt <= 0) {
+      setError("Enter a valid amount greater than zero.");
+      return;
+    }
+    if (spentAt && Number.isNaN(new Date(spentAt).getTime())) {
+      setError("Enter a valid date (YYYY-MM-DD).");
+      return;
+    }
+    addMutation.mutate({
+      id: projectId,
+      data: {
+        category,
+        description: description.trim(),
+        amount: amt,
+        spentAt: spentAt || undefined,
+      },
+    });
+  }
+
+  return (
+    <Modal
+      visible={visible}
+      animationType="slide"
+      onRequestClose={close}
+      presentationStyle="pageSheet"
+    >
+      <View style={{ flex: 1, backgroundColor: colors.background }}>
+        <View
+          style={[
+            styles.modalHeader,
+            {
+              // iOS pageSheet floats below the status bar, so it doesn't need
+              // the safe-area inset; Android renders full-screen and does.
+              paddingTop: Platform.OS === "ios" ? 16 : insets.top + 12,
+              borderBottomColor: colors.border,
+            },
+          ]}
+        >
+          <Text style={[styles.modalTitle, { color: colors.foreground }]}>
+            Submit Expense
+          </Text>
+          <Pressable onPress={close} hitSlop={12}>
+            <Text style={[styles.modalCancel, { color: colors.mutedForeground }]}>
+              Cancel
+            </Text>
+          </Pressable>
+        </View>
+
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+        >
+          <ScrollView
+            contentContainerStyle={styles.modalBody}
+            keyboardShouldPersistTaps="handled"
+          >
+            <SelectModal
+              label="Project"
+              placeholder={
+                projectsQuery.isLoading
+                  ? "Loading projects…"
+                  : projectOptions.length === 0
+                    ? "No projects available"
+                    : "Select project"
+              }
+              value={projectId}
+              options={projectOptions}
+              onChange={setProjectId}
+              testID="select-expense-project"
+            />
+            <SelectModal
+              label="Category"
+              value={category}
+              options={CATEGORY_OPTIONS}
+              onChange={(v) =>
+                setCategory((v as AddProjectExpenseBodyCategory) ?? "SOFTWARE")
+              }
+              testID="select-expense-category"
+            />
+            <TextField
+              label="Amount (IDR)"
+              value={amount}
+              onChangeText={setAmount}
+              placeholder="0"
+              keyboardType="numeric"
+              testID="input-expense-amount"
+            />
+            <TextField
+              label="Description"
+              value={description}
+              onChangeText={setDescription}
+              placeholder="e.g. Travel to client site, taxi fare"
+              autoCapitalize="sentences"
+              multiline
+              testID="input-expense-description"
+            />
+            <TextField
+              label="Date"
+              value={spentAt}
+              onChangeText={setSpentAt}
+              placeholder="YYYY-MM-DD"
+              testID="input-expense-date"
+            />
+
+            {error ? (
+              <Text style={[styles.error, { color: colors.destructive }]}>
+                {error}
+              </Text>
+            ) : null}
+
+            <Button
+              label="Submit Expense"
+              onPress={handleSubmit}
+              loading={addMutation.isPending}
+              testID="button-confirm-expense"
+            />
+            <Text style={[styles.note, { color: colors.mutedForeground }]}>
+              Submitted expenses are sent to the project manager for approval.
+            </Text>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </View>
+    </Modal>
+  );
+}
+
+const styles = StyleSheet.create({
+  content: { padding: 16, gap: 12, paddingBottom: 120 },
+  kpiRow: { flexDirection: "row", gap: 12 },
+  kpiValue: { fontSize: 18, fontFamily: "Inter_700Bold" },
+  kpiLabel: { fontSize: 13, fontFamily: "Inter_400Regular" },
+  rowTop: { flexDirection: "row", alignItems: "center", gap: 10 },
+  project: { flex: 1, fontSize: 16, fontFamily: "Inter_600SemiBold" },
+  rowMeta: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 10,
+  },
+  meta: { fontSize: 14, fontFamily: "Inter_400Regular", flexShrink: 1 },
+  amount: { fontSize: 16, fontFamily: "Inter_600SemiBold" },
+  reject: { fontSize: 13, fontFamily: "Inter_500Medium", lineHeight: 18 },
+  loading: { paddingVertical: 48, alignItems: "center" },
+  badge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 999,
+    alignSelf: "flex-start",
+  },
+  badgeText: { fontSize: 11, fontFamily: "Inter_700Bold", letterSpacing: 0.5 },
+  modalHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    paddingBottom: 14,
+    borderBottomWidth: 1,
+    gap: 12,
+  },
+  modalTitle: { fontSize: 20, fontFamily: "Inter_700Bold" },
+  modalCancel: { fontSize: 16, fontFamily: "Inter_500Medium" },
+  modalBody: { padding: 20, gap: 16, paddingBottom: 48 },
+  error: { fontSize: 14, fontFamily: "Inter_500Medium", lineHeight: 19 },
+  note: { fontSize: 13, fontFamily: "Inter_400Regular", textAlign: "center" },
+});

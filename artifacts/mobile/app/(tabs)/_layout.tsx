@@ -35,6 +35,14 @@ function NativeTabLayout() {
       ) : (
         <NativeTabs.Trigger name="timesheets" hidden />
       )}
+      {logs ? (
+        <NativeTabs.Trigger name="expenses">
+          <Icon sf={{ default: "creditcard", selected: "creditcard.fill" }} />
+          <Label>Expenses</Label>
+        </NativeTabs.Trigger>
+      ) : (
+        <NativeTabs.Trigger name="expenses" hidden />
+      )}
       {approves ? (
         <NativeTabs.Trigger name="approvals">
           <Icon
@@ -119,6 +127,19 @@ function ClassicTabLayout() {
               <SymbolView name="list.bullet.rectangle" tintColor={color} size={24} />
             ) : (
               <Feather name="list" size={22} color={color} />
+            ),
+        }}
+      />
+      <Tabs.Screen
+        name="expenses"
+        options={{
+          title: "Expenses",
+          href: logs ? "/expenses" : null,
+          tabBarIcon: ({ color }) =>
+            isIOS ? (
+              <SymbolView name="creditcard" tintColor={color} size={24} />
+            ) : (
+              <Feather name="credit-card" size={22} color={color} />
             ),
         }}
       />
