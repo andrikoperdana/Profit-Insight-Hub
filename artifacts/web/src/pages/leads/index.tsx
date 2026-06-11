@@ -513,6 +513,11 @@ export default function LeadsPage() {
                           </Badge>
                         )}
                       </div>
+                      {l.pipedriveDealId != null && (
+                        <Badge variant="outline" className="text-[9px] border-primary/40 text-primary">
+                          From Pipedrive
+                        </Badge>
+                      )}
                       <div className="text-xs text-muted-foreground">
                         {l.clientName || l.prospectiveClientName || "—"}
                       </div>
@@ -598,6 +603,11 @@ export default function LeadsPage() {
                       <div className="flex items-center gap-2">
                         <span className="font-medium">{l.title}</span>
                         {(l as any).followupOverdue && <AlertTriangle className="h-3 w-3 text-destructive" />}
+                        {l.pipedriveDealId != null && (
+                          <Badge variant="outline" className="text-[9px] border-primary/40 text-primary">
+                            Pipedrive
+                          </Badge>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell className="text-sm">{l.clientName || l.prospectiveClientName || "—"}</TableCell>
@@ -636,6 +646,12 @@ export default function LeadsPage() {
                   <TabsTrigger value="activities" data-testid="tab-activities">Activities</TabsTrigger>
                 </TabsList>
                 <TabsContent value="detail" className="space-y-2 text-sm">
+                  {drawerLead.pipedriveDealId != null && (
+                    <div className="rounded-md border border-primary/30 bg-primary/5 px-3 py-2 text-xs text-muted-foreground">
+                      Imported from Pipedrive (deal #{drawerLead.pipedriveDealId}). Details sync one-way
+                      from Pipedrive and may be overwritten on the next import.
+                    </div>
+                  )}
                   <Row k="Client" v={drawerLead.clientName || drawerLead.prospectiveClientName || "—"} />
                   <Row k="Stage" v={drawerLead.stage} />
                   <Row k="Value" v={formatIDR(drawerLead.estimatedValue)} />

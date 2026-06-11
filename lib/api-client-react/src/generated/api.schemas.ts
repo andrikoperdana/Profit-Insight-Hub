@@ -561,6 +561,8 @@ export interface Lead {
   convertedProjectId?: string | null;
   wonAt?: string | null;
   lostAt?: string | null;
+  pipedriveDealId?: number | null;
+  pipedriveUpdatedAt?: string | null;
   nextActionAt?: string | null;
   followupOverdue?: boolean | null;
   createdAt: string;

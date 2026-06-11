@@ -22,6 +22,7 @@ import { Switch } from "@/components/ui/switch";
 import { LoadingPage } from "@/components/common/Loading";
 import { Calendar, Copy, RefreshCw, Check, KeyRound, Upload, Trash2, Link2, Unlink, Loader2, SlidersHorizontal } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { PipedriveIntegrationCard } from "./PipedriveIntegrationCard";
 
 const AVATAR_MAX_BYTES = 300 * 1024;
 
@@ -711,6 +712,7 @@ export default function Settings() {
 
   const canManageXero = user?.role === "MANAGEMENT" || user?.role === "FINANCE" || user?.role === "SUPER_ADMIN";
   const canManageBusinessRules = user?.role === "MANAGEMENT" || user?.role === "SUPER_ADMIN";
+  const canManagePipedrive = user?.role === "MANAGEMENT" || user?.role === "SUPER_ADMIN";
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -771,6 +773,8 @@ export default function Settings() {
       {canManageBusinessRules && <BusinessRulesCard />}
 
       {canManageXero && <XeroIntegrationCard />}
+
+      {canManagePipedrive && <PipedriveIntegrationCard />}
 
       <ChangePasswordCard />
 

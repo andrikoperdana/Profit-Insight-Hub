@@ -204,8 +204,14 @@ router.put(
       }[];
     };
 
-    await prisma.$transaction(
-      body.mappings.map((m) =>
+    // PUT carries the complete desired mapping set: upsert the submitted rows
+    // and delete any stage mapping the caller omitted (i.e. unmapped in the UI).
+    const submittedStageIds = body.mappings.map((m) => m.pipedriveStageId);
+    await prisma.$transaction([
+      prisma.pipedriveStageMapping.deleteMany({
+        where: { pipedriveStageId: { notIn: submittedStageIds } },
+      }),
+      ...body.mappings.map((m) =>
         prisma.pipedriveStageMapping.upsert({
           where: { pipedriveStageId: m.pipedriveStageId },
           create: {
@@ -221,7 +227,7 @@ router.put(
           },
         }),
       ),
-    );
+    ]);
     await recordAudit(req, {
       action: "pipedrive.stage_mappings_updated",
       entityType: "PipedriveStageMapping",

@@ -363,6 +363,11 @@ export async function importDeal(deal: PdDeal, ctx: SyncContext): Promise<Import
       return "updated";
     }
 
+    // Only OPEN deals become new leads. A won/lost deal that was never tracked
+    // stays in Pipedrive as history rather than flooding the Leads pipeline.
+    // (Existing leads are still updated above when an open deal later closes.)
+    if ((deal.status ?? "").toLowerCase() !== "open") return "skipped";
+
     // Create needs a non-null ownerId. Match the Pipedrive owner's email to an
     // active Sales user, else use the configured default owner, else error so
     // the deal is recorded in the sync result rather than silently misassigned.
@@ -422,8 +427,11 @@ export async function syncSingleDeal(dealId: number): Promise<ImportOutcome> {
 }
 
 /**
- * Backfill / refresh: pull all non-deleted deals (open + won + lost) and import
- * them. Guarded by a single advisory lock so two syncs never run at once.
+ * Backfill / refresh: pull OPEN deals only and import them as leads. Closed
+ * (won/lost) deals stay in Pipedrive as history and never flood the Leads
+ * pipeline; an already-imported lead is still updated (e.g. open -> won/lost)
+ * via the webhook path. Guarded by a single advisory lock so two syncs never
+ * run at once.
  */
 export async function runFullSync(): Promise<SyncResult> {
   const [{ locked }] = await prisma.$queryRaw<{ locked: boolean }[]>`
@@ -433,7 +441,7 @@ export async function runFullSync(): Promise<SyncResult> {
   try {
     const result: SyncResult = { imported: 0, updated: 0, skipped: 0, errors: [] };
     const ctx = await buildContext();
-    const deals = await pdListAll<PdDeal>("/deals", { status: "all_not_deleted" });
+    const deals = await pdListAll<PdDeal>("/deals", { status: "open" });
     for (const deal of deals) {
       try {
         const outcome = await importDeal(deal, ctx);

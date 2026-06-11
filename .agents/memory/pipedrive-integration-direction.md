@@ -1,20 +1,22 @@
 ---
 name: Pipedrive integration direction
-description: Chosen direction and rationale for a (deferred) Pipedrive CRM integration.
+description: Shipped design + non-obvious constraints for the one-way Pipedrive→Leads import.
 ---
 
-# Pipedrive integration direction
+# Pipedrive integration (Phase 1 — shipped)
 
-Decision: if/when a Pipedrive integration is built, do **one-way Import (Pipedrive → app)** — not export, not two-way sync.
+Direction: **one-way Import (Pipedrive → app Leads pipeline)** only. The app never writes back to Pipedrive. Deal → Lead; pipeline stage → `LeadStage` via a configurable mapping; deal owner → Sales user (email match, else a configured default owner); Organization/Person → Client + contact. Link columns: `Lead.pipedriveDealId`, `Client.pipedriveOrgId`.
 
-**Why:** The firm's sales team works day-to-day inside Pipedrive (paid, familiar). The app already has its own internal Leads pipeline, so the goal is to mirror Pipedrive deals into the app without double entry. Two-way sync was judged overkill/high-risk (conflict handling, webhook loops, stage/user mapping) unless two teams work in parallel. Export-only is usually not worth a paid Pipedrive seat just to store data.
+**Why one-way:** sales lives in Pipedrive day-to-day; the app just mirrors deals to avoid double entry. Two-way sync judged overkill/high-risk (conflict handling, webhook loops).
 
-**How to apply (Phase 1 plan — agreed but deferred, NOT yet built):**
-- Connect via the Replit OAuth connector `connector_catalog:pipedrive` (status `requires_setup`; call `proposeIntegration` when building). No manual API keys (unlike Xero, which uses `XERO_CLIENT_ID/SECRET` env secrets).
-- Map: Pipedrive Deal → Lead; pipeline stages → `LeadStage` (NEW/QUALIFIED/PROPOSAL/NEGOTIATION/WON/LOST) via a **configurable** mapping (companies customize their stages); deal owner → Sales user matched by email; Organization/Person → Client + contact.
-- Add link columns analogous to `Client.xeroContactId` (e.g. `Lead.pipedriveDealId` unique, `Client.pipedriveOrgId`).
-- Sync via Pipedrive webhooks (real-time) + polling fallback; one-time backfill of open/won deals. Webhook reliability pattern can mirror the existing Xero integration.
-- A WON deal lands as a Lead in WON stage, then flows through the existing convert-to-Project flow — fits the Sales "create project only from a won lead" lock.
-- UI: connection status, "Sync now" button, "From Pipedrive" badge; synced fields read-only.
+## Non-obvious constraints (won't be obvious from code alone)
 
-Status: user approved the Import direction but chose NOT to start building yet (keep the plan for later).
+- **Auth seam is a manual API token, NOT a Replit OAuth connector.** Pipedrive OAuth is dead at this org, so auth uses env secret `PIPEDRIVE_API_TOKEN` + `PIPEDRIVE_API_DOMAIN` (x-api-token header). Do **not** reach for `proposeIntegration`/`connector_catalog:pipedrive` — that earlier plan was abandoned.
+- **Import scope = OPEN/active deals only.** The org has ~6k deals (most won/lost = noise). Full sync fetches `{status:"open"}` and the CREATE path skips non-open deals; existing leads still UPDATE on open→won/lost transitions. Don't "fix" this into importing everything.
+- **Stage-mapping PUT is replace-semantics.** `PUT /pipedrive/stage-mappings` upserts submitted rows AND deletes any omitted stage mapping in the same transaction. The settings UI omits a stage to unmap it; an unmapped Pipedrive stage falls back to importing as NEW. An empty `mappings` array therefore clears all mappings — intended.
+- **Default lead owner must be an active SALES user** (server-validated in `PUT /pipedrive/settings`); the settings picker filters `/users/active-all` to role SALES.
+- **Webhook is unauthenticated by a shared secret** (`AppSetting.pipedriveWebhookSecret`); when no secret is configured it accepts (pre-setup) and only ever triggers a server-side re-fetch by deal id (never trusts the payload body).
+
+## Access / gating
+- Backend admin endpoints (`status/sync/settings/stage-mappings`) gated to `ADMIN_ROLES=["MANAGEMENT"]`; `requireRole` auto-bypasses SUPER_ADMIN. FE settings card gate is `MANAGEMENT || SUPER_ADMIN` to match.
+- Leads carry `pipedriveDealId`; the Leads page shows a "From Pipedrive" badge keyed on `pipedriveDealId != null`.

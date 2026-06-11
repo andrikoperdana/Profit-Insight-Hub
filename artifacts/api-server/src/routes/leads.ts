@@ -33,6 +33,8 @@ type LeadForSerialize = {
   convertedProjectId: string | null;
   wonAt: Date | null;
   lostAt: Date | null;
+  pipedriveDealId: number | null;
+  pipedriveUpdatedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -91,6 +93,8 @@ function serialize(l: LeadForSerialize) {
     convertedProjectId: l.convertedProjectId,
     wonAt: l.wonAt ? l.wonAt.toISOString() : null,
     lostAt: l.lostAt ? l.lostAt.toISOString() : null,
+    pipedriveDealId: l.pipedriveDealId,
+    pipedriveUpdatedAt: l.pipedriveUpdatedAt ? l.pipedriveUpdatedAt.toISOString() : null,
     createdAt: l.createdAt.toISOString(),
     updatedAt: l.updatedAt.toISOString(),
   };
