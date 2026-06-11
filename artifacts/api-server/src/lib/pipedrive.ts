@@ -9,10 +9,11 @@ import { APP_SETTINGS_ID } from "./app-settings.js";
 // Leads pipeline. This module owns the connector seam, the REST helpers, the
 // field mapping, and the idempotent per-deal upsert ("import") core.
 //
-// Token handling: unlike Xero (which stores + refreshes its own tokens in the
-// DB), Pipedrive is wired through a Replit connector. A fresh access token is
-// fetched per request from the connector proxy via `getPipedriveConn()` and is
-// NEVER cached here. That wiring is completed once the user authorizes OAuth.
+// Auth: Pipedrive is reached with a personal API token (PIPEDRIVE_API_TOKEN
+// secret) scoped to the account's API domain (PIPEDRIVE_API_DOMAIN). The token
+// is read fresh from the environment per request via `getPipedriveConn()` and
+// is NEVER cached or logged. A Replit-connector OAuth path can slot into the
+// same seam later by returning a Bearer header instead of x-api-token.
 // ---------------------------------------------------------------------------
 
 export type LeadStage =
@@ -48,16 +49,23 @@ function errorMessage(e: unknown): string {
 // ---------------------------------------------------------------------------
 
 /**
- * Returns a fresh Pipedrive access token plus the account's API base domain.
- * Never cache the result — tokens expire and are refreshed by the connector.
+ * Returns the Pipedrive API base domain plus the auth headers to attach to
+ * every REST call. Read fresh from the environment per request; never cached.
  *
- * Wired to the Replit Pipedrive connector once OAuth is authorized. Until then
- * it throws so every caller degrades gracefully (status = not connected, sync
- * returns a clear error) rather than crashing.
+ * Current mode: personal API token via the `x-api-token` header. Throws
+ * PipedriveNotConnectedError when no credentials are configured so every caller
+ * degrades gracefully (status = not connected, sync returns a clear error)
+ * rather than crashing.
  */
-async function getPipedriveConn(): Promise<{ accessToken: string; apiDomain: string }> {
-  // TODO(pipedrive-oauth): implement using the Replit connector
-  // (getUncachablePipedriveClient) once the connection is authorized.
+async function getPipedriveConn(): Promise<{
+  apiDomain: string;
+  authHeaders: Record<string, string>;
+}> {
+  const token = process.env["PIPEDRIVE_API_TOKEN"]?.trim();
+  const apiDomain = process.env["PIPEDRIVE_API_DOMAIN"]?.trim();
+  if (token && apiDomain) {
+    return { apiDomain, authHeaders: { "x-api-token": token } };
+  }
   throw new PipedriveNotConnectedError();
 }
 
@@ -72,13 +80,13 @@ export async function pipedriveConfigured(): Promise<boolean> {
 }
 
 async function pdFetch<T>(path: string, init?: RequestInit): Promise<T> {
-  const { accessToken, apiDomain } = await getPipedriveConn();
+  const { apiDomain, authHeaders } = await getPipedriveConn();
   const base = apiDomain.replace(/\/+$/, "");
   const url = `${base}/api/v1${path}`;
   const res = await fetch(url, {
     ...init,
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      ...authHeaders,
       "Content-Type": "application/json",
       ...(init?.headers ?? {}),
     },

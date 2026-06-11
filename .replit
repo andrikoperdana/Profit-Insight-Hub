@@ -95,3 +95,4 @@ SITE_GATE_USER = "itsecasia"
 SITE_GATE_PASS = "@Its3c@Asia2026"
 
 [userenv.shared]
+PIPEDRIVE_API_DOMAIN = "https://itsecaustralia.pipedrive.com"
