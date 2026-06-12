@@ -41,6 +41,26 @@ export function canViewTeamExpenses(role: UserRole | undefined | null): boolean 
   );
 }
 
+/**
+ * Roles that can open the Expenses tab on mobile: anyone who logs hours (and so
+ * files their own claims) OR anyone who reviews cross-project claims
+ * (Management / Sales / PM via the "Team" view). Without the second clause,
+ * Management and Sales were listed for the Team view but could never reach the
+ * tab at all.
+ */
+export function canViewExpenses(role: UserRole | undefined | null): boolean {
+  return canLogHours(role) || canViewTeamExpenses(role);
+}
+
+/**
+ * Roles whose expense submissions are auto-approved on the server (no PM
+ * approval step). Mirrors the server allowlist in routes/expenses.ts:
+ * MANAGEMENT and SUPER_ADMIN.
+ */
+export function expensesAutoApproved(role: UserRole | undefined | null): boolean {
+  return role === "MANAGEMENT" || role === "SUPER_ADMIN";
+}
+
 /** Friendly label for a role, used in the header greeting. */
 export function roleLabel(role: UserRole | undefined | null): string {
   switch (role) {

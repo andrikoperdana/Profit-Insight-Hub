@@ -42,7 +42,7 @@ import {
 import { useAuth } from "@/contexts/auth";
 import { useColors } from "@/hooks/useColors";
 import { formatIDR, formatShortDate, todayYMD } from "@/lib/format";
-import { canViewTeamExpenses } from "@/lib/roles";
+import { canViewTeamExpenses, expensesAutoApproved } from "@/lib/roles";
 
 const MY_EXPENSES_KEY = ["my-expenses", "mobile"] as const;
 
@@ -432,6 +432,8 @@ function SubmitExpenseModal({
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const qc = useQueryClient();
+  const { user } = useAuth();
+  const autoApproved = expensesAutoApproved(user?.role);
 
   const [projectId, setProjectId] = useState<string | null>(null);
   const [category, setCategory] = useState<AddProjectExpenseBodyCategory>("SOFTWARE");
@@ -774,7 +776,9 @@ function SubmitExpenseModal({
               testID="button-confirm-expense"
             />
             <Text style={[styles.note, { color: colors.mutedForeground }]}>
-              Submitted expenses are sent to the project manager for approval.
+              {autoApproved
+                ? "Expenses you submit are approved automatically."
+                : "Submitted expenses are sent to the project manager for approval."}
             </Text>
           </ScrollView>
         </KeyboardAvoidingView>

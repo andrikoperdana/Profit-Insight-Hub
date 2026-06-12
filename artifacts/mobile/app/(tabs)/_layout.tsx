@@ -9,13 +9,14 @@ import { Platform, StyleSheet, View, useColorScheme } from "react-native";
 
 import { useAuth } from "@/contexts/auth";
 import { useColors } from "@/hooks/useColors";
-import { canApproveTimesheets, canLogHours } from "@/lib/roles";
+import { canApproveTimesheets, canLogHours, canViewExpenses } from "@/lib/roles";
 
 function NativeTabLayout() {
   const { user } = useAuth();
   const role = user?.role;
   const logs = canLogHours(role);
   const approves = canApproveTimesheets(role);
+  const showExpenses = canViewExpenses(role);
 
   return (
     <NativeTabs>
@@ -35,7 +36,7 @@ function NativeTabLayout() {
       ) : (
         <NativeTabs.Trigger name="timesheets" hidden />
       )}
-      {logs ? (
+      {showExpenses ? (
         <NativeTabs.Trigger name="expenses">
           <Icon sf={{ default: "creditcard", selected: "creditcard.fill" }} />
           <Label>Expenses</Label>
@@ -67,6 +68,7 @@ function ClassicTabLayout() {
   const role = user?.role;
   const logs = canLogHours(role);
   const approves = canApproveTimesheets(role);
+  const showExpenses = canViewExpenses(role);
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
   const isIOS = Platform.OS === "ios";
@@ -134,7 +136,7 @@ function ClassicTabLayout() {
         name="expenses"
         options={{
           title: "Expenses",
-          href: logs ? "/expenses" : null,
+          href: showExpenses ? "/expenses" : null,
           tabBarIcon: ({ color }) =>
             isIOS ? (
               <SymbolView name="creditcard" tintColor={color} size={24} />
