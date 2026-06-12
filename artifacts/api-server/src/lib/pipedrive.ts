@@ -300,8 +300,12 @@ async function loadSalesByEmail(): Promise<Map<string, string>> {
   return m;
 }
 
-// Pipedrive deal custom-field key for "Region" (enum). Stable per account.
-const REGION_FIELD_KEY = "e6d24cd8f0723cbf5bd39d42b5e0eb7fea929102";
+// Pipedrive deal custom-field key for "Region" (enum). Stable per account, but
+// overridable via env so a re-created field (which gets a new key) needs no code
+// change — falls back to the known production key when the env var is unset.
+const REGION_FIELD_KEY =
+  process.env["PIPEDRIVE_REGION_FIELD_KEY"]?.trim() ||
+  "e6d24cd8f0723cbf5bd39d42b5e0eb7fea929102";
 
 type PdFieldOption = { id?: number; label?: string };
 type PdDealField = { key?: string; options?: PdFieldOption[] };

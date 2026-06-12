@@ -129,7 +129,10 @@ function Calendar({
           return (
             <div
               data-slot="calendar"
-              ref={rootRef}
+              // react-day-picker bundles its own @types/react copy (the Expo app
+              // pins an older one), so rootRef's Ref type is nominally distinct
+              // from this app's. Cast to this app's React.Ref to reconcile them.
+              ref={rootRef as React.Ref<HTMLDivElement>}
               className={cn(className)}
               {...props}
             />

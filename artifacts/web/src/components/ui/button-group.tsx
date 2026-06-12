@@ -44,7 +44,11 @@ function ButtonGroupText({
 }: React.ComponentProps<"div"> & {
   asChild?: boolean
 }) {
-  const Comp = asChild ? Slot : "div"
+  // Typed as ElementType so the polymorphic Slot/"div" union accepts div props.
+  // The workspace has two @types/react copies (Expo pins an older one) which
+  // skews Radix Slot's prop types; ElementType is the idiomatic way to keep this
+  // polymorphic component's spread sound across that skew.
+  const Comp: React.ElementType = asChild ? Slot : "div"
 
   return (
     <Comp

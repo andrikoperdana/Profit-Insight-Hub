@@ -49,6 +49,7 @@ type LeadRow = {
   industry: string | null;
   source: string | null;
   competitorWon: string | null;
+  region: string | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -140,6 +141,7 @@ vi.mock("@workspace/db", () => {
           industry: args.data.industry ?? null,
           source: args.data.source ?? null,
           competitorWon: null,
+          region: args.data.region ?? null,
           createdAt: now,
           updatedAt: now,
         };
@@ -244,6 +246,7 @@ function seedLead(overrides: Partial<LeadRow> = {}): LeadRow {
     industry: null,
     source: null,
     competitorWon: null,
+    region: null,
     createdAt: now,
     updatedAt: now,
     ...overrides,
@@ -580,5 +583,19 @@ describe("Lead activities authorization", () => {
       .delete(`/api/leads/${lead1.id}/activities/${act.id}`)
       .set(SALES);
     expect(res.status).toBe(404);
+  });
+});
+
+// ─── Region passthrough ─────────────────────────────────────────────────────
+
+describe("GET /api/leads region", () => {
+  it("serializes each lead's region (label or null)", async () => {
+    seedLead({ ownerId: "sales-1", region: "Singapore" });
+    seedLead({ ownerId: "sales-1", region: null });
+    const res = await request(makeApp()).get("/api/leads").set(MGMT);
+    expect(res.status).toBe(200);
+    const regions = res.body.map((l: any) => l.region);
+    expect(regions).toContain("Singapore");
+    expect(regions).toContain(null);
   });
 });
