@@ -22,3 +22,7 @@ Email is a **best-effort side effect of `notifyUser`** (api-server `lib/email.ts
 - Domain `mail.psa4pmo.xyz` verified in Resend for **sending only** (receiving off), region Tokyo. `RESEND_API_KEY` in Replit Secrets, readable from the bash shell (so live send tests via a `/tmp/*.mjs` run work; the code_execution sandbox cannot read it).
 - Smoke-test recipients: Resend provides `delivered@resend.dev` / `bounced@resend.dev` / `complained@resend.dev` — use `delivered@resend.dev` to validate key+domain+from without a real inbox or reputation risk.
 - **Production needs a republish** to pick up code changes; the dev workflow restart only affects the dev environment.
+
+## Branding
+- Emails use brand red `#e10e19` (= web `--primary` HSL 357 88% 47%) for the CTA button + the white-on-dark ITSEC wordmark in the dark header. Green is reserved for success semantics, not brand.
+- **Email images need a publicly-reachable URL.** The logo is hosted in the web app's public dir (`artifacts/web/public/itsec-logo-white.png`), served at the app root. The site gate is **client-side only** (React overlay on the web artifact; the server gate guards only `/api/*`), so web static assets are public — but the production logo URL (`https://psa4pmo.xyz/itsec-logo-white.png`) only resolves **after a republish** that ships the asset. Live preview sends point `EMAIL_LOGO_URL` at the dev domain instead.

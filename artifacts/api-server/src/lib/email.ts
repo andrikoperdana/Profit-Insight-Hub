@@ -16,6 +16,10 @@ const SEND_TIMEOUT_MS = 5000;
 const EMAIL_FROM = process.env.EMAIL_FROM || "SecureProfit Hub <notifications@mail.psa4pmo.xyz>";
 const APP_BASE_URL = (process.env.APP_BASE_URL || "https://psa4pmo.xyz").replace(/\/+$/, "");
 const REPLY_TO = process.env.EMAIL_REPLY_TO || "";
+// Brand logo (white-on-dark ITSEC wordmark) and brand colour for email chrome.
+// Logo lives in the web app's public dir, so it is reachable at the app root.
+const EMAIL_LOGO_URL = process.env.EMAIL_LOGO_URL || `${APP_BASE_URL}/itsec-logo-white.png`;
+const BRAND_COLOR = "#e10e19";
 
 /** Notification `type` values that should also be sent as email (important only). */
 export const EMAIL_NOTIFICATION_TYPES = new Set<string>([
@@ -153,7 +157,7 @@ function buildHtml(opts: { name: string; title: string; message: string; url: st
   const safeMessage = escapeHtml(opts.message);
   const button = opts.url
     ? `<tr><td style="padding-top:24px;">
-            <a href="${escapeHtml(opts.url)}" style="display:inline-block;background:#16a34a;color:#ffffff;text-decoration:none;font-weight:600;font-size:14px;padding:12px 22px;border-radius:8px;">Open in SecureProfit Hub</a>
+            <a href="${escapeHtml(opts.url)}" style="display:inline-block;background:${BRAND_COLOR};color:#ffffff;text-decoration:none;font-weight:600;font-size:14px;padding:12px 22px;border-radius:8px;">Open in SecureProfit Hub</a>
           </td></tr>`
     : "";
   return `<!doctype html><html><body style="margin:0;background:#f4f5f7;font-family:Arial,Helvetica,sans-serif;color:#1f2933;">
@@ -161,7 +165,8 @@ function buildHtml(opts: { name: string; title: string; message: string; url: st
     <tr><td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e4e7eb;">
         <tr><td style="background:#0f172a;padding:18px 28px;">
-          <span style="color:#22c55e;font-weight:700;font-size:16px;letter-spacing:0.3px;">SecureProfit Hub</span>
+          <img src="${escapeHtml(EMAIL_LOGO_URL)}" alt="ITSEC" height="26" style="height:26px;width:auto;display:inline-block;vertical-align:middle;border:0;" />
+          <span style="color:#ffffff;font-weight:700;font-size:16px;letter-spacing:0.3px;vertical-align:middle;padding-left:10px;">SecureProfit Hub</span>
         </td></tr>
         <tr><td style="padding:28px;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
