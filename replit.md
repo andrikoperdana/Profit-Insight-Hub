@@ -60,6 +60,8 @@ Editable by MGMT/assigned-PM/Sales-owner unless noted. Each tab has its own rout
 
 Persisted `Notification` rows (`lib/notifications.ts` `notifyUser`), surfaced in the Header bell via `GET /api/notifications` (polled 60s, mark-read/mark-all-read). Timesheet approval events: submit/resubmit/bulk-create notifies the project's PM ("awaiting approval", link `/approvals`); approve (single+bulk) and reject notify the submitter (link `/timesheets`; reject includes reason). Actor==recipient is skipped; `/submit` only notifies on a real transition into SUBMITTED so repeats don't spam. Also used for leads/projects (`lib/leadNotifications.ts`, `lib/notificationRules.ts` — dedup by day).
 
+**Email** (`lib/email.ts`, Resend REST API via native fetch) — best-effort side effect of `notifyUser`: after the in-app row is created, **important types only** are emailed (`timesheet.submitted/approved/rejected`, `expense.rejected`, `INVOICE_DUE_SOON`, `PROJECT_OVERRUN`, `LOW_MARGIN`). Fired without awaiting, never throws, 5s timeout; skips deleted/invalid recipients; never logs the provider response body (PII — log `{status,domain,errorCode}` only). **No scheduler** — daily rules still only fire on MGMT dashboard load. From `notifications@mail.psa4pmo.xyz` (verified). Env levers (optional, sane defaults in code): `EMAIL_SEND_ALLOWLIST` (if set, only those exact addresses get mail — set to a test address before go-live to avoid bouncing seed/test emails, then clear), `EMAIL_SEND_BLOCKLIST_DOMAINS`, `EMAIL_FROM`, `APP_BASE_URL` (email links), `EMAIL_REPLY_TO`.
+
 ## Financials (`routes/.../serializers.ts`)
 
 - `resourceCost` = Σ APPROVED timesheets `(hours/8) × resource.dailyRate`; `additionalCost` = Σ APPROVED `ProjectExpense.amount`
