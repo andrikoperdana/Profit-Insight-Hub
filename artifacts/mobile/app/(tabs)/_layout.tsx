@@ -9,14 +9,14 @@ import { Platform, StyleSheet, View, useColorScheme } from "react-native";
 
 import { useAuth } from "@/contexts/auth";
 import { useColors } from "@/hooks/useColors";
-import { canApproveTimesheets, canLogHours, canViewExpenses } from "@/lib/roles";
+import { canApproveTimesheets, canLogHours } from "@/lib/roles";
 
 function NativeTabLayout() {
   const { user } = useAuth();
   const role = user?.role;
   const logs = canLogHours(role);
   const approves = canApproveTimesheets(role);
-  const showExpenses = canViewExpenses(role);
+  const showExpenses = logs;
 
   return (
     <NativeTabs>
@@ -68,7 +68,7 @@ function ClassicTabLayout() {
   const role = user?.role;
   const logs = canLogHours(role);
   const approves = canApproveTimesheets(role);
-  const showExpenses = canViewExpenses(role);
+  const showExpenses = logs;
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
   const isIOS = Platform.OS === "ios";
