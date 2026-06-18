@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { customFetch, useListUsers } from "@workspace/api-client-react";
 import { useAuth } from "@/lib/auth";
+import { isSuperAdmin } from "@/lib/roles";
 import { ScrollText, Filter, RefreshCw, Download } from "lucide-react";
 import { formatDate } from "@/lib/format";
 import { exportCsv, exportSheets } from "@/lib/exports";
@@ -153,7 +154,7 @@ export default function AuditLogPage() {
     queryFn: () => customFetch<ActionStat[]>("/api/audit-logs/actions"),
   });
 
-  if (user?.role !== "SITE_ADMIN") {
+  if (!isSuperAdmin(user?.role) && user?.role !== "SITE_ADMIN") {
     return (
       <div className="p-6">
         <Card>

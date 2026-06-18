@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useAuth } from "@/lib/auth";
-import { isPrincipalRole } from "@/lib/roles";
+import { isPrincipalRole, isSuperAdmin } from "@/lib/roles";
 import { useGetResourcePlanning, useListLeaves } from "@workspace/api-client-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +14,7 @@ import { Grid3x3, ShieldAlert } from "lucide-react";
 export default function ResourcePlanningPage() {
   const { user } = useAuth();
   const isPM =
+    isSuperAdmin(user?.role) ||
     user?.role === "PROJECT_MANAGER" ||
     user?.role === "MANAGEMENT" ||
     user?.role === "HR" ||

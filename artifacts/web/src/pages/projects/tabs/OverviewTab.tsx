@@ -60,7 +60,7 @@ import { LoadingPage } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
 import { PdfUploadField, type PdfFileData } from "@/components/common/PdfUploadField";
 import { useAuth } from "@/lib/auth";
-import { RoleLabels, canViewProjectFinancials } from "@/lib/roles";
+import { RoleLabels, canViewProjectFinancials, isSuperAdmin } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
 import BudgetConsumptionCard from "@/components/projects/BudgetConsumptionCard";
 import { ProfitOutlookCompact, type ProfitOutlook } from "@/components/projects/ProfitOutlookPanel";
@@ -86,6 +86,7 @@ function OverviewTab({ project }: { project: any }) {
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const canEdit =
+    isSuperAdmin(user?.role) ||
     user?.role === "MANAGEMENT" ||
     (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id) ||
     (user?.role === "SALES" && project.salesId === user?.id);
@@ -104,7 +105,7 @@ function OverviewTab({ project }: { project: any }) {
 
   const isDraft = project.status === ProjectStatus.DRAFT;
   const isSalesDraftEdit = isDraft && user?.role === "SALES";
-  const canPickClient = user?.role === "MANAGEMENT" || isSalesDraftEdit;
+  const canPickClient = isSuperAdmin(user?.role) || user?.role === "MANAGEMENT" || isSalesDraftEdit;
 
   const { data: clients } = useListClients({
     query: {
@@ -253,7 +254,8 @@ function OverviewTab({ project }: { project: any }) {
         </Card>
       )}
 
-      {(user?.role === "MANAGEMENT" ||
+      {(isSuperAdmin(user?.role) ||
+        user?.role === "MANAGEMENT" ||
         (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id) ||
         (user?.role === "ADMIN_PROJECT" && project.adminProjectId === user?.id)) && (
         <DocumentChecklistCard projectId={project.id} projectStatus={project.status} />

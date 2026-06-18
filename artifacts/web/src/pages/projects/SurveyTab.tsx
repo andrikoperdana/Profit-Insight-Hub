@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/lib/auth";
+import { isSuperAdmin } from "@/lib/roles";
 import { downloadAuthed } from "@/lib/exports";
 import { Link2, Copy, ExternalLink, Download, MessageSquare, Star, RefreshCw } from "lucide-react";
 
@@ -50,7 +51,7 @@ export default function SurveyTab({ projectId }: { projectId: string }) {
   const { user } = useAuth();
   const { toast } = useToast();
   const role = user?.role;
-  const canView = role === "MANAGEMENT" || role === "PROJECT_MANAGER";
+  const canView = isSuperAdmin(role) || role === "MANAGEMENT" || role === "PROJECT_MANAGER";
 
   const qc = useQueryClient();
 

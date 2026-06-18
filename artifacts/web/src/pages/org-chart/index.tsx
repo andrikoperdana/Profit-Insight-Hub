@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { EmptyState } from "@/components/common/EmptyState";
 import { LoadingPage } from "@/components/common/Loading";
 import { GitBranch, ShieldAlert } from "lucide-react";
-import { RoleLabels, isPrincipalRole } from "@/lib/roles";
+import { RoleLabels, isPrincipalRole, isSuperAdmin } from "@/lib/roles";
 
 type User = {
   id: string;
@@ -62,7 +62,10 @@ function UserNode({ user, sub }: { user: User; sub?: number }) {
 export default function OrgChartPage() {
   const { user: me } = useAuth();
   const canView =
-    me?.role === "HR" || me?.role === "MANAGEMENT" || me?.role === "SITE_ADMIN";
+    isSuperAdmin(me?.role) ||
+    me?.role === "HR" ||
+    me?.role === "MANAGEMENT" ||
+    me?.role === "SITE_ADMIN";
 
   const { data: users, isLoading } = useListUsers();
 

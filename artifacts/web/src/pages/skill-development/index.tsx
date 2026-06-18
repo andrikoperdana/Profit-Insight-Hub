@@ -30,7 +30,7 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { useToast } from "@/hooks/use-toast";
 import { TrendingUp, Plus, Trash2, CheckCircle2, Pause, Play, History, Target } from "lucide-react";
 
-const PRIVILEGED = ["MANAGEMENT", "HR", "SITE_ADMIN"];
+const PRIVILEGED = ["MANAGEMENT", "HR", "SITE_ADMIN", "SUPER_ADMIN"];
 
 export default function SkillDevelopmentPage() {
   const { user } = useAuth();

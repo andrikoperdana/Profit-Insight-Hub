@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { LoadingPage } from "@/components/common/Loading";
 import { useAuth } from "@/lib/auth";
+import { isSuperAdmin } from "@/lib/roles";
 import { useListReports, useGetReportOptions, customFetch } from "@workspace/api-client-react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, FileText, FileSpreadsheet, FileType2, AlertCircle } from "lucide-react";
@@ -99,7 +100,8 @@ export default function ReportRunner() {
   const [, params] = useRoute("/reports/:id");
   const reportId = params?.id ?? "";
   const { user } = useAuth();
-  const allowed = user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER";
+  const allowed =
+    isSuperAdmin(user?.role) || user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER";
 
   const { data: meta } = useListReports({ query: { enabled: allowed, queryKey: ["reports"] } });
   const reportMeta = useMemo(() => (meta as any[] | undefined)?.find((r) => r.id === reportId), [meta, reportId]);

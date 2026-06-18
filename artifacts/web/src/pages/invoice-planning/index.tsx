@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useAuth } from "@/lib/auth";
+import { isSuperAdmin } from "@/lib/roles";
 import { useGetInvoicePlanning, getGetInvoicePlanningQueryKey, customFetch } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
@@ -53,6 +54,7 @@ export default function InvoicePlanningPage() {
   const [, navigate] = useLocation();
 
   const allowed =
+    isSuperAdmin(user?.role) ||
     user?.role === "MANAGEMENT" ||
     user?.role === "FINANCE" ||
     user?.role === "PROJECT_MANAGER" ||
@@ -87,7 +89,7 @@ export default function InvoicePlanningPage() {
 
   const { data, isLoading } = useGetInvoicePlanning({ startDate, periods, mode });
 
-  const isManagement = user?.role === "MANAGEMENT";
+  const isManagement = isSuperAdmin(user?.role) || user?.role === "MANAGEMENT";
   const hasMilestones = useMemo(() => {
     if (!data) return false;
     for (const g of data.groups) for (const r of g.rows) for (const c of r.cells) if (c.milestones.length) return true;

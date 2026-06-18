@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useAuth } from "@/lib/auth";
+import { isSuperAdmin } from "@/lib/roles";
 import { useGetSkillMatrix } from "@workspace/api-client-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,7 +11,11 @@ import { Award, AlertTriangle, ShieldAlert } from "lucide-react";
 
 export default function SkillMatrixPage() {
   const { user } = useAuth();
-  const canView = user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER" || user?.role === "HR";
+  const canView =
+    isSuperAdmin(user?.role) ||
+    user?.role === "MANAGEMENT" ||
+    user?.role === "PROJECT_MANAGER" ||
+    user?.role === "HR";
   const { data, isLoading } = useGetSkillMatrix();
   const [filter, setFilter] = useState("");
 

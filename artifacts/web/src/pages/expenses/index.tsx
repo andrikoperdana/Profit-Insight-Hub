@@ -5,6 +5,7 @@ import {
   getListExpensesQueryKey,
 } from "@workspace/api-client-react";
 import { useAuth } from "@/lib/auth";
+import { isSuperAdmin } from "@/lib/roles";
 import { UserRole } from "@workspace/api-client-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -41,6 +42,7 @@ export default function ExpensesPage() {
   const [, setLocation] = useLocation();
 
   const allowed =
+    isSuperAdmin(user?.role) ||
     user?.role === UserRole.MANAGEMENT ||
     user?.role === UserRole.PROJECT_MANAGER ||
     user?.role === UserRole.SALES;

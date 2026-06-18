@@ -34,6 +34,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { useAuth } from "@/lib/auth";
+import { isSuperAdmin } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "@/lib/format";
 import { exportCsv } from "@/lib/exports";
@@ -144,6 +145,7 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
   const { data: resources } = useListProjectResources(projectId);
 
   const isManager =
+    isSuperAdmin(user?.role) ||
     user?.role === "MANAGEMENT" ||
     (user?.role === "PROJECT_MANAGER" && project.pmId === user.id);
 

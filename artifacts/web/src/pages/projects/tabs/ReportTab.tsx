@@ -26,6 +26,7 @@ import {
 import { formatDate } from "@/lib/format";
 import { EmptyState } from "@/components/common/EmptyState";
 import { useAuth } from "@/lib/auth";
+import { isSuperAdmin } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -93,6 +94,7 @@ function ReportTab({ projectId, project }: { projectId: string; project: any }) 
   const { toast } = useToast();
   const qc = useQueryClient();
   const canEdit =
+    isSuperAdmin(user?.role) ||
     user?.role === "MANAGEMENT" ||
     (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id) ||
     (user?.role === "TECHNICAL_WRITER" && project.technicalWriterId === user?.id);

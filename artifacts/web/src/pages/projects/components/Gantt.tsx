@@ -58,7 +58,7 @@ import { LoadingPage } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
 import { PdfUploadField, type PdfFileData } from "@/components/common/PdfUploadField";
 import { useAuth } from "@/lib/auth";
-import { RoleLabels, canViewProjectFinancials } from "@/lib/roles";
+import { RoleLabels, canViewProjectFinancials, isSuperAdmin } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
 
 import { Button } from "@/components/ui/button";
@@ -92,7 +92,7 @@ function TaskGanttChart({
   const { user } = useAuth();
   const { toast } = useToast();
   const qc = useQueryClient();
-  const isManager = user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER";
+  const isManager = isSuperAdmin(user?.role) || user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER";
 
   const updateTask = useUpdateTask({
     mutation: {

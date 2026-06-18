@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/lib/auth";
+import { isSuperAdmin } from "@/lib/roles";
 import { useLocation } from "wouter";
 import {
   useGetTopPerformers,
@@ -434,7 +435,7 @@ export default function TopPerformersPage() {
 
   const { data: businessUnits } = useListBusinessUnits();
 
-  if (user && user.role !== "MANAGEMENT" && !isPrincipal) {
+  if (user && !isSuperAdmin(user.role) && user.role !== "MANAGEMENT" && !isPrincipal) {
     setLocation("/");
     return null;
   }

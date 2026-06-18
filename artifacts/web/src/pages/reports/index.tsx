@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { LoadingPage } from "@/components/common/Loading";
 import { useAuth } from "@/lib/auth";
+import { isSuperAdmin } from "@/lib/roles";
 import { useListReports } from "@workspace/api-client-react";
 import { TrendingUp, Activity, Wallet, FileCheck, AlertCircle, ChevronRight } from "lucide-react";
 
@@ -15,7 +16,11 @@ const CATEGORY_META: Record<string, { label: string; icon: typeof TrendingUp; co
 
 export default function ReportsIndex() {
   const { user } = useAuth();
-  const allowed = user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER" || user?.role === "FINANCE";
+  const allowed =
+    isSuperAdmin(user?.role) ||
+    user?.role === "MANAGEMENT" ||
+    user?.role === "PROJECT_MANAGER" ||
+    user?.role === "FINANCE";
   const { data: reports, isLoading } = useListReports({
     query: { enabled: allowed, queryKey: ["reports"] },
   });

@@ -120,8 +120,8 @@ export default function LeadsPage() {
   const isSuperAdmin = role === "SUPER_ADMIN";
   const isSales = role === "SALES";
   const isAllowed = !!user && (isSales || isMgmt || isSuperAdmin);
-  const canWrite = isSales;
-  const canImport = isSales || isMgmt;
+  const canWrite = isSuperAdmin || isSales;
+  const canImport = isSuperAdmin || isSales || isMgmt;
   // Who may reassign: MGMT/Super Admin can move any lead; Sales only their own.
   const canReassignAny = isMgmt || isSuperAdmin;
   const canReassign = (l: Lead) => canReassignAny || (isSales && l.ownerId === user?.id);
@@ -890,7 +890,7 @@ export default function LeadsPage() {
                 <TabsContent value="activities">
                   <ActivitiesPanel
                     leadId={drawerLead.id}
-                    canWrite={canWrite && drawerLead.ownerId === user?.id}
+                    canWrite={canWrite && (isSuperAdmin || drawerLead.ownerId === user?.id)}
                     onMutated={() => {
                       qc.invalidateQueries({ queryKey: getListLeadActivitiesQueryKey(drawerLead.id) });
                       qc.invalidateQueries({ queryKey: getListLeadsQueryKey() });

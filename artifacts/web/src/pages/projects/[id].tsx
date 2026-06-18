@@ -59,7 +59,7 @@ import { LoadingPage } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
 import { PdfUploadField, type PdfFileData } from "@/components/common/PdfUploadField";
 import { useAuth } from "@/lib/auth";
-import { RoleLabels, canViewProjectFinancials, canViewRaid } from "@/lib/roles";
+import { RoleLabels, canViewProjectFinancials, canViewRaid, isSuperAdmin } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
 
 import { Button } from "@/components/ui/button";
@@ -153,7 +153,7 @@ export default function ProjectDetail() {
     );
   }
 
-  const canChangeStatus = user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER";
+  const canChangeStatus = (user?.role === "MANAGEMENT" || isSuperAdmin(user?.role)) || user?.role === "PROJECT_MANAGER";
   const isCommercial = project.kind === "CLIENT";
 
   return (
@@ -346,40 +346,40 @@ export default function ProjectDetail() {
           )}
           <TabsTrigger value="resources">Resources</TabsTrigger>
           <TabsTrigger value="expenses" data-testid="tab-trigger-expenses">Expenses</TabsTrigger>
-          {(user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER") && (
+          {((user?.role === "MANAGEMENT" || isSuperAdmin(user?.role)) || user?.role === "PROJECT_MANAGER") && (
             <TabsTrigger value="timesheets" data-testid="tab-trigger-timesheets">Timesheets</TabsTrigger>
           )}
           {isCommercial && canViewProjectFinancials(user?.role) && (
             <TabsTrigger value="billing" data-testid="tab-trigger-billing">Billing</TabsTrigger>
           )}
-          {isCommercial && (user?.role === "MANAGEMENT" ||
+          {isCommercial && ((user?.role === "MANAGEMENT" || isSuperAdmin(user?.role)) ||
             (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id) ||
             (user?.role === "TECHNICAL_WRITER" && project.technicalWriterId === user?.id) ||
             (user?.role === "ADMIN_PROJECT" && project.adminProjectId === user?.id)) && (
             <TabsTrigger value="report" data-testid="tab-trigger-report">Report</TabsTrigger>
           )}
-          {(user?.role === "MANAGEMENT" ||
+          {((user?.role === "MANAGEMENT" || isSuperAdmin(user?.role)) ||
             (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id) ||
             (user?.role === "ADMIN_PROJECT" && project.adminProjectId === user?.id)) && (
             <TabsTrigger value="documents">Documents</TabsTrigger>
           )}
-          {(user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER") && (
+          {((user?.role === "MANAGEMENT" || isSuperAdmin(user?.role)) || user?.role === "PROJECT_MANAGER") && (
             <TabsTrigger value="survey">Customer Survey</TabsTrigger>
           )}
-          {(user?.role === "MANAGEMENT" ||
+          {((user?.role === "MANAGEMENT" || isSuperAdmin(user?.role)) ||
             (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id)) && (
             <TabsTrigger value="activity" data-testid="tab-trigger-activity">Activity</TabsTrigger>
           )}
           {canViewRaid(user?.role) && (
             <TabsTrigger value="raid" data-testid="tab-trigger-raid">RAID</TabsTrigger>
           )}
-          {(user?.role === "MANAGEMENT" ||
+          {((user?.role === "MANAGEMENT" || isSuperAdmin(user?.role)) ||
             (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id)) && (
             <TabsTrigger value="workstreams" data-testid="tab-trigger-workstreams">
               Workstreams
             </TabsTrigger>
           )}
-          {(user?.role === "MANAGEMENT" ||
+          {((user?.role === "MANAGEMENT" || isSuperAdmin(user?.role)) ||
             (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id) ||
             (user?.role === "ADMIN_PROJECT" && project.adminProjectId === user?.id)) && (
             <TabsTrigger value="closing" data-testid="tab-trigger-closing">Closing</TabsTrigger>
@@ -406,7 +406,7 @@ export default function ProjectDetail() {
         <TabsContent value="expenses" className="pt-4 m-0">
           <ExpensesTab projectId={id} project={project} />
         </TabsContent>
-        {(user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER") && (
+        {((user?.role === "MANAGEMENT" || isSuperAdmin(user?.role)) || user?.role === "PROJECT_MANAGER") && (
           <TabsContent value="timesheets" className="pt-4 m-0">
             <TimesheetsTab projectId={id} project={project} />
           </TabsContent>

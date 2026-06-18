@@ -23,6 +23,7 @@ import { LoadingPage } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
 import { Clock, Download, CheckCircle2, XCircle, Trash2 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
+import { isSuperAdmin } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "@/lib/format";
 import { exportCsv } from "@/lib/exports";
@@ -49,6 +50,7 @@ export default function TimesheetsTab({ projectId, project }: { projectId: strin
   const qc = useQueryClient();
 
   const isApprover =
+    isSuperAdmin(user?.role) ||
     user?.role === "MANAGEMENT" ||
     (user?.role === "PROJECT_MANAGER" && project?.pmId === user.id);
 
@@ -306,7 +308,7 @@ export default function TimesheetsTab({ projectId, project }: { projectId: strin
                               </Button>
                             </>
                           )}
-                          {(user?.role === "MANAGEMENT" || ts.userId === user?.id) && (
+                          {(isSuperAdmin(user?.role) || user?.role === "MANAGEMENT" || ts.userId === user?.id) && (
                             <Button
                               variant="ghost"
                               size="sm"

@@ -64,7 +64,7 @@ import { LoadingPage } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
 import { PdfUploadField, type PdfFileData } from "@/components/common/PdfUploadField";
 import { useAuth } from "@/lib/auth";
-import { RoleLabels, canViewProjectFinancials, canViewDailyRate } from "@/lib/roles";
+import { RoleLabels, canViewProjectFinancials, canViewDailyRate, isSuperAdmin } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
 
 import { Button } from "@/components/ui/button";
@@ -85,6 +85,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const canEdit =
+    isSuperAdmin(user?.role) ||
     user?.role === "MANAGEMENT" ||
     (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id);
   // Daily Rate / Est. Cost columns only visible to MGMT, PM, Finance, HR.

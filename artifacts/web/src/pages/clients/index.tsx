@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
-import { canManageClients } from "@/lib/roles";
+import { canManageClients, isSuperAdmin } from "@/lib/roles";
 import { useListClients, useCreateClient, useSyncClientToXero } from "@workspace/api-client-react";
 import { getListClientsQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -57,7 +57,7 @@ export default function ClientsList() {
     query: { queryKey: getListClientsQueryKey() }
   });
 
-  const canSyncXero = user?.role === "MANAGEMENT" || user?.role === "FINANCE";
+  const canSyncXero = isSuperAdmin(user?.role) || user?.role === "MANAGEMENT" || user?.role === "FINANCE";
 
   const syncToXero = useSyncClientToXero({
     mutation: {

@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { useAuth } from "@/lib/auth";
+import { isSuperAdmin } from "@/lib/roles";
 import { useLocation } from "wouter";
 import {
   useListProjectTemplates,
@@ -56,8 +57,9 @@ const DEFAULT_RATES: Record<string, number> = {
 
 export default function ProjectTemplatesPage() {
   const { user } = useAuth();
-  const isMgmt = user?.role === "MANAGEMENT";
-  const canApply = ["MANAGEMENT", "PROJECT_MANAGER", "SALES"].includes(user?.role ?? "");
+  const isMgmt = isSuperAdmin(user?.role) || user?.role === "MANAGEMENT";
+  const canApply =
+    isSuperAdmin(user?.role) || ["MANAGEMENT", "PROJECT_MANAGER", "SALES"].includes(user?.role ?? "");
   const { data: templates, isLoading } = useListProjectTemplates();
   const [editOpen, setEditOpen] = useState(false);
   const [editing, setEditing] = useState<ProjectTemplate | null>(null);

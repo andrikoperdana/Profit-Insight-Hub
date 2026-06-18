@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/lib/auth";
+import { isSuperAdmin } from "@/lib/roles";
 import {
   useListTimesheets,
   useApproveTimesheet,
@@ -52,7 +53,7 @@ const OVERDUE_MS = 48 * 60 * 60 * 1000;
 export default function ApprovalInbox() {
   const { user } = useAuth();
   const [, setLocation] = useLocation();
-  const isPM = user?.role === "PROJECT_MANAGER" || user?.role === "MANAGEMENT";
+  const isPM = isSuperAdmin(user?.role) || user?.role === "PROJECT_MANAGER" || user?.role === "MANAGEMENT";
 
   useEffect(() => {
     if (user && !isPM) setLocation("/timesheets");

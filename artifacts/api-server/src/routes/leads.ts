@@ -129,6 +129,7 @@ function scope(req: AuthedRequest): Record<string, unknown> | null {
 }
 
 function canMutate(req: AuthedRequest, lead: { ownerId: string }): boolean {
+  if (req.user.role === "SUPER_ADMIN") return true;
   if (req.user.role === "SALES") return lead.ownerId === req.user.sub;
   return false;
 }
@@ -784,7 +785,7 @@ router.get("/leads/:id/activities", async (req: AuthedRequest, res: Response) =>
 router.post("/leads/:id/activities", async (req: AuthedRequest, res: Response) => {
   const lead = await loadLeadForActivity(req, res);
   if (!lead) return;
-  if (req.user.role !== "SALES" || lead.ownerId !== req.user.sub) {
+  if (req.user.role !== "SUPER_ADMIN" && (req.user.role !== "SALES" || lead.ownerId !== req.user.sub)) {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
@@ -812,7 +813,7 @@ router.post("/leads/:id/activities", async (req: AuthedRequest, res: Response) =
 router.patch("/leads/:id/activities/:activityId", async (req: AuthedRequest, res: Response) => {
   const lead = await loadLeadForActivity(req, res);
   if (!lead) return;
-  if (req.user.role !== "SALES" || lead.ownerId !== req.user.sub) {
+  if (req.user.role !== "SUPER_ADMIN" && (req.user.role !== "SALES" || lead.ownerId !== req.user.sub)) {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
@@ -843,7 +844,7 @@ router.patch("/leads/:id/activities/:activityId", async (req: AuthedRequest, res
 router.delete("/leads/:id/activities/:activityId", async (req: AuthedRequest, res: Response) => {
   const lead = await loadLeadForActivity(req, res);
   if (!lead) return;
-  if (req.user.role !== "SALES" || lead.ownerId !== req.user.sub) {
+  if (req.user.role !== "SUPER_ADMIN" && (req.user.role !== "SALES" || lead.ownerId !== req.user.sub)) {
     res.status(403).json({ error: "Forbidden" });
     return;
   }

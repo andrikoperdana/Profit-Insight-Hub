@@ -10,7 +10,7 @@ import { CalendarRange, ChevronLeft, ChevronRight, Download, AlertTriangle, Coff
 import { LoadingPage } from "@/components/common/Loading";
 import { useAuth } from "@/lib/auth";
 import { exportSheets } from "@/lib/exports";
-import { RoleLabels } from "@/lib/roles";
+import { RoleLabels, isSuperAdmin } from "@/lib/roles";
 
 type Cell = { date: string; status: "AVAILABLE" | "ASSIGNED" | "OVERLOADED" | "WEEKEND" | "ON_LEAVE"; hours: number; projects: string[]; leaveType?: string | null };
 type WeeklyTotal = { weekStart: string; hours: number; warning: boolean };
@@ -61,7 +61,11 @@ const STATUS_STYLE: Record<Cell["status"], string> = {
 
 export default function CapacityPlanning() {
   const { user } = useAuth();
-  const allowed = user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER" || user?.role === "HR";
+  const allowed =
+    isSuperAdmin(user?.role) ||
+    user?.role === "MANAGEMENT" ||
+    user?.role === "PROJECT_MANAGER" ||
+    user?.role === "HR";
 
   const [weeks, setWeeks] = useState<2 | 4>(2);
   const [anchor, setAnchor] = useState<Date>(() => startOfWeek(new Date()));

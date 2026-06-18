@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useAuth } from "@/lib/auth";
+import { isSuperAdmin } from "@/lib/roles";
 import { useListLeaves } from "@workspace/api-client-react";
 import {
   Card,
@@ -97,7 +98,10 @@ export default function LeavesPage() {
   const { user } = useAuth();
   const { toast } = useToast();
   const canView =
-    user?.role === "HR" || user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER";
+    isSuperAdmin(user?.role) ||
+    user?.role === "HR" ||
+    user?.role === "MANAGEMENT" ||
+    user?.role === "PROJECT_MANAGER";
 
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<string>("all");

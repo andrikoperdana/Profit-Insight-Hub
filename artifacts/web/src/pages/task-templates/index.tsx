@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
+import { isSuperAdmin } from "@/lib/roles";
 import {
   useListTaskTemplates,
   useCreateTaskTemplate,
@@ -27,12 +28,12 @@ import { ListChecks, Plus, Pencil, Trash2, ShieldAlert } from "lucide-react";
 
 export default function TaskTemplatesPage() {
   const { user } = useAuth();
-  const isMgmt = user?.role === "MANAGEMENT";
+  const isMgmt = isSuperAdmin(user?.role) || user?.role === "MANAGEMENT";
   const { data: templates, isLoading } = useListTaskTemplates();
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<TaskTemplate | null>(null);
 
-  if (user?.role !== "MANAGEMENT" && user?.role !== "PROJECT_MANAGER") {
+  if (!isSuperAdmin(user?.role) && user?.role !== "MANAGEMENT" && user?.role !== "PROJECT_MANAGER") {
     return (
       <EmptyState
         title="Access denied"

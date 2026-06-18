@@ -28,6 +28,7 @@ import {
 import { Plus, Pencil, Trash2, AlertTriangle, ShieldAlert, HelpCircle, Link2, ListChecks } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/lib/auth";
+import { isSuperAdmin } from "@/lib/roles";
 import { formatDate } from "@/lib/format";
 import { EmptyState } from "@/components/common/EmptyState";
 
@@ -89,13 +90,14 @@ export default function RaidTab({ projectId, project }: { projectId: string; pro
   const { toast } = useToast();
   const qc = useQueryClient();
   const { data: items = [], isLoading } = useListProjectRaidItems(projectId);
-  const canFetchUsers = user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER";
+  const canFetchUsers = isSuperAdmin(user?.role) || user?.role === "MANAGEMENT" || user?.role === "PROJECT_MANAGER";
   const { data: usersResp } = useListActiveAllUsers(
     canFetchUsers ? undefined : { query: { enabled: false, queryKey: ["active-all-users-disabled"] } },
   );
   const users = Array.isArray(usersResp) ? usersResp : [];
 
   const canEdit =
+    isSuperAdmin(user?.role) ||
     user?.role === "MANAGEMENT" ||
     (user?.role === "PROJECT_MANAGER" && project.pmId === user.id);
 

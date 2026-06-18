@@ -9,6 +9,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { useAuth } from "@/lib/auth";
+import { isSuperAdmin } from "@/lib/roles";
 import { formatIDR } from "@/lib/format";
 import { Download, Receipt, AlertCircle } from "lucide-react";
 
@@ -25,7 +26,7 @@ export default function VatRecapPage() {
     return out;
   }, [currentYear]);
 
-  const isMgmt = user?.role === "MANAGEMENT" || user?.role === "FINANCE";
+  const isMgmt = isSuperAdmin(user?.role) || user?.role === "MANAGEMENT" || user?.role === "FINANCE";
 
   if (!isMgmt) {
     return (

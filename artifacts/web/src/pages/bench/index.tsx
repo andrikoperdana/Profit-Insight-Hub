@@ -29,7 +29,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/common/EmptyState";
 import { LoadingPage } from "@/components/common/Loading";
-import { RoleLabels, isPrincipalRole } from "@/lib/roles";
+import { RoleLabels, isPrincipalRole, isSuperAdmin } from "@/lib/roles";
 import {
   Users,
   AlertTriangle,
@@ -64,7 +64,7 @@ export default function BenchPage() {
   const isPM = user?.role === "PROJECT_MANAGER";
   const isHr = user?.role === "HR";
   const isPrincipal = isPrincipalRole(user?.role);
-  const allowed = isMgmt || isPM || isHr || isPrincipal;
+  const allowed = isSuperAdmin(user?.role) || isMgmt || isPM || isHr || isPrincipal;
 
   const { data, isLoading } = useGetResourceUtilizationDetail({
     query: { enabled: !!user && allowed },
@@ -311,7 +311,7 @@ export default function BenchPage() {
         </CardContent>
       </Card>
 
-      {isMgmt && (
+      {(isSuperAdmin(user?.role) || isMgmt) && (
         <Card className="border-border shadow-sm">
           <CardHeader>
             <CardTitle className="text-base">Next steps</CardTitle>

@@ -32,6 +32,7 @@ import {
 import { EmptyState } from "@/components/common/EmptyState";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/lib/auth";
+import { isSuperAdmin } from "@/lib/roles";
 import { formatIDR, formatDate } from "@/lib/format";
 import { Plus, Pencil, Trash2, AlertTriangle, Layers } from "lucide-react";
 
@@ -107,6 +108,7 @@ export default function WorkstreamsTab({
   const { user } = useAuth();
 
   const canWrite =
+    isSuperAdmin(user?.role) ||
     user?.role === "MANAGEMENT" ||
     (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id);
 

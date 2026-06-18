@@ -31,7 +31,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/lib/auth";
 import { formatDate } from "@/lib/format";
-import { RoleLabels } from "@/lib/roles";
+import { RoleLabels, isSuperAdmin } from "@/lib/roles";
 
 const STATUS_COLORS: Record<PerformanceReviewStatus, string> = {
   DRAFT: "bg-slate-500/15 text-slate-300 border-slate-500/40",
@@ -82,7 +82,7 @@ export default function PerformanceReviewDetailPage() {
 
   if (isLoading || !review) return <div className="p-6 text-muted-foreground">Loading…</div>;
 
-  const isMgmt = user?.role === "MANAGEMENT";
+  const isMgmt = isSuperAdmin(user?.role) || user?.role === "MANAGEMENT";
   const isReviewer = review.reviewerId === user?.id;
   const isSubject = review.userId === user?.id;
   const editable = (isReviewer || isMgmt) && review.status !== "ACKNOWLEDGED";

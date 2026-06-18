@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { customFetch } from "@workspace/api-client-react";
 import { useAuth } from "@/lib/auth";
+import { isSuperAdmin } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -233,16 +234,16 @@ export default function SurveyResultsPage() {
     queryFn: () => customFetch<ApiResponse>(
       `/api/survey/responses?year=${year}&page=${page}&pageSize=${pageSize}`,
     ),
-    enabled: user?.role === "MANAGEMENT" || user?.role === "SALES",
+    enabled: isSuperAdmin(user?.role) || user?.role === "MANAGEMENT" || user?.role === "SALES",
   });
 
   const byProject = useQuery<ByProjectResponse>({
     queryKey: ["/survey/by-project", year],
     queryFn: () => customFetch<ByProjectResponse>(`/api/survey/by-project?year=${year}`),
-    enabled: (user?.role === "MANAGEMENT" || user?.role === "SALES") && view === "project",
+    enabled: (isSuperAdmin(user?.role) || user?.role === "MANAGEMENT" || user?.role === "SALES") && view === "project",
   });
 
-  if (user && user.role !== "MANAGEMENT" && user.role !== "SALES") {
+  if (user && !isSuperAdmin(user.role) && user.role !== "MANAGEMENT" && user.role !== "SALES") {
     setLocation("/");
     return null;
   }

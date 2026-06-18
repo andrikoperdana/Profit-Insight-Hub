@@ -26,7 +26,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/lib/auth";
 import { formatDate } from "@/lib/format";
 import { EmptyState } from "@/components/common/EmptyState";
-import { RoleLabels } from "@/lib/roles";
+import { RoleLabels, isSuperAdmin } from "@/lib/roles";
 
 const STATUS_COLORS: Record<PerformanceReviewStatus, string> = {
   DRAFT: "bg-slate-500/15 text-slate-300 border-slate-500/40",
@@ -39,7 +39,7 @@ const PERIODS: PerformanceReviewPeriod[] = ["Q1", "Q2", "Q3", "Q4", "ANNUAL"];
 export default function PerformanceReviewsListPage() {
   const { user } = useAuth();
   const { toast } = useToast();
-  const isMgmt = user?.role === "MANAGEMENT";
+  const isMgmt = isSuperAdmin(user?.role) || user?.role === "MANAGEMENT";
   // /api/users is open to MANAGEMENT, PROJECT_MANAGER, SALES, HR, SITE_ADMIN.
   // PMs need it to pick team subjects; Principals fall back to manual entry
   // (server enforces principalId scope).

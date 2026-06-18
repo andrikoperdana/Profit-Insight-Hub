@@ -60,7 +60,7 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { WorkstreamPicker, WorkstreamBadge } from "../components/WorkstreamPicker";
 import { PdfUploadField, type PdfFileData } from "@/components/common/PdfUploadField";
 import { useAuth } from "@/lib/auth";
-import { RoleLabels, canViewProjectFinancials } from "@/lib/roles";
+import { RoleLabels, canViewProjectFinancials, isSuperAdmin } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
 
 import { Button } from "@/components/ui/button";
@@ -95,6 +95,7 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
   const { user } = useAuth();
   const { data: expenses, isLoading } = useListProjectExpenses(projectId);
   const isApprover =
+    isSuperAdmin(user?.role) ||
     user?.role === "MANAGEMENT" ||
     (user?.role === "PROJECT_MANAGER" && project?.pmId === user.id);
 

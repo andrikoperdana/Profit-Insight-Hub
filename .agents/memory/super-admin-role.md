@@ -10,6 +10,12 @@ A top-privilege role that can view AND edit/manage everything, above all other r
 ## Wiring pattern
 - `requireRole()` (middlewares/auth.ts) short-circuits to allow for `SUPER_ADMIN`. That covers every `requireRole`-guarded route automatically.
 - For **custom gates** (routes that don't use `requireRole`, plus inline role checks, `Set`/array role lists, serializer visibility helpers like `canViewDailyRate`/`DAILY_RATE_ALLOWED_ROLES`), `SUPER_ADMIN` must be added explicitly — the `requireRole` bypass does NOT reach these. Convention: add to enable-checks (`|| role === "SUPER_ADMIN"`) and remove from deny-chains (`&& role !== "SUPER_ADMIN"`).
+- **Route gate + in-handler ownership predicate are two separate layers.** A handler can be guarded by `requireRole(...)` (which `SUPER_ADMIN` bypasses) yet still 403 inside the body via a per-row ownership predicate that defaults non-owner/non-SALES to `false` (e.g. leads `canMutate` and the lead-activity owner checks). God-account write needs BOTH layers updated — passing the route gate is not enough.
+  - **Why:** the leads page looked "allowed" for SUPER_ADMIN (route bypass + read scope `{}`) but every edit/delete/convert/activity still 403'd until `canMutate`/activity predicates were taught about SUPER_ADMIN.
+  - **How to apply:** when enabling god-mode write on a resource, grep its route file for in-handler `403`/ownership checks (`canMutate`, `role !== "X" || ownerId !== sub`) and add `SUPER_ADMIN`, not just the route gate.
+
+## Leads page (read-only-MGMT trap)
+- Leads deliberately make **MANAGEMENT read-only** (`canWrite = isSales`, `scope()` gives MGMT `{}` read but `canMutate` returns false for MGMT). When granting SUPER_ADMIN lead write, add ONLY `SUPER_ADMIN` to `canWrite`/`canImport`/`canMutate`/activity gates — do NOT add MANAGEMENT, or you regress the intentional read-only stance. The convert handler sets `project.salesId = lead.ownerId`; a super admin normally converts a Sales-owned lead so salesId stays a real Sales user.
 
 ## Deliberate exclusions (do not "fix")
 - **`users.ts` `ALL_ROLES` excludes `SUPER_ADMIN` on purpose** — keeps the god account seed-only and stops SITE_ADMIN/MGMT from creating or escalating anyone to `SUPER_ADMIN`.

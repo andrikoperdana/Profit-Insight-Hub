@@ -15,6 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/lib/auth";
+import { isSuperAdmin } from "@/lib/roles";
 import { CheckCircle2, Circle, MinusCircle, Lock } from "lucide-react";
 
 export default function ClosingTab({ projectId, project }: { projectId: string; project: any }) {
@@ -23,6 +24,7 @@ export default function ClosingTab({ projectId, project }: { projectId: string; 
   const { toast } = useToast();
   const { data: items, isLoading } = useGetProjectClosingChecklist(projectId);
   const canWrite =
+    isSuperAdmin(user?.role) ||
     user?.role === "MANAGEMENT" ||
     (user?.role === "PROJECT_MANAGER" && project?.pmId === user?.id);
 

@@ -32,7 +32,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { useAuth } from "@/lib/auth";
-import { canInvoiceProjectStatus } from "@/lib/roles";
+import { canInvoiceProjectStatus, isSuperAdmin } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate, formatIDR } from "@/lib/format";
 import { EmptyState } from "@/components/common/EmptyState";
@@ -97,17 +97,19 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
   });
 
   const isManager =
+    isSuperAdmin(user?.role) ||
     user?.role === "MANAGEMENT" ||
     (user?.role === "PROJECT_MANAGER" && project.pmId === user.id);
 
   const canPushXero =
+    isSuperAdmin(user?.role) ||
     user?.role === "MANAGEMENT" ||
     user?.role === "FINANCE" ||
     (user?.role === "PROJECT_MANAGER" && project.pmId === user.id);
 
   // The pull-from-Xero endpoint is gated to MANAGEMENT/FINANCE only, so the
   // button must follow the same allowlist or PMs would hit a 403.
-  const canSyncXero = user?.role === "MANAGEMENT" || user?.role === "FINANCE";
+  const canSyncXero = isSuperAdmin(user?.role) || user?.role === "MANAGEMENT" || user?.role === "FINANCE";
 
   // A project can only be invoiced once it is running (ACTIVE) or beyond. Before
   // that (DRAFT / OBSERVATION / NO_NEED_CONSULTANT) invoicing actions are blocked.

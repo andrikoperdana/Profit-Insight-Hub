@@ -58,7 +58,7 @@ import { LoadingPage } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
 import { PdfUploadField, type PdfFileData } from "@/components/common/PdfUploadField";
 import { useAuth } from "@/lib/auth";
-import { RoleLabels, canViewProjectFinancials } from "@/lib/roles";
+import { RoleLabels, canViewProjectFinancials, isSuperAdmin } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
 
 import { Button } from "@/components/ui/button";
@@ -101,6 +101,7 @@ function DocumentsTab({ projectId, projectStatus }: { projectId: string; project
   });
 
   const canUpload =
+    isSuperAdmin(user?.role) ||
     user?.role === "ADMIN_PROJECT" ||
     user?.role === "MANAGEMENT" ||
     user?.role === "PROJECT_MANAGER";
