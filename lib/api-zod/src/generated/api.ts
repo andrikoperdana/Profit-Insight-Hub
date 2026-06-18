@@ -4974,18 +4974,21 @@ export const GetPipedriveStatusResponse = zod.object({
   importedLeadCount: zod.number(),
   linkedClientCount: zod.number(),
   stageMappingCount: zod.number(),
-});
-
-export const RunPipedriveSyncResponse = zod.object({
-  imported: zod.number(),
-  updated: zod.number(),
-  skipped: zod.number(),
-  errors: zod.array(
-    zod.object({
-      dealId: zod.number(),
-      error: zod.string(),
-    }),
-  ),
+  sync: zod.object({
+    running: zod.boolean(),
+    startedAt: zod.string().nullable(),
+    finishedAt: zod.string().nullable(),
+    runId: zod.string().nullable(),
+    error: zod.string().nullable(),
+    result: zod
+      .object({
+        imported: zod.number(),
+        updated: zod.number(),
+        skipped: zod.number(),
+        errorCount: zod.number(),
+      })
+      .nullable(),
+  }),
 });
 
 export const UpdatePipedriveSettingsBody = zod.object({
@@ -5001,6 +5004,21 @@ export const UpdatePipedriveSettingsResponse = zod.object({
   importedLeadCount: zod.number(),
   linkedClientCount: zod.number(),
   stageMappingCount: zod.number(),
+  sync: zod.object({
+    running: zod.boolean(),
+    startedAt: zod.string().nullable(),
+    finishedAt: zod.string().nullable(),
+    runId: zod.string().nullable(),
+    error: zod.string().nullable(),
+    result: zod
+      .object({
+        imported: zod.number(),
+        updated: zod.number(),
+        skipped: zod.number(),
+        errorCount: zod.number(),
+      })
+      .nullable(),
+  }),
 });
 
 export const GetPipedriveStageMappingsResponse = zod.object({

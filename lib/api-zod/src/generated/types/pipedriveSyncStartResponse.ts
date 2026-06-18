@@ -6,7 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type PipedriveSyncResultErrorsItem = {
-  dealId: number;
-  error: string;
-};
+export interface PipedriveSyncStartResponse {
+  started: boolean;
+  runId: string;
+}

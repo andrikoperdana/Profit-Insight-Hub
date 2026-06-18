@@ -1002,6 +1002,11 @@ model AppSetting {
   pipedriveLastSyncAt       DateTime?
   pipedriveDefaultOwnerId   String?
   pipedriveWebhookSecret    String?
+  pipedriveSyncRunId        String?
+  pipedriveSyncStartedAt    DateTime?
+  pipedriveSyncFinishedAt   DateTime?
+  pipedriveSyncError        String?   @db.Text
+  pipedriveSyncResult       Json?
   updatedAt                 DateTime  @updatedAt
   updatedById               String?
 }

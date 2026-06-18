@@ -97,7 +97,7 @@ import type {
   PerformanceReviewProjectRating,
   PipedriveStageMappingsResponse,
   PipedriveStatus,
-  PipedriveSyncResult,
+  PipedriveSyncStartResponse,
   ProfitTrendPoint,
   Project,
   ProjectDetail,
@@ -12456,8 +12456,8 @@ export const getRunPipedriveSyncUrl = () => {
 
 export const runPipedriveSync = async (
   options?: RequestInit,
-): Promise<PipedriveSyncResult> => {
-  return customFetch<PipedriveSyncResult>(getRunPipedriveSyncUrl(), {
+): Promise<PipedriveSyncStartResponse> => {
+  return customFetch<PipedriveSyncStartResponse>(getRunPipedriveSyncUrl(), {
     ...options,
     method: "POST",
   });

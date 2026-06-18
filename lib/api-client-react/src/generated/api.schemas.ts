@@ -53,6 +53,22 @@ export interface XeroInvoiceResult {
   invoiceNumber?: string | null;
 }
 
+export interface PipedriveSyncResultSummary {
+  imported: number;
+  updated: number;
+  skipped: number;
+  errorCount: number;
+}
+
+export interface PipedriveSyncState {
+  running: boolean;
+  startedAt: string | null;
+  finishedAt: string | null;
+  runId: string | null;
+  error: string | null;
+  result: PipedriveSyncResultSummary | null;
+}
+
 export interface PipedriveStatus {
   connected: boolean;
   autoSyncEnabled: boolean;
@@ -61,18 +77,12 @@ export interface PipedriveStatus {
   importedLeadCount: number;
   linkedClientCount: number;
   stageMappingCount: number;
+  sync: PipedriveSyncState;
 }
 
-export type PipedriveSyncResultErrorsItem = {
-  dealId: number;
-  error: string;
-};
-
-export interface PipedriveSyncResult {
-  imported: number;
-  updated: number;
-  skipped: number;
-  errors: PipedriveSyncResultErrorsItem[];
+export interface PipedriveSyncStartResponse {
+  started: boolean;
+  runId: string;
 }
 
 export type LeadStage = (typeof LeadStage)[keyof typeof LeadStage];

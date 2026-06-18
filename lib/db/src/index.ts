@@ -65,6 +65,7 @@ export { ensureSampleTaskTemplates } from "./sample-task-templates.js";
 export { ensureSampleProjectTemplates } from "./sample-project-templates.js";
 export { ensureSampleWorkstreamProjects } from "./sample-workstream-projects.js";
 
+export { Prisma } from "./generated/client/index.js";
 export type {
   User,
   Client,
@@ -79,5 +80,4 @@ export type {
   TimesheetStatus,
   DocumentType,
   ProjectReportType,
-  Prisma,
 } from "./generated/client/index.js";

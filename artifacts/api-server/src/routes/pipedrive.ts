@@ -12,10 +12,13 @@ import { logger } from "../lib/logger.js";
 import { APP_SETTINGS_ID } from "../lib/app-settings.js";
 import {
   pipedriveConfigured,
-  runFullSync,
+  claimPipedriveSync,
+  runPipedriveSyncJob,
   syncSingleDeal,
   listPipedriveStages,
+  SYNC_STALE_MS,
   PipedriveNotConnectedError,
+  type SyncResultSummary,
   type LeadStage,
 } from "../lib/pipedrive.js";
 
@@ -61,6 +64,10 @@ async function buildStatus() {
       prisma.client.count({ where: { pipedriveOrgId: { not: null } } }),
       prisma.pipedriveStageMapping.count(),
     ]);
+  const startedAt = settings?.pipedriveSyncStartedAt ?? null;
+  const finishedAt = settings?.pipedriveSyncFinishedAt ?? null;
+  const running =
+    !!startedAt && !finishedAt && Date.now() - startedAt.getTime() < SYNC_STALE_MS;
   return {
     connected,
     autoSyncEnabled: settings?.pipedriveAutoSyncEnabled ?? false,
@@ -69,6 +76,15 @@ async function buildStatus() {
     importedLeadCount,
     linkedClientCount,
     stageMappingCount,
+    sync: {
+      running,
+      startedAt: startedAt?.toISOString() ?? null,
+      finishedAt: finishedAt?.toISOString() ?? null,
+      runId: settings?.pipedriveSyncRunId ?? null,
+      error: settings?.pipedriveSyncError ?? null,
+      result:
+        (settings?.pipedriveSyncResult as unknown as SyncResultSummary | null) ?? null,
+    },
   };
 }
 
@@ -87,26 +103,36 @@ router.post(
   requireRole(...ADMIN_ROLES),
   async (req: Request, res: Response) => {
     try {
-      const result = await runFullSync();
-      await recordAudit(req, {
+      // The full import can run for several minutes against the remote DB,
+      // which exceeds the deployment's hard request timeout. So we only CLAIM
+      // the run here, fire it without awaiting, and return immediately; the
+      // client polls GET /pipedrive/status to observe progress and completion.
+      if (!(await pipedriveConfigured())) {
+        res.status(409).json({ error: "Pipedrive is not connected" });
+        return;
+      }
+      const { started, runId } = await claimPipedriveSync();
+      if (!started || !runId) {
+        res.status(409).json({ error: "A Pipedrive sync is already running" });
+        return;
+      }
+      // The run is claimed: start the worker first so a failed audit write can
+      // never leave a "running" claim with no worker (which would block the next
+      // sync until the stale window elapses). Audit is best-effort.
+      void runPipedriveSyncJob(runId);
+      void recordAudit(req, {
         action: "pipedrive.synced",
         entityType: "System",
         entityId: "pipedrive",
-        description: `Ran a Pipedrive import (created ${result.imported}, updated ${result.updated}, skipped ${result.skipped}, errors ${result.errors.length})`,
-        after: {
-          imported: result.imported,
-          updated: result.updated,
-          skipped: result.skipped,
-          errorCount: result.errors.length,
-        },
-      });
-      res.json(result);
+        description: "Started a Pipedrive import",
+      }).catch((err) => req.log.error({ err }, "Failed to record Pipedrive sync audit"));
+      res.status(202).json({ started: true, runId });
     } catch (e) {
       if (e instanceof PipedriveNotConnectedError) {
         res.status(409).json({ error: "Pipedrive is not connected" });
         return;
       }
-      req.log.error({ err: e }, "Pipedrive sync failed");
+      req.log.error({ err: e }, "Pipedrive sync failed to start");
       res.status(500).json({ error: errorMessage(e) });
     }
   },

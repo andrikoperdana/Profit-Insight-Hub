@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   useGetPipedriveStatus,
   getGetPipedriveStatusQueryKey,
@@ -45,7 +45,13 @@ export function PipedriveIntegrationCard() {
   const qc = useQueryClient();
 
   const { data: status, isLoading } = useGetPipedriveStatus({
-    query: { queryKey: getGetPipedriveStatusQueryKey() },
+    query: {
+      queryKey: getGetPipedriveStatusQueryKey(),
+      // While a background import is running, poll so the card reflects progress
+      // and completion without a manual refresh; stop polling once it finishes.
+      refetchInterval: (query) =>
+        query.state.data?.sync?.running ? 3000 : false,
+    },
   });
   const { data: mappingData } = useGetPipedriveStageMappings({
     query: { queryKey: getGetPipedriveStageMappingsQueryKey() },
@@ -102,23 +108,58 @@ export function PipedriveIntegrationCard() {
     }
   }, [mappingData]);
 
+  // Remember the run this browser started so we toast completion only for the
+  // user's own import — not for a background run that was already finished when
+  // the page loaded, or an automatic poll-triggered run.
+  const awaitingRunIdRef = useRef<string | null>(null);
+
   const sync = useRunPipedriveSync({
     mutation: {
       onSuccess: (res) => {
+        awaitingRunIdRef.current = res.runId;
         toast({
-          title: "Pipedrive import complete",
-          description: `Imported ${res.imported}, updated ${res.updated}, skipped ${res.skipped}${
-            res.errors.length ? `, ${res.errors.length} error(s)` : ""
-          }.`,
-          variant: res.errors.length ? "destructive" : undefined,
+          title: "Pipedrive import started",
+          description:
+            "Importing open deals in the background. This can take a few minutes.",
         });
         qc.invalidateQueries({ queryKey: getGetPipedriveStatusQueryKey() });
-        qc.invalidateQueries({ queryKey: getListLeadsQueryKey() });
       },
       onError: (e: any) =>
-        toast({ title: "Import failed", description: e?.message, variant: "destructive" }),
+        toast({
+          title: "Could not start import",
+          description: e?.message,
+          variant: "destructive",
+        }),
     },
   });
+
+  // When our claimed run finishes (observed via status polling), surface the
+  // result and refresh the leads list.
+  const syncState = status?.sync;
+  useEffect(() => {
+    const awaited = awaitingRunIdRef.current;
+    if (!awaited || !syncState) return;
+    if (syncState.running || syncState.runId !== awaited || !syncState.finishedAt) {
+      return;
+    }
+    awaitingRunIdRef.current = null;
+    if (syncState.error) {
+      toast({ title: "Import failed", description: syncState.error, variant: "destructive" });
+    } else if (syncState.result) {
+      const r = syncState.result;
+      toast({
+        title: "Pipedrive import complete",
+        description: `Imported ${r.imported}, updated ${r.updated}, skipped ${r.skipped}${
+          r.errorCount ? `, ${r.errorCount} error(s)` : ""
+        }.`,
+        variant: r.errorCount ? "destructive" : undefined,
+      });
+    } else {
+      toast({ title: "Pipedrive import complete" });
+    }
+    qc.invalidateQueries({ queryKey: getGetPipedriveStatusQueryKey() });
+    qc.invalidateQueries({ queryKey: getListLeadsQueryKey() });
+  }, [syncState, qc, toast]);
 
   const saveSettings = useUpdatePipedriveSettings({
     mutation: {
@@ -192,12 +233,14 @@ export function PipedriveIntegrationCard() {
               <div>
                 <p className="font-medium">Connected</p>
                 <p className="text-xs text-muted-foreground">
-                  {status?.lastSyncAt
-                    ? `Last import ${new Date(status.lastSyncAt).toLocaleString("en-US", {
-                        dateStyle: "medium",
-                        timeStyle: "short",
-                      })}`
-                    : "No import has run yet"}
+                  {status?.sync?.running
+                    ? "Import in progress…"
+                    : status?.lastSyncAt
+                      ? `Last import ${new Date(status.lastSyncAt).toLocaleString("en-US", {
+                          dateStyle: "medium",
+                          timeStyle: "short",
+                        })}`
+                      : "No import has run yet"}
                 </p>
               </div>
             </div>
@@ -218,13 +261,16 @@ export function PipedriveIntegrationCard() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              <Button onClick={() => sync.mutate()} disabled={sync.isPending}>
-                {sync.isPending ? (
+              <Button
+                onClick={() => sync.mutate()}
+                disabled={sync.isPending || !!status?.sync?.running}
+              >
+                {sync.isPending || status?.sync?.running ? (
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                 ) : (
                   <RefreshCw className="h-4 w-4 mr-2" />
                 )}
-                Sync now
+                {status?.sync?.running ? "Syncing…" : "Sync now"}
               </Button>
             </div>
 

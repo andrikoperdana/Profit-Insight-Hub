@@ -5,11 +5,10 @@
  * SecureProfit Hub API
  * OpenAPI spec version: 0.1.0
  */
-import type { PipedriveSyncResultErrorsItem } from "./pipedriveSyncResultErrorsItem";
 
-export interface PipedriveSyncResult {
+export interface PipedriveSyncResultSummary {
   imported: number;
   updated: number;
   skipped: number;
-  errors: PipedriveSyncResultErrorsItem[];
+  errorCount: number;
 }

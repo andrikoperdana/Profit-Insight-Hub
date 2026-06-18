@@ -5,6 +5,7 @@
  * SecureProfit Hub API
  * OpenAPI spec version: 0.1.0
  */
+import type { PipedriveSyncState } from "./pipedriveSyncState";
 
 export interface PipedriveStatus {
   connected: boolean;
@@ -14,4 +15,5 @@ export interface PipedriveStatus {
   importedLeadCount: number;
   linkedClientCount: number;
   stageMappingCount: number;
+  sync: PipedriveSyncState;
 }

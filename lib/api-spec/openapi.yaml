@@ -2343,11 +2343,12 @@ paths:
       operationId: runPipedriveSync
       tags: [pipedrive]
       responses:
-        "200":
-          description: OK
+        "202":
+          description: Accepted - sync started in the background
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/PipedriveSyncResult" }
+              schema:
+                { $ref: "#/components/schemas/PipedriveSyncStartResponse" }
 
   /pipedrive/settings:
     put:
@@ -2453,6 +2454,7 @@ components:
           importedLeadCount,
           linkedClientCount,
           stageMappingCount,
+          sync,
         ]
       properties:
         connected: { type: boolean }
@@ -2462,22 +2464,37 @@ components:
         importedLeadCount: { type: integer }
         linkedClientCount: { type: integer }
         stageMappingCount: { type: integer }
+        sync: { $ref: "#/components/schemas/PipedriveSyncState" }
 
-    PipedriveSyncResult:
+    PipedriveSyncState:
       type: object
-      required: [imported, updated, skipped, errors]
+      required: [running, startedAt, finishedAt, runId, error, result]
+      properties:
+        running: { type: boolean }
+        startedAt: { type: string, nullable: true }
+        finishedAt: { type: string, nullable: true }
+        runId: { type: string, nullable: true }
+        error: { type: string, nullable: true }
+        result:
+          nullable: true
+          allOf:
+            - $ref: "#/components/schemas/PipedriveSyncResultSummary"
+
+    PipedriveSyncResultSummary:
+      type: object
+      required: [imported, updated, skipped, errorCount]
       properties:
         imported: { type: integer }
         updated: { type: integer }
         skipped: { type: integer }
-        errors:
-          type: array
-          items:
-            type: object
-            required: [dealId, error]
-            properties:
-              dealId: { type: integer }
-              error: { type: string }
+        errorCount: { type: integer }
+
+    PipedriveSyncStartResponse:
+      type: object
+      required: [started, runId]
+      properties:
+        started: { type: boolean }
+        runId: { type: string }
 
     PipedriveStageMapping:
       type: object

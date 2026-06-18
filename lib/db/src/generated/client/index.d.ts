@@ -46595,6 +46595,10 @@ export namespace Prisma {
     pipedriveLastSyncAt: Date | null
     pipedriveDefaultOwnerId: string | null
     pipedriveWebhookSecret: string | null
+    pipedriveSyncRunId: string | null
+    pipedriveSyncStartedAt: Date | null
+    pipedriveSyncFinishedAt: Date | null
+    pipedriveSyncError: string | null
     updatedAt: Date | null
     updatedById: string | null
   }
@@ -46613,6 +46617,10 @@ export namespace Prisma {
     pipedriveLastSyncAt: Date | null
     pipedriveDefaultOwnerId: string | null
     pipedriveWebhookSecret: string | null
+    pipedriveSyncRunId: string | null
+    pipedriveSyncStartedAt: Date | null
+    pipedriveSyncFinishedAt: Date | null
+    pipedriveSyncError: string | null
     updatedAt: Date | null
     updatedById: string | null
   }
@@ -46631,6 +46639,11 @@ export namespace Prisma {
     pipedriveLastSyncAt: number
     pipedriveDefaultOwnerId: number
     pipedriveWebhookSecret: number
+    pipedriveSyncRunId: number
+    pipedriveSyncStartedAt: number
+    pipedriveSyncFinishedAt: number
+    pipedriveSyncError: number
+    pipedriveSyncResult: number
     updatedAt: number
     updatedById: number
     _all: number
@@ -46669,6 +46682,10 @@ export namespace Prisma {
     pipedriveLastSyncAt?: true
     pipedriveDefaultOwnerId?: true
     pipedriveWebhookSecret?: true
+    pipedriveSyncRunId?: true
+    pipedriveSyncStartedAt?: true
+    pipedriveSyncFinishedAt?: true
+    pipedriveSyncError?: true
     updatedAt?: true
     updatedById?: true
   }
@@ -46687,6 +46704,10 @@ export namespace Prisma {
     pipedriveLastSyncAt?: true
     pipedriveDefaultOwnerId?: true
     pipedriveWebhookSecret?: true
+    pipedriveSyncRunId?: true
+    pipedriveSyncStartedAt?: true
+    pipedriveSyncFinishedAt?: true
+    pipedriveSyncError?: true
     updatedAt?: true
     updatedById?: true
   }
@@ -46705,6 +46726,11 @@ export namespace Prisma {
     pipedriveLastSyncAt?: true
     pipedriveDefaultOwnerId?: true
     pipedriveWebhookSecret?: true
+    pipedriveSyncRunId?: true
+    pipedriveSyncStartedAt?: true
+    pipedriveSyncFinishedAt?: true
+    pipedriveSyncError?: true
+    pipedriveSyncResult?: true
     updatedAt?: true
     updatedById?: true
     _all?: true
@@ -46810,6 +46836,11 @@ export namespace Prisma {
     pipedriveLastSyncAt: Date | null
     pipedriveDefaultOwnerId: string | null
     pipedriveWebhookSecret: string | null
+    pipedriveSyncRunId: string | null
+    pipedriveSyncStartedAt: Date | null
+    pipedriveSyncFinishedAt: Date | null
+    pipedriveSyncError: string | null
+    pipedriveSyncResult: JsonValue | null
     updatedAt: Date
     updatedById: string | null
     _count: AppSettingCountAggregateOutputType | null
@@ -46847,6 +46878,11 @@ export namespace Prisma {
     pipedriveLastSyncAt?: boolean
     pipedriveDefaultOwnerId?: boolean
     pipedriveWebhookSecret?: boolean
+    pipedriveSyncRunId?: boolean
+    pipedriveSyncStartedAt?: boolean
+    pipedriveSyncFinishedAt?: boolean
+    pipedriveSyncError?: boolean
+    pipedriveSyncResult?: boolean
     updatedAt?: boolean
     updatedById?: boolean
   }, ExtArgs["result"]["appSetting"]>
@@ -46865,6 +46901,11 @@ export namespace Prisma {
     pipedriveLastSyncAt?: boolean
     pipedriveDefaultOwnerId?: boolean
     pipedriveWebhookSecret?: boolean
+    pipedriveSyncRunId?: boolean
+    pipedriveSyncStartedAt?: boolean
+    pipedriveSyncFinishedAt?: boolean
+    pipedriveSyncError?: boolean
+    pipedriveSyncResult?: boolean
     updatedAt?: boolean
     updatedById?: boolean
   }, ExtArgs["result"]["appSetting"]>
@@ -46883,6 +46924,11 @@ export namespace Prisma {
     pipedriveLastSyncAt?: boolean
     pipedriveDefaultOwnerId?: boolean
     pipedriveWebhookSecret?: boolean
+    pipedriveSyncRunId?: boolean
+    pipedriveSyncStartedAt?: boolean
+    pipedriveSyncFinishedAt?: boolean
+    pipedriveSyncError?: boolean
+    pipedriveSyncResult?: boolean
     updatedAt?: boolean
     updatedById?: boolean
   }
@@ -46905,6 +46951,11 @@ export namespace Prisma {
       pipedriveLastSyncAt: Date | null
       pipedriveDefaultOwnerId: string | null
       pipedriveWebhookSecret: string | null
+      pipedriveSyncRunId: string | null
+      pipedriveSyncStartedAt: Date | null
+      pipedriveSyncFinishedAt: Date | null
+      pipedriveSyncError: string | null
+      pipedriveSyncResult: Prisma.JsonValue | null
       updatedAt: Date
       updatedById: string | null
     }, ExtArgs["result"]["appSetting"]>
@@ -47313,6 +47364,11 @@ export namespace Prisma {
     readonly pipedriveLastSyncAt: FieldRef<"AppSetting", 'DateTime'>
     readonly pipedriveDefaultOwnerId: FieldRef<"AppSetting", 'String'>
     readonly pipedriveWebhookSecret: FieldRef<"AppSetting", 'String'>
+    readonly pipedriveSyncRunId: FieldRef<"AppSetting", 'String'>
+    readonly pipedriveSyncStartedAt: FieldRef<"AppSetting", 'DateTime'>
+    readonly pipedriveSyncFinishedAt: FieldRef<"AppSetting", 'DateTime'>
+    readonly pipedriveSyncError: FieldRef<"AppSetting", 'String'>
+    readonly pipedriveSyncResult: FieldRef<"AppSetting", 'Json'>
     readonly updatedAt: FieldRef<"AppSetting", 'DateTime'>
     readonly updatedById: FieldRef<"AppSetting", 'String'>
   }
@@ -50161,6 +50217,11 @@ export namespace Prisma {
     pipedriveLastSyncAt: 'pipedriveLastSyncAt',
     pipedriveDefaultOwnerId: 'pipedriveDefaultOwnerId',
     pipedriveWebhookSecret: 'pipedriveWebhookSecret',
+    pipedriveSyncRunId: 'pipedriveSyncRunId',
+    pipedriveSyncStartedAt: 'pipedriveSyncStartedAt',
+    pipedriveSyncFinishedAt: 'pipedriveSyncFinishedAt',
+    pipedriveSyncError: 'pipedriveSyncError',
+    pipedriveSyncResult: 'pipedriveSyncResult',
     updatedAt: 'updatedAt',
     updatedById: 'updatedById'
   };
@@ -54341,6 +54402,11 @@ export namespace Prisma {
     pipedriveLastSyncAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
     pipedriveDefaultOwnerId?: StringNullableFilter<"AppSetting"> | string | null
     pipedriveWebhookSecret?: StringNullableFilter<"AppSetting"> | string | null
+    pipedriveSyncRunId?: StringNullableFilter<"AppSetting"> | string | null
+    pipedriveSyncStartedAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
+    pipedriveSyncFinishedAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
+    pipedriveSyncError?: StringNullableFilter<"AppSetting"> | string | null
+    pipedriveSyncResult?: JsonNullableFilter<"AppSetting">
     updatedAt?: DateTimeFilter<"AppSetting"> | Date | string
     updatedById?: StringNullableFilter<"AppSetting"> | string | null
   }
@@ -54359,6 +54425,11 @@ export namespace Prisma {
     pipedriveLastSyncAt?: SortOrderInput | SortOrder
     pipedriveDefaultOwnerId?: SortOrderInput | SortOrder
     pipedriveWebhookSecret?: SortOrderInput | SortOrder
+    pipedriveSyncRunId?: SortOrderInput | SortOrder
+    pipedriveSyncStartedAt?: SortOrderInput | SortOrder
+    pipedriveSyncFinishedAt?: SortOrderInput | SortOrder
+    pipedriveSyncError?: SortOrderInput | SortOrder
+    pipedriveSyncResult?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrderInput | SortOrder
   }
@@ -54380,6 +54451,11 @@ export namespace Prisma {
     pipedriveLastSyncAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
     pipedriveDefaultOwnerId?: StringNullableFilter<"AppSetting"> | string | null
     pipedriveWebhookSecret?: StringNullableFilter<"AppSetting"> | string | null
+    pipedriveSyncRunId?: StringNullableFilter<"AppSetting"> | string | null
+    pipedriveSyncStartedAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
+    pipedriveSyncFinishedAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
+    pipedriveSyncError?: StringNullableFilter<"AppSetting"> | string | null
+    pipedriveSyncResult?: JsonNullableFilter<"AppSetting">
     updatedAt?: DateTimeFilter<"AppSetting"> | Date | string
     updatedById?: StringNullableFilter<"AppSetting"> | string | null
   }, "id">
@@ -54398,6 +54474,11 @@ export namespace Prisma {
     pipedriveLastSyncAt?: SortOrderInput | SortOrder
     pipedriveDefaultOwnerId?: SortOrderInput | SortOrder
     pipedriveWebhookSecret?: SortOrderInput | SortOrder
+    pipedriveSyncRunId?: SortOrderInput | SortOrder
+    pipedriveSyncStartedAt?: SortOrderInput | SortOrder
+    pipedriveSyncFinishedAt?: SortOrderInput | SortOrder
+    pipedriveSyncError?: SortOrderInput | SortOrder
+    pipedriveSyncResult?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrderInput | SortOrder
     _count?: AppSettingCountOrderByAggregateInput
@@ -54424,6 +54505,11 @@ export namespace Prisma {
     pipedriveLastSyncAt?: DateTimeNullableWithAggregatesFilter<"AppSetting"> | Date | string | null
     pipedriveDefaultOwnerId?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
     pipedriveWebhookSecret?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
+    pipedriveSyncRunId?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
+    pipedriveSyncStartedAt?: DateTimeNullableWithAggregatesFilter<"AppSetting"> | Date | string | null
+    pipedriveSyncFinishedAt?: DateTimeNullableWithAggregatesFilter<"AppSetting"> | Date | string | null
+    pipedriveSyncError?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
+    pipedriveSyncResult?: JsonNullableWithAggregatesFilter<"AppSetting">
     updatedAt?: DateTimeWithAggregatesFilter<"AppSetting"> | Date | string
     updatedById?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
   }
@@ -58686,6 +58772,11 @@ export namespace Prisma {
     pipedriveLastSyncAt?: Date | string | null
     pipedriveDefaultOwnerId?: string | null
     pipedriveWebhookSecret?: string | null
+    pipedriveSyncRunId?: string | null
+    pipedriveSyncStartedAt?: Date | string | null
+    pipedriveSyncFinishedAt?: Date | string | null
+    pipedriveSyncError?: string | null
+    pipedriveSyncResult?: NullableJsonNullValueInput | InputJsonValue
     updatedAt?: Date | string
     updatedById?: string | null
   }
@@ -58704,6 +58795,11 @@ export namespace Prisma {
     pipedriveLastSyncAt?: Date | string | null
     pipedriveDefaultOwnerId?: string | null
     pipedriveWebhookSecret?: string | null
+    pipedriveSyncRunId?: string | null
+    pipedriveSyncStartedAt?: Date | string | null
+    pipedriveSyncFinishedAt?: Date | string | null
+    pipedriveSyncError?: string | null
+    pipedriveSyncResult?: NullableJsonNullValueInput | InputJsonValue
     updatedAt?: Date | string
     updatedById?: string | null
   }
@@ -58722,6 +58818,11 @@ export namespace Prisma {
     pipedriveLastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pipedriveDefaultOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
     pipedriveWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveSyncRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveSyncStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveSyncFinishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveSyncResult?: NullableJsonNullValueInput | InputJsonValue
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -58740,6 +58841,11 @@ export namespace Prisma {
     pipedriveLastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pipedriveDefaultOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
     pipedriveWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveSyncRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveSyncStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveSyncFinishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveSyncResult?: NullableJsonNullValueInput | InputJsonValue
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -58758,6 +58864,11 @@ export namespace Prisma {
     pipedriveLastSyncAt?: Date | string | null
     pipedriveDefaultOwnerId?: string | null
     pipedriveWebhookSecret?: string | null
+    pipedriveSyncRunId?: string | null
+    pipedriveSyncStartedAt?: Date | string | null
+    pipedriveSyncFinishedAt?: Date | string | null
+    pipedriveSyncError?: string | null
+    pipedriveSyncResult?: NullableJsonNullValueInput | InputJsonValue
     updatedAt?: Date | string
     updatedById?: string | null
   }
@@ -58776,6 +58887,11 @@ export namespace Prisma {
     pipedriveLastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pipedriveDefaultOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
     pipedriveWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveSyncRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveSyncStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveSyncFinishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveSyncResult?: NullableJsonNullValueInput | InputJsonValue
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -58794,6 +58910,11 @@ export namespace Prisma {
     pipedriveLastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pipedriveDefaultOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
     pipedriveWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveSyncRunId?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveSyncStartedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveSyncFinishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveSyncError?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveSyncResult?: NullableJsonNullValueInput | InputJsonValue
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -61965,6 +62086,11 @@ export namespace Prisma {
     pipedriveLastSyncAt?: SortOrder
     pipedriveDefaultOwnerId?: SortOrder
     pipedriveWebhookSecret?: SortOrder
+    pipedriveSyncRunId?: SortOrder
+    pipedriveSyncStartedAt?: SortOrder
+    pipedriveSyncFinishedAt?: SortOrder
+    pipedriveSyncError?: SortOrder
+    pipedriveSyncResult?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrder
   }
@@ -61992,6 +62118,10 @@ export namespace Prisma {
     pipedriveLastSyncAt?: SortOrder
     pipedriveDefaultOwnerId?: SortOrder
     pipedriveWebhookSecret?: SortOrder
+    pipedriveSyncRunId?: SortOrder
+    pipedriveSyncStartedAt?: SortOrder
+    pipedriveSyncFinishedAt?: SortOrder
+    pipedriveSyncError?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrder
   }
@@ -62010,6 +62140,10 @@ export namespace Prisma {
     pipedriveLastSyncAt?: SortOrder
     pipedriveDefaultOwnerId?: SortOrder
     pipedriveWebhookSecret?: SortOrder
+    pipedriveSyncRunId?: SortOrder
+    pipedriveSyncStartedAt?: SortOrder
+    pipedriveSyncFinishedAt?: SortOrder
+    pipedriveSyncError?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrder
   }

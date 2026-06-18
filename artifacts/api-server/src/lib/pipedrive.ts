@@ -1,4 +1,5 @@
-import { prisma, type Prisma } from "@workspace/db";
+import { randomUUID } from "node:crypto";
+import { prisma, Prisma } from "@workspace/db";
 import { logger } from "./logger.js";
 import { APP_SETTINGS_ID } from "./app-settings.js";
 
@@ -528,38 +529,160 @@ export async function syncSingleDeal(dealId: number): Promise<ImportOutcome> {
  * Backfill / refresh: pull OPEN deals only and import them as leads. Closed
  * (won/lost) deals stay in Pipedrive as history and never flood the Leads
  * pipeline; an already-imported lead is still updated (e.g. open -> won/lost)
- * via the webhook path. Guarded by a single advisory lock so two syncs never
- * run at once.
+ * via the webhook path.
+ *
+ * This is the pure import work and can run for several minutes. Concurrency is
+ * guarded by the DB-backed run claim (`claimPipedriveSync`); completion
+ * bookkeeping (lastSyncAt, result/error) is owned by `runPipedriveSyncJob`. Do
+ * NOT call this from the request path — use claim + job so the HTTP request
+ * returns immediately and the client polls for progress.
  */
 export async function runFullSync(): Promise<SyncResult> {
-  const [{ locked }] = await prisma.$queryRaw<{ locked: boolean }[]>`
-    SELECT pg_try_advisory_lock(${PD_SYNC_LOCK_KEY}::int4, 0::int4) AS locked`;
-  if (!locked) throw new Error("A Pipedrive sync is already running");
-
-  try {
-    const result: SyncResult = { imported: 0, updated: 0, skipped: 0, errors: [] };
-    const ctx = await buildContext();
-    const deals = await pdListAll<PdDeal>("/deals", { status: "open" });
-    for (const deal of deals) {
-      try {
-        const outcome = await importDeal(deal, ctx);
-        if (outcome === "created") result.imported++;
-        else if (outcome === "updated") result.updated++;
-        else result.skipped++;
-      } catch (e) {
-        result.errors.push({ dealId: deal.id, error: errorMessage(e) });
-      }
+  const result: SyncResult = { imported: 0, updated: 0, skipped: 0, errors: [] };
+  const ctx = await buildContext();
+  const deals = await pdListAll<PdDeal>("/deals", { status: "open" });
+  for (const deal of deals) {
+    try {
+      const outcome = await importDeal(deal, ctx);
+      if (outcome === "created") result.imported++;
+      else if (outcome === "updated") result.updated++;
+      else result.skipped++;
+    } catch (e) {
+      result.errors.push({ dealId: deal.id, error: errorMessage(e) });
     }
-    await prisma.appSetting
-      .upsert({
-        where: { id: APP_SETTINGS_ID },
-        create: { id: APP_SETTINGS_ID, pipedriveLastSyncAt: new Date() },
-        update: { pipedriveLastSyncAt: new Date() },
-      })
-      .catch((e) => logger.warn({ err: e }, "pipedrive: failed to stamp lastSyncAt"));
-    return result;
-  } finally {
-    await prisma.$queryRaw`SELECT pg_advisory_unlock(${PD_SYNC_LOCK_KEY}::int4, 0::int4)`;
+  }
+  return result;
+}
+
+// ---------------------------------------------------------------------------
+// Background sync orchestration
+//
+// A full sync can exceed the deployment's hard request timeout (~5 min), so the
+// HTTP route only CLAIMS a run and fires the job without awaiting; the client
+// polls GET /pipedrive/status. Run state lives on the AppSetting singleton so it
+// is visible across autoscale instances.
+// ---------------------------------------------------------------------------
+
+// A claimed run with no finishedAt is treated as stale (its instance was killed
+// or scaled down mid-sync) after this window, so a new sync can be claimed. The
+// import is idempotent, so re-running after a stale run is safe.
+export const SYNC_STALE_MS = 20 * 60 * 1000;
+
+// Compact, bounded result persisted to AppSetting.pipedriveSyncResult. The full
+// per-deal error list is intentionally NOT stored (size + PII) — only its count.
+export interface SyncResultSummary {
+  imported: number;
+  updated: number;
+  skipped: number;
+  errorCount: number;
+}
+
+function summarizeResult(r: SyncResult): SyncResultSummary {
+  return {
+    imported: r.imported,
+    updated: r.updated,
+    skipped: r.skipped,
+    errorCount: r.errors.length,
+  };
+}
+
+function syncIsRunning(
+  startedAt: Date | null | undefined,
+  finishedAt: Date | null | undefined,
+  now = Date.now(),
+): boolean {
+  return !!startedAt && !finishedAt && now - startedAt.getTime() < SYNC_STALE_MS;
+}
+
+/**
+ * Atomically claim a full sync. Serialized across instances with a
+ * transaction-scoped advisory lock (auto-released at commit — no
+ * connection-affinity leak like a session-level lock). Returns a fresh runId
+ * when the claim succeeds, or `{ started: false }` when a non-stale run is
+ * already in flight.
+ */
+export async function claimPipedriveSync(): Promise<{
+  started: boolean;
+  runId: string | null;
+}> {
+  return prisma.$transaction(async (tx) => {
+    await tx.$executeRaw`SELECT pg_advisory_xact_lock(${PD_SYNC_LOCK_KEY}::int4, 0::int4)`;
+    const s = await tx.appSetting.findUnique({ where: { id: APP_SETTINGS_ID } });
+    if (syncIsRunning(s?.pipedriveSyncStartedAt, s?.pipedriveSyncFinishedAt)) {
+      return { started: false, runId: null };
+    }
+    const runId = randomUUID();
+    const now = new Date();
+    await tx.appSetting.upsert({
+      where: { id: APP_SETTINGS_ID },
+      create: {
+        id: APP_SETTINGS_ID,
+        pipedriveSyncRunId: runId,
+        pipedriveSyncStartedAt: now,
+        pipedriveSyncFinishedAt: null,
+        pipedriveSyncError: null,
+        pipedriveSyncResult: Prisma.DbNull,
+      },
+      update: {
+        pipedriveSyncRunId: runId,
+        pipedriveSyncStartedAt: now,
+        pipedriveSyncFinishedAt: null,
+        pipedriveSyncError: null,
+        pipedriveSyncResult: Prisma.DbNull,
+      },
+    });
+    return { started: true, runId };
+  });
+}
+
+/**
+ * Record the outcome of a finished run. Guarded by runId + finishedAt:null so a
+ * stale worker whose run was superseded by a newer claim can never overwrite the
+ * current run's state.
+ */
+async function finishPipedriveSync(
+  runId: string,
+  outcome: { result: SyncResult } | { error: string },
+): Promise<void> {
+  const data: Prisma.AppSettingUpdateManyMutationInput =
+    "result" in outcome
+      ? {
+          pipedriveSyncFinishedAt: new Date(),
+          pipedriveSyncError: null,
+          pipedriveSyncResult: summarizeResult(
+            outcome.result,
+          ) as unknown as Prisma.InputJsonValue,
+          pipedriveLastSyncAt: new Date(),
+        }
+      : {
+          pipedriveSyncFinishedAt: new Date(),
+          pipedriveSyncError: outcome.error.slice(0, 1000),
+          pipedriveSyncResult: Prisma.DbNull,
+        };
+  await prisma.appSetting.updateMany({
+    where: {
+      id: APP_SETTINGS_ID,
+      pipedriveSyncRunId: runId,
+      pipedriveSyncFinishedAt: null,
+    },
+    data,
+  });
+}
+
+/**
+ * Background worker: run the full sync to completion and persist its outcome.
+ * Never throws — failures are recorded on the AppSetting row for the UI to
+ * surface. Fire-and-forget from the request path with `void`.
+ */
+export async function runPipedriveSyncJob(runId: string): Promise<void> {
+  try {
+    const result = await runFullSync();
+    await finishPipedriveSync(runId, { result });
+  } catch (e) {
+    await finishPipedriveSync(runId, { error: errorMessage(e) }).catch((err) =>
+      logger.error({ err }, "pipedrive: failed to persist sync failure"),
+    );
+    logger.error({ err: e }, "pipedrive: background sync failed");
   }
 }
 

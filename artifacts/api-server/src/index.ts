@@ -11,7 +11,12 @@ import {
 import { runPaymentSync } from "./routes/xero.js";
 import { xeroConfigured } from "./lib/xero.js";
 import { getAppSettings, APP_SETTINGS_ID } from "./lib/app-settings.js";
-import { runFullSync, PipedriveNotConnectedError } from "./lib/pipedrive.js";
+import {
+  pipedriveConfigured,
+  claimPipedriveSync,
+  runPipedriveSyncJob,
+  PipedriveNotConnectedError,
+} from "./lib/pipedrive.js";
 
 const rawPort = process.env["PORT"];
 
@@ -115,13 +120,17 @@ const PIPEDRIVE_POLL_MS = 15 * 60_000;
 const pipedrivePoll = setInterval(() => {
   prisma.appSetting
     .findUnique({ where: { id: APP_SETTINGS_ID } })
-    .then((settings) => {
+    .then(async (settings) => {
       if (!settings?.pipedriveAutoSyncEnabled) return;
-      return runFullSync().then((r) => {
-        if (r.imported > 0 || r.updated > 0) {
-          logger.info(r, "Pipedrive poll imported deals");
-        }
-      });
+      // No-op until the connector is authorized.
+      if (!(await pipedriveConfigured())) return;
+      // Claim through the same DB-backed guard as the manual route so an
+      // automatic poll and a manual "Sync now" can never run at the same time.
+      // The job persists its own outcome; the request path (route) and the UI
+      // observe progress via GET /pipedrive/status.
+      const { started, runId } = await claimPipedriveSync();
+      if (!started || !runId) return;
+      await runPipedriveSyncJob(runId);
     })
     .catch((err) => {
       if (err instanceof PipedriveNotConnectedError) return;
