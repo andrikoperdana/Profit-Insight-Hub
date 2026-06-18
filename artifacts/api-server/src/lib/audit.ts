@@ -68,6 +68,7 @@ export type AuditAction =
   | "client.xero_synced"
   | "invoice_settings.updated"
   | "app_settings.updated"
+  | "app_settings.email_notifications_updated"
   | "project.report_updated"
   | "project_report.created"
   | "project_report.updated"

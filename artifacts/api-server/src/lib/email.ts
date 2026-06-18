@@ -1,5 +1,6 @@
 import { prisma } from "@workspace/db";
 import { logger } from "./logger.js";
+import { getAppSettings } from "./app-settings.js";
 
 /**
  * Best-effort transactional email delivery via the Resend REST API.
@@ -207,6 +208,11 @@ export async function maybeSendNotificationEmail(opts: {
   try {
     if (!shouldEmailNotification(opts.type)) return;
     if (!process.env.RESEND_API_KEY) return;
+    // Global kill-switch (Settings → Email Notifications). Disabled by default,
+    // so no email goes out until an admin turns it on. Served from the cached
+    // app-settings read, so this stays cheap on the notification hot path.
+    const settings = await getAppSettings();
+    if (!settings.emailNotificationsEnabled) return;
 
     const user = await prisma.user.findUnique({
       where: { id: opts.userId },

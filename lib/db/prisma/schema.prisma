@@ -997,6 +997,7 @@ model AppSetting {
   invoiceDueSoonDays    Int      @default(7)
   lateTimesheetDays     Int      @default(3)
   xeroAutoSyncEnabled   Boolean  @default(false)
+  emailNotificationsEnabled Boolean @default(false)
   pipedriveAutoSyncEnabled Boolean @default(false)
   pipedriveLastSyncAt   DateTime?
   pipedriveDefaultOwnerId String?

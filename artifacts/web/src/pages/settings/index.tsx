@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { LoadingPage } from "@/components/common/Loading";
-import { Calendar, Copy, RefreshCw, Check, KeyRound, Upload, Trash2, Link2, Unlink, Loader2, SlidersHorizontal } from "lucide-react";
+import { Calendar, Copy, RefreshCw, Check, KeyRound, Upload, Trash2, Link2, Unlink, Loader2, SlidersHorizontal, Mail } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { PipedriveIntegrationCard } from "./PipedriveIntegrationCard";
 
@@ -478,6 +478,94 @@ interface AppSettingsShape {
   invoiceDueSoonDays: number;
   lateTimesheetDays: number;
   xeroAutoSyncEnabled: boolean;
+  emailNotificationsEnabled: boolean;
+}
+
+function EmailNotificationsCard() {
+  const { toast } = useToast();
+  const [enabled, setEnabled] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const s = await customFetch<AppSettingsShape>("/api/app-settings");
+        if (!active) return;
+        setEnabled(Boolean(s.emailNotificationsEnabled));
+      } catch (e: any) {
+        if (active)
+          toast({ title: "Failed to load email settings", description: e?.message, variant: "destructive" });
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [toast]);
+
+  const handleToggle = async (next: boolean) => {
+    if (saving) return;
+    const prev = enabled;
+    setEnabled(next);
+    setSaving(true);
+    try {
+      await customFetch("/api/app-settings/email-notifications", {
+        method: "PUT",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ emailNotificationsEnabled: next }),
+      });
+      toast({
+        title: next ? "Email notifications enabled" : "Email notifications disabled",
+        description: next
+          ? "Important notifications will now also be sent to users by email."
+          : "Notifications will only appear inside the app.",
+      });
+    } catch (e: any) {
+      setEnabled(prev);
+      toast({ title: "Failed to save", description: e?.message ?? "Unknown error", variant: "destructive" });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <Card className="border-border shadow-sm">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Mail className="h-5 w-5 text-primary" /> Email Notifications
+        </CardTitle>
+        <CardDescription>
+          When enabled, important notifications (timesheet approvals and rejections, billing and
+          project alerts) are also sent to users by email. In-app notifications are always delivered
+          regardless of this setting.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {loading ? (
+          <p className="text-sm text-muted-foreground">Loading…</p>
+        ) : (
+          <div className="flex items-start justify-between gap-4 rounded-md border border-border p-3">
+            <div className="space-y-0.5">
+              <Label htmlFor="email-notifications">Send notification emails</Label>
+              <p className="text-xs text-muted-foreground">
+                Disabled by default. Turn this on to start sending notification emails.
+              </p>
+            </div>
+            <Switch
+              id="email-notifications"
+              checked={enabled}
+              disabled={saving}
+              onCheckedChange={handleToggle}
+              data-testid="switch-email-notifications"
+            />
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
 }
 
 function BusinessRulesCard() {
@@ -713,6 +801,7 @@ export default function Settings() {
   const canManageXero = user?.role === "MANAGEMENT" || user?.role === "FINANCE" || user?.role === "SUPER_ADMIN";
   const canManageBusinessRules = user?.role === "MANAGEMENT" || user?.role === "SUPER_ADMIN";
   const canManagePipedrive = user?.role === "MANAGEMENT" || user?.role === "SUPER_ADMIN";
+  const canManageEmailNotifications = user?.role === "MANAGEMENT" || user?.role === "SUPER_ADMIN";
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -771,6 +860,8 @@ export default function Settings() {
       </Card>
 
       {canManageBusinessRules && <BusinessRulesCard />}
+
+      {canManageEmailNotifications && <EmailNotificationsCard />}
 
       {canManageXero && <XeroIntegrationCard />}
 

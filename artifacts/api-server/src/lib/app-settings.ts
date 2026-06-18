@@ -16,6 +16,7 @@ export interface AppSettings {
   invoiceDueSoonDays: number;
   lateTimesheetDays: number;
   xeroAutoSyncEnabled: boolean;
+  emailNotificationsEnabled: boolean;
 }
 
 export const DEFAULT_APP_SETTINGS: AppSettings = {
@@ -26,6 +27,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   invoiceDueSoonDays: 7,
   lateTimesheetDays: 3,
   xeroAutoSyncEnabled: false,
+  emailNotificationsEnabled: false,
 };
 
 const CACHE_TTL_MS = 60_000;
@@ -68,6 +70,10 @@ export async function getAppSettings(): Promise<AppSettings> {
       typeof row?.xeroAutoSyncEnabled === "boolean"
         ? row.xeroAutoSyncEnabled
         : DEFAULT_APP_SETTINGS.xeroAutoSyncEnabled,
+    emailNotificationsEnabled:
+      typeof row?.emailNotificationsEnabled === "boolean"
+        ? row.emailNotificationsEnabled
+        : DEFAULT_APP_SETTINGS.emailNotificationsEnabled,
   };
   cache = { value, expiresAt: now + CACHE_TTL_MS };
   return value;

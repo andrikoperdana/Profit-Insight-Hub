@@ -101,4 +101,45 @@ router.put("/app-settings", requireRole(...MANAGE_ROLES), async (req, res) => {
   res.json(saved);
 });
 
+// Dedicated toggle for global email notifications. Kept separate from the
+// business-rules PUT so the Settings switch can flip it independently without
+// having to round-trip the numeric thresholds.
+router.put(
+  "/app-settings/email-notifications",
+  requireRole(...MANAGE_ROLES),
+  async (req, res) => {
+    const body = req.body ?? {};
+    if (typeof body.emailNotificationsEnabled !== "boolean") {
+      res.status(400).json({ error: "emailNotificationsEnabled must be true or false" });
+      return;
+    }
+
+    const before = await prisma.appSetting.findUnique({ where: { id: APP_SETTINGS_ID } });
+    const saved = await prisma.appSetting.upsert({
+      where: { id: APP_SETTINGS_ID },
+      create: {
+        id: APP_SETTINGS_ID,
+        emailNotificationsEnabled: body.emailNotificationsEnabled,
+        updatedById: req.user?.sub ?? null,
+      },
+      update: {
+        emailNotificationsEnabled: body.emailNotificationsEnabled,
+        updatedById: req.user?.sub ?? null,
+      },
+    });
+    invalidateAppSettingsCache();
+
+    await recordAudit(req, {
+      action: "app_settings.email_notifications_updated",
+      entityType: "AppSetting",
+      entityId: saved.id,
+      description: `Email notifications ${saved.emailNotificationsEnabled ? "enabled" : "disabled"}`,
+      before,
+      after: saved,
+    });
+
+    res.json({ emailNotificationsEnabled: saved.emailNotificationsEnabled });
+  },
+);
+
 export default router;

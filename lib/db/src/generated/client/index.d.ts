@@ -46590,6 +46590,7 @@ export namespace Prisma {
     invoiceDueSoonDays: number | null
     lateTimesheetDays: number | null
     xeroAutoSyncEnabled: boolean | null
+    emailNotificationsEnabled: boolean | null
     pipedriveAutoSyncEnabled: boolean | null
     pipedriveLastSyncAt: Date | null
     pipedriveDefaultOwnerId: string | null
@@ -46607,6 +46608,7 @@ export namespace Prisma {
     invoiceDueSoonDays: number | null
     lateTimesheetDays: number | null
     xeroAutoSyncEnabled: boolean | null
+    emailNotificationsEnabled: boolean | null
     pipedriveAutoSyncEnabled: boolean | null
     pipedriveLastSyncAt: Date | null
     pipedriveDefaultOwnerId: string | null
@@ -46624,6 +46626,7 @@ export namespace Prisma {
     invoiceDueSoonDays: number
     lateTimesheetDays: number
     xeroAutoSyncEnabled: number
+    emailNotificationsEnabled: number
     pipedriveAutoSyncEnabled: number
     pipedriveLastSyncAt: number
     pipedriveDefaultOwnerId: number
@@ -46661,6 +46664,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: true
     lateTimesheetDays?: true
     xeroAutoSyncEnabled?: true
+    emailNotificationsEnabled?: true
     pipedriveAutoSyncEnabled?: true
     pipedriveLastSyncAt?: true
     pipedriveDefaultOwnerId?: true
@@ -46678,6 +46682,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: true
     lateTimesheetDays?: true
     xeroAutoSyncEnabled?: true
+    emailNotificationsEnabled?: true
     pipedriveAutoSyncEnabled?: true
     pipedriveLastSyncAt?: true
     pipedriveDefaultOwnerId?: true
@@ -46695,6 +46700,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: true
     lateTimesheetDays?: true
     xeroAutoSyncEnabled?: true
+    emailNotificationsEnabled?: true
     pipedriveAutoSyncEnabled?: true
     pipedriveLastSyncAt?: true
     pipedriveDefaultOwnerId?: true
@@ -46799,6 +46805,7 @@ export namespace Prisma {
     invoiceDueSoonDays: number
     lateTimesheetDays: number
     xeroAutoSyncEnabled: boolean
+    emailNotificationsEnabled: boolean
     pipedriveAutoSyncEnabled: boolean
     pipedriveLastSyncAt: Date | null
     pipedriveDefaultOwnerId: string | null
@@ -46835,6 +46842,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: boolean
     lateTimesheetDays?: boolean
     xeroAutoSyncEnabled?: boolean
+    emailNotificationsEnabled?: boolean
     pipedriveAutoSyncEnabled?: boolean
     pipedriveLastSyncAt?: boolean
     pipedriveDefaultOwnerId?: boolean
@@ -46852,6 +46860,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: boolean
     lateTimesheetDays?: boolean
     xeroAutoSyncEnabled?: boolean
+    emailNotificationsEnabled?: boolean
     pipedriveAutoSyncEnabled?: boolean
     pipedriveLastSyncAt?: boolean
     pipedriveDefaultOwnerId?: boolean
@@ -46869,6 +46878,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: boolean
     lateTimesheetDays?: boolean
     xeroAutoSyncEnabled?: boolean
+    emailNotificationsEnabled?: boolean
     pipedriveAutoSyncEnabled?: boolean
     pipedriveLastSyncAt?: boolean
     pipedriveDefaultOwnerId?: boolean
@@ -46890,6 +46900,7 @@ export namespace Prisma {
       invoiceDueSoonDays: number
       lateTimesheetDays: number
       xeroAutoSyncEnabled: boolean
+      emailNotificationsEnabled: boolean
       pipedriveAutoSyncEnabled: boolean
       pipedriveLastSyncAt: Date | null
       pipedriveDefaultOwnerId: string | null
@@ -47297,6 +47308,7 @@ export namespace Prisma {
     readonly invoiceDueSoonDays: FieldRef<"AppSetting", 'Int'>
     readonly lateTimesheetDays: FieldRef<"AppSetting", 'Int'>
     readonly xeroAutoSyncEnabled: FieldRef<"AppSetting", 'Boolean'>
+    readonly emailNotificationsEnabled: FieldRef<"AppSetting", 'Boolean'>
     readonly pipedriveAutoSyncEnabled: FieldRef<"AppSetting", 'Boolean'>
     readonly pipedriveLastSyncAt: FieldRef<"AppSetting", 'DateTime'>
     readonly pipedriveDefaultOwnerId: FieldRef<"AppSetting", 'String'>
@@ -50144,6 +50156,7 @@ export namespace Prisma {
     invoiceDueSoonDays: 'invoiceDueSoonDays',
     lateTimesheetDays: 'lateTimesheetDays',
     xeroAutoSyncEnabled: 'xeroAutoSyncEnabled',
+    emailNotificationsEnabled: 'emailNotificationsEnabled',
     pipedriveAutoSyncEnabled: 'pipedriveAutoSyncEnabled',
     pipedriveLastSyncAt: 'pipedriveLastSyncAt',
     pipedriveDefaultOwnerId: 'pipedriveDefaultOwnerId',
@@ -54323,6 +54336,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: IntFilter<"AppSetting"> | number
     lateTimesheetDays?: IntFilter<"AppSetting"> | number
     xeroAutoSyncEnabled?: BoolFilter<"AppSetting"> | boolean
+    emailNotificationsEnabled?: BoolFilter<"AppSetting"> | boolean
     pipedriveAutoSyncEnabled?: BoolFilter<"AppSetting"> | boolean
     pipedriveLastSyncAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
     pipedriveDefaultOwnerId?: StringNullableFilter<"AppSetting"> | string | null
@@ -54340,6 +54354,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
     xeroAutoSyncEnabled?: SortOrder
+    emailNotificationsEnabled?: SortOrder
     pipedriveAutoSyncEnabled?: SortOrder
     pipedriveLastSyncAt?: SortOrderInput | SortOrder
     pipedriveDefaultOwnerId?: SortOrderInput | SortOrder
@@ -54360,6 +54375,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: IntFilter<"AppSetting"> | number
     lateTimesheetDays?: IntFilter<"AppSetting"> | number
     xeroAutoSyncEnabled?: BoolFilter<"AppSetting"> | boolean
+    emailNotificationsEnabled?: BoolFilter<"AppSetting"> | boolean
     pipedriveAutoSyncEnabled?: BoolFilter<"AppSetting"> | boolean
     pipedriveLastSyncAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
     pipedriveDefaultOwnerId?: StringNullableFilter<"AppSetting"> | string | null
@@ -54377,6 +54393,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
     xeroAutoSyncEnabled?: SortOrder
+    emailNotificationsEnabled?: SortOrder
     pipedriveAutoSyncEnabled?: SortOrder
     pipedriveLastSyncAt?: SortOrderInput | SortOrder
     pipedriveDefaultOwnerId?: SortOrderInput | SortOrder
@@ -54402,6 +54419,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: IntWithAggregatesFilter<"AppSetting"> | number
     lateTimesheetDays?: IntWithAggregatesFilter<"AppSetting"> | number
     xeroAutoSyncEnabled?: BoolWithAggregatesFilter<"AppSetting"> | boolean
+    emailNotificationsEnabled?: BoolWithAggregatesFilter<"AppSetting"> | boolean
     pipedriveAutoSyncEnabled?: BoolWithAggregatesFilter<"AppSetting"> | boolean
     pipedriveLastSyncAt?: DateTimeNullableWithAggregatesFilter<"AppSetting"> | Date | string | null
     pipedriveDefaultOwnerId?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
@@ -58663,6 +58681,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: number
     lateTimesheetDays?: number
     xeroAutoSyncEnabled?: boolean
+    emailNotificationsEnabled?: boolean
     pipedriveAutoSyncEnabled?: boolean
     pipedriveLastSyncAt?: Date | string | null
     pipedriveDefaultOwnerId?: string | null
@@ -58680,6 +58699,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: number
     lateTimesheetDays?: number
     xeroAutoSyncEnabled?: boolean
+    emailNotificationsEnabled?: boolean
     pipedriveAutoSyncEnabled?: boolean
     pipedriveLastSyncAt?: Date | string | null
     pipedriveDefaultOwnerId?: string | null
@@ -58697,6 +58717,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: IntFieldUpdateOperationsInput | number
     lateTimesheetDays?: IntFieldUpdateOperationsInput | number
     xeroAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailNotificationsEnabled?: BoolFieldUpdateOperationsInput | boolean
     pipedriveAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
     pipedriveLastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pipedriveDefaultOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58714,6 +58735,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: IntFieldUpdateOperationsInput | number
     lateTimesheetDays?: IntFieldUpdateOperationsInput | number
     xeroAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailNotificationsEnabled?: BoolFieldUpdateOperationsInput | boolean
     pipedriveAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
     pipedriveLastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pipedriveDefaultOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58731,6 +58753,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: number
     lateTimesheetDays?: number
     xeroAutoSyncEnabled?: boolean
+    emailNotificationsEnabled?: boolean
     pipedriveAutoSyncEnabled?: boolean
     pipedriveLastSyncAt?: Date | string | null
     pipedriveDefaultOwnerId?: string | null
@@ -58748,6 +58771,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: IntFieldUpdateOperationsInput | number
     lateTimesheetDays?: IntFieldUpdateOperationsInput | number
     xeroAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailNotificationsEnabled?: BoolFieldUpdateOperationsInput | boolean
     pipedriveAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
     pipedriveLastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pipedriveDefaultOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58765,6 +58789,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: IntFieldUpdateOperationsInput | number
     lateTimesheetDays?: IntFieldUpdateOperationsInput | number
     xeroAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
+    emailNotificationsEnabled?: BoolFieldUpdateOperationsInput | boolean
     pipedriveAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
     pipedriveLastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pipedriveDefaultOwnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -61935,6 +61960,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
     xeroAutoSyncEnabled?: SortOrder
+    emailNotificationsEnabled?: SortOrder
     pipedriveAutoSyncEnabled?: SortOrder
     pipedriveLastSyncAt?: SortOrder
     pipedriveDefaultOwnerId?: SortOrder
@@ -61961,6 +61987,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
     xeroAutoSyncEnabled?: SortOrder
+    emailNotificationsEnabled?: SortOrder
     pipedriveAutoSyncEnabled?: SortOrder
     pipedriveLastSyncAt?: SortOrder
     pipedriveDefaultOwnerId?: SortOrder
@@ -61978,6 +62005,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
     xeroAutoSyncEnabled?: SortOrder
+    emailNotificationsEnabled?: SortOrder
     pipedriveAutoSyncEnabled?: SortOrder
     pipedriveLastSyncAt?: SortOrder
     pipedriveDefaultOwnerId?: SortOrder
