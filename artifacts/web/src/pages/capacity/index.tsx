@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { customFetch } from "@workspace/api-client-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -51,6 +51,8 @@ function monthLabel(s: string): string {
   return d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 }
 
+const PAGE_SIZE = 25;
+
 const STATUS_STYLE: Record<Cell["status"], string> = {
   AVAILABLE: "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30",
   ASSIGNED: "bg-blue-500/15 text-blue-400 border border-blue-500/30",
@@ -72,6 +74,7 @@ export default function CapacityPlanning() {
   const [principalFilter, setPrincipalFilter] = useState<string>("all");
   const [specFilter, setSpecFilter] = useState<string>("all");
   const [roleFilter, setRoleFilter] = useState<string>("all");
+  const [page, setPage] = useState(0);
 
   const startStr = anchor.toISOString().slice(0, 10);
   const days = weeks * 7;
@@ -92,6 +95,10 @@ export default function CapacityPlanning() {
       return true;
     });
   }, [data, principalFilter, specFilter, roleFilter]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [principalFilter, specFilter, roleFilter]);
 
   if (!allowed) {
     return (
@@ -146,6 +153,13 @@ export default function CapacityPlanning() {
   // Days with notable patterns
   const overloadedDays = data.summary.filter((s) => s.isWorkday && s.overloaded > 0);
   const idleHeavyDays = data.summary.filter((s) => s.isWorkday && s.available >= 3 && s.assigned <= s.available);
+
+  // Pagination (25 resources per page)
+  const pageCount = Math.max(1, Math.ceil(filteredRows.length / PAGE_SIZE));
+  const safePage = Math.min(page, pageCount - 1);
+  const pagedRows = filteredRows.slice(safePage * PAGE_SIZE, safePage * PAGE_SIZE + PAGE_SIZE);
+  const showingFrom = filteredRows.length === 0 ? 0 : safePage * PAGE_SIZE + 1;
+  const showingTo = Math.min(filteredRows.length, safePage * PAGE_SIZE + PAGE_SIZE);
 
   return (
     <div className="space-y-6">
@@ -294,7 +308,7 @@ export default function CapacityPlanning() {
                     </td>
                   </tr>
                 )}
-                {filteredRows.map((row) => (
+                {pagedRows.map((row) => (
                   <tr key={row.userId} className="border-t border-border hover:bg-muted/20">
                     <td className="p-2 sticky left-0 bg-card z-10">
                       <div className="font-medium">{row.userName}</div>
@@ -372,6 +386,34 @@ export default function CapacityPlanning() {
             </table>
           </TooltipProvider>
         </CardContent>
+        {filteredRows.length > PAGE_SIZE && (
+          <div className="flex items-center justify-between gap-3 border-t border-border px-4 py-3">
+            <span className="text-xs text-muted-foreground">
+              Showing {showingFrom}&ndash;{showingTo} of {filteredRows.length} resources
+            </span>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage((p) => Math.max(0, p - 1))}
+                disabled={safePage === 0}
+              >
+                <ChevronLeft className="h-4 w-4 mr-1" /> Prev
+              </Button>
+              <span className="text-xs text-muted-foreground">
+                Page {safePage + 1} of {pageCount}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
+                disabled={safePage >= pageCount - 1}
+              >
+                Next <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </div>
+          </div>
+        )}
       </Card>
     </div>
   );
