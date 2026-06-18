@@ -65,7 +65,7 @@ catalog:
   tailwind-merge: ^3.3.1
   tailwindcss: ^4.1.14
   tsx: ^4.21.0
-  vite: ^7.3.2
+  vite: ^7.3.5
   wouter: ^3.3.5
   zod: ^3.25.76
 
@@ -160,11 +160,13 @@ overrides:
   "@expo/ngrok-bin>@expo/ngrok-bin-win32-x64": "-"
   # drizzle-kit uses esbuild internally on an older version that's vulnerable, this overrides it
   "@esbuild-kit/esm-loader": "npm:tsx@^4.21.0"
-  esbuild: "0.27.3"
+  # GHSA-g7r4-m6w7-qqqr: esbuild arbitrary file read in dev server (Windows alternate paths)
+  esbuild: "^0.28.1"
   # ── Security CVE overrides ──────────────────────────────────────────────────
   # GHSA-v2wj-q39q-566r / GHSA-p9ff-h696-f583 / GHSA-4w7w-66w2-5vf9: vite CVEs
+  # GHSA-fx2h-pf6j-xcff / GHSA-v6wh-96g9-6wx3: vite fs.deny bypass + NTLMv2 hash disclosure
   # Global override forces vitest's bundled vite peer to also use the patched version
-  vite: "^7.3.2"
+  vite: "^7.3.5"
   # GHSA-3v7f-55p6-f55p / GHSA-c2c7-rcm5-vvqj: picomatch ReDoS (2.x path)
   "micromatch>picomatch": "^2.3.2"
   # GHSA-3v7f-55p6-f55p / GHSA-c2c7-rcm5-vvqj: picomatch ReDoS (4.x path via vitest/vite)
@@ -189,4 +191,18 @@ overrides:
   # GHSA-f23m-r3pf-42rh / GHSA-r5fr-rjxr-66jc: lodash prototype pollution / code injection
   lodash: "^4.18.0"
   # GHSA-ph9p-34f9-6g65: tmp predictable temp-file names (symlink attack)
-  tmp: "^0.2.6"
+  # GHSA-7c78-jf6q-g5cm: tmp type-confusion path traversal
+  tmp: "^0.2.7"
+  # GHSA-72gw-mp4g-v24j / GHSA-3p4h-7m6x-2hcm: multer DoS via deeply nested fields / incomplete abort cleanup
+  multer: "^2.2.0"
+  # GHSA-hmw2-7cc7-3qxx: form-data CRLF injection via unescaped field names/filenames
+  form-data: "^4.0.6"
+  # GHSA-76mc-f452-cxcm / GHSA-hpcv-96wg-7vj8 / GHSA-r47g-fvhr-h676 / GHSA-rp9w-3fw7-7cwq / GHSA-vxr8-fq34-vvx9 / GHSA-gvmj-g25r-r7wr: multiple DOMPurify XSS bypasses
+  # Note: GHSA-x4vx-rjvf-j5p4 has no upstream patch; all others are fixed in >=3.4.9
+  dompurify: "^3.4.9"
+  # GHSA-4x5r-pxfx-6jf8: @babel/core arbitrary file read via sourceMappingURL comment
+  "@babel/core": "^7.29.6"
+  # GHSA-h67p-54hq-rp68: js-yaml quadratic-complexity DoS in merge key handling
+  js-yaml: "^4.2.0"
+  # GHSA-6v5v-wf23-fmfq: markdown-it quadratic complexity DoS in smartquotes rule
+  markdown-it: "^14.2.0"
