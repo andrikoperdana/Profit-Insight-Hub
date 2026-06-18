@@ -206,3 +206,13 @@ overrides:
   js-yaml: "^4.2.0"
   # GHSA-6v5v-wf23-fmfq: markdown-it quadratic complexity DoS in smartquotes rule
   markdown-it: "^14.2.0"
+
+packageExtensions:
+  # react-native-worklets@0.5.x's babel plugin does a bare `require("@babel/generator")`
+  # but never declares it. It used to resolve via hoisting, but the `@babel/core` override
+  # above re-isolated worklets into a subtree where @babel/generator is no longer reachable,
+  # crashing the Metro/babel transform with "Cannot find module '@babel/generator'" and
+  # breaking the Expo mobile production build. Declare it so pnpm links it into the subtree.
+  react-native-worklets:
+    dependencies:
+      "@babel/generator": "^7.29.6"
