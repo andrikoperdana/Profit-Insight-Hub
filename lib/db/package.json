@@ -10,7 +10,7 @@
     "migrate": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy",
     "migrate:status": "prisma migrate status",
-    "push": "prisma db push --accept-data-loss",
+    "push": "if [ \"$ALLOW_DB_PUSH\" = \"1\" ]; then prisma db push --accept-data-loss; else echo 'db push is disabled — use migrations: pnpm --filter @workspace/db run migrate (override with ALLOW_DB_PUSH=1)'; exit 1; fi",
     "seed": "tsx src/seed.ts",
     "typecheck": "tsc -p tsconfig.json"
   },

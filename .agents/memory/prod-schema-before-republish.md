@@ -1,37 +1,46 @@
 ---
-name: Prod schema before republish
-description: Why new Prisma columns must be applied to the prod DB before republishing, and how to do it safely.
+name: Prod schema via migrations (and before republish)
+description: How prod schema changes are applied now that Prisma Migrate exists, and why prod must be migrated before/after a republish.
 ---
 
-# Apply additive schema changes to prod BEFORE republishing
+# Apply schema changes to prod via migrations BEFORE/AFTER republish
 
-`prisma db push` in dev only touches the **dev** database. Prod is a separate
-remote Neon DB; schema changes are **manual** (replit.md "Common tasks").
+The repo now uses **Prisma Migrate** (baseline `0_init`; history under
+`lib/db/prisma/migrations/`). `migrate dev` / merges only touch the **dev**
+database. Prod is a separate remote Neon DB and is **NOT auto-migrated by the
+autoscale deploy** — applying to prod is a deliberate, separate step.
 
-**The trap:** Prisma's `findUnique`/`findMany` select *all* scalar columns of a
-model by default. The moment new server code that references a freshly added
-column (e.g. `getAppSettings()` reading `AppSetting.emailNotificationsEnabled`)
-runs against a prod DB that lacks the column, Prisma throws and the call site
-breaks. For shared hot paths (app-settings, serializers) this can take down
+**The trap (still true):** Prisma's `findUnique`/`findMany` select *all* scalar
+columns of a model by default. If new server code references a freshly added
+column and runs against a prod DB that lacks it, Prisma throws and the call site
+breaks — for shared hot paths (app-settings, serializers) this can take down
 broad swaths of the live app on republish.
 
-**How to apply safely (additive columns):** run a targeted, idempotent ALTER
-against `$PROD_DATABASE_URL` with `psql` — NOT `prisma db push` (which would try
-to sync the *entire* schema and could apply unrelated drift):
+**How to apply to prod (preferred):**
 
 ```
-psql "$PROD_DATABASE_URL" -v ON_ERROR_STOP=1 \
-  -c 'ALTER TABLE "AppSetting" ADD COLUMN IF NOT EXISTS "emailNotificationsEnabled" BOOLEAN NOT NULL DEFAULT false;'
+DATABASE_URL="$PROD_DATABASE_URL" pnpm --filter @workspace/db run migrate:deploy
 ```
 
-Table/column names are the Prisma model/field names verbatim (camelCase, quoted)
-unless the schema uses `@@map`/`@map`. `psql` is available and can read
-`$PROD_DATABASE_URL` from bash (the code_execution sandbox cannot — see
-sandbox-vs-shell-env). An additive column with a default is invisible to the
-currently-running old code, so it's safe to apply ahead of the republish.
+It applies only pending migrations and is a no-op when nothing is pending. Run
+it before the republish for additive columns (invisible to old code), or right
+after for changes the new code needs immediately. `psql` reads
+`$PROD_DATABASE_URL` from bash; the code_execution sandbox cannot (see
+sandbox-vs-shell-env).
 
-**Why:** decouples the risky prod-schema step from the deploy and prevents a
-broken republish; surgical ALTER avoids `db push` syncing unrelated schema drift.
+**Fallback (only if migrate can't run):** a targeted idempotent
+`ALTER TABLE ... ADD COLUMN IF NOT EXISTS` via `psql "$PROD_DATABASE_URL"` —
+never `prisma db push` (it syncs the *entire* schema and can apply unrelated
+drift). `db push` is now guarded behind `ALLOW_DB_PUSH=1` for this reason.
+
+**Adopting migrations on a live DB (how the baseline was created):** generate a
+full `0_init` from the existing schema, confirm `migrate diff` is empty on dev
+AND prod, then `prisma migrate resolve --applied 0_init` on **both** so neither
+tries to re-create existing tables. Keep hand-written SQL out of the
+`migrations/` scan path (archived in `lib/db/prisma/manual-sql/`).
+
+**Why:** decouples the risky prod-schema step from deploy and prevents a broken
+republish.
 
 **How to apply:** any task that adds a Prisma column/table the server selects —
-apply it to prod (additively) as part of the change, don't wait for republish.
+migrate prod (additively) as part of the change; don't wait for republish.

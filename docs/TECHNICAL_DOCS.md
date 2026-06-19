@@ -331,9 +331,11 @@ The schema is managed with **Prisma Migrate** (migration history lives in
 3. Commit the new folder created under `lib/db/prisma/migrations/`.
 4. Restart the API server workflow.
 
-Merges and deploys apply pending migrations automatically via
-`scripts/post-merge.sh` (`prisma migrate deploy`). To apply to production
-directly: `DATABASE_URL=<prod-url> pnpm --filter @workspace/db run migrate:deploy`
+Task-agent merges into main apply pending migrations to the **dev** database
+automatically via `scripts/post-merge.sh` (`prisma migrate deploy`). The
+autoscale deployment does **not** auto-migrate production, so apply to prod
+explicitly before/after a republish:
+`DATABASE_URL=<prod-url> pnpm --filter @workspace/db run migrate:deploy`
 (a no-op when nothing is pending). Avoid `prisma db push` now that migrations
 exist — it bypasses history and causes drift. Legacy hand-written SQL is
 archived in `lib/db/prisma/manual-sql/` for reference only.

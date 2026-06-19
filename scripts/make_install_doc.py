@@ -147,9 +147,9 @@ add_para(
     "Jika Anda restore dari dump terbaru, schema sudah sinkron. "
     "Untuk memastikan, jalankan:"
 )
-add_code("pnpm --filter @workspace/db exec prisma db push")
+add_code("pnpm --filter @workspace/db run migrate:deploy")
 add_para(
-    "Perintah ini akan membandingkan schema.prisma dengan database. "
+    "Perintah ini menerapkan migrasi yang belum dijalankan ke database. "
     "Jika sudah sinkron, tidak ada perubahan yang diterapkan."
 )
 
