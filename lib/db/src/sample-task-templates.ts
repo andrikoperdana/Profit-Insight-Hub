@@ -1,6 +1,4 @@
-import { PrismaClient } from "./generated/client/index.js";
-
-const prisma = new PrismaClient();
+import { prisma } from "./index.js";
 
 type TplTask = {
   title: string;
@@ -106,8 +104,17 @@ export async function ensureSampleTaskTemplates(): Promise<void> {
   console.log(`[task-templates] created=${created} skipped=${skipped}`);
 }
 
-const isMain = import.meta.url === `file://${process.argv[1]}`;
-if (isMain) {
+// Only auto-run when this file is the actual entrypoint (e.g. `tsx
+// sample-task-templates.ts`). The naive `import.meta.url === file://argv[1]`
+// check wrongly matches when esbuild bundles this module into the api-server's
+// dist/index.mjs (both resolve to the bundle path), which would auto-run the
+// seed at boot against a half-initialized circular import. Guard on the
+// filename so the bundle never triggers it.
+const __argv1 = process.argv[1] ?? "";
+if (
+  import.meta.url === `file://${__argv1}` &&
+  (__argv1.endsWith("sample-task-templates.ts") || __argv1.endsWith("sample-task-templates.js"))
+) {
   ensureSampleTaskTemplates()
     .then(() => prisma.$disconnect())
     .catch((e) => {

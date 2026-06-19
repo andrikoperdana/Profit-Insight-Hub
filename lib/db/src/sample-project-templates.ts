@@ -1,6 +1,4 @@
-import { PrismaClient } from "./generated/client/index.js";
-
-const prisma = new PrismaClient();
+import { prisma } from "./index.js";
 
 type TplResource = { role: string; count: number; plannedMandays: number; dailyRate: number; note?: string };
 type TplMilestone = { name: string; percentage: number; offsetDays: number };
