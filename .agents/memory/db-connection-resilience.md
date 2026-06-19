@@ -13,6 +13,18 @@ Production logs were full of `prisma:error ... terminating connection due to adm
 
 **How to apply:** if you change DB connection setup, preserve these URL params (with env overrides) and the global singleton. Do not pass a raw `DATABASE_URL` straight into `new PrismaClient` without the pool params.
 
+## Retry layer is idempotent-only — never blanket-retry writes
+
+The shared client wraps every op in a `$extends({ query: { $allOperations } })` retry that re-runs on transient connection errors (E57P01 / P1001/P1002/P1008/P1017 / "Server has closed the connection" etc.), capped by `DB_MAX_ATTEMPTS` (default 3) with jittered exponential backoff.
+
+**Rule:** auto-retry is gated to **idempotent ops only** — pure reads, plus single-row `update`s whose `data` has no atomic numeric operator (increment/decrement/multiply/divide). create / createMany / upsert / delete / deleteMany / updateMany / atomic-increment updates / raw writes are **never** auto-retried.
+
+**Why:** a connection can die *after* the server committed but *before* Prisma gets the ack; re-running a non-idempotent write would double-apply (duplicate rows, double increments). Architect review FAILed an earlier blanket `$allOperations` write-retry for exactly this. Idempotent-only retry is the most we can do safely at the shared-client layer.
+
+**Transaction safety:** `$allOperations` also wraps ops *inside* `$transaction(async tx => …)`, but `query` is bound to that tx connection, so a retry just fails out on the doomed connection — it cannot escape the tx or re-acquire an advisory lock. The outer `$transaction` wrapper is not intercepted, so multi-statement / advisory-lock flows (xero.ts, pipedrive.ts) are never auto-replayed.
+
+**How to apply:** if you need to retry a non-idempotent write, do it at the call site with explicit idempotency (e.g. a natural unique key + upsert, or a dedup token), not by widening `isRetriableOperation`. The deeper infra fix for the E57P01 flood is pointing the **deployed runtime** `DATABASE_URL` at Neon's **pooled** endpoint (`-pooler` host / `pgbouncer=true`, low per-instance `connection_limit`) while keeping **migrations** on the direct endpoint — prod currently uses the direct endpoint. Changing the prod secret needs user confirmation.
+
 # Graceful shutdown lives in the API server, NOT the shared db lib
 
 **Rule:** SIGTERM/SIGINT handlers (server.close → prisma.$disconnect → process.exit, with a ~10s force-exit timeout) live in `artifacts/api-server/src/index.ts`, never in `lib/db`.
