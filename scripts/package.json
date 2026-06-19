@@ -10,6 +10,7 @@
     "flow-doc": "tsx ./src/proses-flow-doc.ts",
     "project-flow-pdf": "tsx ./src/gen-project-flow-pdf.ts",
     "dashboard-menu-doc": "tsx ./src/gen-dashboard-menu-doc.ts",
+    "database-doc": "tsx ./src/gen-database-doc.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {

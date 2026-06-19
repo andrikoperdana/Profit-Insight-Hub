@@ -383,3 +383,15 @@ id = "MR-UJdn6zCS9AtDLRu5lB"
 uri = "file://exports/Fit-Gap-PSOhub-SecureProfit-Hub-2026-06-09-EN.docx"
 type = "word_document"
 title = "Fit-Gap Analysis: SecureProfit Hub vs PSOhub (English, June 9, 2026)"
+
+[[outputs]]
+id = "OxfFzoXz0VlCUM3HH4_xI"
+uri = "file://docs/SecureProfit-Hub-Database-Documentation.docx"
+type = "word_document"
+title = "Dokumentasi RDBMS SecureProfit Hub (.docx)"
+
+[[outputs]]
+id = "WjWlxziVrBBoTikREOKoU"
+uri = "file://docs/DATABASE_RDBMS.md"
+type = "text"
+title = "Dokumentasi RDBMS (Markdown)"
