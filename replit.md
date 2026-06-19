@@ -127,7 +127,8 @@ Per-role: MANAGEMENT (executive KPIs, profit trend, aging, at-risk, `PMAllocatio
 
 ## Common tasks
 
-- Regenerate Prisma: `pnpm --filter @workspace/db exec prisma generate`; push schema: `... exec prisma db push`
+- Regenerate Prisma client: `pnpm --filter @workspace/db run generate`
+- **Schema changes use Prisma Migrate** (not `db push`): edit `schema.prisma` → `pnpm --filter @workspace/db run migrate` (creates + applies a migration to dev, asks for a name) → commit the new folder under `lib/db/prisma/migrations/`. Merges/deploys apply pending migrations via `migrate:deploy` (`scripts/post-merge.sh`). Prod baseline is `0_init` (already marked applied on dev + prod); legacy hand-written SQL is archived in `lib/db/prisma/manual-sql/` (reference only). Avoid `db push` now that migrations exist — it bypasses history and causes drift. For prod, run `DATABASE_URL=<prod> pnpm --filter @workspace/db run migrate:deploy` (no-op when nothing is pending).
 - Regenerate API client/zod: `pnpm --filter @workspace/api-spec run codegen` (post-step `fix-zod-barrel.mjs` rewrites `lib/api-zod/src/index.ts` to only re-export `./generated/api`)
 - Reseed DB: `pnpm --filter @workspace/db run seed`; sample report data: `... exec tsx src/sample-report-data.ts` (idempotent)
 

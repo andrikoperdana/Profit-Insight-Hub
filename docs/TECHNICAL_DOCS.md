@@ -322,13 +322,21 @@ serves the SPA in dev.
 
 ### 7.3 Database Migrations
 
-The schema is managed with `prisma db push` (no migration history in this
-template). To change the schema:
+The schema is managed with **Prisma Migrate** (migration history lives in
+`lib/db/prisma/migrations/`; baseline is `0_init`). To change the schema:
 
 1. Edit `lib/db/prisma/schema.prisma`.
-2. Run `pnpm --filter @workspace/db exec prisma db push`.
-3. Run `pnpm --filter @workspace/db exec prisma generate`.
+2. Run `pnpm --filter @workspace/db run migrate` (creates + applies a migration
+   to the dev DB; you will be asked for a migration name).
+3. Commit the new folder created under `lib/db/prisma/migrations/`.
 4. Restart the API server workflow.
+
+Merges and deploys apply pending migrations automatically via
+`scripts/post-merge.sh` (`prisma migrate deploy`). To apply to production
+directly: `DATABASE_URL=<prod-url> pnpm --filter @workspace/db run migrate:deploy`
+(a no-op when nothing is pending). Avoid `prisma db push` now that migrations
+exist — it bypasses history and causes drift. Legacy hand-written SQL is
+archived in `lib/db/prisma/manual-sql/` for reference only.
 
 ### 7.4 Seeding
 

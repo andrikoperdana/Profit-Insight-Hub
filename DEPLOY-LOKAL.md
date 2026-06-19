@@ -322,10 +322,10 @@ Simpan: tekan `Ctrl+O`, lalu Enter, lalu `Ctrl+X` untuk keluar.
 Dari folder root proyek (`~/secureprofit`):
 
 ```bash
-pnpm --filter @workspace/db exec prisma db push
+pnpm --filter @workspace/db run migrate:deploy
 ```
 
-Ini akan membuat semua tabel di database. Tunggu sampai muncul "Your database is now in sync with your Prisma schema".
+Ini akan membuat semua tabel di database (menjalankan migrasi `0_init`). Tunggu sampai muncul "All migrations have been successfully applied".
 
 ### C. Isi data awal (akun demo)
 
@@ -535,7 +535,7 @@ Kalau ada perubahan kode (fitur baru, bug fix), prosesnya:
 cd ~/secureprofit
 git pull                                              # ambil kode terbaru
 pnpm install                                          # update paket kalau ada
-pnpm --filter @workspace/db exec prisma db push       # update skema DB kalau ada
+pnpm --filter @workspace/db run migrate:deploy        # update skema DB kalau ada
 pnpm --filter @workspace/api-server run build         # build ulang API
 pnpm --filter @workspace/web run build                # build ulang web
 pm2 restart secureprofit-api                          # restart backend
