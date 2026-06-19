@@ -33,9 +33,42 @@ function intFromEnv(name: string, fallback: number): number {
 //   - DB_CONNECTION_LIMIT : max connections this process keeps in its pool
 //   - DB_POOL_TIMEOUT     : seconds a query waits for a free pooled connection
 //   - DB_CONNECT_TIMEOUT  : seconds to wait when opening a new connection
+//
+// Opt-in PgBouncer routing (DB_USE_PGBOUNCER=1): the most effective cure for
+// the idle-reaping E57P01 churn is to talk to Neon's connection pooler instead
+// of the direct endpoint. Neon's pooler host is the direct host with `-pooler`
+// inserted into the endpoint id (e.g. `ep-foo.…neon.tech` → `ep-foo-pooler.…
+// neon.tech`); pairing it with `pgbouncer=true` keeps server connections warm
+// and survives idle reaping far better. This rewrite is RUNTIME-ONLY (Prisma
+// Migrate reads DATABASE_URL directly and never calls this), strictly scoped to
+// recognized Neon `ep-*.…neon.tech` hosts, and a hard no-op for anything else
+// (Replit Helium alias, localhost, already-pooled hosts) — so the flag can be
+// enabled without risk of breaking a non-Neon deployment, and removed to revert
+// without a code change.
+function applyNeonPgBouncer(url: URL): void {
+  const flag = (process.env.DB_USE_PGBOUNCER ?? "").trim().toLowerCase();
+  if (flag !== "1" && flag !== "true" && flag !== "yes") return;
+  const host = url.hostname;
+  const isNeon = host.startsWith("ep-") && host.endsWith(".neon.tech");
+  if (!isNeon) return; // unknown host: never guess a pooler that may not exist
+  const dot = host.indexOf(".");
+  const firstLabel = dot > 0 ? host.slice(0, dot) : host;
+  // Detect "already pooled" via the endpoint-id label suffix, not a broad
+  // substring, so a direct host whose generated id merely contains "-pooler"
+  // somewhere isn't mistaken for the pooler endpoint.
+  if (dot > 0 && !firstLabel.endsWith("-pooler")) {
+    url.hostname = `${firstLabel}-pooler${host.slice(dot)}`;
+  }
+  // Force pgbouncer=true on every pooled connection: PgBouncer transaction mode
+  // requires Prisma to skip prepared statements, so override any stray/false
+  // value rather than preserving it.
+  url.searchParams.set("pgbouncer", "true");
+}
+
 function buildDatasourceUrl(raw: string): string {
   try {
     const url = new URL(raw);
+    applyNeonPgBouncer(url);
     const ensure = (key: string, value: string) => {
       if (!url.searchParams.has(key)) url.searchParams.set(key, value);
     };

@@ -23,7 +23,17 @@ The shared client wraps every op in a `$extends({ query: { $allOperations } })` 
 
 **Transaction safety:** `$allOperations` also wraps ops *inside* `$transaction(async tx => …)`, but `query` is bound to that tx connection, so a retry just fails out on the doomed connection — it cannot escape the tx or re-acquire an advisory lock. The outer `$transaction` wrapper is not intercepted, so multi-statement / advisory-lock flows (xero.ts, pipedrive.ts) are never auto-replayed.
 
-**How to apply:** if you need to retry a non-idempotent write, do it at the call site with explicit idempotency (e.g. a natural unique key + upsert, or a dedup token), not by widening `isRetriableOperation`. The deeper infra fix for the E57P01 flood is pointing the **deployed runtime** `DATABASE_URL` at Neon's **pooled** endpoint (`-pooler` host / `pgbouncer=true`, low per-instance `connection_limit`) while keeping **migrations** on the direct endpoint — prod currently uses the direct endpoint. Changing the prod secret needs user confirmation.
+**How to apply:** if you need to retry a non-idempotent write, do it at the call site with explicit idempotency (e.g. a natural unique key + upsert, or a dedup token), not by widening `isRetriableOperation`.
+
+## Dev vs prod DB topology + opt-in PgBouncer routing
+
+**Topology (non-obvious):** dev and prod are **separate databases**. Dev `DATABASE_URL` is the Replit-managed Helium DB (internal host alias `helium`, runtime-managed — never hand-edit). Prod runtime is an **external Neon (Singapore)** reached via the **direct** endpoint; that same Neon is what `PROD_DATABASE_URL` (a manual secret) points at, used only by migration scripts. So the direct-endpoint idle reaping (E57P01) is a prod-only phenomenon you can't reproduce against dev/Helium.
+
+**The deeper E57P01 cure = talk to Neon's pooler, gated by a flag.** `buildDatasourceUrl` (runtime-only; Prisma Migrate never calls it) has `applyNeonPgBouncer`: when env `DB_USE_PGBOUNCER` is truthy AND host matches `ep-*.…neon.tech`, it rewrites the endpoint-id label to `…-pooler` and forces `pgbouncer=true`. Strict no-op for any non-Neon host (Helium alias, localhost) and already-pooled hosts. `DB_USE_PGBOUNCER=1` is set in **production scope only**.
+
+**Why a flag + transform instead of editing the secret:** runtime `DATABASE_URL` is runtime-managed (can't set), and a pooled URL holds credentials (would need `requestEnvVar`). The transform needs no secret access, leaves **migrations on the direct endpoint** (they read the raw env), and is **instantly reversible**: delete the prod `DB_USE_PGBOUNCER` env var + republish reverts to direct, no code change. Takes effect only after a **republish**.
+
+**Pooler compat for this app:** Neon pooler = PgBouncer **transaction** mode → `pgbouncer=true` disables prepared statements (required). `pg_advisory_xact_lock` inside `$transaction` is fine (transaction-scoped). Do **not** route session-scoped features through this client (session `pg_advisory_lock`, `LISTEN/NOTIFY`, temp tables, session GUCs). Verify any new pooler host with `psql … -c 'select 1'` before enabling — the `-pooler` insert is deterministic but confirm it resolves.
 
 # Graceful shutdown lives in the API server, NOT the shared db lib
 

@@ -93,6 +93,7 @@ PENTEST_JWT_SECRET = "k26bL+77NKDEjGd+pQENDccTd1jP7jlct/7sJnPCTYqq6mrsEi5U7BVVSM
 PENTEST_CRED_KEY = "c0DwaEmyLQNqs094k8HIZyKx+tP/48XBlsDah+V7HoA="
 SITE_GATE_USER = "itsecasia"
 SITE_GATE_PASS = "@Its3c@Asia2026"
+DB_USE_PGBOUNCER = "1"
 
 [userenv.shared]
 PIPEDRIVE_API_DOMAIN = "https://itsecaustralia.pipedrive.com"
