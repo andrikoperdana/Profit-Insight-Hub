@@ -154,7 +154,7 @@ export default function Sidebar() {
     : "U";
 
   return (
-    <aside className="w-64 bg-sidebar border-r border-sidebar-border hidden md:flex flex-col h-screen sticky top-0">
+    <aside className="w-64 bg-sidebar border-r border-sidebar-border hidden md:flex flex-col h-screen sticky top-0 print:hidden">
       {/* Brand */}
       <div className="h-16 flex items-center px-5 border-b border-sidebar-border">
         <div className="relative h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center mr-3 ring-1 ring-primary/30 p-1.5">

@@ -2,7 +2,7 @@ import { useListProjects, customFetch } from "@workspace/api-client-react";
 import { Link } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Plus, Search, Download } from "lucide-react";
+import { Plus, Search, Download, FileText } from "lucide-react";
 import { formatMoney } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
 import { canCreateProject, canViewProjectFinancials } from "@/lib/roles";
@@ -182,10 +182,24 @@ export default function ProjectsList() {
               {pager.pageItems.map((project) => (
                 <TableRow key={project.id} className="group cursor-pointer hover:bg-muted/30">
                   <TableCell>
-                    <Link href={`/projects/${project.id}`} className="block h-full w-full outline-none">
-                      <div className="font-medium text-foreground group-hover:text-primary transition-colors">{project.name}</div>
-                      <div className="text-xs text-muted-foreground font-mono">{project.code}</div>
-                    </Link>
+                    <div className="flex items-center gap-2">
+                      <Link href={`/projects/${project.id}`} className="block min-w-0 outline-none">
+                        <div className="font-medium text-foreground group-hover:text-primary transition-colors">{project.name}</div>
+                        <div className="text-xs text-muted-foreground font-mono">{project.code}</div>
+                      </Link>
+                      <Button
+                        asChild
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 shrink-0 text-muted-foreground hover:text-foreground"
+                        title="Open project summary"
+                        data-testid={`button-project-summary-${project.id}`}
+                      >
+                        <Link href={`/projects/${project.id}/summary`} aria-label="Open project summary">
+                          <FileText className="h-4 w-4" />
+                        </Link>
+                      </Button>
+                    </div>
                   </TableCell>
                   <TableCell>{project.clientName || "-"}</TableCell>
                   <TableCell><ProjectStatusBadge status={project.status} /></TableCell>

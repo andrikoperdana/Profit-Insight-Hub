@@ -82,7 +82,7 @@ export default function Header() {
     : "U";
 
   return (
-    <header className="h-16 border-b border-border bg-card flex items-center justify-between px-4 md:px-6 sticky top-0 z-10">
+    <header className="h-16 border-b border-border bg-card flex items-center justify-between px-4 md:px-6 sticky top-0 z-10 print:hidden">
       <div className="flex items-center md:hidden">
         <Sheet>
           <SheetTrigger asChild>

@@ -6,9 +6,9 @@ export default function Layout({ children }: PropsWithChildren) {
   return (
     <div className="min-h-screen bg-background flex flex-col md:flex-row">
       <Sidebar />
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden print:overflow-visible">
         <Header />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 print:overflow-visible print:p-0">
           <div className="max-w-[1600px] mx-auto animate-in fade-in duration-300">
             {children}
           </div>

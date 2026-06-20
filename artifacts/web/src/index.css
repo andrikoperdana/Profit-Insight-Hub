@@ -238,3 +238,30 @@
   }
   ::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground) / 0.5); }
 }
+
+/* ---- Print / Save as PDF (Project Summary) ---- */
+@media print {
+  html, body, #root {
+    height: auto !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+  }
+  .summary-root { max-width: none !important; }
+  /* Ink-friendly: force light background + dark text within the summary */
+  .summary-root, .summary-root * {
+    color: #0f172a !important;
+    border-color: #cbd5e1 !important;
+    box-shadow: none !important;
+  }
+  .summary-root .text-muted-foreground { color: #475569 !important; }
+  .summary-root [class*="bg-card"],
+  .summary-root .bg-card,
+  .summary-root .card-elevated { background: #ffffff !important; }
+  /* Let long tables flow across pages; keep rows + repeat headers intact */
+  .summary-root section { break-inside: auto; }
+  .summary-root table { break-inside: auto; }
+  .summary-root tr { break-inside: avoid; }
+  .summary-root thead { display: table-header-group; }
+  /* Don't clip wide tables when printing */
+  .summary-root .overflow-x-auto { overflow: visible !important; }
+}

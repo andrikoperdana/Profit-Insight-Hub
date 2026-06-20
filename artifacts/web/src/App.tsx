@@ -15,6 +15,7 @@ import Dashboard from "@/pages/dashboard";
 
 const ProjectsList = lazy(() => import("@/pages/projects"));
 const ProjectDetail = lazy(() => import("@/pages/projects/[id]"));
+const ProjectSummary = lazy(() => import("@/pages/projects/summary"));
 const NewProject = lazy(() => import("@/pages/projects/new"));
 const TimesheetsList = lazy(() => import("@/pages/timesheets"));
 const ApprovalInbox = lazy(() => import("@/pages/approvals"));
@@ -152,6 +153,7 @@ function Router() {
         <Route path="/" component={() => <ProtectedRoute component={Dashboard} />} />
         <Route path="/projects" component={() => <ProtectedRoute component={ProjectsList} denyRoles={["HR"]} />} />
         <Route path="/projects/new" component={() => <ProtectedRoute component={NewProject} denyRoles={["HR"]} />} />
+        <Route path="/projects/:id/summary" component={() => <ProtectedRoute component={ProjectSummary} denyRoles={["HR"]} />} />
         <Route path="/projects/:id" component={() => <ProtectedRoute component={ProjectDetail} denyRoles={["HR"]} />} />
         <Route path="/timesheets" component={() => <ProtectedRoute component={TimesheetsList} />} />
         <Route path="/approvals" component={() => <ProtectedRoute component={ApprovalInbox} />} />
