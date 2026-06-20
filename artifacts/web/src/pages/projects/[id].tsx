@@ -113,6 +113,16 @@ export default function ProjectDetail() {
     },
   });
 
+  const updateNote = useUpdateProject({
+    mutation: {
+      onSuccess: () => {
+        qc.invalidateQueries({ queryKey: getGetProjectQueryKey(id) });
+        qc.invalidateQueries({ queryKey: ["/projects"] });
+      },
+      onError: (e: any) => toast({ title: "Failed to update note", description: e?.message, variant: "destructive" }),
+    },
+  });
+
   const [reasonDialog, setReasonDialog] = useState<{
     open: boolean;
     target: ProjectStatus | null;
@@ -144,6 +154,33 @@ export default function ProjectDetail() {
     );
   }
 
+  const [noteDialog, setNoteDialog] = useState<{ open: boolean; value: string }>(
+    { open: false, value: "" },
+  );
+
+  function openNoteDialog() {
+    setNoteDialog({ open: true, value: project?.lastStatusReason ?? "" });
+  }
+
+  function saveNote() {
+    updateNote.mutate(
+      { id, data: { statusChangeReason: noteDialog.value.trim() } as any },
+      {
+        onSuccess: () => {
+          setNoteDialog({ open: false, value: "" });
+          toast({ title: "Note saved" });
+        },
+      },
+    );
+  }
+
+  function clearNote() {
+    updateNote.mutate(
+      { id, data: { statusChangeReason: "" } as any },
+      { onSuccess: () => toast({ title: "Note cleared" }) },
+    );
+  }
+
   if (isLoading) return <LoadingPage />;
   if (!project) {
     return (
@@ -156,6 +193,11 @@ export default function ProjectDetail() {
 
   const canChangeStatus = (user?.role === "MANAGEMENT" || isSuperAdmin(user?.role)) || user?.role === "PROJECT_MANAGER";
   const isCommercial = project.kind === "CLIENT";
+  // While the project is PAUSE or COMPLETE the reason is required context (the
+  // pause banner says it is shown below), so allow editing but not clearing it.
+  const reasonLocked =
+    project.status === ProjectStatus.PAUSE ||
+    project.status === ProjectStatus.COMPLETE;
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
@@ -201,6 +243,16 @@ export default function ProjectDetail() {
                 <SelectItem value={ProjectStatus.CLOSED} disabled>Closed (auto)</SelectItem>
               </SelectContent>
             </Select>
+            {!project.lastStatusReason && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={openNoteDialog}
+                data-testid="button-add-note"
+              >
+                <Plus className="h-4 w-4 mr-1" /> Add note
+              </Button>
+            )}
           </div>
         )}
       </div>
@@ -265,8 +317,37 @@ export default function ProjectDetail() {
 
       {project.lastStatusReason && (
         <div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-3 text-sm text-amber-200">
-          <span className="font-semibold">Last status change reason: </span>
-          {project.lastStatusReason}
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <span className="font-semibold">Last status change reason: </span>
+              {project.lastStatusReason}
+            </div>
+            {canChangeStatus && (
+              <div className="flex items-center gap-1 shrink-0">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 px-2 text-amber-200 hover:text-amber-100 hover:bg-amber-500/10"
+                  onClick={openNoteDialog}
+                  data-testid="button-edit-note"
+                >
+                  <Pencil className="h-3.5 w-3.5 mr-1" /> Edit
+                </Button>
+                {!reasonLocked && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 px-2 text-amber-200 hover:text-amber-100 hover:bg-amber-500/10"
+                    onClick={clearNote}
+                    disabled={updateNote.isPending}
+                    data-testid="button-clear-note"
+                  >
+                    <X className="h-3.5 w-3.5 mr-1" /> Clear
+                  </Button>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       )}
 
@@ -319,6 +400,56 @@ export default function ProjectDetail() {
               data-testid="status-reason-confirm"
             >
               Confirm
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={noteDialog.open}
+        onOpenChange={(o) => setNoteDialog((s) => ({ ...s, open: o }))}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {project.lastStatusReason ? "Edit note" : "Add note"}
+            </DialogTitle>
+            <DialogDescription>
+              This note shows on the project as the "Last status change reason".
+              Update or clear it at any time.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2 py-2">
+            <Label>Note</Label>
+            <Textarea
+              value={noteDialog.value}
+              onChange={(e) =>
+                setNoteDialog((s) => ({ ...s, value: e.target.value }))
+              }
+              placeholder="e.g. Resumed after client confirmed scope"
+              className="resize-none h-24"
+              data-testid="note-textarea"
+            />
+          </div>
+          <DialogFooter className="gap-2">
+            {project.lastStatusReason && !reasonLocked && (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setNoteDialog({ open: false, value: "" });
+                  clearNote();
+                }}
+                disabled={updateNote.isPending}
+              >
+                Remove note
+              </Button>
+            )}
+            <Button
+              onClick={saveNote}
+              disabled={updateNote.isPending}
+              data-testid="note-save"
+            >
+              {updateNote.isPending ? "Saving..." : "Save"}
             </Button>
           </DialogFooter>
         </DialogContent>

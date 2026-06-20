@@ -674,8 +674,14 @@ router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdatePro
   if (b.estimatedCost !== undefined) data.estimatedCost = Number(b.estimatedCost);
   if (b.plannedMandays !== undefined)
     data.plannedMandays = Number(b.plannedMandays);
-  if (b.statusChangeReason !== undefined && b.status !== undefined) {
-    data.lastStatusReason = String(b.statusChangeReason ?? "") || null;
+  // statusChangeReason doubles as the editable "Last status change reason" note.
+  // It is written when provided alongside a status change AND when sent on its
+  // own (no status field), so MGMT/PM can edit or clear the note at any time
+  // without forcing a status transition. Field-level auth above already limits
+  // this field to MANAGEMENT / PROJECT_MANAGER / SUPER_ADMIN.
+  if (b.statusChangeReason !== undefined) {
+    data.lastStatusReason =
+      String(b.statusChangeReason ?? "").trim().slice(0, 500) || null;
   }
   if (b.spkFileUrl !== undefined) {
     try {
