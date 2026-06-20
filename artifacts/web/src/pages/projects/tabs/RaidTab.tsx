@@ -11,6 +11,7 @@ import {
   type RaidImpact,
   type RaidLikelihood,
   type RaidStatus,
+  type RaidResponseStrategy,
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -61,6 +62,26 @@ const STATUS_COLORS: Record<RaidStatus, string> = {
   CLOSED: "bg-emerald-500/15 text-emerald-400 border-emerald-500/40",
 };
 
+const STRATEGY_LABELS: Record<RaidResponseStrategy, string> = {
+  AVOID: "Avoid",
+  MITIGATE: "Mitigate",
+  TRANSFER: "Transfer",
+  ACCEPT: "Accept",
+};
+
+// Numeric weights mirror the server (artifacts/api-server/src/routes/raid.ts).
+const IMPACT_WEIGHT: Record<RaidImpact, number> = { LOW: 1, MEDIUM: 2, HIGH: 3, CRITICAL: 4 };
+const LIKELIHOOD_WEIGHT: Record<RaidLikelihood, number> = { LOW: 1, MEDIUM: 2, HIGH: 3 };
+// Impact rows ordered most-severe first for the matrix; likelihood columns ascending.
+const MATRIX_IMPACTS: RaidImpact[] = ["CRITICAL", "HIGH", "MEDIUM", "LOW"];
+const MATRIX_LIKELIHOODS: RaidLikelihood[] = ["LOW", "MEDIUM", "HIGH"];
+
+function riskScoreColor(score: number): string {
+  if (score >= 8) return "bg-red-500/20 text-red-300 border-red-500/40";
+  if (score >= 4) return "bg-amber-500/20 text-amber-300 border-amber-500/40";
+  return "bg-emerald-500/20 text-emerald-300 border-emerald-500/40";
+}
+
 type FormState = {
   type: RaidType;
   title: string;
@@ -70,6 +91,7 @@ type FormState = {
   status: RaidStatus;
   ownerId: string;
   mitigation: string;
+  responseStrategy: string;
   dueDate: string;
 };
 
@@ -82,6 +104,7 @@ const EMPTY_FORM: FormState = {
   status: "OPEN",
   ownerId: "__none__",
   mitigation: "",
+  responseStrategy: "__none__",
   dueDate: "",
 };
 
@@ -126,6 +149,7 @@ export default function RaidTab({ projectId, project }: { projectId: string; pro
       status: item.status,
       ownerId: item.ownerId ?? "__none__",
       mitigation: item.mitigation ?? "",
+      responseStrategy: item.responseStrategy ?? "__none__",
       dueDate: item.dueDate ? item.dueDate.slice(0, 10) : "",
     });
     setDialogOpen(true);
@@ -145,6 +169,8 @@ export default function RaidTab({ projectId, project }: { projectId: string; pro
       status: form.status,
       ownerId: form.ownerId === "__none__" ? null : form.ownerId,
       mitigation: form.mitigation.trim() || null,
+      responseStrategy:
+        form.responseStrategy === "__none__" ? null : (form.responseStrategy as RaidResponseStrategy),
       dueDate: form.dueDate || null,
     };
     try {
@@ -191,6 +217,11 @@ export default function RaidTab({ projectId, project }: { projectId: string; pro
     closed: items.filter((i) => i.status === "CLOSED").length,
     critical: items.filter((i) => i.impact === "CRITICAL" && i.status !== "CLOSED").length,
   };
+
+  // Active (non-closed) RISK items bucketed into the impact x likelihood matrix.
+  const activeRisks = items.filter((i) => i.type === "RISK" && i.status !== "CLOSED");
+  const matrixCount = (impact: RaidImpact, likelihood: RaidLikelihood) =>
+    activeRisks.filter((i) => i.impact === impact && i.likelihood === likelihood).length;
 
   if (isLoading) return <div className="p-6 text-muted-foreground">Loading…</div>;
 
@@ -276,6 +307,19 @@ export default function RaidTab({ projectId, project }: { projectId: string; pro
                   </Select>
                 </div>
                 <div className="space-y-1.5">
+                  <Label>Response Strategy</Label>
+                  <Select value={form.responseStrategy} onValueChange={(v) => setForm((s) => ({ ...s, responseStrategy: v }))}>
+                    <SelectTrigger><SelectValue placeholder="(none)" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="__none__">— Not set —</SelectItem>
+                      <SelectItem value="AVOID">Avoid</SelectItem>
+                      <SelectItem value="MITIGATE">Mitigate</SelectItem>
+                      <SelectItem value="TRANSFER">Transfer</SelectItem>
+                      <SelectItem value="ACCEPT">Accept</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1.5">
                   <Label>Owner</Label>
                   <Select value={form.ownerId} onValueChange={(v) => setForm((s) => ({ ...s, ownerId: v }))}>
                     <SelectTrigger><SelectValue placeholder="(unassigned)" /></SelectTrigger>
@@ -331,6 +375,64 @@ export default function RaidTab({ projectId, project }: { projectId: string; pro
         ))}
       </div>
 
+      {activeRisks.length > 0 && (
+        <Card>
+          <CardHeader className="py-3">
+            <CardTitle className="text-base">Risk Matrix</CardTitle>
+            <p className="text-xs text-muted-foreground">
+              Active risks by impact and likelihood. Score = impact x likelihood.
+            </p>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="text-xs border-separate border-spacing-1">
+                <thead>
+                  <tr>
+                    <th className="p-1 text-left font-normal text-muted-foreground">Impact / Likelihood</th>
+                    {MATRIX_LIKELIHOODS.map((l) => (
+                      <th key={l} className="p-1 text-center font-normal text-muted-foreground w-20">{l}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {MATRIX_IMPACTS.map((imp) => (
+                    <tr key={imp}>
+                      <td className="p-1 pr-2 text-muted-foreground">{imp}</td>
+                      {MATRIX_LIKELIHOODS.map((lik) => {
+                        const score = IMPACT_WEIGHT[imp] * LIKELIHOOD_WEIGHT[lik];
+                        const count = matrixCount(imp, lik);
+                        return (
+                          <td key={lik} className="p-0">
+                            <div
+                              className={`flex h-12 flex-col items-center justify-center rounded-md border ${riskScoreColor(score)} ${count === 0 ? "opacity-40" : ""}`}
+                              title={`${imp} impact x ${lik} likelihood - score ${score}`}
+                            >
+                              <span className="text-base font-semibold leading-none">{count}</span>
+                              <span className="text-[10px] opacity-70">score {score}</span>
+                            </div>
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="mt-3 flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground">
+              <span className="inline-flex items-center gap-1.5">
+                <span className="inline-block h-2.5 w-2.5 rounded-sm border border-emerald-500/40 bg-emerald-500/20" /> Low (1-3)
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="inline-block h-2.5 w-2.5 rounded-sm border border-amber-500/40 bg-amber-500/20" /> Medium (4-7)
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="inline-block h-2.5 w-2.5 rounded-sm border border-red-500/40 bg-red-500/20" /> High (8-12)
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {items.length === 0 ? (
         <EmptyState
           icon={<ListChecks className="h-12 w-12 text-muted-foreground/50" />}
@@ -363,10 +465,18 @@ export default function RaidTab({ projectId, project }: { projectId: string; pro
                           <div className="text-sm text-muted-foreground mt-0.5 whitespace-pre-wrap">{item.description}</div>
                         )}
                       </div>
-                      <div className="flex items-center gap-1">
+                      <div className="flex flex-wrap items-center gap-1">
                         <Badge variant="outline" className={STATUS_COLORS[item.status]}>{item.status}</Badge>
                         <Badge variant="outline" className={IMPACT_COLORS[item.impact]}>{item.impact}</Badge>
                         <Badge variant="outline">L:{item.likelihood}</Badge>
+                        {typeof item.riskScore === "number" && (
+                          <Badge variant="outline" className={riskScoreColor(item.riskScore)}>
+                            Score {item.riskScore}
+                          </Badge>
+                        )}
+                        {item.responseStrategy && (
+                          <Badge variant="outline">{STRATEGY_LABELS[item.responseStrategy]}</Badge>
+                        )}
                       </div>
                     </div>
                     {item.mitigation && (

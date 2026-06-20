@@ -78,6 +78,7 @@ import {
 import { type GanttTask, type DragMode, TASK_STATUS_BAR, TASK_STATUS_LABEL, startOfDay, addDays, diffDays } from "./gantt/utils";
 import { GanttBar } from "./gantt/GanttBar";
 import { DependencyArrows } from "./gantt/DependencyArrows";
+import { computeCriticalPath } from "./gantt/criticalPath";
 function TaskGanttChart({
   projectId,
   tasks,
@@ -123,6 +124,11 @@ function TaskGanttChart({
   const tasksEffective = tasks.map(effectiveTask);
   const scheduled = tasksEffective.filter((t) => t.startDate && t.endDate);
   const unscheduled = tasksEffective.filter((t) => !t.startDate || !t.endDate);
+
+  // Critical path (CPM) over the full task set so parent/summary tasks are
+  // detected; recomputed live as bars are dragged. Cheap for typical task counts.
+  const { criticalIds } = computeCriticalPath(tasksEffective);
+  const criticalCount = criticalIds.size;
 
   // Compute date range that contains all task bars + project bounds
   const allDates: Date[] = [];
@@ -270,6 +276,7 @@ function TaskGanttChart({
                             left={left}
                             width={width}
                             overdue={overdue}
+                            isCritical={criticalIds.has(t.id)}
                             isManager={isManager}
                             rangeStart={rangeStart}
                             totalDays={totalDays}
@@ -348,6 +355,12 @@ function TaskGanttChart({
                 {todayInRange && (
                   <span className="inline-flex items-center gap-1.5">
                     <span className="inline-block h-3 w-px bg-amber-400" /> Today
+                  </span>
+                )}
+                {criticalCount > 0 && (
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="inline-block h-2.5 w-4 rounded-sm bg-muted/40 outline outline-2 outline-offset-1 outline-amber-400" />
+                    Critical path
                   </span>
                 )}
               </div>

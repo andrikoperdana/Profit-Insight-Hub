@@ -81,6 +81,7 @@ function GanttBar({
   left,
   width,
   overdue,
+  isCritical,
   isManager,
   rangeStart,
   totalDays,
@@ -92,6 +93,7 @@ function GanttBar({
   left: number;
   width: number;
   overdue: boolean;
+  isCritical?: boolean;
   isManager: boolean;
   rangeStart: Date;
   totalDays: number;
@@ -198,9 +200,9 @@ function GanttBar({
 
   return (
     <div
-      className={`absolute top-1 bottom-1 rounded border ${TASK_STATUS_BAR[task.status]} ${overdue ? "ring-1 ring-destructive/60" : ""} group`}
+      className={`absolute top-1 bottom-1 rounded border ${TASK_STATUS_BAR[task.status]} ${overdue ? "ring-1 ring-destructive/60" : ""} ${isCritical ? "outline outline-2 outline-offset-1 outline-amber-400" : ""} group`}
       style={{ left: `${left}%`, width: `${width}%`, cursor, touchAction: "none" }}
-      title={`${task.title}\n${formatDate(task.startDate!)} → ${formatDate(task.endDate!)}\nStatus: ${TASK_STATUS_LABEL[task.status]}${overdue ? " (overdue)" : ""}${isManager ? "\nDrag body to shift, edges to resize" : ""}`}
+      title={`${task.title}\n${formatDate(task.startDate!)} → ${formatDate(task.endDate!)}\nStatus: ${TASK_STATUS_LABEL[task.status]}${overdue ? " (overdue)" : ""}${isCritical ? "\nOn critical path" : ""}${isManager ? "\nDrag body to shift, edges to resize" : ""}`}
       data-testid={`gantt-bar-${task.id}`}
       data-task-bar={task.id}
       onPointerDown={handlePointerDown}

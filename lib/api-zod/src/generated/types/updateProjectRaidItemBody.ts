@@ -7,6 +7,7 @@
  */
 import type { RaidImpact } from "./raidImpact";
 import type { RaidLikelihood } from "./raidLikelihood";
+import type { RaidResponseStrategy } from "./raidResponseStrategy";
 import type { RaidStatus } from "./raidStatus";
 import type { RaidType } from "./raidType";
 
@@ -19,5 +20,6 @@ export interface UpdateProjectRaidItemBody {
   status?: RaidStatus;
   ownerId?: string | null;
   mitigation?: string | null;
+  responseStrategy?: RaidResponseStrategy | null;
   dueDate?: string | null;
 }

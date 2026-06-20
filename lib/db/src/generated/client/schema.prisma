@@ -148,6 +148,9 @@ model User {
 
   raidItemsOwned          ProjectRaidItem[]                @relation("RaidOwner")
   raidItemsCreated        ProjectRaidItem[]                @relation("RaidCreator")
+  baselinesCreated        ProjectBaseline[]                @relation("ProjectBaselineCreator")
+  changeRequestsRequested ChangeRequest[]                  @relation("ChangeRequestRequester")
+  changeRequestsDecided   ChangeRequest[]                  @relation("ChangeRequestDecider")
   perfReviewsSubject      PerformanceReview[]              @relation("PerfReviewSubject")
   perfReviewsAuthored     PerformanceReview[]              @relation("PerfReviewReviewer")
   perfProjectRatingsGiven PerformanceReviewProjectRating[] @relation("PerfProjRater")
@@ -232,12 +235,89 @@ model Project {
   closingChecklist   ProjectClosingChecklistItem[]
   workstreams        ProjectWorkstream[]
   reports            ProjectReport[]
+  baselines          ProjectBaseline[]
+  changeRequests     ChangeRequest[]
 
   @@index([pmId])
   @@index([salesId])
   @@index([clientId])
   @@index([status])
   @@index([deletedAt])
+}
+
+// A point-in-time snapshot of a project's scope/schedule/cost commitment.
+// Exactly one baseline per project is `isCurrent` (the active commitment EVM and
+// variance compare against). The first baseline is captured automatically when a
+// project transitions to ACTIVE (source ACTIVATION); later versions are created
+// when an approved Change Request is applied (source CHANGE_REQUEST) or manually.
+model ProjectBaseline {
+  id              String                @id @default(cuid())
+  projectId       String
+  project         Project               @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  version         Int
+  isCurrent       Boolean               @default(true)
+  source          ProjectBaselineSource @default(ACTIVATION)
+  changeRequestId String?
+  changeRequest   ChangeRequest?        @relation("BaselineChangeRequest", fields: [changeRequestId], references: [id])
+  startDate       DateTime?
+  endDate         DateTime?
+  plannedMandays  Float                 @default(0)
+  estimatedCost   Float                 @default(0)
+  contractValue   Float                 @default(0)
+  createdById     String?
+  createdBy       User?                 @relation("ProjectBaselineCreator", fields: [createdById], references: [id])
+  createdAt       DateTime              @default(now())
+
+  @@unique([projectId, version])
+  @@index([projectId, isCurrent])
+}
+
+enum ProjectBaselineSource {
+  ACTIVATION
+  CHANGE_REQUEST
+  MANUAL
+}
+
+model ChangeRequest {
+  id                     String              @id @default(cuid())
+  projectId              String
+  project                Project             @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  type                   ChangeRequestType
+  status                 ChangeRequestStatus @default(DRAFT)
+  title                  String
+  description            String?
+  impactSummary          String?
+  proposedStartDate      DateTime?
+  proposedEndDate        DateTime?
+  proposedPlannedMandays Float?
+  proposedEstimatedCost  Float?
+  proposedContractValue  Float?
+  requestedById          String?
+  requestedBy            User?               @relation("ChangeRequestRequester", fields: [requestedById], references: [id])
+  decidedById            String?
+  decidedBy              User?               @relation("ChangeRequestDecider", fields: [decidedById], references: [id])
+  decidedAt              DateTime?
+  decisionNote           String?
+  appliedAt              DateTime?
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
+
+  baselines ProjectBaseline[] @relation("BaselineChangeRequest")
+
+  @@index([projectId, status])
+}
+
+enum ChangeRequestType {
+  SCOPE
+  SCHEDULE
+  COST
+}
+
+enum ChangeRequestStatus {
+  DRAFT
+  APPROVED
+  APPLIED
+  REJECTED
 }
 
 model ProjectReport {
@@ -887,25 +967,33 @@ enum RaidStatus {
   CLOSED
 }
 
+enum RaidResponseStrategy {
+  AVOID
+  MITIGATE
+  TRANSFER
+  ACCEPT
+}
+
 model ProjectRaidItem {
-  id          String         @id @default(cuid())
-  projectId   String
-  project     Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  type        RaidType
-  title       String
-  description String?        @db.Text
-  impact      RaidImpact     @default(MEDIUM)
-  likelihood  RaidLikelihood @default(MEDIUM)
-  status      RaidStatus     @default(OPEN)
-  ownerId     String?
-  owner       User?          @relation("RaidOwner", fields: [ownerId], references: [id])
-  mitigation  String?        @db.Text
-  dueDate     DateTime?
-  closedAt    DateTime?
-  createdById String?
-  createdBy   User?          @relation("RaidCreator", fields: [createdById], references: [id])
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  id               String                @id @default(cuid())
+  projectId        String
+  project          Project               @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  type             RaidType
+  title            String
+  description      String?               @db.Text
+  impact           RaidImpact            @default(MEDIUM)
+  likelihood       RaidLikelihood        @default(MEDIUM)
+  status           RaidStatus            @default(OPEN)
+  ownerId          String?
+  owner            User?                 @relation("RaidOwner", fields: [ownerId], references: [id])
+  mitigation       String?               @db.Text
+  responseStrategy RaidResponseStrategy?
+  dueDate          DateTime?
+  closedAt         DateTime?
+  createdById      String?
+  createdBy        User?                 @relation("RaidCreator", fields: [createdById], references: [id])
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
 
   @@index([projectId])
   @@index([type])

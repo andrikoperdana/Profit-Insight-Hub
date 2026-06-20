@@ -33,6 +33,8 @@ import type {
   BulkAddResourcesBody,
   BulkAddResourcesResponse,
   BusinessUnit,
+  ChangeRequest,
+  ChangeRequestDecisionBody,
   Client,
   ClosingChecklistItem,
   ConvertLeadBody,
@@ -41,6 +43,7 @@ import type {
   CreateBulkTimesheetsBody,
   CreateBulkTimesheetsResponse,
   CreateBusinessUnitBody,
+  CreateChangeRequestBody,
   CreateClientBody,
   CreateDocumentBody,
   CreateLeadActivityBody,
@@ -131,6 +134,7 @@ import type {
   TopPerformersResponse,
   UpdateBillingMilestoneBody,
   UpdateBusinessUnitBody,
+  UpdateChangeRequestBody,
   UpdateClosingChecklistItemBody,
   UpdateLeadActivityBody,
   UpdateLeadBody,
@@ -5258,6 +5262,571 @@ export const useDeleteRaidItem = <
   TContext
 > => {
   return useMutation(getDeleteRaidItemMutationOptions(options));
+};
+
+export const getListProjectChangeRequestsUrl = (id: string) => {
+  return `/api/projects/${id}/change-requests`;
+};
+
+export const listProjectChangeRequests = async (
+  id: string,
+  options?: RequestInit,
+): Promise<ChangeRequest[]> => {
+  return customFetch<ChangeRequest[]>(getListProjectChangeRequestsUrl(id), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListProjectChangeRequestsQueryKey = (id: string) => {
+  return [`/api/projects/${id}/change-requests`] as const;
+};
+
+export const getListProjectChangeRequestsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listProjectChangeRequests>>,
+  TError = ErrorType<unknown>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listProjectChangeRequests>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getListProjectChangeRequestsQueryKey(id);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listProjectChangeRequests>>
+  > = ({ signal }) =>
+    listProjectChangeRequests(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof listProjectChangeRequests>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListProjectChangeRequestsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listProjectChangeRequests>>
+>;
+export type ListProjectChangeRequestsQueryError = ErrorType<unknown>;
+
+export function useListProjectChangeRequests<
+  TData = Awaited<ReturnType<typeof listProjectChangeRequests>>,
+  TError = ErrorType<unknown>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listProjectChangeRequests>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListProjectChangeRequestsQueryOptions(id, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getCreateProjectChangeRequestUrl = (id: string) => {
+  return `/api/projects/${id}/change-requests`;
+};
+
+export const createProjectChangeRequest = async (
+  id: string,
+  createChangeRequestBody: CreateChangeRequestBody,
+  options?: RequestInit,
+): Promise<ChangeRequest> => {
+  return customFetch<ChangeRequest>(getCreateProjectChangeRequestUrl(id), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createChangeRequestBody),
+  });
+};
+
+export const getCreateProjectChangeRequestMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createProjectChangeRequest>>,
+    TError,
+    { id: string; data: BodyType<CreateChangeRequestBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createProjectChangeRequest>>,
+  TError,
+  { id: string; data: BodyType<CreateChangeRequestBody> },
+  TContext
+> => {
+  const mutationKey = ["createProjectChangeRequest"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createProjectChangeRequest>>,
+    { id: string; data: BodyType<CreateChangeRequestBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return createProjectChangeRequest(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateProjectChangeRequestMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createProjectChangeRequest>>
+>;
+export type CreateProjectChangeRequestMutationBody =
+  BodyType<CreateChangeRequestBody>;
+export type CreateProjectChangeRequestMutationError = ErrorType<unknown>;
+
+export const useCreateProjectChangeRequest = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createProjectChangeRequest>>,
+    TError,
+    { id: string; data: BodyType<CreateChangeRequestBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createProjectChangeRequest>>,
+  TError,
+  { id: string; data: BodyType<CreateChangeRequestBody> },
+  TContext
+> => {
+  return useMutation(getCreateProjectChangeRequestMutationOptions(options));
+};
+
+export const getUpdateChangeRequestUrl = (crId: string) => {
+  return `/api/change-requests/${crId}`;
+};
+
+export const updateChangeRequest = async (
+  crId: string,
+  updateChangeRequestBody: UpdateChangeRequestBody,
+  options?: RequestInit,
+): Promise<ChangeRequest> => {
+  return customFetch<ChangeRequest>(getUpdateChangeRequestUrl(crId), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(updateChangeRequestBody),
+  });
+};
+
+export const getUpdateChangeRequestMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateChangeRequest>>,
+    TError,
+    { crId: string; data: BodyType<UpdateChangeRequestBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateChangeRequest>>,
+  TError,
+  { crId: string; data: BodyType<UpdateChangeRequestBody> },
+  TContext
+> => {
+  const mutationKey = ["updateChangeRequest"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateChangeRequest>>,
+    { crId: string; data: BodyType<UpdateChangeRequestBody> }
+  > = (props) => {
+    const { crId, data } = props ?? {};
+
+    return updateChangeRequest(crId, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateChangeRequestMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateChangeRequest>>
+>;
+export type UpdateChangeRequestMutationBody = BodyType<UpdateChangeRequestBody>;
+export type UpdateChangeRequestMutationError = ErrorType<unknown>;
+
+export const useUpdateChangeRequest = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateChangeRequest>>,
+    TError,
+    { crId: string; data: BodyType<UpdateChangeRequestBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateChangeRequest>>,
+  TError,
+  { crId: string; data: BodyType<UpdateChangeRequestBody> },
+  TContext
+> => {
+  return useMutation(getUpdateChangeRequestMutationOptions(options));
+};
+
+export const getDeleteChangeRequestUrl = (crId: string) => {
+  return `/api/change-requests/${crId}`;
+};
+
+export const deleteChangeRequest = async (
+  crId: string,
+  options?: RequestInit,
+): Promise<SuccessMessage> => {
+  return customFetch<SuccessMessage>(getDeleteChangeRequestUrl(crId), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getDeleteChangeRequestMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteChangeRequest>>,
+    TError,
+    { crId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteChangeRequest>>,
+  TError,
+  { crId: string },
+  TContext
+> => {
+  const mutationKey = ["deleteChangeRequest"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteChangeRequest>>,
+    { crId: string }
+  > = (props) => {
+    const { crId } = props ?? {};
+
+    return deleteChangeRequest(crId, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteChangeRequestMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteChangeRequest>>
+>;
+
+export type DeleteChangeRequestMutationError = ErrorType<unknown>;
+
+export const useDeleteChangeRequest = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteChangeRequest>>,
+    TError,
+    { crId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteChangeRequest>>,
+  TError,
+  { crId: string },
+  TContext
+> => {
+  return useMutation(getDeleteChangeRequestMutationOptions(options));
+};
+
+export const getApproveChangeRequestUrl = (crId: string) => {
+  return `/api/change-requests/${crId}/approve`;
+};
+
+export const approveChangeRequest = async (
+  crId: string,
+  changeRequestDecisionBody?: ChangeRequestDecisionBody,
+  options?: RequestInit,
+): Promise<ChangeRequest> => {
+  return customFetch<ChangeRequest>(getApproveChangeRequestUrl(crId), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(changeRequestDecisionBody),
+  });
+};
+
+export const getApproveChangeRequestMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof approveChangeRequest>>,
+    TError,
+    { crId: string; data: BodyType<ChangeRequestDecisionBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof approveChangeRequest>>,
+  TError,
+  { crId: string; data: BodyType<ChangeRequestDecisionBody> },
+  TContext
+> => {
+  const mutationKey = ["approveChangeRequest"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof approveChangeRequest>>,
+    { crId: string; data: BodyType<ChangeRequestDecisionBody> }
+  > = (props) => {
+    const { crId, data } = props ?? {};
+
+    return approveChangeRequest(crId, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ApproveChangeRequestMutationResult = NonNullable<
+  Awaited<ReturnType<typeof approveChangeRequest>>
+>;
+export type ApproveChangeRequestMutationBody =
+  BodyType<ChangeRequestDecisionBody>;
+export type ApproveChangeRequestMutationError = ErrorType<unknown>;
+
+export const useApproveChangeRequest = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof approveChangeRequest>>,
+    TError,
+    { crId: string; data: BodyType<ChangeRequestDecisionBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof approveChangeRequest>>,
+  TError,
+  { crId: string; data: BodyType<ChangeRequestDecisionBody> },
+  TContext
+> => {
+  return useMutation(getApproveChangeRequestMutationOptions(options));
+};
+
+export const getRejectChangeRequestUrl = (crId: string) => {
+  return `/api/change-requests/${crId}/reject`;
+};
+
+export const rejectChangeRequest = async (
+  crId: string,
+  changeRequestDecisionBody?: ChangeRequestDecisionBody,
+  options?: RequestInit,
+): Promise<ChangeRequest> => {
+  return customFetch<ChangeRequest>(getRejectChangeRequestUrl(crId), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(changeRequestDecisionBody),
+  });
+};
+
+export const getRejectChangeRequestMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof rejectChangeRequest>>,
+    TError,
+    { crId: string; data: BodyType<ChangeRequestDecisionBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof rejectChangeRequest>>,
+  TError,
+  { crId: string; data: BodyType<ChangeRequestDecisionBody> },
+  TContext
+> => {
+  const mutationKey = ["rejectChangeRequest"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof rejectChangeRequest>>,
+    { crId: string; data: BodyType<ChangeRequestDecisionBody> }
+  > = (props) => {
+    const { crId, data } = props ?? {};
+
+    return rejectChangeRequest(crId, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RejectChangeRequestMutationResult = NonNullable<
+  Awaited<ReturnType<typeof rejectChangeRequest>>
+>;
+export type RejectChangeRequestMutationBody =
+  BodyType<ChangeRequestDecisionBody>;
+export type RejectChangeRequestMutationError = ErrorType<unknown>;
+
+export const useRejectChangeRequest = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof rejectChangeRequest>>,
+    TError,
+    { crId: string; data: BodyType<ChangeRequestDecisionBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof rejectChangeRequest>>,
+  TError,
+  { crId: string; data: BodyType<ChangeRequestDecisionBody> },
+  TContext
+> => {
+  return useMutation(getRejectChangeRequestMutationOptions(options));
+};
+
+export const getApplyChangeRequestUrl = (crId: string) => {
+  return `/api/change-requests/${crId}/apply`;
+};
+
+export const applyChangeRequest = async (
+  crId: string,
+  options?: RequestInit,
+): Promise<ChangeRequest> => {
+  return customFetch<ChangeRequest>(getApplyChangeRequestUrl(crId), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getApplyChangeRequestMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof applyChangeRequest>>,
+    TError,
+    { crId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof applyChangeRequest>>,
+  TError,
+  { crId: string },
+  TContext
+> => {
+  const mutationKey = ["applyChangeRequest"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof applyChangeRequest>>,
+    { crId: string }
+  > = (props) => {
+    const { crId } = props ?? {};
+
+    return applyChangeRequest(crId, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ApplyChangeRequestMutationResult = NonNullable<
+  Awaited<ReturnType<typeof applyChangeRequest>>
+>;
+
+export type ApplyChangeRequestMutationError = ErrorType<unknown>;
+
+export const useApplyChangeRequest = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof applyChangeRequest>>,
+    TError,
+    { crId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof applyChangeRequest>>,
+  TError,
+  { crId: string },
+  TContext
+> => {
+  return useMutation(getApplyChangeRequestMutationOptions(options));
 };
 
 export const getListProjectWorkstreamsUrl = (id: string) => {

@@ -963,6 +963,16 @@ export const RaidStatus = {
   CLOSED: "CLOSED",
 } as const;
 
+export type RaidResponseStrategy =
+  (typeof RaidResponseStrategy)[keyof typeof RaidResponseStrategy];
+
+export const RaidResponseStrategy = {
+  AVOID: "AVOID",
+  MITIGATE: "MITIGATE",
+  TRANSFER: "TRANSFER",
+  ACCEPT: "ACCEPT",
+} as const;
+
 export interface ProjectRaidItem {
   id: string;
   projectId: string;
@@ -975,6 +985,8 @@ export interface ProjectRaidItem {
   ownerId?: string | null;
   ownerName?: string | null;
   mitigation?: string | null;
+  responseStrategy?: RaidResponseStrategy | null;
+  riskScore?: number | null;
   dueDate?: string | null;
   closedAt?: string | null;
   createdById?: string | null;
@@ -992,6 +1004,7 @@ export interface CreateProjectRaidItemBody {
   status?: RaidStatus;
   ownerId?: string | null;
   mitigation?: string | null;
+  responseStrategy?: RaidResponseStrategy | null;
   dueDate?: string | null;
 }
 
@@ -1004,7 +1017,80 @@ export interface UpdateProjectRaidItemBody {
   status?: RaidStatus;
   ownerId?: string | null;
   mitigation?: string | null;
+  responseStrategy?: RaidResponseStrategy | null;
   dueDate?: string | null;
+}
+
+export type ChangeRequestType =
+  (typeof ChangeRequestType)[keyof typeof ChangeRequestType];
+
+export const ChangeRequestType = {
+  SCOPE: "SCOPE",
+  SCHEDULE: "SCHEDULE",
+  COST: "COST",
+} as const;
+
+export type ChangeRequestStatus =
+  (typeof ChangeRequestStatus)[keyof typeof ChangeRequestStatus];
+
+export const ChangeRequestStatus = {
+  DRAFT: "DRAFT",
+  APPROVED: "APPROVED",
+  APPLIED: "APPLIED",
+  REJECTED: "REJECTED",
+} as const;
+
+export interface ChangeRequest {
+  id: string;
+  projectId: string;
+  type: ChangeRequestType;
+  status: ChangeRequestStatus;
+  title: string;
+  description?: string | null;
+  impactSummary?: string | null;
+  proposedStartDate?: string | null;
+  proposedEndDate?: string | null;
+  proposedPlannedMandays?: number | null;
+  proposedEstimatedCost?: number | null;
+  proposedContractValue?: number | null;
+  requestedById?: string | null;
+  requestedByName?: string | null;
+  decidedById?: string | null;
+  decidedByName?: string | null;
+  decidedAt?: string | null;
+  decisionNote?: string | null;
+  appliedAt?: string | null;
+  canEdit?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateChangeRequestBody {
+  type: ChangeRequestType;
+  title: string;
+  description?: string | null;
+  impactSummary?: string | null;
+  proposedStartDate?: string | null;
+  proposedEndDate?: string | null;
+  proposedPlannedMandays?: number | null;
+  proposedEstimatedCost?: number | null;
+  proposedContractValue?: number | null;
+}
+
+export interface UpdateChangeRequestBody {
+  type?: ChangeRequestType;
+  title?: string;
+  description?: string | null;
+  impactSummary?: string | null;
+  proposedStartDate?: string | null;
+  proposedEndDate?: string | null;
+  proposedPlannedMandays?: number | null;
+  proposedEstimatedCost?: number | null;
+  proposedContractValue?: number | null;
+}
+
+export interface ChangeRequestDecisionBody {
+  decisionNote?: string | null;
 }
 
 export type PerformanceReviewPeriod =
@@ -1582,6 +1668,91 @@ export type ProjectFinancialsProfitOutlook = {
   progressPct?: number;
 } | null;
 
+export type ProjectFinancialsEvmCostStatus =
+  | (typeof ProjectFinancialsEvmCostStatus)[keyof typeof ProjectFinancialsEvmCostStatus]
+  | null;
+
+export const ProjectFinancialsEvmCostStatus = {
+  UNDER: "UNDER",
+  ON_TARGET: "ON_TARGET",
+  OVER: "OVER",
+} as const;
+
+export type ProjectFinancialsEvmScheduleStatus =
+  | (typeof ProjectFinancialsEvmScheduleStatus)[keyof typeof ProjectFinancialsEvmScheduleStatus]
+  | null;
+
+export const ProjectFinancialsEvmScheduleStatus = {
+  AHEAD: "AHEAD",
+  ON_TARGET: "ON_TARGET",
+  BEHIND: "BEHIND",
+} as const;
+
+export type ProjectFinancialsEvmPvBasis =
+  (typeof ProjectFinancialsEvmPvBasis)[keyof typeof ProjectFinancialsEvmPvBasis];
+
+export const ProjectFinancialsEvmPvBasis = {
+  BASELINE: "BASELINE",
+  PROJECT: "PROJECT",
+} as const;
+
+/**
+ * Earned Value Management metrics. When the project lacks the inputs EVM needs (a budget, dated leaf tasks, a schedule window), the relevant fields are null and insufficientData is true.
+ */
+export type ProjectFinancialsEvm = {
+  insufficientData: boolean;
+  reason?: string | null;
+  bac: number;
+  ac: number;
+  ev?: number | null;
+  pv?: number | null;
+  percentComplete?: number | null;
+  plannedPct?: number | null;
+  cpi?: number | null;
+  spi?: number | null;
+  eac?: number | null;
+  etc?: number | null;
+  vac?: number | null;
+  tcpi?: number | null;
+  costStatus?: ProjectFinancialsEvmCostStatus;
+  scheduleStatus?: ProjectFinancialsEvmScheduleStatus;
+  pvBasis: ProjectFinancialsEvmPvBasis;
+} | null;
+
+export type ProjectFinancialsBaselineSource =
+  (typeof ProjectFinancialsBaselineSource)[keyof typeof ProjectFinancialsBaselineSource];
+
+export const ProjectFinancialsBaselineSource = {
+  ACTIVATION: "ACTIVATION",
+  CHANGE_REQUEST: "CHANGE_REQUEST",
+  MANUAL: "MANUAL",
+} as const;
+
+/**
+ * The project's current baseline snapshot (scope / schedule / cost commitment). Null until the project has been activated.
+ */
+export type ProjectFinancialsBaseline = {
+  version: number;
+  source: ProjectFinancialsBaselineSource;
+  capturedAt: string;
+  startDate?: string | null;
+  endDate?: string | null;
+  plannedMandays: number;
+  estimatedCost: number;
+  contractValue: number;
+} | null;
+
+/**
+ * Current project values minus the current baseline (positive means a value has grown since the baseline was set). Null when no baseline exists. Date variances are in whole days.
+ */
+export type ProjectFinancialsBaselineVariance = {
+  startDateDays?: number | null;
+  endDateDays?: number | null;
+  plannedMandays: number;
+  estimatedCost: number;
+  contractValue: number;
+} | null;
+
 export interface MonthlyFinancialPoint {
   month: string;
   cost: number;
@@ -1613,6 +1784,12 @@ export interface ProjectFinancials {
   netMarginPct?: number;
   overheadMultiplier?: number;
   profitOutlook?: ProjectFinancialsProfitOutlook;
+  /** Earned Value Management metrics. When the project lacks the inputs EVM needs (a budget, dated leaf tasks, a schedule window), the relevant fields are null and insufficientData is true. */
+  evm?: ProjectFinancialsEvm;
+  /** The project's current baseline snapshot (scope / schedule / cost commitment). Null until the project has been activated. */
+  baseline?: ProjectFinancialsBaseline;
+  /** Current project values minus the current baseline (positive means a value has grown since the baseline was set). Null when no baseline exists. Date variances are in whole days. */
+  baselineVariance?: ProjectFinancialsBaselineVariance;
   monthly?: MonthlyFinancialPoint[];
 }
 

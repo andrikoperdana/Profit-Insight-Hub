@@ -1029,6 +1029,115 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/SuccessMessage" }
 
+  /projects/{id}/change-requests:
+    get:
+      operationId: listProjectChangeRequests
+      tags: [change-requests]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ChangeRequest" }
+    post:
+      operationId: createProjectChangeRequest
+      tags: [change-requests]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateChangeRequestBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ChangeRequest" }
+
+  /change-requests/{crId}:
+    patch:
+      operationId: updateChangeRequest
+      tags: [change-requests]
+      parameters:
+        - { name: crId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpdateChangeRequestBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ChangeRequest" }
+    delete:
+      operationId: deleteChangeRequest
+      tags: [change-requests]
+      parameters:
+        - { name: crId, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /change-requests/{crId}/approve:
+    post:
+      operationId: approveChangeRequest
+      tags: [change-requests]
+      parameters:
+        - { name: crId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ChangeRequestDecisionBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ChangeRequest" }
+
+  /change-requests/{crId}/reject:
+    post:
+      operationId: rejectChangeRequest
+      tags: [change-requests]
+      parameters:
+        - { name: crId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ChangeRequestDecisionBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ChangeRequest" }
+
+  /change-requests/{crId}/apply:
+    post:
+      operationId: applyChangeRequest
+      tags: [change-requests]
+      parameters:
+        - { name: crId, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ChangeRequest" }
+
   /projects/{id}/workstreams:
     get:
       operationId: listProjectWorkstreams
@@ -3298,6 +3407,7 @@ components:
     RaidImpact: { type: string, enum: [LOW, MEDIUM, HIGH, CRITICAL] }
     RaidLikelihood: { type: string, enum: [LOW, MEDIUM, HIGH] }
     RaidStatus: { type: string, enum: [OPEN, MITIGATING, CLOSED] }
+    RaidResponseStrategy: { type: string, enum: [AVOID, MITIGATE, TRANSFER, ACCEPT] }
 
     ProjectRaidItem:
       type: object
@@ -3314,6 +3424,8 @@ components:
         ownerId: { type: string, nullable: true }
         ownerName: { type: string, nullable: true }
         mitigation: { type: string, nullable: true }
+        responseStrategy: { allOf: [ { $ref: "#/components/schemas/RaidResponseStrategy" } ], nullable: true }
+        riskScore: { type: integer, nullable: true }
         dueDate: { type: string, nullable: true }
         closedAt: { type: string, nullable: true }
         createdById: { type: string, nullable: true }
@@ -3333,6 +3445,7 @@ components:
         status: { $ref: "#/components/schemas/RaidStatus" }
         ownerId: { type: string, nullable: true }
         mitigation: { type: string, nullable: true }
+        responseStrategy: { allOf: [ { $ref: "#/components/schemas/RaidResponseStrategy" } ], nullable: true }
         dueDate: { type: string, nullable: true }
 
     UpdateProjectRaidItemBody:
@@ -3346,7 +3459,70 @@ components:
         status: { $ref: "#/components/schemas/RaidStatus" }
         ownerId: { type: string, nullable: true }
         mitigation: { type: string, nullable: true }
+        responseStrategy: { allOf: [ { $ref: "#/components/schemas/RaidResponseStrategy" } ], nullable: true }
         dueDate: { type: string, nullable: true }
+
+    ChangeRequestType: { type: string, enum: [SCOPE, SCHEDULE, COST] }
+    ChangeRequestStatus: { type: string, enum: [DRAFT, APPROVED, APPLIED, REJECTED] }
+
+    ChangeRequest:
+      type: object
+      required: [id, projectId, type, status, title, createdAt, updatedAt]
+      properties:
+        id: { type: string }
+        projectId: { type: string }
+        type: { $ref: "#/components/schemas/ChangeRequestType" }
+        status: { $ref: "#/components/schemas/ChangeRequestStatus" }
+        title: { type: string }
+        description: { type: string, nullable: true }
+        impactSummary: { type: string, nullable: true }
+        proposedStartDate: { type: string, nullable: true }
+        proposedEndDate: { type: string, nullable: true }
+        proposedPlannedMandays: { type: number, nullable: true }
+        proposedEstimatedCost: { type: number, nullable: true }
+        proposedContractValue: { type: number, nullable: true }
+        requestedById: { type: string, nullable: true }
+        requestedByName: { type: string, nullable: true }
+        decidedById: { type: string, nullable: true }
+        decidedByName: { type: string, nullable: true }
+        decidedAt: { type: string, nullable: true }
+        decisionNote: { type: string, nullable: true }
+        appliedAt: { type: string, nullable: true }
+        canEdit: { type: boolean }
+        createdAt: { type: string }
+        updatedAt: { type: string }
+
+    CreateChangeRequestBody:
+      type: object
+      required: [type, title]
+      properties:
+        type: { $ref: "#/components/schemas/ChangeRequestType" }
+        title: { type: string }
+        description: { type: string, nullable: true }
+        impactSummary: { type: string, nullable: true }
+        proposedStartDate: { type: string, nullable: true }
+        proposedEndDate: { type: string, nullable: true }
+        proposedPlannedMandays: { type: number, nullable: true }
+        proposedEstimatedCost: { type: number, nullable: true }
+        proposedContractValue: { type: number, nullable: true }
+
+    UpdateChangeRequestBody:
+      type: object
+      properties:
+        type: { $ref: "#/components/schemas/ChangeRequestType" }
+        title: { type: string }
+        description: { type: string, nullable: true }
+        impactSummary: { type: string, nullable: true }
+        proposedStartDate: { type: string, nullable: true }
+        proposedEndDate: { type: string, nullable: true }
+        proposedPlannedMandays: { type: number, nullable: true }
+        proposedEstimatedCost: { type: number, nullable: true }
+        proposedContractValue: { type: number, nullable: true }
+
+    ChangeRequestDecisionBody:
+      type: object
+      properties:
+        decisionNote: { type: string, nullable: true }
 
     PerformanceReviewPeriod: { type: string, enum: [Q1, Q2, Q3, Q4, ANNUAL] }
     PerformanceReviewStatus: { type: string, enum: [DRAFT, SUBMITTED, ACKNOWLEDGED] }
@@ -3919,6 +4095,68 @@ components:
             forecastProfit: { type: number }
             forecastMarginPct: { type: number }
             progressPct: { type: number }
+        evm:
+          type: object
+          nullable: true
+          description: >-
+            Earned Value Management metrics. When the project lacks the inputs
+            EVM needs (a budget, dated leaf tasks, a schedule window), the
+            relevant fields are null and insufficientData is true.
+          required: [insufficientData, bac, ac, pvBasis]
+          properties:
+            insufficientData: { type: boolean }
+            reason: { type: string, nullable: true }
+            bac: { type: number }
+            ac: { type: number }
+            ev: { type: number, nullable: true }
+            pv: { type: number, nullable: true }
+            percentComplete: { type: number, nullable: true }
+            plannedPct: { type: number, nullable: true }
+            cpi: { type: number, nullable: true }
+            spi: { type: number, nullable: true }
+            eac: { type: number, nullable: true }
+            etc: { type: number, nullable: true }
+            vac: { type: number, nullable: true }
+            tcpi: { type: number, nullable: true }
+            costStatus:
+              type: string
+              nullable: true
+              enum: [UNDER, ON_TARGET, OVER]
+            scheduleStatus:
+              type: string
+              nullable: true
+              enum: [AHEAD, ON_TARGET, BEHIND]
+            pvBasis: { type: string, enum: [BASELINE, PROJECT] }
+        baseline:
+          type: object
+          nullable: true
+          description: >-
+            The project's current baseline snapshot (scope / schedule / cost
+            commitment). Null until the project has been activated.
+          required: [version, source, capturedAt, plannedMandays, estimatedCost, contractValue]
+          properties:
+            version: { type: integer }
+            source: { type: string, enum: [ACTIVATION, CHANGE_REQUEST, MANUAL] }
+            capturedAt: { type: string, format: date-time }
+            startDate: { type: string, nullable: true }
+            endDate: { type: string, nullable: true }
+            plannedMandays: { type: number }
+            estimatedCost: { type: number }
+            contractValue: { type: number }
+        baselineVariance:
+          type: object
+          nullable: true
+          description: >-
+            Current project values minus the current baseline (positive means a
+            value has grown since the baseline was set). Null when no baseline
+            exists. Date variances are in whole days.
+          required: [plannedMandays, estimatedCost, contractValue]
+          properties:
+            startDateDays: { type: number, nullable: true }
+            endDateDays: { type: number, nullable: true }
+            plannedMandays: { type: number }
+            estimatedCost: { type: number }
+            contractValue: { type: number }
         monthly:
           type: array
           items: { $ref: "#/components/schemas/MonthlyFinancialPoint" }

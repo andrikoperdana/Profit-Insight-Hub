@@ -569,3 +569,213 @@ export function computeProfitOutlook(
     progressPct,
   };
 }
+
+// --- Earned Value Management (EVM) -----------------------------------------
+// PMP-standard cost & schedule performance derived from physical task progress
+// versus money spent. All metrics are null-safe: when the project lacks the
+// inputs EVM needs (a budget, any dated leaf tasks, a schedule window), the
+// relevant fields are null and `insufficientData` is true so the UI can show a
+// "not enough data" notice instead of misleading numbers.
+//
+// Definitions:
+//   BAC — Budget At Completion (the project's estimated cost)
+//   AC  — Actual Cost incurred so far
+//   EV  — Earned Value = physical % complete × BAC
+//   PV  — Planned Value = schedule-elapsed fraction × BAC
+//   CPI — Cost Performance Index = EV / AC      (>1 under budget)
+//   SPI — Schedule Performance Index = EV / PV  (>1 ahead of schedule)
+//   EAC — Estimate At Completion = BAC / CPI
+//   ETC — Estimate To Complete = EAC − AC
+//   VAC — Variance At Completion = BAC − EAC
+//   TCPI— To-Complete Performance Index = (BAC − EV) / (BAC − AC)
+
+export interface EvmTaskInput {
+  id: string;
+  parentTaskId: string | null;
+  startDate: Date | null;
+  endDate: Date | null;
+  progressPercent: number;
+  status?: string;
+}
+
+export type EvmCostStatus = "UNDER" | "ON_TARGET" | "OVER";
+export type EvmScheduleStatus = "AHEAD" | "ON_TARGET" | "BEHIND";
+
+export interface EvmMetrics {
+  insufficientData: boolean;
+  reason: string | null;
+  bac: number;
+  ac: number;
+  ev: number | null;
+  pv: number | null;
+  percentComplete: number | null;
+  plannedPct: number | null;
+  cpi: number | null;
+  spi: number | null;
+  eac: number | null;
+  etc: number | null;
+  vac: number | null;
+  tcpi: number | null;
+  costStatus: EvmCostStatus | null;
+  scheduleStatus: EvmScheduleStatus | null;
+  pvBasis: "BASELINE" | "PROJECT";
+}
+
+// Tolerance band around 1.0 for CPI/SPI plain-language status. Indices within
+// ±5% read as "on target" rather than over/under or ahead/behind.
+const EVM_EPSILON = 0.05;
+
+function evmClamp(n: number, lo: number, hi: number): number {
+  return Math.min(hi, Math.max(lo, n));
+}
+
+export function computeEvm(opts: {
+  bac: number;
+  ac: number;
+  tasks: EvmTaskInput[];
+  scheduleStart: Date | null;
+  scheduleEnd: Date | null;
+  pvBasis?: "BASELINE" | "PROJECT";
+  now?: Date;
+}): EvmMetrics {
+  const { bac, ac, tasks, scheduleStart, scheduleEnd } = opts;
+  const now = opts.now ?? new Date();
+  const pvBasis = opts.pvBasis ?? "PROJECT";
+
+  const base: EvmMetrics = {
+    insufficientData: true,
+    reason: null,
+    bac,
+    ac,
+    ev: null,
+    pv: null,
+    percentComplete: null,
+    plannedPct: null,
+    cpi: null,
+    spi: null,
+    eac: null,
+    etc: null,
+    vac: null,
+    tcpi: null,
+    costStatus: null,
+    scheduleStatus: null,
+    pvBasis,
+  };
+
+  if (!(bac > 0)) {
+    return {
+      ...base,
+      reason: "No budget at completion (estimated cost) set for this project.",
+    };
+  }
+
+  // EV: duration-weighted physical % complete across LEAF tasks only. Parent /
+  // summary tasks are excluded (their progress is a roll-up of children and
+  // would double-count). Only tasks with both a start and end date contribute,
+  // weighted by their duration in days (min 1) so longer tasks carry more of
+  // the schedule. Using stored progressPercent (TaskStatus forces DONE=100 /
+  // TODO=0) keeps EV honest rather than tying it to mandays burn (which would
+  // pin CPI ≈ 1 by construction).
+  const parentIds = new Set<string>();
+  for (const t of tasks) {
+    if (t.parentTaskId) parentIds.add(t.parentTaskId);
+  }
+  let weightSum = 0;
+  let weightedProgress = 0;
+  for (const t of tasks) {
+    if (parentIds.has(t.id)) continue;
+    if (!t.startDate || !t.endDate) continue;
+    const days = Math.max(
+      1,
+      (t.endDate.getTime() - t.startDate.getTime()) / 86_400_000,
+    );
+    const progress = evmClamp(t.progressPercent ?? 0, 0, 100);
+    weightSum += days;
+    weightedProgress += days * progress;
+  }
+
+  if (weightSum <= 0) {
+    return {
+      ...base,
+      reason:
+        "No leaf tasks with start and end dates yet — EVM needs scheduled tasks to measure earned value.",
+    };
+  }
+
+  const percentComplete = weightedProgress / weightSum; // 0..100
+  const ev = (percentComplete / 100) * bac;
+
+  // PV: fraction of the schedule window that has elapsed × BAC. Uses the
+  // baseline dates when a baseline exists (caller passes them in via
+  // scheduleStart/scheduleEnd + pvBasis), else the project's current dates.
+  let pv: number | null = null;
+  let plannedPct: number | null = null;
+  if (
+    scheduleStart &&
+    scheduleEnd &&
+    scheduleEnd.getTime() > scheduleStart.getTime()
+  ) {
+    const frac = evmClamp(
+      (now.getTime() - scheduleStart.getTime()) /
+        (scheduleEnd.getTime() - scheduleStart.getTime()),
+      0,
+      1,
+    );
+    plannedPct = frac * 100;
+    pv = frac * bac;
+  }
+
+  const cpi = ac > 0 ? ev / ac : null;
+  const spi = pv && pv > 0 ? ev / pv : null;
+  const eac = cpi && cpi > 0 ? bac / cpi : null;
+  const etc = eac != null ? eac - ac : null;
+  const vac = eac != null ? bac - eac : null;
+  // TCPI is only meaningful while budget remains (BAC − AC > 0); once the budget
+  // is spent there is no remaining cost to index against.
+  const tcpi = bac - ac > 0 ? (bac - ev) / (bac - ac) : null;
+
+  const costStatus: EvmCostStatus | null =
+    cpi == null
+      ? null
+      : cpi > 1 + EVM_EPSILON
+        ? "UNDER"
+        : cpi < 1 - EVM_EPSILON
+          ? "OVER"
+          : "ON_TARGET";
+  const scheduleStatus: EvmScheduleStatus | null =
+    spi == null
+      ? null
+      : spi > 1 + EVM_EPSILON
+        ? "AHEAD"
+        : spi < 1 - EVM_EPSILON
+          ? "BEHIND"
+          : "ON_TARGET";
+
+  // Cost metrics (CPI/EAC/...) are valid from EV + AC alone, so we keep the
+  // panel live even when no schedule window exists — but surface a reason so the
+  // blank Planned Value / SPI are explained rather than silently empty.
+  const reason =
+    pv == null
+      ? "No baseline or project start/end date window set — schedule metrics (Planned Value, SPI) are unavailable."
+      : null;
+
+  return {
+    insufficientData: false,
+    reason,
+    bac,
+    ac,
+    ev,
+    pv,
+    percentComplete,
+    plannedPct,
+    cpi,
+    spi,
+    eac,
+    etc,
+    vac,
+    tcpi,
+    costStatus,
+    scheduleStatus,
+    pvBasis,
+  };
+}

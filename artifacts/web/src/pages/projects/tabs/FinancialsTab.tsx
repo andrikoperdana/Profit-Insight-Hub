@@ -58,6 +58,12 @@ import { LoadingPage } from "@/components/common/Loading";
 import { EmptyState } from "@/components/common/EmptyState";
 import { PdfUploadField, type PdfFileData } from "@/components/common/PdfUploadField";
 import { ProfitOutlookPanel, type ProfitOutlook } from "@/components/projects/ProfitOutlookPanel";
+import { EvmPanel, type EvmData } from "@/components/projects/EvmPanel";
+import {
+  BaselineVariancePanel,
+  type BaselineData,
+  type BaselineVarianceData,
+} from "@/components/projects/BaselineVariancePanel";
 import { useAuth } from "@/lib/auth";
 import { RoleLabels, canViewProjectFinancials } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
@@ -191,6 +197,13 @@ function FinancialsTab({ projectId, isCommercial = true }: { projectId: string; 
     <div className="space-y-6">
       {f.profitOutlook && (
         <ProfitOutlookPanel outlook={f.profitOutlook as ProfitOutlook} />
+      )}
+      {f.evm && <EvmPanel evm={f.evm as EvmData} />}
+      {f.baseline && (
+        <BaselineVariancePanel
+          baseline={f.baseline as BaselineData}
+          variance={(f.baselineVariance ?? null) as BaselineVarianceData | null}
+        />
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <FinancialCard

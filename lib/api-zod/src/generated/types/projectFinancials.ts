@@ -6,6 +6,9 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { MonthlyFinancialPoint } from "./monthlyFinancialPoint";
+import type { ProjectFinancialsBaseline } from "./projectFinancialsBaseline";
+import type { ProjectFinancialsBaselineVariance } from "./projectFinancialsBaselineVariance";
+import type { ProjectFinancialsEvm } from "./projectFinancialsEvm";
 import type { ProjectFinancialsProfitOutlook } from "./projectFinancialsProfitOutlook";
 
 export interface ProjectFinancials {
@@ -33,5 +36,11 @@ export interface ProjectFinancials {
   netMarginPct?: number;
   overheadMultiplier?: number;
   profitOutlook?: ProjectFinancialsProfitOutlook;
+  /** Earned Value Management metrics. When the project lacks the inputs EVM needs (a budget, dated leaf tasks, a schedule window), the relevant fields are null and insufficientData is true. */
+  evm?: ProjectFinancialsEvm;
+  /** The project's current baseline snapshot (scope / schedule / cost commitment). Null until the project has been activated. */
+  baseline?: ProjectFinancialsBaseline;
+  /** Current project values minus the current baseline (positive means a value has grown since the baseline was set). Null when no baseline exists. Date variances are in whole days. */
+  baselineVariance?: ProjectFinancialsBaselineVariance;
   monthly?: MonthlyFinancialPoint[];
 }

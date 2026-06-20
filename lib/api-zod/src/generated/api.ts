@@ -1768,6 +1768,57 @@ export const GetProjectFinancialsResponse = zod.object({
       progressPct: zod.number().optional(),
     })
     .nullish(),
+  evm: zod
+    .object({
+      insufficientData: zod.boolean(),
+      reason: zod.string().nullish(),
+      bac: zod.number(),
+      ac: zod.number(),
+      ev: zod.number().nullish(),
+      pv: zod.number().nullish(),
+      percentComplete: zod.number().nullish(),
+      plannedPct: zod.number().nullish(),
+      cpi: zod.number().nullish(),
+      spi: zod.number().nullish(),
+      eac: zod.number().nullish(),
+      etc: zod.number().nullish(),
+      vac: zod.number().nullish(),
+      tcpi: zod.number().nullish(),
+      costStatus: zod.enum(["UNDER", "ON_TARGET", "OVER"]).nullish(),
+      scheduleStatus: zod.enum(["AHEAD", "ON_TARGET", "BEHIND"]).nullish(),
+      pvBasis: zod.enum(["BASELINE", "PROJECT"]),
+    })
+    .nullish()
+    .describe(
+      "Earned Value Management metrics. When the project lacks the inputs EVM needs (a budget, dated leaf tasks, a schedule window), the relevant fields are null and insufficientData is true.",
+    ),
+  baseline: zod
+    .object({
+      version: zod.number(),
+      source: zod.enum(["ACTIVATION", "CHANGE_REQUEST", "MANUAL"]),
+      capturedAt: zod.coerce.date(),
+      startDate: zod.string().nullish(),
+      endDate: zod.string().nullish(),
+      plannedMandays: zod.number(),
+      estimatedCost: zod.number(),
+      contractValue: zod.number(),
+    })
+    .nullish()
+    .describe(
+      "The project's current baseline snapshot (scope \/ schedule \/ cost commitment). Null until the project has been activated.",
+    ),
+  baselineVariance: zod
+    .object({
+      startDateDays: zod.number().nullish(),
+      endDateDays: zod.number().nullish(),
+      plannedMandays: zod.number(),
+      estimatedCost: zod.number(),
+      contractValue: zod.number(),
+    })
+    .nullish()
+    .describe(
+      "Current project values minus the current baseline (positive means a value has grown since the baseline was set). Null when no baseline exists. Date variances are in whole days.",
+    ),
   monthly: zod
     .array(
       zod.object({
@@ -2272,6 +2323,10 @@ export const ListProjectRaidItemsResponseItem = zod.object({
   ownerId: zod.string().nullish(),
   ownerName: zod.string().nullish(),
   mitigation: zod.string().nullish(),
+  responseStrategy: zod
+    .enum(["AVOID", "MITIGATE", "TRANSFER", "ACCEPT"])
+    .nullish(),
+  riskScore: zod.number().nullish(),
   dueDate: zod.string().nullish(),
   closedAt: zod.string().nullish(),
   createdById: zod.string().nullish(),
@@ -2296,6 +2351,9 @@ export const CreateProjectRaidItemBody = zod.object({
   status: zod.enum(["OPEN", "MITIGATING", "CLOSED"]).optional(),
   ownerId: zod.string().nullish(),
   mitigation: zod.string().nullish(),
+  responseStrategy: zod
+    .enum(["AVOID", "MITIGATE", "TRANSFER", "ACCEPT"])
+    .nullish(),
   dueDate: zod.string().nullish(),
 });
 
@@ -2312,6 +2370,9 @@ export const UpdateRaidItemBody = zod.object({
   status: zod.enum(["OPEN", "MITIGATING", "CLOSED"]).optional(),
   ownerId: zod.string().nullish(),
   mitigation: zod.string().nullish(),
+  responseStrategy: zod
+    .enum(["AVOID", "MITIGATE", "TRANSFER", "ACCEPT"])
+    .nullish(),
   dueDate: zod.string().nullish(),
 });
 
@@ -2327,6 +2388,10 @@ export const UpdateRaidItemResponse = zod.object({
   ownerId: zod.string().nullish(),
   ownerName: zod.string().nullish(),
   mitigation: zod.string().nullish(),
+  responseStrategy: zod
+    .enum(["AVOID", "MITIGATE", "TRANSFER", "ACCEPT"])
+    .nullish(),
+  riskScore: zod.number().nullish(),
   dueDate: zod.string().nullish(),
   closedAt: zod.string().nullish(),
   createdById: zod.string().nullish(),
@@ -2342,6 +2407,199 @@ export const DeleteRaidItemParams = zod.object({
 export const DeleteRaidItemResponse = zod.object({
   success: zod.boolean(),
   message: zod.string().optional(),
+});
+
+export const ListProjectChangeRequestsParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const ListProjectChangeRequestsResponseItem = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  type: zod.enum(["SCOPE", "SCHEDULE", "COST"]),
+  status: zod.enum(["DRAFT", "APPROVED", "APPLIED", "REJECTED"]),
+  title: zod.string(),
+  description: zod.string().nullish(),
+  impactSummary: zod.string().nullish(),
+  proposedStartDate: zod.string().nullish(),
+  proposedEndDate: zod.string().nullish(),
+  proposedPlannedMandays: zod.number().nullish(),
+  proposedEstimatedCost: zod.number().nullish(),
+  proposedContractValue: zod.number().nullish(),
+  requestedById: zod.string().nullish(),
+  requestedByName: zod.string().nullish(),
+  decidedById: zod.string().nullish(),
+  decidedByName: zod.string().nullish(),
+  decidedAt: zod.string().nullish(),
+  decisionNote: zod.string().nullish(),
+  appliedAt: zod.string().nullish(),
+  canEdit: zod.boolean().optional(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+export const ListProjectChangeRequestsResponse = zod.array(
+  ListProjectChangeRequestsResponseItem,
+);
+
+export const CreateProjectChangeRequestParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const CreateProjectChangeRequestBody = zod.object({
+  type: zod.enum(["SCOPE", "SCHEDULE", "COST"]),
+  title: zod.string(),
+  description: zod.string().nullish(),
+  impactSummary: zod.string().nullish(),
+  proposedStartDate: zod.string().nullish(),
+  proposedEndDate: zod.string().nullish(),
+  proposedPlannedMandays: zod.number().nullish(),
+  proposedEstimatedCost: zod.number().nullish(),
+  proposedContractValue: zod.number().nullish(),
+});
+
+export const UpdateChangeRequestParams = zod.object({
+  crId: zod.coerce.string(),
+});
+
+export const UpdateChangeRequestBody = zod.object({
+  type: zod.enum(["SCOPE", "SCHEDULE", "COST"]).optional(),
+  title: zod.string().optional(),
+  description: zod.string().nullish(),
+  impactSummary: zod.string().nullish(),
+  proposedStartDate: zod.string().nullish(),
+  proposedEndDate: zod.string().nullish(),
+  proposedPlannedMandays: zod.number().nullish(),
+  proposedEstimatedCost: zod.number().nullish(),
+  proposedContractValue: zod.number().nullish(),
+});
+
+export const UpdateChangeRequestResponse = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  type: zod.enum(["SCOPE", "SCHEDULE", "COST"]),
+  status: zod.enum(["DRAFT", "APPROVED", "APPLIED", "REJECTED"]),
+  title: zod.string(),
+  description: zod.string().nullish(),
+  impactSummary: zod.string().nullish(),
+  proposedStartDate: zod.string().nullish(),
+  proposedEndDate: zod.string().nullish(),
+  proposedPlannedMandays: zod.number().nullish(),
+  proposedEstimatedCost: zod.number().nullish(),
+  proposedContractValue: zod.number().nullish(),
+  requestedById: zod.string().nullish(),
+  requestedByName: zod.string().nullish(),
+  decidedById: zod.string().nullish(),
+  decidedByName: zod.string().nullish(),
+  decidedAt: zod.string().nullish(),
+  decisionNote: zod.string().nullish(),
+  appliedAt: zod.string().nullish(),
+  canEdit: zod.boolean().optional(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+export const DeleteChangeRequestParams = zod.object({
+  crId: zod.coerce.string(),
+});
+
+export const DeleteChangeRequestResponse = zod.object({
+  success: zod.boolean(),
+  message: zod.string().optional(),
+});
+
+export const ApproveChangeRequestParams = zod.object({
+  crId: zod.coerce.string(),
+});
+
+export const ApproveChangeRequestBody = zod.object({
+  decisionNote: zod.string().nullish(),
+});
+
+export const ApproveChangeRequestResponse = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  type: zod.enum(["SCOPE", "SCHEDULE", "COST"]),
+  status: zod.enum(["DRAFT", "APPROVED", "APPLIED", "REJECTED"]),
+  title: zod.string(),
+  description: zod.string().nullish(),
+  impactSummary: zod.string().nullish(),
+  proposedStartDate: zod.string().nullish(),
+  proposedEndDate: zod.string().nullish(),
+  proposedPlannedMandays: zod.number().nullish(),
+  proposedEstimatedCost: zod.number().nullish(),
+  proposedContractValue: zod.number().nullish(),
+  requestedById: zod.string().nullish(),
+  requestedByName: zod.string().nullish(),
+  decidedById: zod.string().nullish(),
+  decidedByName: zod.string().nullish(),
+  decidedAt: zod.string().nullish(),
+  decisionNote: zod.string().nullish(),
+  appliedAt: zod.string().nullish(),
+  canEdit: zod.boolean().optional(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+export const RejectChangeRequestParams = zod.object({
+  crId: zod.coerce.string(),
+});
+
+export const RejectChangeRequestBody = zod.object({
+  decisionNote: zod.string().nullish(),
+});
+
+export const RejectChangeRequestResponse = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  type: zod.enum(["SCOPE", "SCHEDULE", "COST"]),
+  status: zod.enum(["DRAFT", "APPROVED", "APPLIED", "REJECTED"]),
+  title: zod.string(),
+  description: zod.string().nullish(),
+  impactSummary: zod.string().nullish(),
+  proposedStartDate: zod.string().nullish(),
+  proposedEndDate: zod.string().nullish(),
+  proposedPlannedMandays: zod.number().nullish(),
+  proposedEstimatedCost: zod.number().nullish(),
+  proposedContractValue: zod.number().nullish(),
+  requestedById: zod.string().nullish(),
+  requestedByName: zod.string().nullish(),
+  decidedById: zod.string().nullish(),
+  decidedByName: zod.string().nullish(),
+  decidedAt: zod.string().nullish(),
+  decisionNote: zod.string().nullish(),
+  appliedAt: zod.string().nullish(),
+  canEdit: zod.boolean().optional(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
+export const ApplyChangeRequestParams = zod.object({
+  crId: zod.coerce.string(),
+});
+
+export const ApplyChangeRequestResponse = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  type: zod.enum(["SCOPE", "SCHEDULE", "COST"]),
+  status: zod.enum(["DRAFT", "APPROVED", "APPLIED", "REJECTED"]),
+  title: zod.string(),
+  description: zod.string().nullish(),
+  impactSummary: zod.string().nullish(),
+  proposedStartDate: zod.string().nullish(),
+  proposedEndDate: zod.string().nullish(),
+  proposedPlannedMandays: zod.number().nullish(),
+  proposedEstimatedCost: zod.number().nullish(),
+  proposedContractValue: zod.number().nullish(),
+  requestedById: zod.string().nullish(),
+  requestedByName: zod.string().nullish(),
+  decidedById: zod.string().nullish(),
+  decidedByName: zod.string().nullish(),
+  decidedAt: zod.string().nullish(),
+  decisionNote: zod.string().nullish(),
+  appliedAt: zod.string().nullish(),
+  canEdit: zod.boolean().optional(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
 });
 
 export const ListProjectWorkstreamsParams = zod.object({

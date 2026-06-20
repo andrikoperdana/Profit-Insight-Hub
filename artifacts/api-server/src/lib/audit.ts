@@ -90,7 +90,13 @@ export type AuditAction =
   | "workstream.deleted"
   | "pipedrive.synced"
   | "pipedrive.settings_updated"
-  | "pipedrive.stage_mappings_updated";
+  | "pipedrive.stage_mappings_updated"
+  | "change_request.created"
+  | "change_request.updated"
+  | "change_request.approved"
+  | "change_request.rejected"
+  | "change_request.applied"
+  | "change_request.deleted";
 
 export type EntityType =
   | "User"
@@ -120,6 +126,7 @@ export type EntityType =
   | "Client"
   | "XeroConnection"
   | "PipedriveStageMapping"
+  | "ChangeRequest"
   | "System";
 
 interface AuditInput {

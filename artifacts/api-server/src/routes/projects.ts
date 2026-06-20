@@ -8,6 +8,7 @@ import {
   projectInclude,
   computeMetrics,
   computeProfitOutlook,
+  computeEvm,
   canViewProjectFinancials,
   canViewDailyRate,
 } from "../lib/serializers.js";
@@ -705,6 +706,32 @@ router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdatePro
     data,
     include: projectInclude,
   });
+  // Capture the initial project baseline the first time it is activated. The
+  // baseline is the scope/schedule/cost commitment that EVM's Planned Value and
+  // the variance panel measure against. We auto-create the ACTIVATION baseline
+  // only once — re-activating after a PAUSE keeps the original commitment;
+  // later versions come from applied Change Requests.
+  if (updated.status === "ACTIVE" && beforeProj.status !== "ACTIVE") {
+    const existingBaselines = await prisma.projectBaseline.count({
+      where: { projectId: updated.id },
+    });
+    if (existingBaselines === 0) {
+      await prisma.projectBaseline.create({
+        data: {
+          projectId: updated.id,
+          version: 1,
+          isCurrent: true,
+          source: "ACTIVATION",
+          startDate: updated.startDate,
+          endDate: updated.endDate,
+          plannedMandays: updated.plannedMandays,
+          estimatedCost: updated.estimatedCost,
+          contractValue: updated.contractValue,
+          createdById: req.user?.sub ?? null,
+        },
+      });
+    }
+  }
   // NO_NEED_CONSULTANT cascade: when entering this status, release all
   // KONSULTAN resources and clear the assigned Technical Writer. Admin Project
   // remains so closing documents can still be uploaded.
@@ -957,6 +984,66 @@ router.get("/projects/:id/financials", async (req, res) => {
 
   const burnRatePct = m.burnRatePct;
 
+  // Earned Value Management — needs task-level progress/dates, which projectInclude
+  // does not load, so fetch the lean task slice EVM requires separately. EV is a
+  // duration-weighted roll-up of leaf-task physical completion (see computeEvm).
+  const evmTasks = await prisma.task.findMany({
+    where: { projectId: p.id },
+    select: {
+      id: true,
+      parentTaskId: true,
+      startDate: true,
+      endDate: true,
+      progressPercent: true,
+      status: true,
+    },
+  });
+  // Baseline (the project's committed scope/schedule/cost). When a current
+  // baseline with dates exists, EVM's Planned Value is measured against the
+  // baseline schedule window rather than the (possibly re-planned) live dates.
+  const currentBaseline = await prisma.projectBaseline.findFirst({
+    where: { projectId: p.id, isCurrent: true },
+    orderBy: { version: "desc" },
+  });
+  const hasBaselineDates = !!(currentBaseline?.startDate && currentBaseline?.endDate);
+  const evm = computeEvm({
+    // BAC is the committed budget: the current baseline's estimatedCost when a
+    // baseline exists, so EVM measures against the commitment even if the live
+    // project estimatedCost drifts (re-planning before a formal re-baseline).
+    bac: currentBaseline ? currentBaseline.estimatedCost : p.estimatedCost,
+    ac: m.actualCost,
+    tasks: evmTasks,
+    scheduleStart: hasBaselineDates ? currentBaseline!.startDate : (p.startDate ?? null),
+    scheduleEnd: hasBaselineDates ? currentBaseline!.endDate : (p.endDate ?? null),
+    pvBasis: hasBaselineDates ? "BASELINE" : "PROJECT",
+  });
+
+  const baseline = currentBaseline
+    ? {
+        version: currentBaseline.version,
+        source: currentBaseline.source,
+        capturedAt: currentBaseline.createdAt.toISOString(),
+        startDate: currentBaseline.startDate ? currentBaseline.startDate.toISOString() : null,
+        endDate: currentBaseline.endDate ? currentBaseline.endDate.toISOString() : null,
+        plannedMandays: currentBaseline.plannedMandays,
+        estimatedCost: currentBaseline.estimatedCost,
+        contractValue: currentBaseline.contractValue,
+      }
+    : null;
+  const baselineDayDiff = (a: Date | null, b: Date | null): number | null => {
+    if (!a || !b) return null;
+    return Math.round((a.getTime() - b.getTime()) / 86_400_000);
+  };
+  const baselineVariance = currentBaseline
+    ? {
+        startDateDays: baselineDayDiff(p.startDate ?? null, currentBaseline.startDate),
+        endDateDays: baselineDayDiff(p.endDate ?? null, currentBaseline.endDate),
+        plannedMandays: p.plannedMandays - currentBaseline.plannedMandays,
+        estimatedCost: p.estimatedCost - currentBaseline.estimatedCost,
+        contractValue: p.contractValue - currentBaseline.contractValue,
+      }
+    : null;
+
   // Forecast & plain-language profit outlook share one source of truth. The
   // outlook projects forward from the burn rate once work is logged, and falls
   // back to the intake estimate before any actuals exist.
@@ -1018,6 +1105,9 @@ router.get("/projects/:id/financials", async (req, res) => {
     netMarginPct: m.netMarginPct,
     overheadMultiplier: m.overheadMultiplier,
     profitOutlook,
+    evm,
+    baseline,
+    baselineVariance,
     monthly,
   });
 });

@@ -83,6 +83,7 @@ import ReportTab from "./tabs/ReportTab";
 import DocumentsTab from "./tabs/DocumentsTab";
 import ActivityTab from "./tabs/ActivityTab";
 import RaidTab from "./tabs/RaidTab";
+import ChangeRequestsTab from "./tabs/ChangeRequestsTab";
 import WorkstreamsTab from "./tabs/WorkstreamsTab";
 import ClosingTab from "./tabs/ClosingTab";
 import DraftCompletionCard from "./components/DraftCompletionCard";
@@ -375,6 +376,12 @@ export default function ProjectDetail() {
           )}
           {((user?.role === "MANAGEMENT" || isSuperAdmin(user?.role)) ||
             (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id)) && (
+            <TabsTrigger value="change-requests" data-testid="tab-trigger-change-requests">
+              Change Requests
+            </TabsTrigger>
+          )}
+          {((user?.role === "MANAGEMENT" || isSuperAdmin(user?.role)) ||
+            (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id)) && (
             <TabsTrigger value="workstreams" data-testid="tab-trigger-workstreams">
               Workstreams
             </TabsTrigger>
@@ -433,6 +440,12 @@ export default function ProjectDetail() {
         {canViewRaid(user?.role) && (
           <TabsContent value="raid" className="pt-4 m-0">
             <RaidTab projectId={id} project={project} />
+          </TabsContent>
+        )}
+        {((user?.role === "MANAGEMENT" || isSuperAdmin(user?.role)) ||
+          (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id)) && (
+          <TabsContent value="change-requests" className="pt-4 m-0">
+            <ChangeRequestsTab projectId={id} project={project} />
           </TabsContent>
         )}
         <TabsContent value="workstreams" className="pt-4 m-0">

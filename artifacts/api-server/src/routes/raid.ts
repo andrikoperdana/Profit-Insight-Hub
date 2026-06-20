@@ -25,6 +25,20 @@ const RAID_TYPES = new Set(["RISK", "ASSUMPTION", "ISSUE", "DEPENDENCY"]);
 const IMPACTS = new Set(["LOW", "MEDIUM", "HIGH", "CRITICAL"]);
 const LIKELIHOODS = new Set(["LOW", "MEDIUM", "HIGH"]);
 const STATUSES = new Set(["OPEN", "MITIGATING", "CLOSED"]);
+const RESPONSE_STRATEGIES = new Set(["AVOID", "MITIGATE", "TRANSFER", "ACCEPT"]);
+
+// Numeric weights for the qualitative PMI risk matrix. Impact 1-4, likelihood
+// 1-3; riskScore = impact x likelihood (1-12). Only meaningful for RISK items.
+const IMPACT_WEIGHT: Record<string, number> = { LOW: 1, MEDIUM: 2, HIGH: 3, CRITICAL: 4 };
+const LIKELIHOOD_WEIGHT: Record<string, number> = { LOW: 1, MEDIUM: 2, HIGH: 3 };
+
+function computeRiskScore(type: string, impact: string, likelihood: string): number | null {
+  if (type !== "RISK") return null;
+  const i = IMPACT_WEIGHT[impact];
+  const l = LIKELIHOOD_WEIGHT[likelihood];
+  if (!i || !l) return null;
+  return i * l;
+}
 
 type RaidWithRelations = {
   id: string;
@@ -38,6 +52,7 @@ type RaidWithRelations = {
   ownerId: string | null;
   owner: { name: string } | null;
   mitigation: string | null;
+  responseStrategy: string | null;
   dueDate: Date | null;
   closedAt: Date | null;
   createdById: string | null;
@@ -59,6 +74,8 @@ function serialize(r: RaidWithRelations) {
     ownerId: r.ownerId,
     ownerName: r.owner?.name ?? null,
     mitigation: r.mitigation,
+    responseStrategy: (r.responseStrategy as "AVOID" | "MITIGATE" | "TRANSFER" | "ACCEPT" | null) ?? null,
+    riskScore: computeRiskScore(r.type, r.impact, r.likelihood),
     dueDate: r.dueDate ? r.dueDate.toISOString() : null,
     closedAt: r.closedAt ? r.closedAt.toISOString() : null,
     createdById: r.createdById,
@@ -115,6 +132,14 @@ router.post("/projects/:id/raid", async (req, res) => {
   const impact = body.impact && IMPACTS.has(String(body.impact)) ? String(body.impact) : "MEDIUM";
   const likelihood = body.likelihood && LIKELIHOODS.has(String(body.likelihood)) ? String(body.likelihood) : "MEDIUM";
   const status = body.status && STATUSES.has(String(body.status)) ? String(body.status) : "OPEN";
+  let responseStrategy: string | null = null;
+  if (body.responseStrategy !== undefined && body.responseStrategy !== null && body.responseStrategy !== "") {
+    if (!RESPONSE_STRATEGIES.has(String(body.responseStrategy))) {
+      res.status(400).json({ error: `responseStrategy must be one of ${[...RESPONSE_STRATEGIES].join(", ")}` });
+      return;
+    }
+    responseStrategy = String(body.responseStrategy);
+  }
   let dueDate: Date | null = null;
   if (body.dueDate) {
     const d = new Date(body.dueDate);
@@ -138,6 +163,7 @@ router.post("/projects/:id/raid", async (req, res) => {
       status: status as "OPEN" | "MITIGATING" | "CLOSED",
       ownerId,
       mitigation: body.mitigation ? String(body.mitigation).trim() || null : null,
+      responseStrategy: responseStrategy as "AVOID" | "MITIGATE" | "TRANSFER" | "ACCEPT" | null,
       dueDate,
       closedAt: status === "CLOSED" ? new Date() : null,
       createdById: req.user!.sub,
@@ -202,6 +228,16 @@ router.patch("/raid/:itemId", async (req, res) => {
   }
   if (body.mitigation !== undefined) {
     data.mitigation = body.mitigation ? String(body.mitigation).trim() || null : null;
+  }
+  if (body.responseStrategy !== undefined) {
+    if (body.responseStrategy === null || body.responseStrategy === "") {
+      data.responseStrategy = null;
+    } else if (!RESPONSE_STRATEGIES.has(String(body.responseStrategy))) {
+      res.status(400).json({ error: "responseStrategy invalid" });
+      return;
+    } else {
+      data.responseStrategy = String(body.responseStrategy);
+    }
   }
   if (body.dueDate !== undefined) {
     if (body.dueDate === null || body.dueDate === "") {

@@ -29,6 +29,16 @@ export type Client = $Result.DefaultSelection<Prisma.$ClientPayload>
  */
 export type Project = $Result.DefaultSelection<Prisma.$ProjectPayload>
 /**
+ * Model ProjectBaseline
+ * 
+ */
+export type ProjectBaseline = $Result.DefaultSelection<Prisma.$ProjectBaselinePayload>
+/**
+ * Model ChangeRequest
+ * 
+ */
+export type ChangeRequest = $Result.DefaultSelection<Prisma.$ChangeRequestPayload>
+/**
  * Model ProjectReport
  * 
  */
@@ -270,6 +280,34 @@ export const ProjectKind: {
 export type ProjectKind = (typeof ProjectKind)[keyof typeof ProjectKind]
 
 
+export const ProjectBaselineSource: {
+  ACTIVATION: 'ACTIVATION',
+  CHANGE_REQUEST: 'CHANGE_REQUEST',
+  MANUAL: 'MANUAL'
+};
+
+export type ProjectBaselineSource = (typeof ProjectBaselineSource)[keyof typeof ProjectBaselineSource]
+
+
+export const ChangeRequestType: {
+  SCOPE: 'SCOPE',
+  SCHEDULE: 'SCHEDULE',
+  COST: 'COST'
+};
+
+export type ChangeRequestType = (typeof ChangeRequestType)[keyof typeof ChangeRequestType]
+
+
+export const ChangeRequestStatus: {
+  DRAFT: 'DRAFT',
+  APPROVED: 'APPROVED',
+  APPLIED: 'APPLIED',
+  REJECTED: 'REJECTED'
+};
+
+export type ChangeRequestStatus = (typeof ChangeRequestStatus)[keyof typeof ChangeRequestStatus]
+
+
 export const ProjectReportType: {
   DRAFT: 'DRAFT',
   INTERIM: 'INTERIM',
@@ -399,6 +437,16 @@ export const RaidStatus: {
 export type RaidStatus = (typeof RaidStatus)[keyof typeof RaidStatus]
 
 
+export const RaidResponseStrategy: {
+  AVOID: 'AVOID',
+  MITIGATE: 'MITIGATE',
+  TRANSFER: 'TRANSFER',
+  ACCEPT: 'ACCEPT'
+};
+
+export type RaidResponseStrategy = (typeof RaidResponseStrategy)[keyof typeof RaidResponseStrategy]
+
+
 export const PerformanceReviewPeriod: {
   Q1: 'Q1',
   Q2: 'Q2',
@@ -435,6 +483,18 @@ export const ProjectStatus: typeof $Enums.ProjectStatus
 export type ProjectKind = $Enums.ProjectKind
 
 export const ProjectKind: typeof $Enums.ProjectKind
+
+export type ProjectBaselineSource = $Enums.ProjectBaselineSource
+
+export const ProjectBaselineSource: typeof $Enums.ProjectBaselineSource
+
+export type ChangeRequestType = $Enums.ChangeRequestType
+
+export const ChangeRequestType: typeof $Enums.ChangeRequestType
+
+export type ChangeRequestStatus = $Enums.ChangeRequestStatus
+
+export const ChangeRequestStatus: typeof $Enums.ChangeRequestStatus
 
 export type ProjectReportType = $Enums.ProjectReportType
 
@@ -487,6 +547,10 @@ export const RaidLikelihood: typeof $Enums.RaidLikelihood
 export type RaidStatus = $Enums.RaidStatus
 
 export const RaidStatus: typeof $Enums.RaidStatus
+
+export type RaidResponseStrategy = $Enums.RaidResponseStrategy
+
+export const RaidResponseStrategy: typeof $Enums.RaidResponseStrategy
 
 export type PerformanceReviewPeriod = $Enums.PerformanceReviewPeriod
 
@@ -648,6 +712,26 @@ export class PrismaClient<
     * ```
     */
   get project(): Prisma.ProjectDelegate<ExtArgs>;
+
+  /**
+   * `prisma.projectBaseline`: Exposes CRUD operations for the **ProjectBaseline** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProjectBaselines
+    * const projectBaselines = await prisma.projectBaseline.findMany()
+    * ```
+    */
+  get projectBaseline(): Prisma.ProjectBaselineDelegate<ExtArgs>;
+
+  /**
+   * `prisma.changeRequest`: Exposes CRUD operations for the **ChangeRequest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ChangeRequests
+    * const changeRequests = await prisma.changeRequest.findMany()
+    * ```
+    */
+  get changeRequest(): Prisma.ChangeRequestDelegate<ExtArgs>;
 
   /**
    * `prisma.projectReport`: Exposes CRUD operations for the **ProjectReport** model.
@@ -1462,6 +1546,8 @@ export namespace Prisma {
     User: 'User',
     Client: 'Client',
     Project: 'Project',
+    ProjectBaseline: 'ProjectBaseline',
+    ChangeRequest: 'ChangeRequest',
     ProjectReport: 'ProjectReport',
     ProjectWorkstream: 'ProjectWorkstream',
     SurveyQuestion: 'SurveyQuestion',
@@ -1514,7 +1600,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "client" | "project" | "projectReport" | "projectWorkstream" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectClosingChecklistItem" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "skillDevelopmentGoal" | "skillProgressionLog" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "projectTemplate" | "projectTemplateResource" | "projectTemplateMilestone" | "projectTemplateRaidItem" | "notification" | "projectRaidItem" | "performanceReview" | "performanceReviewProjectRating" | "invoiceSetting" | "appSetting" | "pipedriveStageMapping" | "xeroConnection"
+      modelProps: "user" | "client" | "project" | "projectBaseline" | "changeRequest" | "projectReport" | "projectWorkstream" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectClosingChecklistItem" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "skillDevelopmentGoal" | "skillProgressionLog" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "projectTemplate" | "projectTemplateResource" | "projectTemplateMilestone" | "projectTemplateRaidItem" | "notification" | "projectRaidItem" | "performanceReview" | "performanceReviewProjectRating" | "invoiceSetting" | "appSetting" | "pipedriveStageMapping" | "xeroConnection"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1725,6 +1811,146 @@ export namespace Prisma {
           count: {
             args: Prisma.ProjectCountArgs<ExtArgs>
             result: $Utils.Optional<ProjectCountAggregateOutputType> | number
+          }
+        }
+      }
+      ProjectBaseline: {
+        payload: Prisma.$ProjectBaselinePayload<ExtArgs>
+        fields: Prisma.ProjectBaselineFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProjectBaselineFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectBaselinePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProjectBaselineFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectBaselinePayload>
+          }
+          findFirst: {
+            args: Prisma.ProjectBaselineFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectBaselinePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProjectBaselineFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectBaselinePayload>
+          }
+          findMany: {
+            args: Prisma.ProjectBaselineFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectBaselinePayload>[]
+          }
+          create: {
+            args: Prisma.ProjectBaselineCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectBaselinePayload>
+          }
+          createMany: {
+            args: Prisma.ProjectBaselineCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProjectBaselineCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectBaselinePayload>[]
+          }
+          delete: {
+            args: Prisma.ProjectBaselineDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectBaselinePayload>
+          }
+          update: {
+            args: Prisma.ProjectBaselineUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectBaselinePayload>
+          }
+          deleteMany: {
+            args: Prisma.ProjectBaselineDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProjectBaselineUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ProjectBaselineUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectBaselinePayload>
+          }
+          aggregate: {
+            args: Prisma.ProjectBaselineAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProjectBaseline>
+          }
+          groupBy: {
+            args: Prisma.ProjectBaselineGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProjectBaselineGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProjectBaselineCountArgs<ExtArgs>
+            result: $Utils.Optional<ProjectBaselineCountAggregateOutputType> | number
+          }
+        }
+      }
+      ChangeRequest: {
+        payload: Prisma.$ChangeRequestPayload<ExtArgs>
+        fields: Prisma.ChangeRequestFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ChangeRequestFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChangeRequestPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ChangeRequestFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChangeRequestPayload>
+          }
+          findFirst: {
+            args: Prisma.ChangeRequestFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChangeRequestPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ChangeRequestFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChangeRequestPayload>
+          }
+          findMany: {
+            args: Prisma.ChangeRequestFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChangeRequestPayload>[]
+          }
+          create: {
+            args: Prisma.ChangeRequestCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChangeRequestPayload>
+          }
+          createMany: {
+            args: Prisma.ChangeRequestCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ChangeRequestCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChangeRequestPayload>[]
+          }
+          delete: {
+            args: Prisma.ChangeRequestDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChangeRequestPayload>
+          }
+          update: {
+            args: Prisma.ChangeRequestUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChangeRequestPayload>
+          }
+          deleteMany: {
+            args: Prisma.ChangeRequestDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ChangeRequestUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ChangeRequestUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChangeRequestPayload>
+          }
+          aggregate: {
+            args: Prisma.ChangeRequestAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateChangeRequest>
+          }
+          groupBy: {
+            args: Prisma.ChangeRequestGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ChangeRequestGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ChangeRequestCountArgs<ExtArgs>
+            result: $Utils.Optional<ChangeRequestCountAggregateOutputType> | number
           }
         }
       }
@@ -4513,6 +4739,9 @@ export namespace Prisma {
     skillProgressionsLogged: number
     raidItemsOwned: number
     raidItemsCreated: number
+    baselinesCreated: number
+    changeRequestsRequested: number
+    changeRequestsDecided: number
     perfReviewsSubject: number
     perfReviewsAuthored: number
     perfProjectRatingsGiven: number
@@ -4553,6 +4782,9 @@ export namespace Prisma {
     skillProgressionsLogged?: boolean | UserCountOutputTypeCountSkillProgressionsLoggedArgs
     raidItemsOwned?: boolean | UserCountOutputTypeCountRaidItemsOwnedArgs
     raidItemsCreated?: boolean | UserCountOutputTypeCountRaidItemsCreatedArgs
+    baselinesCreated?: boolean | UserCountOutputTypeCountBaselinesCreatedArgs
+    changeRequestsRequested?: boolean | UserCountOutputTypeCountChangeRequestsRequestedArgs
+    changeRequestsDecided?: boolean | UserCountOutputTypeCountChangeRequestsDecidedArgs
     perfReviewsSubject?: boolean | UserCountOutputTypeCountPerfReviewsSubjectArgs
     perfReviewsAuthored?: boolean | UserCountOutputTypeCountPerfReviewsAuthoredArgs
     perfProjectRatingsGiven?: boolean | UserCountOutputTypeCountPerfProjectRatingsGivenArgs
@@ -4810,6 +5042,27 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountBaselinesCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectBaselineWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountChangeRequestsRequestedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChangeRequestWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountChangeRequestsDecidedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChangeRequestWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountPerfReviewsSubjectArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PerformanceReviewWhereInput
   }
@@ -4887,6 +5140,8 @@ export namespace Prisma {
     closingChecklist: number
     workstreams: number
     reports: number
+    baselines: number
+    changeRequests: number
   }
 
   export type ProjectCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4903,6 +5158,8 @@ export namespace Prisma {
     closingChecklist?: boolean | ProjectCountOutputTypeCountClosingChecklistArgs
     workstreams?: boolean | ProjectCountOutputTypeCountWorkstreamsArgs
     reports?: boolean | ProjectCountOutputTypeCountReportsArgs
+    baselines?: boolean | ProjectCountOutputTypeCountBaselinesArgs
+    changeRequests?: boolean | ProjectCountOutputTypeCountChangeRequestsArgs
   }
 
   // Custom InputTypes
@@ -5005,6 +5262,51 @@ export namespace Prisma {
    */
   export type ProjectCountOutputTypeCountReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectReportWhereInput
+  }
+
+  /**
+   * ProjectCountOutputType without action
+   */
+  export type ProjectCountOutputTypeCountBaselinesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectBaselineWhereInput
+  }
+
+  /**
+   * ProjectCountOutputType without action
+   */
+  export type ProjectCountOutputTypeCountChangeRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChangeRequestWhereInput
+  }
+
+
+  /**
+   * Count Type ChangeRequestCountOutputType
+   */
+
+  export type ChangeRequestCountOutputType = {
+    baselines: number
+  }
+
+  export type ChangeRequestCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    baselines?: boolean | ChangeRequestCountOutputTypeCountBaselinesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ChangeRequestCountOutputType without action
+   */
+  export type ChangeRequestCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChangeRequestCountOutputType
+     */
+    select?: ChangeRequestCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ChangeRequestCountOutputType without action
+   */
+  export type ChangeRequestCountOutputTypeCountBaselinesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectBaselineWhereInput
   }
 
 
@@ -5810,6 +6112,9 @@ export namespace Prisma {
     skillProgressionsLogged?: boolean | User$skillProgressionsLoggedArgs<ExtArgs>
     raidItemsOwned?: boolean | User$raidItemsOwnedArgs<ExtArgs>
     raidItemsCreated?: boolean | User$raidItemsCreatedArgs<ExtArgs>
+    baselinesCreated?: boolean | User$baselinesCreatedArgs<ExtArgs>
+    changeRequestsRequested?: boolean | User$changeRequestsRequestedArgs<ExtArgs>
+    changeRequestsDecided?: boolean | User$changeRequestsDecidedArgs<ExtArgs>
     perfReviewsSubject?: boolean | User$perfReviewsSubjectArgs<ExtArgs>
     perfReviewsAuthored?: boolean | User$perfReviewsAuthoredArgs<ExtArgs>
     perfProjectRatingsGiven?: boolean | User$perfProjectRatingsGivenArgs<ExtArgs>
@@ -5897,6 +6202,9 @@ export namespace Prisma {
     skillProgressionsLogged?: boolean | User$skillProgressionsLoggedArgs<ExtArgs>
     raidItemsOwned?: boolean | User$raidItemsOwnedArgs<ExtArgs>
     raidItemsCreated?: boolean | User$raidItemsCreatedArgs<ExtArgs>
+    baselinesCreated?: boolean | User$baselinesCreatedArgs<ExtArgs>
+    changeRequestsRequested?: boolean | User$changeRequestsRequestedArgs<ExtArgs>
+    changeRequestsDecided?: boolean | User$changeRequestsDecidedArgs<ExtArgs>
     perfReviewsSubject?: boolean | User$perfReviewsSubjectArgs<ExtArgs>
     perfReviewsAuthored?: boolean | User$perfReviewsAuthoredArgs<ExtArgs>
     perfProjectRatingsGiven?: boolean | User$perfProjectRatingsGivenArgs<ExtArgs>
@@ -5948,6 +6256,9 @@ export namespace Prisma {
       skillProgressionsLogged: Prisma.$SkillProgressionLogPayload<ExtArgs>[]
       raidItemsOwned: Prisma.$ProjectRaidItemPayload<ExtArgs>[]
       raidItemsCreated: Prisma.$ProjectRaidItemPayload<ExtArgs>[]
+      baselinesCreated: Prisma.$ProjectBaselinePayload<ExtArgs>[]
+      changeRequestsRequested: Prisma.$ChangeRequestPayload<ExtArgs>[]
+      changeRequestsDecided: Prisma.$ChangeRequestPayload<ExtArgs>[]
       perfReviewsSubject: Prisma.$PerformanceReviewPayload<ExtArgs>[]
       perfReviewsAuthored: Prisma.$PerformanceReviewPayload<ExtArgs>[]
       perfProjectRatingsGiven: Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>[]
@@ -6371,6 +6682,9 @@ export namespace Prisma {
     skillProgressionsLogged<T extends User$skillProgressionsLoggedArgs<ExtArgs> = {}>(args?: Subset<T, User$skillProgressionsLoggedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SkillProgressionLogPayload<ExtArgs>, T, "findMany"> | Null>
     raidItemsOwned<T extends User$raidItemsOwnedArgs<ExtArgs> = {}>(args?: Subset<T, User$raidItemsOwnedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectRaidItemPayload<ExtArgs>, T, "findMany"> | Null>
     raidItemsCreated<T extends User$raidItemsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$raidItemsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectRaidItemPayload<ExtArgs>, T, "findMany"> | Null>
+    baselinesCreated<T extends User$baselinesCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$baselinesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectBaselinePayload<ExtArgs>, T, "findMany"> | Null>
+    changeRequestsRequested<T extends User$changeRequestsRequestedArgs<ExtArgs> = {}>(args?: Subset<T, User$changeRequestsRequestedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChangeRequestPayload<ExtArgs>, T, "findMany"> | Null>
+    changeRequestsDecided<T extends User$changeRequestsDecidedArgs<ExtArgs> = {}>(args?: Subset<T, User$changeRequestsDecidedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChangeRequestPayload<ExtArgs>, T, "findMany"> | Null>
     perfReviewsSubject<T extends User$perfReviewsSubjectArgs<ExtArgs> = {}>(args?: Subset<T, User$perfReviewsSubjectArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PerformanceReviewPayload<ExtArgs>, T, "findMany"> | Null>
     perfReviewsAuthored<T extends User$perfReviewsAuthoredArgs<ExtArgs> = {}>(args?: Subset<T, User$perfReviewsAuthoredArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PerformanceReviewPayload<ExtArgs>, T, "findMany"> | Null>
     perfProjectRatingsGiven<T extends User$perfProjectRatingsGivenArgs<ExtArgs> = {}>(args?: Subset<T, User$perfProjectRatingsGivenArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>, T, "findMany"> | Null>
@@ -7460,6 +7774,66 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProjectRaidItemScalarFieldEnum | ProjectRaidItemScalarFieldEnum[]
+  }
+
+  /**
+   * User.baselinesCreated
+   */
+  export type User$baselinesCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectBaseline
+     */
+    select?: ProjectBaselineSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectBaselineInclude<ExtArgs> | null
+    where?: ProjectBaselineWhereInput
+    orderBy?: ProjectBaselineOrderByWithRelationInput | ProjectBaselineOrderByWithRelationInput[]
+    cursor?: ProjectBaselineWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectBaselineScalarFieldEnum | ProjectBaselineScalarFieldEnum[]
+  }
+
+  /**
+   * User.changeRequestsRequested
+   */
+  export type User$changeRequestsRequestedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChangeRequest
+     */
+    select?: ChangeRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChangeRequestInclude<ExtArgs> | null
+    where?: ChangeRequestWhereInput
+    orderBy?: ChangeRequestOrderByWithRelationInput | ChangeRequestOrderByWithRelationInput[]
+    cursor?: ChangeRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChangeRequestScalarFieldEnum | ChangeRequestScalarFieldEnum[]
+  }
+
+  /**
+   * User.changeRequestsDecided
+   */
+  export type User$changeRequestsDecidedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChangeRequest
+     */
+    select?: ChangeRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChangeRequestInclude<ExtArgs> | null
+    where?: ChangeRequestWhereInput
+    orderBy?: ChangeRequestOrderByWithRelationInput | ChangeRequestOrderByWithRelationInput[]
+    cursor?: ChangeRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChangeRequestScalarFieldEnum | ChangeRequestScalarFieldEnum[]
   }
 
   /**
@@ -9099,6 +9473,8 @@ export namespace Prisma {
     closingChecklist?: boolean | Project$closingChecklistArgs<ExtArgs>
     workstreams?: boolean | Project$workstreamsArgs<ExtArgs>
     reports?: boolean | Project$reportsArgs<ExtArgs>
+    baselines?: boolean | Project$baselinesArgs<ExtArgs>
+    changeRequests?: boolean | Project$changeRequestsArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
 
@@ -9208,6 +9584,8 @@ export namespace Prisma {
     closingChecklist?: boolean | Project$closingChecklistArgs<ExtArgs>
     workstreams?: boolean | Project$workstreamsArgs<ExtArgs>
     reports?: boolean | Project$reportsArgs<ExtArgs>
+    baselines?: boolean | Project$baselinesArgs<ExtArgs>
+    changeRequests?: boolean | Project$changeRequestsArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9239,6 +9617,8 @@ export namespace Prisma {
       closingChecklist: Prisma.$ProjectClosingChecklistItemPayload<ExtArgs>[]
       workstreams: Prisma.$ProjectWorkstreamPayload<ExtArgs>[]
       reports: Prisma.$ProjectReportPayload<ExtArgs>[]
+      baselines: Prisma.$ProjectBaselinePayload<ExtArgs>[]
+      changeRequests: Prisma.$ChangeRequestPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -9661,6 +10041,8 @@ export namespace Prisma {
     closingChecklist<T extends Project$closingChecklistArgs<ExtArgs> = {}>(args?: Subset<T, Project$closingChecklistArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectClosingChecklistItemPayload<ExtArgs>, T, "findMany"> | Null>
     workstreams<T extends Project$workstreamsArgs<ExtArgs> = {}>(args?: Subset<T, Project$workstreamsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "findMany"> | Null>
     reports<T extends Project$reportsArgs<ExtArgs> = {}>(args?: Subset<T, Project$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectReportPayload<ExtArgs>, T, "findMany"> | Null>
+    baselines<T extends Project$baselinesArgs<ExtArgs> = {}>(args?: Subset<T, Project$baselinesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectBaselinePayload<ExtArgs>, T, "findMany"> | Null>
+    changeRequests<T extends Project$changeRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Project$changeRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChangeRequestPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10366,6 +10748,46 @@ export namespace Prisma {
   }
 
   /**
+   * Project.baselines
+   */
+  export type Project$baselinesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectBaseline
+     */
+    select?: ProjectBaselineSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectBaselineInclude<ExtArgs> | null
+    where?: ProjectBaselineWhereInput
+    orderBy?: ProjectBaselineOrderByWithRelationInput | ProjectBaselineOrderByWithRelationInput[]
+    cursor?: ProjectBaselineWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectBaselineScalarFieldEnum | ProjectBaselineScalarFieldEnum[]
+  }
+
+  /**
+   * Project.changeRequests
+   */
+  export type Project$changeRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChangeRequest
+     */
+    select?: ChangeRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChangeRequestInclude<ExtArgs> | null
+    where?: ChangeRequestWhereInput
+    orderBy?: ChangeRequestOrderByWithRelationInput | ChangeRequestOrderByWithRelationInput[]
+    cursor?: ChangeRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChangeRequestScalarFieldEnum | ChangeRequestScalarFieldEnum[]
+  }
+
+  /**
    * Project without action
    */
   export type ProjectDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10377,6 +10799,2334 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ProjectInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ProjectBaseline
+   */
+
+  export type AggregateProjectBaseline = {
+    _count: ProjectBaselineCountAggregateOutputType | null
+    _avg: ProjectBaselineAvgAggregateOutputType | null
+    _sum: ProjectBaselineSumAggregateOutputType | null
+    _min: ProjectBaselineMinAggregateOutputType | null
+    _max: ProjectBaselineMaxAggregateOutputType | null
+  }
+
+  export type ProjectBaselineAvgAggregateOutputType = {
+    version: number | null
+    plannedMandays: number | null
+    estimatedCost: number | null
+    contractValue: number | null
+  }
+
+  export type ProjectBaselineSumAggregateOutputType = {
+    version: number | null
+    plannedMandays: number | null
+    estimatedCost: number | null
+    contractValue: number | null
+  }
+
+  export type ProjectBaselineMinAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    version: number | null
+    isCurrent: boolean | null
+    source: $Enums.ProjectBaselineSource | null
+    changeRequestId: string | null
+    startDate: Date | null
+    endDate: Date | null
+    plannedMandays: number | null
+    estimatedCost: number | null
+    contractValue: number | null
+    createdById: string | null
+    createdAt: Date | null
+  }
+
+  export type ProjectBaselineMaxAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    version: number | null
+    isCurrent: boolean | null
+    source: $Enums.ProjectBaselineSource | null
+    changeRequestId: string | null
+    startDate: Date | null
+    endDate: Date | null
+    plannedMandays: number | null
+    estimatedCost: number | null
+    contractValue: number | null
+    createdById: string | null
+    createdAt: Date | null
+  }
+
+  export type ProjectBaselineCountAggregateOutputType = {
+    id: number
+    projectId: number
+    version: number
+    isCurrent: number
+    source: number
+    changeRequestId: number
+    startDate: number
+    endDate: number
+    plannedMandays: number
+    estimatedCost: number
+    contractValue: number
+    createdById: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ProjectBaselineAvgAggregateInputType = {
+    version?: true
+    plannedMandays?: true
+    estimatedCost?: true
+    contractValue?: true
+  }
+
+  export type ProjectBaselineSumAggregateInputType = {
+    version?: true
+    plannedMandays?: true
+    estimatedCost?: true
+    contractValue?: true
+  }
+
+  export type ProjectBaselineMinAggregateInputType = {
+    id?: true
+    projectId?: true
+    version?: true
+    isCurrent?: true
+    source?: true
+    changeRequestId?: true
+    startDate?: true
+    endDate?: true
+    plannedMandays?: true
+    estimatedCost?: true
+    contractValue?: true
+    createdById?: true
+    createdAt?: true
+  }
+
+  export type ProjectBaselineMaxAggregateInputType = {
+    id?: true
+    projectId?: true
+    version?: true
+    isCurrent?: true
+    source?: true
+    changeRequestId?: true
+    startDate?: true
+    endDate?: true
+    plannedMandays?: true
+    estimatedCost?: true
+    contractValue?: true
+    createdById?: true
+    createdAt?: true
+  }
+
+  export type ProjectBaselineCountAggregateInputType = {
+    id?: true
+    projectId?: true
+    version?: true
+    isCurrent?: true
+    source?: true
+    changeRequestId?: true
+    startDate?: true
+    endDate?: true
+    plannedMandays?: true
+    estimatedCost?: true
+    contractValue?: true
+    createdById?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ProjectBaselineAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProjectBaseline to aggregate.
+     */
+    where?: ProjectBaselineWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectBaselines to fetch.
+     */
+    orderBy?: ProjectBaselineOrderByWithRelationInput | ProjectBaselineOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProjectBaselineWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectBaselines from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectBaselines.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ProjectBaselines
+    **/
+    _count?: true | ProjectBaselineCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ProjectBaselineAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProjectBaselineSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProjectBaselineMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProjectBaselineMaxAggregateInputType
+  }
+
+  export type GetProjectBaselineAggregateType<T extends ProjectBaselineAggregateArgs> = {
+        [P in keyof T & keyof AggregateProjectBaseline]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProjectBaseline[P]>
+      : GetScalarType<T[P], AggregateProjectBaseline[P]>
+  }
+
+
+
+
+  export type ProjectBaselineGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectBaselineWhereInput
+    orderBy?: ProjectBaselineOrderByWithAggregationInput | ProjectBaselineOrderByWithAggregationInput[]
+    by: ProjectBaselineScalarFieldEnum[] | ProjectBaselineScalarFieldEnum
+    having?: ProjectBaselineScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProjectBaselineCountAggregateInputType | true
+    _avg?: ProjectBaselineAvgAggregateInputType
+    _sum?: ProjectBaselineSumAggregateInputType
+    _min?: ProjectBaselineMinAggregateInputType
+    _max?: ProjectBaselineMaxAggregateInputType
+  }
+
+  export type ProjectBaselineGroupByOutputType = {
+    id: string
+    projectId: string
+    version: number
+    isCurrent: boolean
+    source: $Enums.ProjectBaselineSource
+    changeRequestId: string | null
+    startDate: Date | null
+    endDate: Date | null
+    plannedMandays: number
+    estimatedCost: number
+    contractValue: number
+    createdById: string | null
+    createdAt: Date
+    _count: ProjectBaselineCountAggregateOutputType | null
+    _avg: ProjectBaselineAvgAggregateOutputType | null
+    _sum: ProjectBaselineSumAggregateOutputType | null
+    _min: ProjectBaselineMinAggregateOutputType | null
+    _max: ProjectBaselineMaxAggregateOutputType | null
+  }
+
+  type GetProjectBaselineGroupByPayload<T extends ProjectBaselineGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProjectBaselineGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProjectBaselineGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProjectBaselineGroupByOutputType[P]>
+            : GetScalarType<T[P], ProjectBaselineGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProjectBaselineSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    version?: boolean
+    isCurrent?: boolean
+    source?: boolean
+    changeRequestId?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    plannedMandays?: boolean
+    estimatedCost?: boolean
+    contractValue?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    changeRequest?: boolean | ProjectBaseline$changeRequestArgs<ExtArgs>
+    createdBy?: boolean | ProjectBaseline$createdByArgs<ExtArgs>
+  }, ExtArgs["result"]["projectBaseline"]>
+
+  export type ProjectBaselineSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    version?: boolean
+    isCurrent?: boolean
+    source?: boolean
+    changeRequestId?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    plannedMandays?: boolean
+    estimatedCost?: boolean
+    contractValue?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    changeRequest?: boolean | ProjectBaseline$changeRequestArgs<ExtArgs>
+    createdBy?: boolean | ProjectBaseline$createdByArgs<ExtArgs>
+  }, ExtArgs["result"]["projectBaseline"]>
+
+  export type ProjectBaselineSelectScalar = {
+    id?: boolean
+    projectId?: boolean
+    version?: boolean
+    isCurrent?: boolean
+    source?: boolean
+    changeRequestId?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    plannedMandays?: boolean
+    estimatedCost?: boolean
+    contractValue?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+  }
+
+  export type ProjectBaselineInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    changeRequest?: boolean | ProjectBaseline$changeRequestArgs<ExtArgs>
+    createdBy?: boolean | ProjectBaseline$createdByArgs<ExtArgs>
+  }
+  export type ProjectBaselineIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    changeRequest?: boolean | ProjectBaseline$changeRequestArgs<ExtArgs>
+    createdBy?: boolean | ProjectBaseline$createdByArgs<ExtArgs>
+  }
+
+  export type $ProjectBaselinePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ProjectBaseline"
+    objects: {
+      project: Prisma.$ProjectPayload<ExtArgs>
+      changeRequest: Prisma.$ChangeRequestPayload<ExtArgs> | null
+      createdBy: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      projectId: string
+      version: number
+      isCurrent: boolean
+      source: $Enums.ProjectBaselineSource
+      changeRequestId: string | null
+      startDate: Date | null
+      endDate: Date | null
+      plannedMandays: number
+      estimatedCost: number
+      contractValue: number
+      createdById: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["projectBaseline"]>
+    composites: {}
+  }
+
+  type ProjectBaselineGetPayload<S extends boolean | null | undefined | ProjectBaselineDefaultArgs> = $Result.GetResult<Prisma.$ProjectBaselinePayload, S>
+
+  type ProjectBaselineCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ProjectBaselineFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ProjectBaselineCountAggregateInputType | true
+    }
+
+  export interface ProjectBaselineDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProjectBaseline'], meta: { name: 'ProjectBaseline' } }
+    /**
+     * Find zero or one ProjectBaseline that matches the filter.
+     * @param {ProjectBaselineFindUniqueArgs} args - Arguments to find a ProjectBaseline
+     * @example
+     * // Get one ProjectBaseline
+     * const projectBaseline = await prisma.projectBaseline.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProjectBaselineFindUniqueArgs>(args: SelectSubset<T, ProjectBaselineFindUniqueArgs<ExtArgs>>): Prisma__ProjectBaselineClient<$Result.GetResult<Prisma.$ProjectBaselinePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one ProjectBaseline that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ProjectBaselineFindUniqueOrThrowArgs} args - Arguments to find a ProjectBaseline
+     * @example
+     * // Get one ProjectBaseline
+     * const projectBaseline = await prisma.projectBaseline.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProjectBaselineFindUniqueOrThrowArgs>(args: SelectSubset<T, ProjectBaselineFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProjectBaselineClient<$Result.GetResult<Prisma.$ProjectBaselinePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first ProjectBaseline that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectBaselineFindFirstArgs} args - Arguments to find a ProjectBaseline
+     * @example
+     * // Get one ProjectBaseline
+     * const projectBaseline = await prisma.projectBaseline.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProjectBaselineFindFirstArgs>(args?: SelectSubset<T, ProjectBaselineFindFirstArgs<ExtArgs>>): Prisma__ProjectBaselineClient<$Result.GetResult<Prisma.$ProjectBaselinePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first ProjectBaseline that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectBaselineFindFirstOrThrowArgs} args - Arguments to find a ProjectBaseline
+     * @example
+     * // Get one ProjectBaseline
+     * const projectBaseline = await prisma.projectBaseline.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProjectBaselineFindFirstOrThrowArgs>(args?: SelectSubset<T, ProjectBaselineFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProjectBaselineClient<$Result.GetResult<Prisma.$ProjectBaselinePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more ProjectBaselines that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectBaselineFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProjectBaselines
+     * const projectBaselines = await prisma.projectBaseline.findMany()
+     * 
+     * // Get first 10 ProjectBaselines
+     * const projectBaselines = await prisma.projectBaseline.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const projectBaselineWithIdOnly = await prisma.projectBaseline.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProjectBaselineFindManyArgs>(args?: SelectSubset<T, ProjectBaselineFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectBaselinePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a ProjectBaseline.
+     * @param {ProjectBaselineCreateArgs} args - Arguments to create a ProjectBaseline.
+     * @example
+     * // Create one ProjectBaseline
+     * const ProjectBaseline = await prisma.projectBaseline.create({
+     *   data: {
+     *     // ... data to create a ProjectBaseline
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProjectBaselineCreateArgs>(args: SelectSubset<T, ProjectBaselineCreateArgs<ExtArgs>>): Prisma__ProjectBaselineClient<$Result.GetResult<Prisma.$ProjectBaselinePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many ProjectBaselines.
+     * @param {ProjectBaselineCreateManyArgs} args - Arguments to create many ProjectBaselines.
+     * @example
+     * // Create many ProjectBaselines
+     * const projectBaseline = await prisma.projectBaseline.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProjectBaselineCreateManyArgs>(args?: SelectSubset<T, ProjectBaselineCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ProjectBaselines and returns the data saved in the database.
+     * @param {ProjectBaselineCreateManyAndReturnArgs} args - Arguments to create many ProjectBaselines.
+     * @example
+     * // Create many ProjectBaselines
+     * const projectBaseline = await prisma.projectBaseline.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ProjectBaselines and only return the `id`
+     * const projectBaselineWithIdOnly = await prisma.projectBaseline.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProjectBaselineCreateManyAndReturnArgs>(args?: SelectSubset<T, ProjectBaselineCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectBaselinePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a ProjectBaseline.
+     * @param {ProjectBaselineDeleteArgs} args - Arguments to delete one ProjectBaseline.
+     * @example
+     * // Delete one ProjectBaseline
+     * const ProjectBaseline = await prisma.projectBaseline.delete({
+     *   where: {
+     *     // ... filter to delete one ProjectBaseline
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProjectBaselineDeleteArgs>(args: SelectSubset<T, ProjectBaselineDeleteArgs<ExtArgs>>): Prisma__ProjectBaselineClient<$Result.GetResult<Prisma.$ProjectBaselinePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one ProjectBaseline.
+     * @param {ProjectBaselineUpdateArgs} args - Arguments to update one ProjectBaseline.
+     * @example
+     * // Update one ProjectBaseline
+     * const projectBaseline = await prisma.projectBaseline.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProjectBaselineUpdateArgs>(args: SelectSubset<T, ProjectBaselineUpdateArgs<ExtArgs>>): Prisma__ProjectBaselineClient<$Result.GetResult<Prisma.$ProjectBaselinePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more ProjectBaselines.
+     * @param {ProjectBaselineDeleteManyArgs} args - Arguments to filter ProjectBaselines to delete.
+     * @example
+     * // Delete a few ProjectBaselines
+     * const { count } = await prisma.projectBaseline.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProjectBaselineDeleteManyArgs>(args?: SelectSubset<T, ProjectBaselineDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProjectBaselines.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectBaselineUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProjectBaselines
+     * const projectBaseline = await prisma.projectBaseline.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProjectBaselineUpdateManyArgs>(args: SelectSubset<T, ProjectBaselineUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ProjectBaseline.
+     * @param {ProjectBaselineUpsertArgs} args - Arguments to update or create a ProjectBaseline.
+     * @example
+     * // Update or create a ProjectBaseline
+     * const projectBaseline = await prisma.projectBaseline.upsert({
+     *   create: {
+     *     // ... data to create a ProjectBaseline
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProjectBaseline we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProjectBaselineUpsertArgs>(args: SelectSubset<T, ProjectBaselineUpsertArgs<ExtArgs>>): Prisma__ProjectBaselineClient<$Result.GetResult<Prisma.$ProjectBaselinePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of ProjectBaselines.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectBaselineCountArgs} args - Arguments to filter ProjectBaselines to count.
+     * @example
+     * // Count the number of ProjectBaselines
+     * const count = await prisma.projectBaseline.count({
+     *   where: {
+     *     // ... the filter for the ProjectBaselines we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProjectBaselineCountArgs>(
+      args?: Subset<T, ProjectBaselineCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProjectBaselineCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProjectBaseline.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectBaselineAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProjectBaselineAggregateArgs>(args: Subset<T, ProjectBaselineAggregateArgs>): Prisma.PrismaPromise<GetProjectBaselineAggregateType<T>>
+
+    /**
+     * Group by ProjectBaseline.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectBaselineGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProjectBaselineGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProjectBaselineGroupByArgs['orderBy'] }
+        : { orderBy?: ProjectBaselineGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProjectBaselineGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProjectBaselineGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ProjectBaseline model
+   */
+  readonly fields: ProjectBaselineFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProjectBaseline.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProjectBaselineClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    changeRequest<T extends ProjectBaseline$changeRequestArgs<ExtArgs> = {}>(args?: Subset<T, ProjectBaseline$changeRequestArgs<ExtArgs>>): Prisma__ChangeRequestClient<$Result.GetResult<Prisma.$ChangeRequestPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    createdBy<T extends ProjectBaseline$createdByArgs<ExtArgs> = {}>(args?: Subset<T, ProjectBaseline$createdByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ProjectBaseline model
+   */ 
+  interface ProjectBaselineFieldRefs {
+    readonly id: FieldRef<"ProjectBaseline", 'String'>
+    readonly projectId: FieldRef<"ProjectBaseline", 'String'>
+    readonly version: FieldRef<"ProjectBaseline", 'Int'>
+    readonly isCurrent: FieldRef<"ProjectBaseline", 'Boolean'>
+    readonly source: FieldRef<"ProjectBaseline", 'ProjectBaselineSource'>
+    readonly changeRequestId: FieldRef<"ProjectBaseline", 'String'>
+    readonly startDate: FieldRef<"ProjectBaseline", 'DateTime'>
+    readonly endDate: FieldRef<"ProjectBaseline", 'DateTime'>
+    readonly plannedMandays: FieldRef<"ProjectBaseline", 'Float'>
+    readonly estimatedCost: FieldRef<"ProjectBaseline", 'Float'>
+    readonly contractValue: FieldRef<"ProjectBaseline", 'Float'>
+    readonly createdById: FieldRef<"ProjectBaseline", 'String'>
+    readonly createdAt: FieldRef<"ProjectBaseline", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ProjectBaseline findUnique
+   */
+  export type ProjectBaselineFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectBaseline
+     */
+    select?: ProjectBaselineSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectBaselineInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectBaseline to fetch.
+     */
+    where: ProjectBaselineWhereUniqueInput
+  }
+
+  /**
+   * ProjectBaseline findUniqueOrThrow
+   */
+  export type ProjectBaselineFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectBaseline
+     */
+    select?: ProjectBaselineSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectBaselineInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectBaseline to fetch.
+     */
+    where: ProjectBaselineWhereUniqueInput
+  }
+
+  /**
+   * ProjectBaseline findFirst
+   */
+  export type ProjectBaselineFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectBaseline
+     */
+    select?: ProjectBaselineSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectBaselineInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectBaseline to fetch.
+     */
+    where?: ProjectBaselineWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectBaselines to fetch.
+     */
+    orderBy?: ProjectBaselineOrderByWithRelationInput | ProjectBaselineOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProjectBaselines.
+     */
+    cursor?: ProjectBaselineWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectBaselines from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectBaselines.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProjectBaselines.
+     */
+    distinct?: ProjectBaselineScalarFieldEnum | ProjectBaselineScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectBaseline findFirstOrThrow
+   */
+  export type ProjectBaselineFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectBaseline
+     */
+    select?: ProjectBaselineSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectBaselineInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectBaseline to fetch.
+     */
+    where?: ProjectBaselineWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectBaselines to fetch.
+     */
+    orderBy?: ProjectBaselineOrderByWithRelationInput | ProjectBaselineOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProjectBaselines.
+     */
+    cursor?: ProjectBaselineWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectBaselines from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectBaselines.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProjectBaselines.
+     */
+    distinct?: ProjectBaselineScalarFieldEnum | ProjectBaselineScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectBaseline findMany
+   */
+  export type ProjectBaselineFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectBaseline
+     */
+    select?: ProjectBaselineSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectBaselineInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectBaselines to fetch.
+     */
+    where?: ProjectBaselineWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectBaselines to fetch.
+     */
+    orderBy?: ProjectBaselineOrderByWithRelationInput | ProjectBaselineOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ProjectBaselines.
+     */
+    cursor?: ProjectBaselineWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectBaselines from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectBaselines.
+     */
+    skip?: number
+    distinct?: ProjectBaselineScalarFieldEnum | ProjectBaselineScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectBaseline create
+   */
+  export type ProjectBaselineCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectBaseline
+     */
+    select?: ProjectBaselineSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectBaselineInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ProjectBaseline.
+     */
+    data: XOR<ProjectBaselineCreateInput, ProjectBaselineUncheckedCreateInput>
+  }
+
+  /**
+   * ProjectBaseline createMany
+   */
+  export type ProjectBaselineCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ProjectBaselines.
+     */
+    data: ProjectBaselineCreateManyInput | ProjectBaselineCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ProjectBaseline createManyAndReturn
+   */
+  export type ProjectBaselineCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectBaseline
+     */
+    select?: ProjectBaselineSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many ProjectBaselines.
+     */
+    data: ProjectBaselineCreateManyInput | ProjectBaselineCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectBaselineIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProjectBaseline update
+   */
+  export type ProjectBaselineUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectBaseline
+     */
+    select?: ProjectBaselineSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectBaselineInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ProjectBaseline.
+     */
+    data: XOR<ProjectBaselineUpdateInput, ProjectBaselineUncheckedUpdateInput>
+    /**
+     * Choose, which ProjectBaseline to update.
+     */
+    where: ProjectBaselineWhereUniqueInput
+  }
+
+  /**
+   * ProjectBaseline updateMany
+   */
+  export type ProjectBaselineUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ProjectBaselines.
+     */
+    data: XOR<ProjectBaselineUpdateManyMutationInput, ProjectBaselineUncheckedUpdateManyInput>
+    /**
+     * Filter which ProjectBaselines to update
+     */
+    where?: ProjectBaselineWhereInput
+  }
+
+  /**
+   * ProjectBaseline upsert
+   */
+  export type ProjectBaselineUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectBaseline
+     */
+    select?: ProjectBaselineSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectBaselineInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ProjectBaseline to update in case it exists.
+     */
+    where: ProjectBaselineWhereUniqueInput
+    /**
+     * In case the ProjectBaseline found by the `where` argument doesn't exist, create a new ProjectBaseline with this data.
+     */
+    create: XOR<ProjectBaselineCreateInput, ProjectBaselineUncheckedCreateInput>
+    /**
+     * In case the ProjectBaseline was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProjectBaselineUpdateInput, ProjectBaselineUncheckedUpdateInput>
+  }
+
+  /**
+   * ProjectBaseline delete
+   */
+  export type ProjectBaselineDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectBaseline
+     */
+    select?: ProjectBaselineSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectBaselineInclude<ExtArgs> | null
+    /**
+     * Filter which ProjectBaseline to delete.
+     */
+    where: ProjectBaselineWhereUniqueInput
+  }
+
+  /**
+   * ProjectBaseline deleteMany
+   */
+  export type ProjectBaselineDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProjectBaselines to delete
+     */
+    where?: ProjectBaselineWhereInput
+  }
+
+  /**
+   * ProjectBaseline.changeRequest
+   */
+  export type ProjectBaseline$changeRequestArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChangeRequest
+     */
+    select?: ChangeRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChangeRequestInclude<ExtArgs> | null
+    where?: ChangeRequestWhereInput
+  }
+
+  /**
+   * ProjectBaseline.createdBy
+   */
+  export type ProjectBaseline$createdByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * ProjectBaseline without action
+   */
+  export type ProjectBaselineDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectBaseline
+     */
+    select?: ProjectBaselineSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectBaselineInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ChangeRequest
+   */
+
+  export type AggregateChangeRequest = {
+    _count: ChangeRequestCountAggregateOutputType | null
+    _avg: ChangeRequestAvgAggregateOutputType | null
+    _sum: ChangeRequestSumAggregateOutputType | null
+    _min: ChangeRequestMinAggregateOutputType | null
+    _max: ChangeRequestMaxAggregateOutputType | null
+  }
+
+  export type ChangeRequestAvgAggregateOutputType = {
+    proposedPlannedMandays: number | null
+    proposedEstimatedCost: number | null
+    proposedContractValue: number | null
+  }
+
+  export type ChangeRequestSumAggregateOutputType = {
+    proposedPlannedMandays: number | null
+    proposedEstimatedCost: number | null
+    proposedContractValue: number | null
+  }
+
+  export type ChangeRequestMinAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    type: $Enums.ChangeRequestType | null
+    status: $Enums.ChangeRequestStatus | null
+    title: string | null
+    description: string | null
+    impactSummary: string | null
+    proposedStartDate: Date | null
+    proposedEndDate: Date | null
+    proposedPlannedMandays: number | null
+    proposedEstimatedCost: number | null
+    proposedContractValue: number | null
+    requestedById: string | null
+    decidedById: string | null
+    decidedAt: Date | null
+    decisionNote: string | null
+    appliedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ChangeRequestMaxAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    type: $Enums.ChangeRequestType | null
+    status: $Enums.ChangeRequestStatus | null
+    title: string | null
+    description: string | null
+    impactSummary: string | null
+    proposedStartDate: Date | null
+    proposedEndDate: Date | null
+    proposedPlannedMandays: number | null
+    proposedEstimatedCost: number | null
+    proposedContractValue: number | null
+    requestedById: string | null
+    decidedById: string | null
+    decidedAt: Date | null
+    decisionNote: string | null
+    appliedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ChangeRequestCountAggregateOutputType = {
+    id: number
+    projectId: number
+    type: number
+    status: number
+    title: number
+    description: number
+    impactSummary: number
+    proposedStartDate: number
+    proposedEndDate: number
+    proposedPlannedMandays: number
+    proposedEstimatedCost: number
+    proposedContractValue: number
+    requestedById: number
+    decidedById: number
+    decidedAt: number
+    decisionNote: number
+    appliedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ChangeRequestAvgAggregateInputType = {
+    proposedPlannedMandays?: true
+    proposedEstimatedCost?: true
+    proposedContractValue?: true
+  }
+
+  export type ChangeRequestSumAggregateInputType = {
+    proposedPlannedMandays?: true
+    proposedEstimatedCost?: true
+    proposedContractValue?: true
+  }
+
+  export type ChangeRequestMinAggregateInputType = {
+    id?: true
+    projectId?: true
+    type?: true
+    status?: true
+    title?: true
+    description?: true
+    impactSummary?: true
+    proposedStartDate?: true
+    proposedEndDate?: true
+    proposedPlannedMandays?: true
+    proposedEstimatedCost?: true
+    proposedContractValue?: true
+    requestedById?: true
+    decidedById?: true
+    decidedAt?: true
+    decisionNote?: true
+    appliedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ChangeRequestMaxAggregateInputType = {
+    id?: true
+    projectId?: true
+    type?: true
+    status?: true
+    title?: true
+    description?: true
+    impactSummary?: true
+    proposedStartDate?: true
+    proposedEndDate?: true
+    proposedPlannedMandays?: true
+    proposedEstimatedCost?: true
+    proposedContractValue?: true
+    requestedById?: true
+    decidedById?: true
+    decidedAt?: true
+    decisionNote?: true
+    appliedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ChangeRequestCountAggregateInputType = {
+    id?: true
+    projectId?: true
+    type?: true
+    status?: true
+    title?: true
+    description?: true
+    impactSummary?: true
+    proposedStartDate?: true
+    proposedEndDate?: true
+    proposedPlannedMandays?: true
+    proposedEstimatedCost?: true
+    proposedContractValue?: true
+    requestedById?: true
+    decidedById?: true
+    decidedAt?: true
+    decisionNote?: true
+    appliedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ChangeRequestAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChangeRequest to aggregate.
+     */
+    where?: ChangeRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChangeRequests to fetch.
+     */
+    orderBy?: ChangeRequestOrderByWithRelationInput | ChangeRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ChangeRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChangeRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChangeRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ChangeRequests
+    **/
+    _count?: true | ChangeRequestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ChangeRequestAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ChangeRequestSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ChangeRequestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ChangeRequestMaxAggregateInputType
+  }
+
+  export type GetChangeRequestAggregateType<T extends ChangeRequestAggregateArgs> = {
+        [P in keyof T & keyof AggregateChangeRequest]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateChangeRequest[P]>
+      : GetScalarType<T[P], AggregateChangeRequest[P]>
+  }
+
+
+
+
+  export type ChangeRequestGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChangeRequestWhereInput
+    orderBy?: ChangeRequestOrderByWithAggregationInput | ChangeRequestOrderByWithAggregationInput[]
+    by: ChangeRequestScalarFieldEnum[] | ChangeRequestScalarFieldEnum
+    having?: ChangeRequestScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ChangeRequestCountAggregateInputType | true
+    _avg?: ChangeRequestAvgAggregateInputType
+    _sum?: ChangeRequestSumAggregateInputType
+    _min?: ChangeRequestMinAggregateInputType
+    _max?: ChangeRequestMaxAggregateInputType
+  }
+
+  export type ChangeRequestGroupByOutputType = {
+    id: string
+    projectId: string
+    type: $Enums.ChangeRequestType
+    status: $Enums.ChangeRequestStatus
+    title: string
+    description: string | null
+    impactSummary: string | null
+    proposedStartDate: Date | null
+    proposedEndDate: Date | null
+    proposedPlannedMandays: number | null
+    proposedEstimatedCost: number | null
+    proposedContractValue: number | null
+    requestedById: string | null
+    decidedById: string | null
+    decidedAt: Date | null
+    decisionNote: string | null
+    appliedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: ChangeRequestCountAggregateOutputType | null
+    _avg: ChangeRequestAvgAggregateOutputType | null
+    _sum: ChangeRequestSumAggregateOutputType | null
+    _min: ChangeRequestMinAggregateOutputType | null
+    _max: ChangeRequestMaxAggregateOutputType | null
+  }
+
+  type GetChangeRequestGroupByPayload<T extends ChangeRequestGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ChangeRequestGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ChangeRequestGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ChangeRequestGroupByOutputType[P]>
+            : GetScalarType<T[P], ChangeRequestGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ChangeRequestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    type?: boolean
+    status?: boolean
+    title?: boolean
+    description?: boolean
+    impactSummary?: boolean
+    proposedStartDate?: boolean
+    proposedEndDate?: boolean
+    proposedPlannedMandays?: boolean
+    proposedEstimatedCost?: boolean
+    proposedContractValue?: boolean
+    requestedById?: boolean
+    decidedById?: boolean
+    decidedAt?: boolean
+    decisionNote?: boolean
+    appliedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    requestedBy?: boolean | ChangeRequest$requestedByArgs<ExtArgs>
+    decidedBy?: boolean | ChangeRequest$decidedByArgs<ExtArgs>
+    baselines?: boolean | ChangeRequest$baselinesArgs<ExtArgs>
+    _count?: boolean | ChangeRequestCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["changeRequest"]>
+
+  export type ChangeRequestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    type?: boolean
+    status?: boolean
+    title?: boolean
+    description?: boolean
+    impactSummary?: boolean
+    proposedStartDate?: boolean
+    proposedEndDate?: boolean
+    proposedPlannedMandays?: boolean
+    proposedEstimatedCost?: boolean
+    proposedContractValue?: boolean
+    requestedById?: boolean
+    decidedById?: boolean
+    decidedAt?: boolean
+    decisionNote?: boolean
+    appliedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    requestedBy?: boolean | ChangeRequest$requestedByArgs<ExtArgs>
+    decidedBy?: boolean | ChangeRequest$decidedByArgs<ExtArgs>
+  }, ExtArgs["result"]["changeRequest"]>
+
+  export type ChangeRequestSelectScalar = {
+    id?: boolean
+    projectId?: boolean
+    type?: boolean
+    status?: boolean
+    title?: boolean
+    description?: boolean
+    impactSummary?: boolean
+    proposedStartDate?: boolean
+    proposedEndDate?: boolean
+    proposedPlannedMandays?: boolean
+    proposedEstimatedCost?: boolean
+    proposedContractValue?: boolean
+    requestedById?: boolean
+    decidedById?: boolean
+    decidedAt?: boolean
+    decisionNote?: boolean
+    appliedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ChangeRequestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    requestedBy?: boolean | ChangeRequest$requestedByArgs<ExtArgs>
+    decidedBy?: boolean | ChangeRequest$decidedByArgs<ExtArgs>
+    baselines?: boolean | ChangeRequest$baselinesArgs<ExtArgs>
+    _count?: boolean | ChangeRequestCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ChangeRequestIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    requestedBy?: boolean | ChangeRequest$requestedByArgs<ExtArgs>
+    decidedBy?: boolean | ChangeRequest$decidedByArgs<ExtArgs>
+  }
+
+  export type $ChangeRequestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ChangeRequest"
+    objects: {
+      project: Prisma.$ProjectPayload<ExtArgs>
+      requestedBy: Prisma.$UserPayload<ExtArgs> | null
+      decidedBy: Prisma.$UserPayload<ExtArgs> | null
+      baselines: Prisma.$ProjectBaselinePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      projectId: string
+      type: $Enums.ChangeRequestType
+      status: $Enums.ChangeRequestStatus
+      title: string
+      description: string | null
+      impactSummary: string | null
+      proposedStartDate: Date | null
+      proposedEndDate: Date | null
+      proposedPlannedMandays: number | null
+      proposedEstimatedCost: number | null
+      proposedContractValue: number | null
+      requestedById: string | null
+      decidedById: string | null
+      decidedAt: Date | null
+      decisionNote: string | null
+      appliedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["changeRequest"]>
+    composites: {}
+  }
+
+  type ChangeRequestGetPayload<S extends boolean | null | undefined | ChangeRequestDefaultArgs> = $Result.GetResult<Prisma.$ChangeRequestPayload, S>
+
+  type ChangeRequestCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ChangeRequestFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ChangeRequestCountAggregateInputType | true
+    }
+
+  export interface ChangeRequestDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ChangeRequest'], meta: { name: 'ChangeRequest' } }
+    /**
+     * Find zero or one ChangeRequest that matches the filter.
+     * @param {ChangeRequestFindUniqueArgs} args - Arguments to find a ChangeRequest
+     * @example
+     * // Get one ChangeRequest
+     * const changeRequest = await prisma.changeRequest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ChangeRequestFindUniqueArgs>(args: SelectSubset<T, ChangeRequestFindUniqueArgs<ExtArgs>>): Prisma__ChangeRequestClient<$Result.GetResult<Prisma.$ChangeRequestPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one ChangeRequest that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ChangeRequestFindUniqueOrThrowArgs} args - Arguments to find a ChangeRequest
+     * @example
+     * // Get one ChangeRequest
+     * const changeRequest = await prisma.changeRequest.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ChangeRequestFindUniqueOrThrowArgs>(args: SelectSubset<T, ChangeRequestFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ChangeRequestClient<$Result.GetResult<Prisma.$ChangeRequestPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first ChangeRequest that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChangeRequestFindFirstArgs} args - Arguments to find a ChangeRequest
+     * @example
+     * // Get one ChangeRequest
+     * const changeRequest = await prisma.changeRequest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ChangeRequestFindFirstArgs>(args?: SelectSubset<T, ChangeRequestFindFirstArgs<ExtArgs>>): Prisma__ChangeRequestClient<$Result.GetResult<Prisma.$ChangeRequestPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first ChangeRequest that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChangeRequestFindFirstOrThrowArgs} args - Arguments to find a ChangeRequest
+     * @example
+     * // Get one ChangeRequest
+     * const changeRequest = await prisma.changeRequest.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ChangeRequestFindFirstOrThrowArgs>(args?: SelectSubset<T, ChangeRequestFindFirstOrThrowArgs<ExtArgs>>): Prisma__ChangeRequestClient<$Result.GetResult<Prisma.$ChangeRequestPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more ChangeRequests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChangeRequestFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ChangeRequests
+     * const changeRequests = await prisma.changeRequest.findMany()
+     * 
+     * // Get first 10 ChangeRequests
+     * const changeRequests = await prisma.changeRequest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const changeRequestWithIdOnly = await prisma.changeRequest.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ChangeRequestFindManyArgs>(args?: SelectSubset<T, ChangeRequestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChangeRequestPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a ChangeRequest.
+     * @param {ChangeRequestCreateArgs} args - Arguments to create a ChangeRequest.
+     * @example
+     * // Create one ChangeRequest
+     * const ChangeRequest = await prisma.changeRequest.create({
+     *   data: {
+     *     // ... data to create a ChangeRequest
+     *   }
+     * })
+     * 
+     */
+    create<T extends ChangeRequestCreateArgs>(args: SelectSubset<T, ChangeRequestCreateArgs<ExtArgs>>): Prisma__ChangeRequestClient<$Result.GetResult<Prisma.$ChangeRequestPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many ChangeRequests.
+     * @param {ChangeRequestCreateManyArgs} args - Arguments to create many ChangeRequests.
+     * @example
+     * // Create many ChangeRequests
+     * const changeRequest = await prisma.changeRequest.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ChangeRequestCreateManyArgs>(args?: SelectSubset<T, ChangeRequestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ChangeRequests and returns the data saved in the database.
+     * @param {ChangeRequestCreateManyAndReturnArgs} args - Arguments to create many ChangeRequests.
+     * @example
+     * // Create many ChangeRequests
+     * const changeRequest = await prisma.changeRequest.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ChangeRequests and only return the `id`
+     * const changeRequestWithIdOnly = await prisma.changeRequest.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ChangeRequestCreateManyAndReturnArgs>(args?: SelectSubset<T, ChangeRequestCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChangeRequestPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a ChangeRequest.
+     * @param {ChangeRequestDeleteArgs} args - Arguments to delete one ChangeRequest.
+     * @example
+     * // Delete one ChangeRequest
+     * const ChangeRequest = await prisma.changeRequest.delete({
+     *   where: {
+     *     // ... filter to delete one ChangeRequest
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ChangeRequestDeleteArgs>(args: SelectSubset<T, ChangeRequestDeleteArgs<ExtArgs>>): Prisma__ChangeRequestClient<$Result.GetResult<Prisma.$ChangeRequestPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one ChangeRequest.
+     * @param {ChangeRequestUpdateArgs} args - Arguments to update one ChangeRequest.
+     * @example
+     * // Update one ChangeRequest
+     * const changeRequest = await prisma.changeRequest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ChangeRequestUpdateArgs>(args: SelectSubset<T, ChangeRequestUpdateArgs<ExtArgs>>): Prisma__ChangeRequestClient<$Result.GetResult<Prisma.$ChangeRequestPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more ChangeRequests.
+     * @param {ChangeRequestDeleteManyArgs} args - Arguments to filter ChangeRequests to delete.
+     * @example
+     * // Delete a few ChangeRequests
+     * const { count } = await prisma.changeRequest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ChangeRequestDeleteManyArgs>(args?: SelectSubset<T, ChangeRequestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChangeRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChangeRequestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ChangeRequests
+     * const changeRequest = await prisma.changeRequest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ChangeRequestUpdateManyArgs>(args: SelectSubset<T, ChangeRequestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ChangeRequest.
+     * @param {ChangeRequestUpsertArgs} args - Arguments to update or create a ChangeRequest.
+     * @example
+     * // Update or create a ChangeRequest
+     * const changeRequest = await prisma.changeRequest.upsert({
+     *   create: {
+     *     // ... data to create a ChangeRequest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ChangeRequest we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ChangeRequestUpsertArgs>(args: SelectSubset<T, ChangeRequestUpsertArgs<ExtArgs>>): Prisma__ChangeRequestClient<$Result.GetResult<Prisma.$ChangeRequestPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of ChangeRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChangeRequestCountArgs} args - Arguments to filter ChangeRequests to count.
+     * @example
+     * // Count the number of ChangeRequests
+     * const count = await prisma.changeRequest.count({
+     *   where: {
+     *     // ... the filter for the ChangeRequests we want to count
+     *   }
+     * })
+    **/
+    count<T extends ChangeRequestCountArgs>(
+      args?: Subset<T, ChangeRequestCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ChangeRequestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ChangeRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChangeRequestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ChangeRequestAggregateArgs>(args: Subset<T, ChangeRequestAggregateArgs>): Prisma.PrismaPromise<GetChangeRequestAggregateType<T>>
+
+    /**
+     * Group by ChangeRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChangeRequestGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ChangeRequestGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ChangeRequestGroupByArgs['orderBy'] }
+        : { orderBy?: ChangeRequestGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ChangeRequestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChangeRequestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ChangeRequest model
+   */
+  readonly fields: ChangeRequestFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ChangeRequest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ChangeRequestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    requestedBy<T extends ChangeRequest$requestedByArgs<ExtArgs> = {}>(args?: Subset<T, ChangeRequest$requestedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    decidedBy<T extends ChangeRequest$decidedByArgs<ExtArgs> = {}>(args?: Subset<T, ChangeRequest$decidedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    baselines<T extends ChangeRequest$baselinesArgs<ExtArgs> = {}>(args?: Subset<T, ChangeRequest$baselinesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectBaselinePayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ChangeRequest model
+   */ 
+  interface ChangeRequestFieldRefs {
+    readonly id: FieldRef<"ChangeRequest", 'String'>
+    readonly projectId: FieldRef<"ChangeRequest", 'String'>
+    readonly type: FieldRef<"ChangeRequest", 'ChangeRequestType'>
+    readonly status: FieldRef<"ChangeRequest", 'ChangeRequestStatus'>
+    readonly title: FieldRef<"ChangeRequest", 'String'>
+    readonly description: FieldRef<"ChangeRequest", 'String'>
+    readonly impactSummary: FieldRef<"ChangeRequest", 'String'>
+    readonly proposedStartDate: FieldRef<"ChangeRequest", 'DateTime'>
+    readonly proposedEndDate: FieldRef<"ChangeRequest", 'DateTime'>
+    readonly proposedPlannedMandays: FieldRef<"ChangeRequest", 'Float'>
+    readonly proposedEstimatedCost: FieldRef<"ChangeRequest", 'Float'>
+    readonly proposedContractValue: FieldRef<"ChangeRequest", 'Float'>
+    readonly requestedById: FieldRef<"ChangeRequest", 'String'>
+    readonly decidedById: FieldRef<"ChangeRequest", 'String'>
+    readonly decidedAt: FieldRef<"ChangeRequest", 'DateTime'>
+    readonly decisionNote: FieldRef<"ChangeRequest", 'String'>
+    readonly appliedAt: FieldRef<"ChangeRequest", 'DateTime'>
+    readonly createdAt: FieldRef<"ChangeRequest", 'DateTime'>
+    readonly updatedAt: FieldRef<"ChangeRequest", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ChangeRequest findUnique
+   */
+  export type ChangeRequestFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChangeRequest
+     */
+    select?: ChangeRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChangeRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which ChangeRequest to fetch.
+     */
+    where: ChangeRequestWhereUniqueInput
+  }
+
+  /**
+   * ChangeRequest findUniqueOrThrow
+   */
+  export type ChangeRequestFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChangeRequest
+     */
+    select?: ChangeRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChangeRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which ChangeRequest to fetch.
+     */
+    where: ChangeRequestWhereUniqueInput
+  }
+
+  /**
+   * ChangeRequest findFirst
+   */
+  export type ChangeRequestFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChangeRequest
+     */
+    select?: ChangeRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChangeRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which ChangeRequest to fetch.
+     */
+    where?: ChangeRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChangeRequests to fetch.
+     */
+    orderBy?: ChangeRequestOrderByWithRelationInput | ChangeRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChangeRequests.
+     */
+    cursor?: ChangeRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChangeRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChangeRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChangeRequests.
+     */
+    distinct?: ChangeRequestScalarFieldEnum | ChangeRequestScalarFieldEnum[]
+  }
+
+  /**
+   * ChangeRequest findFirstOrThrow
+   */
+  export type ChangeRequestFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChangeRequest
+     */
+    select?: ChangeRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChangeRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which ChangeRequest to fetch.
+     */
+    where?: ChangeRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChangeRequests to fetch.
+     */
+    orderBy?: ChangeRequestOrderByWithRelationInput | ChangeRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChangeRequests.
+     */
+    cursor?: ChangeRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChangeRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChangeRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChangeRequests.
+     */
+    distinct?: ChangeRequestScalarFieldEnum | ChangeRequestScalarFieldEnum[]
+  }
+
+  /**
+   * ChangeRequest findMany
+   */
+  export type ChangeRequestFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChangeRequest
+     */
+    select?: ChangeRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChangeRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which ChangeRequests to fetch.
+     */
+    where?: ChangeRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChangeRequests to fetch.
+     */
+    orderBy?: ChangeRequestOrderByWithRelationInput | ChangeRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ChangeRequests.
+     */
+    cursor?: ChangeRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChangeRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChangeRequests.
+     */
+    skip?: number
+    distinct?: ChangeRequestScalarFieldEnum | ChangeRequestScalarFieldEnum[]
+  }
+
+  /**
+   * ChangeRequest create
+   */
+  export type ChangeRequestCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChangeRequest
+     */
+    select?: ChangeRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChangeRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ChangeRequest.
+     */
+    data: XOR<ChangeRequestCreateInput, ChangeRequestUncheckedCreateInput>
+  }
+
+  /**
+   * ChangeRequest createMany
+   */
+  export type ChangeRequestCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ChangeRequests.
+     */
+    data: ChangeRequestCreateManyInput | ChangeRequestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ChangeRequest createManyAndReturn
+   */
+  export type ChangeRequestCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChangeRequest
+     */
+    select?: ChangeRequestSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many ChangeRequests.
+     */
+    data: ChangeRequestCreateManyInput | ChangeRequestCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChangeRequestIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ChangeRequest update
+   */
+  export type ChangeRequestUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChangeRequest
+     */
+    select?: ChangeRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChangeRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ChangeRequest.
+     */
+    data: XOR<ChangeRequestUpdateInput, ChangeRequestUncheckedUpdateInput>
+    /**
+     * Choose, which ChangeRequest to update.
+     */
+    where: ChangeRequestWhereUniqueInput
+  }
+
+  /**
+   * ChangeRequest updateMany
+   */
+  export type ChangeRequestUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ChangeRequests.
+     */
+    data: XOR<ChangeRequestUpdateManyMutationInput, ChangeRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which ChangeRequests to update
+     */
+    where?: ChangeRequestWhereInput
+  }
+
+  /**
+   * ChangeRequest upsert
+   */
+  export type ChangeRequestUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChangeRequest
+     */
+    select?: ChangeRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChangeRequestInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ChangeRequest to update in case it exists.
+     */
+    where: ChangeRequestWhereUniqueInput
+    /**
+     * In case the ChangeRequest found by the `where` argument doesn't exist, create a new ChangeRequest with this data.
+     */
+    create: XOR<ChangeRequestCreateInput, ChangeRequestUncheckedCreateInput>
+    /**
+     * In case the ChangeRequest was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ChangeRequestUpdateInput, ChangeRequestUncheckedUpdateInput>
+  }
+
+  /**
+   * ChangeRequest delete
+   */
+  export type ChangeRequestDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChangeRequest
+     */
+    select?: ChangeRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChangeRequestInclude<ExtArgs> | null
+    /**
+     * Filter which ChangeRequest to delete.
+     */
+    where: ChangeRequestWhereUniqueInput
+  }
+
+  /**
+   * ChangeRequest deleteMany
+   */
+  export type ChangeRequestDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChangeRequests to delete
+     */
+    where?: ChangeRequestWhereInput
+  }
+
+  /**
+   * ChangeRequest.requestedBy
+   */
+  export type ChangeRequest$requestedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * ChangeRequest.decidedBy
+   */
+  export type ChangeRequest$decidedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * ChangeRequest.baselines
+   */
+  export type ChangeRequest$baselinesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectBaseline
+     */
+    select?: ProjectBaselineSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectBaselineInclude<ExtArgs> | null
+    where?: ProjectBaselineWhereInput
+    orderBy?: ProjectBaselineOrderByWithRelationInput | ProjectBaselineOrderByWithRelationInput[]
+    cursor?: ProjectBaselineWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectBaselineScalarFieldEnum | ProjectBaselineScalarFieldEnum[]
+  }
+
+  /**
+   * ChangeRequest without action
+   */
+  export type ChangeRequestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChangeRequest
+     */
+    select?: ChangeRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChangeRequestInclude<ExtArgs> | null
   }
 
 
@@ -42333,6 +45083,7 @@ export namespace Prisma {
     status: $Enums.RaidStatus | null
     ownerId: string | null
     mitigation: string | null
+    responseStrategy: $Enums.RaidResponseStrategy | null
     dueDate: Date | null
     closedAt: Date | null
     createdById: string | null
@@ -42351,6 +45102,7 @@ export namespace Prisma {
     status: $Enums.RaidStatus | null
     ownerId: string | null
     mitigation: string | null
+    responseStrategy: $Enums.RaidResponseStrategy | null
     dueDate: Date | null
     closedAt: Date | null
     createdById: string | null
@@ -42369,6 +45121,7 @@ export namespace Prisma {
     status: number
     ownerId: number
     mitigation: number
+    responseStrategy: number
     dueDate: number
     closedAt: number
     createdById: number
@@ -42389,6 +45142,7 @@ export namespace Prisma {
     status?: true
     ownerId?: true
     mitigation?: true
+    responseStrategy?: true
     dueDate?: true
     closedAt?: true
     createdById?: true
@@ -42407,6 +45161,7 @@ export namespace Prisma {
     status?: true
     ownerId?: true
     mitigation?: true
+    responseStrategy?: true
     dueDate?: true
     closedAt?: true
     createdById?: true
@@ -42425,6 +45180,7 @@ export namespace Prisma {
     status?: true
     ownerId?: true
     mitigation?: true
+    responseStrategy?: true
     dueDate?: true
     closedAt?: true
     createdById?: true
@@ -42516,6 +45272,7 @@ export namespace Prisma {
     status: $Enums.RaidStatus
     ownerId: string | null
     mitigation: string | null
+    responseStrategy: $Enums.RaidResponseStrategy | null
     dueDate: Date | null
     closedAt: Date | null
     createdById: string | null
@@ -42551,6 +45308,7 @@ export namespace Prisma {
     status?: boolean
     ownerId?: boolean
     mitigation?: boolean
+    responseStrategy?: boolean
     dueDate?: boolean
     closedAt?: boolean
     createdById?: boolean
@@ -42572,6 +45330,7 @@ export namespace Prisma {
     status?: boolean
     ownerId?: boolean
     mitigation?: boolean
+    responseStrategy?: boolean
     dueDate?: boolean
     closedAt?: boolean
     createdById?: boolean
@@ -42593,6 +45352,7 @@ export namespace Prisma {
     status?: boolean
     ownerId?: boolean
     mitigation?: boolean
+    responseStrategy?: boolean
     dueDate?: boolean
     closedAt?: boolean
     createdById?: boolean
@@ -42629,6 +45389,7 @@ export namespace Prisma {
       status: $Enums.RaidStatus
       ownerId: string | null
       mitigation: string | null
+      responseStrategy: $Enums.RaidResponseStrategy | null
       dueDate: Date | null
       closedAt: Date | null
       createdById: string | null
@@ -43040,6 +45801,7 @@ export namespace Prisma {
     readonly status: FieldRef<"ProjectRaidItem", 'RaidStatus'>
     readonly ownerId: FieldRef<"ProjectRaidItem", 'String'>
     readonly mitigation: FieldRef<"ProjectRaidItem", 'String'>
+    readonly responseStrategy: FieldRef<"ProjectRaidItem", 'RaidResponseStrategy'>
     readonly dueDate: FieldRef<"ProjectRaidItem", 'DateTime'>
     readonly closedAt: FieldRef<"ProjectRaidItem", 'DateTime'>
     readonly createdById: FieldRef<"ProjectRaidItem", 'String'>
@@ -49622,6 +52384,50 @@ export namespace Prisma {
   export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
 
 
+  export const ProjectBaselineScalarFieldEnum: {
+    id: 'id',
+    projectId: 'projectId',
+    version: 'version',
+    isCurrent: 'isCurrent',
+    source: 'source',
+    changeRequestId: 'changeRequestId',
+    startDate: 'startDate',
+    endDate: 'endDate',
+    plannedMandays: 'plannedMandays',
+    estimatedCost: 'estimatedCost',
+    contractValue: 'contractValue',
+    createdById: 'createdById',
+    createdAt: 'createdAt'
+  };
+
+  export type ProjectBaselineScalarFieldEnum = (typeof ProjectBaselineScalarFieldEnum)[keyof typeof ProjectBaselineScalarFieldEnum]
+
+
+  export const ChangeRequestScalarFieldEnum: {
+    id: 'id',
+    projectId: 'projectId',
+    type: 'type',
+    status: 'status',
+    title: 'title',
+    description: 'description',
+    impactSummary: 'impactSummary',
+    proposedStartDate: 'proposedStartDate',
+    proposedEndDate: 'proposedEndDate',
+    proposedPlannedMandays: 'proposedPlannedMandays',
+    proposedEstimatedCost: 'proposedEstimatedCost',
+    proposedContractValue: 'proposedContractValue',
+    requestedById: 'requestedById',
+    decidedById: 'decidedById',
+    decidedAt: 'decidedAt',
+    decisionNote: 'decisionNote',
+    appliedAt: 'appliedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ChangeRequestScalarFieldEnum = (typeof ChangeRequestScalarFieldEnum)[keyof typeof ChangeRequestScalarFieldEnum]
+
+
   export const ProjectReportScalarFieldEnum: {
     id: 'id',
     projectId: 'projectId',
@@ -50136,6 +52942,7 @@ export namespace Prisma {
     status: 'status',
     ownerId: 'ownerId',
     mitigation: 'mitigation',
+    responseStrategy: 'responseStrategy',
     dueDate: 'dueDate',
     closedAt: 'closedAt',
     createdById: 'createdById',
@@ -50430,6 +53237,48 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'ProjectBaselineSource'
+   */
+  export type EnumProjectBaselineSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectBaselineSource'>
+    
+
+
+  /**
+   * Reference to a field of type 'ProjectBaselineSource[]'
+   */
+  export type ListEnumProjectBaselineSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectBaselineSource[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ChangeRequestType'
+   */
+  export type EnumChangeRequestTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ChangeRequestType'>
+    
+
+
+  /**
+   * Reference to a field of type 'ChangeRequestType[]'
+   */
+  export type ListEnumChangeRequestTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ChangeRequestType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ChangeRequestStatus'
+   */
+  export type EnumChangeRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ChangeRequestStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'ChangeRequestStatus[]'
+   */
+  export type ListEnumChangeRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ChangeRequestStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'ProjectReportType'
    */
   export type EnumProjectReportTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectReportType'>
@@ -50619,6 +53468,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'RaidResponseStrategy'
+   */
+  export type EnumRaidResponseStrategyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RaidResponseStrategy'>
+    
+
+
+  /**
+   * Reference to a field of type 'RaidResponseStrategy[]'
+   */
+  export type ListEnumRaidResponseStrategyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RaidResponseStrategy[]'>
+    
+
+
+  /**
    * Reference to a field of type 'PerformanceReviewPeriod'
    */
   export type EnumPerformanceReviewPeriodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PerformanceReviewPeriod'>
@@ -50707,6 +53570,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogListRelationFilter
     raidItemsOwned?: ProjectRaidItemListRelationFilter
     raidItemsCreated?: ProjectRaidItemListRelationFilter
+    baselinesCreated?: ProjectBaselineListRelationFilter
+    changeRequestsRequested?: ChangeRequestListRelationFilter
+    changeRequestsDecided?: ChangeRequestListRelationFilter
     perfReviewsSubject?: PerformanceReviewListRelationFilter
     perfReviewsAuthored?: PerformanceReviewListRelationFilter
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingListRelationFilter
@@ -50767,6 +53633,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogOrderByRelationAggregateInput
     raidItemsOwned?: ProjectRaidItemOrderByRelationAggregateInput
     raidItemsCreated?: ProjectRaidItemOrderByRelationAggregateInput
+    baselinesCreated?: ProjectBaselineOrderByRelationAggregateInput
+    changeRequestsRequested?: ChangeRequestOrderByRelationAggregateInput
+    changeRequestsDecided?: ChangeRequestOrderByRelationAggregateInput
     perfReviewsSubject?: PerformanceReviewOrderByRelationAggregateInput
     perfReviewsAuthored?: PerformanceReviewOrderByRelationAggregateInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingOrderByRelationAggregateInput
@@ -50830,6 +53699,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogListRelationFilter
     raidItemsOwned?: ProjectRaidItemListRelationFilter
     raidItemsCreated?: ProjectRaidItemListRelationFilter
+    baselinesCreated?: ProjectBaselineListRelationFilter
+    changeRequestsRequested?: ChangeRequestListRelationFilter
+    changeRequestsDecided?: ChangeRequestListRelationFilter
     perfReviewsSubject?: PerformanceReviewListRelationFilter
     perfReviewsAuthored?: PerformanceReviewListRelationFilter
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingListRelationFilter
@@ -51028,6 +53900,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemListRelationFilter
     workstreams?: ProjectWorkstreamListRelationFilter
     reports?: ProjectReportListRelationFilter
+    baselines?: ProjectBaselineListRelationFilter
+    changeRequests?: ChangeRequestListRelationFilter
   }
 
   export type ProjectOrderByWithRelationInput = {
@@ -51087,6 +53961,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemOrderByRelationAggregateInput
     workstreams?: ProjectWorkstreamOrderByRelationAggregateInput
     reports?: ProjectReportOrderByRelationAggregateInput
+    baselines?: ProjectBaselineOrderByRelationAggregateInput
+    changeRequests?: ChangeRequestOrderByRelationAggregateInput
   }
 
   export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -51149,6 +54025,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemListRelationFilter
     workstreams?: ProjectWorkstreamListRelationFilter
     reports?: ProjectReportListRelationFilter
+    baselines?: ProjectBaselineListRelationFilter
+    changeRequests?: ChangeRequestListRelationFilter
   }, "id" | "code" | "surveyToken" | "clientShareToken">
 
   export type ProjectOrderByWithAggregationInput = {
@@ -51239,6 +54117,246 @@ export namespace Prisma {
     clientShareToken?: StringNullableWithAggregatesFilter<"Project"> | string | null
     clientShareEnabled?: BoolWithAggregatesFilter<"Project"> | boolean
     clientShareExpiresAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
+  }
+
+  export type ProjectBaselineWhereInput = {
+    AND?: ProjectBaselineWhereInput | ProjectBaselineWhereInput[]
+    OR?: ProjectBaselineWhereInput[]
+    NOT?: ProjectBaselineWhereInput | ProjectBaselineWhereInput[]
+    id?: StringFilter<"ProjectBaseline"> | string
+    projectId?: StringFilter<"ProjectBaseline"> | string
+    version?: IntFilter<"ProjectBaseline"> | number
+    isCurrent?: BoolFilter<"ProjectBaseline"> | boolean
+    source?: EnumProjectBaselineSourceFilter<"ProjectBaseline"> | $Enums.ProjectBaselineSource
+    changeRequestId?: StringNullableFilter<"ProjectBaseline"> | string | null
+    startDate?: DateTimeNullableFilter<"ProjectBaseline"> | Date | string | null
+    endDate?: DateTimeNullableFilter<"ProjectBaseline"> | Date | string | null
+    plannedMandays?: FloatFilter<"ProjectBaseline"> | number
+    estimatedCost?: FloatFilter<"ProjectBaseline"> | number
+    contractValue?: FloatFilter<"ProjectBaseline"> | number
+    createdById?: StringNullableFilter<"ProjectBaseline"> | string | null
+    createdAt?: DateTimeFilter<"ProjectBaseline"> | Date | string
+    project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    changeRequest?: XOR<ChangeRequestNullableRelationFilter, ChangeRequestWhereInput> | null
+    createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+  }
+
+  export type ProjectBaselineOrderByWithRelationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    version?: SortOrder
+    isCurrent?: SortOrder
+    source?: SortOrder
+    changeRequestId?: SortOrderInput | SortOrder
+    startDate?: SortOrderInput | SortOrder
+    endDate?: SortOrderInput | SortOrder
+    plannedMandays?: SortOrder
+    estimatedCost?: SortOrder
+    contractValue?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    project?: ProjectOrderByWithRelationInput
+    changeRequest?: ChangeRequestOrderByWithRelationInput
+    createdBy?: UserOrderByWithRelationInput
+  }
+
+  export type ProjectBaselineWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    projectId_version?: ProjectBaselineProjectIdVersionCompoundUniqueInput
+    AND?: ProjectBaselineWhereInput | ProjectBaselineWhereInput[]
+    OR?: ProjectBaselineWhereInput[]
+    NOT?: ProjectBaselineWhereInput | ProjectBaselineWhereInput[]
+    projectId?: StringFilter<"ProjectBaseline"> | string
+    version?: IntFilter<"ProjectBaseline"> | number
+    isCurrent?: BoolFilter<"ProjectBaseline"> | boolean
+    source?: EnumProjectBaselineSourceFilter<"ProjectBaseline"> | $Enums.ProjectBaselineSource
+    changeRequestId?: StringNullableFilter<"ProjectBaseline"> | string | null
+    startDate?: DateTimeNullableFilter<"ProjectBaseline"> | Date | string | null
+    endDate?: DateTimeNullableFilter<"ProjectBaseline"> | Date | string | null
+    plannedMandays?: FloatFilter<"ProjectBaseline"> | number
+    estimatedCost?: FloatFilter<"ProjectBaseline"> | number
+    contractValue?: FloatFilter<"ProjectBaseline"> | number
+    createdById?: StringNullableFilter<"ProjectBaseline"> | string | null
+    createdAt?: DateTimeFilter<"ProjectBaseline"> | Date | string
+    project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    changeRequest?: XOR<ChangeRequestNullableRelationFilter, ChangeRequestWhereInput> | null
+    createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+  }, "id" | "projectId_version">
+
+  export type ProjectBaselineOrderByWithAggregationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    version?: SortOrder
+    isCurrent?: SortOrder
+    source?: SortOrder
+    changeRequestId?: SortOrderInput | SortOrder
+    startDate?: SortOrderInput | SortOrder
+    endDate?: SortOrderInput | SortOrder
+    plannedMandays?: SortOrder
+    estimatedCost?: SortOrder
+    contractValue?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: ProjectBaselineCountOrderByAggregateInput
+    _avg?: ProjectBaselineAvgOrderByAggregateInput
+    _max?: ProjectBaselineMaxOrderByAggregateInput
+    _min?: ProjectBaselineMinOrderByAggregateInput
+    _sum?: ProjectBaselineSumOrderByAggregateInput
+  }
+
+  export type ProjectBaselineScalarWhereWithAggregatesInput = {
+    AND?: ProjectBaselineScalarWhereWithAggregatesInput | ProjectBaselineScalarWhereWithAggregatesInput[]
+    OR?: ProjectBaselineScalarWhereWithAggregatesInput[]
+    NOT?: ProjectBaselineScalarWhereWithAggregatesInput | ProjectBaselineScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ProjectBaseline"> | string
+    projectId?: StringWithAggregatesFilter<"ProjectBaseline"> | string
+    version?: IntWithAggregatesFilter<"ProjectBaseline"> | number
+    isCurrent?: BoolWithAggregatesFilter<"ProjectBaseline"> | boolean
+    source?: EnumProjectBaselineSourceWithAggregatesFilter<"ProjectBaseline"> | $Enums.ProjectBaselineSource
+    changeRequestId?: StringNullableWithAggregatesFilter<"ProjectBaseline"> | string | null
+    startDate?: DateTimeNullableWithAggregatesFilter<"ProjectBaseline"> | Date | string | null
+    endDate?: DateTimeNullableWithAggregatesFilter<"ProjectBaseline"> | Date | string | null
+    plannedMandays?: FloatWithAggregatesFilter<"ProjectBaseline"> | number
+    estimatedCost?: FloatWithAggregatesFilter<"ProjectBaseline"> | number
+    contractValue?: FloatWithAggregatesFilter<"ProjectBaseline"> | number
+    createdById?: StringNullableWithAggregatesFilter<"ProjectBaseline"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ProjectBaseline"> | Date | string
+  }
+
+  export type ChangeRequestWhereInput = {
+    AND?: ChangeRequestWhereInput | ChangeRequestWhereInput[]
+    OR?: ChangeRequestWhereInput[]
+    NOT?: ChangeRequestWhereInput | ChangeRequestWhereInput[]
+    id?: StringFilter<"ChangeRequest"> | string
+    projectId?: StringFilter<"ChangeRequest"> | string
+    type?: EnumChangeRequestTypeFilter<"ChangeRequest"> | $Enums.ChangeRequestType
+    status?: EnumChangeRequestStatusFilter<"ChangeRequest"> | $Enums.ChangeRequestStatus
+    title?: StringFilter<"ChangeRequest"> | string
+    description?: StringNullableFilter<"ChangeRequest"> | string | null
+    impactSummary?: StringNullableFilter<"ChangeRequest"> | string | null
+    proposedStartDate?: DateTimeNullableFilter<"ChangeRequest"> | Date | string | null
+    proposedEndDate?: DateTimeNullableFilter<"ChangeRequest"> | Date | string | null
+    proposedPlannedMandays?: FloatNullableFilter<"ChangeRequest"> | number | null
+    proposedEstimatedCost?: FloatNullableFilter<"ChangeRequest"> | number | null
+    proposedContractValue?: FloatNullableFilter<"ChangeRequest"> | number | null
+    requestedById?: StringNullableFilter<"ChangeRequest"> | string | null
+    decidedById?: StringNullableFilter<"ChangeRequest"> | string | null
+    decidedAt?: DateTimeNullableFilter<"ChangeRequest"> | Date | string | null
+    decisionNote?: StringNullableFilter<"ChangeRequest"> | string | null
+    appliedAt?: DateTimeNullableFilter<"ChangeRequest"> | Date | string | null
+    createdAt?: DateTimeFilter<"ChangeRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"ChangeRequest"> | Date | string
+    project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    requestedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    decidedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    baselines?: ProjectBaselineListRelationFilter
+  }
+
+  export type ChangeRequestOrderByWithRelationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    impactSummary?: SortOrderInput | SortOrder
+    proposedStartDate?: SortOrderInput | SortOrder
+    proposedEndDate?: SortOrderInput | SortOrder
+    proposedPlannedMandays?: SortOrderInput | SortOrder
+    proposedEstimatedCost?: SortOrderInput | SortOrder
+    proposedContractValue?: SortOrderInput | SortOrder
+    requestedById?: SortOrderInput | SortOrder
+    decidedById?: SortOrderInput | SortOrder
+    decidedAt?: SortOrderInput | SortOrder
+    decisionNote?: SortOrderInput | SortOrder
+    appliedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    project?: ProjectOrderByWithRelationInput
+    requestedBy?: UserOrderByWithRelationInput
+    decidedBy?: UserOrderByWithRelationInput
+    baselines?: ProjectBaselineOrderByRelationAggregateInput
+  }
+
+  export type ChangeRequestWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ChangeRequestWhereInput | ChangeRequestWhereInput[]
+    OR?: ChangeRequestWhereInput[]
+    NOT?: ChangeRequestWhereInput | ChangeRequestWhereInput[]
+    projectId?: StringFilter<"ChangeRequest"> | string
+    type?: EnumChangeRequestTypeFilter<"ChangeRequest"> | $Enums.ChangeRequestType
+    status?: EnumChangeRequestStatusFilter<"ChangeRequest"> | $Enums.ChangeRequestStatus
+    title?: StringFilter<"ChangeRequest"> | string
+    description?: StringNullableFilter<"ChangeRequest"> | string | null
+    impactSummary?: StringNullableFilter<"ChangeRequest"> | string | null
+    proposedStartDate?: DateTimeNullableFilter<"ChangeRequest"> | Date | string | null
+    proposedEndDate?: DateTimeNullableFilter<"ChangeRequest"> | Date | string | null
+    proposedPlannedMandays?: FloatNullableFilter<"ChangeRequest"> | number | null
+    proposedEstimatedCost?: FloatNullableFilter<"ChangeRequest"> | number | null
+    proposedContractValue?: FloatNullableFilter<"ChangeRequest"> | number | null
+    requestedById?: StringNullableFilter<"ChangeRequest"> | string | null
+    decidedById?: StringNullableFilter<"ChangeRequest"> | string | null
+    decidedAt?: DateTimeNullableFilter<"ChangeRequest"> | Date | string | null
+    decisionNote?: StringNullableFilter<"ChangeRequest"> | string | null
+    appliedAt?: DateTimeNullableFilter<"ChangeRequest"> | Date | string | null
+    createdAt?: DateTimeFilter<"ChangeRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"ChangeRequest"> | Date | string
+    project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    requestedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    decidedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    baselines?: ProjectBaselineListRelationFilter
+  }, "id">
+
+  export type ChangeRequestOrderByWithAggregationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    impactSummary?: SortOrderInput | SortOrder
+    proposedStartDate?: SortOrderInput | SortOrder
+    proposedEndDate?: SortOrderInput | SortOrder
+    proposedPlannedMandays?: SortOrderInput | SortOrder
+    proposedEstimatedCost?: SortOrderInput | SortOrder
+    proposedContractValue?: SortOrderInput | SortOrder
+    requestedById?: SortOrderInput | SortOrder
+    decidedById?: SortOrderInput | SortOrder
+    decidedAt?: SortOrderInput | SortOrder
+    decisionNote?: SortOrderInput | SortOrder
+    appliedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ChangeRequestCountOrderByAggregateInput
+    _avg?: ChangeRequestAvgOrderByAggregateInput
+    _max?: ChangeRequestMaxOrderByAggregateInput
+    _min?: ChangeRequestMinOrderByAggregateInput
+    _sum?: ChangeRequestSumOrderByAggregateInput
+  }
+
+  export type ChangeRequestScalarWhereWithAggregatesInput = {
+    AND?: ChangeRequestScalarWhereWithAggregatesInput | ChangeRequestScalarWhereWithAggregatesInput[]
+    OR?: ChangeRequestScalarWhereWithAggregatesInput[]
+    NOT?: ChangeRequestScalarWhereWithAggregatesInput | ChangeRequestScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ChangeRequest"> | string
+    projectId?: StringWithAggregatesFilter<"ChangeRequest"> | string
+    type?: EnumChangeRequestTypeWithAggregatesFilter<"ChangeRequest"> | $Enums.ChangeRequestType
+    status?: EnumChangeRequestStatusWithAggregatesFilter<"ChangeRequest"> | $Enums.ChangeRequestStatus
+    title?: StringWithAggregatesFilter<"ChangeRequest"> | string
+    description?: StringNullableWithAggregatesFilter<"ChangeRequest"> | string | null
+    impactSummary?: StringNullableWithAggregatesFilter<"ChangeRequest"> | string | null
+    proposedStartDate?: DateTimeNullableWithAggregatesFilter<"ChangeRequest"> | Date | string | null
+    proposedEndDate?: DateTimeNullableWithAggregatesFilter<"ChangeRequest"> | Date | string | null
+    proposedPlannedMandays?: FloatNullableWithAggregatesFilter<"ChangeRequest"> | number | null
+    proposedEstimatedCost?: FloatNullableWithAggregatesFilter<"ChangeRequest"> | number | null
+    proposedContractValue?: FloatNullableWithAggregatesFilter<"ChangeRequest"> | number | null
+    requestedById?: StringNullableWithAggregatesFilter<"ChangeRequest"> | string | null
+    decidedById?: StringNullableWithAggregatesFilter<"ChangeRequest"> | string | null
+    decidedAt?: DateTimeNullableWithAggregatesFilter<"ChangeRequest"> | Date | string | null
+    decisionNote?: StringNullableWithAggregatesFilter<"ChangeRequest"> | string | null
+    appliedAt?: DateTimeNullableWithAggregatesFilter<"ChangeRequest"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ChangeRequest"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ChangeRequest"> | Date | string
   }
 
   export type ProjectReportWhereInput = {
@@ -53988,6 +57106,7 @@ export namespace Prisma {
     status?: EnumRaidStatusFilter<"ProjectRaidItem"> | $Enums.RaidStatus
     ownerId?: StringNullableFilter<"ProjectRaidItem"> | string | null
     mitigation?: StringNullableFilter<"ProjectRaidItem"> | string | null
+    responseStrategy?: EnumRaidResponseStrategyNullableFilter<"ProjectRaidItem"> | $Enums.RaidResponseStrategy | null
     dueDate?: DateTimeNullableFilter<"ProjectRaidItem"> | Date | string | null
     closedAt?: DateTimeNullableFilter<"ProjectRaidItem"> | Date | string | null
     createdById?: StringNullableFilter<"ProjectRaidItem"> | string | null
@@ -54009,6 +57128,7 @@ export namespace Prisma {
     status?: SortOrder
     ownerId?: SortOrderInput | SortOrder
     mitigation?: SortOrderInput | SortOrder
+    responseStrategy?: SortOrderInput | SortOrder
     dueDate?: SortOrderInput | SortOrder
     closedAt?: SortOrderInput | SortOrder
     createdById?: SortOrderInput | SortOrder
@@ -54033,6 +57153,7 @@ export namespace Prisma {
     status?: EnumRaidStatusFilter<"ProjectRaidItem"> | $Enums.RaidStatus
     ownerId?: StringNullableFilter<"ProjectRaidItem"> | string | null
     mitigation?: StringNullableFilter<"ProjectRaidItem"> | string | null
+    responseStrategy?: EnumRaidResponseStrategyNullableFilter<"ProjectRaidItem"> | $Enums.RaidResponseStrategy | null
     dueDate?: DateTimeNullableFilter<"ProjectRaidItem"> | Date | string | null
     closedAt?: DateTimeNullableFilter<"ProjectRaidItem"> | Date | string | null
     createdById?: StringNullableFilter<"ProjectRaidItem"> | string | null
@@ -54054,6 +57175,7 @@ export namespace Prisma {
     status?: SortOrder
     ownerId?: SortOrderInput | SortOrder
     mitigation?: SortOrderInput | SortOrder
+    responseStrategy?: SortOrderInput | SortOrder
     dueDate?: SortOrderInput | SortOrder
     closedAt?: SortOrderInput | SortOrder
     createdById?: SortOrderInput | SortOrder
@@ -54078,6 +57200,7 @@ export namespace Prisma {
     status?: EnumRaidStatusWithAggregatesFilter<"ProjectRaidItem"> | $Enums.RaidStatus
     ownerId?: StringNullableWithAggregatesFilter<"ProjectRaidItem"> | string | null
     mitigation?: StringNullableWithAggregatesFilter<"ProjectRaidItem"> | string | null
+    responseStrategy?: EnumRaidResponseStrategyNullableWithAggregatesFilter<"ProjectRaidItem"> | $Enums.RaidResponseStrategy | null
     dueDate?: DateTimeNullableWithAggregatesFilter<"ProjectRaidItem"> | Date | string | null
     closedAt?: DateTimeNullableWithAggregatesFilter<"ProjectRaidItem"> | Date | string | null
     createdById?: StringNullableWithAggregatesFilter<"ProjectRaidItem"> | string | null
@@ -54702,6 +57825,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -54759,6 +57885,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -54816,6 +57945,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -54873,6 +58005,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -55086,6 +58221,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateInput = {
@@ -55140,6 +58277,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUpdateInput = {
@@ -55194,6 +58333,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateInput = {
@@ -55248,6 +58389,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectCreateManyInput = {
@@ -55366,6 +58509,270 @@ export namespace Prisma {
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ProjectBaselineCreateInput = {
+    id?: string
+    version: number
+    isCurrent?: boolean
+    source?: $Enums.ProjectBaselineSource
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    plannedMandays?: number
+    estimatedCost?: number
+    contractValue?: number
+    createdAt?: Date | string
+    project: ProjectCreateNestedOneWithoutBaselinesInput
+    changeRequest?: ChangeRequestCreateNestedOneWithoutBaselinesInput
+    createdBy?: UserCreateNestedOneWithoutBaselinesCreatedInput
+  }
+
+  export type ProjectBaselineUncheckedCreateInput = {
+    id?: string
+    projectId: string
+    version: number
+    isCurrent?: boolean
+    source?: $Enums.ProjectBaselineSource
+    changeRequestId?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    plannedMandays?: number
+    estimatedCost?: number
+    contractValue?: number
+    createdById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ProjectBaselineUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    isCurrent?: BoolFieldUpdateOperationsInput | boolean
+    source?: EnumProjectBaselineSourceFieldUpdateOperationsInput | $Enums.ProjectBaselineSource
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutBaselinesNestedInput
+    changeRequest?: ChangeRequestUpdateOneWithoutBaselinesNestedInput
+    createdBy?: UserUpdateOneWithoutBaselinesCreatedNestedInput
+  }
+
+  export type ProjectBaselineUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    isCurrent?: BoolFieldUpdateOperationsInput | boolean
+    source?: EnumProjectBaselineSourceFieldUpdateOperationsInput | $Enums.ProjectBaselineSource
+    changeRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectBaselineCreateManyInput = {
+    id?: string
+    projectId: string
+    version: number
+    isCurrent?: boolean
+    source?: $Enums.ProjectBaselineSource
+    changeRequestId?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    plannedMandays?: number
+    estimatedCost?: number
+    contractValue?: number
+    createdById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ProjectBaselineUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    isCurrent?: BoolFieldUpdateOperationsInput | boolean
+    source?: EnumProjectBaselineSourceFieldUpdateOperationsInput | $Enums.ProjectBaselineSource
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectBaselineUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    isCurrent?: BoolFieldUpdateOperationsInput | boolean
+    source?: EnumProjectBaselineSourceFieldUpdateOperationsInput | $Enums.ProjectBaselineSource
+    changeRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChangeRequestCreateInput = {
+    id?: string
+    type: $Enums.ChangeRequestType
+    status?: $Enums.ChangeRequestStatus
+    title: string
+    description?: string | null
+    impactSummary?: string | null
+    proposedStartDate?: Date | string | null
+    proposedEndDate?: Date | string | null
+    proposedPlannedMandays?: number | null
+    proposedEstimatedCost?: number | null
+    proposedContractValue?: number | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    appliedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutChangeRequestsInput
+    requestedBy?: UserCreateNestedOneWithoutChangeRequestsRequestedInput
+    decidedBy?: UserCreateNestedOneWithoutChangeRequestsDecidedInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutChangeRequestInput
+  }
+
+  export type ChangeRequestUncheckedCreateInput = {
+    id?: string
+    projectId: string
+    type: $Enums.ChangeRequestType
+    status?: $Enums.ChangeRequestStatus
+    title: string
+    description?: string | null
+    impactSummary?: string | null
+    proposedStartDate?: Date | string | null
+    proposedEndDate?: Date | string | null
+    proposedPlannedMandays?: number | null
+    proposedEstimatedCost?: number | null
+    proposedContractValue?: number | null
+    requestedById?: string | null
+    decidedById?: string | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    appliedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutChangeRequestInput
+  }
+
+  export type ChangeRequestUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumChangeRequestTypeFieldUpdateOperationsInput | $Enums.ChangeRequestType
+    status?: EnumChangeRequestStatusFieldUpdateOperationsInput | $Enums.ChangeRequestStatus
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impactSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedPlannedMandays?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedEstimatedCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedContractValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutChangeRequestsNestedInput
+    requestedBy?: UserUpdateOneWithoutChangeRequestsRequestedNestedInput
+    decidedBy?: UserUpdateOneWithoutChangeRequestsDecidedNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutChangeRequestNestedInput
+  }
+
+  export type ChangeRequestUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    type?: EnumChangeRequestTypeFieldUpdateOperationsInput | $Enums.ChangeRequestType
+    status?: EnumChangeRequestStatusFieldUpdateOperationsInput | $Enums.ChangeRequestStatus
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impactSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedPlannedMandays?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedEstimatedCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedContractValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    requestedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutChangeRequestNestedInput
+  }
+
+  export type ChangeRequestCreateManyInput = {
+    id?: string
+    projectId: string
+    type: $Enums.ChangeRequestType
+    status?: $Enums.ChangeRequestStatus
+    title: string
+    description?: string | null
+    impactSummary?: string | null
+    proposedStartDate?: Date | string | null
+    proposedEndDate?: Date | string | null
+    proposedPlannedMandays?: number | null
+    proposedEstimatedCost?: number | null
+    proposedContractValue?: number | null
+    requestedById?: string | null
+    decidedById?: string | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    appliedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ChangeRequestUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumChangeRequestTypeFieldUpdateOperationsInput | $Enums.ChangeRequestType
+    status?: EnumChangeRequestStatusFieldUpdateOperationsInput | $Enums.ChangeRequestStatus
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impactSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedPlannedMandays?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedEstimatedCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedContractValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChangeRequestUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    type?: EnumChangeRequestTypeFieldUpdateOperationsInput | $Enums.ChangeRequestType
+    status?: EnumChangeRequestStatusFieldUpdateOperationsInput | $Enums.ChangeRequestStatus
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impactSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedPlannedMandays?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedEstimatedCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedContractValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    requestedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProjectReportCreateInput = {
@@ -58309,6 +61716,7 @@ export namespace Prisma {
     likelihood?: $Enums.RaidLikelihood
     status?: $Enums.RaidStatus
     mitigation?: string | null
+    responseStrategy?: $Enums.RaidResponseStrategy | null
     dueDate?: Date | string | null
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -58329,6 +61737,7 @@ export namespace Prisma {
     status?: $Enums.RaidStatus
     ownerId?: string | null
     mitigation?: string | null
+    responseStrategy?: $Enums.RaidResponseStrategy | null
     dueDate?: Date | string | null
     closedAt?: Date | string | null
     createdById?: string | null
@@ -58345,6 +61754,7 @@ export namespace Prisma {
     likelihood?: EnumRaidLikelihoodFieldUpdateOperationsInput | $Enums.RaidLikelihood
     status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
     mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    responseStrategy?: NullableEnumRaidResponseStrategyFieldUpdateOperationsInput | $Enums.RaidResponseStrategy | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -58365,6 +61775,7 @@ export namespace Prisma {
     status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    responseStrategy?: NullableEnumRaidResponseStrategyFieldUpdateOperationsInput | $Enums.RaidResponseStrategy | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58383,6 +61794,7 @@ export namespace Prisma {
     status?: $Enums.RaidStatus
     ownerId?: string | null
     mitigation?: string | null
+    responseStrategy?: $Enums.RaidResponseStrategy | null
     dueDate?: Date | string | null
     closedAt?: Date | string | null
     createdById?: string | null
@@ -58399,6 +61811,7 @@ export namespace Prisma {
     likelihood?: EnumRaidLikelihoodFieldUpdateOperationsInput | $Enums.RaidLikelihood
     status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
     mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    responseStrategy?: NullableEnumRaidResponseStrategyFieldUpdateOperationsInput | $Enums.RaidResponseStrategy | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -58416,6 +61829,7 @@ export namespace Prisma {
     status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    responseStrategy?: NullableEnumRaidResponseStrategyFieldUpdateOperationsInput | $Enums.RaidResponseStrategy | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59314,6 +62728,18 @@ export namespace Prisma {
     none?: ProjectRaidItemWhereInput
   }
 
+  export type ProjectBaselineListRelationFilter = {
+    every?: ProjectBaselineWhereInput
+    some?: ProjectBaselineWhereInput
+    none?: ProjectBaselineWhereInput
+  }
+
+  export type ChangeRequestListRelationFilter = {
+    every?: ChangeRequestWhereInput
+    some?: ChangeRequestWhereInput
+    none?: ChangeRequestWhereInput
+  }
+
   export type PerformanceReviewListRelationFilter = {
     every?: PerformanceReviewWhereInput
     some?: PerformanceReviewWhereInput
@@ -59420,6 +62846,14 @@ export namespace Prisma {
   }
 
   export type ProjectRaidItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProjectBaselineOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ChangeRequestOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -59934,16 +63368,217 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
-  export type EnumProjectReportTypeNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.ProjectReportType | EnumProjectReportTypeFieldRefInput<$PrismaModel> | null
-    in?: $Enums.ProjectReportType[] | ListEnumProjectReportTypeFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.ProjectReportType[] | ListEnumProjectReportTypeFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumProjectReportTypeNullableFilter<$PrismaModel> | $Enums.ProjectReportType | null
+  export type EnumProjectBaselineSourceFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjectBaselineSource | EnumProjectBaselineSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.ProjectBaselineSource[] | ListEnumProjectBaselineSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProjectBaselineSource[] | ListEnumProjectBaselineSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumProjectBaselineSourceFilter<$PrismaModel> | $Enums.ProjectBaselineSource
   }
 
   export type ProjectRelationFilter = {
     is?: ProjectWhereInput
     isNot?: ProjectWhereInput
+  }
+
+  export type ChangeRequestNullableRelationFilter = {
+    is?: ChangeRequestWhereInput | null
+    isNot?: ChangeRequestWhereInput | null
+  }
+
+  export type ProjectBaselineProjectIdVersionCompoundUniqueInput = {
+    projectId: string
+    version: number
+  }
+
+  export type ProjectBaselineCountOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    version?: SortOrder
+    isCurrent?: SortOrder
+    source?: SortOrder
+    changeRequestId?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    plannedMandays?: SortOrder
+    estimatedCost?: SortOrder
+    contractValue?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ProjectBaselineAvgOrderByAggregateInput = {
+    version?: SortOrder
+    plannedMandays?: SortOrder
+    estimatedCost?: SortOrder
+    contractValue?: SortOrder
+  }
+
+  export type ProjectBaselineMaxOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    version?: SortOrder
+    isCurrent?: SortOrder
+    source?: SortOrder
+    changeRequestId?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    plannedMandays?: SortOrder
+    estimatedCost?: SortOrder
+    contractValue?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ProjectBaselineMinOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    version?: SortOrder
+    isCurrent?: SortOrder
+    source?: SortOrder
+    changeRequestId?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    plannedMandays?: SortOrder
+    estimatedCost?: SortOrder
+    contractValue?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ProjectBaselineSumOrderByAggregateInput = {
+    version?: SortOrder
+    plannedMandays?: SortOrder
+    estimatedCost?: SortOrder
+    contractValue?: SortOrder
+  }
+
+  export type EnumProjectBaselineSourceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjectBaselineSource | EnumProjectBaselineSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.ProjectBaselineSource[] | ListEnumProjectBaselineSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProjectBaselineSource[] | ListEnumProjectBaselineSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumProjectBaselineSourceWithAggregatesFilter<$PrismaModel> | $Enums.ProjectBaselineSource
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumProjectBaselineSourceFilter<$PrismaModel>
+    _max?: NestedEnumProjectBaselineSourceFilter<$PrismaModel>
+  }
+
+  export type EnumChangeRequestTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ChangeRequestType | EnumChangeRequestTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ChangeRequestType[] | ListEnumChangeRequestTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ChangeRequestType[] | ListEnumChangeRequestTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumChangeRequestTypeFilter<$PrismaModel> | $Enums.ChangeRequestType
+  }
+
+  export type EnumChangeRequestStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ChangeRequestStatus | EnumChangeRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ChangeRequestStatus[] | ListEnumChangeRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ChangeRequestStatus[] | ListEnumChangeRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumChangeRequestStatusFilter<$PrismaModel> | $Enums.ChangeRequestStatus
+  }
+
+  export type ChangeRequestCountOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    impactSummary?: SortOrder
+    proposedStartDate?: SortOrder
+    proposedEndDate?: SortOrder
+    proposedPlannedMandays?: SortOrder
+    proposedEstimatedCost?: SortOrder
+    proposedContractValue?: SortOrder
+    requestedById?: SortOrder
+    decidedById?: SortOrder
+    decidedAt?: SortOrder
+    decisionNote?: SortOrder
+    appliedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ChangeRequestAvgOrderByAggregateInput = {
+    proposedPlannedMandays?: SortOrder
+    proposedEstimatedCost?: SortOrder
+    proposedContractValue?: SortOrder
+  }
+
+  export type ChangeRequestMaxOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    impactSummary?: SortOrder
+    proposedStartDate?: SortOrder
+    proposedEndDate?: SortOrder
+    proposedPlannedMandays?: SortOrder
+    proposedEstimatedCost?: SortOrder
+    proposedContractValue?: SortOrder
+    requestedById?: SortOrder
+    decidedById?: SortOrder
+    decidedAt?: SortOrder
+    decisionNote?: SortOrder
+    appliedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ChangeRequestMinOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    impactSummary?: SortOrder
+    proposedStartDate?: SortOrder
+    proposedEndDate?: SortOrder
+    proposedPlannedMandays?: SortOrder
+    proposedEstimatedCost?: SortOrder
+    proposedContractValue?: SortOrder
+    requestedById?: SortOrder
+    decidedById?: SortOrder
+    decidedAt?: SortOrder
+    decisionNote?: SortOrder
+    appliedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ChangeRequestSumOrderByAggregateInput = {
+    proposedPlannedMandays?: SortOrder
+    proposedEstimatedCost?: SortOrder
+    proposedContractValue?: SortOrder
+  }
+
+  export type EnumChangeRequestTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ChangeRequestType | EnumChangeRequestTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ChangeRequestType[] | ListEnumChangeRequestTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ChangeRequestType[] | ListEnumChangeRequestTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumChangeRequestTypeWithAggregatesFilter<$PrismaModel> | $Enums.ChangeRequestType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumChangeRequestTypeFilter<$PrismaModel>
+    _max?: NestedEnumChangeRequestTypeFilter<$PrismaModel>
+  }
+
+  export type EnumChangeRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ChangeRequestStatus | EnumChangeRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ChangeRequestStatus[] | ListEnumChangeRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ChangeRequestStatus[] | ListEnumChangeRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumChangeRequestStatusWithAggregatesFilter<$PrismaModel> | $Enums.ChangeRequestStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumChangeRequestStatusFilter<$PrismaModel>
+    _max?: NestedEnumChangeRequestStatusFilter<$PrismaModel>
+  }
+
+  export type EnumProjectReportTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjectReportType | EnumProjectReportTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ProjectReportType[] | ListEnumProjectReportTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ProjectReportType[] | ListEnumProjectReportTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumProjectReportTypeNullableFilter<$PrismaModel> | $Enums.ProjectReportType | null
   }
 
   export type ProjectWorkstreamNullableRelationFilter = {
@@ -61790,6 +65425,13 @@ export namespace Prisma {
     not?: NestedEnumRaidStatusFilter<$PrismaModel> | $Enums.RaidStatus
   }
 
+  export type EnumRaidResponseStrategyNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaidResponseStrategy | EnumRaidResponseStrategyFieldRefInput<$PrismaModel> | null
+    in?: $Enums.RaidResponseStrategy[] | ListEnumRaidResponseStrategyFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.RaidResponseStrategy[] | ListEnumRaidResponseStrategyFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumRaidResponseStrategyNullableFilter<$PrismaModel> | $Enums.RaidResponseStrategy | null
+  }
+
   export type ProjectRaidItemCountOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
@@ -61801,6 +65443,7 @@ export namespace Prisma {
     status?: SortOrder
     ownerId?: SortOrder
     mitigation?: SortOrder
+    responseStrategy?: SortOrder
     dueDate?: SortOrder
     closedAt?: SortOrder
     createdById?: SortOrder
@@ -61819,6 +65462,7 @@ export namespace Prisma {
     status?: SortOrder
     ownerId?: SortOrder
     mitigation?: SortOrder
+    responseStrategy?: SortOrder
     dueDate?: SortOrder
     closedAt?: SortOrder
     createdById?: SortOrder
@@ -61837,6 +65481,7 @@ export namespace Prisma {
     status?: SortOrder
     ownerId?: SortOrder
     mitigation?: SortOrder
+    responseStrategy?: SortOrder
     dueDate?: SortOrder
     closedAt?: SortOrder
     createdById?: SortOrder
@@ -61852,6 +65497,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumRaidStatusFilter<$PrismaModel>
     _max?: NestedEnumRaidStatusFilter<$PrismaModel>
+  }
+
+  export type EnumRaidResponseStrategyNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaidResponseStrategy | EnumRaidResponseStrategyFieldRefInput<$PrismaModel> | null
+    in?: $Enums.RaidResponseStrategy[] | ListEnumRaidResponseStrategyFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.RaidResponseStrategy[] | ListEnumRaidResponseStrategyFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumRaidResponseStrategyNullableWithAggregatesFilter<$PrismaModel> | $Enums.RaidResponseStrategy | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumRaidResponseStrategyNullableFilter<$PrismaModel>
+    _max?: NestedEnumRaidResponseStrategyNullableFilter<$PrismaModel>
   }
 
   export type EnumPerformanceReviewPeriodFilter<$PrismaModel = never> = {
@@ -62489,6 +66144,27 @@ export namespace Prisma {
     connect?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
   }
 
+  export type ProjectBaselineCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<ProjectBaselineCreateWithoutCreatedByInput, ProjectBaselineUncheckedCreateWithoutCreatedByInput> | ProjectBaselineCreateWithoutCreatedByInput[] | ProjectBaselineUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: ProjectBaselineCreateOrConnectWithoutCreatedByInput | ProjectBaselineCreateOrConnectWithoutCreatedByInput[]
+    createMany?: ProjectBaselineCreateManyCreatedByInputEnvelope
+    connect?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+  }
+
+  export type ChangeRequestCreateNestedManyWithoutRequestedByInput = {
+    create?: XOR<ChangeRequestCreateWithoutRequestedByInput, ChangeRequestUncheckedCreateWithoutRequestedByInput> | ChangeRequestCreateWithoutRequestedByInput[] | ChangeRequestUncheckedCreateWithoutRequestedByInput[]
+    connectOrCreate?: ChangeRequestCreateOrConnectWithoutRequestedByInput | ChangeRequestCreateOrConnectWithoutRequestedByInput[]
+    createMany?: ChangeRequestCreateManyRequestedByInputEnvelope
+    connect?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+  }
+
+  export type ChangeRequestCreateNestedManyWithoutDecidedByInput = {
+    create?: XOR<ChangeRequestCreateWithoutDecidedByInput, ChangeRequestUncheckedCreateWithoutDecidedByInput> | ChangeRequestCreateWithoutDecidedByInput[] | ChangeRequestUncheckedCreateWithoutDecidedByInput[]
+    connectOrCreate?: ChangeRequestCreateOrConnectWithoutDecidedByInput | ChangeRequestCreateOrConnectWithoutDecidedByInput[]
+    createMany?: ChangeRequestCreateManyDecidedByInputEnvelope
+    connect?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+  }
+
   export type PerformanceReviewCreateNestedManyWithoutUserInput = {
     create?: XOR<PerformanceReviewCreateWithoutUserInput, PerformanceReviewUncheckedCreateWithoutUserInput> | PerformanceReviewCreateWithoutUserInput[] | PerformanceReviewUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PerformanceReviewCreateOrConnectWithoutUserInput | PerformanceReviewCreateOrConnectWithoutUserInput[]
@@ -62746,6 +66422,27 @@ export namespace Prisma {
     connectOrCreate?: ProjectRaidItemCreateOrConnectWithoutCreatedByInput | ProjectRaidItemCreateOrConnectWithoutCreatedByInput[]
     createMany?: ProjectRaidItemCreateManyCreatedByInputEnvelope
     connect?: ProjectRaidItemWhereUniqueInput | ProjectRaidItemWhereUniqueInput[]
+  }
+
+  export type ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<ProjectBaselineCreateWithoutCreatedByInput, ProjectBaselineUncheckedCreateWithoutCreatedByInput> | ProjectBaselineCreateWithoutCreatedByInput[] | ProjectBaselineUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: ProjectBaselineCreateOrConnectWithoutCreatedByInput | ProjectBaselineCreateOrConnectWithoutCreatedByInput[]
+    createMany?: ProjectBaselineCreateManyCreatedByInputEnvelope
+    connect?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+  }
+
+  export type ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput = {
+    create?: XOR<ChangeRequestCreateWithoutRequestedByInput, ChangeRequestUncheckedCreateWithoutRequestedByInput> | ChangeRequestCreateWithoutRequestedByInput[] | ChangeRequestUncheckedCreateWithoutRequestedByInput[]
+    connectOrCreate?: ChangeRequestCreateOrConnectWithoutRequestedByInput | ChangeRequestCreateOrConnectWithoutRequestedByInput[]
+    createMany?: ChangeRequestCreateManyRequestedByInputEnvelope
+    connect?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+  }
+
+  export type ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput = {
+    create?: XOR<ChangeRequestCreateWithoutDecidedByInput, ChangeRequestUncheckedCreateWithoutDecidedByInput> | ChangeRequestCreateWithoutDecidedByInput[] | ChangeRequestUncheckedCreateWithoutDecidedByInput[]
+    connectOrCreate?: ChangeRequestCreateOrConnectWithoutDecidedByInput | ChangeRequestCreateOrConnectWithoutDecidedByInput[]
+    createMany?: ChangeRequestCreateManyDecidedByInputEnvelope
+    connect?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
   }
 
   export type PerformanceReviewUncheckedCreateNestedManyWithoutUserInput = {
@@ -63319,6 +67016,48 @@ export namespace Prisma {
     deleteMany?: ProjectRaidItemScalarWhereInput | ProjectRaidItemScalarWhereInput[]
   }
 
+  export type ProjectBaselineUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<ProjectBaselineCreateWithoutCreatedByInput, ProjectBaselineUncheckedCreateWithoutCreatedByInput> | ProjectBaselineCreateWithoutCreatedByInput[] | ProjectBaselineUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: ProjectBaselineCreateOrConnectWithoutCreatedByInput | ProjectBaselineCreateOrConnectWithoutCreatedByInput[]
+    upsert?: ProjectBaselineUpsertWithWhereUniqueWithoutCreatedByInput | ProjectBaselineUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: ProjectBaselineCreateManyCreatedByInputEnvelope
+    set?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    disconnect?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    delete?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    connect?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    update?: ProjectBaselineUpdateWithWhereUniqueWithoutCreatedByInput | ProjectBaselineUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: ProjectBaselineUpdateManyWithWhereWithoutCreatedByInput | ProjectBaselineUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: ProjectBaselineScalarWhereInput | ProjectBaselineScalarWhereInput[]
+  }
+
+  export type ChangeRequestUpdateManyWithoutRequestedByNestedInput = {
+    create?: XOR<ChangeRequestCreateWithoutRequestedByInput, ChangeRequestUncheckedCreateWithoutRequestedByInput> | ChangeRequestCreateWithoutRequestedByInput[] | ChangeRequestUncheckedCreateWithoutRequestedByInput[]
+    connectOrCreate?: ChangeRequestCreateOrConnectWithoutRequestedByInput | ChangeRequestCreateOrConnectWithoutRequestedByInput[]
+    upsert?: ChangeRequestUpsertWithWhereUniqueWithoutRequestedByInput | ChangeRequestUpsertWithWhereUniqueWithoutRequestedByInput[]
+    createMany?: ChangeRequestCreateManyRequestedByInputEnvelope
+    set?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    disconnect?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    delete?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    connect?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    update?: ChangeRequestUpdateWithWhereUniqueWithoutRequestedByInput | ChangeRequestUpdateWithWhereUniqueWithoutRequestedByInput[]
+    updateMany?: ChangeRequestUpdateManyWithWhereWithoutRequestedByInput | ChangeRequestUpdateManyWithWhereWithoutRequestedByInput[]
+    deleteMany?: ChangeRequestScalarWhereInput | ChangeRequestScalarWhereInput[]
+  }
+
+  export type ChangeRequestUpdateManyWithoutDecidedByNestedInput = {
+    create?: XOR<ChangeRequestCreateWithoutDecidedByInput, ChangeRequestUncheckedCreateWithoutDecidedByInput> | ChangeRequestCreateWithoutDecidedByInput[] | ChangeRequestUncheckedCreateWithoutDecidedByInput[]
+    connectOrCreate?: ChangeRequestCreateOrConnectWithoutDecidedByInput | ChangeRequestCreateOrConnectWithoutDecidedByInput[]
+    upsert?: ChangeRequestUpsertWithWhereUniqueWithoutDecidedByInput | ChangeRequestUpsertWithWhereUniqueWithoutDecidedByInput[]
+    createMany?: ChangeRequestCreateManyDecidedByInputEnvelope
+    set?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    disconnect?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    delete?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    connect?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    update?: ChangeRequestUpdateWithWhereUniqueWithoutDecidedByInput | ChangeRequestUpdateWithWhereUniqueWithoutDecidedByInput[]
+    updateMany?: ChangeRequestUpdateManyWithWhereWithoutDecidedByInput | ChangeRequestUpdateManyWithWhereWithoutDecidedByInput[]
+    deleteMany?: ChangeRequestScalarWhereInput | ChangeRequestScalarWhereInput[]
+  }
+
   export type PerformanceReviewUpdateManyWithoutUserNestedInput = {
     create?: XOR<PerformanceReviewCreateWithoutUserInput, PerformanceReviewUncheckedCreateWithoutUserInput> | PerformanceReviewCreateWithoutUserInput[] | PerformanceReviewUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PerformanceReviewCreateOrConnectWithoutUserInput | PerformanceReviewCreateOrConnectWithoutUserInput[]
@@ -63837,6 +67576,48 @@ export namespace Prisma {
     deleteMany?: ProjectRaidItemScalarWhereInput | ProjectRaidItemScalarWhereInput[]
   }
 
+  export type ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<ProjectBaselineCreateWithoutCreatedByInput, ProjectBaselineUncheckedCreateWithoutCreatedByInput> | ProjectBaselineCreateWithoutCreatedByInput[] | ProjectBaselineUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: ProjectBaselineCreateOrConnectWithoutCreatedByInput | ProjectBaselineCreateOrConnectWithoutCreatedByInput[]
+    upsert?: ProjectBaselineUpsertWithWhereUniqueWithoutCreatedByInput | ProjectBaselineUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: ProjectBaselineCreateManyCreatedByInputEnvelope
+    set?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    disconnect?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    delete?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    connect?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    update?: ProjectBaselineUpdateWithWhereUniqueWithoutCreatedByInput | ProjectBaselineUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: ProjectBaselineUpdateManyWithWhereWithoutCreatedByInput | ProjectBaselineUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: ProjectBaselineScalarWhereInput | ProjectBaselineScalarWhereInput[]
+  }
+
+  export type ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput = {
+    create?: XOR<ChangeRequestCreateWithoutRequestedByInput, ChangeRequestUncheckedCreateWithoutRequestedByInput> | ChangeRequestCreateWithoutRequestedByInput[] | ChangeRequestUncheckedCreateWithoutRequestedByInput[]
+    connectOrCreate?: ChangeRequestCreateOrConnectWithoutRequestedByInput | ChangeRequestCreateOrConnectWithoutRequestedByInput[]
+    upsert?: ChangeRequestUpsertWithWhereUniqueWithoutRequestedByInput | ChangeRequestUpsertWithWhereUniqueWithoutRequestedByInput[]
+    createMany?: ChangeRequestCreateManyRequestedByInputEnvelope
+    set?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    disconnect?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    delete?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    connect?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    update?: ChangeRequestUpdateWithWhereUniqueWithoutRequestedByInput | ChangeRequestUpdateWithWhereUniqueWithoutRequestedByInput[]
+    updateMany?: ChangeRequestUpdateManyWithWhereWithoutRequestedByInput | ChangeRequestUpdateManyWithWhereWithoutRequestedByInput[]
+    deleteMany?: ChangeRequestScalarWhereInput | ChangeRequestScalarWhereInput[]
+  }
+
+  export type ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput = {
+    create?: XOR<ChangeRequestCreateWithoutDecidedByInput, ChangeRequestUncheckedCreateWithoutDecidedByInput> | ChangeRequestCreateWithoutDecidedByInput[] | ChangeRequestUncheckedCreateWithoutDecidedByInput[]
+    connectOrCreate?: ChangeRequestCreateOrConnectWithoutDecidedByInput | ChangeRequestCreateOrConnectWithoutDecidedByInput[]
+    upsert?: ChangeRequestUpsertWithWhereUniqueWithoutDecidedByInput | ChangeRequestUpsertWithWhereUniqueWithoutDecidedByInput[]
+    createMany?: ChangeRequestCreateManyDecidedByInputEnvelope
+    set?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    disconnect?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    delete?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    connect?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    update?: ChangeRequestUpdateWithWhereUniqueWithoutDecidedByInput | ChangeRequestUpdateWithWhereUniqueWithoutDecidedByInput[]
+    updateMany?: ChangeRequestUpdateManyWithWhereWithoutDecidedByInput | ChangeRequestUpdateManyWithWhereWithoutDecidedByInput[]
+    deleteMany?: ChangeRequestScalarWhereInput | ChangeRequestScalarWhereInput[]
+  }
+
   export type PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<PerformanceReviewCreateWithoutUserInput, PerformanceReviewUncheckedCreateWithoutUserInput> | PerformanceReviewCreateWithoutUserInput[] | PerformanceReviewUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PerformanceReviewCreateOrConnectWithoutUserInput | PerformanceReviewCreateOrConnectWithoutUserInput[]
@@ -64092,6 +67873,20 @@ export namespace Prisma {
     connect?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
   }
 
+  export type ProjectBaselineCreateNestedManyWithoutProjectInput = {
+    create?: XOR<ProjectBaselineCreateWithoutProjectInput, ProjectBaselineUncheckedCreateWithoutProjectInput> | ProjectBaselineCreateWithoutProjectInput[] | ProjectBaselineUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectBaselineCreateOrConnectWithoutProjectInput | ProjectBaselineCreateOrConnectWithoutProjectInput[]
+    createMany?: ProjectBaselineCreateManyProjectInputEnvelope
+    connect?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+  }
+
+  export type ChangeRequestCreateNestedManyWithoutProjectInput = {
+    create?: XOR<ChangeRequestCreateWithoutProjectInput, ChangeRequestUncheckedCreateWithoutProjectInput> | ChangeRequestCreateWithoutProjectInput[] | ChangeRequestUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ChangeRequestCreateOrConnectWithoutProjectInput | ChangeRequestCreateOrConnectWithoutProjectInput[]
+    createMany?: ChangeRequestCreateManyProjectInputEnvelope
+    connect?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+  }
+
   export type ProjectResourceUncheckedCreateNestedManyWithoutProjectInput = {
     create?: XOR<ProjectResourceCreateWithoutProjectInput, ProjectResourceUncheckedCreateWithoutProjectInput> | ProjectResourceCreateWithoutProjectInput[] | ProjectResourceUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: ProjectResourceCreateOrConnectWithoutProjectInput | ProjectResourceCreateOrConnectWithoutProjectInput[]
@@ -64181,6 +67976,20 @@ export namespace Prisma {
     connectOrCreate?: ProjectReportCreateOrConnectWithoutProjectInput | ProjectReportCreateOrConnectWithoutProjectInput[]
     createMany?: ProjectReportCreateManyProjectInputEnvelope
     connect?: ProjectReportWhereUniqueInput | ProjectReportWhereUniqueInput[]
+  }
+
+  export type ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput = {
+    create?: XOR<ProjectBaselineCreateWithoutProjectInput, ProjectBaselineUncheckedCreateWithoutProjectInput> | ProjectBaselineCreateWithoutProjectInput[] | ProjectBaselineUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectBaselineCreateOrConnectWithoutProjectInput | ProjectBaselineCreateOrConnectWithoutProjectInput[]
+    createMany?: ProjectBaselineCreateManyProjectInputEnvelope
+    connect?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+  }
+
+  export type ChangeRequestUncheckedCreateNestedManyWithoutProjectInput = {
+    create?: XOR<ChangeRequestCreateWithoutProjectInput, ChangeRequestUncheckedCreateWithoutProjectInput> | ChangeRequestCreateWithoutProjectInput[] | ChangeRequestUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ChangeRequestCreateOrConnectWithoutProjectInput | ChangeRequestCreateOrConnectWithoutProjectInput[]
+    createMany?: ChangeRequestCreateManyProjectInputEnvelope
+    connect?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
   }
 
   export type EnumProjectStatusFieldUpdateOperationsInput = {
@@ -64429,6 +68238,34 @@ export namespace Prisma {
     deleteMany?: ProjectReportScalarWhereInput | ProjectReportScalarWhereInput[]
   }
 
+  export type ProjectBaselineUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<ProjectBaselineCreateWithoutProjectInput, ProjectBaselineUncheckedCreateWithoutProjectInput> | ProjectBaselineCreateWithoutProjectInput[] | ProjectBaselineUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectBaselineCreateOrConnectWithoutProjectInput | ProjectBaselineCreateOrConnectWithoutProjectInput[]
+    upsert?: ProjectBaselineUpsertWithWhereUniqueWithoutProjectInput | ProjectBaselineUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: ProjectBaselineCreateManyProjectInputEnvelope
+    set?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    disconnect?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    delete?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    connect?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    update?: ProjectBaselineUpdateWithWhereUniqueWithoutProjectInput | ProjectBaselineUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: ProjectBaselineUpdateManyWithWhereWithoutProjectInput | ProjectBaselineUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: ProjectBaselineScalarWhereInput | ProjectBaselineScalarWhereInput[]
+  }
+
+  export type ChangeRequestUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<ChangeRequestCreateWithoutProjectInput, ChangeRequestUncheckedCreateWithoutProjectInput> | ChangeRequestCreateWithoutProjectInput[] | ChangeRequestUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ChangeRequestCreateOrConnectWithoutProjectInput | ChangeRequestCreateOrConnectWithoutProjectInput[]
+    upsert?: ChangeRequestUpsertWithWhereUniqueWithoutProjectInput | ChangeRequestUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: ChangeRequestCreateManyProjectInputEnvelope
+    set?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    disconnect?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    delete?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    connect?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    update?: ChangeRequestUpdateWithWhereUniqueWithoutProjectInput | ChangeRequestUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: ChangeRequestUpdateManyWithWhereWithoutProjectInput | ChangeRequestUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: ChangeRequestScalarWhereInput | ChangeRequestScalarWhereInput[]
+  }
+
   export type ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput = {
     create?: XOR<ProjectResourceCreateWithoutProjectInput, ProjectResourceUncheckedCreateWithoutProjectInput> | ProjectResourceCreateWithoutProjectInput[] | ProjectResourceUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: ProjectResourceCreateOrConnectWithoutProjectInput | ProjectResourceCreateOrConnectWithoutProjectInput[]
@@ -64609,6 +68446,180 @@ export namespace Prisma {
     update?: ProjectReportUpdateWithWhereUniqueWithoutProjectInput | ProjectReportUpdateWithWhereUniqueWithoutProjectInput[]
     updateMany?: ProjectReportUpdateManyWithWhereWithoutProjectInput | ProjectReportUpdateManyWithWhereWithoutProjectInput[]
     deleteMany?: ProjectReportScalarWhereInput | ProjectReportScalarWhereInput[]
+  }
+
+  export type ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<ProjectBaselineCreateWithoutProjectInput, ProjectBaselineUncheckedCreateWithoutProjectInput> | ProjectBaselineCreateWithoutProjectInput[] | ProjectBaselineUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectBaselineCreateOrConnectWithoutProjectInput | ProjectBaselineCreateOrConnectWithoutProjectInput[]
+    upsert?: ProjectBaselineUpsertWithWhereUniqueWithoutProjectInput | ProjectBaselineUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: ProjectBaselineCreateManyProjectInputEnvelope
+    set?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    disconnect?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    delete?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    connect?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    update?: ProjectBaselineUpdateWithWhereUniqueWithoutProjectInput | ProjectBaselineUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: ProjectBaselineUpdateManyWithWhereWithoutProjectInput | ProjectBaselineUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: ProjectBaselineScalarWhereInput | ProjectBaselineScalarWhereInput[]
+  }
+
+  export type ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<ChangeRequestCreateWithoutProjectInput, ChangeRequestUncheckedCreateWithoutProjectInput> | ChangeRequestCreateWithoutProjectInput[] | ChangeRequestUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ChangeRequestCreateOrConnectWithoutProjectInput | ChangeRequestCreateOrConnectWithoutProjectInput[]
+    upsert?: ChangeRequestUpsertWithWhereUniqueWithoutProjectInput | ChangeRequestUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: ChangeRequestCreateManyProjectInputEnvelope
+    set?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    disconnect?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    delete?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    connect?: ChangeRequestWhereUniqueInput | ChangeRequestWhereUniqueInput[]
+    update?: ChangeRequestUpdateWithWhereUniqueWithoutProjectInput | ChangeRequestUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: ChangeRequestUpdateManyWithWhereWithoutProjectInput | ChangeRequestUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: ChangeRequestScalarWhereInput | ChangeRequestScalarWhereInput[]
+  }
+
+  export type ProjectCreateNestedOneWithoutBaselinesInput = {
+    create?: XOR<ProjectCreateWithoutBaselinesInput, ProjectUncheckedCreateWithoutBaselinesInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutBaselinesInput
+    connect?: ProjectWhereUniqueInput
+  }
+
+  export type ChangeRequestCreateNestedOneWithoutBaselinesInput = {
+    create?: XOR<ChangeRequestCreateWithoutBaselinesInput, ChangeRequestUncheckedCreateWithoutBaselinesInput>
+    connectOrCreate?: ChangeRequestCreateOrConnectWithoutBaselinesInput
+    connect?: ChangeRequestWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutBaselinesCreatedInput = {
+    create?: XOR<UserCreateWithoutBaselinesCreatedInput, UserUncheckedCreateWithoutBaselinesCreatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBaselinesCreatedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumProjectBaselineSourceFieldUpdateOperationsInput = {
+    set?: $Enums.ProjectBaselineSource
+  }
+
+  export type ProjectUpdateOneRequiredWithoutBaselinesNestedInput = {
+    create?: XOR<ProjectCreateWithoutBaselinesInput, ProjectUncheckedCreateWithoutBaselinesInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutBaselinesInput
+    upsert?: ProjectUpsertWithoutBaselinesInput
+    connect?: ProjectWhereUniqueInput
+    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutBaselinesInput, ProjectUpdateWithoutBaselinesInput>, ProjectUncheckedUpdateWithoutBaselinesInput>
+  }
+
+  export type ChangeRequestUpdateOneWithoutBaselinesNestedInput = {
+    create?: XOR<ChangeRequestCreateWithoutBaselinesInput, ChangeRequestUncheckedCreateWithoutBaselinesInput>
+    connectOrCreate?: ChangeRequestCreateOrConnectWithoutBaselinesInput
+    upsert?: ChangeRequestUpsertWithoutBaselinesInput
+    disconnect?: ChangeRequestWhereInput | boolean
+    delete?: ChangeRequestWhereInput | boolean
+    connect?: ChangeRequestWhereUniqueInput
+    update?: XOR<XOR<ChangeRequestUpdateToOneWithWhereWithoutBaselinesInput, ChangeRequestUpdateWithoutBaselinesInput>, ChangeRequestUncheckedUpdateWithoutBaselinesInput>
+  }
+
+  export type UserUpdateOneWithoutBaselinesCreatedNestedInput = {
+    create?: XOR<UserCreateWithoutBaselinesCreatedInput, UserUncheckedCreateWithoutBaselinesCreatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBaselinesCreatedInput
+    upsert?: UserUpsertWithoutBaselinesCreatedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBaselinesCreatedInput, UserUpdateWithoutBaselinesCreatedInput>, UserUncheckedUpdateWithoutBaselinesCreatedInput>
+  }
+
+  export type ProjectCreateNestedOneWithoutChangeRequestsInput = {
+    create?: XOR<ProjectCreateWithoutChangeRequestsInput, ProjectUncheckedCreateWithoutChangeRequestsInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutChangeRequestsInput
+    connect?: ProjectWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutChangeRequestsRequestedInput = {
+    create?: XOR<UserCreateWithoutChangeRequestsRequestedInput, UserUncheckedCreateWithoutChangeRequestsRequestedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutChangeRequestsRequestedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutChangeRequestsDecidedInput = {
+    create?: XOR<UserCreateWithoutChangeRequestsDecidedInput, UserUncheckedCreateWithoutChangeRequestsDecidedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutChangeRequestsDecidedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ProjectBaselineCreateNestedManyWithoutChangeRequestInput = {
+    create?: XOR<ProjectBaselineCreateWithoutChangeRequestInput, ProjectBaselineUncheckedCreateWithoutChangeRequestInput> | ProjectBaselineCreateWithoutChangeRequestInput[] | ProjectBaselineUncheckedCreateWithoutChangeRequestInput[]
+    connectOrCreate?: ProjectBaselineCreateOrConnectWithoutChangeRequestInput | ProjectBaselineCreateOrConnectWithoutChangeRequestInput[]
+    createMany?: ProjectBaselineCreateManyChangeRequestInputEnvelope
+    connect?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+  }
+
+  export type ProjectBaselineUncheckedCreateNestedManyWithoutChangeRequestInput = {
+    create?: XOR<ProjectBaselineCreateWithoutChangeRequestInput, ProjectBaselineUncheckedCreateWithoutChangeRequestInput> | ProjectBaselineCreateWithoutChangeRequestInput[] | ProjectBaselineUncheckedCreateWithoutChangeRequestInput[]
+    connectOrCreate?: ProjectBaselineCreateOrConnectWithoutChangeRequestInput | ProjectBaselineCreateOrConnectWithoutChangeRequestInput[]
+    createMany?: ProjectBaselineCreateManyChangeRequestInputEnvelope
+    connect?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+  }
+
+  export type EnumChangeRequestTypeFieldUpdateOperationsInput = {
+    set?: $Enums.ChangeRequestType
+  }
+
+  export type EnumChangeRequestStatusFieldUpdateOperationsInput = {
+    set?: $Enums.ChangeRequestStatus
+  }
+
+  export type ProjectUpdateOneRequiredWithoutChangeRequestsNestedInput = {
+    create?: XOR<ProjectCreateWithoutChangeRequestsInput, ProjectUncheckedCreateWithoutChangeRequestsInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutChangeRequestsInput
+    upsert?: ProjectUpsertWithoutChangeRequestsInput
+    connect?: ProjectWhereUniqueInput
+    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutChangeRequestsInput, ProjectUpdateWithoutChangeRequestsInput>, ProjectUncheckedUpdateWithoutChangeRequestsInput>
+  }
+
+  export type UserUpdateOneWithoutChangeRequestsRequestedNestedInput = {
+    create?: XOR<UserCreateWithoutChangeRequestsRequestedInput, UserUncheckedCreateWithoutChangeRequestsRequestedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutChangeRequestsRequestedInput
+    upsert?: UserUpsertWithoutChangeRequestsRequestedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutChangeRequestsRequestedInput, UserUpdateWithoutChangeRequestsRequestedInput>, UserUncheckedUpdateWithoutChangeRequestsRequestedInput>
+  }
+
+  export type UserUpdateOneWithoutChangeRequestsDecidedNestedInput = {
+    create?: XOR<UserCreateWithoutChangeRequestsDecidedInput, UserUncheckedCreateWithoutChangeRequestsDecidedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutChangeRequestsDecidedInput
+    upsert?: UserUpsertWithoutChangeRequestsDecidedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutChangeRequestsDecidedInput, UserUpdateWithoutChangeRequestsDecidedInput>, UserUncheckedUpdateWithoutChangeRequestsDecidedInput>
+  }
+
+  export type ProjectBaselineUpdateManyWithoutChangeRequestNestedInput = {
+    create?: XOR<ProjectBaselineCreateWithoutChangeRequestInput, ProjectBaselineUncheckedCreateWithoutChangeRequestInput> | ProjectBaselineCreateWithoutChangeRequestInput[] | ProjectBaselineUncheckedCreateWithoutChangeRequestInput[]
+    connectOrCreate?: ProjectBaselineCreateOrConnectWithoutChangeRequestInput | ProjectBaselineCreateOrConnectWithoutChangeRequestInput[]
+    upsert?: ProjectBaselineUpsertWithWhereUniqueWithoutChangeRequestInput | ProjectBaselineUpsertWithWhereUniqueWithoutChangeRequestInput[]
+    createMany?: ProjectBaselineCreateManyChangeRequestInputEnvelope
+    set?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    disconnect?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    delete?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    connect?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    update?: ProjectBaselineUpdateWithWhereUniqueWithoutChangeRequestInput | ProjectBaselineUpdateWithWhereUniqueWithoutChangeRequestInput[]
+    updateMany?: ProjectBaselineUpdateManyWithWhereWithoutChangeRequestInput | ProjectBaselineUpdateManyWithWhereWithoutChangeRequestInput[]
+    deleteMany?: ProjectBaselineScalarWhereInput | ProjectBaselineScalarWhereInput[]
+  }
+
+  export type ProjectBaselineUncheckedUpdateManyWithoutChangeRequestNestedInput = {
+    create?: XOR<ProjectBaselineCreateWithoutChangeRequestInput, ProjectBaselineUncheckedCreateWithoutChangeRequestInput> | ProjectBaselineCreateWithoutChangeRequestInput[] | ProjectBaselineUncheckedCreateWithoutChangeRequestInput[]
+    connectOrCreate?: ProjectBaselineCreateOrConnectWithoutChangeRequestInput | ProjectBaselineCreateOrConnectWithoutChangeRequestInput[]
+    upsert?: ProjectBaselineUpsertWithWhereUniqueWithoutChangeRequestInput | ProjectBaselineUpsertWithWhereUniqueWithoutChangeRequestInput[]
+    createMany?: ProjectBaselineCreateManyChangeRequestInputEnvelope
+    set?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    disconnect?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    delete?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    connect?: ProjectBaselineWhereUniqueInput | ProjectBaselineWhereUniqueInput[]
+    update?: ProjectBaselineUpdateWithWhereUniqueWithoutChangeRequestInput | ProjectBaselineUpdateWithWhereUniqueWithoutChangeRequestInput[]
+    updateMany?: ProjectBaselineUpdateManyWithWhereWithoutChangeRequestInput | ProjectBaselineUpdateManyWithWhereWithoutChangeRequestInput[]
+    deleteMany?: ProjectBaselineScalarWhereInput | ProjectBaselineScalarWhereInput[]
   }
 
   export type ProjectCreateNestedOneWithoutReportsInput = {
@@ -66713,6 +70724,10 @@ export namespace Prisma {
     set?: $Enums.RaidStatus
   }
 
+  export type NullableEnumRaidResponseStrategyFieldUpdateOperationsInput = {
+    set?: $Enums.RaidResponseStrategy | null
+  }
+
   export type ProjectUpdateOneRequiredWithoutRaidItemsNestedInput = {
     create?: XOR<ProjectCreateWithoutRaidItemsInput, ProjectUncheckedCreateWithoutRaidItemsInput>
     connectOrCreate?: ProjectCreateOrConnectWithoutRaidItemsInput
@@ -67171,6 +71186,57 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
+  export type NestedEnumProjectBaselineSourceFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjectBaselineSource | EnumProjectBaselineSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.ProjectBaselineSource[] | ListEnumProjectBaselineSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProjectBaselineSource[] | ListEnumProjectBaselineSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumProjectBaselineSourceFilter<$PrismaModel> | $Enums.ProjectBaselineSource
+  }
+
+  export type NestedEnumProjectBaselineSourceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProjectBaselineSource | EnumProjectBaselineSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.ProjectBaselineSource[] | ListEnumProjectBaselineSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProjectBaselineSource[] | ListEnumProjectBaselineSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumProjectBaselineSourceWithAggregatesFilter<$PrismaModel> | $Enums.ProjectBaselineSource
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumProjectBaselineSourceFilter<$PrismaModel>
+    _max?: NestedEnumProjectBaselineSourceFilter<$PrismaModel>
+  }
+
+  export type NestedEnumChangeRequestTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ChangeRequestType | EnumChangeRequestTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ChangeRequestType[] | ListEnumChangeRequestTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ChangeRequestType[] | ListEnumChangeRequestTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumChangeRequestTypeFilter<$PrismaModel> | $Enums.ChangeRequestType
+  }
+
+  export type NestedEnumChangeRequestStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ChangeRequestStatus | EnumChangeRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ChangeRequestStatus[] | ListEnumChangeRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ChangeRequestStatus[] | ListEnumChangeRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumChangeRequestStatusFilter<$PrismaModel> | $Enums.ChangeRequestStatus
+  }
+
+  export type NestedEnumChangeRequestTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ChangeRequestType | EnumChangeRequestTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ChangeRequestType[] | ListEnumChangeRequestTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ChangeRequestType[] | ListEnumChangeRequestTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumChangeRequestTypeWithAggregatesFilter<$PrismaModel> | $Enums.ChangeRequestType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumChangeRequestTypeFilter<$PrismaModel>
+    _max?: NestedEnumChangeRequestTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumChangeRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ChangeRequestStatus | EnumChangeRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ChangeRequestStatus[] | ListEnumChangeRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ChangeRequestStatus[] | ListEnumChangeRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumChangeRequestStatusWithAggregatesFilter<$PrismaModel> | $Enums.ChangeRequestStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumChangeRequestStatusFilter<$PrismaModel>
+    _max?: NestedEnumChangeRequestStatusFilter<$PrismaModel>
+  }
+
   export type NestedEnumProjectReportTypeNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.ProjectReportType | EnumProjectReportTypeFieldRefInput<$PrismaModel> | null
     in?: $Enums.ProjectReportType[] | ListEnumProjectReportTypeFieldRefInput<$PrismaModel> | null
@@ -67426,6 +71492,13 @@ export namespace Prisma {
     not?: NestedEnumRaidStatusFilter<$PrismaModel> | $Enums.RaidStatus
   }
 
+  export type NestedEnumRaidResponseStrategyNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaidResponseStrategy | EnumRaidResponseStrategyFieldRefInput<$PrismaModel> | null
+    in?: $Enums.RaidResponseStrategy[] | ListEnumRaidResponseStrategyFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.RaidResponseStrategy[] | ListEnumRaidResponseStrategyFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumRaidResponseStrategyNullableFilter<$PrismaModel> | $Enums.RaidResponseStrategy | null
+  }
+
   export type NestedEnumRaidStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.RaidStatus | EnumRaidStatusFieldRefInput<$PrismaModel>
     in?: $Enums.RaidStatus[] | ListEnumRaidStatusFieldRefInput<$PrismaModel>
@@ -67434,6 +71507,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumRaidStatusFilter<$PrismaModel>
     _max?: NestedEnumRaidStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumRaidResponseStrategyNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RaidResponseStrategy | EnumRaidResponseStrategyFieldRefInput<$PrismaModel> | null
+    in?: $Enums.RaidResponseStrategy[] | ListEnumRaidResponseStrategyFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.RaidResponseStrategy[] | ListEnumRaidResponseStrategyFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumRaidResponseStrategyNullableWithAggregatesFilter<$PrismaModel> | $Enums.RaidResponseStrategy | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumRaidResponseStrategyNullableFilter<$PrismaModel>
+    _max?: NestedEnumRaidResponseStrategyNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumPerformanceReviewPeriodFilter<$PrismaModel = never> = {
@@ -67550,6 +71633,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -67606,6 +71692,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -67667,6 +71756,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -67723,6 +71815,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -67789,6 +71884,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -67845,6 +71943,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -67906,6 +72007,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -67962,6 +72066,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -68098,6 +72205,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutSalesInput = {
@@ -68151,6 +72260,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutSalesInput = {
@@ -68214,6 +72325,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutPmInput = {
@@ -68267,6 +72380,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutPmInput = {
@@ -68330,6 +72445,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutTechnicalWriterInput = {
@@ -68383,6 +72500,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutTechnicalWriterInput = {
@@ -68446,6 +72565,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutAdminProjectInput = {
@@ -68499,6 +72620,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutAdminProjectInput = {
@@ -69464,6 +73587,7 @@ export namespace Prisma {
     likelihood?: $Enums.RaidLikelihood
     status?: $Enums.RaidStatus
     mitigation?: string | null
+    responseStrategy?: $Enums.RaidResponseStrategy | null
     dueDate?: Date | string | null
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -69482,6 +73606,7 @@ export namespace Prisma {
     likelihood?: $Enums.RaidLikelihood
     status?: $Enums.RaidStatus
     mitigation?: string | null
+    responseStrategy?: $Enums.RaidResponseStrategy | null
     dueDate?: Date | string | null
     closedAt?: Date | string | null
     createdById?: string | null
@@ -69508,6 +73633,7 @@ export namespace Prisma {
     likelihood?: $Enums.RaidLikelihood
     status?: $Enums.RaidStatus
     mitigation?: string | null
+    responseStrategy?: $Enums.RaidResponseStrategy | null
     dueDate?: Date | string | null
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -69527,6 +73653,7 @@ export namespace Prisma {
     status?: $Enums.RaidStatus
     ownerId?: string | null
     mitigation?: string | null
+    responseStrategy?: $Enums.RaidResponseStrategy | null
     dueDate?: Date | string | null
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -69540,6 +73667,154 @@ export namespace Prisma {
 
   export type ProjectRaidItemCreateManyCreatedByInputEnvelope = {
     data: ProjectRaidItemCreateManyCreatedByInput | ProjectRaidItemCreateManyCreatedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProjectBaselineCreateWithoutCreatedByInput = {
+    id?: string
+    version: number
+    isCurrent?: boolean
+    source?: $Enums.ProjectBaselineSource
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    plannedMandays?: number
+    estimatedCost?: number
+    contractValue?: number
+    createdAt?: Date | string
+    project: ProjectCreateNestedOneWithoutBaselinesInput
+    changeRequest?: ChangeRequestCreateNestedOneWithoutBaselinesInput
+  }
+
+  export type ProjectBaselineUncheckedCreateWithoutCreatedByInput = {
+    id?: string
+    projectId: string
+    version: number
+    isCurrent?: boolean
+    source?: $Enums.ProjectBaselineSource
+    changeRequestId?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    plannedMandays?: number
+    estimatedCost?: number
+    contractValue?: number
+    createdAt?: Date | string
+  }
+
+  export type ProjectBaselineCreateOrConnectWithoutCreatedByInput = {
+    where: ProjectBaselineWhereUniqueInput
+    create: XOR<ProjectBaselineCreateWithoutCreatedByInput, ProjectBaselineUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type ProjectBaselineCreateManyCreatedByInputEnvelope = {
+    data: ProjectBaselineCreateManyCreatedByInput | ProjectBaselineCreateManyCreatedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ChangeRequestCreateWithoutRequestedByInput = {
+    id?: string
+    type: $Enums.ChangeRequestType
+    status?: $Enums.ChangeRequestStatus
+    title: string
+    description?: string | null
+    impactSummary?: string | null
+    proposedStartDate?: Date | string | null
+    proposedEndDate?: Date | string | null
+    proposedPlannedMandays?: number | null
+    proposedEstimatedCost?: number | null
+    proposedContractValue?: number | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    appliedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutChangeRequestsInput
+    decidedBy?: UserCreateNestedOneWithoutChangeRequestsDecidedInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutChangeRequestInput
+  }
+
+  export type ChangeRequestUncheckedCreateWithoutRequestedByInput = {
+    id?: string
+    projectId: string
+    type: $Enums.ChangeRequestType
+    status?: $Enums.ChangeRequestStatus
+    title: string
+    description?: string | null
+    impactSummary?: string | null
+    proposedStartDate?: Date | string | null
+    proposedEndDate?: Date | string | null
+    proposedPlannedMandays?: number | null
+    proposedEstimatedCost?: number | null
+    proposedContractValue?: number | null
+    decidedById?: string | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    appliedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutChangeRequestInput
+  }
+
+  export type ChangeRequestCreateOrConnectWithoutRequestedByInput = {
+    where: ChangeRequestWhereUniqueInput
+    create: XOR<ChangeRequestCreateWithoutRequestedByInput, ChangeRequestUncheckedCreateWithoutRequestedByInput>
+  }
+
+  export type ChangeRequestCreateManyRequestedByInputEnvelope = {
+    data: ChangeRequestCreateManyRequestedByInput | ChangeRequestCreateManyRequestedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ChangeRequestCreateWithoutDecidedByInput = {
+    id?: string
+    type: $Enums.ChangeRequestType
+    status?: $Enums.ChangeRequestStatus
+    title: string
+    description?: string | null
+    impactSummary?: string | null
+    proposedStartDate?: Date | string | null
+    proposedEndDate?: Date | string | null
+    proposedPlannedMandays?: number | null
+    proposedEstimatedCost?: number | null
+    proposedContractValue?: number | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    appliedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutChangeRequestsInput
+    requestedBy?: UserCreateNestedOneWithoutChangeRequestsRequestedInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutChangeRequestInput
+  }
+
+  export type ChangeRequestUncheckedCreateWithoutDecidedByInput = {
+    id?: string
+    projectId: string
+    type: $Enums.ChangeRequestType
+    status?: $Enums.ChangeRequestStatus
+    title: string
+    description?: string | null
+    impactSummary?: string | null
+    proposedStartDate?: Date | string | null
+    proposedEndDate?: Date | string | null
+    proposedPlannedMandays?: number | null
+    proposedEstimatedCost?: number | null
+    proposedContractValue?: number | null
+    requestedById?: string | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    appliedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutChangeRequestInput
+  }
+
+  export type ChangeRequestCreateOrConnectWithoutDecidedByInput = {
+    where: ChangeRequestWhereUniqueInput
+    create: XOR<ChangeRequestCreateWithoutDecidedByInput, ChangeRequestUncheckedCreateWithoutDecidedByInput>
+  }
+
+  export type ChangeRequestCreateManyDecidedByInputEnvelope = {
+    data: ChangeRequestCreateManyDecidedByInput | ChangeRequestCreateManyDecidedByInput[]
     skipDuplicates?: boolean
   }
 
@@ -69774,6 +74049,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -69830,6 +74108,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -69936,6 +74217,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -69992,6 +74276,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -70917,6 +75204,7 @@ export namespace Prisma {
     status?: EnumRaidStatusFilter<"ProjectRaidItem"> | $Enums.RaidStatus
     ownerId?: StringNullableFilter<"ProjectRaidItem"> | string | null
     mitigation?: StringNullableFilter<"ProjectRaidItem"> | string | null
+    responseStrategy?: EnumRaidResponseStrategyNullableFilter<"ProjectRaidItem"> | $Enums.RaidResponseStrategy | null
     dueDate?: DateTimeNullableFilter<"ProjectRaidItem"> | Date | string | null
     closedAt?: DateTimeNullableFilter<"ProjectRaidItem"> | Date | string | null
     createdById?: StringNullableFilter<"ProjectRaidItem"> | string | null
@@ -70938,6 +75226,98 @@ export namespace Prisma {
   export type ProjectRaidItemUpdateManyWithWhereWithoutCreatedByInput = {
     where: ProjectRaidItemScalarWhereInput
     data: XOR<ProjectRaidItemUpdateManyMutationInput, ProjectRaidItemUncheckedUpdateManyWithoutCreatedByInput>
+  }
+
+  export type ProjectBaselineUpsertWithWhereUniqueWithoutCreatedByInput = {
+    where: ProjectBaselineWhereUniqueInput
+    update: XOR<ProjectBaselineUpdateWithoutCreatedByInput, ProjectBaselineUncheckedUpdateWithoutCreatedByInput>
+    create: XOR<ProjectBaselineCreateWithoutCreatedByInput, ProjectBaselineUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type ProjectBaselineUpdateWithWhereUniqueWithoutCreatedByInput = {
+    where: ProjectBaselineWhereUniqueInput
+    data: XOR<ProjectBaselineUpdateWithoutCreatedByInput, ProjectBaselineUncheckedUpdateWithoutCreatedByInput>
+  }
+
+  export type ProjectBaselineUpdateManyWithWhereWithoutCreatedByInput = {
+    where: ProjectBaselineScalarWhereInput
+    data: XOR<ProjectBaselineUpdateManyMutationInput, ProjectBaselineUncheckedUpdateManyWithoutCreatedByInput>
+  }
+
+  export type ProjectBaselineScalarWhereInput = {
+    AND?: ProjectBaselineScalarWhereInput | ProjectBaselineScalarWhereInput[]
+    OR?: ProjectBaselineScalarWhereInput[]
+    NOT?: ProjectBaselineScalarWhereInput | ProjectBaselineScalarWhereInput[]
+    id?: StringFilter<"ProjectBaseline"> | string
+    projectId?: StringFilter<"ProjectBaseline"> | string
+    version?: IntFilter<"ProjectBaseline"> | number
+    isCurrent?: BoolFilter<"ProjectBaseline"> | boolean
+    source?: EnumProjectBaselineSourceFilter<"ProjectBaseline"> | $Enums.ProjectBaselineSource
+    changeRequestId?: StringNullableFilter<"ProjectBaseline"> | string | null
+    startDate?: DateTimeNullableFilter<"ProjectBaseline"> | Date | string | null
+    endDate?: DateTimeNullableFilter<"ProjectBaseline"> | Date | string | null
+    plannedMandays?: FloatFilter<"ProjectBaseline"> | number
+    estimatedCost?: FloatFilter<"ProjectBaseline"> | number
+    contractValue?: FloatFilter<"ProjectBaseline"> | number
+    createdById?: StringNullableFilter<"ProjectBaseline"> | string | null
+    createdAt?: DateTimeFilter<"ProjectBaseline"> | Date | string
+  }
+
+  export type ChangeRequestUpsertWithWhereUniqueWithoutRequestedByInput = {
+    where: ChangeRequestWhereUniqueInput
+    update: XOR<ChangeRequestUpdateWithoutRequestedByInput, ChangeRequestUncheckedUpdateWithoutRequestedByInput>
+    create: XOR<ChangeRequestCreateWithoutRequestedByInput, ChangeRequestUncheckedCreateWithoutRequestedByInput>
+  }
+
+  export type ChangeRequestUpdateWithWhereUniqueWithoutRequestedByInput = {
+    where: ChangeRequestWhereUniqueInput
+    data: XOR<ChangeRequestUpdateWithoutRequestedByInput, ChangeRequestUncheckedUpdateWithoutRequestedByInput>
+  }
+
+  export type ChangeRequestUpdateManyWithWhereWithoutRequestedByInput = {
+    where: ChangeRequestScalarWhereInput
+    data: XOR<ChangeRequestUpdateManyMutationInput, ChangeRequestUncheckedUpdateManyWithoutRequestedByInput>
+  }
+
+  export type ChangeRequestScalarWhereInput = {
+    AND?: ChangeRequestScalarWhereInput | ChangeRequestScalarWhereInput[]
+    OR?: ChangeRequestScalarWhereInput[]
+    NOT?: ChangeRequestScalarWhereInput | ChangeRequestScalarWhereInput[]
+    id?: StringFilter<"ChangeRequest"> | string
+    projectId?: StringFilter<"ChangeRequest"> | string
+    type?: EnumChangeRequestTypeFilter<"ChangeRequest"> | $Enums.ChangeRequestType
+    status?: EnumChangeRequestStatusFilter<"ChangeRequest"> | $Enums.ChangeRequestStatus
+    title?: StringFilter<"ChangeRequest"> | string
+    description?: StringNullableFilter<"ChangeRequest"> | string | null
+    impactSummary?: StringNullableFilter<"ChangeRequest"> | string | null
+    proposedStartDate?: DateTimeNullableFilter<"ChangeRequest"> | Date | string | null
+    proposedEndDate?: DateTimeNullableFilter<"ChangeRequest"> | Date | string | null
+    proposedPlannedMandays?: FloatNullableFilter<"ChangeRequest"> | number | null
+    proposedEstimatedCost?: FloatNullableFilter<"ChangeRequest"> | number | null
+    proposedContractValue?: FloatNullableFilter<"ChangeRequest"> | number | null
+    requestedById?: StringNullableFilter<"ChangeRequest"> | string | null
+    decidedById?: StringNullableFilter<"ChangeRequest"> | string | null
+    decidedAt?: DateTimeNullableFilter<"ChangeRequest"> | Date | string | null
+    decisionNote?: StringNullableFilter<"ChangeRequest"> | string | null
+    appliedAt?: DateTimeNullableFilter<"ChangeRequest"> | Date | string | null
+    createdAt?: DateTimeFilter<"ChangeRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"ChangeRequest"> | Date | string
+  }
+
+  export type ChangeRequestUpsertWithWhereUniqueWithoutDecidedByInput = {
+    where: ChangeRequestWhereUniqueInput
+    update: XOR<ChangeRequestUpdateWithoutDecidedByInput, ChangeRequestUncheckedUpdateWithoutDecidedByInput>
+    create: XOR<ChangeRequestCreateWithoutDecidedByInput, ChangeRequestUncheckedCreateWithoutDecidedByInput>
+  }
+
+  export type ChangeRequestUpdateWithWhereUniqueWithoutDecidedByInput = {
+    where: ChangeRequestWhereUniqueInput
+    data: XOR<ChangeRequestUpdateWithoutDecidedByInput, ChangeRequestUncheckedUpdateWithoutDecidedByInput>
+  }
+
+  export type ChangeRequestUpdateManyWithWhereWithoutDecidedByInput = {
+    where: ChangeRequestScalarWhereInput
+    data: XOR<ChangeRequestUpdateManyMutationInput, ChangeRequestUncheckedUpdateManyWithoutDecidedByInput>
   }
 
   export type PerformanceReviewUpsertWithWhereUniqueWithoutUserInput = {
@@ -71077,6 +75457,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutClientInput = {
@@ -71130,6 +75512,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutClientInput = {
@@ -71328,6 +75712,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -71384,6 +75771,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -71445,6 +75835,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -71501,6 +75894,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -71562,6 +75958,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -71618,6 +76017,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -71679,6 +76081,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -71735,6 +76140,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -72096,6 +76504,7 @@ export namespace Prisma {
     likelihood?: $Enums.RaidLikelihood
     status?: $Enums.RaidStatus
     mitigation?: string | null
+    responseStrategy?: $Enums.RaidResponseStrategy | null
     dueDate?: Date | string | null
     closedAt?: Date | string | null
     createdAt?: Date | string
@@ -72114,6 +76523,7 @@ export namespace Prisma {
     status?: $Enums.RaidStatus
     ownerId?: string | null
     mitigation?: string | null
+    responseStrategy?: $Enums.RaidResponseStrategy | null
     dueDate?: Date | string | null
     closedAt?: Date | string | null
     createdById?: string | null
@@ -72301,6 +76711,100 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProjectBaselineCreateWithoutProjectInput = {
+    id?: string
+    version: number
+    isCurrent?: boolean
+    source?: $Enums.ProjectBaselineSource
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    plannedMandays?: number
+    estimatedCost?: number
+    contractValue?: number
+    createdAt?: Date | string
+    changeRequest?: ChangeRequestCreateNestedOneWithoutBaselinesInput
+    createdBy?: UserCreateNestedOneWithoutBaselinesCreatedInput
+  }
+
+  export type ProjectBaselineUncheckedCreateWithoutProjectInput = {
+    id?: string
+    version: number
+    isCurrent?: boolean
+    source?: $Enums.ProjectBaselineSource
+    changeRequestId?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    plannedMandays?: number
+    estimatedCost?: number
+    contractValue?: number
+    createdById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ProjectBaselineCreateOrConnectWithoutProjectInput = {
+    where: ProjectBaselineWhereUniqueInput
+    create: XOR<ProjectBaselineCreateWithoutProjectInput, ProjectBaselineUncheckedCreateWithoutProjectInput>
+  }
+
+  export type ProjectBaselineCreateManyProjectInputEnvelope = {
+    data: ProjectBaselineCreateManyProjectInput | ProjectBaselineCreateManyProjectInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ChangeRequestCreateWithoutProjectInput = {
+    id?: string
+    type: $Enums.ChangeRequestType
+    status?: $Enums.ChangeRequestStatus
+    title: string
+    description?: string | null
+    impactSummary?: string | null
+    proposedStartDate?: Date | string | null
+    proposedEndDate?: Date | string | null
+    proposedPlannedMandays?: number | null
+    proposedEstimatedCost?: number | null
+    proposedContractValue?: number | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    appliedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    requestedBy?: UserCreateNestedOneWithoutChangeRequestsRequestedInput
+    decidedBy?: UserCreateNestedOneWithoutChangeRequestsDecidedInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutChangeRequestInput
+  }
+
+  export type ChangeRequestUncheckedCreateWithoutProjectInput = {
+    id?: string
+    type: $Enums.ChangeRequestType
+    status?: $Enums.ChangeRequestStatus
+    title: string
+    description?: string | null
+    impactSummary?: string | null
+    proposedStartDate?: Date | string | null
+    proposedEndDate?: Date | string | null
+    proposedPlannedMandays?: number | null
+    proposedEstimatedCost?: number | null
+    proposedContractValue?: number | null
+    requestedById?: string | null
+    decidedById?: string | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    appliedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutChangeRequestInput
+  }
+
+  export type ChangeRequestCreateOrConnectWithoutProjectInput = {
+    where: ChangeRequestWhereUniqueInput
+    create: XOR<ChangeRequestCreateWithoutProjectInput, ChangeRequestUncheckedCreateWithoutProjectInput>
+  }
+
+  export type ChangeRequestCreateManyProjectInputEnvelope = {
+    data: ChangeRequestCreateManyProjectInput | ChangeRequestCreateManyProjectInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ClientUpsertWithoutProjectsInput = {
     update: XOR<ClientUpdateWithoutProjectsInput, ClientUncheckedUpdateWithoutProjectsInput>
     create: XOR<ClientCreateWithoutProjectsInput, ClientUncheckedCreateWithoutProjectsInput>
@@ -72402,6 +76906,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -72458,6 +76965,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -72525,6 +77035,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -72581,6 +77094,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -72648,6 +77164,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -72704,6 +77223,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -72771,6 +77293,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -72827,6 +77352,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -73102,6 +77630,1426 @@ export namespace Prisma {
     data: XOR<ProjectReportUpdateManyMutationInput, ProjectReportUncheckedUpdateManyWithoutProjectInput>
   }
 
+  export type ProjectBaselineUpsertWithWhereUniqueWithoutProjectInput = {
+    where: ProjectBaselineWhereUniqueInput
+    update: XOR<ProjectBaselineUpdateWithoutProjectInput, ProjectBaselineUncheckedUpdateWithoutProjectInput>
+    create: XOR<ProjectBaselineCreateWithoutProjectInput, ProjectBaselineUncheckedCreateWithoutProjectInput>
+  }
+
+  export type ProjectBaselineUpdateWithWhereUniqueWithoutProjectInput = {
+    where: ProjectBaselineWhereUniqueInput
+    data: XOR<ProjectBaselineUpdateWithoutProjectInput, ProjectBaselineUncheckedUpdateWithoutProjectInput>
+  }
+
+  export type ProjectBaselineUpdateManyWithWhereWithoutProjectInput = {
+    where: ProjectBaselineScalarWhereInput
+    data: XOR<ProjectBaselineUpdateManyMutationInput, ProjectBaselineUncheckedUpdateManyWithoutProjectInput>
+  }
+
+  export type ChangeRequestUpsertWithWhereUniqueWithoutProjectInput = {
+    where: ChangeRequestWhereUniqueInput
+    update: XOR<ChangeRequestUpdateWithoutProjectInput, ChangeRequestUncheckedUpdateWithoutProjectInput>
+    create: XOR<ChangeRequestCreateWithoutProjectInput, ChangeRequestUncheckedCreateWithoutProjectInput>
+  }
+
+  export type ChangeRequestUpdateWithWhereUniqueWithoutProjectInput = {
+    where: ChangeRequestWhereUniqueInput
+    data: XOR<ChangeRequestUpdateWithoutProjectInput, ChangeRequestUncheckedUpdateWithoutProjectInput>
+  }
+
+  export type ChangeRequestUpdateManyWithWhereWithoutProjectInput = {
+    where: ChangeRequestScalarWhereInput
+    data: XOR<ChangeRequestUpdateManyMutationInput, ChangeRequestUncheckedUpdateManyWithoutProjectInput>
+  }
+
+  export type ProjectCreateWithoutBaselinesInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    currency?: string
+    exchangeRate?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    useWorkstreams?: boolean
+    surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
+    client: ClientCreateNestedOneWithoutProjectsInput
+    sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
+    pm?: UserCreateNestedOneWithoutProjectsAsPmInput
+    technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
+    adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    resources?: ProjectResourceCreateNestedManyWithoutProjectInput
+    timesheets?: TimesheetCreateNestedManyWithoutProjectInput
+    documents?: DocumentCreateNestedManyWithoutProjectInput
+    activities?: ActivityCreateNestedManyWithoutProjectInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
+    expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
+    tasks?: TaskCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
+    closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectUncheckedCreateWithoutBaselinesInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
+    clientId: string
+    salesId?: string | null
+    pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    currency?: string
+    exchangeRate?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    useWorkstreams?: boolean
+    surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutProjectInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
+    expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
+    closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutBaselinesInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutBaselinesInput, ProjectUncheckedCreateWithoutBaselinesInput>
+  }
+
+  export type ChangeRequestCreateWithoutBaselinesInput = {
+    id?: string
+    type: $Enums.ChangeRequestType
+    status?: $Enums.ChangeRequestStatus
+    title: string
+    description?: string | null
+    impactSummary?: string | null
+    proposedStartDate?: Date | string | null
+    proposedEndDate?: Date | string | null
+    proposedPlannedMandays?: number | null
+    proposedEstimatedCost?: number | null
+    proposedContractValue?: number | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    appliedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutChangeRequestsInput
+    requestedBy?: UserCreateNestedOneWithoutChangeRequestsRequestedInput
+    decidedBy?: UserCreateNestedOneWithoutChangeRequestsDecidedInput
+  }
+
+  export type ChangeRequestUncheckedCreateWithoutBaselinesInput = {
+    id?: string
+    projectId: string
+    type: $Enums.ChangeRequestType
+    status?: $Enums.ChangeRequestStatus
+    title: string
+    description?: string | null
+    impactSummary?: string | null
+    proposedStartDate?: Date | string | null
+    proposedEndDate?: Date | string | null
+    proposedPlannedMandays?: number | null
+    proposedEstimatedCost?: number | null
+    proposedContractValue?: number | null
+    requestedById?: string | null
+    decidedById?: string | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    appliedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ChangeRequestCreateOrConnectWithoutBaselinesInput = {
+    where: ChangeRequestWhereUniqueInput
+    create: XOR<ChangeRequestCreateWithoutBaselinesInput, ChangeRequestUncheckedCreateWithoutBaselinesInput>
+  }
+
+  export type UserCreateWithoutBaselinesCreatedInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    calendarTokenVersion?: number
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
+    skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
+    skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
+    skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserUncheckedCreateWithoutBaselinesCreatedInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnitId?: string | null
+    managerId?: string | null
+    principalId?: string | null
+    calendarTokenVersion?: number
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
+    skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
+    skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
+    skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserCreateOrConnectWithoutBaselinesCreatedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutBaselinesCreatedInput, UserUncheckedCreateWithoutBaselinesCreatedInput>
+  }
+
+  export type ProjectUpsertWithoutBaselinesInput = {
+    update: XOR<ProjectUpdateWithoutBaselinesInput, ProjectUncheckedUpdateWithoutBaselinesInput>
+    create: XOR<ProjectCreateWithoutBaselinesInput, ProjectUncheckedCreateWithoutBaselinesInput>
+    where?: ProjectWhereInput
+  }
+
+  export type ProjectUpdateToOneWithWhereWithoutBaselinesInput = {
+    where?: ProjectWhereInput
+    data: XOR<ProjectUpdateWithoutBaselinesInput, ProjectUncheckedUpdateWithoutBaselinesInput>
+  }
+
+  export type ProjectUpdateWithoutBaselinesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
+    sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
+    pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
+    technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
+    adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
+    timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUpdateManyWithoutProjectNestedInput
+    activities?: ActivityUpdateManyWithoutProjectNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
+    expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
+    closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutBaselinesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
+    clientId?: StringFieldUpdateOperationsInput | string
+    salesId?: NullableStringFieldUpdateOperationsInput | string | null
+    pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutProjectNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
+    expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
+    closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ChangeRequestUpsertWithoutBaselinesInput = {
+    update: XOR<ChangeRequestUpdateWithoutBaselinesInput, ChangeRequestUncheckedUpdateWithoutBaselinesInput>
+    create: XOR<ChangeRequestCreateWithoutBaselinesInput, ChangeRequestUncheckedCreateWithoutBaselinesInput>
+    where?: ChangeRequestWhereInput
+  }
+
+  export type ChangeRequestUpdateToOneWithWhereWithoutBaselinesInput = {
+    where?: ChangeRequestWhereInput
+    data: XOR<ChangeRequestUpdateWithoutBaselinesInput, ChangeRequestUncheckedUpdateWithoutBaselinesInput>
+  }
+
+  export type ChangeRequestUpdateWithoutBaselinesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumChangeRequestTypeFieldUpdateOperationsInput | $Enums.ChangeRequestType
+    status?: EnumChangeRequestStatusFieldUpdateOperationsInput | $Enums.ChangeRequestStatus
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impactSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedPlannedMandays?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedEstimatedCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedContractValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutChangeRequestsNestedInput
+    requestedBy?: UserUpdateOneWithoutChangeRequestsRequestedNestedInput
+    decidedBy?: UserUpdateOneWithoutChangeRequestsDecidedNestedInput
+  }
+
+  export type ChangeRequestUncheckedUpdateWithoutBaselinesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    type?: EnumChangeRequestTypeFieldUpdateOperationsInput | $Enums.ChangeRequestType
+    status?: EnumChangeRequestStatusFieldUpdateOperationsInput | $Enums.ChangeRequestStatus
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impactSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedPlannedMandays?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedEstimatedCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedContractValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    requestedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUpsertWithoutBaselinesCreatedInput = {
+    update: XOR<UserUpdateWithoutBaselinesCreatedInput, UserUncheckedUpdateWithoutBaselinesCreatedInput>
+    create: XOR<UserCreateWithoutBaselinesCreatedInput, UserUncheckedCreateWithoutBaselinesCreatedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutBaselinesCreatedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutBaselinesCreatedInput, UserUncheckedUpdateWithoutBaselinesCreatedInput>
+  }
+
+  export type UserUpdateWithoutBaselinesCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
+    skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
+    skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
+    skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutBaselinesCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
+    skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
+    skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type ProjectCreateWithoutChangeRequestsInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    currency?: string
+    exchangeRate?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    useWorkstreams?: boolean
+    surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
+    client: ClientCreateNestedOneWithoutProjectsInput
+    sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
+    pm?: UserCreateNestedOneWithoutProjectsAsPmInput
+    technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
+    adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    resources?: ProjectResourceCreateNestedManyWithoutProjectInput
+    timesheets?: TimesheetCreateNestedManyWithoutProjectInput
+    documents?: DocumentCreateNestedManyWithoutProjectInput
+    activities?: ActivityCreateNestedManyWithoutProjectInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
+    expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
+    tasks?: TaskCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
+    closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectUncheckedCreateWithoutChangeRequestsInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
+    clientId: string
+    salesId?: string | null
+    pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    currency?: string
+    exchangeRate?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    useWorkstreams?: boolean
+    surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutProjectInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
+    expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
+    closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutChangeRequestsInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutChangeRequestsInput, ProjectUncheckedCreateWithoutChangeRequestsInput>
+  }
+
+  export type UserCreateWithoutChangeRequestsRequestedInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    calendarTokenVersion?: number
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
+    skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
+    skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
+    skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserUncheckedCreateWithoutChangeRequestsRequestedInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnitId?: string | null
+    managerId?: string | null
+    principalId?: string | null
+    calendarTokenVersion?: number
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
+    skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
+    skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
+    skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserCreateOrConnectWithoutChangeRequestsRequestedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutChangeRequestsRequestedInput, UserUncheckedCreateWithoutChangeRequestsRequestedInput>
+  }
+
+  export type UserCreateWithoutChangeRequestsDecidedInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    calendarTokenVersion?: number
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
+    skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
+    skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
+    skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserUncheckedCreateWithoutChangeRequestsDecidedInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnitId?: string | null
+    managerId?: string | null
+    principalId?: string | null
+    calendarTokenVersion?: number
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
+    skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
+    skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
+    skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserCreateOrConnectWithoutChangeRequestsDecidedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutChangeRequestsDecidedInput, UserUncheckedCreateWithoutChangeRequestsDecidedInput>
+  }
+
+  export type ProjectBaselineCreateWithoutChangeRequestInput = {
+    id?: string
+    version: number
+    isCurrent?: boolean
+    source?: $Enums.ProjectBaselineSource
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    plannedMandays?: number
+    estimatedCost?: number
+    contractValue?: number
+    createdAt?: Date | string
+    project: ProjectCreateNestedOneWithoutBaselinesInput
+    createdBy?: UserCreateNestedOneWithoutBaselinesCreatedInput
+  }
+
+  export type ProjectBaselineUncheckedCreateWithoutChangeRequestInput = {
+    id?: string
+    projectId: string
+    version: number
+    isCurrent?: boolean
+    source?: $Enums.ProjectBaselineSource
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    plannedMandays?: number
+    estimatedCost?: number
+    contractValue?: number
+    createdById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ProjectBaselineCreateOrConnectWithoutChangeRequestInput = {
+    where: ProjectBaselineWhereUniqueInput
+    create: XOR<ProjectBaselineCreateWithoutChangeRequestInput, ProjectBaselineUncheckedCreateWithoutChangeRequestInput>
+  }
+
+  export type ProjectBaselineCreateManyChangeRequestInputEnvelope = {
+    data: ProjectBaselineCreateManyChangeRequestInput | ProjectBaselineCreateManyChangeRequestInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProjectUpsertWithoutChangeRequestsInput = {
+    update: XOR<ProjectUpdateWithoutChangeRequestsInput, ProjectUncheckedUpdateWithoutChangeRequestsInput>
+    create: XOR<ProjectCreateWithoutChangeRequestsInput, ProjectUncheckedCreateWithoutChangeRequestsInput>
+    where?: ProjectWhereInput
+  }
+
+  export type ProjectUpdateToOneWithWhereWithoutChangeRequestsInput = {
+    where?: ProjectWhereInput
+    data: XOR<ProjectUpdateWithoutChangeRequestsInput, ProjectUncheckedUpdateWithoutChangeRequestsInput>
+  }
+
+  export type ProjectUpdateWithoutChangeRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
+    sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
+    pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
+    technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
+    adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
+    timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUpdateManyWithoutProjectNestedInput
+    activities?: ActivityUpdateManyWithoutProjectNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
+    expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
+    closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutChangeRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
+    clientId?: StringFieldUpdateOperationsInput | string
+    salesId?: NullableStringFieldUpdateOperationsInput | string | null
+    pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutProjectNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
+    expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
+    closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type UserUpsertWithoutChangeRequestsRequestedInput = {
+    update: XOR<UserUpdateWithoutChangeRequestsRequestedInput, UserUncheckedUpdateWithoutChangeRequestsRequestedInput>
+    create: XOR<UserCreateWithoutChangeRequestsRequestedInput, UserUncheckedCreateWithoutChangeRequestsRequestedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutChangeRequestsRequestedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutChangeRequestsRequestedInput, UserUncheckedUpdateWithoutChangeRequestsRequestedInput>
+  }
+
+  export type UserUpdateWithoutChangeRequestsRequestedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
+    skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
+    skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
+    skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutChangeRequestsRequestedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
+    skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
+    skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type UserUpsertWithoutChangeRequestsDecidedInput = {
+    update: XOR<UserUpdateWithoutChangeRequestsDecidedInput, UserUncheckedUpdateWithoutChangeRequestsDecidedInput>
+    create: XOR<UserCreateWithoutChangeRequestsDecidedInput, UserUncheckedCreateWithoutChangeRequestsDecidedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutChangeRequestsDecidedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutChangeRequestsDecidedInput, UserUncheckedUpdateWithoutChangeRequestsDecidedInput>
+  }
+
+  export type UserUpdateWithoutChangeRequestsDecidedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
+    skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
+    skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
+    skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutChangeRequestsDecidedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
+    skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
+    skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type ProjectBaselineUpsertWithWhereUniqueWithoutChangeRequestInput = {
+    where: ProjectBaselineWhereUniqueInput
+    update: XOR<ProjectBaselineUpdateWithoutChangeRequestInput, ProjectBaselineUncheckedUpdateWithoutChangeRequestInput>
+    create: XOR<ProjectBaselineCreateWithoutChangeRequestInput, ProjectBaselineUncheckedCreateWithoutChangeRequestInput>
+  }
+
+  export type ProjectBaselineUpdateWithWhereUniqueWithoutChangeRequestInput = {
+    where: ProjectBaselineWhereUniqueInput
+    data: XOR<ProjectBaselineUpdateWithoutChangeRequestInput, ProjectBaselineUncheckedUpdateWithoutChangeRequestInput>
+  }
+
+  export type ProjectBaselineUpdateManyWithWhereWithoutChangeRequestInput = {
+    where: ProjectBaselineScalarWhereInput
+    data: XOR<ProjectBaselineUpdateManyMutationInput, ProjectBaselineUncheckedUpdateManyWithoutChangeRequestInput>
+  }
+
   export type ProjectCreateWithoutReportsInput = {
     id?: string
     code: string
@@ -73153,6 +79101,8 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutReportsInput = {
@@ -73206,6 +79156,8 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutReportsInput = {
@@ -73315,6 +79267,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -73371,6 +79326,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -73443,6 +79401,8 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutReportsInput = {
@@ -73496,6 +79456,8 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectWorkstreamUpsertWithoutReportsInput = {
@@ -73617,6 +79579,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -73673,6 +79638,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -73729,6 +79697,8 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutWorkstreamsInput = {
@@ -73782,6 +79752,8 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutWorkstreamsInput = {
@@ -74168,6 +80140,8 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutWorkstreamsInput = {
@@ -74221,6 +80195,8 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type BusinessUnitUpsertWithoutWorkstreamsInput = {
@@ -74405,6 +80381,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutSurveyResponsesInput = {
@@ -74458,6 +80436,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutSurveyResponsesInput = {
@@ -74527,6 +80507,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutSurveyResponsesInput = {
@@ -74580,6 +80562,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserCreateWithoutAuditLogsInput = {
@@ -74633,6 +80617,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -74689,6 +80676,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -74761,6 +80751,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -74817,6 +80810,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -74873,6 +80869,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutResourcesInput = {
@@ -74926,6 +80924,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutResourcesInput = {
@@ -75035,6 +81035,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -75091,6 +81094,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -75152,6 +81158,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -75208,6 +81217,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -75280,6 +81292,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutResourcesInput = {
@@ -75333,6 +81347,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectWorkstreamUpsertWithoutResourcesInput = {
@@ -75454,6 +81470,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -75510,6 +81529,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -75577,6 +81599,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -75633,6 +81658,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -75689,6 +81717,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutTimesheetsInput = {
@@ -75742,6 +81772,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutTimesheetsInput = {
@@ -75851,6 +81883,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -75907,6 +81942,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -76019,6 +82057,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -76075,6 +82116,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -76147,6 +82191,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutTimesheetsInput = {
@@ -76200,6 +82246,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectWorkstreamUpsertWithoutTimesheetsInput = {
@@ -76321,6 +82369,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -76377,6 +82428,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -76501,6 +82555,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -76557,6 +82614,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -76613,6 +82673,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutDocumentsInput = {
@@ -76666,6 +82728,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutDocumentsInput = {
@@ -76724,6 +82788,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -76780,6 +82847,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -76992,6 +83062,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutDocumentsInput = {
@@ -77045,6 +83117,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutDocumentsUploadedInput = {
@@ -77109,6 +83183,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -77165,6 +83242,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -77343,6 +83423,8 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutClosingChecklistInput = {
@@ -77396,6 +83478,8 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutClosingChecklistInput = {
@@ -77454,6 +83538,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -77510,6 +83597,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -77582,6 +83672,8 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutClosingChecklistInput = {
@@ -77635,6 +83727,8 @@ export namespace Prisma {
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutClosingChecklistsCompletedInput = {
@@ -77699,6 +83793,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -77755,6 +83852,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -77811,6 +83911,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutExpensesInput = {
@@ -77864,6 +83966,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutExpensesInput = {
@@ -77973,6 +84077,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -78029,6 +84136,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -78090,6 +84200,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -78146,6 +84259,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -78218,6 +84334,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutExpensesInput = {
@@ -78271,6 +84389,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectWorkstreamUpsertWithoutExpensesInput = {
@@ -78392,6 +84512,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -78448,6 +84571,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -78515,6 +84641,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -78571,6 +84700,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -78627,6 +84759,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -78683,6 +84818,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -79095,6 +85233,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -79151,6 +85292,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -79250,6 +85394,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -79306,6 +85453,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -79395,6 +85545,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -79451,6 +85604,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -79539,6 +85695,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -79595,6 +85754,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -79667,6 +85829,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -79723,6 +85888,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -79823,6 +85991,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -79879,6 +86050,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -79935,6 +86109,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -79991,6 +86168,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -80079,6 +86259,9 @@ export namespace Prisma {
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -80135,6 +86318,9 @@ export namespace Prisma {
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -80207,6 +86393,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -80263,6 +86452,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -80363,6 +86555,9 @@ export namespace Prisma {
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -80419,6 +86614,9 @@ export namespace Prisma {
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -80475,6 +86673,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -80531,6 +86732,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -80592,6 +86796,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutActivitiesInput = {
@@ -80645,6 +86851,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutActivitiesInput = {
@@ -80714,6 +86922,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -80770,6 +86981,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -80837,6 +87051,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutActivitiesInput = {
@@ -80890,6 +87106,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectCreateWithoutTasksInput = {
@@ -80943,6 +87161,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutTasksInput = {
@@ -80996,6 +87216,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutTasksInput = {
@@ -81105,6 +87327,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -81161,6 +87386,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -81222,6 +87450,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -81278,6 +87509,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -81593,6 +87827,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutTasksInput = {
@@ -81646,6 +87882,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectWorkstreamUpsertWithoutTasksInput = {
@@ -81767,6 +88005,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -81823,6 +88064,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -81890,6 +88134,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -81946,6 +88193,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -82381,6 +88631,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutBillingMilestonesInput = {
@@ -82434,6 +88686,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutBillingMilestonesInput = {
@@ -82600,6 +88854,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutBillingMilestonesInput = {
@@ -82653,6 +88909,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectWorkstreamUpsertWithoutBillingMilestonesInput = {
@@ -82830,6 +89088,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -82886,6 +89147,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -83015,6 +89279,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -83071,6 +89338,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -83178,6 +89448,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -83234,6 +89507,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -83363,6 +89639,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -83419,6 +89698,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -83508,6 +89790,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -83564,6 +89849,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -83707,6 +89995,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -83763,6 +90054,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -83900,6 +90194,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -83956,6 +90253,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -84099,6 +90399,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -84155,6 +90458,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -84211,6 +90517,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -84267,6 +90576,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -84339,6 +90651,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -84395,6 +90710,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -84480,6 +90798,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -84536,6 +90857,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -84695,6 +91019,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -84751,6 +91078,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -84881,6 +91211,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -84937,6 +91270,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -85169,6 +91505,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -85225,6 +91564,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -85671,6 +92013,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -85727,6 +92072,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -85799,6 +92147,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -85855,6 +92206,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -85911,6 +92265,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutRaidItemsInput = {
@@ -85964,6 +92320,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutRaidItemsInput = {
@@ -86022,6 +92380,9 @@ export namespace Prisma {
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -86078,6 +92439,9 @@ export namespace Prisma {
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -86139,6 +92503,9 @@ export namespace Prisma {
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
@@ -86195,6 +92562,9 @@ export namespace Prisma {
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
@@ -86267,6 +92637,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutRaidItemsInput = {
@@ -86320,6 +92692,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutRaidItemsOwnedInput = {
@@ -86384,6 +92758,9 @@ export namespace Prisma {
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -86440,6 +92817,9 @@ export namespace Prisma {
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -86507,6 +92887,9 @@ export namespace Prisma {
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -86563,6 +92946,9 @@ export namespace Prisma {
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -86620,6 +93006,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
@@ -86676,6 +93065,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
@@ -86737,6 +93129,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
   }
@@ -86793,6 +93188,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
   }
@@ -86895,6 +93293,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
@@ -86951,6 +93352,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
@@ -87018,6 +93422,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
   }
@@ -87074,6 +93481,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
@@ -87192,6 +93602,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutPerfProjectRatingsInput = {
@@ -87245,6 +93657,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutPerfProjectRatingsInput = {
@@ -87304,6 +93718,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
   }
@@ -87360,6 +93777,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
   }
@@ -87484,6 +93904,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutPerfProjectRatingsInput = {
@@ -87537,6 +93959,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutPerfProjectRatingsGivenInput = {
@@ -87602,6 +94026,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
   }
@@ -87658,6 +94085,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   }
@@ -88229,6 +94659,7 @@ export namespace Prisma {
     likelihood?: $Enums.RaidLikelihood
     status?: $Enums.RaidStatus
     mitigation?: string | null
+    responseStrategy?: $Enums.RaidResponseStrategy | null
     dueDate?: Date | string | null
     closedAt?: Date | string | null
     createdById?: string | null
@@ -88247,8 +94678,66 @@ export namespace Prisma {
     status?: $Enums.RaidStatus
     ownerId?: string | null
     mitigation?: string | null
+    responseStrategy?: $Enums.RaidResponseStrategy | null
     dueDate?: Date | string | null
     closedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectBaselineCreateManyCreatedByInput = {
+    id?: string
+    projectId: string
+    version: number
+    isCurrent?: boolean
+    source?: $Enums.ProjectBaselineSource
+    changeRequestId?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    plannedMandays?: number
+    estimatedCost?: number
+    contractValue?: number
+    createdAt?: Date | string
+  }
+
+  export type ChangeRequestCreateManyRequestedByInput = {
+    id?: string
+    projectId: string
+    type: $Enums.ChangeRequestType
+    status?: $Enums.ChangeRequestStatus
+    title: string
+    description?: string | null
+    impactSummary?: string | null
+    proposedStartDate?: Date | string | null
+    proposedEndDate?: Date | string | null
+    proposedPlannedMandays?: number | null
+    proposedEstimatedCost?: number | null
+    proposedContractValue?: number | null
+    decidedById?: string | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    appliedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ChangeRequestCreateManyDecidedByInput = {
+    id?: string
+    projectId: string
+    type: $Enums.ChangeRequestType
+    status?: $Enums.ChangeRequestStatus
+    title: string
+    description?: string | null
+    impactSummary?: string | null
+    proposedStartDate?: Date | string | null
+    proposedEndDate?: Date | string | null
+    proposedPlannedMandays?: number | null
+    proposedEstimatedCost?: number | null
+    proposedContractValue?: number | null
+    requestedById?: string | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    appliedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -88354,6 +94843,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -88410,6 +94902,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -88485,6 +94980,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -88541,6 +95039,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -88691,6 +95192,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutSalesInput = {
@@ -88744,6 +95247,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutSalesInput = {
@@ -88837,6 +95342,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutPmInput = {
@@ -88890,6 +95397,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutPmInput = {
@@ -88983,6 +95492,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutTechnicalWriterInput = {
@@ -89036,6 +95547,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutTechnicalWriterInput = {
@@ -89129,6 +95642,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutAdminProjectInput = {
@@ -89182,6 +95697,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutAdminProjectInput = {
@@ -90271,6 +96788,7 @@ export namespace Prisma {
     likelihood?: EnumRaidLikelihoodFieldUpdateOperationsInput | $Enums.RaidLikelihood
     status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
     mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    responseStrategy?: NullableEnumRaidResponseStrategyFieldUpdateOperationsInput | $Enums.RaidResponseStrategy | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -90289,6 +96807,7 @@ export namespace Prisma {
     likelihood?: EnumRaidLikelihoodFieldUpdateOperationsInput | $Enums.RaidLikelihood
     status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
     mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    responseStrategy?: NullableEnumRaidResponseStrategyFieldUpdateOperationsInput | $Enums.RaidResponseStrategy | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -90306,6 +96825,7 @@ export namespace Prisma {
     likelihood?: EnumRaidLikelihoodFieldUpdateOperationsInput | $Enums.RaidLikelihood
     status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
     mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    responseStrategy?: NullableEnumRaidResponseStrategyFieldUpdateOperationsInput | $Enums.RaidResponseStrategy | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -90322,6 +96842,7 @@ export namespace Prisma {
     likelihood?: EnumRaidLikelihoodFieldUpdateOperationsInput | $Enums.RaidLikelihood
     status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
     mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    responseStrategy?: NullableEnumRaidResponseStrategyFieldUpdateOperationsInput | $Enums.RaidResponseStrategy | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -90341,6 +96862,7 @@ export namespace Prisma {
     status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    responseStrategy?: NullableEnumRaidResponseStrategyFieldUpdateOperationsInput | $Enums.RaidResponseStrategy | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -90358,8 +96880,184 @@ export namespace Prisma {
     status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    responseStrategy?: NullableEnumRaidResponseStrategyFieldUpdateOperationsInput | $Enums.RaidResponseStrategy | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectBaselineUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    isCurrent?: BoolFieldUpdateOperationsInput | boolean
+    source?: EnumProjectBaselineSourceFieldUpdateOperationsInput | $Enums.ProjectBaselineSource
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutBaselinesNestedInput
+    changeRequest?: ChangeRequestUpdateOneWithoutBaselinesNestedInput
+  }
+
+  export type ProjectBaselineUncheckedUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    isCurrent?: BoolFieldUpdateOperationsInput | boolean
+    source?: EnumProjectBaselineSourceFieldUpdateOperationsInput | $Enums.ProjectBaselineSource
+    changeRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectBaselineUncheckedUpdateManyWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    isCurrent?: BoolFieldUpdateOperationsInput | boolean
+    source?: EnumProjectBaselineSourceFieldUpdateOperationsInput | $Enums.ProjectBaselineSource
+    changeRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChangeRequestUpdateWithoutRequestedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumChangeRequestTypeFieldUpdateOperationsInput | $Enums.ChangeRequestType
+    status?: EnumChangeRequestStatusFieldUpdateOperationsInput | $Enums.ChangeRequestStatus
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impactSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedPlannedMandays?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedEstimatedCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedContractValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutChangeRequestsNestedInput
+    decidedBy?: UserUpdateOneWithoutChangeRequestsDecidedNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutChangeRequestNestedInput
+  }
+
+  export type ChangeRequestUncheckedUpdateWithoutRequestedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    type?: EnumChangeRequestTypeFieldUpdateOperationsInput | $Enums.ChangeRequestType
+    status?: EnumChangeRequestStatusFieldUpdateOperationsInput | $Enums.ChangeRequestStatus
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impactSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedPlannedMandays?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedEstimatedCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedContractValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    decidedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutChangeRequestNestedInput
+  }
+
+  export type ChangeRequestUncheckedUpdateManyWithoutRequestedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    type?: EnumChangeRequestTypeFieldUpdateOperationsInput | $Enums.ChangeRequestType
+    status?: EnumChangeRequestStatusFieldUpdateOperationsInput | $Enums.ChangeRequestStatus
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impactSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedPlannedMandays?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedEstimatedCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedContractValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    decidedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChangeRequestUpdateWithoutDecidedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumChangeRequestTypeFieldUpdateOperationsInput | $Enums.ChangeRequestType
+    status?: EnumChangeRequestStatusFieldUpdateOperationsInput | $Enums.ChangeRequestStatus
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impactSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedPlannedMandays?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedEstimatedCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedContractValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutChangeRequestsNestedInput
+    requestedBy?: UserUpdateOneWithoutChangeRequestsRequestedNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutChangeRequestNestedInput
+  }
+
+  export type ChangeRequestUncheckedUpdateWithoutDecidedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    type?: EnumChangeRequestTypeFieldUpdateOperationsInput | $Enums.ChangeRequestType
+    status?: EnumChangeRequestStatusFieldUpdateOperationsInput | $Enums.ChangeRequestStatus
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impactSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedPlannedMandays?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedEstimatedCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedContractValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    requestedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutChangeRequestNestedInput
+  }
+
+  export type ChangeRequestUncheckedUpdateManyWithoutDecidedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    type?: EnumChangeRequestTypeFieldUpdateOperationsInput | $Enums.ChangeRequestType
+    status?: EnumChangeRequestStatusFieldUpdateOperationsInput | $Enums.ChangeRequestStatus
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impactSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedPlannedMandays?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedEstimatedCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedContractValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    requestedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -90638,6 +97336,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutClientInput = {
@@ -90691,6 +97391,8 @@ export namespace Prisma {
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutClientInput = {
@@ -90955,6 +97657,7 @@ export namespace Prisma {
     status?: $Enums.RaidStatus
     ownerId?: string | null
     mitigation?: string | null
+    responseStrategy?: $Enums.RaidResponseStrategy | null
     dueDate?: Date | string | null
     closedAt?: Date | string | null
     createdById?: string | null
@@ -91017,6 +97720,42 @@ export namespace Prisma {
     workstreamId?: string | null
     submittedAt?: Date | string | null
     createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectBaselineCreateManyProjectInput = {
+    id?: string
+    version: number
+    isCurrent?: boolean
+    source?: $Enums.ProjectBaselineSource
+    changeRequestId?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    plannedMandays?: number
+    estimatedCost?: number
+    contractValue?: number
+    createdById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ChangeRequestCreateManyProjectInput = {
+    id?: string
+    type: $Enums.ChangeRequestType
+    status?: $Enums.ChangeRequestStatus
+    title: string
+    description?: string | null
+    impactSummary?: string | null
+    proposedStartDate?: Date | string | null
+    proposedEndDate?: Date | string | null
+    proposedPlannedMandays?: number | null
+    proposedEstimatedCost?: number | null
+    proposedContractValue?: number | null
+    requestedById?: string | null
+    decidedById?: string | null
+    decidedAt?: Date | string | null
+    decisionNote?: string | null
+    appliedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -91415,6 +98154,7 @@ export namespace Prisma {
     likelihood?: EnumRaidLikelihoodFieldUpdateOperationsInput | $Enums.RaidLikelihood
     status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
     mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    responseStrategy?: NullableEnumRaidResponseStrategyFieldUpdateOperationsInput | $Enums.RaidResponseStrategy | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -91433,6 +98173,7 @@ export namespace Prisma {
     status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    responseStrategy?: NullableEnumRaidResponseStrategyFieldUpdateOperationsInput | $Enums.RaidResponseStrategy | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -91450,6 +98191,7 @@ export namespace Prisma {
     status?: EnumRaidStatusFieldUpdateOperationsInput | $Enums.RaidStatus
     ownerId?: NullableStringFieldUpdateOperationsInput | string | null
     mitigation?: NullableStringFieldUpdateOperationsInput | string | null
+    responseStrategy?: NullableEnumRaidResponseStrategyFieldUpdateOperationsInput | $Enums.RaidResponseStrategy | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -91644,6 +98386,176 @@ export namespace Prisma {
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectBaselineUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    isCurrent?: BoolFieldUpdateOperationsInput | boolean
+    source?: EnumProjectBaselineSourceFieldUpdateOperationsInput | $Enums.ProjectBaselineSource
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    changeRequest?: ChangeRequestUpdateOneWithoutBaselinesNestedInput
+    createdBy?: UserUpdateOneWithoutBaselinesCreatedNestedInput
+  }
+
+  export type ProjectBaselineUncheckedUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    isCurrent?: BoolFieldUpdateOperationsInput | boolean
+    source?: EnumProjectBaselineSourceFieldUpdateOperationsInput | $Enums.ProjectBaselineSource
+    changeRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectBaselineUncheckedUpdateManyWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    isCurrent?: BoolFieldUpdateOperationsInput | boolean
+    source?: EnumProjectBaselineSourceFieldUpdateOperationsInput | $Enums.ProjectBaselineSource
+    changeRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChangeRequestUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumChangeRequestTypeFieldUpdateOperationsInput | $Enums.ChangeRequestType
+    status?: EnumChangeRequestStatusFieldUpdateOperationsInput | $Enums.ChangeRequestStatus
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impactSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedPlannedMandays?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedEstimatedCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedContractValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    requestedBy?: UserUpdateOneWithoutChangeRequestsRequestedNestedInput
+    decidedBy?: UserUpdateOneWithoutChangeRequestsDecidedNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutChangeRequestNestedInput
+  }
+
+  export type ChangeRequestUncheckedUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumChangeRequestTypeFieldUpdateOperationsInput | $Enums.ChangeRequestType
+    status?: EnumChangeRequestStatusFieldUpdateOperationsInput | $Enums.ChangeRequestStatus
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impactSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedPlannedMandays?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedEstimatedCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedContractValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    requestedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutChangeRequestNestedInput
+  }
+
+  export type ChangeRequestUncheckedUpdateManyWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumChangeRequestTypeFieldUpdateOperationsInput | $Enums.ChangeRequestType
+    status?: EnumChangeRequestStatusFieldUpdateOperationsInput | $Enums.ChangeRequestStatus
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    impactSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    proposedPlannedMandays?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedEstimatedCost?: NullableFloatFieldUpdateOperationsInput | number | null
+    proposedContractValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    requestedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decisionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    appliedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectBaselineCreateManyChangeRequestInput = {
+    id?: string
+    projectId: string
+    version: number
+    isCurrent?: boolean
+    source?: $Enums.ProjectBaselineSource
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    plannedMandays?: number
+    estimatedCost?: number
+    contractValue?: number
+    createdById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ProjectBaselineUpdateWithoutChangeRequestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    isCurrent?: BoolFieldUpdateOperationsInput | boolean
+    source?: EnumProjectBaselineSourceFieldUpdateOperationsInput | $Enums.ProjectBaselineSource
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutBaselinesNestedInput
+    createdBy?: UserUpdateOneWithoutBaselinesCreatedNestedInput
+  }
+
+  export type ProjectBaselineUncheckedUpdateWithoutChangeRequestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    isCurrent?: BoolFieldUpdateOperationsInput | boolean
+    source?: EnumProjectBaselineSourceFieldUpdateOperationsInput | $Enums.ProjectBaselineSource
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectBaselineUncheckedUpdateManyWithoutChangeRequestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    isCurrent?: BoolFieldUpdateOperationsInput | boolean
+    source?: EnumProjectBaselineSourceFieldUpdateOperationsInput | $Enums.ProjectBaselineSource
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProjectResourceCreateManyWorkstreamInput = {
@@ -92274,6 +99186,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
@@ -92330,6 +99245,9 @@ export namespace Prisma {
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
@@ -93258,6 +100176,10 @@ export namespace Prisma {
      */
     export type ProjectCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProjectCountOutputTypeDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use ChangeRequestCountOutputTypeDefaultArgs instead
+     */
+    export type ChangeRequestCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ChangeRequestCountOutputTypeDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use ProjectWorkstreamCountOutputTypeDefaultArgs instead
      */
     export type ProjectWorkstreamCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProjectWorkstreamCountOutputTypeDefaultArgs<ExtArgs>
@@ -93309,6 +100231,14 @@ export namespace Prisma {
      * @deprecated Use ProjectDefaultArgs instead
      */
     export type ProjectArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProjectDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ProjectBaselineDefaultArgs instead
+     */
+    export type ProjectBaselineArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProjectBaselineDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ChangeRequestDefaultArgs instead
+     */
+    export type ChangeRequestArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ChangeRequestDefaultArgs<ExtArgs>
     /**
      * @deprecated Use ProjectReportDefaultArgs instead
      */
