@@ -115,7 +115,7 @@ export default function Dashboard() {
       <WelcomeBanner subtitle={isFinance ? "Executive snapshot: portfolio health & profitability." : "Executive snapshot: portfolio health, profitability, and team utilization."} />
 
       <div className={isFinance ? "grid gap-3 md:grid-cols-2" : ""}>
-        <a href="/reports">
+        <Link href="/reports">
           <Card className="cursor-pointer border-primary/30 bg-primary/5 hover:border-primary/60 transition h-full" data-testid="card-reports-shortcut">
             <CardContent className="flex items-center justify-between gap-3 py-4">
               <div>
@@ -125,9 +125,9 @@ export default function Dashboard() {
               <Button size="sm" variant="outline" className="border-primary/40 text-primary hover:bg-primary/10">Open</Button>
             </CardContent>
           </Card>
-        </a>
+        </Link>
         {isFinance && (
-          <a href="/invoice-planning">
+          <Link href="/invoice-planning">
             <Card className="cursor-pointer border-amber-500/30 bg-amber-500/5 hover:border-amber-500/60 transition h-full" data-testid="card-invoice-planning-shortcut">
               <CardContent className="flex items-center justify-between gap-3 py-4">
                 <div>
@@ -137,10 +137,10 @@ export default function Dashboard() {
                 <Button size="sm" variant="outline" className="border-amber-500/40 text-amber-300 hover:bg-amber-500/10">Open</Button>
               </CardContent>
             </Card>
-          </a>
+          </Link>
         )}
         {isFinance && (
-          <a href="/invoice-settings">
+          <Link href="/invoice-settings">
             <Card className="cursor-pointer border-sky-500/30 bg-sky-500/5 hover:border-sky-500/60 transition h-full" data-testid="card-invoice-settings-shortcut">
               <CardContent className="flex items-center justify-between gap-3 py-4">
                 <div>
@@ -150,7 +150,7 @@ export default function Dashboard() {
                 <Button size="sm" variant="outline" className="border-sky-500/40 text-sky-300 hover:bg-sky-500/10">Open</Button>
               </CardContent>
             </Card>
-          </a>
+          </Link>
         )}
       </div>
 

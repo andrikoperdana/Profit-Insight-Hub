@@ -275,6 +275,39 @@ router.get("/dashboard/pending-aging", async (req, res) => {
   res.json(agingPayload);
 });
 
+// Per-PM count of timesheets awaiting approval (status SUBMITTED), grouped by
+// the owning project's PM. MANAGEMENT/SUPER_ADMIN only — powers the PM
+// Dashboards monitor so a PMO Director can see each PM's outstanding approval
+// queue without impersonating them.
+router.get("/dashboard/pm-pending-timesheets", async (req, res) => {
+  const role = req.user!.role;
+  if (role !== "MANAGEMENT" && role !== "SUPER_ADMIN") {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  const ppKey = "pm-pending-timesheets:all";
+  const cachedPp = aggregationCache.get(ppKey);
+  if (cachedPp) {
+    res.json(cachedPp);
+    return;
+  }
+  const submitted = await prisma.timesheet.findMany({
+    where: { status: "SUBMITTED", project: { deletedAt: null } },
+    select: { project: { select: { pmId: true, pm: { select: { name: true } } } } },
+  });
+  const byPm = new Map<string, { pmId: string; pmName: string; pendingCount: number }>();
+  for (const t of submitted) {
+    const pmId = t.project?.pmId;
+    if (!pmId) continue;
+    const existing = byPm.get(pmId);
+    if (existing) existing.pendingCount += 1;
+    else byPm.set(pmId, { pmId, pmName: t.project?.pm?.name ?? "Unknown", pendingCount: 1 });
+  }
+  const ppPayload = Array.from(byPm.values()).sort((a, b) => b.pendingCount - a.pendingCount);
+  aggregationCache.set(ppKey, ppPayload);
+  res.json(ppPayload);
+});
+
 router.get("/dashboard/utilization-trend", async (req, res) => {
   const days = Math.min(Math.max(parseInt(String(req.query.days ?? 30), 10) || 30, 7), 90);
   const utilKey = `utilization-trend:${days}`;

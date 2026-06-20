@@ -11,6 +11,7 @@ import { classifyProject } from "@/lib/projectType";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
@@ -30,6 +31,7 @@ export default function ProjectsList() {
     isPrincipal ? ProjectStatus.ACTIVE : "all",
   );
   const [searchQuery, setSearchQuery] = useState("");
+  const [pmFilter, setPmFilter] = useState<string>("all");
   const [seeding, setSeeding] = useState(false);
 
   const { data: projects, isLoading } = useListProjects(
@@ -57,7 +59,19 @@ export default function ProjectsList() {
     p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
     p.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
     (p.clientName && p.clientName.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  )?.filter(p => pmFilter === "all" || p.pmId === pmFilter);
+
+  // Distinct PMs present in the loaded (status-scoped) project set, for the
+  // "Filter by PM" dropdown next to the search box. Lets MGMT/Super Admin slice
+  // the list by who owns each engagement without a server round-trip.
+  const pmOptions = Array.from(
+    (projects ?? []).reduce((m, p) => {
+      if (p.pmId && p.pmName) m.set(p.pmId, p.pmName);
+      return m;
+    }, new Map<string, string>()),
+  )
+    .map(([id, name]) => ({ id, name }))
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   const showFinancials = canViewProjectFinancials(user?.role);
 
@@ -87,7 +101,7 @@ export default function ProjectsList() {
   });
 
   const pager = usePagination(filteredProjects, {
-    resetKey: `${statusFilter}|${searchQuery}`,
+    resetKey: `${statusFilter}|${searchQuery}|${pmFilter}`,
   });
 
   return (
@@ -131,7 +145,7 @@ export default function ProjectsList() {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
-        <Tabs value={statusFilter} onValueChange={setStatusFilter} className="w-full sm:w-auto">
+        <Tabs value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPmFilter("all"); }} className="w-full sm:w-auto">
           <TabsList className="bg-muted w-full sm:w-auto overflow-x-auto justify-start">
             {!isPrincipal && <TabsTrigger value="all">All</TabsTrigger>}
             {!isPrincipal && <TabsTrigger value={ProjectStatus.OBSERVATION}>Observation</TabsTrigger>}
@@ -142,14 +156,29 @@ export default function ProjectsList() {
           </TabsList>
         </Tabs>
 
-        <div className="relative w-full sm:w-64">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          {pmOptions.length >= 2 && (
+            <Select value={pmFilter} onValueChange={setPmFilter}>
+              <SelectTrigger className="w-full sm:w-48 bg-card" data-testid="select-pm-filter">
+                <SelectValue placeholder="Filter by PM" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All PMs</SelectItem>
+                {pmOptions.map((pm) => (
+                  <SelectItem key={pm.id} value={pm.id}>{pm.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input 
             placeholder="Search projects..." 
             className="pl-9 bg-card" 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
+        </div>
         </div>
       </div>
 

@@ -136,6 +136,7 @@ export default function Sidebar() {
     ...(canManageUsers(user?.role) ? [{ href: "/business-units", label: "Business Units", icon: Network }] : []),
     ...(canManageUsers(user?.role) ? [{ href: "/skills", label: "Skills", icon: Award }] : []),
     ...(sa || user?.role === "MANAGEMENT" ? [{ href: "/business-intelligence", label: "Business Intelligence", icon: TrendingUp }] : []),
+    ...(sa || user?.role === "MANAGEMENT" ? [{ href: "/pm-dashboards", label: "PM Dashboards", icon: LayoutDashboard }] : []),
     ...(sa || user?.role === "MANAGEMENT" ||
         user?.role === "PRINCIPAL_KONSULTAN" ||
         user?.role === "PRINCIPAL_TECHNICAL_WRITER" ||
