@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { EmptyState } from "@/components/common/EmptyState";
+import { Pagination, usePagination } from "@/components/common/Pagination";
 import { TableSkeleton } from "@/components/common/Loading";
 import { ProjectStatusBadge } from "@/components/common/Badges";
 import { exportSheets } from "@/lib/exports";
@@ -263,12 +264,13 @@ export default function PortfolioMonitorPage() {
         />
       ) : (
         <>
-          <PortfolioTable rows={data.rows} />
+          <PortfolioTable rows={data.rows} resetKey={year} />
           <ForecastMatrix
             rows={data.rows}
             weeks={data.weeks}
             weeklyTotals={data.weeklyTotals}
             grandTotal={data.forecastGrandTotal}
+            resetKey={year}
           />
         </>
       )}
@@ -276,7 +278,14 @@ export default function PortfolioMonitorPage() {
   );
 }
 
-function PortfolioTable({ rows }: { rows: PortfolioMonitorRow[] }) {
+function PortfolioTable({
+  rows,
+  resetKey,
+}: {
+  rows: PortfolioMonitorRow[];
+  resetKey: unknown;
+}) {
+  const pager = usePagination(rows, { resetKey, defaultPageSize: 25 });
   return (
     <Card className="border-border overflow-hidden">
       <CardHeader className="pb-2 bg-muted/30">
@@ -306,7 +315,7 @@ function PortfolioTable({ rows }: { rows: PortfolioMonitorRow[] }) {
             </tr>
           </thead>
           <tbody>
-            {rows.map((r) => (
+            {pager.pageItems.map((r) => (
               <tr
                 key={r.projectId}
                 className="border-t border-border/40 hover:bg-muted/20"
@@ -384,6 +393,15 @@ function PortfolioTable({ rows }: { rows: PortfolioMonitorRow[] }) {
           </tbody>
         </table>
       </CardContent>
+      <Pagination
+        page={pager.page}
+        pageSize={pager.pageSize}
+        total={pager.total}
+        totalPages={pager.totalPages}
+        onPageChange={pager.setPage}
+        onPageSizeChange={pager.setPageSize}
+        testId="pm-portfolio-pagination"
+      />
     </Card>
   );
 }
@@ -393,11 +411,13 @@ function ForecastMatrix({
   weeks,
   weeklyTotals,
   grandTotal,
+  resetKey,
 }: {
   rows: PortfolioMonitorRow[];
   weeks: { key: string; label: string; start: string }[];
   weeklyTotals: number[];
   grandTotal: number;
+  resetKey: unknown;
 }) {
   // Only render weeks that have at least one forecast value to keep the matrix
   // readable (a full year of empty columns is noise).
@@ -409,6 +429,9 @@ function ForecastMatrix({
     () => rows.filter((r) => r.forecastTotal > 0),
     [rows],
   );
+  // Hook must run before any early return; the grand-total footer still reflects
+  // the full dataset (weeklyTotals/grandTotal), independent of the visible page.
+  const pager = usePagination(visibleRows, { resetKey, defaultPageSize: 25 });
 
   if (activeIdx.length === 0) {
     return (
@@ -456,7 +479,7 @@ function ForecastMatrix({
             </tr>
           </thead>
           <tbody>
-            {visibleRows.map((r) => (
+            {pager.pageItems.map((r) => (
               <tr
                 key={r.projectId}
                 className="border-t border-border/40 hover:bg-muted/20"
@@ -503,6 +526,15 @@ function ForecastMatrix({
           </tfoot>
         </table>
       </CardContent>
+      <Pagination
+        page={pager.page}
+        pageSize={pager.pageSize}
+        total={pager.total}
+        totalPages={pager.totalPages}
+        onPageChange={pager.setPage}
+        onPageSizeChange={pager.setPageSize}
+        testId="pm-forecast-pagination"
+      />
     </Card>
   );
 }
