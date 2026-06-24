@@ -66,6 +66,7 @@ import type {
   GetBillableUtilizationParams,
   GetInvoicePlanningParams,
   GetLeadsAnalyticsParams,
+  GetPortfolioMonitorParams,
   GetReportOptionsParams,
   GetResourcePlanningParams,
   GetTopPerformersParams,
@@ -101,6 +102,7 @@ import type {
   PipedriveStageMappingsResponse,
   PipedriveStatus,
   PipedriveSyncStartResponse,
+  PortfolioMonitorMatrix,
   ProfitTrendPoint,
   Project,
   ProjectDetail,
@@ -7877,6 +7879,105 @@ export function useGetInvoicePlanning<
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetInvoicePlanningQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * PMO portfolio monitor — one row per commercial project (financials, hours vs budget, estimated vs actual margin, anomaly flags) plus a weekly "to be invoiced" forecast across the requested year. Management only.
+ */
+export const getGetPortfolioMonitorUrl = (
+  params?: GetPortfolioMonitorParams,
+) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/portfolio-monitor?${stringifiedParams}`
+    : `/api/portfolio-monitor`;
+};
+
+export const getPortfolioMonitor = async (
+  params?: GetPortfolioMonitorParams,
+  options?: RequestInit,
+): Promise<PortfolioMonitorMatrix> => {
+  return customFetch<PortfolioMonitorMatrix>(
+    getGetPortfolioMonitorUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getGetPortfolioMonitorQueryKey = (
+  params?: GetPortfolioMonitorParams,
+) => {
+  return [`/api/portfolio-monitor`, ...(params ? [params] : [])] as const;
+};
+
+export const getGetPortfolioMonitorQueryOptions = <
+  TData = Awaited<ReturnType<typeof getPortfolioMonitor>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPortfolioMonitorParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getPortfolioMonitor>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetPortfolioMonitorQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getPortfolioMonitor>>
+  > = ({ signal }) =>
+    getPortfolioMonitor(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getPortfolioMonitor>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetPortfolioMonitorQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPortfolioMonitor>>
+>;
+export type GetPortfolioMonitorQueryError = ErrorType<unknown>;
+
+export function useGetPortfolioMonitor<
+  TData = Awaited<ReturnType<typeof getPortfolioMonitor>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: GetPortfolioMonitorParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getPortfolioMonitor>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetPortfolioMonitorQueryOptions(params, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

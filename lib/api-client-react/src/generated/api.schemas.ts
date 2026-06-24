@@ -2083,6 +2083,50 @@ export interface InvoicePlanningMatrix {
   unscheduledCount: number;
 }
 
+export interface PortfolioMonitorWeek {
+  key: string;
+  label: string;
+  start: string;
+}
+
+export interface PortfolioMonitorRow {
+  projectId: string;
+  projectCode?: string | null;
+  projectName: string;
+  clientName?: string | null;
+  pmName?: string | null;
+  startDate?: string | null;
+  endDate?: string | null;
+  type?: string | null;
+  stage: string;
+  sellingAmount: number;
+  invoiced: number;
+  remainingInvoice: number;
+  usedHours: number;
+  budgetHours: number;
+  deltaHours: number;
+  usedCosts: number;
+  budgetCosts: number;
+  deltaCosts: number;
+  estimatedMargin: number;
+  actualMargin: number;
+  deltaMargin: number;
+  currency: string;
+  unusualMargin: boolean;
+  zeroBudget: boolean;
+  weeklyForecast: number[];
+  forecastTotal: number;
+}
+
+export interface PortfolioMonitorMatrix {
+  year: number;
+  generatedAt: string;
+  weeks: PortfolioMonitorWeek[];
+  rows: PortfolioMonitorRow[];
+  weeklyTotals: number[];
+  forecastGrandTotal: number;
+}
+
 export interface ReportFilterOption {
   value: string;
   label: string;
@@ -2687,6 +2731,15 @@ export const GetInvoicePlanningMode = {
   week: "week",
   month: "month",
 } as const;
+
+export type GetPortfolioMonitorParams = {
+  /**
+   * Calendar year for the weekly forecast; defaults to the current UTC year.
+   * @minimum 2000
+   * @maximum 2100
+   */
+  year?: number;
+};
 
 export type ListTimesheetsParams = {
   status?: string;

@@ -1516,6 +1516,20 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/InvoicePlanningMatrix" }
 
+  /portfolio-monitor:
+    get:
+      operationId: getPortfolioMonitor
+      tags: [portfolio-monitor]
+      description: PMO portfolio monitor — one row per commercial project (financials, hours vs budget, estimated vs actual margin, anomaly flags) plus a weekly "to be invoiced" forecast across the requested year. Management only.
+      parameters:
+        - { name: year, in: query, required: false, schema: { type: integer, minimum: 2000, maximum: 2100 }, description: "Calendar year for the weekly forecast; defaults to the current UTC year." }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PortfolioMonitorMatrix" }
+
   /timesheets:
     get:
       operationId: listTimesheets
@@ -4522,6 +4536,86 @@ components:
         unscheduledCount:
           type: integer
           description: "Count of milestones (in visible projects) with no due date — not shown in matrix."
+
+    PortfolioMonitorWeek:
+      type: object
+      required: [key, label, start]
+      properties:
+        key: { type: string }
+        label: { type: string }
+        start: { type: string }
+
+    PortfolioMonitorRow:
+      type: object
+      required:
+        [
+          projectId,
+          projectName,
+          stage,
+          sellingAmount,
+          invoiced,
+          remainingInvoice,
+          usedHours,
+          budgetHours,
+          deltaHours,
+          usedCosts,
+          budgetCosts,
+          deltaCosts,
+          estimatedMargin,
+          actualMargin,
+          deltaMargin,
+          currency,
+          unusualMargin,
+          zeroBudget,
+          weeklyForecast,
+          forecastTotal,
+        ]
+      properties:
+        projectId: { type: string }
+        projectCode: { type: string, nullable: true }
+        projectName: { type: string }
+        clientName: { type: string, nullable: true }
+        pmName: { type: string, nullable: true }
+        startDate: { type: string, nullable: true }
+        endDate: { type: string, nullable: true }
+        type: { type: string, nullable: true }
+        stage: { type: string }
+        sellingAmount: { type: number }
+        invoiced: { type: number }
+        remainingInvoice: { type: number }
+        usedHours: { type: number }
+        budgetHours: { type: number }
+        deltaHours: { type: number }
+        usedCosts: { type: number }
+        budgetCosts: { type: number }
+        deltaCosts: { type: number }
+        estimatedMargin: { type: number }
+        actualMargin: { type: number }
+        deltaMargin: { type: number }
+        currency: { type: string }
+        unusualMargin: { type: boolean }
+        zeroBudget: { type: boolean }
+        weeklyForecast:
+          type: array
+          items: { type: number }
+        forecastTotal: { type: number }
+
+    PortfolioMonitorMatrix:
+      type: object
+      required: [year, generatedAt, weeks, rows, weeklyTotals, forecastGrandTotal]
+      properties:
+        year: { type: integer }
+        generatedAt: { type: string }
+        weeks:
+          type: array
+          items: { $ref: "#/components/schemas/PortfolioMonitorWeek" }
+        rows:
+          type: array
+          items: { $ref: "#/components/schemas/PortfolioMonitorRow" }
+        weeklyTotals:
+          type: array
+          items: { type: number }
+        forecastGrandTotal: { type: number }
 
     ReportFilterOption:
       type: object

@@ -3463,6 +3463,67 @@ export const GetInvoicePlanningResponse = zod.object({
     ),
 });
 
+/**
+ * PMO portfolio monitor — one row per commercial project (financials, hours vs budget, estimated vs actual margin, anomaly flags) plus a weekly "to be invoiced" forecast across the requested year. Management only.
+ */
+export const getPortfolioMonitorQueryYearMin = 2000;
+export const getPortfolioMonitorQueryYearMax = 2100;
+
+export const GetPortfolioMonitorQueryParams = zod.object({
+  year: zod.coerce
+    .number()
+    .min(getPortfolioMonitorQueryYearMin)
+    .max(getPortfolioMonitorQueryYearMax)
+    .optional()
+    .describe(
+      "Calendar year for the weekly forecast; defaults to the current UTC year.",
+    ),
+});
+
+export const GetPortfolioMonitorResponse = zod.object({
+  year: zod.number(),
+  generatedAt: zod.string(),
+  weeks: zod.array(
+    zod.object({
+      key: zod.string(),
+      label: zod.string(),
+      start: zod.string(),
+    }),
+  ),
+  rows: zod.array(
+    zod.object({
+      projectId: zod.string(),
+      projectCode: zod.string().nullish(),
+      projectName: zod.string(),
+      clientName: zod.string().nullish(),
+      pmName: zod.string().nullish(),
+      startDate: zod.string().nullish(),
+      endDate: zod.string().nullish(),
+      type: zod.string().nullish(),
+      stage: zod.string(),
+      sellingAmount: zod.number(),
+      invoiced: zod.number(),
+      remainingInvoice: zod.number(),
+      usedHours: zod.number(),
+      budgetHours: zod.number(),
+      deltaHours: zod.number(),
+      usedCosts: zod.number(),
+      budgetCosts: zod.number(),
+      deltaCosts: zod.number(),
+      estimatedMargin: zod.number(),
+      actualMargin: zod.number(),
+      deltaMargin: zod.number(),
+      currency: zod.string(),
+      unusualMargin: zod.boolean(),
+      zeroBudget: zod.boolean(),
+      weeklyForecast: zod.array(zod.number()),
+      forecastTotal: zod.number(),
+    }),
+  ),
+  weeklyTotals: zod.array(zod.number()),
+  forecastGrandTotal: zod.number(),
+});
+
 export const ListTimesheetsQueryParams = zod.object({
   status: zod.coerce.string().optional(),
   projectId: zod.coerce.string().optional(),
