@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Link } from "wouter";
 import {
   useGetPortfolioMonitor,
   type PortfolioMonitorRow,
@@ -312,7 +313,7 @@ function PortfolioTable({ rows }: { rows: PortfolioMonitorRow[] }) {
                 data-testid={`row-pm-${r.projectId}`}
               >
                 <td className="p-2 sticky left-0 bg-background font-medium">
-                  <a
+                  <Link
                     href={`/projects/${r.projectId}`}
                     className="block hover:text-primary"
                   >
@@ -322,7 +323,7 @@ function PortfolioTable({ rows }: { rows: PortfolioMonitorRow[] }) {
                         {r.projectCode}
                       </div>
                     )}
-                  </a>
+                  </Link>
                 </td>
                 <td className="p-2 text-muted-foreground">{r.clientName ?? "—"}</td>
                 <td className="p-2">{r.type ?? "—"}</td>
@@ -461,14 +462,14 @@ function ForecastMatrix({
                 className="border-t border-border/40 hover:bg-muted/20"
               >
                 <td className="p-2 sticky left-0 bg-background font-medium">
-                  <a href={`/projects/${r.projectId}`} className="hover:text-primary">
+                  <Link href={`/projects/${r.projectId}`} className="hover:text-primary">
                     <span className="font-semibold">{r.projectName}</span>
                     {r.projectCode && (
                       <span className="ml-1 text-[10px] text-muted-foreground font-mono">
                         {r.projectCode}
                       </span>
                     )}
-                  </a>
+                  </Link>
                 </td>
                 {activeIdx.map((i) => {
                   const v = r.weeklyForecast[i] ?? 0;
