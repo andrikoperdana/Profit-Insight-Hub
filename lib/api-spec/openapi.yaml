@@ -3931,6 +3931,10 @@ components:
         approvedAt: { type: string, nullable: true }
         rejectionReason: { type: string, nullable: true }
         createdAt: { type: string }
+        userPlannedMandays: { type: number, nullable: true }
+        userConsumedMandays: { type: number, nullable: true }
+        projectPlannedMandays: { type: number, nullable: true }
+        projectConsumedMandays: { type: number, nullable: true }
 
     CreateTimesheetBody:
       type: object

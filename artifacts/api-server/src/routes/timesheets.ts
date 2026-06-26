@@ -50,6 +50,76 @@ function serialize(
 
 const tsInclude = { user: true, project: true, approvedBy: true, task: true } as const;
 
+type TimesheetWithRelations = Prisma.TimesheetGetPayload<{ include: typeof tsInclude }>;
+
+const HOURS_PER_MANDAY = 8;
+
+/**
+ * Serialize a timesheet list, enriching each row with consumed-vs-planned
+ * mandays (per-person on the project AND project-wide) so an approver can see
+ * how an entry affects the budget before approving.
+ *
+ * Consumption is APPROVER-ONLY to avoid leaking whole-team totals: it is
+ * computed for the approval scope (already restricted to the caller's
+ * projects) or when a single project is requested by someone who can approve
+ * it (MANAGEMENT/SUPER_ADMIN, or the project's PM). Everyone else gets nulls.
+ */
+async function serializeTimesheets(
+  list: TimesheetWithRelations[],
+  ctx: { scope: string; projectId?: string; role: string; userId: string },
+) {
+  const base = list.map(serialize);
+  if (list.length === 0) return base;
+
+  const isMgmt = ctx.role === "MANAGEMENT" || ctx.role === "SUPER_ADMIN";
+  let enrich = false;
+  if (ctx.scope === "approval") {
+    enrich = true;
+  } else if (ctx.projectId) {
+    enrich =
+      isMgmt ||
+      (ctx.role === "PROJECT_MANAGER" && list[0].project.pmId === ctx.userId);
+  }
+  if (!enrich) return base;
+
+  const pids = Array.from(new Set(list.map((t) => t.projectId)));
+  const [resources, byUser, byProject] = await Promise.all([
+    prisma.projectResource.findMany({
+      where: { projectId: { in: pids } },
+      select: { projectId: true, userId: true, plannedMandays: true },
+    }),
+    prisma.timesheet.groupBy({
+      by: ["projectId", "userId"],
+      where: { projectId: { in: pids }, status: "APPROVED" },
+      _sum: { hours: true },
+    }),
+    prisma.timesheet.groupBy({
+      by: ["projectId"],
+      where: { projectId: { in: pids }, status: "APPROVED" },
+      _sum: { hours: true },
+    }),
+  ]);
+
+  const plannedByUser = new Map<string, number>();
+  for (const r of resources) plannedByUser.set(`${r.projectId}:${r.userId}`, r.plannedMandays);
+  const consumedByUser = new Map<string, number>();
+  for (const g of byUser) consumedByUser.set(`${g.projectId}:${g.userId}`, (g._sum.hours ?? 0) / HOURS_PER_MANDAY);
+  const consumedByProject = new Map<string, number>();
+  for (const g of byProject) consumedByProject.set(g.projectId, (g._sum.hours ?? 0) / HOURS_PER_MANDAY);
+
+  return base.map((s, i) => {
+    const t = list[i];
+    const key = `${t.projectId}:${t.userId}`;
+    return {
+      ...s,
+      userPlannedMandays: plannedByUser.has(key) ? plannedByUser.get(key)! : null,
+      userConsumedMandays: consumedByUser.get(key) ?? 0,
+      projectPlannedMandays: t.project.plannedMandays,
+      projectConsumedMandays: consumedByProject.get(t.projectId) ?? 0,
+    };
+  });
+}
+
 router.get("/timesheets", async (req, res) => {
   const status = req.query.status as TimesheetStatus | undefined;
   const projectId = req.query.projectId as string | undefined;
@@ -91,7 +161,13 @@ router.get("/timesheets", async (req, res) => {
     orderBy: [{ workDate: "desc" }, { createdAt: "desc" }],
     take: 500,
   });
-  res.json(list.map(serialize));
+  const enriched = await serializeTimesheets(list, {
+    scope,
+    projectId,
+    role,
+    userId: req.user!.sub,
+  });
+  res.json(enriched);
 });
 
 function startOfDay(d: Date): Date {

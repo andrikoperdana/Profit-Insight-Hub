@@ -1507,6 +1507,10 @@ export interface Timesheet {
   approvedAt?: string | null;
   rejectionReason?: string | null;
   createdAt: string;
+  userPlannedMandays?: number | null;
+  userConsumedMandays?: number | null;
+  projectPlannedMandays?: number | null;
+  projectConsumedMandays?: number | null;
 }
 
 export interface CreateTimesheetBody {

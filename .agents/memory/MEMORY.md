@@ -31,3 +31,4 @@
 - [Dashboard cold-start herd](dashboard-cold-start-herd.md) — prod slowness = cold-start + ~20 concurrent dashboard calls; never refetchOnMount:always+staleTime:0 on widgets, throttle run-checks (10min TTL + coalesce, don't cache failures), batch rule N+1.
 - [Prisma migrate non-interactive](prisma-migrate-noninteractive.md) — `run migrate` hangs in agent bash (name prompt, no TTY); use `exec prisma migrate dev --name X --skip-generate < /dev/null` then `run generate`.
 - [ProjectBaseline single-current](baseline-single-current.md) — one current baseline via @@unique([projectId,version]); CR-driven = create+flip+atomic-claim in one txn, ACTIVATION = non-txn count+create (unique still blocks dupes). No partial index.
+- [Timesheet manday consumption](timesheet-manday-consumption.md) — approval list enrichment is approver-gated (team totals leak otherwise); bulk over-plan warnings must accumulate selected hours per (project,user)/project, not per-row.

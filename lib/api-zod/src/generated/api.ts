@@ -3548,6 +3548,10 @@ export const ListTimesheetsResponseItem = zod.object({
   approvedAt: zod.string().nullish(),
   rejectionReason: zod.string().nullish(),
   createdAt: zod.string(),
+  userPlannedMandays: zod.number().nullish(),
+  userConsumedMandays: zod.number().nullish(),
+  projectPlannedMandays: zod.number().nullish(),
+  projectConsumedMandays: zod.number().nullish(),
 });
 export const ListTimesheetsResponse = zod.array(ListTimesheetsResponseItem);
 
@@ -4276,6 +4280,10 @@ export const SubmitTimesheetResponse = zod.object({
   approvedAt: zod.string().nullish(),
   rejectionReason: zod.string().nullish(),
   createdAt: zod.string(),
+  userPlannedMandays: zod.number().nullish(),
+  userConsumedMandays: zod.number().nullish(),
+  projectPlannedMandays: zod.number().nullish(),
+  projectConsumedMandays: zod.number().nullish(),
 });
 
 export const ApproveTimesheetParams = zod.object({
@@ -4300,6 +4308,10 @@ export const ApproveTimesheetResponse = zod.object({
   approvedAt: zod.string().nullish(),
   rejectionReason: zod.string().nullish(),
   createdAt: zod.string(),
+  userPlannedMandays: zod.number().nullish(),
+  userConsumedMandays: zod.number().nullish(),
+  projectPlannedMandays: zod.number().nullish(),
+  projectConsumedMandays: zod.number().nullish(),
 });
 
 export const RejectTimesheetParams = zod.object({
@@ -4328,6 +4340,10 @@ export const RejectTimesheetResponse = zod.object({
   approvedAt: zod.string().nullish(),
   rejectionReason: zod.string().nullish(),
   createdAt: zod.string(),
+  userPlannedMandays: zod.number().nullish(),
+  userConsumedMandays: zod.number().nullish(),
+  projectPlannedMandays: zod.number().nullish(),
+  projectConsumedMandays: zod.number().nullish(),
 });
 
 export const DeleteTimesheetParams = zod.object({

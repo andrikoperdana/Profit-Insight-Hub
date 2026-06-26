@@ -11,9 +11,10 @@ import { getListTimesheetsQueryKey } from "@workspace/api-client-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { Link, useLocation } from "wouter";
-import { AlarmClock, Calendar, Check, Clock, Download, Inbox, XCircle } from "lucide-react";
+import { AlarmClock, AlertTriangle, Calendar, Check, Clock, Download, Inbox, XCircle } from "lucide-react";
 import { formatDate } from "@/lib/format";
 import { exportCsv } from "@/lib/exports";
+import { MandayUsage, wouldExceedPlan, countCumulativeOverPlan } from "@/components/timesheets/MandayBudget";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -124,6 +125,47 @@ export default function ApprovalInbox() {
     ).length;
   }, [timesheets]);
 
+  function entryWouldExceed(t: NonNullable<typeof timesheets>[number]): boolean {
+    const pending = t.status === "SUBMITTED" ? t.hours : 0;
+    return (
+      wouldExceedPlan(t.userConsumedMandays, t.userPlannedMandays, pending) ||
+      wouldExceedPlan(t.projectConsumedMandays, t.projectPlannedMandays, pending)
+    );
+  }
+
+  const overBudgetCount = useMemo(() => {
+    if (!timesheets) return 0;
+    return timesheets.filter(entryWouldExceed).length;
+  }, [timesheets]);
+
+  function handleApprove(ts: NonNullable<typeof timesheets>[number]) {
+    if (
+      entryWouldExceed(ts) &&
+      !window.confirm(
+        `Approving ${ts.userName}'s ${ts.hours}h on ${ts.projectName} will exceed planned mandays. Approve anyway?`,
+      )
+    ) {
+      return;
+    }
+    approve.mutate({ id: ts.id });
+  }
+
+  function handleBulkApprove() {
+    const ids = Array.from(selected);
+    const idSet = new Set(ids);
+    const selectedEntries = (timesheets ?? []).filter((t) => idSet.has(t.id));
+    const overCount = countCumulativeOverPlan(selectedEntries);
+    if (
+      overCount > 0 &&
+      !window.confirm(
+        `Approving the selected timesheet(s) will push ${overCount} of them over planned mandays. Approve anyway?`,
+      )
+    ) {
+      return;
+    }
+    bulkApprove.mutate(ids);
+  }
+
   const allChecked =
     !!timesheets?.length && selected.size === timesheets.length;
   const someChecked = selected.size > 0 && !allChecked;
@@ -186,6 +228,24 @@ export default function ApprovalInbox() {
         </Card>
       )}
 
+      {overBudgetCount > 0 && (
+        <Card className="border-amber-500/40 bg-amber-500/5">
+          <CardContent className="flex items-start gap-3 pt-6">
+            <AlertTriangle className="h-5 w-5 text-amber-500 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-amber-600">
+                {overBudgetCount} submission{overBudgetCount === 1 ? "" : "s"}{" "}
+                would exceed planned mandays
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Approving these will push a consultant or the project over its
+                planned mandays. Review before approving.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <Card className="border-border shadow-sm">
         <CardHeader>
           <CardTitle className="text-base flex items-center justify-between flex-wrap gap-2">
@@ -208,7 +268,7 @@ export default function ApprovalInbox() {
               {selected.size > 0 && (
                 <Button
                   size="sm"
-                  onClick={() => bulkApprove.mutate(Array.from(selected))}
+                  onClick={handleBulkApprove}
                   disabled={bulkApprove.isPending}
                   className="bg-emerald-500 hover:bg-emerald-400 text-emerald-950"
                   data-testid="button-bulk-approve"
@@ -236,6 +296,7 @@ export default function ApprovalInbox() {
               icon={<Clock className="h-10 w-10 text-muted-foreground/50" />}
             />
           ) : (
+            <div className="overflow-x-auto">
             <Table>
               <TableHeader className="bg-muted/50">
                 <TableRow>
@@ -253,6 +314,7 @@ export default function ApprovalInbox() {
                   <TableHead>Submitter</TableHead>
                   <TableHead>Project</TableHead>
                   <TableHead className="text-right">Hours</TableHead>
+                  <TableHead>Mandays</TableHead>
                   <TableHead>Description</TableHead>
                   <TableHead className="text-right">Action</TableHead>
                 </TableRow>
@@ -303,6 +365,24 @@ export default function ApprovalInbox() {
                       <TableCell className="text-right font-mono">
                         {ts.hours}
                       </TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        <MandayUsage
+                          label="Person"
+                          consumedMandays={ts.userConsumedMandays}
+                          plannedMandays={ts.userPlannedMandays}
+                          pendingHours={
+                            ts.status === "SUBMITTED" ? ts.hours : 0
+                          }
+                        />
+                        <MandayUsage
+                          label="Project"
+                          consumedMandays={ts.projectConsumedMandays}
+                          plannedMandays={ts.projectPlannedMandays}
+                          pendingHours={
+                            ts.status === "SUBMITTED" ? ts.hours : 0
+                          }
+                        />
+                      </TableCell>
                       <TableCell className="max-w-md">
                         <p
                           className="text-sm text-foreground/90 line-clamp-2"
@@ -321,7 +401,7 @@ export default function ApprovalInbox() {
                             size="sm"
                             variant="outline"
                             className="text-emerald-600 border-emerald-600/30 hover:bg-emerald-500/10 hover:text-emerald-500"
-                            onClick={() => approve.mutate({ id: ts.id })}
+                            onClick={() => handleApprove(ts)}
                             disabled={approve.isPending}
                             data-testid={`approve-${ts.id}`}
                           >
@@ -335,6 +415,7 @@ export default function ApprovalInbox() {
                 })}
               </TableBody>
             </Table>
+            </div>
           )}
           {timesheets && timesheets.length > 0 && (
             <Pagination

@@ -27,6 +27,7 @@ import { isSuperAdmin } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "@/lib/format";
 import { exportCsv } from "@/lib/exports";
+import { MandayUsage, OverPlanBadge, wouldExceedPlan, countCumulativeOverPlan } from "@/components/timesheets/MandayBudget";
 
 const STATUS_COLORS: Record<string, string> = {
   DRAFT: "bg-muted/40 text-muted-foreground border-border",
@@ -118,6 +119,42 @@ export default function TimesheetsTab({ projectId, project }: { projectId: strin
   const submittedHours = filtered.filter((t: any) => t.status === "SUBMITTED").reduce((s: number, t: any) => s + (t.hours ?? 0), 0);
   const rejectedHours = filtered.filter((t: any) => t.status === "REJECTED").reduce((s: number, t: any) => s + (t.hours ?? 0), 0);
 
+  const projectBudget = useMemo(() => {
+    const row = list.find(
+      (t: any) => t.projectConsumedMandays != null || t.projectPlannedMandays != null,
+    );
+    if (!row) return null;
+    const consumed = row.projectConsumedMandays ?? 0;
+    const planned = row.projectPlannedMandays ?? project?.plannedMandays ?? 0;
+    return { consumed, planned, over: planned > 0 && consumed > planned + 1e-6 };
+  }, [list, project]);
+
+  const overBudgetSubmitted = useMemo(
+    () =>
+      filtered.filter(
+        (t: any) =>
+          t.status === "SUBMITTED" &&
+          (wouldExceedPlan(t.userConsumedMandays, t.userPlannedMandays, t.hours) ||
+            wouldExceedPlan(t.projectConsumedMandays, t.projectPlannedMandays, t.hours)),
+      ).length,
+    [filtered],
+  );
+
+  function handleApproveRow(ts: any) {
+    const exceed =
+      wouldExceedPlan(ts.userConsumedMandays, ts.userPlannedMandays, ts.hours) ||
+      wouldExceedPlan(ts.projectConsumedMandays, ts.projectPlannedMandays, ts.hours);
+    if (
+      exceed &&
+      !confirm(
+        `Approving ${ts.userName}'s ${ts.hours}h will exceed planned mandays. Approve anyway?`,
+      )
+    ) {
+      return;
+    }
+    approveMutation.mutate({ id: ts.id });
+  }
+
   function handleExportCsv() {
     const rows = filtered.map((ts: any) => ({
       Date: ts.workDate ? ts.workDate.slice(0, 10) : "",
@@ -139,7 +176,12 @@ export default function TimesheetsTab({ projectId, project }: { projectId: strin
       toast({ title: "Nothing to approve", description: "No submitted entries in current view." });
       return;
     }
-    if (!confirm(`Approve ${pending.length} submitted timesheet(s)?`)) return;
+    const overCount = countCumulativeOverPlan(pending);
+    const msg =
+      overCount > 0
+        ? `Approve ${pending.length} submitted timesheet(s)? ${overCount} would exceed planned mandays.`
+        : `Approve ${pending.length} submitted timesheet(s)?`;
+    if (!confirm(msg)) return;
     for (const ts of pending) {
       try {
         await approveMutation.mutateAsync({ id: ts.id });
@@ -168,6 +210,34 @@ export default function TimesheetsTab({ projectId, project }: { projectId: strin
             <StatCard label="Pending Approval" value={submittedHours.toFixed(1)} />
             <StatCard label="Rejected Hours" value={rejectedHours.toFixed(1)} />
           </div>
+
+          {projectBudget && (
+            <div
+              className={`rounded-md border p-3 flex items-center justify-between gap-3 ${
+                projectBudget.over ? "border-destructive/50 bg-destructive/5" : "border-border bg-card"
+              }`}
+            >
+              <div>
+                <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
+                  Project Mandays (approved / planned)
+                </div>
+                <div
+                  className={`font-mono font-semibold mt-1 ${projectBudget.over ? "text-destructive" : ""}`}
+                >
+                  {projectBudget.consumed.toFixed(1)} /{" "}
+                  {projectBudget.planned > 0 ? projectBudget.planned.toFixed(1) : "—"} md
+                </div>
+              </div>
+              {projectBudget.over && <OverPlanBadge>Over project plan</OverPlanBadge>}
+            </div>
+          )}
+
+          {overBudgetSubmitted > 0 && (
+            <div className="rounded-md border border-amber-500/40 bg-amber-500/5 p-3 text-sm font-medium text-amber-600">
+              {overBudgetSubmitted} submitted entr{overBudgetSubmitted === 1 ? "y" : "ies"} would
+              exceed planned mandays if approved.
+            </div>
+          )}
 
           <div className="flex flex-wrap items-center gap-2">
             <div className="flex flex-col">
@@ -260,7 +330,18 @@ export default function TimesheetsTab({ projectId, project }: { projectId: strin
                       <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
                         {ts.workDate ? formatDate(ts.workDate) : "—"}
                       </TableCell>
-                      <TableCell className="text-sm">{ts.userName ?? "—"}</TableCell>
+                      <TableCell className="text-sm">
+                        <div>{ts.userName ?? "—"}</div>
+                        {ts.userConsumedMandays != null && (
+                          <MandayUsage
+                            label="Used"
+                            consumedMandays={ts.userConsumedMandays}
+                            plannedMandays={ts.userPlannedMandays}
+                            pendingHours={ts.status === "SUBMITTED" ? ts.hours : 0}
+                            className="mt-0.5"
+                          />
+                        )}
+                      </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
                         {ts.taskTitle ?? <span className="italic">—</span>}
                       </TableCell>
@@ -286,7 +367,7 @@ export default function TimesheetsTab({ projectId, project }: { projectId: strin
                                 size="sm"
                                 className="h-7 px-2 text-xs border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10"
                                 disabled={approveMutation.isPending}
-                                onClick={() => approveMutation.mutate({ id: ts.id })}
+                                onClick={() => handleApproveRow(ts)}
                                 data-testid={`button-approve-ts-${ts.id}`}
                               >
                                 <CheckCircle2 className="h-3.5 w-3.5 mr-1" /> Approve
