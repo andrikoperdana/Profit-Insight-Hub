@@ -70,8 +70,6 @@ export default function Dashboard() {
   const { data: aging } = useQuery<{ buckets: { lt24h: number; h24to48: number; gt48h: number; gt72h: number }; oldestHours: number; samples: any[] }>({
     queryKey: ["dashboard-pending-aging"],
     queryFn: () => customFetch<any>("/api/dashboard/pending-aging"),
-    refetchOnMount: "always",
-    staleTime: 0,
   });
 
   // Match the colors used by ProjectStatusBadge across the app so the donut

@@ -142,16 +142,12 @@ export default function ResourceUtilizationSection() {
     queryKey: ["dashboard-resource-utilization-detail"],
     queryFn: () =>
       customFetch<Detail>("/api/dashboard/resource-utilization-detail"),
-    refetchOnMount: "always",
-    staleTime: 0,
   });
 
   const { data: trend } = useQuery<TrendResp>({
     queryKey: ["dashboard-utilization-trend", 30],
     queryFn: () =>
       customFetch<TrendResp>("/api/dashboard/utilization-trend?days=30"),
-    refetchOnMount: "always",
-    staleTime: 0,
   });
 
   const filteredResources = useMemo(() => {

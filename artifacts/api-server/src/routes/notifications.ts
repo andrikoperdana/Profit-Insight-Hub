@@ -6,6 +6,37 @@ import { runAllNotificationChecks } from "../lib/notificationRules.js";
 const router: IRouter = Router();
 router.use(requireAuth);
 
+// The notification rules engine is heavy (re-scans projects/timesheets/expenses)
+// and is triggered from every MANAGEMENT dashboard load. Because the rules
+// already dedup notifications per-day, running the full engine on every load is
+// wasteful and piles onto the cold-start request burst. Throttle it to at most
+// one real run per window across all callers, and coalesce concurrent triggers
+// onto a single in-flight run. Failures are never cached.
+type ChecksResult = Awaited<ReturnType<typeof runAllNotificationChecks>>;
+const RUN_CHECKS_TTL_MS = 10 * 60_000;
+let lastChecksResult: ChecksResult | null = null;
+let lastChecksAt = 0;
+let inFlightChecks: Promise<ChecksResult> | null = null;
+
+async function runChecksThrottled(): Promise<ChecksResult> {
+  const now = Date.now();
+  if (lastChecksResult && now - lastChecksAt < RUN_CHECKS_TTL_MS) {
+    return lastChecksResult;
+  }
+  if (inFlightChecks) return inFlightChecks;
+  inFlightChecks = (async () => {
+    try {
+      const result = await runAllNotificationChecks();
+      lastChecksResult = result;
+      lastChecksAt = Date.now();
+      return result;
+    } finally {
+      inFlightChecks = null;
+    }
+  })();
+  return inFlightChecks;
+}
+
 function serialize(n: {
   id: string;
   userId: string;
@@ -62,8 +93,10 @@ router.post("/notifications/read-all", async (req, res) => {
 });
 
 /**
- * Run the notification rules engine. Idempotent (dedup-per-day).
- * MANAGEMENT or PROJECT_MANAGER can trigger; everyone else gets 403.
+ * Run the notification rules engine. Idempotent (dedup-per-day) and throttled
+ * (see runChecksThrottled): the heavy engine runs at most once per ~10 min
+ * across all callers, returning the last result otherwise.
+ * MANAGEMENT or SUPER_ADMIN can trigger; everyone else gets 403.
  * Frontend calls this from dashboard load so checks stay fresh without cron.
  */
 router.post("/notifications/run-checks", async (req, res) => {
@@ -73,7 +106,7 @@ router.post("/notifications/run-checks", async (req, res) => {
     return;
   }
   try {
-    const result = await runAllNotificationChecks();
+    const result = await runChecksThrottled();
     req.log.info({ result }, "Notification rules engine ran");
     res.json(result);
   } catch (err) {

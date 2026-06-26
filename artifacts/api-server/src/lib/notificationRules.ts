@@ -153,13 +153,17 @@ async function checkLateTimesheets(): Promise<number> {
     where: { deletedAt: null, role: { in: ["KONSULTAN", "TECHNICAL_WRITER"] } },
     select: { id: true, name: true, principalId: true },
   });
+  // Batch the "has a recent timesheet" lookup into a single query instead of
+  // one findFirst per user (an N+1 that dominated this check's runtime).
+  const recentRows = await prisma.timesheet.findMany({
+    where: { userId: { in: users.map((u) => u.id) }, workDate: { gte: cutoff } },
+    select: { userId: true },
+    distinct: ["userId"],
+  });
+  const hasRecentTimesheet = new Set(recentRows.map((r) => r.userId));
   let created = 0;
   for (const u of users) {
-    const recent = await prisma.timesheet.findFirst({
-      where: { userId: u.id, workDate: { gte: cutoff } },
-      select: { id: true },
-    });
-    if (recent) continue;
+    if (hasRecentTimesheet.has(u.id)) continue;
     const title = "Timesheet missing";
     const message = `You have not submitted a timesheet since ${cutoff.toISOString().slice(0, 10)}.`;
     if (await notifyOnceDaily({ userId: u.id, type: "TIMESHEET_LATE", title, message, link: "/timesheets" })) created++;
