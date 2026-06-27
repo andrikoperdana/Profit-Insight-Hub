@@ -24,6 +24,7 @@ tags:
   - name: raid
   - name: performance-reviews
   - name: pipedrive
+  - name: executive-copilot
 
 paths:
   /reports:
@@ -2514,8 +2515,193 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/PipedriveStageMappingsResponse" }
 
+  /executive-copilot/briefing:
+    get:
+      operationId: getExecutiveBriefing
+      tags: [executive-copilot]
+      summary: Return the most recently generated executive briefing (cached, no AI call).
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ExecutiveBriefingState" }
+
+  /executive-copilot/briefing/generate:
+    post:
+      operationId: generateExecutiveBriefing
+      tags: [executive-copilot]
+      summary: Generate a fresh AI executive briefing from current portfolio data (incurs AI cost).
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ExecutiveBriefingResult" }
+
 components:
   schemas:
+    ExecutiveCopilotPortfolioFacts:
+      type: object
+      required:
+        [
+          totalProjects,
+          activeProjects,
+          clientProjects,
+          totalContractValue,
+          totalRecognizedRevenue,
+          totalActualCost,
+          totalActualProfit,
+          weightedMarginPct,
+          portfolioHealthScore,
+          healthLabel,
+        ]
+      properties:
+        totalProjects: { type: integer }
+        activeProjects: { type: integer }
+        clientProjects: { type: integer }
+        totalContractValue: { type: number }
+        totalRecognizedRevenue: { type: number }
+        totalActualCost: { type: number }
+        totalActualProfit: { type: number }
+        weightedMarginPct: { type: number }
+        portfolioHealthScore: { type: number }
+        healthLabel: { type: string }
+
+    ExecutiveCopilotUtilizationFacts:
+      type: object
+      required:
+        [headcount, billableActive, idle, overloaded, idleLong, utilizationPct]
+      properties:
+        headcount: { type: integer }
+        billableActive: { type: integer }
+        idle: { type: integer }
+        overloaded: { type: integer }
+        idleLong: { type: integer }
+        utilizationPct: { type: number }
+
+    ExecutiveCopilotCashFlowFacts:
+      type: object
+      required:
+        [plannedNext30Days, plannedNext90Days, outstandingInvoicedAmount, paidLast90Days]
+      properties:
+        plannedNext30Days: { type: number }
+        plannedNext90Days: { type: number }
+        outstandingInvoicedAmount: { type: number }
+        paidLast90Days: { type: number }
+
+    ExecutiveCopilotInvoiceFacts:
+      type: object
+      required:
+        [invoicedCount, invoicedAmount, paidAmount, outstandingAmount, plannedCount, plannedAmount]
+      properties:
+        invoicedCount: { type: integer }
+        invoicedAmount: { type: number }
+        paidAmount: { type: number }
+        outstandingAmount: { type: number }
+        plannedCount: { type: integer }
+        plannedAmount: { type: number }
+
+    ExecutiveCopilotDelayedProject:
+      type: object
+      required: [id, code, name, status, daysOverdue]
+      properties:
+        id: { type: string }
+        code: { type: string }
+        name: { type: string }
+        status: { type: string }
+        endDate: { type: string, nullable: true }
+        daysOverdue: { type: integer }
+
+    ExecutiveCopilotRiskProject:
+      type: object
+      required: [id, code, name, openCritical, openHigh]
+      properties:
+        id: { type: string }
+        code: { type: string }
+        name: { type: string }
+        openCritical: { type: integer }
+        openHigh: { type: integer }
+        healthScore: { type: number, nullable: true }
+
+    ExecutiveCopilotFacts:
+      type: object
+      required:
+        [portfolio, utilization, cashFlow, invoices, delayedProjects, highRiskProjects]
+      properties:
+        portfolio: { $ref: "#/components/schemas/ExecutiveCopilotPortfolioFacts" }
+        utilization: { $ref: "#/components/schemas/ExecutiveCopilotUtilizationFacts" }
+        cashFlow: { $ref: "#/components/schemas/ExecutiveCopilotCashFlowFacts" }
+        invoices: { $ref: "#/components/schemas/ExecutiveCopilotInvoiceFacts" }
+        delayedProjects:
+          type: array
+          items: { $ref: "#/components/schemas/ExecutiveCopilotDelayedProject" }
+        highRiskProjects:
+          type: array
+          items: { $ref: "#/components/schemas/ExecutiveCopilotRiskProject" }
+
+    ExecutiveBriefingAction:
+      type: object
+      required: [title, detail, priority]
+      properties:
+        title: { type: string }
+        detail: { type: string }
+        priority: { type: string, enum: [HIGH, MEDIUM, LOW] }
+
+    ExecutiveBriefingNarrative:
+      type: object
+      required:
+        [
+          headline,
+          healthLabel,
+          portfolioHealthScore,
+          revenueSummary,
+          marginSummary,
+          utilizationSummary,
+          cashFlowSummary,
+          outstandingInvoicesSummary,
+          consultantAvailabilitySummary,
+          delayedProjectsSummary,
+          highRiskProjectsSummary,
+          recommendedActions,
+        ]
+      properties:
+        headline: { type: string }
+        healthLabel: { type: string }
+        portfolioHealthScore: { type: number }
+        revenueSummary: { type: string }
+        marginSummary: { type: string }
+        utilizationSummary: { type: string }
+        cashFlowSummary: { type: string }
+        outstandingInvoicesSummary: { type: string }
+        consultantAvailabilitySummary: { type: string }
+        delayedProjectsSummary: { type: string }
+        highRiskProjectsSummary: { type: string }
+        recommendedActions:
+          type: array
+          minItems: 1
+          maxItems: 5
+          items: { $ref: "#/components/schemas/ExecutiveBriefingAction" }
+
+    ExecutiveBriefingResult:
+      type: object
+      required: [generatedAt, model, facts, briefing]
+      properties:
+        generatedAt: { type: string }
+        model: { type: string }
+        stale: { type: boolean }
+        facts: { $ref: "#/components/schemas/ExecutiveCopilotFacts" }
+        briefing: { $ref: "#/components/schemas/ExecutiveBriefingNarrative" }
+
+    ExecutiveBriefingState:
+      type: object
+      required: [hasBriefing]
+      properties:
+        hasBriefing: { type: boolean }
+        result:
+          allOf: [{ $ref: "#/components/schemas/ExecutiveBriefingResult" }]
+          nullable: true
+
     HealthStatus:
       type: object
       required: [status]

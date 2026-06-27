@@ -5433,3 +5433,190 @@ export const UpdatePipedriveStageMappingsResponse = zod.object({
     )
     .nullish(),
 });
+
+/**
+ * @summary Return the most recently generated executive briefing (cached, no AI call).
+ */
+export const getExecutiveBriefingResponseResultOneBriefingRecommendedActionsMax = 5;
+
+export const GetExecutiveBriefingResponse = zod.object({
+  hasBriefing: zod.boolean(),
+  result: zod
+    .object({
+      generatedAt: zod.string(),
+      model: zod.string(),
+      stale: zod.boolean().optional(),
+      facts: zod.object({
+        portfolio: zod.object({
+          totalProjects: zod.number(),
+          activeProjects: zod.number(),
+          clientProjects: zod.number(),
+          totalContractValue: zod.number(),
+          totalRecognizedRevenue: zod.number(),
+          totalActualCost: zod.number(),
+          totalActualProfit: zod.number(),
+          weightedMarginPct: zod.number(),
+          portfolioHealthScore: zod.number(),
+          healthLabel: zod.string(),
+        }),
+        utilization: zod.object({
+          headcount: zod.number(),
+          billableActive: zod.number(),
+          idle: zod.number(),
+          overloaded: zod.number(),
+          idleLong: zod.number(),
+          utilizationPct: zod.number(),
+        }),
+        cashFlow: zod.object({
+          plannedNext30Days: zod.number(),
+          plannedNext90Days: zod.number(),
+          outstandingInvoicedAmount: zod.number(),
+          paidLast90Days: zod.number(),
+        }),
+        invoices: zod.object({
+          invoicedCount: zod.number(),
+          invoicedAmount: zod.number(),
+          paidAmount: zod.number(),
+          outstandingAmount: zod.number(),
+          plannedCount: zod.number(),
+          plannedAmount: zod.number(),
+        }),
+        delayedProjects: zod.array(
+          zod.object({
+            id: zod.string(),
+            code: zod.string(),
+            name: zod.string(),
+            status: zod.string(),
+            endDate: zod.string().nullish(),
+            daysOverdue: zod.number(),
+          }),
+        ),
+        highRiskProjects: zod.array(
+          zod.object({
+            id: zod.string(),
+            code: zod.string(),
+            name: zod.string(),
+            openCritical: zod.number(),
+            openHigh: zod.number(),
+            healthScore: zod.number().nullish(),
+          }),
+        ),
+      }),
+      briefing: zod.object({
+        headline: zod.string(),
+        healthLabel: zod.string(),
+        portfolioHealthScore: zod.number(),
+        revenueSummary: zod.string(),
+        marginSummary: zod.string(),
+        utilizationSummary: zod.string(),
+        cashFlowSummary: zod.string(),
+        outstandingInvoicesSummary: zod.string(),
+        consultantAvailabilitySummary: zod.string(),
+        delayedProjectsSummary: zod.string(),
+        highRiskProjectsSummary: zod.string(),
+        recommendedActions: zod
+          .array(
+            zod.object({
+              title: zod.string(),
+              detail: zod.string(),
+              priority: zod.enum(["HIGH", "MEDIUM", "LOW"]),
+            }),
+          )
+          .min(1)
+          .max(
+            getExecutiveBriefingResponseResultOneBriefingRecommendedActionsMax,
+          ),
+      }),
+    })
+    .nullish(),
+});
+
+/**
+ * @summary Generate a fresh AI executive briefing from current portfolio data (incurs AI cost).
+ */
+export const generateExecutiveBriefingResponseBriefingRecommendedActionsMax = 5;
+
+export const GenerateExecutiveBriefingResponse = zod.object({
+  generatedAt: zod.string(),
+  model: zod.string(),
+  stale: zod.boolean().optional(),
+  facts: zod.object({
+    portfolio: zod.object({
+      totalProjects: zod.number(),
+      activeProjects: zod.number(),
+      clientProjects: zod.number(),
+      totalContractValue: zod.number(),
+      totalRecognizedRevenue: zod.number(),
+      totalActualCost: zod.number(),
+      totalActualProfit: zod.number(),
+      weightedMarginPct: zod.number(),
+      portfolioHealthScore: zod.number(),
+      healthLabel: zod.string(),
+    }),
+    utilization: zod.object({
+      headcount: zod.number(),
+      billableActive: zod.number(),
+      idle: zod.number(),
+      overloaded: zod.number(),
+      idleLong: zod.number(),
+      utilizationPct: zod.number(),
+    }),
+    cashFlow: zod.object({
+      plannedNext30Days: zod.number(),
+      plannedNext90Days: zod.number(),
+      outstandingInvoicedAmount: zod.number(),
+      paidLast90Days: zod.number(),
+    }),
+    invoices: zod.object({
+      invoicedCount: zod.number(),
+      invoicedAmount: zod.number(),
+      paidAmount: zod.number(),
+      outstandingAmount: zod.number(),
+      plannedCount: zod.number(),
+      plannedAmount: zod.number(),
+    }),
+    delayedProjects: zod.array(
+      zod.object({
+        id: zod.string(),
+        code: zod.string(),
+        name: zod.string(),
+        status: zod.string(),
+        endDate: zod.string().nullish(),
+        daysOverdue: zod.number(),
+      }),
+    ),
+    highRiskProjects: zod.array(
+      zod.object({
+        id: zod.string(),
+        code: zod.string(),
+        name: zod.string(),
+        openCritical: zod.number(),
+        openHigh: zod.number(),
+        healthScore: zod.number().nullish(),
+      }),
+    ),
+  }),
+  briefing: zod.object({
+    headline: zod.string(),
+    healthLabel: zod.string(),
+    portfolioHealthScore: zod.number(),
+    revenueSummary: zod.string(),
+    marginSummary: zod.string(),
+    utilizationSummary: zod.string(),
+    cashFlowSummary: zod.string(),
+    outstandingInvoicesSummary: zod.string(),
+    consultantAvailabilitySummary: zod.string(),
+    delayedProjectsSummary: zod.string(),
+    highRiskProjectsSummary: zod.string(),
+    recommendedActions: zod
+      .array(
+        zod.object({
+          title: zod.string(),
+          detail: zod.string(),
+          priority: zod.enum(["HIGH", "MEDIUM", "LOW"]),
+        }),
+      )
+      .min(1)
+      .max(generateExecutiveBriefingResponseBriefingRecommendedActionsMax),
+  }),
+});

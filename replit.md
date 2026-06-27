@@ -69,6 +69,7 @@ Persisted `Notification` rows (`lib/notifications.ts` `notifyUser`), surfaced in
 
 ## Feature pages (route — roles — purpose)
 
+- `/executive-copilot` (MGMT) — AI Executive Copilot briefing page (not a chatbot). All numbers computed deterministically (`api-server/src/lib/executive-copilot.ts` `buildExecutiveCopilotFacts`); LLM (gpt-5.4) only narrates prose + Top 5 actions. Portfolio health score/label deterministic and overwritten onto the validated AI JSON. Split endpoints: `POST /executive-copilot/briefing/generate` (button-driven, incurs AI cost) + `GET /executive-copilot/briefing` (cached only). Module-level cache + single-flight + 10min stale flag. Never sends docs/rates/raw timesheets to the LLM; never logs provider body.
 - `/vat-recap` (MGMT) — 12-month + annual VAT breakdown of INVOICED/PAID milestones.
 - `/resource-planning` (PM/MGMT/HR/Principal_*) — BU-grouped weekly mandays.
 - `/bench` (PM/MGMT/HR/Principal_*) — utilization detail.
@@ -90,7 +91,7 @@ Server `requireRole` (`middlewares/auth.ts`): **MGMT** full; **PM** write own pr
 
 Per-role dashboards in `pages/dashboard/index.tsx` (MGMT executive KPIs, PM active/approvals, Sales pipeline, Konsultan/TW log-time, Admin Project closing-docs, Site Admin audit, HR `HRDashboard.tsx`).
 
-Routes: `/login`, `/` (dashboard), `/projects`(+`/new`,`/:id`,`/:id/summary`), `/timesheets`, `/clients`, `/users`, `/skills`, `/business-units`, `/resource-planning`, `/skill-matrix`, `/bench`, `/capacity`, `/task-templates`, `/leaves`, `/org-chart`, `/reports`, `/invoice-planning`, `/vat-recap`, `/performance-reviews`, `/work-hours`, `/approvals`, `/settings`, `/my-tasks`, `/my-timesheets`, `/my-expenses`. (Role gating per page; see `App.tsx`.)
+Routes: `/login`, `/` (dashboard), `/projects`(+`/new`,`/:id`,`/:id/summary`), `/timesheets`, `/clients`, `/users`, `/skills`, `/business-units`, `/resource-planning`, `/skill-matrix`, `/bench`, `/capacity`, `/task-templates`, `/leaves`, `/org-chart`, `/reports`, `/invoice-planning`, `/vat-recap`, `/executive-copilot`, `/performance-reviews`, `/work-hours`, `/approvals`, `/settings`, `/my-tasks`, `/my-timesheets`, `/my-expenses`. (Role gating per page; see `App.tsx`.)
 
 ## Gotchas (do not regress)
 

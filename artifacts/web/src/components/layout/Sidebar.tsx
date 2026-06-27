@@ -29,6 +29,7 @@ import {
   ClipboardCheck,
   CheckSquare,
   FileText,
+  Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -138,6 +139,7 @@ export default function Sidebar() {
     ...(sa || user?.role === "MANAGEMENT" ? [{ href: "/business-intelligence", label: "Business Intelligence", icon: TrendingUp }] : []),
     ...(sa || user?.role === "MANAGEMENT" ? [{ href: "/pm-dashboards", label: "PM Dashboards", icon: LayoutDashboard }] : []),
     ...(sa || user?.role === "MANAGEMENT" ? [{ href: "/portfolio-monitor", label: "Portfolio Monitor", icon: ClipboardList }] : []),
+    ...(sa || user?.role === "MANAGEMENT" ? [{ href: "/executive-copilot", label: "AI Executive Copilot", icon: Sparkles }] : []),
     ...(sa || user?.role === "MANAGEMENT" ||
         user?.role === "PRINCIPAL_KONSULTAN" ||
         user?.role === "PRINCIPAL_TECHNICAL_WRITER" ||

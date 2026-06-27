@@ -49,6 +49,7 @@ import workHoursRouter from "./work-hours.js";
 import xeroRouter from "./xero.js";
 import pipedriveRouter from "./pipedrive.js";
 import clientPortalRouter from "./client-portal.js";
+import executiveCopilotRouter from "./executive-copilot.js";
 
 const router: IRouter = Router();
 
@@ -117,5 +118,6 @@ router.use(performanceReviewsRouter);
 router.use(workstreamsRouter);
 router.use(projectReportsRouter);
 router.use(workHoursRouter);
+router.use(executiveCopilotRouter);
 
 export default router;

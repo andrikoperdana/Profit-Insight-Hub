@@ -5,6 +5,118 @@
  * SecureProfit Hub API
  * OpenAPI spec version: 0.1.0
  */
+export interface ExecutiveCopilotPortfolioFacts {
+  totalProjects: number;
+  activeProjects: number;
+  clientProjects: number;
+  totalContractValue: number;
+  totalRecognizedRevenue: number;
+  totalActualCost: number;
+  totalActualProfit: number;
+  weightedMarginPct: number;
+  portfolioHealthScore: number;
+  healthLabel: string;
+}
+
+export interface ExecutiveCopilotUtilizationFacts {
+  headcount: number;
+  billableActive: number;
+  idle: number;
+  overloaded: number;
+  idleLong: number;
+  utilizationPct: number;
+}
+
+export interface ExecutiveCopilotCashFlowFacts {
+  plannedNext30Days: number;
+  plannedNext90Days: number;
+  outstandingInvoicedAmount: number;
+  paidLast90Days: number;
+}
+
+export interface ExecutiveCopilotInvoiceFacts {
+  invoicedCount: number;
+  invoicedAmount: number;
+  paidAmount: number;
+  outstandingAmount: number;
+  plannedCount: number;
+  plannedAmount: number;
+}
+
+export interface ExecutiveCopilotDelayedProject {
+  id: string;
+  code: string;
+  name: string;
+  status: string;
+  endDate?: string | null;
+  daysOverdue: number;
+}
+
+export interface ExecutiveCopilotRiskProject {
+  id: string;
+  code: string;
+  name: string;
+  openCritical: number;
+  openHigh: number;
+  healthScore?: number | null;
+}
+
+export interface ExecutiveCopilotFacts {
+  portfolio: ExecutiveCopilotPortfolioFacts;
+  utilization: ExecutiveCopilotUtilizationFacts;
+  cashFlow: ExecutiveCopilotCashFlowFacts;
+  invoices: ExecutiveCopilotInvoiceFacts;
+  delayedProjects: ExecutiveCopilotDelayedProject[];
+  highRiskProjects: ExecutiveCopilotRiskProject[];
+}
+
+export type ExecutiveBriefingActionPriority =
+  (typeof ExecutiveBriefingActionPriority)[keyof typeof ExecutiveBriefingActionPriority];
+
+export const ExecutiveBriefingActionPriority = {
+  HIGH: "HIGH",
+  MEDIUM: "MEDIUM",
+  LOW: "LOW",
+} as const;
+
+export interface ExecutiveBriefingAction {
+  title: string;
+  detail: string;
+  priority: ExecutiveBriefingActionPriority;
+}
+
+export interface ExecutiveBriefingNarrative {
+  headline: string;
+  healthLabel: string;
+  portfolioHealthScore: number;
+  revenueSummary: string;
+  marginSummary: string;
+  utilizationSummary: string;
+  cashFlowSummary: string;
+  outstandingInvoicesSummary: string;
+  consultantAvailabilitySummary: string;
+  delayedProjectsSummary: string;
+  highRiskProjectsSummary: string;
+  /**
+   * @minItems 1
+   * @maxItems 5
+   */
+  recommendedActions: ExecutiveBriefingAction[];
+}
+
+export interface ExecutiveBriefingResult {
+  generatedAt: string;
+  model: string;
+  stale?: boolean;
+  facts: ExecutiveCopilotFacts;
+  briefing: ExecutiveBriefingNarrative;
+}
+
+export interface ExecutiveBriefingState {
+  hasBriefing: boolean;
+  result?: ExecutiveBriefingResult | null;
+}
+
 export interface HealthStatus {
   status: string;
 }

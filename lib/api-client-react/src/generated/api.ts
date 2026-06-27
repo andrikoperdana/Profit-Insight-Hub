@@ -63,6 +63,8 @@ import type {
   CreateUserBody,
   DashboardSummary,
   Document,
+  ExecutiveBriefingResult,
+  ExecutiveBriefingState,
   GetBillableUtilizationParams,
   GetInvoicePlanningParams,
   GetLeadsAnalyticsParams,
@@ -13430,4 +13432,163 @@ export const useUpdatePipedriveStageMappings = <
   TContext
 > => {
   return useMutation(getUpdatePipedriveStageMappingsMutationOptions(options));
+};
+
+/**
+ * @summary Return the most recently generated executive briefing (cached, no AI call).
+ */
+export const getGetExecutiveBriefingUrl = () => {
+  return `/api/executive-copilot/briefing`;
+};
+
+export const getExecutiveBriefing = async (
+  options?: RequestInit,
+): Promise<ExecutiveBriefingState> => {
+  return customFetch<ExecutiveBriefingState>(getGetExecutiveBriefingUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetExecutiveBriefingQueryKey = () => {
+  return [`/api/executive-copilot/briefing`] as const;
+};
+
+export const getGetExecutiveBriefingQueryOptions = <
+  TData = Awaited<ReturnType<typeof getExecutiveBriefing>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getExecutiveBriefing>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetExecutiveBriefingQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getExecutiveBriefing>>
+  > = ({ signal }) => getExecutiveBriefing({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getExecutiveBriefing>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetExecutiveBriefingQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getExecutiveBriefing>>
+>;
+export type GetExecutiveBriefingQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Return the most recently generated executive briefing (cached, no AI call).
+ */
+
+export function useGetExecutiveBriefing<
+  TData = Awaited<ReturnType<typeof getExecutiveBriefing>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getExecutiveBriefing>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetExecutiveBriefingQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Generate a fresh AI executive briefing from current portfolio data (incurs AI cost).
+ */
+export const getGenerateExecutiveBriefingUrl = () => {
+  return `/api/executive-copilot/briefing/generate`;
+};
+
+export const generateExecutiveBriefing = async (
+  options?: RequestInit,
+): Promise<ExecutiveBriefingResult> => {
+  return customFetch<ExecutiveBriefingResult>(
+    getGenerateExecutiveBriefingUrl(),
+    {
+      ...options,
+      method: "POST",
+    },
+  );
+};
+
+export const getGenerateExecutiveBriefingMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof generateExecutiveBriefing>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof generateExecutiveBriefing>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = ["generateExecutiveBriefing"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof generateExecutiveBriefing>>,
+    void
+  > = () => {
+    return generateExecutiveBriefing(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type GenerateExecutiveBriefingMutationResult = NonNullable<
+  Awaited<ReturnType<typeof generateExecutiveBriefing>>
+>;
+
+export type GenerateExecutiveBriefingMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Generate a fresh AI executive briefing from current portfolio data (incurs AI cost).
+ */
+export const useGenerateExecutiveBriefing = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof generateExecutiveBriefing>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof generateExecutiveBriefing>>,
+  TError,
+  void,
+  TContext
+> => {
+  return useMutation(getGenerateExecutiveBriefingMutationOptions(options));
 };
