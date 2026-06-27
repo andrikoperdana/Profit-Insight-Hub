@@ -206,6 +206,8 @@ overrides:
   js-yaml: "^4.2.0"
   # GHSA-6v5v-wf23-fmfq: markdown-it quadratic complexity DoS in smartquotes rule
   markdown-it: "^14.2.0"
+  # GHSA-g8m3-5g58-fq7m / GHSA-vxpw-j846-p89q / GHSA-p88m-4jfj-68fv / GHSA-35p6-xmwp-9g52: undici CVEs in 6.26.0
+  undici: "^6.27.0"
 
 packageExtensions:
   # react-native-worklets@0.5.x's babel plugin does a bare `require("@babel/generator")`
