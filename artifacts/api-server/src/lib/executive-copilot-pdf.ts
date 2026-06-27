@@ -453,7 +453,7 @@ function buildBriefing(
       d.status,
       String(d.daysOverdue),
     ]),
-    [70, 235, 70, 100],
+    [110, 205, 60, 100],
     "No delayed projects.",
   );
 
@@ -470,7 +470,7 @@ function buildBriefing(
       String(r.openHigh),
       r.healthScore == null ? "-" : String(r.healthScore),
     ]),
-    [70, 215, 60, 60, 70],
+    [110, 185, 55, 55, 70],
     "No high-risk projects.",
   );
 
@@ -553,6 +553,11 @@ export function streamExecutiveBriefingPdf(
   const range = doc.bufferedPageRange();
   for (let i = 0; i < range.count; i += 1) {
     doc.switchToPage(range.start + i);
+    // The footer sits below the bottom margin. Without this, PDFKit treats each
+    // footer line as overflow and auto-inserts a blank page per write, so a
+    // 3-page briefing balloons to 9. Dropping the bottom margin disables that
+    // auto-pagination while we stamp footers.
+    doc.page.margins.bottom = 0;
     const y = doc.page.height - 40;
     const cw = contentWidth(doc);
     doc
