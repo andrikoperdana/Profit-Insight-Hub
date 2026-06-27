@@ -33,4 +33,5 @@
 - [Prisma migrate non-interactive](prisma-migrate-noninteractive.md) — `run migrate` hangs in agent bash (name prompt, no TTY); use `exec prisma migrate dev --name X --skip-generate < /dev/null` then `run generate`.
 - [ProjectBaseline single-current](baseline-single-current.md) — one current baseline via @@unique([projectId,version]); CR-driven = create+flip+atomic-claim in one txn, ACTIVATION = non-txn count+create (unique still blocks dupes). No partial index.
 - [Timesheet manday consumption](timesheet-manday-consumption.md) — approval list enrichment is approver-gated (team totals leak otherwise); bulk over-plan warnings must accumulate selected hours per (project,user)/project, not per-row.
+- [Deployment build mobile Expo bundle](deployment-build-mobile-expo.md) — publish builds web+api-server+mobile; the Expo iOS+Android Metro bundle is the heavy/flaky step; fast "connection lost" failure = transient infra, retry first.
 - [PDFKit footer blank pages](pdfkit-footer-blank-pages.md) — text below the bottom margin auto-adds a page per write; zero `page.margins.bottom` after switchToPage before footers.
