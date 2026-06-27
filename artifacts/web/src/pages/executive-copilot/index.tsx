@@ -6,7 +6,9 @@ import {
   type ExecutiveCopilotFacts,
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { formatIDR, formatPct, formatDateTime } from "@/lib/format";
+import { downloadAuthed } from "@/lib/exports";
 import {
   Card,
   CardContent,
@@ -20,6 +22,7 @@ import { toast } from "@/hooks/use-toast";
 import {
   Sparkles,
   RefreshCw,
+  Download,
   TrendingUp,
   Percent,
   Users,
@@ -458,6 +461,27 @@ export default function ExecutiveCopilotPage() {
   const result = state?.result ?? null;
   const generating = generate.isPending;
 
+  const [exporting, setExporting] = useState(false);
+
+  const handleExportPdf = async () => {
+    setExporting(true);
+    try {
+      const stamp = new Date().toISOString().slice(0, 10);
+      await downloadAuthed(
+        "/api/executive-copilot/briefing/export.pdf",
+        `executive-briefing-${stamp}.pdf`,
+      );
+    } catch {
+      toast({
+        title: "Export failed",
+        description: "Could not export the briefing PDF. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setExporting(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -472,7 +496,7 @@ export default function ExecutiveCopilotPage() {
             from live data; the AI provides the narrative.
           </p>
           {result && (
-            <p className="flex items-center gap-2 text-xs text-muted-foreground">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span>
                 Generated {formatDateTime(result.generatedAt)} · {result.model}
               </span>
@@ -484,23 +508,35 @@ export default function ExecutiveCopilotPage() {
                   Stale
                 </Badge>
               )}
-            </p>
+            </div>
           )}
         </div>
-        <Button onClick={() => generate.mutate()} disabled={generating}>
-          {result ? (
-            <RefreshCw
-              className={`mr-2 h-4 w-4 ${generating ? "animate-spin" : ""}`}
-            />
-          ) : (
-            <Sparkles className="mr-2 h-4 w-4" />
+        <div className="flex items-center gap-2">
+          {result && (
+            <Button
+              variant="outline"
+              onClick={handleExportPdf}
+              disabled={exporting}
+            >
+              <Download className="mr-2 h-4 w-4" />
+              {exporting ? "Exporting..." : "Export PDF"}
+            </Button>
           )}
-          {generating
-            ? "Generating..."
-            : result
-              ? "Refresh Briefing"
-              : "Generate Briefing"}
-        </Button>
+          <Button onClick={() => generate.mutate()} disabled={generating}>
+            {result ? (
+              <RefreshCw
+                className={`mr-2 h-4 w-4 ${generating ? "animate-spin" : ""}`}
+              />
+            ) : (
+              <Sparkles className="mr-2 h-4 w-4" />
+            )}
+            {generating
+              ? "Generating..."
+              : result
+                ? "Refresh Briefing"
+                : "Generate Briefing"}
+          </Button>
+        </div>
       </div>
 
       {isLoading ? (

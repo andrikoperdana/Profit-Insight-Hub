@@ -6,6 +6,7 @@ import {
   buildExecutiveCopilotFacts,
   type ExecutiveCopilotFacts,
 } from "../lib/executive-copilot.js";
+import { streamExecutiveBriefingPdf } from "../lib/executive-copilot-pdf.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -169,6 +170,37 @@ router.get("/executive-copilot/briefing", (req, res) => {
     hasBriefing: true,
     result: { ...lastResult, stale: ageMs > STALE_MS },
   });
+});
+
+// Professional PDF export of the current cached briefing. Binary stream (not in
+// the OpenAPI codegen) — the frontend downloads it with an auth header. Numbers
+// come from the deterministic facts; the AI prose is narrative only.
+router.get("/executive-copilot/briefing/export.pdf", (req, res) => {
+  if (!isExecutive(req.user?.role)) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  if (!lastResult) {
+    res.status(409).json({ error: "Generate a briefing first." });
+    return;
+  }
+  try {
+    const ageMs = Date.now() - new Date(lastResult.generatedAt).getTime();
+    streamExecutiveBriefingPdf(res, {
+      ...lastResult,
+      stale: ageMs > STALE_MS,
+    });
+  } catch (err) {
+    req.log.error(
+      { err: err instanceof Error ? err.message : "unknown" },
+      "executive briefing PDF export failed",
+    );
+    if (!res.headersSent) {
+      res.status(500).json({ error: "Failed to export the briefing PDF." });
+    } else {
+      res.end();
+    }
+  }
 });
 
 export default router;
