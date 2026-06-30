@@ -401,3 +401,9 @@ id = "Nth_FHohO0urO6BXYeFDU"
 uri = "file://docs/Dokumentasi-Fitur-PMP-SecureProfit-Hub.docx"
 type = "word_document"
 title = "Dokumentasi Fitur PMP — SecureProfit Hub"
+
+[[outputs]]
+id = "P_w8BQu1bCRJI-MFNo-dc"
+uri = "file://docs/commission-feature-feasibility.md"
+type = "text"
+title = "Studi Kelayakan Fitur Commission Tracker"
