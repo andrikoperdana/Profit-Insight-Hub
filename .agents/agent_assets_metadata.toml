@@ -413,3 +413,15 @@ id = "APKdWCumvOtxybCCXLvZK"
 uri = "file://docs/commission-feature-feasibility.en.md"
 type = "text"
 title = "Commission Tracker — Feasibility Study (English)"
+
+[[outputs]]
+id = "YGyp3bHYabd7tr7gDM5jF"
+uri = "file://docs/commission-feature-feasibility.en.docx"
+type = "word_document"
+title = "Commission Tracker — Feasibility Study (English, Word)"
+
+[[outputs]]
+id = "3ccDA1pwOvum7fqYSxz8u"
+uri = "file://docs/commission-feature-feasibility.docx"
+type = "word_document"
+title = "Studi Kelayakan Commission Tracker (Bahasa Indonesia, Word)"
