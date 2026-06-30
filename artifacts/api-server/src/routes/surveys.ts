@@ -521,15 +521,17 @@ router.put("/projects/:id/survey-share", requireAuth, async (req, res) => {
   });
 });
 
-// Dashboard widget — average satisfaction this month (MANAGEMENT)
-router.get("/survey/summary", requireAuth, requireRole("MANAGEMENT", "PROJECT_MANAGER"), async (req, res) => {
+// Pure satisfaction-summary compute (current month), shared by GET
+// /survey/summary and the aggregated GET /dashboard/overview CSAT section.
+// pmId scopes to a single PM's projects; omit for the whole portfolio.
+export async function computeSurveySummary(opts: { pmId?: string }) {
   const now = new Date();
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
   const where: { createdAt: { gte: Date }; project?: { pmId: string } } = {
     createdAt: { gte: monthStart },
   };
-  if (req.user!.role === "PROJECT_MANAGER") {
-    where.project = { pmId: req.user!.sub };
+  if (opts.pmId) {
+    where.project = { pmId: opts.pmId };
   }
   const responses = await prisma.surveyResponse.findMany({
     where,
@@ -545,12 +547,21 @@ router.get("/survey/summary", requireAuth, requireRole("MANAGEMENT", "PROJECT_MA
     responses,
   ).filter((q) => q.type === "RATING");
   const { perQuestion, overallAverage } = computeAggregates(responses, allQuestions);
-  res.json({
+  return {
     monthStart: monthStart.toISOString(),
     responseCount: responses.length,
     overallAverage,
     perQuestion,
-  });
+  };
+}
+
+// Dashboard widget — average satisfaction this month (MANAGEMENT)
+router.get("/survey/summary", requireAuth, requireRole("MANAGEMENT", "PROJECT_MANAGER"), async (req, res) => {
+  res.json(
+    await computeSurveySummary({
+      pmId: req.user!.role === "PROJECT_MANAGER" ? req.user!.sub : undefined,
+    }),
+  );
 });
 
 // Annual survey list — paginated client feedback across all projects (MGMT only).

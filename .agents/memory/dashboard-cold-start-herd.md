@@ -34,12 +34,34 @@ the worst ones balloon to 13–50s. Once warm, the same endpoints are 30–250ms
   "has a recent timesheet" lookup (single `findMany distinct userId` + Set), never
   a `findFirst` per consultant.
 
-## If cold-load still hurts after the above
+## Aggregate overview endpoint (DONE)
 
-Architect-endorsed next lever (not yet done): a single aggregate
-`GET /api/dashboard/overview` (Promise.all of existing computations, one response)
-to collapse ~8 dashboard calls into 1. Scope narrowly: MANAGEMENT/FINANCE/
-SUPER_ADMIN only, `requireFinancialView` where commercial data appears, cache key
-must encode role/scope, include only dashboard-owned widgets — leave Header
-notifications and broad `useListProjects` out. Costs OpenAPI + codegen + frontend
-refactor risk, so only do it if logs still show excessive fan-out.
+The MANAGEMENT/FINANCE dashboard fan-out is now collapsed into ONE
+`GET /api/dashboard/overview` (admitted: MANAGEMENT/FINANCE/SUPER_ADMIN only,
+others 403). Server does Promise.all of pure compute fns, a module-level 30s
+TtlCache + single-flight, then zod-validates (non-fatal: logs a warning, still
+serves — availability over strictness on a perf aggregation). The frontend uses a
+single `useGetDashboardOverview`; child cards are **prop-driven** and must not
+self-fetch when rendered inside the overview dashboard.
+
+Durable rules learned here:
+
+- **Overview cache key is `overview:${role}` — role-uniform, NOT per-user.** This is
+  only safe because the admitted roles (MGMT/FINANCE/SUPER_ADMIN) get a
+  role-uniform payload; `userId` is passed to compute fns but their per-user
+  branches are PM/Principal-only, who are never admitted. **If you ever add
+  per-user scoping to an admitted role, add `sub` to the cache key in the same
+  change** or one user serves another's payload.
+- **FINANCE parity = null-gating, not a separate shape.** The overview returns the
+  full key set but nulls the MGMT-only sections (crm/csat/recentActivity/
+  pendingAging/utilizationTrend/resourceUtilizationDetail/pmAllocation/
+  pendingAssignment) for FINANCE; the frontend renders those as hidden/zero,
+  matching the OLD per-endpoint 403 behavior. Keep cards rendering null→empty.
+- **A prop-driven card reused elsewhere must keep its own fallback fetch.**
+  e.g. BillableUtilizationCard is also used by HRDashboard, so it keeps an
+  internal fetch; in ManagementDashboard it's fed via props + gated behind
+  `{overview && ...}` so it never double-fetches.
+- **Keep `GET /users` lazy.** The Assign-PM dialog's `useListUsers` must be gated
+  `enabled: !!selected` (only when the dialog opens) so it doesn't re-add a
+  first-load request whenever pending-assignment projects exist. Passing
+  `{query:{enabled,...}}` to the generated hook requires an explicit `queryKey`.

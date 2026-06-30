@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { customFetch } from "@workspace/api-client-react";
+import { customFetch, type ResourceUtilizationDetail, type DashboardUtilizationTrend, type BenchResourceRow } from "@workspace/api-client-react";
 import {
   Card,
   CardContent,
@@ -50,55 +50,11 @@ import { exportSheets } from "@/lib/exports";
 import { Link } from "wouter";
 import { format } from "date-fns";
 
-type Row = {
-  userId: string;
-  userName: string;
-  role: string;
-  title: string | null;
-  specialization: string | null;
-  status: "ACTIVE" | "IDLE" | "OVERLOADED";
-  currentProjectId: string | null;
-  currentProjectName: string | null;
-  currentProjectStatus: string | null;
-  currentClientId: string | null;
-  currentClientName: string | null;
-  assignmentEndDate: string | null;
-  daysRemaining: number | null;
-  finishingSoon: boolean;
-  daysSinceLastActivity: number | null;
-  idleLong: boolean;
-  overloaded: boolean;
-  avgHoursPerDay7d: number;
-  monthHours: number;
-  utilizationPctMonth: number;
-};
-
-type Detail = {
-  summary: {
-    total: number;
-    active: number;
-    idle: number;
-    vacation: number;
-    finishingSoon: number;
-    overloaded: number;
-    idleLong: number;
-    utilizationPct: number;
-  };
-  filters: {
-    principals: { id: string; name: string }[];
-    specializations: string[];
-  };
-  resources: Row[];
-  finishingSoonList: Row[];
-  idleLongList: Row[];
-  overloadedList: Row[];
-};
-
-type TrendResp = {
-  days: number;
-  headcount: number;
-  trend: { date: string; utilizationPct: number; hours: number }[];
-};
+// Aliased to the generated OpenAPI types so this section can be driven either
+// by its own fetch or by the aggregated dashboard overview payload.
+type Row = BenchResourceRow;
+type Detail = ResourceUtilizationDetail;
+type TrendResp = DashboardUtilizationTrend;
 
 const ROLE_LABEL: Record<string, string> = {
   KONSULTAN: "Consultant",
@@ -134,21 +90,34 @@ function StatusBadge({ row }: { row: Row }) {
   );
 }
 
-export default function ResourceUtilizationSection() {
+export default function ResourceUtilizationSection({
+  detail: detailProp,
+  trend: trendProp,
+}: {
+  detail?: Detail;
+  trend?: TrendResp;
+} = {}) {
   const [principal, setPrincipal] = useState<string>("__all__");
   const [specialization, setSpecialization] = useState<string>("__all__");
 
-  const { data, isLoading } = useQuery<Detail>({
+  // The executive dashboard supplies both via the aggregated overview; when
+  // rendered standalone these fall back to their own fetches.
+  const detailQuery = useQuery<Detail>({
     queryKey: ["dashboard-resource-utilization-detail"],
     queryFn: () =>
       customFetch<Detail>("/api/dashboard/resource-utilization-detail"),
+    enabled: detailProp === undefined,
   });
+  const data = detailProp ?? detailQuery.data;
+  const isLoading = detailProp === undefined && detailQuery.isLoading;
 
-  const { data: trend } = useQuery<TrendResp>({
+  const trendQuery = useQuery<TrendResp>({
     queryKey: ["dashboard-utilization-trend", 30],
     queryFn: () =>
       customFetch<TrendResp>("/api/dashboard/utilization-trend?days=30"),
+    enabled: trendProp === undefined,
   });
+  const trend = trendProp ?? trendQuery.data;
 
   const filteredResources = useMemo(() => {
     if (!data) return [];

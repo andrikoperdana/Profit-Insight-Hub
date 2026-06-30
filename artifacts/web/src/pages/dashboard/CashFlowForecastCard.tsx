@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useGetInvoicePlanning } from "@workspace/api-client-react";
+import { useGetInvoicePlanning, getGetInvoicePlanningQueryKey, type DashboardCashFlowMonth } from "@workspace/api-client-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
@@ -22,16 +22,37 @@ function compactIDR(n: number): string {
   return n.toFixed(0);
 }
 
-export default function CashFlowForecastCard() {
+export default function CashFlowForecastCard({ months: monthsProp }: { months?: DashboardCashFlowMonth[] } = {}) {
   const today = new Date();
   const y = today.getFullYear();
   const m = String(today.getMonth() + 1).padStart(2, "0");
   const defaultMonth1 = `${y}-${m}-01`;
   const [metric, setMetric] = useState<"dpp" | "total">("total");
 
-  const { data, isLoading } = useGetInvoicePlanning({ mode: "month", startDate: defaultMonth1, periods: 6 });
+  // When the parent (executive dashboard) already loaded the aggregated
+  // overview, it hands us the precomputed monthly cash-flow buckets so we skip
+  // the standalone invoice-planning fetch. Other callers fall back to fetching.
+  const query = useGetInvoicePlanning(
+    { mode: "month", startDate: defaultMonth1, periods: 6 },
+    {
+      query: {
+        enabled: monthsProp === undefined,
+        queryKey: getGetInvoicePlanningQueryKey({ mode: "month", startDate: defaultMonth1, periods: 6 }),
+      },
+    },
+  );
+  const isLoading = monthsProp === undefined && query.isLoading;
 
   const rows = useMemo(() => {
+    if (monthsProp) {
+      return monthsProp.map((mm) => ({
+        month: formatMonthLabel(mm.periodStart),
+        paid: metric === "dpp" ? mm.paidDpp : mm.paidTotal,
+        invoiced: metric === "dpp" ? mm.invoicedDpp : mm.invoicedTotal,
+        planned: metric === "dpp" ? mm.plannedDpp : mm.plannedTotal,
+      }));
+    }
+    const data = query.data;
     if (!data) return [];
     return data.periodStarts.map((iso) => {
       let paid = 0, invoiced = 0, planned = 0;
@@ -50,7 +71,7 @@ export default function CashFlowForecastCard() {
       }
       return { month: formatMonthLabel(iso), paid, invoiced, planned };
     });
-  }, [data, metric]);
+  }, [monthsProp, query.data, metric]);
 
   const totals = useMemo(() => {
     const t = rows.reduce(

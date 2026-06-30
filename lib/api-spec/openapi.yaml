@@ -2381,6 +2381,18 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/BillableUtilization" }
 
+  /dashboard/overview:
+    get:
+      operationId: getDashboardOverview
+      tags: [dashboard]
+      summary: Aggregated MANAGEMENT/FINANCE dashboard payload (single round-trip)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DashboardOverview" }
+
   /xero/status:
     get:
       operationId: getXeroStatus
@@ -4528,6 +4540,174 @@ components:
               billableHours: { type: number }
               nonBillableHours: { type: number }
               billablePct: { type: number }
+
+    ProjectTypeStat:
+      type: object
+      required: [type, count, revenue, cost, profit, marginPct]
+      properties:
+        type: { type: string }
+        count: { type: integer }
+        revenue: { type: number }
+        cost: { type: number }
+        profit: { type: number }
+        marginPct: { type: number }
+
+    DashboardCashFlowMonth:
+      type: object
+      required: [periodStart, paidDpp, paidTotal, invoicedDpp, invoicedTotal, plannedDpp, plannedTotal]
+      properties:
+        periodStart: { type: string }
+        paidDpp: { type: number }
+        paidTotal: { type: number }
+        invoicedDpp: { type: number }
+        invoicedTotal: { type: number }
+        plannedDpp: { type: number }
+        plannedTotal: { type: number }
+
+    DashboardCashFlow:
+      type: object
+      required: [months]
+      properties:
+        months:
+          type: array
+          items: { $ref: "#/components/schemas/DashboardCashFlowMonth" }
+
+    DashboardCsatQuestion:
+      type: object
+      required: [key, text, average, responseCount]
+      properties:
+        key: { type: string }
+        text: { type: string }
+        average: { type: number }
+        responseCount: { type: integer }
+
+    DashboardCsat:
+      type: object
+      required: [monthStart, responseCount, overallAverage, perQuestion]
+      properties:
+        monthStart: { type: string }
+        responseCount: { type: integer }
+        overallAverage: { type: number }
+        perQuestion:
+          type: array
+          items: { $ref: "#/components/schemas/DashboardCsatQuestion" }
+
+    PendingAgingItem:
+      type: object
+      required: [id, submitterName, projectName, projectId, hours, workDate, submittedAt, hoursWaiting]
+      properties:
+        id: { type: string }
+        submitterName: { type: string }
+        projectName: { type: string }
+        projectId: { type: string }
+        hours: { type: number }
+        workDate: { type: string }
+        submittedAt: { type: string }
+        hoursWaiting: { type: number }
+
+    DashboardPendingAging:
+      type: object
+      required: [pendingTotal, overdueCount, oldestHours, buckets, samples, overdue]
+      properties:
+        pendingTotal: { type: integer }
+        overdueCount: { type: integer }
+        oldestHours: { type: number }
+        buckets:
+          type: object
+          required: [lt24h, h24to48, gt48h, gt72h]
+          properties:
+            lt24h: { type: integer }
+            h24to48: { type: integer }
+            gt48h: { type: integer }
+            gt72h: { type: integer }
+        samples:
+          type: array
+          items: { $ref: "#/components/schemas/PendingAgingItem" }
+        overdue:
+          type: array
+          items: { $ref: "#/components/schemas/PendingAgingItem" }
+
+    DashboardUtilizationTrendPoint:
+      type: object
+      required: [date, utilizationPct, hours]
+      properties:
+        date: { type: string }
+        utilizationPct: { type: number }
+        hours: { type: number }
+
+    DashboardUtilizationTrend:
+      type: object
+      required: [days, headcount, trend]
+      properties:
+        days: { type: integer }
+        headcount: { type: integer }
+        trend:
+          type: array
+          items: { $ref: "#/components/schemas/DashboardUtilizationTrendPoint" }
+
+    PmAllocationRow:
+      type: object
+      required: [id, name, active, observation, draft, totalActiveValue, inFlight]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        title: { type: string, nullable: true }
+        active: { type: integer }
+        observation: { type: integer }
+        draft: { type: integer }
+        totalActiveValue: { type: number }
+        inFlight: { type: integer }
+
+    DashboardOverview:
+      type: object
+      required:
+        [summary, profitTrend, statusBreakdown, topProjects, losingProjects, projectTypeStats, billableUtilization, cashFlow, crm, csat, recentActivity, pendingAging, utilizationTrend, resourceUtilizationDetail, pmAllocation, pendingAssignment]
+      properties:
+        summary: { $ref: "#/components/schemas/DashboardSummary" }
+        profitTrend:
+          type: array
+          items: { $ref: "#/components/schemas/ProfitTrendPoint" }
+        statusBreakdown:
+          type: array
+          items: { $ref: "#/components/schemas/StatusCount" }
+        topProjects:
+          type: array
+          items: { $ref: "#/components/schemas/Project" }
+        losingProjects:
+          type: array
+          items: { $ref: "#/components/schemas/Project" }
+        projectTypeStats:
+          type: array
+          items: { $ref: "#/components/schemas/ProjectTypeStat" }
+        billableUtilization: { $ref: "#/components/schemas/BillableUtilization" }
+        cashFlow: { $ref: "#/components/schemas/DashboardCashFlow" }
+        crm:
+          allOf: [{ $ref: "#/components/schemas/LeadAnalytics" }]
+          nullable: true
+        csat:
+          allOf: [{ $ref: "#/components/schemas/DashboardCsat" }]
+          nullable: true
+        recentActivity:
+          type: array
+          nullable: true
+          items: { $ref: "#/components/schemas/ActivityItem" }
+        pendingAging:
+          allOf: [{ $ref: "#/components/schemas/DashboardPendingAging" }]
+          nullable: true
+        utilizationTrend:
+          allOf: [{ $ref: "#/components/schemas/DashboardUtilizationTrend" }]
+          nullable: true
+        resourceUtilizationDetail:
+          allOf: [{ $ref: "#/components/schemas/ResourceUtilizationDetail" }]
+          nullable: true
+        pmAllocation:
+          type: array
+          nullable: true
+          items: { $ref: "#/components/schemas/PmAllocationRow" }
+        pendingAssignment:
+          type: array
+          nullable: true
+          items: { $ref: "#/components/schemas/Project" }
 
     BusinessUnit:
       type: object

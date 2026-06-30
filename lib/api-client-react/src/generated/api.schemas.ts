@@ -2046,6 +2046,112 @@ export interface BillableUtilization {
   trend: BillableUtilizationTrendItem[];
 }
 
+export interface ProjectTypeStat {
+  type: string;
+  count: number;
+  revenue: number;
+  cost: number;
+  profit: number;
+  marginPct: number;
+}
+
+export interface DashboardCashFlowMonth {
+  periodStart: string;
+  paidDpp: number;
+  paidTotal: number;
+  invoicedDpp: number;
+  invoicedTotal: number;
+  plannedDpp: number;
+  plannedTotal: number;
+}
+
+export interface DashboardCashFlow {
+  months: DashboardCashFlowMonth[];
+}
+
+export interface DashboardCsatQuestion {
+  key: string;
+  text: string;
+  average: number;
+  responseCount: number;
+}
+
+export interface DashboardCsat {
+  monthStart: string;
+  responseCount: number;
+  overallAverage: number;
+  perQuestion: DashboardCsatQuestion[];
+}
+
+export interface PendingAgingItem {
+  id: string;
+  submitterName: string;
+  projectName: string;
+  projectId: string;
+  hours: number;
+  workDate: string;
+  submittedAt: string;
+  hoursWaiting: number;
+}
+
+export type DashboardPendingAgingBuckets = {
+  lt24h: number;
+  h24to48: number;
+  gt48h: number;
+  gt72h: number;
+};
+
+export interface DashboardPendingAging {
+  pendingTotal: number;
+  overdueCount: number;
+  oldestHours: number;
+  buckets: DashboardPendingAgingBuckets;
+  samples: PendingAgingItem[];
+  overdue: PendingAgingItem[];
+}
+
+export interface DashboardUtilizationTrendPoint {
+  date: string;
+  utilizationPct: number;
+  hours: number;
+}
+
+export interface DashboardUtilizationTrend {
+  days: number;
+  headcount: number;
+  trend: DashboardUtilizationTrendPoint[];
+}
+
+export interface PmAllocationRow {
+  id: string;
+  name: string;
+  title?: string | null;
+  active: number;
+  observation: number;
+  draft: number;
+  totalActiveValue: number;
+  inFlight: number;
+}
+
+export interface DashboardOverview {
+  summary: DashboardSummary;
+  profitTrend: ProfitTrendPoint[];
+  statusBreakdown: StatusCount[];
+  topProjects: Project[];
+  losingProjects: Project[];
+  projectTypeStats: ProjectTypeStat[];
+  billableUtilization: BillableUtilization;
+  cashFlow: DashboardCashFlow;
+  crm: LeadAnalytics | null;
+  csat: DashboardCsat | null;
+  recentActivity: ActivityItem[] | null;
+  pendingAging: DashboardPendingAging | null;
+  utilizationTrend: DashboardUtilizationTrend | null;
+  resourceUtilizationDetail: ResourceUtilizationDetail | null;
+  pmAllocation: PmAllocationRow[] | null;
+  pendingAssignment: Project[] | null;
+}
+
 export interface BusinessUnit {
   id: string;
   name: string;

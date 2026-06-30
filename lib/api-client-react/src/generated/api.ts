@@ -61,6 +61,7 @@ import type {
   CreateTaskTemplateBody,
   CreateTimesheetBody,
   CreateUserBody,
+  DashboardOverview,
   DashboardSummary,
   Document,
   ExecutiveBriefingResult,
@@ -12594,6 +12595,81 @@ export function useGetBillableUtilization<
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetBillableUtilizationQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Aggregated MANAGEMENT/FINANCE dashboard payload (single round-trip)
+ */
+export const getGetDashboardOverviewUrl = () => {
+  return `/api/dashboard/overview`;
+};
+
+export const getDashboardOverview = async (
+  options?: RequestInit,
+): Promise<DashboardOverview> => {
+  return customFetch<DashboardOverview>(getGetDashboardOverviewUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetDashboardOverviewQueryKey = () => {
+  return [`/api/dashboard/overview`] as const;
+};
+
+export const getGetDashboardOverviewQueryOptions = <
+  TData = Awaited<ReturnType<typeof getDashboardOverview>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getDashboardOverview>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetDashboardOverviewQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getDashboardOverview>>
+  > = ({ signal }) => getDashboardOverview({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getDashboardOverview>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetDashboardOverviewQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getDashboardOverview>>
+>;
+export type GetDashboardOverviewQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Aggregated MANAGEMENT/FINANCE dashboard payload (single round-trip)
+ */
+
+export function useGetDashboardOverview<
+  TData = Awaited<ReturnType<typeof getDashboardOverview>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getDashboardOverview>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetDashboardOverviewQueryOptions(options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

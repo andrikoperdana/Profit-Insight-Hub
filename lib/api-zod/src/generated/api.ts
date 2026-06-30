@@ -5259,6 +5259,679 @@ export const GetBillableUtilizationResponse = zod.object({
   ),
 });
 
+/**
+ * @summary Aggregated MANAGEMENT/FINANCE dashboard payload (single round-trip)
+ */
+export const GetDashboardOverviewResponse = zod.object({
+  summary: zod.object({
+    totalProjects: zod.number(),
+    activeProjects: zod.number(),
+    totalContractValue: zod.number(),
+    totalRevenueNet: zod.number().optional(),
+    totalActualCost: zod.number(),
+    totalActualProfit: zod.number(),
+    totalNetActualCost: zod.number().optional(),
+    totalNetActualProfit: zod.number().optional(),
+    totalRecognizedRevenue: zod.number().optional(),
+    totalAccruedCost: zod.number().optional(),
+    avgMarginPct: zod
+      .number()
+      .describe("Simple unweighted average of project margins (legacy)"),
+    weightedMarginPct: zod
+      .number()
+      .optional()
+      .describe("Σ profit \/ Σ revenue × 100 (portfolio-weighted)"),
+    weightedNetMarginPct: zod
+      .number()
+      .optional()
+      .describe(
+        "Weighted margin using net revenue (DPP) and overhead-loaded cost",
+      ),
+    pendingTimesheets: zod.number(),
+    totalMandays: zod.number(),
+  }),
+  profitTrend: zod.array(
+    zod.object({
+      month: zod.string(),
+      revenue: zod.number(),
+      cost: zod.number(),
+      profit: zod.number(),
+    }),
+  ),
+  statusBreakdown: zod.array(
+    zod.object({
+      status: zod.enum([
+        "DRAFT",
+        "OBSERVATION",
+        "ACTIVE",
+        "NO_NEED_CONSULTANT",
+        "PAUSE",
+        "COMPLETE",
+        "CLOSED",
+      ]),
+      count: zod.number(),
+      value: zod.number(),
+    }),
+  ),
+  topProjects: zod.array(
+    zod.object({
+      id: zod.string(),
+      code: zod.string(),
+      name: zod.string(),
+      description: zod.string().nullish(),
+      status: zod.enum([
+        "DRAFT",
+        "OBSERVATION",
+        "ACTIVE",
+        "NO_NEED_CONSULTANT",
+        "PAUSE",
+        "COMPLETE",
+        "CLOSED",
+      ]),
+      kind: zod
+        .enum(["CLIENT", "INTERNAL", "PRESALES", "TRAINING"])
+        .optional()
+        .describe(
+          "Project category. CLIENT = paid engagement (default, all financial\nreports include). INTERNAL\/PRESALES\/TRAINING = non-billable initiatives\nexcluded from VAT recap, billing aging, cash inflow forecast, and\nPPN detail reports.\n",
+        ),
+      clientId: zod.string().optional(),
+      clientName: zod.string().optional(),
+      salesId: zod.string().nullish(),
+      salesName: zod.string().nullish(),
+      pmId: zod.string().nullish(),
+      pmName: zod.string().nullish(),
+      technicalWriterId: zod.string().nullish(),
+      technicalWriterName: zod.string().nullish(),
+      adminProjectId: zod.string().nullish(),
+      adminProjectName: zod.string().nullish(),
+      startDate: zod.string().nullish(),
+      endDate: zod.string().nullish(),
+      contractValue: zod.number(),
+      currency: zod.string().nullish(),
+      exchangeRate: zod.number().nullish(),
+      vatPercent: zod.number().optional(),
+      contractValueIncludesVat: zod.boolean().optional(),
+      useWorkstreams: zod
+        .boolean()
+        .optional()
+        .describe(
+          "If true, project is split into Workstreams; per-workstream pickers become available on resources\/tasks\/expenses\/billing.",
+        ),
+      revenueNet: zod.number().optional(),
+      vatAmount: zod.number().optional(),
+      recognizedRevenue: zod.number().optional(),
+      accruedCost: zod.number().optional(),
+      loadedResourceCost: zod.number().optional(),
+      netActualCost: zod.number().optional(),
+      netActualProfit: zod.number().optional(),
+      netMarginPct: zod.number().optional(),
+      overheadMultiplier: zod.number().optional(),
+      estimatedCost: zod.number(),
+      estimatedProfit: zod.number(),
+      plannedMandays: zod.number(),
+      actualMandays: zod.number().optional(),
+      actualCost: zod.number(),
+      resourceCost: zod.number(),
+      additionalCost: zod.number(),
+      actualProfit: zod.number().optional(),
+      marginPct: zod.number().optional(),
+      reportCoverUrl: zod.string().nullish(),
+      reportLink: zod.string().nullish(),
+      reportSubmittedAt: zod.string().nullish(),
+      lastStatusReason: zod.string().nullish(),
+      healthScore: zod
+        .number()
+        .nullish()
+        .describe(
+          "0-100 composite health score. Null for DRAFT\/CLOSED projects or callers without financial visibility.",
+        ),
+      healthLabel: zod.enum(["HEALTHY", "AT_RISK", "CRITICAL"]).nullish(),
+      healthComponents: zod
+        .object({
+          margin: zod.number().optional(),
+          raid: zod.number().optional(),
+          expenses: zod.number().optional(),
+          billing: zod.number().optional(),
+          schedule: zod.number().optional(),
+        })
+        .nullish(),
+      healthReasons: zod.array(zod.string()).nullish(),
+      profitOutlook: zod
+        .object({
+          status: zod.enum(["PROFIT", "THIN", "LOSS_RISK", "EARLY"]).optional(),
+          contractValue: zod.number().optional(),
+          estimatedCost: zod.number().optional(),
+          estimatedProfit: zod.number().optional(),
+          estimatedMarginPct: zod.number().optional(),
+          actualCost: zod.number().optional(),
+          actualProfit: zod.number().optional(),
+          actualMarginPct: zod.number().optional(),
+          forecastCost: zod.number().optional(),
+          forecastProfit: zod.number().optional(),
+          forecastMarginPct: zod.number().optional(),
+          progressPct: zod.number().optional(),
+        })
+        .nullish()
+        .describe(
+          "Plain-language profit\/loss outlook. Null for callers without financial visibility.",
+        ),
+      spkFileUrl: zod.string().nullish(),
+      spkFileName: zod.string().nullish(),
+      contractFileUrl: zod.string().nullish(),
+      contractFileName: zod.string().nullish(),
+      createdAt: zod.string(),
+    }),
+  ),
+  losingProjects: zod.array(
+    zod.object({
+      id: zod.string(),
+      code: zod.string(),
+      name: zod.string(),
+      description: zod.string().nullish(),
+      status: zod.enum([
+        "DRAFT",
+        "OBSERVATION",
+        "ACTIVE",
+        "NO_NEED_CONSULTANT",
+        "PAUSE",
+        "COMPLETE",
+        "CLOSED",
+      ]),
+      kind: zod
+        .enum(["CLIENT", "INTERNAL", "PRESALES", "TRAINING"])
+        .optional()
+        .describe(
+          "Project category. CLIENT = paid engagement (default, all financial\nreports include). INTERNAL\/PRESALES\/TRAINING = non-billable initiatives\nexcluded from VAT recap, billing aging, cash inflow forecast, and\nPPN detail reports.\n",
+        ),
+      clientId: zod.string().optional(),
+      clientName: zod.string().optional(),
+      salesId: zod.string().nullish(),
+      salesName: zod.string().nullish(),
+      pmId: zod.string().nullish(),
+      pmName: zod.string().nullish(),
+      technicalWriterId: zod.string().nullish(),
+      technicalWriterName: zod.string().nullish(),
+      adminProjectId: zod.string().nullish(),
+      adminProjectName: zod.string().nullish(),
+      startDate: zod.string().nullish(),
+      endDate: zod.string().nullish(),
+      contractValue: zod.number(),
+      currency: zod.string().nullish(),
+      exchangeRate: zod.number().nullish(),
+      vatPercent: zod.number().optional(),
+      contractValueIncludesVat: zod.boolean().optional(),
+      useWorkstreams: zod
+        .boolean()
+        .optional()
+        .describe(
+          "If true, project is split into Workstreams; per-workstream pickers become available on resources\/tasks\/expenses\/billing.",
+        ),
+      revenueNet: zod.number().optional(),
+      vatAmount: zod.number().optional(),
+      recognizedRevenue: zod.number().optional(),
+      accruedCost: zod.number().optional(),
+      loadedResourceCost: zod.number().optional(),
+      netActualCost: zod.number().optional(),
+      netActualProfit: zod.number().optional(),
+      netMarginPct: zod.number().optional(),
+      overheadMultiplier: zod.number().optional(),
+      estimatedCost: zod.number(),
+      estimatedProfit: zod.number(),
+      plannedMandays: zod.number(),
+      actualMandays: zod.number().optional(),
+      actualCost: zod.number(),
+      resourceCost: zod.number(),
+      additionalCost: zod.number(),
+      actualProfit: zod.number().optional(),
+      marginPct: zod.number().optional(),
+      reportCoverUrl: zod.string().nullish(),
+      reportLink: zod.string().nullish(),
+      reportSubmittedAt: zod.string().nullish(),
+      lastStatusReason: zod.string().nullish(),
+      healthScore: zod
+        .number()
+        .nullish()
+        .describe(
+          "0-100 composite health score. Null for DRAFT\/CLOSED projects or callers without financial visibility.",
+        ),
+      healthLabel: zod.enum(["HEALTHY", "AT_RISK", "CRITICAL"]).nullish(),
+      healthComponents: zod
+        .object({
+          margin: zod.number().optional(),
+          raid: zod.number().optional(),
+          expenses: zod.number().optional(),
+          billing: zod.number().optional(),
+          schedule: zod.number().optional(),
+        })
+        .nullish(),
+      healthReasons: zod.array(zod.string()).nullish(),
+      profitOutlook: zod
+        .object({
+          status: zod.enum(["PROFIT", "THIN", "LOSS_RISK", "EARLY"]).optional(),
+          contractValue: zod.number().optional(),
+          estimatedCost: zod.number().optional(),
+          estimatedProfit: zod.number().optional(),
+          estimatedMarginPct: zod.number().optional(),
+          actualCost: zod.number().optional(),
+          actualProfit: zod.number().optional(),
+          actualMarginPct: zod.number().optional(),
+          forecastCost: zod.number().optional(),
+          forecastProfit: zod.number().optional(),
+          forecastMarginPct: zod.number().optional(),
+          progressPct: zod.number().optional(),
+        })
+        .nullish()
+        .describe(
+          "Plain-language profit\/loss outlook. Null for callers without financial visibility.",
+        ),
+      spkFileUrl: zod.string().nullish(),
+      spkFileName: zod.string().nullish(),
+      contractFileUrl: zod.string().nullish(),
+      contractFileName: zod.string().nullish(),
+      createdAt: zod.string(),
+    }),
+  ),
+  projectTypeStats: zod.array(
+    zod.object({
+      type: zod.string(),
+      count: zod.number(),
+      revenue: zod.number(),
+      cost: zod.number(),
+      profit: zod.number(),
+      marginPct: zod.number(),
+    }),
+  ),
+  billableUtilization: zod.object({
+    days: zod.number(),
+    billableHours: zod.number(),
+    nonBillableHours: zod.number(),
+    totalHours: zod.number(),
+    billablePct: zod.number().describe("billableHours \/ totalHours × 100"),
+    trend: zod.array(
+      zod.object({
+        date: zod.string(),
+        billableHours: zod.number(),
+        nonBillableHours: zod.number(),
+        billablePct: zod.number(),
+      }),
+    ),
+  }),
+  cashFlow: zod.object({
+    months: zod.array(
+      zod.object({
+        periodStart: zod.string(),
+        paidDpp: zod.number(),
+        paidTotal: zod.number(),
+        invoicedDpp: zod.number(),
+        invoicedTotal: zod.number(),
+        plannedDpp: zod.number(),
+        plannedTotal: zod.number(),
+      }),
+    ),
+  }),
+  crm: zod
+    .object({
+      weightedPipelineByStage: zod.record(
+        zod.string(),
+        zod.object({
+          count: zod.number(),
+          value: zod.number(),
+          weighted: zod.number(),
+        }),
+      ),
+      expectedRevenueThisQuarter: zod.number(),
+      funnel: zod.record(zod.string(), zod.number()),
+      conversionRates: zod.array(
+        zod.object({
+          from: zod.string(),
+          to: zod.string(),
+          fromCount: zod.number(),
+          toCount: zod.number(),
+          rate: zod.number(),
+        }),
+      ),
+      lostReasonBreakdown: zod.record(
+        zod.string(),
+        zod.object({
+          count: zod.number(),
+          value: zod.number(),
+        }),
+      ),
+      windowFrom: zod.string(),
+      windowTo: zod.string(),
+    })
+    .nullable(),
+  csat: zod
+    .object({
+      monthStart: zod.string(),
+      responseCount: zod.number(),
+      overallAverage: zod.number(),
+      perQuestion: zod.array(
+        zod.object({
+          key: zod.string(),
+          text: zod.string(),
+          average: zod.number(),
+          responseCount: zod.number(),
+        }),
+      ),
+    })
+    .nullable(),
+  recentActivity: zod
+    .array(
+      zod.object({
+        id: zod.string(),
+        type: zod.string(),
+        message: zod.string(),
+        userName: zod.string().nullish(),
+        projectName: zod.string().nullish(),
+        createdAt: zod.string(),
+      }),
+    )
+    .nullable(),
+  pendingAging: zod
+    .object({
+      pendingTotal: zod.number(),
+      overdueCount: zod.number(),
+      oldestHours: zod.number(),
+      buckets: zod.object({
+        lt24h: zod.number(),
+        h24to48: zod.number(),
+        gt48h: zod.number(),
+        gt72h: zod.number(),
+      }),
+      samples: zod.array(
+        zod.object({
+          id: zod.string(),
+          submitterName: zod.string(),
+          projectName: zod.string(),
+          projectId: zod.string(),
+          hours: zod.number(),
+          workDate: zod.string(),
+          submittedAt: zod.string(),
+          hoursWaiting: zod.number(),
+        }),
+      ),
+      overdue: zod.array(
+        zod.object({
+          id: zod.string(),
+          submitterName: zod.string(),
+          projectName: zod.string(),
+          projectId: zod.string(),
+          hours: zod.number(),
+          workDate: zod.string(),
+          submittedAt: zod.string(),
+          hoursWaiting: zod.number(),
+        }),
+      ),
+    })
+    .nullable(),
+  utilizationTrend: zod
+    .object({
+      days: zod.number(),
+      headcount: zod.number(),
+      trend: zod.array(
+        zod.object({
+          date: zod.string(),
+          utilizationPct: zod.number(),
+          hours: zod.number(),
+        }),
+      ),
+    })
+    .nullable(),
+  resourceUtilizationDetail: zod
+    .object({
+      summary: zod.object({
+        total: zod.number(),
+        active: zod.number(),
+        idle: zod.number(),
+        vacation: zod.number(),
+        finishingSoon: zod.number(),
+        overloaded: zod.number(),
+        idleLong: zod.number(),
+        utilizationPct: zod.number(),
+      }),
+      distribution: zod.array(
+        zod.object({
+          name: zod.string(),
+          value: zod.number(),
+        }),
+      ),
+      filters: zod.object({
+        principals: zod.array(
+          zod.object({
+            id: zod.string(),
+            name: zod.string(),
+          }),
+        ),
+        specializations: zod.array(zod.string()),
+      }),
+      resources: zod.array(
+        zod.object({
+          userId: zod.string(),
+          userName: zod.string(),
+          role: zod.string(),
+          title: zod.string().nullish(),
+          specialization: zod.string().nullish(),
+          status: zod.enum(["ACTIVE", "IDLE", "OVERLOADED"]),
+          currentProjectId: zod.string().nullish(),
+          currentProjectName: zod.string().nullish(),
+          currentProjectStatus: zod.string().nullish(),
+          currentClientId: zod.string().nullish(),
+          currentClientName: zod.string().nullish(),
+          assignmentEndDate: zod.string().nullish(),
+          daysRemaining: zod.number().nullish(),
+          finishingSoon: zod.boolean(),
+          daysSinceLastActivity: zod.number().nullish(),
+          idleLong: zod.boolean(),
+          overloaded: zod.boolean(),
+          avgHoursPerDay7d: zod.number(),
+          monthHours: zod.number(),
+          utilizationPctMonth: zod.number(),
+        }),
+      ),
+      finishingSoonList: zod.array(
+        zod.object({
+          userId: zod.string(),
+          userName: zod.string(),
+          role: zod.string(),
+          title: zod.string().nullish(),
+          specialization: zod.string().nullish(),
+          status: zod.enum(["ACTIVE", "IDLE", "OVERLOADED"]),
+          currentProjectId: zod.string().nullish(),
+          currentProjectName: zod.string().nullish(),
+          currentProjectStatus: zod.string().nullish(),
+          currentClientId: zod.string().nullish(),
+          currentClientName: zod.string().nullish(),
+          assignmentEndDate: zod.string().nullish(),
+          daysRemaining: zod.number().nullish(),
+          finishingSoon: zod.boolean(),
+          daysSinceLastActivity: zod.number().nullish(),
+          idleLong: zod.boolean(),
+          overloaded: zod.boolean(),
+          avgHoursPerDay7d: zod.number(),
+          monthHours: zod.number(),
+          utilizationPctMonth: zod.number(),
+        }),
+      ),
+      idleLongList: zod.array(
+        zod.object({
+          userId: zod.string(),
+          userName: zod.string(),
+          role: zod.string(),
+          title: zod.string().nullish(),
+          specialization: zod.string().nullish(),
+          status: zod.enum(["ACTIVE", "IDLE", "OVERLOADED"]),
+          currentProjectId: zod.string().nullish(),
+          currentProjectName: zod.string().nullish(),
+          currentProjectStatus: zod.string().nullish(),
+          currentClientId: zod.string().nullish(),
+          currentClientName: zod.string().nullish(),
+          assignmentEndDate: zod.string().nullish(),
+          daysRemaining: zod.number().nullish(),
+          finishingSoon: zod.boolean(),
+          daysSinceLastActivity: zod.number().nullish(),
+          idleLong: zod.boolean(),
+          overloaded: zod.boolean(),
+          avgHoursPerDay7d: zod.number(),
+          monthHours: zod.number(),
+          utilizationPctMonth: zod.number(),
+        }),
+      ),
+      overloadedList: zod.array(
+        zod.object({
+          userId: zod.string(),
+          userName: zod.string(),
+          role: zod.string(),
+          title: zod.string().nullish(),
+          specialization: zod.string().nullish(),
+          status: zod.enum(["ACTIVE", "IDLE", "OVERLOADED"]),
+          currentProjectId: zod.string().nullish(),
+          currentProjectName: zod.string().nullish(),
+          currentProjectStatus: zod.string().nullish(),
+          currentClientId: zod.string().nullish(),
+          currentClientName: zod.string().nullish(),
+          assignmentEndDate: zod.string().nullish(),
+          daysRemaining: zod.number().nullish(),
+          finishingSoon: zod.boolean(),
+          daysSinceLastActivity: zod.number().nullish(),
+          idleLong: zod.boolean(),
+          overloaded: zod.boolean(),
+          avgHoursPerDay7d: zod.number(),
+          monthHours: zod.number(),
+          utilizationPctMonth: zod.number(),
+        }),
+      ),
+    })
+    .nullable(),
+  pmAllocation: zod
+    .array(
+      zod.object({
+        id: zod.string(),
+        name: zod.string(),
+        title: zod.string().nullish(),
+        active: zod.number(),
+        observation: zod.number(),
+        draft: zod.number(),
+        totalActiveValue: zod.number(),
+        inFlight: zod.number(),
+      }),
+    )
+    .nullable(),
+  pendingAssignment: zod
+    .array(
+      zod.object({
+        id: zod.string(),
+        code: zod.string(),
+        name: zod.string(),
+        description: zod.string().nullish(),
+        status: zod.enum([
+          "DRAFT",
+          "OBSERVATION",
+          "ACTIVE",
+          "NO_NEED_CONSULTANT",
+          "PAUSE",
+          "COMPLETE",
+          "CLOSED",
+        ]),
+        kind: zod
+          .enum(["CLIENT", "INTERNAL", "PRESALES", "TRAINING"])
+          .optional()
+          .describe(
+            "Project category. CLIENT = paid engagement (default, all financial\nreports include). INTERNAL\/PRESALES\/TRAINING = non-billable initiatives\nexcluded from VAT recap, billing aging, cash inflow forecast, and\nPPN detail reports.\n",
+          ),
+        clientId: zod.string().optional(),
+        clientName: zod.string().optional(),
+        salesId: zod.string().nullish(),
+        salesName: zod.string().nullish(),
+        pmId: zod.string().nullish(),
+        pmName: zod.string().nullish(),
+        technicalWriterId: zod.string().nullish(),
+        technicalWriterName: zod.string().nullish(),
+        adminProjectId: zod.string().nullish(),
+        adminProjectName: zod.string().nullish(),
+        startDate: zod.string().nullish(),
+        endDate: zod.string().nullish(),
+        contractValue: zod.number(),
+        currency: zod.string().nullish(),
+        exchangeRate: zod.number().nullish(),
+        vatPercent: zod.number().optional(),
+        contractValueIncludesVat: zod.boolean().optional(),
+        useWorkstreams: zod
+          .boolean()
+          .optional()
+          .describe(
+            "If true, project is split into Workstreams; per-workstream pickers become available on resources\/tasks\/expenses\/billing.",
+          ),
+        revenueNet: zod.number().optional(),
+        vatAmount: zod.number().optional(),
+        recognizedRevenue: zod.number().optional(),
+        accruedCost: zod.number().optional(),
+        loadedResourceCost: zod.number().optional(),
+        netActualCost: zod.number().optional(),
+        netActualProfit: zod.number().optional(),
+        netMarginPct: zod.number().optional(),
+        overheadMultiplier: zod.number().optional(),
+        estimatedCost: zod.number(),
+        estimatedProfit: zod.number(),
+        plannedMandays: zod.number(),
+        actualMandays: zod.number().optional(),
+        actualCost: zod.number(),
+        resourceCost: zod.number(),
+        additionalCost: zod.number(),
+        actualProfit: zod.number().optional(),
+        marginPct: zod.number().optional(),
+        reportCoverUrl: zod.string().nullish(),
+        reportLink: zod.string().nullish(),
+        reportSubmittedAt: zod.string().nullish(),
+        lastStatusReason: zod.string().nullish(),
+        healthScore: zod
+          .number()
+          .nullish()
+          .describe(
+            "0-100 composite health score. Null for DRAFT\/CLOSED projects or callers without financial visibility.",
+          ),
+        healthLabel: zod.enum(["HEALTHY", "AT_RISK", "CRITICAL"]).nullish(),
+        healthComponents: zod
+          .object({
+            margin: zod.number().optional(),
+            raid: zod.number().optional(),
+            expenses: zod.number().optional(),
+            billing: zod.number().optional(),
+            schedule: zod.number().optional(),
+          })
+          .nullish(),
+        healthReasons: zod.array(zod.string()).nullish(),
+        profitOutlook: zod
+          .object({
+            status: zod
+              .enum(["PROFIT", "THIN", "LOSS_RISK", "EARLY"])
+              .optional(),
+            contractValue: zod.number().optional(),
+            estimatedCost: zod.number().optional(),
+            estimatedProfit: zod.number().optional(),
+            estimatedMarginPct: zod.number().optional(),
+            actualCost: zod.number().optional(),
+            actualProfit: zod.number().optional(),
+            actualMarginPct: zod.number().optional(),
+            forecastCost: zod.number().optional(),
+            forecastProfit: zod.number().optional(),
+            forecastMarginPct: zod.number().optional(),
+            progressPct: zod.number().optional(),
+          })
+          .nullish()
+          .describe(
+            "Plain-language profit\/loss outlook. Null for callers without financial visibility.",
+          ),
+        spkFileUrl: zod.string().nullish(),
+        spkFileName: zod.string().nullish(),
+        contractFileUrl: zod.string().nullish(),
+        contractFileName: zod.string().nullish(),
+        createdAt: zod.string(),
+      }),
+    )
+    .nullable(),
+});
+
 export const GetXeroStatusResponse = zod.object({
   connected: zod.boolean(),
   configured: zod.boolean(),

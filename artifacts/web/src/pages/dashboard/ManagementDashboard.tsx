@@ -1,11 +1,10 @@
-import { useGetDashboardSummary, useGetProfitTrend, useGetStatusBreakdown, useGetTopProjects, useGetRecentActivity, useGetUtilization, customFetch, useListUsers, useUpdateProject, getListProjectsQueryKey, getListNotificationsQueryKey, UserRole, useGetLeadsAnalytics } from "@workspace/api-client-react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useGetDashboardOverview, customFetch, useListUsers, getListUsersQueryKey, useUpdateProject, getListProjectsQueryKey, getListNotificationsQueryKey, UserRole, type DashboardCsat, type LeadAnalytics, type PmAllocationRow } from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { formatIDR, formatPct } from "@/lib/format";
 import { Briefcase, Wallet, TrendingUp, Clock, Activity, AlarmClock, Download, UserPlus } from "lucide-react";
 import { exportSheets, downloadAuthed } from "@/lib/exports";
-import { classifyProject, type ProjectType } from "@/lib/projectType";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -19,7 +18,7 @@ import BillableUtilizationCard from "@/components/dashboard/BillableUtilizationC
 import CashFlowForecastCard from "./CashFlowForecastCard";
 import { formatDistanceToNow } from "date-fns";
 import { Link } from "wouter";
-import { ProjectStatus, useListProjects } from "@workspace/api-client-react";
+import { ProjectStatus } from "@workspace/api-client-react";
 import WelcomeBanner from "@/components/dashboard/WelcomeBanner";
 import { AlertTriangle } from "lucide-react";
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -49,28 +48,28 @@ export default function Dashboard() {
       .then(() => dashQc.invalidateQueries({ queryKey: getListNotificationsQueryKey() }))
       .catch(() => {});
   }, [dashQc]);
-  const { data: summary, isLoading: loadingSummary } = useGetDashboardSummary();
-  const { data: trend, isLoading: loadingTrend } = useGetProfitTrend();
-  const { data: statusBreakdown, isLoading: loadingStatus } = useGetStatusBreakdown();
-  const { data: topProjects, isLoading: loadingTop } = useGetTopProjects();
-  const { data: recentActivity, isLoading: loadingActivity } = useGetRecentActivity();
-  const { data: utilization } = useGetUtilization();
-  const { data: allProjects } = useListProjects();
-  const losingProjects = (allProjects ?? [])
-    .filter(
-      (p) =>
-        (p.status === ProjectStatus.ACTIVE || p.status === ProjectStatus.PAUSE) &&
-        p.marginPct !== null &&
-        p.marginPct !== undefined &&
-        (p.actualMandays ?? 0) > 0 &&
-        p.marginPct < 10,
-    )
-    .sort((a, b) => (a.marginPct ?? 0) - (b.marginPct ?? 0))
-    .slice(0, 5);
-  const { data: aging } = useQuery<{ buckets: { lt24h: number; h24to48: number; gt48h: number; gt72h: number }; oldestHours: number; samples: any[] }>({
-    queryKey: ["dashboard-pending-aging"],
-    queryFn: () => customFetch<any>("/api/dashboard/pending-aging"),
-  });
+  // Single aggregated first-load fetch replaces ~12 separate dashboard calls
+  // (summary, profit trend, status breakdown, top/losing projects, recent
+  // activity, pending aging, billable + resource utilization, cash flow, CRM,
+  // CSAT, PM allocation, pending assignment, project-type stats). Collapsing the
+  // fan-out keeps a cold autoscale instance + remote Neon from being saturated
+  // on the first load after idle.
+  const { data: overview, isLoading: loadingOverview } = useGetDashboardOverview();
+
+  const summary = overview?.summary;
+  const trend = overview?.profitTrend;
+  const statusBreakdown = overview?.statusBreakdown;
+  const topProjects = overview?.topProjects;
+  const recentActivity = overview?.recentActivity ?? undefined;
+  const aging = overview?.pendingAging ?? undefined;
+  const losingProjects = overview?.losingProjects ?? [];
+  const pendingAssignment = overview?.pendingAssignment ?? [];
+  const projectTypeStats = overview?.projectTypeStats ?? [];
+  const loadingSummary = loadingOverview;
+  const loadingTrend = loadingOverview;
+  const loadingStatus = loadingOverview;
+  const loadingTop = loadingOverview;
+  const loadingActivity = loadingOverview;
 
   // Match the colors used by ProjectStatusBadge across the app so the donut
   // legend reads the same as every status badge users see elsewhere.
@@ -84,29 +83,6 @@ export default function Dashboard() {
     [ProjectStatus.CLOSED]: "hsl(215, 16%, 47%)",       // slate-500
     [ProjectStatus.NO_NEED_CONSULTANT]: "hsl(25, 95%, 53%)",
   };
-
-  const pendingAssignment = (allProjects ?? []).filter(
-    (p) => p.status === ProjectStatus.DRAFT && !p.pmId,
-  );
-
-  // Project Type Analysis: classify projects by type and compute profitability per type
-  const projectTypeStats = (() => {
-    const map = new Map<ProjectType, { type: ProjectType; count: number; revenue: number; cost: number; profit: number }>();
-    for (const p of allProjects ?? []) {
-      const t = classifyProject({ name: p.name, code: p.code });
-      const cur = map.get(t) ?? { type: t, count: 0, revenue: 0, cost: 0, profit: 0 };
-      cur.count += 1;
-      cur.revenue += p.contractValue ?? 0;
-      const ac = (p as any).actualCost ?? 0;
-      const ap = (p as any).actualProfit ?? ((p.contractValue ?? 0) - ac);
-      cur.cost += ac;
-      cur.profit += ap;
-      map.set(t, cur);
-    }
-    return Array.from(map.values())
-      .map((r) => ({ ...r, marginPct: r.revenue > 0 ? (r.profit / r.revenue) * 100 : 0 }))
-      .sort((a, b) => b.profit - a.profit);
-  })();
 
   return (
     <div className="space-y-6">
@@ -238,10 +214,12 @@ export default function Dashboard() {
         )}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <BillableUtilizationCard days={30} />
-        <SatisfactionWidget />
-      </div>
+      {overview && (
+        <div className="grid gap-4 lg:grid-cols-2">
+          <BillableUtilizationCard days={30} data={overview.billableUtilization} />
+          <SatisfactionWidget data={overview.csat} />
+        </div>
+      )}
 
       {/* PM Reminder: pending timesheet aging */}
       {!isFinance && aging && (aging.buckets.gt48h > 0 || aging.buckets.gt72h > 0 || aging.buckets.h24to48 > 0) && (
@@ -274,14 +252,19 @@ export default function Dashboard() {
       )}
 
       {/* Cash Flow Forecast: 6-month billing inflow projection */}
-      <CashFlowForecastCard />
+      {overview && <CashFlowForecastCard months={overview.cashFlow.months} />}
 
       {/* PM Allocation: managers reporting up to PMO */}
-      <CrmSummaryCard />
-      {!isFinance && <PMAllocationCard />}
+      {overview && <CrmSummaryCard data={overview.crm} />}
+      {!isFinance && overview && <PMAllocationCard rows={overview.pmAllocation ?? []} />}
 
       {/* Resource Utilization */}
-      {!isFinance && <ResourceUtilizationSection />}
+      {!isFinance && overview && (
+        <ResourceUtilizationSection
+          detail={overview.resourceUtilizationDetail ?? undefined}
+          trend={overview.utilizationTrend ?? undefined}
+        />
+      )}
 
       <div className="grid gap-6 md:grid-cols-7 lg:grid-cols-7">
         {/* Profit Trend Chart */}
@@ -483,9 +466,9 @@ export default function Dashboard() {
 function PendingAssignmentSection({ projects }: { projects: any[] }) {
   const { toast } = useToast();
   const qc = useQueryClient();
-  const { data: users } = useListUsers();
   const [selected, setSelected] = useState<any | null>(null);
   const [pmId, setPmId] = useState<string>("");
+  const { data: users } = useListUsers({ query: { enabled: !!selected, queryKey: getListUsersQueryKey() } });
 
   const updateProject = useUpdateProject({
     mutation: {
@@ -592,17 +575,8 @@ function PendingAssignmentSection({ projects }: { projects: any[] }) {
   );
 }
 
-function SatisfactionWidget() {
+function SatisfactionWidget({ data }: { data: DashboardCsat | null }) {
   const queryClient = useQueryClient();
-  const { data, isLoading } = useQuery<{
-    monthStart: string;
-    responseCount: number;
-    overallAverage: number;
-    perQuestion: { key: string; text: string; average: number; responseCount: number }[];
-  }>({
-    queryKey: ["/survey/summary"],
-    queryFn: () => customFetch("/api/survey/summary"),
-  });
   const [seeding, setSeeding] = useState(false);
   const onSeed = async () => {
     if (!confirm("Load CSAT demo data? This will close a few projects and create ~11 survey responses. Run once only.")) return;
@@ -617,7 +591,6 @@ function SatisfactionWidget() {
       setSeeding(false);
     }
   };
-  if (isLoading) return <SkeletonCard />;
   if (!data) return null;
   return (
     <Card className="border-border shadow-sm">
@@ -671,8 +644,7 @@ function SatisfactionWidget() {
   );
 }
 
-function CrmSummaryCard() {
-  const { data } = useGetLeadsAnalytics();
+function CrmSummaryCard({ data }: { data: LeadAnalytics | null }) {
   const stages = ["NEW", "QUALIFIED", "PROPOSAL", "NEGOTIATION"];
   const weightedTotal = stages.reduce(
     (s, k) => s + (data?.weightedPipelineByStage?.[k]?.weighted ?? 0),
@@ -716,23 +688,12 @@ function CrmSummaryCard() {
   );
 }
 
-function PMAllocationCard() {
-  const { data: users } = useListUsers();
-  const { data: projects } = useListProjects();
-  const pms = (users ?? []).filter((u: any) => u.role === UserRole.PROJECT_MANAGER && u.isActive);
-  type Row = { id: string; name: string; title: string | null; active: number; observation: number; draft: number; totalActiveValue: number; inFlight: number; tone: string };
-  const rows: Row[] = pms.map((pm: any) => {
-    const owned = (projects ?? []).filter((p: any) => p.pmId === pm.id);
-    const active = owned.filter((p: any) => p.status === ProjectStatus.ACTIVE).length;
-    const observation = owned.filter((p: any) => p.status === ProjectStatus.OBSERVATION).length;
-    const draft = owned.filter((p: any) => p.status === ProjectStatus.DRAFT).length;
-    const totalActiveValue = owned
-      .filter((p: any) => p.status === ProjectStatus.ACTIVE || p.status === ProjectStatus.OBSERVATION)
-      .reduce((s: number, p: any) => s + (p.contractValue ?? 0), 0);
-    const inFlight = active + observation;
-    const tone = inFlight >= 6 ? "text-destructive" : inFlight >= 4 ? "text-amber-500" : "text-emerald-500";
-    return { id: pm.id, name: pm.name, title: pm.title, active, observation, draft, totalActiveValue, inFlight, tone };
-  }).sort((a, b) => b.inFlight - a.inFlight);
+function PMAllocationCard({ rows: serverRows }: { rows: PmAllocationRow[] }) {
+  // Server already aggregates + sorts by in-flight; we only add the tone class.
+  const rows = serverRows.map((r) => ({
+    ...r,
+    tone: r.inFlight >= 6 ? "text-destructive" : r.inFlight >= 4 ? "text-amber-500" : "text-emerald-500",
+  }));
 
   return (
     <Card className="border-border shadow-sm">

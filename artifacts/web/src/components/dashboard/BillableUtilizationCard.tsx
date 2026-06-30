@@ -1,4 +1,4 @@
-import { useGetBillableUtilization } from "@workspace/api-client-react";
+import { useGetBillableUtilization, getGetBillableUtilizationQueryKey, type BillableUtilization } from "@workspace/api-client-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
@@ -12,8 +12,16 @@ function ratingFor(pct: number): { label: string; color: string } {
   return { label: "Underutilized", color: "bg-rose-500/20 text-rose-300 border-rose-500/40" };
 }
 
-export default function BillableUtilizationCard({ days = 30 }: { days?: number }) {
-  const { data, isLoading, isError } = useGetBillableUtilization({ days });
+export default function BillableUtilizationCard({ days = 30, data: dataProp }: { days?: number; data?: BillableUtilization }) {
+  // The executive dashboard supplies this via the aggregated overview; other
+  // callers (e.g. HR dashboard) fall back to fetching it directly.
+  const query = useGetBillableUtilization(
+    { days },
+    { query: { enabled: dataProp === undefined, queryKey: getGetBillableUtilizationQueryKey({ days }) } },
+  );
+  const data = dataProp ?? query.data;
+  const isLoading = dataProp === undefined && query.isLoading;
+  const isError = dataProp === undefined && query.isError;
 
   if (isError) {
     return (

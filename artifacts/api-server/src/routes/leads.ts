@@ -235,15 +235,18 @@ router.post(
   },
 );
 
-router.get("/leads/analytics", async (req: AuthedRequest, res: Response) => {
-  const role = req.user.role;
-  if (role !== "SALES" && role !== "MANAGEMENT" && role !== "SUPER_ADMIN") {
-    res.status(403).json({ error: "Forbidden" });
-    return;
-  }
-  const ownerFilter = role === "SALES" ? { ownerId: req.user.sub } : {};
-  const from = req.query.from ? new Date(String(req.query.from)) : new Date(Date.now() - 180 * 24 * 60 * 60 * 1000);
-  const to = req.query.to ? new Date(String(req.query.to)) : new Date();
+// Pure lead-analytics compute, shared by GET /leads/analytics and the
+// aggregated GET /dashboard/overview CRM section. ownerId scopes to a single
+// SALES owner; omit for the whole portfolio (MANAGEMENT). from/to default to a
+// trailing 180-day window.
+export async function computeLeadsAnalytics(opts: {
+  ownerId?: string;
+  from?: Date;
+  to?: Date;
+}) {
+  const ownerFilter = opts.ownerId ? { ownerId: opts.ownerId } : {};
+  const from = opts.from ?? new Date(Date.now() - 180 * 24 * 60 * 60 * 1000);
+  const to = opts.to ?? new Date();
 
   const allOpen = await prisma.lead.findMany({
     where: { deletedAt: null, ...ownerFilter, stage: { notIn: ["WON", "LOST"] } },
@@ -304,7 +307,7 @@ router.get("/leads/analytics", async (req: AuthedRequest, res: Response) => {
     lostBreakdown[reason].value += l.estimatedValue;
   }
 
-  res.json({
+  return {
     weightedPipelineByStage,
     expectedRevenueThisQuarter,
     funnel,
@@ -312,7 +315,21 @@ router.get("/leads/analytics", async (req: AuthedRequest, res: Response) => {
     lostReasonBreakdown: lostBreakdown,
     windowFrom: from.toISOString(),
     windowTo: to.toISOString(),
+  };
+}
+
+router.get("/leads/analytics", async (req: AuthedRequest, res: Response) => {
+  const role = req.user.role;
+  if (role !== "SALES" && role !== "MANAGEMENT" && role !== "SUPER_ADMIN") {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  const result = await computeLeadsAnalytics({
+    ownerId: role === "SALES" ? req.user.sub : undefined,
+    from: req.query.from ? new Date(String(req.query.from)) : undefined,
+    to: req.query.to ? new Date(String(req.query.to)) : undefined,
   });
+  res.json(result);
 });
 
 function validate(b: Record<string, unknown>, partial: boolean): string | null {
