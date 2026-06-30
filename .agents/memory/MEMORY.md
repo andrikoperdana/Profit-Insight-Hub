@@ -18,6 +18,7 @@
 - [SUPER_ADMIN god-mode role](super-admin-role.md) — requireRole auto-bypasses it, but custom gates/serializer visibility need it added explicitly; deliberately kept out of users.ts ALL_ROLES (seed-only, anti-escalation) yet seeded account stays editable.
 - [Shared fetch RN guards](mobile-fetch-rn-guards.md) — browser-only side effects in custom-fetch must use isBrowserDom() (window+localStorage+location); `typeof window` alone crashes the Expo native app.
 - [Expo dev-workflow port probe & verification](expo-dev-workflow-verification.md) — restart_workflow can falsely report DIDNT_OPEN_A_PORT for Expo even when Metro binds; verify by curl-compiling the web bundle, not by retrying restart.
+- [Metro stale haste map after codegen](metro-stale-haste-map-after-codegen.md) — "Unable to resolve ./generated/api" in Expo is a stale /tmp/metro-* cache after codegen rewrites api.ts, not a bug; restart mobile (clear caches) to re-index.
 - [Phone-only timer per user](mobile-timer-per-user.md) — a device-local AsyncStorage running-timer must be keyed by user id or it leaks across accounts on a shared phone.
 - [PM timesheet auto-approval & submit guard](timesheet-pm-auto-approve.md) — a PM's own hours auto-approve on ANY project (like MGMT); /submit must only allow DRAFT/REJECTED→SUBMITTED so APPROVED never reverts.
 - [Pipedrive one-way import](pipedrive-integration-direction.md) — Pipedrive→Leads import; manual API token (OAuth dead), open-deals-only; sync is async (202 + status polling, DB-claim guarded) to beat the ~5min request timeout.
