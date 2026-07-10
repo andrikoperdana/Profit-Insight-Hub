@@ -20,7 +20,7 @@ Management (PMO Director), Project Manager, Sales, Konsultan, Technical Writer, 
 ## Domain (Prisma)
 
 - **User** — `seniority` JUNIOR/MID/SENIOR/PRINCIPAL, `businessUnitId`, `managerId` (PM→PMO), `principalId` (delivery user→Principal)
-- **BusinessUnit**, **Skill** + **UserSkill** — seeded BUs: Pentest, GRC, Threat Hunting; 11 skills
+- **BusinessUnit**, **Skill** + **UserSkill** — seeded BUs: Pentest, Governance (ex-GRC), Solution (ex-Threat Hunting), MSS, Forensic; 11 skills. Seed renames old BU names in place (FK-safe)
 - **Client**, **Project**, **Activity** (audit), **Document** (BAST/INVOICE/CONTRACT/REPORT/OTHER, base64)
 - **ProjectResource** (staffing: planned mandays + daily rate), **Timesheet** (DRAFT→SUBMITTED→APPROVED/REJECTED), **ProjectExpense** (PENDING/APPROVED/REJECTED)
 - **BillingMilestone** (Terms-of-Payment, PLANNED/INVOICED/PAID/CANCELLED), **Task** (+ TaskAssignee M:N, TaskDependency, TaskTimeLog; WBS via `parentTaskId`, `billable` flag)

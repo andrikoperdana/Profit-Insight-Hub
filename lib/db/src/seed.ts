@@ -80,7 +80,7 @@ async function ensureBusinessUnitsAndSkills() {
   }
   const buSeed = [
     { name: "Pentest", description: "Offensive security testing — web, mobile, infrastructure, red team." },
-    { name: "Governance", description: "Governance, Risk &amp; Compliance — ISO 27001, SOC 2, PCI DSS, SWIFT, audit." },
+    { name: "Governance", description: "Governance, Risk & Compliance — ISO 27001, SOC 2, PCI DSS, SWIFT, audit." },
     { name: "Solution", description: "Security solutions & engineering — threat hunting, threat modeling, SOC operations." },
     { name: "MSS", description: "Managed Security Services — 24/7 monitoring, managed SOC, MDR." },
     { name: "Forensic", description: "Digital forensics, DFIR, incident response, fraud investigation." },
