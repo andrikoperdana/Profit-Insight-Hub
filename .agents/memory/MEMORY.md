@@ -36,3 +36,4 @@
 - [Timesheet manday consumption](timesheet-manday-consumption.md) — approval list enrichment is approver-gated (team totals leak otherwise); bulk over-plan warnings must accumulate selected hours per (project,user)/project, not per-row.
 - [Deployment build mobile Expo bundle](deployment-build-mobile-expo.md) — publish builds web+api-server+mobile; the Expo iOS+Android Metro bundle is the heavy/flaky step; fast "connection lost" failure = transient infra, retry first.
 - [PDFKit footer blank pages](pdfkit-footer-blank-pages.md) — text below the bottom margin auto-adds a page per write; zero `page.margins.bottom` after switchToPage before footers.
+- [BU rename & project taxonomy](bu-rename-and-project-taxonomy.md) — BU renames are FK-safe UPDATE-in-place (seed rename loop); workstream code "GRC" is a stable key; projectType.ts has 2 copies edited in lockstep, MSS rule before SOC.
