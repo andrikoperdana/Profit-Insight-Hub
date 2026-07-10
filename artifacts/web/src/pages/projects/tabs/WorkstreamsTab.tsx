@@ -301,7 +301,7 @@ export default function WorkstreamsTab({
               title="No workstreams yet"
               description={
                 canWrite
-                  ? "Add a workstream to split this project across multiple Business Units (e.g. Pentest, Threat Hunting, GRC)."
+                  ? "Add a workstream to split this project across multiple Business Units (e.g. Pentest, Governance, MSS)."
                   : "This project has no workstreams. A PM or Management can add them."
               }
             />

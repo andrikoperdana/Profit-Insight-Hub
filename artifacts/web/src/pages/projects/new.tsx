@@ -635,11 +635,11 @@ const createProjectSchema = z.object({
 
 const WORKSTREAM_TEMPLATES: Record<string, { label: string; rows: Array<{ code: string; name: string; buName: string; allocationPct: number }> }> = {
   "pentest-grc-tm": {
-    label: "Pentest + GRC + Threat Modeling (standar)",
+    label: "Pentest + Governance + Threat Modeling (standard)",
     rows: [
       { code: "PT", name: "Penetration Testing", buName: "Pentest", allocationPct: 40 },
-      { code: "GRC", name: "GRC / Compliance Audit", buName: "GRC", allocationPct: 35 },
-      { code: "TM", name: "Threat Modeling", buName: "Threat Hunting", allocationPct: 25 },
+      { code: "GRC", name: "Governance / Compliance Audit", buName: "Governance", allocationPct: 35 },
+      { code: "TM", name: "Threat Modeling", buName: "Solution", allocationPct: 25 },
     ],
   },
   "pentest-only": {
@@ -647,8 +647,8 @@ const WORKSTREAM_TEMPLATES: Record<string, { label: string; rows: Array<{ code: 
     rows: [{ code: "PT", name: "Penetration Testing", buName: "Pentest", allocationPct: 100 }],
   },
   "grc-only": {
-    label: "GRC only",
-    rows: [{ code: "GRC", name: "GRC / Compliance Audit", buName: "GRC", allocationPct: 100 }],
+    label: "Governance only",
+    rows: [{ code: "GRC", name: "Governance / Compliance Audit", buName: "Governance", allocationPct: 100 }],
   },
 };
 
@@ -1346,7 +1346,7 @@ function FullProjectForm() {
               <div>
                 <CardTitle>Workstreams (optional)</CardTitle>
                 <CardDescription>
-                  Split the project into multiple workstreams (e.g. Pentest / GRC / Threat Modeling) so cost, mandays, billing, and timesheets can be tracked per stream. Suitable for combined SPK across Business Units.
+                  Split the project into multiple workstreams (e.g. Pentest / Governance / Threat Modeling) so cost, mandays, billing, and timesheets can be tracked per stream. Suitable for combined SPK across Business Units.
                 </CardDescription>
               </div>
               <FormField

@@ -57,10 +57,33 @@ async function ensurePrincipals(passwordDefault: string) {
 }
 
 async function ensureBusinessUnitsAndSkills() {
+  // Business Units were renamed (July 2026): GRC → Governance and
+  // Threat Hunting → Solution, plus two new units (MSS, Forensic). Rename any
+  // pre-existing row IN PLACE first so every FK reference (users, resources,
+  // workstreams) follows automatically and the upserts below never create a
+  // duplicate unit under the new name.
+  const buRenames = [
+    { from: "GRC", to: "Governance" },
+    { from: "Threat Hunting", to: "Solution" },
+  ];
+  for (const r of buRenames) {
+    const [oldBu, newBu] = await Promise.all([
+      (prisma as any).businessUnit.findUnique({ where: { name: r.from } }),
+      (prisma as any).businessUnit.findUnique({ where: { name: r.to } }),
+    ]);
+    if (oldBu && !newBu) {
+      await (prisma as any).businessUnit.update({
+        where: { id: oldBu.id },
+        data: { name: r.to },
+      });
+    }
+  }
   const buSeed = [
     { name: "Pentest", description: "Offensive security testing — web, mobile, infrastructure, red team." },
-    { name: "GRC", description: "Governance, Risk &amp; Compliance — ISO 27001, SOC 2, PCI DSS, SWIFT, audit." },
-    { name: "Threat Hunting", description: "Threat hunting, DFIR, SOC operations, incident response." },
+    { name: "Governance", description: "Governance, Risk &amp; Compliance — ISO 27001, SOC 2, PCI DSS, SWIFT, audit." },
+    { name: "Solution", description: "Security solutions & engineering — threat hunting, threat modeling, SOC operations." },
+    { name: "MSS", description: "Managed Security Services — 24/7 monitoring, managed SOC, MDR." },
+    { name: "Forensic", description: "Digital forensics, DFIR, incident response, fraud investigation." },
   ];
   for (const b of buSeed) {
     await (prisma as any).businessUnit.upsert({
@@ -97,14 +120,14 @@ async function ensureBusinessUnitsAndSkills() {
 
   type UserAssign = { email: string; seniority?: string; bu?: string; skills?: string[] };
   const assigns: UserAssign[] = [
-    { email: "pm@itsecasia.com",                    seniority: "SENIOR",    bu: "GRC" },
+    { email: "pm@itsecasia.com",                    seniority: "SENIOR",    bu: "Governance" },
     { email: "konsultan@itsecasia.com",             seniority: "SENIOR",    bu: "Pentest",        skills: ["Web Pentest", "Infra Pentest", "Red Team"] },
     { email: "konsultan2@itsecasia.com",            seniority: "MID",       bu: "Pentest",        skills: ["Web Pentest", "Mobile Pentest"] },
-    { email: "writer@itsecasia.com",                seniority: "MID",       bu: "GRC",            skills: ["Technical Writing", "ISO 27001 Audit"] },
-    { email: "admin@itsecasia.com",                 seniority: "JUNIOR",    bu: "GRC" },
+    { email: "writer@itsecasia.com",                seniority: "MID",       bu: "Governance",            skills: ["Technical Writing", "ISO 27001 Audit"] },
+    { email: "admin@itsecasia.com",                 seniority: "JUNIOR",    bu: "Governance" },
     { email: "principal.kon.h7q4@itsecasia.com",      seniority: "PRINCIPAL", bu: "Pentest",        skills: ["Web Pentest", "Red Team", "Threat Hunting"] },
-    { email: "principal.tw.m9k2@itsecasia.com",       seniority: "PRINCIPAL", bu: "GRC",            skills: ["Technical Writing", "ISO 27001 Audit", "SOC 2 Readiness"] },
-    { email: "principal.ap.r3n8@itsecasia.com",       seniority: "PRINCIPAL", bu: "GRC" },
+    { email: "principal.tw.m9k2@itsecasia.com",       seniority: "PRINCIPAL", bu: "Governance",            skills: ["Technical Writing", "ISO 27001 Audit", "SOC 2 Readiness"] },
+    { email: "principal.ap.r3n8@itsecasia.com",       seniority: "PRINCIPAL", bu: "Governance" },
   ];
   for (const a of assigns) {
     const bu = a.bu ? buByName.get(a.bu) : undefined;

@@ -1,13 +1,13 @@
 /**
  * Seed ONE sample project that splits its contract evenly across 3 Business
- * Units (Pentest, GRC, Threat Hunting) — each backed by its own workstream —
+ * Units (Pentest, Governance, Solution) — each backed by its own workstream —
  * and gives EACH workstream/BU its OWN 3 terms of payment (billing
  * milestones). This is the layout needed to test Xero invoicing where every
  * BU is invoiced on its own payment schedule.
  *
  * Example (contract = Rp 300,000,000 NET / VAT excluded):
  *   Pentest          100,000,000  ->  DP 40jt | Progress 30jt | Final 30jt
- *   GRC              100,000,000  ->  DP 40jt | Progress 30jt | Final 30jt
+ *   Governance       100,000,000  ->  DP 40jt | Progress 30jt | Final 30jt
  *   Threat Modeling  100,000,000  ->  DP 40jt | Progress 30jt | Final 30jt
  *   => 9 billing milestones total, 3 per BU.
  *
@@ -33,7 +33,7 @@ interface TermSpec {
 interface WsSpec {
   code: string;
   name: string;
-  buName: "Pentest" | "GRC" | "Threat Hunting";
+  buName: "Pentest" | "Governance" | "Solution";
   buShare: number; // NET rupiah for this BU/workstream
   plannedMandays: number;
   estimatedCost: number;
@@ -66,18 +66,18 @@ const WORKSTREAMS: WsSpec[] = [
   {
     code: "GRC",
     name: "ISO 27001 Compliance Audit",
-    buName: "GRC",
+    buName: "Governance",
     buShare: 100_000_000,
     plannedMandays: 38,
     estimatedCost: 58_000_000,
     resourceRole: "Lead Auditor",
     taskTitle: "ISMS audit fieldwork",
-    terms: standardTerms("GRC"),
+    terms: standardTerms("Governance"),
   },
   {
     code: "TM",
     name: "Threat Modeling",
-    buName: "Threat Hunting",
+    buName: "Solution",
     buShare: 100_000_000,
     plannedMandays: 32,
     estimatedCost: 52_000_000,
@@ -108,7 +108,7 @@ export async function ensureSampleMultiBuTermsProject() {
   const consultantPool = [rian, dewi, ayu];
 
   const busByName = new Map<string, string>();
-  for (const buName of ["Pentest", "GRC", "Threat Hunting"] as const) {
+  for (const buName of ["Pentest", "Governance", "Solution"] as const) {
     const bu = await prisma.businessUnit.findUnique({ where: { name: buName } });
     if (!bu) throw new Error(`Business Unit "${buName}" not found — run base seed first.`);
     busByName.set(buName, bu.id);

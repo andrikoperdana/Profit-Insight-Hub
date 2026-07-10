@@ -37,7 +37,13 @@ export default function Header() {
   const { data: notifications } = useListNotifications({
     query: {
       queryKey: getListNotificationsQueryKey(),
-      refetchInterval: 60000,
+      // Poll only while the tab is actually visible — hidden tabs otherwise
+      // keep hitting the API every minute and pile onto the request herd that
+      // saturates the small production DB pool.
+      refetchInterval: () =>
+        typeof document !== "undefined" && document.visibilityState === "hidden"
+          ? false
+          : 60000,
       enabled: !!user,
     },
   });

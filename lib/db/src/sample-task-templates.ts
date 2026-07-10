@@ -36,7 +36,7 @@ const TEMPLATES: TplDef[] = [
   {
     name: "ISO 27001 Implementation (GRC)",
     description: "High-level stages of ISMS ISO 27001 implementation for enterprise clients.",
-    buName: "GRC",
+    buName: "Governance",
     tasks: [
       { title: "Gap Assessment", durationDays: 10, offsetDays: 0, parentIndex: null, billable: true },
       { title: "Risk Assessment & Treatment Plan", durationDays: 10, offsetDays: 10, parentIndex: null, billable: true },
@@ -52,7 +52,7 @@ const TEMPLATES: TplDef[] = [
   {
     name: "Threat Hunting Engagement (4 weeks)",
     description: "Proactive threat hunting: hypothesis-driven hunt, IOC sweep, hardening recommendations.",
-    buName: "Threat Hunting",
+    buName: "Solution",
     tasks: [
       { title: "Preparation & Data Onboarding", durationDays: 5, offsetDays: 0, parentIndex: null, billable: true },
       { title: "Access to SIEM/EDR", durationDays: 2, offsetDays: 0, parentIndex: 0, billable: true },

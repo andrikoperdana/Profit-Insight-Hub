@@ -55,7 +55,7 @@ const TEMPLATES: TplDef[] = [
     name: "ISO 27001 Implementation (GRC)",
     description:
       "ISMS ISO 27001 implementation project ±3 months for enterprise clients. Includes gap assessment, documentation, and audit support.",
-    buName: "GRC",
+    buName: "Governance",
     taskTemplateName: "ISO 27001 Implementation (GRC)",
     defaultDurationDays: 90,
     estimatedContractValue: 450_000_000,
@@ -80,7 +80,7 @@ const TEMPLATES: TplDef[] = [
     name: "Threat Hunting Engagement (4 weeks)",
     description:
       "Proactive hypothesis-based threat hunting for 1 client SIEM/EDR environment. 4 weeks, output: hunt report + hardening recommendation.",
-    buName: "Threat Hunting",
+    buName: "Solution",
     taskTemplateName: "Threat Hunting Engagement (4 weeks)",
     defaultDurationDays: 28,
     estimatedContractValue: 250_000_000,
@@ -125,7 +125,7 @@ const TEMPLATES: TplDef[] = [
     name: "ISO 27001 Surveillance Audit Support",
     description:
       "Annual ISO 27001 surveillance audit support. 4 weeks prep + on-site audit support.",
-    buName: "GRC",
+    buName: "Governance",
     defaultDurationDays: 28,
     estimatedContractValue: 120_000_000,
     resources: [

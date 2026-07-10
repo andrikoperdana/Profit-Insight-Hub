@@ -12,7 +12,7 @@ import { prisma } from "./index.js";
 interface WsSpec {
   code: string;
   name: string;
-  buName: "Pentest" | "GRC" | "Threat Hunting";
+  buName: "Pentest" | "Governance" | "Solution";
   allocationPct: number;
   plannedMandays: number;
   estimatedCost: number;
@@ -51,8 +51,8 @@ const PROJECTS: ProjectSpec[] = [
     monthsFromNowEnd: 5,
     workstreams: [
       { code: "PT", name: "Pentest Internet Banking", buName: "Pentest", allocationPct: 40, plannedMandays: 140, estimatedCost: 300_000_000, resourceRole: "Lead Pentester", taskTitle: "External & internal pentest scope", milestoneName: "Pentest Delivery 40%", milestonePct: 40 },
-      { code: "GRC", name: "ISO 27001 Surveillance Audit", buName: "GRC", allocationPct: 35, plannedMandays: 130, estimatedCost: 260_000_000, resourceRole: "Lead Auditor", taskTitle: "ISMS surveillance fieldwork", milestoneName: "GRC Delivery 35%", milestonePct: 35 },
-      { code: "TM", name: "Threat Modeling Core Banking", buName: "Threat Hunting", allocationPct: 25, plannedMandays: 90, estimatedCost: 160_000_000, resourceRole: "Threat Modeling Lead", taskTitle: "STRIDE workshop core banking", milestoneName: "Threat Modeling Delivery 25%", milestonePct: 25 },
+      { code: "GRC", name: "ISO 27001 Surveillance Audit", buName: "Governance", allocationPct: 35, plannedMandays: 130, estimatedCost: 260_000_000, resourceRole: "Lead Auditor", taskTitle: "ISMS surveillance fieldwork", milestoneName: "Governance Delivery 35%", milestonePct: 35 },
+      { code: "TM", name: "Threat Modeling Core Banking", buName: "Solution", allocationPct: 25, plannedMandays: 90, estimatedCost: 160_000_000, resourceRole: "Threat Modeling Lead", taskTitle: "STRIDE workshop core banking", milestoneName: "Threat Modeling Delivery 25%", milestonePct: 25 },
     ],
   },
   {
@@ -69,8 +69,8 @@ const PROJECTS: ProjectSpec[] = [
     monthsFromNowEnd: 5,
     workstreams: [
       { code: "PT", name: "Pentest Customer App", buName: "Pentest", allocationPct: 45, plannedMandays: 130, estimatedCost: 260_000_000, resourceRole: "Senior Pentester", taskTitle: "Web & mobile pentest scope", milestoneName: "Pentest Delivery 45%", milestonePct: 45 },
-      { code: "GRC", name: "ISO 27001 Gap Analysis", buName: "GRC", allocationPct: 30, plannedMandays: 90, estimatedCost: 180_000_000, resourceRole: "GRC Lead", taskTitle: "Control gap workshop", milestoneName: "GRC Delivery 30%", milestonePct: 30 },
-      { code: "TM", name: "Threat Modeling Billing", buName: "Threat Hunting", allocationPct: 25, plannedMandays: 70, estimatedCost: 140_000_000, resourceRole: "Threat Modeling Consultant", taskTitle: "DFD & STRIDE billing", milestoneName: "Threat Modeling Delivery 25%", milestonePct: 25 },
+      { code: "GRC", name: "ISO 27001 Gap Analysis", buName: "Governance", allocationPct: 30, plannedMandays: 90, estimatedCost: 180_000_000, resourceRole: "GRC Lead", taskTitle: "Control gap workshop", milestoneName: "Governance Delivery 30%", milestonePct: 30 },
+      { code: "TM", name: "Threat Modeling Billing", buName: "Solution", allocationPct: 25, plannedMandays: 70, estimatedCost: 140_000_000, resourceRole: "Threat Modeling Consultant", taskTitle: "DFD & STRIDE billing", milestoneName: "Threat Modeling Delivery 25%", milestonePct: 25 },
     ],
   },
   {
@@ -87,8 +87,8 @@ const PROJECTS: ProjectSpec[] = [
     monthsFromNowEnd: 6,
     workstreams: [
       { code: "PT", name: "OT/ICS Pentest", buName: "Pentest", allocationPct: 35, plannedMandays: 150, estimatedCost: 320_000_000, resourceRole: "OT Pentester", taskTitle: "ICS protocol pentest", milestoneName: "Pentest Delivery 35%", milestonePct: 35 },
-      { code: "GRC", name: "NIST CSF Maturity Audit", buName: "GRC", allocationPct: 40, plannedMandays: 170, estimatedCost: 380_000_000, resourceRole: "Senior Auditor", taskTitle: "CSF function assessment", milestoneName: "GRC Delivery 40%", milestonePct: 40 },
-      { code: "TM", name: "Threat Modeling SCADA", buName: "Threat Hunting", allocationPct: 25, plannedMandays: 100, estimatedCost: 220_000_000, resourceRole: "Lead Threat Modeler", taskTitle: "SCADA attack tree", milestoneName: "Threat Modeling Delivery 25%", milestonePct: 25 },
+      { code: "GRC", name: "NIST CSF Maturity Audit", buName: "Governance", allocationPct: 40, plannedMandays: 170, estimatedCost: 380_000_000, resourceRole: "Senior Auditor", taskTitle: "CSF function assessment", milestoneName: "Governance Delivery 40%", milestonePct: 40 },
+      { code: "TM", name: "Threat Modeling SCADA", buName: "Solution", allocationPct: 25, plannedMandays: 100, estimatedCost: 220_000_000, resourceRole: "Lead Threat Modeler", taskTitle: "SCADA attack tree", milestoneName: "Threat Modeling Delivery 25%", milestonePct: 25 },
     ],
   },
   {
@@ -105,8 +105,8 @@ const PROJECTS: ProjectSpec[] = [
     monthsFromNowEnd: 4,
     workstreams: [
       { code: "PT", name: "Pentest Checkout & API", buName: "Pentest", allocationPct: 40, plannedMandays: 100, estimatedCost: 200_000_000, resourceRole: "Pentester", taskTitle: "Checkout & API pentest", milestoneName: "Pentest Delivery 40%", milestonePct: 40 },
-      { code: "GRC", name: "PCI DSS Readiness", buName: "GRC", allocationPct: 35, plannedMandays: 90, estimatedCost: 180_000_000, resourceRole: "PCI QSA Lead", taskTitle: "Scoping & ROC prep", milestoneName: "GRC Delivery 35%", milestonePct: 35 },
-      { code: "TM", name: "Threat Modeling Payment Flow", buName: "Threat Hunting", allocationPct: 25, plannedMandays: 60, estimatedCost: 120_000_000, resourceRole: "Threat Modeling Consultant", taskTitle: "Payment flow STRIDE", milestoneName: "Threat Modeling Delivery 25%", milestonePct: 25 },
+      { code: "GRC", name: "PCI DSS Readiness", buName: "Governance", allocationPct: 35, plannedMandays: 90, estimatedCost: 180_000_000, resourceRole: "PCI QSA Lead", taskTitle: "Scoping & ROC prep", milestoneName: "Governance Delivery 35%", milestonePct: 35 },
+      { code: "TM", name: "Threat Modeling Payment Flow", buName: "Solution", allocationPct: 25, plannedMandays: 60, estimatedCost: 120_000_000, resourceRole: "Threat Modeling Consultant", taskTitle: "Payment flow STRIDE", milestoneName: "Threat Modeling Delivery 25%", milestonePct: 25 },
     ],
   },
   {
@@ -123,8 +123,8 @@ const PROJECTS: ProjectSpec[] = [
     monthsFromNowEnd: 7,
     workstreams: [
       { code: "PT", name: "Customer Portal Pentest", buName: "Pentest", allocationPct: 35, plannedMandays: 110, estimatedCost: 220_000_000, resourceRole: "Lead Pentester", taskTitle: "Portal pentest scope", milestoneName: "Pentest Delivery 35%", milestonePct: 35 },
-      { code: "GRC", name: "SOC 2 Type II Readiness", buName: "GRC", allocationPct: 40, plannedMandays: 130, estimatedCost: 280_000_000, resourceRole: "SOC 2 Lead", taskTitle: "Trust Service Criteria readiness", milestoneName: "GRC Delivery 40%", milestonePct: 40 },
-      { code: "TM", name: "Threat Modeling Fraud Engine", buName: "Threat Hunting", allocationPct: 25, plannedMandays: 80, estimatedCost: 140_000_000, resourceRole: "Threat Modeling Lead", taskTitle: "Fraud engine STRIDE/LINDDUN", milestoneName: "Threat Modeling Delivery 25%", milestonePct: 25 },
+      { code: "GRC", name: "SOC 2 Type II Readiness", buName: "Governance", allocationPct: 40, plannedMandays: 130, estimatedCost: 280_000_000, resourceRole: "SOC 2 Lead", taskTitle: "Trust Service Criteria readiness", milestoneName: "Governance Delivery 40%", milestonePct: 40 },
+      { code: "TM", name: "Threat Modeling Fraud Engine", buName: "Solution", allocationPct: 25, plannedMandays: 80, estimatedCost: 140_000_000, resourceRole: "Threat Modeling Lead", taskTitle: "Fraud engine STRIDE/LINDDUN", milestoneName: "Threat Modeling Delivery 25%", milestonePct: 25 },
     ],
   },
 ];
@@ -155,7 +155,7 @@ export async function ensureSampleWorkstreamProjects() {
   const consultantPool = [rian, dewi, ayu];
 
   const busByName = new Map<string, string>();
-  for (const buName of ["Pentest", "GRC", "Threat Hunting"] as const) {
+  for (const buName of ["Pentest", "Governance", "Solution"] as const) {
     const bu = await prisma.businessUnit.findUnique({ where: { name: buName } });
     if (!bu) throw new Error(`Business Unit "${buName}" not found — run base seed first.`);
     busByName.set(buName, bu.id);

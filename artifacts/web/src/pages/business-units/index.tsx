@@ -72,7 +72,7 @@ export default function BusinessUnitsPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Business Units</h1>
           <p className="text-muted-foreground">
-            Group teams by service line (e.g. Pentest, GRC, Threat Hunting).
+            Group teams by service line (e.g. Pentest, Governance, Solution).
           </p>
         </div>
         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
@@ -170,7 +170,7 @@ function BUFormDialog({
     <DialogContent className="sm:max-w-[460px]">
       <DialogHeader>
         <DialogTitle>{title}</DialogTitle>
-        <DialogDescription>Examples: Pentest, GRC, Threat Hunting.</DialogDescription>
+        <DialogDescription>Examples: Pentest, Governance, Solution, MSS, Forensic.</DialogDescription>
       </DialogHeader>
       <div className="space-y-3 py-2">
         <div>

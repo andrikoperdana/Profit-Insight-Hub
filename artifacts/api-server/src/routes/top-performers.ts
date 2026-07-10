@@ -1,7 +1,11 @@
 import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
-import { computeMetrics, projectInclude } from "../lib/serializers.js";
+import {
+  computeMetrics,
+  projectMetricsSelect,
+  type ProjectWithRelations,
+} from "../lib/serializers.js";
 
 const router: IRouter = Router();
 
@@ -234,12 +238,23 @@ router.get(
     const activeMonthsByUser = new Map<string, number>();
 
     if (role === "PROJECT_MANAGER") {
+      // Narrow select on purpose: scoring only needs the metrics shape
+      // (resources/timesheets/expenses) plus pmId, dates, and milestone
+      // invoice timing. The full `projectInclude` would drag avatars, RAID,
+      // and other heavy relations across the wire for every PM project —
+      // a large payload over the remote production database link.
       const projects = await prisma.project.findMany({
         where: {
           pmId: { in: userIds },
           deletedAt: null,
         },
-        include: projectInclude,
+        select: {
+          ...projectMetricsSelect,
+          pmId: true,
+          endDate: true,
+          updatedAt: true,
+          billingMilestones: { select: { invoicedAt: true, dueDate: true } },
+        },
       });
       // For approval speed, fetch timesheets approved this year on PM's projects.
       const pmProjectIds = projects.map((p) => p.id);
@@ -283,7 +298,7 @@ router.get(
         let revenueSum = 0;
         let onTime = 0;
         for (const p of delivered) {
-          const m = computeMetrics(p);
+          const m = computeMetrics(p as unknown as ProjectWithRelations);
           revenueSum += p.contractValue;
           if (p.contractValue > 0) marginSum += m.marginPct;
           if (p.endDate && p.updatedAt <= p.endDate) onTime += 1;

@@ -72,7 +72,7 @@ function buildDatasourceUrl(raw: string): string {
     const ensure = (key: string, value: string) => {
       if (!url.searchParams.has(key)) url.searchParams.set(key, value);
     };
-    ensure("connection_limit", String(intFromEnv("DB_CONNECTION_LIMIT", 12)));
+    ensure("connection_limit", String(intFromEnv("DB_CONNECTION_LIMIT", 24)));
     ensure("pool_timeout", String(intFromEnv("DB_POOL_TIMEOUT", 20)));
     ensure("connect_timeout", String(intFromEnv("DB_CONNECT_TIMEOUT", 10)));
     return url.toString();
