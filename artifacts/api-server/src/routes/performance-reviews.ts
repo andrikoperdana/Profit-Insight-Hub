@@ -203,17 +203,24 @@ const ratingInclude = {
 } as const;
 
 async function computeMetrics(userId: string, start: Date, end: Date) {
-  const timesheets = await prisma.timesheet.findMany({
-    where: {
-      userId,
-      status: "APPROVED",
-      workDate: { gte: start, lte: end },
-    },
-    include: {
-      project: { select: { id: true, code: true, name: true } },
-      task: { select: { billable: true } },
-    },
-  });
+  // Independent queries — run in parallel to save a round-trip on the remote DB.
+  const [timesheets, skills] = await Promise.all([
+    prisma.timesheet.findMany({
+      where: {
+        userId,
+        status: "APPROVED",
+        workDate: { gte: start, lte: end },
+      },
+      include: {
+        project: { select: { id: true, code: true, name: true } },
+        task: { select: { billable: true } },
+      },
+    }),
+    prisma.userSkill.findMany({
+      where: { userId },
+      select: { skillId: true, proficiency: true, skill: { select: { name: true } } },
+    }),
+  ]);
   let billable = 0;
   let total = 0;
   const perProject = new Map<string, { projectId: string; projectCode: string; projectName: string; hours: number }>();
@@ -236,10 +243,6 @@ async function computeMetrics(userId: string, start: Date, end: Date) {
   const months = Math.max(1, Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24 * 30)));
   const capacityHours = months * 21 * 8;
   const utilizationPct = capacityHours > 0 ? (billable / capacityHours) * 100 : 0;
-  const skills = await prisma.userSkill.findMany({
-    where: { userId },
-    select: { skillId: true, proficiency: true, skill: { select: { name: true } } },
-  });
   return {
     billableHours: Number(billable.toFixed(2)),
     totalHours: Number(total.toFixed(2)),
@@ -256,16 +259,19 @@ async function computeMetrics(userId: string, start: Date, end: Date) {
 }
 
 async function loadDetail(id: string) {
-  const review = await prisma.performanceReview.findUnique({
-    where: { id },
-    include: reviewInclude,
-  });
+  // Ratings only need the review id, so fetch them alongside the review itself.
+  const [review, ratings] = await Promise.all([
+    prisma.performanceReview.findUnique({
+      where: { id },
+      include: reviewInclude,
+    }),
+    prisma.performanceReviewProjectRating.findMany({
+      where: { reviewId: id },
+      include: ratingInclude,
+      orderBy: { createdAt: "desc" },
+    }),
+  ]);
   if (!review) return null;
-  const ratings = await prisma.performanceReviewProjectRating.findMany({
-    where: { reviewId: id },
-    include: ratingInclude,
-    orderBy: { createdAt: "desc" },
-  });
   const metrics = await computeMetrics(review.userId, review.periodStart, review.periodEnd);
   const ratingValues = ratings.map((r) => r.rating);
   const avg = ratingValues.length ? ratingValues.reduce((a, b) => a + b, 0) / ratingValues.length : null;
