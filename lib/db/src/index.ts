@@ -33,6 +33,18 @@ function intFromEnv(name: string, fallback: number): number {
 //   - DB_CONNECTION_LIMIT : max connections this process keeps in its pool
 //   - DB_POOL_TIMEOUT     : seconds a query waits for a free pooled connection
 //   - DB_CONNECT_TIMEOUT  : seconds to wait when opening a new connection
+//   - DB_SOCKET_TIMEOUT   : seconds a query may sit on a socket before the
+//                           engine declares the connection dead
+//
+// Pool sizing note (learned in production): with sparse traffic, a LARGE pool
+// is harmful on serverless/autoscale. Idle pooled TCP connections keep getting
+// reaped by the serverless pooler (visible as continuous `kind: Closed`
+// prisma:error noise), and idle NAT mappings can drop without a reset reaching
+// the client, leaving "zombie" connections whose next checkout hangs in TCP
+// retransmit before the engine replaces it. A small pool keeps the working set
+// hot and cycles connections often; `socket_timeout` bounds any residual
+// zombie wait, and the resulting P1008 is retried on a fresh connection by
+// withConnectionRetry below.
 //
 // Opt-in PgBouncer routing (DB_USE_PGBOUNCER=1): the most effective cure for
 // the idle-reaping E57P01 churn is to talk to Neon's connection pooler instead
@@ -72,9 +84,15 @@ function buildDatasourceUrl(raw: string): string {
     const ensure = (key: string, value: string) => {
       if (!url.searchParams.has(key)) url.searchParams.set(key, value);
     };
-    ensure("connection_limit", String(intFromEnv("DB_CONNECTION_LIMIT", 24)));
+    // Small by default — see the pool sizing note above. Raise via env only
+    // for sustained-concurrency workloads, never "just in case".
+    ensure("connection_limit", String(intFromEnv("DB_CONNECTION_LIMIT", 6)));
     ensure("pool_timeout", String(intFromEnv("DB_POOL_TIMEOUT", 20)));
     ensure("connect_timeout", String(intFromEnv("DB_CONNECT_TIMEOUT", 10)));
+    // Bounds how long a query can hang on a silently-dead socket before the
+    // engine gives up (P1008) and withConnectionRetry re-runs it on a fresh
+    // connection. Keep well above the slowest legitimate query (~1-2s).
+    ensure("socket_timeout", String(intFromEnv("DB_SOCKET_TIMEOUT", 10)));
     return url.toString();
   } catch {
     // Non-standard URL (e.g. socket path) — leave it untouched.

@@ -15,6 +15,18 @@ export async function requireAuth(
   res: Response,
   next: NextFunction,
 ): Promise<void> {
+  // Idempotency guard — CRITICAL for latency. Most sub-routers are mounted
+  // WITHOUT a path prefix and start with `router.use(requireAuth)`, so a single
+  // request traverses every earlier router's requireAuth before reaching its
+  // handler (up to ~37 of them). Each run used to hit the DB for the user row;
+  // against a remote database that stacked into 10-40s per request in
+  // production. `req.user` is only ever set below, after a successful
+  // verification within this same request, so if it is present the request has
+  // already been fully authenticated and re-running the check is pure waste.
+  if (req.user) {
+    next();
+    return;
+  }
   const header = req.headers.authorization;
   if (!header || !header.startsWith("Bearer ")) {
     res.status(401).json({ error: "Unauthorized" });

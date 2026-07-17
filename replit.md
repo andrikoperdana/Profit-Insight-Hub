@@ -95,7 +95,7 @@ Routes: `/login`, `/` (dashboard), `/projects`(+`/new`,`/:id`,`/:id/summary`), `
 
 ## Gotchas (do not regress)
 
-- **Express sub-router middleware**: never `router.use(requireRole(...))` at the top of a no-prefix sub-router — it runs before path matching and rejects siblings. Apply per-route or mount under a prefix.
+- **Express sub-router middleware**: never `router.use(requireRole(...))` at the top of a no-prefix sub-router — it runs before path matching and rejects siblings. Apply per-route or mount under a prefix. Related: ~37 no-prefix sub-routers each start with `router.use(requireAuth)`, so one request runs requireAuth up to 37×; `requireAuth` MUST keep its `if (req.user) return next()` idempotency guard or every authed request pays dozens of stacked DB lookups (10-40s/request on a remote prod DB).
 - **Timesheet `?scope=all`** is **default-deny**: only MGMT sees all, PM sees own+own-project, everyone else forced to self. Allowlist new roles; never extend a denylist.
 - **`MY_VIEW_ROLES`** (App.tsx) is the single source of truth for the "My …" pages — same list used by Sidebar's `canSeeMyViews`.
 - **Scoped endpoint caches**: any TtlCache key must encode caller scope or one role serves another's payload.
