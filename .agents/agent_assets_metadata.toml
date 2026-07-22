@@ -431,3 +431,9 @@ id = "yxpE1oJJu6XBiR0fZPmqy"
 uri = "file://docs/SecureProfit-Hub-BOD-Overview.docx"
 type = "word_document"
 title = "SecureProfit Hub — BOD Overview (DOCX)"
+
+[[outputs]]
+id = "kO2YlMQvEMYPnfX9YE1nL"
+uri = "file://docs/SecureProfit-Hub-BOD-Supplement.docx"
+type = "word_document"
+title = "SecureProfit Hub — BOD Supplement (Architecture, Security, Mobile & Roadmap)"

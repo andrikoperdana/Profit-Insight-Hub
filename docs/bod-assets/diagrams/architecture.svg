@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="720" viewBox="0 0 1600 720" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrA" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#64748b"/>
+    </marker>
+    <marker id="arrR" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#dc2626"/>
+    </marker>
+  </defs>
+  <rect width="1600" height="720" fill="#ffffff"/>
+  <text x="40" y="52" font-size="26" font-weight="800" fill="#0f172a">System Architecture at a Glance</text>
+  <text x="40" y="80" font-size="14" fill="#475569">Three ways in, one governed platform, one database as the single system of record.</text>
+
+  <!-- Access layer -->
+  <text x="40" y="140" font-size="13" font-weight="700" fill="#94a3b8" letter-spacing="2">HOW PEOPLE ACCESS IT</text>
+
+  <rect x="40" y="160" width="300" height="104" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="60" y="192" font-size="16" font-weight="700" fill="#0f172a">Web application</text>
+  <text x="60" y="216" font-size="12.5" fill="#475569">Full platform — every role, every module</text>
+  <text x="60" y="236" font-size="12.5" fill="#475569">Runs in any modern browser</text>
+
+  <rect x="40" y="286" width="300" height="104" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="60" y="318" font-size="16" font-weight="700" fill="#0f172a">Mobile app (iOS / Android)</text>
+  <text x="60" y="342" font-size="12.5" fill="#475569">Time tracking, timesheets, expenses,</text>
+  <text x="60" y="362" font-size="12.5" fill="#475569">approvals and notifications on the go</text>
+
+  <rect x="40" y="412" width="300" height="104" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="60" y="444" font-size="16" font-weight="700" fill="#0f172a">Client portal</text>
+  <text x="60" y="468" font-size="12.5" fill="#475569">Read-only progress page via a private link —</text>
+  <text x="60" y="488" font-size="12.5" fill="#475569">no login, no documents, no financials</text>
+
+  <!-- Arrows to API -->
+  <line x1="340" y1="212" x2="560" y2="300" stroke="#64748b" stroke-width="2" marker-end="url(#arrA)"/>
+  <line x1="340" y1="338" x2="560" y2="338" stroke="#64748b" stroke-width="2" marker-end="url(#arrA)"/>
+  <line x1="340" y1="464" x2="560" y2="376" stroke="#64748b" stroke-width="2" marker-end="url(#arrA)"/>
+  <text x="450" y="326" font-size="11.5" fill="#94a3b8" text-anchor="middle">HTTPS</text>
+
+  <!-- Core platform -->
+  <rect x="565" y="200" width="360" height="280" rx="14" fill="#fef2f2" stroke="#fca5a5" stroke-width="2"/>
+  <text x="595" y="240" font-size="18" font-weight="800" fill="#991b1b">SecureProfit Hub core</text>
+  <text x="595" y="272" font-size="13" fill="#7f1d1d">Application server enforcing:</text>
+  <text x="595" y="300" font-size="12.5" fill="#475569">• Sign-in and session security</text>
+  <text x="595" y="324" font-size="12.5" fill="#475569">• Role-based access on every request</text>
+  <text x="595" y="348" font-size="12.5" fill="#475569">• Lifecycle gates (activation / completion)</text>
+  <text x="595" y="372" font-size="12.5" fill="#475569">• Cost, margin, forecast &amp; VAT calculations</text>
+  <text x="595" y="396" font-size="12.5" fill="#475569">• Approval workflows &amp; notifications</text>
+  <text x="595" y="420" font-size="12.5" fill="#475569">• Audit trail of key user actions</text>
+
+  <!-- DB -->
+  <line x1="925" y1="340" x2="1085" y2="340" stroke="#dc2626" stroke-width="2.5" marker-end="url(#arrR)"/>
+  <rect x="1090" y="280" width="280" height="120" rx="14" fill="#0f172a"/>
+  <text x="1120" y="322" font-size="17" font-weight="800" fill="#ffffff">One database</text>
+  <text x="1120" y="348" font-size="12.5" fill="#cbd5e1">Managed cloud PostgreSQL —</text>
+  <text x="1120" y="368" font-size="12.5" fill="#cbd5e1">the single system of record</text>
+
+  <!-- Integrations -->
+  <text x="565" y="560" font-size="13" font-weight="700" fill="#94a3b8" letter-spacing="2">CONNECTED SERVICES</text>
+
+  <rect x="565" y="580" width="236" height="100" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="583" y="610" font-size="15" font-weight="700" fill="#0f172a">Pipedrive CRM</text>
+  <text x="583" y="634" font-size="12" fill="#475569">Open deals imported as leads</text>
+  <text x="583" y="653" font-size="12" fill="#475569">(one-way, on demand)</text>
+
+  <rect x="821" y="580" width="236" height="100" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="839" y="610" font-size="15" font-weight="700" fill="#0f172a">Xero accounting</text>
+  <text x="839" y="634" font-size="12" fill="#475569">Invoices pushed out; payment</text>
+  <text x="839" y="653" font-size="12" fill="#475569">status confirmed back</text>
+
+  <rect x="1077" y="580" width="236" height="100" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="1095" y="610" font-size="15" font-weight="700" fill="#0f172a">Email delivery</text>
+  <text x="1095" y="634" font-size="12" fill="#475569">Optional alerts for key events</text>
+  <text x="1095" y="653" font-size="12" fill="#475569">(off by default, one switch)</text>
+
+  <rect x="1333" y="580" width="227" height="100" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="1351" y="610" font-size="15" font-weight="700" fill="#0f172a">AI briefing service</text>
+  <text x="1351" y="634" font-size="12" fill="#475569">Narrates pre-computed facts;</text>
+  <text x="1351" y="653" font-size="12" fill="#475569">never sees rates or documents</text>
+
+  <!-- Arrows integrations to core -->
+  <line x1="683" y1="580" x2="720" y2="484" stroke="#64748b" stroke-width="2" marker-end="url(#arrA)"/>
+  <line x1="880" y1="580" x2="820" y2="484" stroke="#64748b" stroke-width="2" marker-end="url(#arrA)"/>
+  <line x1="1140" y1="580" x2="900" y2="470" stroke="#64748b" stroke-width="2" marker-end="url(#arrA)"/>
+  <line x1="1400" y1="580" x2="920" y2="440" stroke="#64748b" stroke-width="2" marker-end="url(#arrA)"/>
+
+  <text x="40" y="690" font-size="12" fill="#94a3b8">All traffic is encrypted in transit (HTTPS). Access rules are enforced on the server for every request — never only in the user interface.</text>
+</svg>
