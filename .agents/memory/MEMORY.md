@@ -37,4 +37,5 @@
 - [Deployment build mobile Expo bundle](deployment-build-mobile-expo.md) — publish builds web+api-server+mobile; the Expo iOS+Android Metro bundle is the heavy/flaky step; fast "connection lost" failure = transient infra, retry first.
 - [PDFKit footer blank pages](pdfkit-footer-blank-pages.md) — text below the bottom margin auto-adds a page per write; zero `page.margins.bottom` after switchToPage before footers.
 - [BU rename & project taxonomy](bu-rename-and-project-taxonomy.md) — BU renames are FK-safe UPDATE-in-place (seed rename loop); workstream code "GRC" is a stable key; projectType.ts has 2 copies edited in lockstep, MSS rule before SOC.
+- [BOD doc pipeline](bod-doc-pipeline.md) — regenerate board DOCX via bod-* scripts (shots in ≤6-batches, SVG→PNG, docx builder); deep links need sync auth init; COMPLETE gate = invoiced not paid.
 - [requireAuth no-prefix cascade](requireauth-cascade.md) — per-request middleware DB lookups multiply by router mount position; keep the req.user guard; quantized latency = count middleware round trips.

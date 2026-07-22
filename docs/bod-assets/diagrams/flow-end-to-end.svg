@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="820" viewBox="0 0 1680 820" font-family="Inter, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/>
+    </marker>
+  </defs>
+  <rect width="1680" height="820" fill="#ffffff"/>
+  <text x="60" y="58" font-size="26" font-weight="700" fill="#0f172a">SecureProfit Hub — End-to-End Business Process</text>
+  <text x="60" y="86" font-size="15" fill="#64748b">From CRM lead to a closed, invoiced, and evaluated project — one system of record.</text>
+
+  <!-- Row 1 -->
+  <!-- Stage 1 -->
+  <g>
+    <rect x="60" y="120" width="370" height="250" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+    <circle cx="98" cy="158" r="17" fill="#dc2626"/><text x="98" y="164" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">1</text>
+    <text x="126" y="164" font-size="17" font-weight="700" fill="#0f172a">Lead Intake</text>
+    <text x="126" y="184" font-size="12.5" fill="#dc2626" font-weight="600">PIPEDRIVE CRM</text>
+    <text x="86" y="218" font-size="13.5" fill="#475569">• Open deals synced from Pipedrive</text>
+    <text x="86" y="243" font-size="13.5" fill="#475569">• Sales pipeline board by stage</text>
+    <text x="86" y="268" font-size="13.5" fill="#475569">• Weighted pipeline value (IDR)</text>
+    <text x="86" y="293" font-size="13.5" fill="#475569">• Owner, region and source tracking</text>
+  </g>
+  <line x1="430" y1="245" x2="466" y2="245" stroke="#dc2626" stroke-width="2.5" marker-end="url(#arr)"/>
+
+  <!-- Stage 2 -->
+  <g>
+    <rect x="470" y="120" width="370" height="250" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+    <circle cx="508" cy="158" r="17" fill="#dc2626"/><text x="508" y="164" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">2</text>
+    <text x="536" y="164" font-size="17" font-weight="700" fill="#0f172a">Bidding Won → Request</text>
+    <text x="536" y="184" font-size="12.5" fill="#dc2626" font-weight="600">SALES</text>
+    <text x="496" y="218" font-size="13.5" fill="#475569">• Won lead converted to a project</text>
+    <text x="496" y="243" font-size="13.5" fill="#475569">• Enters as DRAFT project request</text>
+    <text x="496" y="268" font-size="13.5" fill="#475569">• Contract value &amp; scope captured</text>
+    <text x="496" y="293" font-size="13.5" fill="#475569">• Full audit trail from day one</text>
+  </g>
+  <line x1="840" y1="245" x2="876" y2="245" stroke="#dc2626" stroke-width="2.5" marker-end="url(#arr)"/>
+
+  <!-- Stage 3 -->
+  <g>
+    <rect x="880" y="120" width="370" height="250" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+    <circle cx="918" cy="158" r="17" fill="#dc2626"/><text x="918" y="164" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">3</text>
+    <text x="946" y="164" font-size="17" font-weight="700" fill="#0f172a">PM Assignment</text>
+    <text x="946" y="184" font-size="12.5" fill="#dc2626" font-weight="600">PMO DIRECTOR</text>
+    <text x="906" y="218" font-size="13.5" fill="#475569">• New requests flagged on dashboard</text>
+    <text x="906" y="243" font-size="13.5" fill="#475569">• PMO Director assigns the PM</text>
+    <text x="906" y="268" font-size="13.5" fill="#475569">• Project moves to OBSERVATION</text>
+    <text x="906" y="293" font-size="13.5" fill="#475569">• Ownership is explicit and audited</text>
+  </g>
+  <line x1="1250" y1="245" x2="1286" y2="245" stroke="#dc2626" stroke-width="2.5" marker-end="url(#arr)"/>
+
+  <!-- Stage 4 -->
+  <g>
+    <rect x="1290" y="120" width="370" height="250" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+    <circle cx="1328" cy="158" r="17" fill="#dc2626"/><text x="1328" y="164" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">4</text>
+    <text x="1356" y="164" font-size="17" font-weight="700" fill="#0f172a">Project Setup</text>
+    <text x="1356" y="184" font-size="12.5" fill="#dc2626" font-weight="600">PROJECT MANAGER</text>
+    <text x="1316" y="218" font-size="13.5" fill="#475569">• Staffing plan with daily rates</text>
+    <text x="1316" y="243" font-size="13.5" fill="#475569">• Task plan (WBS) &amp; timeline</text>
+    <text x="1316" y="268" font-size="13.5" fill="#475569">• Risk register (RAID)</text>
+    <text x="1316" y="293" font-size="13.5" fill="#475569">• Billing plan totalling 100%</text>
+  </g>
+
+  <!-- Readiness gate connector row1 -> row2 -->
+  <path d="M 1475 370 C 1475 420, 1475 420, 1475 448" stroke="#dc2626" stroke-width="2.5" fill="none" marker-end="url(#arr)"/>
+  <rect x="1355" y="392" width="240" height="30" rx="15" fill="#fef2f2" stroke="#fecaca"/>
+  <text x="1475" y="412" font-size="12.5" font-weight="700" fill="#b91c1c" text-anchor="middle">READINESS GATE → ACTIVE</text>
+
+  <!-- Row 2 (right to left numbering 5..8 left-to-right visually reversed) -->
+  <!-- Stage 5 (rightmost) -->
+  <g>
+    <rect x="1290" y="452" width="370" height="250" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+    <circle cx="1328" cy="490" r="17" fill="#dc2626"/><text x="1328" y="496" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">5</text>
+    <text x="1356" y="496" font-size="17" font-weight="700" fill="#0f172a">Execution &amp; Monitoring</text>
+    <text x="1356" y="516" font-size="12.5" fill="#dc2626" font-weight="600">DELIVERY TEAM + PM</text>
+    <text x="1316" y="550" font-size="13.5" fill="#475569">• Tasks, Gantt &amp; dependencies</text>
+    <text x="1316" y="575" font-size="13.5" fill="#475569">• Timesheets &amp; expense approvals</text>
+    <text x="1316" y="600" font-size="13.5" fill="#475569">• Live margin, health &amp; forecast</text>
+    <text x="1316" y="625" font-size="13.5" fill="#475569">• Read-only client progress portal</text>
+  </g>
+  <line x1="1290" y1="577" x2="1254" y2="577" stroke="#dc2626" stroke-width="2.5" marker-end="url(#arr)"/>
+
+  <!-- Stage 6 -->
+  <g>
+    <rect x="880" y="452" width="370" height="250" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+    <circle cx="918" cy="490" r="17" fill="#dc2626"/><text x="918" y="496" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">6</text>
+    <text x="946" y="496" font-size="17" font-weight="700" fill="#0f172a">Invoicing</text>
+    <text x="946" y="516" font-size="12.5" fill="#dc2626" font-weight="600">XERO INTEGRATION</text>
+    <text x="906" y="550" font-size="13.5" fill="#475569">• Milestone-based invoicing (ToP)</text>
+    <text x="906" y="575" font-size="13.5" fill="#475569">• One-click push to Xero</text>
+    <text x="906" y="600" font-size="13.5" fill="#475569">• Payment status synced back (PAID)</text>
+    <text x="906" y="625" font-size="13.5" fill="#475569">• VAT recap &amp; cash-flow view</text>
+  </g>
+  <line x1="880" y1="577" x2="844" y2="577" stroke="#dc2626" stroke-width="2.5" marker-end="url(#arr)"/>
+
+  <!-- Stage 7 -->
+  <g>
+    <rect x="470" y="452" width="370" height="250" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+    <circle cx="508" cy="490" r="17" fill="#dc2626"/><text x="508" y="496" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">7</text>
+    <text x="536" y="496" font-size="17" font-weight="700" fill="#0f172a">Delivery</text>
+    <text x="536" y="516" font-size="12.5" fill="#dc2626" font-weight="600">PM + TECHNICAL WRITER</text>
+    <text x="496" y="550" font-size="13.5" fill="#475569">• Deliverable reports produced</text>
+    <text x="496" y="575" font-size="13.5" fill="#475569">• Documents vault: BAST, contract,</text>
+    <text x="506" y="595" font-size="13.5" fill="#475569">invoice, reports</text>
+    <text x="496" y="620" font-size="13.5" fill="#475569">• Client acceptance (BAST) recorded</text>
+  </g>
+  <line x1="470" y1="577" x2="434" y2="577" stroke="#dc2626" stroke-width="2.5" marker-end="url(#arr)"/>
+
+  <!-- Stage 8 -->
+  <g>
+    <rect x="60" y="452" width="370" height="250" rx="14" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
+    <circle cx="98" cy="490" r="17" fill="#dc2626"/><text x="98" y="496" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">8</text>
+    <text x="126" y="496" font-size="17" font-weight="700" fill="#0f172a">Closing &amp; Satisfaction</text>
+    <text x="126" y="516" font-size="12.5" fill="#dc2626" font-weight="600">PM + MANAGEMENT</text>
+    <text x="86" y="550" font-size="13.5" fill="#475569">• Completion gate: tasks done, no</text>
+    <text x="96" y="570" font-size="13.5" fill="#475569">pending approvals, BAST uploaded</text>
+    <text x="86" y="595" font-size="13.5" fill="#475569">• Customer satisfaction survey</text>
+    <text x="86" y="620" font-size="13.5" fill="#475569">• Project CLOSED &amp; archived</text>
+  </g>
+
+  <text x="60" y="770" font-size="13" fill="#94a3b8">Every step is role-gated and recorded in the audit trail. Management sees portfolio-level margin, cash flow and risk at all times.</text>
+</svg>

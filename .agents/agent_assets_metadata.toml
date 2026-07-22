@@ -425,3 +425,9 @@ id = "3ccDA1pwOvum7fqYSxz8u"
 uri = "file://docs/commission-feature-feasibility.docx"
 type = "word_document"
 title = "Studi Kelayakan Commission Tracker (Bahasa Indonesia, Word)"
+
+[[outputs]]
+id = "yxpE1oJJu6XBiR0fZPmqy"
+uri = "file://docs/SecureProfit-Hub-BOD-Overview.docx"
+type = "word_document"
+title = "SecureProfit Hub — BOD Overview (DOCX)"

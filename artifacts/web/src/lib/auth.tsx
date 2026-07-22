@@ -18,26 +18,31 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [, setLocation] = useLocation();
-
-  useEffect(() => {
+// Read persisted credentials synchronously so the very first render already
+// knows whether the user is signed in. Reading them in an effect (the old
+// approach) meant render #1 always saw user=null, so ProtectedRoute bounced
+// every hard-refreshed deep link through /login and the user landed back on
+// the dashboard instead of the page they refreshed.
+function readStoredAuth(): { token: string | null; user: User | null } {
+  try {
     const storedToken = localStorage.getItem("auth_token");
     const storedUser = localStorage.getItem("auth_user");
-    
     if (storedToken && storedUser) {
-      try {
-        setToken(storedToken);
-        setUser(JSON.parse(storedUser));
-      } catch (e) {
-        console.error("Failed to parse stored user", e);
-        localStorage.removeItem("auth_token");
-        localStorage.removeItem("auth_user");
-      }
+      return { token: storedToken, user: JSON.parse(storedUser) as User };
     }
-  }, []);
+  } catch (e) {
+    console.error("Failed to parse stored user", e);
+    localStorage.removeItem("auth_token");
+    localStorage.removeItem("auth_user");
+  }
+  return { token: null, user: null };
+}
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [initial] = useState(readStoredAuth);
+  const [user, setUser] = useState<User | null>(initial.user);
+  const [token, setToken] = useState<string | null>(initial.token);
+  const [, setLocation] = useLocation();
 
   const login = (newToken: string, newUser: User) => {
     localStorage.setItem("auth_token", newToken);
