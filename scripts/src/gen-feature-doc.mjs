@@ -170,7 +170,7 @@ children.push(
     alignment: AlignmentType.CENTER,
     children: [
       new TextRun({
-        text: "Disusun: Juni 2026",
+        text: "Disusun: Juli 2026 (rev. 2)",
         color: GREY,
         size: 22,
       }),
@@ -227,6 +227,10 @@ children.push(
       ["Basis Data", "PostgreSQL (via Prisma)", "Penyimpanan data project, pengguna, timesheet, penagihan"],
       ["Kontrak API", "OpenAPI 3 + validasi skema", "Menjaga konsistensi data antara server dan antarmuka"],
       ["Integrasi", "Xero Accounting API (OAuth2)", "Penerbitan invoice & sinkronisasi pembayaran"],
+      ["Impor CRM", "Pipedrive API (satu arah)", "Mengimpor deal penjualan terbuka ke Sales Pipeline sebagai lead"],
+      ["Email", "Resend (email transaksional)", "Peringatan email opsional untuk notifikasi penting (saklar global on/off)"],
+      ["Briefing AI", "Narasi LLM di atas fakta hasil perhitungan sistem", "Halaman AI Executive Copilot untuk Management"],
+      ["Aplikasi mobile", "Expo (React Native)", "Aplikasi pendamping untuk mencatat waktu & biaya dari ponsel"],
     ],
     [22, 40, 38],
   ),
@@ -291,6 +295,12 @@ children.push(
     ),
   ]),
 );
+children.push(h3("Gerbang kesiapan (readiness gates) antar status"));
+children.push(p("Server memberlakukan daftar periksa pada setiap kenaikan status; bila ada yang kurang, perubahan status ditolak disertai daftar jelas apa saja yang harus dilengkapi:"));
+children.push(bullet([t("Menuju ACTIVE — ", true), t("data inti Overview terisi (klien, deskripsi, tanggal, nilai kontrak, manday rencana, estimasi biaya), PM sudah ditetapkan, minimal satu sumber daya, satu tugas, satu item RAID, dan termin penagihan berjumlah total 100%.")]));
+children.push(bullet([t("Menuju COMPLETE — ", true), t("semua tugas DONE, tidak ada timesheet atau biaya yang masih menunggu persetujuan, tidak ada termin penagihan berstatus PLANNED, tidak ada item RAID yang masih OPEN, dan minimal satu dokumen BAST. Saat COMPLETE, sistem otomatis menerbitkan tautan survei klien dan membuat pasangan umpan balik 360° (PM ↔ setiap anggota tim).")]));
+children.push(bullet([t("Menuju CLOSED — ", true), t("seluruh umpan balik 360° sudah dikirim, catatan lessons-learned terisi, dan (untuk project klien) minimal satu respons survei klien. Item daftar periksa penutupan mensyaratkan buktinya sebelum bisa ditandai selesai (BAST bertanda tangan, laporan akhir, invoice terbit).")]));
+children.push(p([t("Catatan: ", true), t("project non-klien (Internal / Presales / Training) dikecualikan dari persyaratan penagihan, BAST, dan survei.")]));
 
 // 5. FITUR PER MODUL
 children.push(h1("5. Fitur Utama per Modul"));
@@ -308,13 +318,14 @@ children.push(h2("5.2 Manajemen Project & Tab-tabnya"));
 children.push(p("Setiap project memiliki halaman detail dengan tab fungsional berikut:"));
 children.push(bullet([t("Overview — ", true), t("ringkasan & edit data inti melalui dialog 'Review & Save'.")]));
 children.push(bullet([t("Timeline (Gantt) — ", true), t("penjadwalan tugas dengan drag-and-drop, resize, dan panah dependensi.")]));
-children.push(bullet([t("Tasks (WBS) — ", true), t("struktur rincian kerja berjenjang, multi-assignee, dependensi finish-to-start, penanda billable.")]));
+children.push(bullet([t("Tasks (WBS) — ", true), t("struktur rincian kerja berjenjang, multi-assignee, dependensi finish-to-start, penanda billable, dan batas jam rencana (planned-hours cap) opsional per tugas (pencatatan melebihi batas akan ditolak).")]));
 children.push(bullet([t("Resources — ", true), t("staffing tim Konsultan & Technical Writer, Admin Project, dan sumber daya lain.")]));
 children.push(bullet([t("RAID — ", true), t("registrasi Risk, Assumption, Issue, Dependency (khusus tim delivery).")]));
 children.push(bullet([t("Expenses — ", true), t("biaya non-sumber daya dengan alur persetujuan; hanya yang APPROVED menambah biaya aktual.")]));
 children.push(bullet([t("Timesheets — ", true), t("seluruh entri waktu pada project, dengan KPI dan persetujuan massal.")]));
 children.push(bullet([t("Billing — ", true), t("Termin pembayaran (milestone) dengan %, DPP, PPN, total, jatuh tempo, dan status invoice.")]));
-children.push(bullet([t("Financials — ", true), t("biaya, profit, margin, burn rate, dan proyeksi (forecast).")]));
+children.push(bullet([t("Financials — ", true), t("biaya, profit, margin, burn rate, forecast, Profit Outlook, Health Score project, dan indikator Earned Value (EVM) terhadap baseline project.")]));
+children.push(bullet([t("Change Requests — ", true), t("perubahan formal lingkup/jadwal/biaya dengan alur DRAFT → APPROVED → APPLIED; penerapan perubahan jadwal atau biaya memperbarui project dan mencatat baseline baru.")]));
 children.push(bullet([t("Documents, Closing, Report, Survey, Workstreams, Activity — ", true), t("dokumen, penutupan, laporan project, survei pelanggan, alur kerja, dan jejak audit.")]));
 
 children.push(h2("5.3 Modul & Halaman Lain"));
@@ -332,7 +343,15 @@ children.push(
       ["VAT Recap", "Rekap PPN 12 bulan + tahunan dari invoice INVOICED/PAID."],
       ["Performance Reviews", "Penilaian kinerja dengan alur DRAFT → SUBMITTED → ACKNOWLEDGED."],
       ["Leaves & Org Chart", "Manajemen cuti dan bagan organisasi."],
-      ["Task Templates", "Template WBS yang dapat diterapkan ke project baru."],
+      ["Task & Project Templates", "Template WBS dan template project yang dapat diterapkan ke project baru."],
+      ["Sales Pipeline (Leads)", "Kanban lead dari kontak pertama hingga konversi menjadi project; deal terbuka dapat diimpor satu arah dari Pipedrive CRM."],
+      ["AI Executive Copilot", "Briefing AI khusus Management: kesehatan portofolio, sorotan risiko, dan Top 5 aksi. Angka dihitung sistem; AI hanya menarasikan."],
+      ["Portfolio Monitor & PM Dashboards", "Pemantauan read-only seluruh project komersial se-PMO, plus tampilan portofolio per PM."],
+      ["Business Intelligence & Top Performers", "Analitik manajemen lanjutan dan peringkat anggota tim berkinerja terbaik."],
+      ["Work Hours", "Pemantauan kepatuhan 40 jam per minggu; cuti yang disetujui menurunkan target mingguan."],
+      ["Survey Results & Template", "Hasil survei kepuasan klien (CSAT) dan template pertanyaan yang dapat diedit."],
+      ["Notifications", "Lonceng notifikasi dalam aplikasi untuk semua peran; kejadian penting juga dapat dikirim via email (saklar global diatur Management)."],
+      ["Aplikasi Mobile", "Aplikasi pendamping berbasis Expo untuk konsultan: catat timesheet dan biaya dari ponsel."],
     ],
     [34, 66],
   ),
@@ -349,11 +368,12 @@ children.push(h2("6.1 Biaya Sumber Daya (Resource Cost)"));
 children.push(p("Biaya tenaga kerja dihitung dari timesheet yang sudah DISETUJUI (APPROVED). Jam kerja dikonversi ke hari (manday) dengan basis 8 jam per hari, lalu dikalikan tarif harian sumber daya."));
 children.push(formula("hari (manday) = jam timesheet ÷ 8"));
 children.push(formula("resourceCost = Σ (hari × tarif_harian) untuk semua timesheet APPROVED"));
-children.push(p([t("Catatan: ", true), t("tarif yang dipakai adalah tarif pada penugasan project (ProjectResource); jika tidak ada, jatuh ke tarif harian default pengguna.")]));
+children.push(p([t("Catatan: ", true), t("setiap penugasan project menyimpan riwayat tarif (periode tarif dengan tanggal mulai berlaku). Timesheet dihitung memakai tarif yang berlaku pada tanggal kerjanya, sehingga perubahan tarif di tengah project tidak pernah mengubah harga pekerjaan yang sudah lewat. Bila belum ada periode tarif, tarif harian penugasan yang dipakai.")]));
 
 children.push(h2("6.2 Biaya Tambahan (Additional Cost)"));
 children.push(p("Biaya non-tenaga kerja (software, hardware, lisensi, perjalanan, lainnya). Hanya biaya berstatus APPROVED yang dihitung; biaya PENDING/REJECTED tetap terlihat untuk transparansi tetapi tidak menambah biaya."));
 children.push(formula("additionalCost = Σ amount untuk semua ProjectExpense APPROVED"));
+children.push(p([t("Kas bon (cash advance): ", true), t("biaya kas bon nantinya diselesaikan (settle) terhadap bukti pengeluaran aktual; setelah diselesaikan, nilai settlement (bukan nilai kas bon awal) yang dihitung sebagai biaya. Biaya purchase order menyertakan nomor PO.")]));
 
 children.push(h2("6.3 Biaya Aktual, Profit, dan Margin"));
 children.push(formula("actualCost   = resourceCost + additionalCost"));
@@ -395,14 +415,23 @@ children.push(p("Nomor invoice dialokasikan secara berurutan dan unik dengan for
 children.push(formula("INV/2026/06/0001 , INV/2026/06/0002 , ..."));
 children.push(p("Nomor dialokasikan di dalam transaksi yang aman dari tabrakan (race-safe), sehingga tidak ada nomor ganda meski beberapa invoice dibuat bersamaan."));
 
-children.push(h2("6.10 Proyeksi Biaya (Forecast)"));
-children.push(p("Forecast memproyeksikan biaya akhir secara linear berdasarkan laju pembakaran (burn rate) saat ini. Endpoint finansial mengagregasi timesheet yang disetujui per bulan dan membandingkannya dengan nilai kontrak yang disebar di sepanjang bulan-bulan aktif project."));
+children.push(h2("6.10 Proyeksi Biaya (Forecast) & Profit Outlook"));
+children.push(p("Satu mesin burn-rate memproyeksikan biaya akhir dari laju pekerjaan yang sudah disetujui: sistem menghitung rata-rata biaya per manday lalu memperluasnya ke total manday rencana. Bila belum ada pekerjaan yang disetujui, forecast memakai estimasi intake sebagai cadangan sehingga angka tidak pernah kosong pada project yang masih muda."));
+children.push(formula("forecastFinalCost = plannedMandays × avgCostPerManday + approvedExpenses\n(cadangan: estimasi biaya intake bila belum ada pekerjaan disetujui)"));
+children.push(p([t("Profit Outlook: ", true), t("tab Financials menampilkan tiga angka berdampingan — Estimasi Awal (dari intake), Aktual sejauh ini, dan Proyeksi saat selesai — dengan penanda status EARLY, PROFIT, THIN, atau LOSS RISK. Margin/Health membaca aktual-sejauh-ini sementara Outlook memproyeksikan hingga selesai, sehingga project muda bisa sah menampilkan margin tinggi sekaligus proyeksi rugi pada saat yang sama.")]));
 
 children.push(h2("6.11 Rekap PPN (VAT Recap)"));
 children.push(p("Rekap PPN menjumlahkan seluruh invoice berstatus INVOICED dan PAID ke dalam rincian 12 bulan + total tahunan, untuk kebutuhan pelaporan pajak."));
 
 children.push(h2("6.12 Utilisasi Sumber Daya"));
 children.push(p("Perencanaan sumber daya menampilkan beban manday per minggu per orang/unit bisnis, dengan memperhitungkan cuti (UserLeave). Ini dipakai untuk memantau utilisasi konsultan dan mengidentifikasi bench (kapasitas menganggur)."));
+
+children.push(h2("6.13 Earned Value (EVM) & Baseline"));
+children.push(p("Saat project diaktifkan, sistem merekam baseline (tanggal rencana, nilai, manday). Change request yang disetujui mencatat versi baseline baru. Terhadap baseline yang berlaku, aplikasi menghitung indikator earned-value standar:"));
+children.push(formula("CPI = earned value ÷ actual cost      (>1 = di bawah anggaran)\nSPI = earned value ÷ planned value    (>1 = lebih cepat dari jadwal)\nEAC = proyeksi total biaya saat selesai"));
+
+children.push(h2("6.14 Skor Kesehatan Project (Health Score)"));
+children.push(p("Setiap project berjalan mendapat skor kesehatan 0-100 yang dibangun dari lima komponen berbobot: erosi margin terhadap estimasi awal, item RAID terbuka berbobot dampak, biaya yang menunggu persetujuan, termin penagihan lewat jatuh tempo, dan hari lewat dari tanggal akhir rencana. Skor ditahan (tidak ditampilkan) selama project masih DRAFT/OBSERVATION atau sudah CLOSED. Skor ini menjadi dasar daftar project berisiko di dashboard Management, PM Dashboards, dan Portfolio Monitor."));
 
 // 7. CONTOH MENYELURUH
 children.push(new Paragraph({ children: [new PageBreak()] }));
