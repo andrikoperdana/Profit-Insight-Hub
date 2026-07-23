@@ -467,3 +467,9 @@ id = "Frlc7WsFeMUu1ckpr-pwX"
 uri = "file://dist/SecureProfit-Hub-Deployment-Guide-EN.docx"
 type = "word_document"
 title = "Deployment Guide (Word / .docx)"
+
+[[outputs]]
+id = "DOAVmCqBzHQRVPc4gbIKW"
+uri = "file://exports/SecureProfit-Hub-Integrations-Technical-Guide-EN.docx"
+type = "word_document"
+title = "Integrations Technical Guide (Xero, Pipedrive, AI Copilot)"
