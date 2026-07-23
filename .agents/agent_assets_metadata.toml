@@ -461,3 +461,9 @@ id = "fgIKass9Ge-clKMqrdcq_"
 uri = "file://dist/secureprofit-hub-db-2026-07-23.sql.gz"
 type = "unspecified"
 title = "Database Dump (448 KB)"
+
+[[outputs]]
+id = "Frlc7WsFeMUu1ckpr-pwX"
+uri = "file://dist/SecureProfit-Hub-Deployment-Guide-EN.docx"
+type = "word_document"
+title = "Deployment Guide (Word / .docx)"
