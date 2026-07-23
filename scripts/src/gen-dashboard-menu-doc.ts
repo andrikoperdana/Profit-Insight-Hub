@@ -225,6 +225,9 @@ function menuGroups(): MenuGroup[] {
         { label: "Business Units", roles: ["SA"], fn: t("Master data Business Unit (sisi Site Admin).", "Business Unit master data (Site Admin side).") },
         { label: "Skills", roles: ["SA"], fn: t("Master data daftar skill (sisi Site Admin).", "Skill list master data (Site Admin side).") },
         { label: "Business Intelligence", roles: ["MGMT"], fn: t("Analitik tingkat lanjut untuk manajemen.", "Advanced analytics for management.") },
+        { label: "PM Dashboards", roles: ["MGMT"], fn: t("Memantau portofolio setiap Project Manager secara sekilas — proyek, kesehatan, margin, dan antrian persetujuan (hanya-baca).", "Monitor each Project Manager's portfolio at a glance — projects, health, margin, and approval queue (read-only).") },
+        { label: "Portfolio Monitor", roles: ["MGMT"], fn: t("Pantauan PMO atas seluruh proyek komersial — penagihan, jam vs anggaran, margin estimasi vs aktual, penanda anomali, dan prakiraan invoice mingguan (hanya-baca).", "PMO-wide view of every commercial project — billing, hours vs budget, estimated vs actual margin, anomaly flags, and a weekly invoice forecast (read-only).") },
+        { label: "AI Executive Copilot", roles: ["MGMT"], fn: t("Ringkasan eksekutif yang dinarasikan AI: skor kesehatan portofolio, sorotan risiko, dan Top 5 aksi. Semua angka dihitung sistem (deterministik); AI hanya menyusun narasinya. Dibuat lewat tombol Generate.", "AI-narrated executive briefing: portfolio health score, risk highlights, and Top 5 actions. All numbers are computed by the system (deterministic); the AI only writes the narrative. Generated on demand via a Generate button.") },
         { label: "Top Performers", roles: ["MGMT", "PRIN"], fn: t("Daftar anggota tim berkinerja terbaik.", "List of top-performing team members.") },
         { label: "VAT Recap", roles: ["MGMT", "FIN"], fn: t("Rekap PPN dari milestone yang sudah INVOICED/PAID per tahun.", "VAT recap from INVOICED/PAID milestones per year.") },
         { label: "Invoice Settings", roles: ["MGMT", "FIN"], fn: t("Pengaturan data perusahaan & bank yang muncul di invoice.", "Company & bank details that appear on invoices.") },
@@ -236,7 +239,7 @@ function menuGroups(): MenuGroup[] {
     {
       heading: t("BAWAH (selalu tampil)", "FOOTER (always shown)"),
       items: [
-        { label: "Settings", roles: ["ALL"], fn: t("Pengaturan akun & preferensi pribadi.", "Personal account & preferences settings.") },
+        { label: "Settings", roles: ["ALL"], fn: t("Pengaturan akun & preferensi pribadi. Khusus Management ada saklar Email Notifications untuk mengaktifkan/mematikan notifikasi email seluruh sistem.", "Personal account & preferences settings. Management additionally sees an Email Notifications switch that turns system-wide email notifications on/off.") },
         { label: "Logout", roles: ["ALL"], fn: t("Keluar dari aplikasi.", "Sign out of the application.") },
       ],
     },
@@ -274,6 +277,9 @@ function matrixRows(): { label: string; roles: Set<string> }[] {
     { label: "Business Units", roles: expand(["HR", "SA"]) },
     { label: "Skills", roles: expand(["HR", "SA"]) },
     { label: "Business Intelligence", roles: expand(["MGMT"]) },
+    { label: "PM Dashboards", roles: expand(["MGMT"]) },
+    { label: "Portfolio Monitor", roles: expand(["MGMT"]) },
+    { label: "AI Executive Copilot", roles: expand(["MGMT"]) },
     { label: "Top Performers", roles: expand(["MGMT", "PRIN"]) },
     { label: "VAT Recap", roles: expand(["MGMT", "FIN"]) },
     { label: "Invoice Settings", roles: expand(["MGMT", "FIN"]) },
@@ -308,7 +314,7 @@ function cover(): Paragraph[] {
     }),
     new Paragraph({
       alignment: AlignmentType.CENTER,
-      children: [new TextRun({ text: t("Versi 1.3", "Version 1.3"), size: 22, font: FONT })],
+      children: [new TextRun({ text: t("Versi 1.4", "Version 1.4"), size: 22, font: FONT })],
     }),
     new Paragraph({
       alignment: AlignmentType.CENTER,
@@ -333,6 +339,10 @@ function intro(): (Paragraph | Table)[] {
     bullet(t(
       "Nama menu dalam aplikasi memakai Bahasa Inggris, jadi nama menu tetap ditulis apa adanya pada dokumen ini.",
       "Menu names inside the app are in English, so menu names are kept verbatim in this document.",
+    )),
+    bullet(t(
+      "Di header (kanan atas) terdapat ikon lonceng Notifications untuk semua role: berisi pemberitahuan dalam aplikasi (mis. timesheet disetujui/ditolak, pengingat approval). Untuk kejadian penting, sistem juga dapat mengirim email bila fitur email dinyalakan oleh Management.",
+      "The header (top right) has a Notifications bell for all roles: it holds in-app notices (e.g. timesheet approved/rejected, approval reminders). For important events the system can also send an email when Management has enabled the email feature.",
     )),
   ];
 }

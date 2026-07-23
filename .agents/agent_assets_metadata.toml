@@ -322,7 +322,7 @@ title = "Referensi Fitur & Perhitungan (Indonesia)"
 id = "3RjFVUzkfHDtI6kmwTgZQ"
 uri = "file://exports/SecureProfit-Hub-Features-and-Calculations-EN.docx"
 type = "word_document"
-title = "Feature & Calculation Reference (English)"
+title = "Features & Calculations (EN) — July 2026"
 
 [[outputs]]
 id = "OjGb-ZYqAasdXoqgEC6f5"
@@ -364,13 +364,13 @@ title = "Project Flow Guide (English) — Edition 8 June 2026"
 id = "Quhs-ORQwAEsrWJBCvMPA"
 uri = "file://exports/SecureProfitHub-Dashboard-Menu-Guide-ID.docx"
 type = "word_document"
-title = "Panduan Dashboard & Menu (Indonesia) — Versi 1.3"
+title = "Panduan Dashboard & Menu (ID) — v1.4"
 
 [[outputs]]
 id = "xHjOW1_-RUH7OEFjM_YyY"
 uri = "file://exports/SecureProfitHub-Dashboard-Menu-Guide-EN.docx"
 type = "word_document"
-title = "Dashboard & Menu Guide (English) — Version 1.3"
+title = "Dashboard & Menu Guide (EN) — v1.4"
 
 [[outputs]]
 id = "7-SHnDXlRUL7rKbetBX2p"

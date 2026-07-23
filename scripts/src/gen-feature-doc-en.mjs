@@ -158,7 +158,7 @@ function cover(subtitle, tag) {
     }),
     new Paragraph({
       alignment: AlignmentType.CENTER,
-      children: [new TextRun({ text: "Prepared: June 2026", color: GREY, size: 22 })],
+      children: [new TextRun({ text: "Prepared: July 2026 (rev. 2)", color: GREY, size: 22 })],
     }),
     new Paragraph({ children: [new PageBreak()] }),
   ];
@@ -213,6 +213,10 @@ full.push(
       ["Database", "PostgreSQL (via Prisma)", "Stores projects, users, timesheets, and billing"],
       ["API contract", "OpenAPI 3 + schema validation", "Keeps data consistent between server and interface"],
       ["Integration", "Xero Accounting API (OAuth2)", "Invoice issuance & payment synchronization"],
+      ["CRM import", "Pipedrive API (one-way)", "Imports open sales deals into the Sales Pipeline as leads"],
+      ["Email", "Resend (transactional email)", "Optional email alerts for important notifications (global on/off switch)"],
+      ["AI briefing", "LLM narration over system-computed facts", "AI Executive Copilot page for Management"],
+      ["Mobile app", "Expo (React Native)", "Companion app for logging time and expenses on the go"],
     ],
     [22, 40, 38],
   ),
@@ -267,6 +271,12 @@ full.push(
     t("a project can only be invoiced once it is ACTIVE or later (ACTIVE, PAUSE, COMPLETE, CLOSED). Projects still in DRAFT or OBSERVATION — i.e. not yet running — cannot issue invoices, push to Xero, or be marked INVOICED/PAID."),
   ]),
 );
+full.push(h3("Readiness gates between statuses"));
+full.push(p("The server enforces a checklist at each promotion; if anything is missing, the status change is rejected with a clear list of what to complete:"));
+full.push(bullet([t("To ACTIVE — ", true), t("core Overview data filled (client, description, dates, contract value, planned mandays, estimated cost), a PM assigned, at least one resource, one task, one RAID item, and billing milestones totaling 100%.")]));
+full.push(bullet([t("To COMPLETE — ", true), t("all tasks DONE, no timesheets or expenses still awaiting approval, no PLANNED billing milestone, no OPEN RAID item, and at least one BAST document. On completion the system automatically issues the client-survey link and creates 360° peer-feedback pairs (PM ↔ each team member).")]));
+full.push(bullet([t("To CLOSED — ", true), t("all 360° feedback submitted, the lessons-learned note filled, and (for client projects) at least one client survey response. Closing-checklist items require their evidence before they can be marked done (signed BAST, final report, issued invoice).")]));
+full.push(p([t("Note: ", true), t("non-client projects (Internal / Presales / Training) skip the billing, BAST, and survey requirements.")]));
 
 full.push(h1("5. Core Features by Module"));
 full.push(h2("5.1 Role-Based Dashboards"));
@@ -282,13 +292,14 @@ full.push(h2("5.2 Project Management & Its Tabs"));
 full.push(p("Each project has a detail page with the following functional tabs:"));
 full.push(bullet([t("Overview — ", true), t("summary & editing of core data via a 'Review & Save' dialog.")]));
 full.push(bullet([t("Timeline (Gantt) — ", true), t("task scheduling with drag-and-drop, resize, and dependency arrows.")]));
-full.push(bullet([t("Tasks (WBS) — ", true), t("hierarchical work breakdown, multi-assignee, finish-to-start dependencies, billable flag.")]));
+full.push(bullet([t("Tasks (WBS) — ", true), t("hierarchical work breakdown, multi-assignee, finish-to-start dependencies, billable flag, and an optional planned-hours cap per task (logging beyond the cap is blocked).")]));
 full.push(bullet([t("Resources — ", true), t("staffing of Consultant & Technical Writer teams, Project Admin, and other resources.")]));
 full.push(bullet([t("RAID — ", true), t("register of Risk, Assumption, Issue, Dependency (delivery team only).")]));
 full.push(bullet([t("Expenses — ", true), t("non-resource costs with an approval flow; only APPROVED items add to actual cost.")]));
 full.push(bullet([t("Timesheets — ", true), t("all time entries on the project, with KPIs and bulk approval.")]));
 full.push(bullet([t("Billing — ", true), t("payment milestones with %, DPP, VAT, total, due date, and invoice status.")]));
-full.push(bullet([t("Financials — ", true), t("cost, profit, margin, burn rate, and forecast.")]));
+full.push(bullet([t("Financials — ", true), t("cost, profit, margin, burn rate, forecast, Profit Outlook, project Health Score, and Earned Value (EVM) indicators against the project baseline.")]));
+full.push(bullet([t("Change Requests — ", true), t("formal scope/schedule/cost changes with a DRAFT → APPROVED → APPLIED flow; applying a schedule or cost change updates the project and records a new baseline.")]));
 full.push(bullet([t("Documents, Closing, Report, Survey, Workstreams, Activity — ", true), t("documents, closing, project reports, customer survey, workstreams, and audit trail.")]));
 
 full.push(h2("5.3 Other Modules & Pages"));
@@ -306,7 +317,15 @@ full.push(
       ["VAT Recap", "12-month + annual VAT recap from INVOICED/PAID invoices."],
       ["Performance Reviews", "Performance appraisal with DRAFT -> SUBMITTED -> ACKNOWLEDGED flow."],
       ["Leaves & Org Chart", "Leave management and organization chart."],
-      ["Task Templates", "Reusable WBS templates applied to new projects."],
+      ["Task & Project Templates", "Reusable WBS and project templates applied to new projects."],
+      ["Sales Pipeline (Leads)", "Lead kanban from first contact to conversion into a project; open deals can be imported one-way from Pipedrive CRM."],
+      ["AI Executive Copilot", "Management-only AI briefing: portfolio health, risk highlights, and Top 5 actions. Numbers are system-computed; the AI only narrates."],
+      ["Portfolio Monitor & PM Dashboards", "PMO-wide read-only monitoring of every commercial project, plus a per-PM portfolio view."],
+      ["Business Intelligence & Top Performers", "Advanced management analytics and a ranking of top-performing team members."],
+      ["Work Hours", "40-hours-per-week compliance tracking; approved leave lowers the weekly target."],
+      ["Survey Results & Template", "Client satisfaction (CSAT) survey results and the editable question template."],
+      ["Notifications", "In-app notification bell for all roles; important events can also be emailed (global switch controlled by Management)."],
+      ["Mobile app", "Expo-based companion app for consultants: log timesheets and expenses from a phone."],
     ],
     [34, 66],
   ),
@@ -320,11 +339,12 @@ full.push(h2("6.1 Resource Cost"));
 full.push(p("Labor cost is computed from APPROVED timesheets. Logged hours are converted to days (mandays) on an 8-hour-per-day basis, then multiplied by the resource's daily rate."));
 full.push(formula("days (manday) = timesheet hours / 8"));
 full.push(formula("resourceCost = SUM( days x daily_rate ) for all APPROVED timesheets"));
-full.push(p([t("Note: ", true), t("the rate used is the rate on the project assignment (ProjectResource); if absent, it falls back to the user's default daily rate.")]));
+full.push(p([t("Note: ", true), t("each project assignment keeps a rate history (rate periods with an effective-from date). A timesheet is costed at the rate in effect on its work date, so changing a rate mid-project never reprices past work. If no rate period exists, the assignment's daily rate is used.")]));
 
 full.push(h2("6.2 Additional Cost"));
 full.push(p("Non-labor costs (software, hardware, license, travel, other). Only APPROVED expenses count; PENDING/REJECTED items remain visible for transparency but do not add to cost."));
 full.push(formula("additionalCost = SUM( amount ) for all APPROVED ProjectExpense"));
+full.push(p([t("Cash advance: ", true), t("a cash-advance expense is later settled against actual receipts; once settled, the settled amount (not the original advance) is what counts toward cost. Purchase-order expenses carry a PO number.")]));
 
 full.push(h2("6.3 Actual Cost, Profit, and Margin"));
 full.push(formula("actualCost   = resourceCost + additionalCost"));
@@ -366,14 +386,23 @@ full.push(p("Invoice numbers are allocated sequentially and uniquely with a year
 full.push(formula("INV/2026/06/0001 , INV/2026/06/0002 , ..."));
 full.push(p("Numbers are allocated inside a race-safe transaction, so no duplicate numbers occur even when several invoices are created at once."));
 
-full.push(h2("6.10 Cost Forecast"));
-full.push(p("The forecast linearly projects final cost from the current burn rate. The financial endpoint aggregates approved timesheets per month and compares them against the contract value spread across the project's active months."));
+full.push(h2("6.10 Cost Forecast & Profit Outlook"));
+full.push(p("A single burn-rate engine projects the final cost from the pace of approved work so far: it derives the average cost per manday and extends it to the planned total. When no work has been approved yet, the forecast falls back to the intake estimate so the numbers never disappear on a young project."));
+full.push(formula("forecastFinalCost = plannedMandays x avgCostPerManday + approvedExpenses\n(fallback: intake estimated cost when no approved work yet)"));
+full.push(p([t("Profit Outlook: ", true), t("the Financials tab shows three figures side by side — Initial Estimate (from intake), Actual so far, and Projected at completion — with a status flag of EARLY, PROFIT, THIN, or LOSS RISK. Margin/Health read actuals-so-far while the Outlook projects to completion, so a young project can legitimately show a high current margin and a projected loss at the same time.")]));
 
 full.push(h2("6.11 VAT Recap"));
 full.push(p("The VAT recap sums all INVOICED and PAID invoices into a 12-month + annual breakdown for tax reporting."));
 
 full.push(h2("6.12 Resource Utilization"));
 full.push(p("Resource planning shows the manday load per week per person/business unit, accounting for leave (UserLeave). This is used to track consultant utilization and identify bench (idle capacity)."));
+
+full.push(h2("6.13 Earned Value (EVM) & Baseline"));
+full.push(p("When a project is activated, the system captures a baseline (planned dates, value, mandays). Approved change requests record a new baseline version. Against the current baseline, the application computes standard earned-value indicators:"));
+full.push(formula("CPI = earned value / actual cost      (>1 = under budget)\nSPI = earned value / planned value    (>1 = ahead of schedule)\nEAC = projected total cost at completion"));
+
+full.push(h2("6.14 Project Health Score"));
+full.push(p("Each running project gets a 0-100 health score built from five weighted components: margin erosion versus the initial estimate, open RAID items weighted by impact, expenses awaiting approval, overdue billing milestones, and days past the planned end date. The score is withheld while a project is still in DRAFT/OBSERVATION or already CLOSED. It powers the at-risk lists on the Management dashboard, PM Dashboards, and Portfolio Monitor."));
 
 full.push(new Paragraph({ children: [new PageBreak()] }));
 full.push(h1("7. End-to-End Worked Example"));
@@ -527,7 +556,7 @@ ex.push(
     spacing: { after: 160 },
     children: [
       new TextRun({
-        text: "Project & Profitability Management System for IT Security Consulting — June 2026",
+        text: "Project & Profitability Management System for IT Security Consulting — July 2026",
         italics: true,
         color: GREY,
         size: 20,
