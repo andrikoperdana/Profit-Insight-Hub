@@ -159,7 +159,7 @@ export default function Login() {
 
         <Card className="border-border/30 bg-muted/30">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm text-muted-foreground uppercase tracking-wider">Test Credentials (password123)</CardTitle>
+            <CardTitle className="text-sm text-muted-foreground tracking-wider"><span className="uppercase">Test Credentials</span> (password: password123)</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-2 gap-2 text-xs">
             {seedUsers.map((u) => (
