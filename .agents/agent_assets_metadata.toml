@@ -304,7 +304,7 @@ title = "Buku Panduan Pengguna (Updated)"
 id = "r7kPcIfhElLm3JapljemK"
 uri = "file://exports/USER_MANUAL_ID.docx"
 type = "word_document"
-title = "Buku Panduan Pengguna (MS Word)"
+title = "User Manual (ID, versi Mei)"
 
 [[outputs]]
 id = "68ogdM9E7HLv4dQhfdMvV"
@@ -322,7 +322,7 @@ title = "Referensi Fitur & Perhitungan (Indonesia)"
 id = "3RjFVUzkfHDtI6kmwTgZQ"
 uri = "file://exports/SecureProfit-Hub-Features-and-Calculations-EN.docx"
 type = "word_document"
-title = "Features & Calculations (EN) — July 2026"
+title = "Features & Calculations (EN, terbaru)"
 
 [[outputs]]
 id = "OjGb-ZYqAasdXoqgEC6f5"
@@ -364,7 +364,7 @@ title = "Project Flow Guide (English) — Edition 8 June 2026"
 id = "Quhs-ORQwAEsrWJBCvMPA"
 uri = "file://exports/SecureProfitHub-Dashboard-Menu-Guide-ID.docx"
 type = "word_document"
-title = "Panduan Dashboard & Menu (ID) — v1.4"
+title = "Panduan Menu & Dashboard (ID)"
 
 [[outputs]]
 id = "xHjOW1_-RUH7OEFjM_YyY"
