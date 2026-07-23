@@ -443,3 +443,21 @@ id = "z1CH_bhc0wm4QPV_MuG0s"
 uri = "file://scripts/exports/SecureProfit-Hub-Release-Notes-July-2026.docx"
 type = "word_document"
 title = "SecureProfit Hub — Release Notes, July 2026 (EN)"
+
+[[outputs]]
+id = "nJK9YtCs5hBr74UfjqUdB"
+uri = "file://DEPLOY-LOCAL-EN.md"
+type = "text"
+title = "Deployment Guide (English)"
+
+[[outputs]]
+id = "tIAJKNRcchWmSuvKjyGso"
+uri = "file://dist/secureprofit-hub-source-2026-07-23.tar.gz"
+type = "unspecified"
+title = "Source Code Archive (40 MB)"
+
+[[outputs]]
+id = "fgIKass9Ge-clKMqrdcq_"
+uri = "file://dist/secureprofit-hub-db-2026-07-23.sql.gz"
+type = "unspecified"
+title = "Database Dump (448 KB)"

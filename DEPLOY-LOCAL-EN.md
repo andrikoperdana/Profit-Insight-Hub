@@ -89,11 +89,16 @@ sudo npm install -g pnpm
 pnpm --version    # 9.x or newer
 ```
 
-### C. PostgreSQL
+### C. PostgreSQL 16
+
+> **Version matters.** Ubuntu 22.04's default `postgresql` package is version 14, but the database dump was taken from PostgreSQL 16 and may not restore cleanly into 14. Install PostgreSQL 16 from the official PostgreSQL repository:
 
 ```bash
-sudo apt install -y postgresql postgresql-contrib
+sudo apt install -y postgresql-common
+sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+sudo apt install -y postgresql-16
 sudo systemctl enable --now postgresql
+psql --version    # should print 16.x
 ```
 
 ### D. Nginx and PM2
@@ -206,7 +211,11 @@ Upload `secureprofit-hub-db-2026-07-23.sql.gz` to the server, then:
 gunzip -c secureprofit-hub-db-2026-07-23.sql.gz | psql -U secureprofit_user -d secureprofit_db -h localhost
 ```
 
-This restores the **complete production database** — all tables, all data (users, projects, timesheets, leads, documents metadata, settings), and Prisma's migration history. You do **not** need to run migrations or seeds after restoring.
+This restores the **complete production database** — all tables, all data (users, projects, timesheets, leads, settings), and Prisma's migration history. You do **not** need to run migrations or seeds after restoring.
+
+> **Documents are included.** All uploaded documents (BAST, invoices, contracts, reports) are stored inside the database itself, so they come along with this restore — no separate file migration is needed.
+>
+> The dump may also create a small extra schema named `_system` (an artifact of the cloud database provider). It is harmless and can be ignored or dropped.
 
 > **Fresh install alternative (empty database, demo accounts only):** skip the restore and instead run:
 >
@@ -234,10 +243,10 @@ pnpm --filter @workspace/db run generate
 pnpm --filter @workspace/api-server run build
 
 # Build the web frontend (served from the site root)
-BASE_PATH=/ pnpm --filter @workspace/web run build
+PORT=3000 BASE_PATH=/ pnpm --filter @workspace/web run build
 ```
 
-> The web build **requires** `BASE_PATH`. For a standard local install serving the app at the root of the domain, use `BASE_PATH=/` exactly as shown.
+> The web build **requires** both `BASE_PATH` and `PORT` to be set or it exits with an error. `BASE_PATH=/` is correct for a standard install at the root of the domain. `PORT` is only used by the dev server config and does not affect the built files — any valid number works.
 
 ### B. Run the API server with PM2
 
@@ -270,6 +279,8 @@ pm2 start ecosystem.config.cjs
 pm2 status                     # secureprofit-api should be "online"
 curl http://localhost:8080/api/healthz    # should answer ok
 ```
+
+> **Uploads folder.** The API creates an `uploads/` folder in its working directory (with this setup: `/home/secureprofit/secureprofit/uploads`). Documents are currently stored inside the database, so this folder usually stays empty, but keep it in mind if it ever contains files — the backup script in step 12 covers it.
 
 ### C. Auto-start on reboot
 
@@ -401,8 +412,11 @@ nano /home/secureprofit/backup-db.sh
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 BACKUP_DIR=/home/secureprofit/backups
 PGPASSWORD='CHANGE_ME_STRONG_PASSWORD' pg_dump -U secureprofit_user -h localhost secureprofit_db | gzip > $BACKUP_DIR/secureprofit_$TIMESTAMP.sql.gz
+# also back up the uploads folder if it has any files
+tar -czf $BACKUP_DIR/uploads_$TIMESTAMP.tar.gz -C /home/secureprofit/secureprofit uploads 2>/dev/null
 # delete backups older than 30 days
 find $BACKUP_DIR -name "*.sql.gz" -mtime +30 -delete
+find $BACKUP_DIR -name "uploads_*.tar.gz" -mtime +30 -delete
 ```
 
 ```bash
@@ -437,7 +451,7 @@ pnpm install                                          # update packages
 pnpm --filter @workspace/db run generate              # regenerate Prisma client
 pnpm --filter @workspace/db run migrate:deploy        # apply DB schema changes
 pnpm --filter @workspace/api-server run build
-BASE_PATH=/ pnpm --filter @workspace/web run build
+PORT=3000 BASE_PATH=/ pnpm --filter @workspace/web run build
 pm2 restart secureprofit-api
 ```
 
@@ -543,6 +557,7 @@ echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 | `INVOICE_COMPANY_NAME` / `INVOICE_BRAND` / `INVOICE_COMPANY_ADDRESS` / `INVOICE_COMPANY_NPWP` / `INVOICE_COMPANY_EMAIL` / `INVOICE_COMPANY_PHONE` / `INVOICE_CITY` / `INVOICE_BANK_NAME` / `INVOICE_BANK_ACCOUNT_NAME` / `INVOICE_BANK_ACCOUNT_NUMBER` | Company details printed on generated invoice PDFs |
 | `LOG_LEVEL` | Pino log level (default `info`) |
 | `DB_USE_PGBOUNCER` | Only needed for pooled cloud databases (leave unset locally) |
+| `SEED_ON_BOOT` | **Never set this on a production-restored database.** When `true`, the server injects demo/sample data on startup |
 
 ### Build-time (web frontend)
 
