@@ -174,8 +174,8 @@ overrides:
   "vite>picomatch": "^4.0.4"
   # GHSA-q8mj-m7cp-5q26: qs DoS via stringify with null values
   qs: "^6.15.2"
-  # GHSA-v39h-62p7-jpjc / GHSA-q3j6-qgpj-74h6: fast-uri path traversal / host confusion
-  fast-uri: "^3.1.2"
+  # GHSA-4c8g-83qw-93j6 / GHSA-v2hh-gcrm-f6hx: fast-uri IDN canonicalization + backslash host confusion
+  fast-uri: "^3.1.4"
   # GHSA-qx2v-qp2m-jg93: PostCSS XSS via unescaped </style>
   postcss: "^8.5.10"
   # GHSA-w5hq-g745-h8pq: uuid missing buffer bounds check in v3/v5/v6
@@ -186,8 +186,8 @@ overrides:
   "router>path-to-regexp": "^8.4.0"
   # GHSA-48c2-rrv3-qjmp: yaml prototype pollution / ReDoS
   yaml: "^2.8.3"
-  # GHSA-f886-m6hf-6m8v: brace-expansion zero-step sequence hangs
-  brace-expansion: "^2.0.3"
+  # GHSA-f886-m6hf-6m8v / GHSA-3jxr-9vmj-r5cp: brace-expansion zero-step hang + exponential DoS
+  brace-expansion: "^2.1.2"
   # GHSA-f23m-r3pf-42rh / GHSA-r5fr-rjxr-66jc: lodash prototype pollution / code injection
   lodash: "^4.18.0"
   # GHSA-ph9p-34f9-6g65: tmp predictable temp-file names (symlink attack)
@@ -197,17 +197,25 @@ overrides:
   multer: "^2.2.0"
   # GHSA-hmw2-7cc7-3qxx: form-data CRLF injection via unescaped field names/filenames
   form-data: "^4.0.6"
-  # GHSA-76mc-f452-cxcm / GHSA-hpcv-96wg-7vj8 / GHSA-r47g-fvhr-h676 / GHSA-rp9w-3fw7-7cwq / GHSA-vxr8-fq34-vvx9 / GHSA-gvmj-g25r-r7wr: multiple DOMPurify XSS bypasses
-  # Note: GHSA-x4vx-rjvf-j5p4 has no upstream patch; all others are fixed in >=3.4.9
-  dompurify: "^3.4.9"
+  # GHSA-76mc-f452-cxcm / GHSA-hpcv-96wg-7vj8 / GHSA-r47g-fvhr-h676 / GHSA-rp9w-3fw7-7cwq / GHSA-vxr8-fq34-vvx9 / GHSA-gvmj-g25r-r7wr / GHSA-c2j3-45gr-mqc4: multiple DOMPurify XSS bypasses
+  # Note: GHSA-x4vx-rjvf-j5p4 has no upstream patch; all others are fixed in >=3.4.12
+  dompurify: "^3.4.12"
   # GHSA-4x5r-pxfx-6jf8: @babel/core arbitrary file read via sourceMappingURL comment
   "@babel/core": "^7.29.6"
-  # GHSA-h67p-54hq-rp68: js-yaml quadratic-complexity DoS in merge key handling
-  js-yaml: "^4.2.0"
+  # GHSA-h67p-54hq-rp68 / GHSA-52cp-r559-cp3m: js-yaml quadratic-complexity DoS in merge key handling
+  js-yaml: "^4.3.0"
   # GHSA-6v5v-wf23-fmfq: markdown-it quadratic complexity DoS in smartquotes rule
   markdown-it: "^14.2.0"
   # GHSA-g8m3-5g58-fq7m / GHSA-vxpw-j846-p89q / GHSA-p88m-4jfj-68fv / GHSA-35p6-xmwp-9g52: undici CVEs in 6.26.0
   undici: "^6.27.0"
+  # GHSA-23hp-3jrh-7fpw / GHSA-8x88-c5mf-7j5w / GHSA-gvwx-54wh-qm9j / GHSA-w8wr-v893-vjvp: node-tar DoS + infinite loop + PAX crash
+  tar: ">=7.5.19"
+  # GHSA-395f-4hp3-45gv: shell-quote quadratic-complexity DoS in parse()
+  shell-quote: ">=1.9.0"
+  # GHSA-v245-v573-v5vm: linkify-it quadratic-complexity DoS in mailto: validator
+  linkify-it: ">=5.0.2"
+  # GHSA-v422-hmwv-36x6: body-parser DoS when invalid limit value disables size enforcement
+  body-parser: "^2.3.0"
 
 packageExtensions:
   # react-native-worklets@0.5.x's babel plugin does a bare `require("@babel/generator")`
