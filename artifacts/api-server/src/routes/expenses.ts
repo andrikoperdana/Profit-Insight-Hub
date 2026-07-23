@@ -63,6 +63,8 @@ const ALLOWED_CATEGORIES = new Set([
   "HARDWARE",
   "LICENSE",
   "TRAVEL",
+  "CASH_ADVANCE",
+  "PURCHASE_ORDER",
   "OTHER",
 ]);
 
@@ -81,6 +83,11 @@ function serializeExpense(e: {
   approvedAt?: Date | null;
   rejectionReason?: string | null;
   approvedBy?: { name: string } | null;
+  poNumber?: string | null;
+  settledAmount?: number | null;
+  settledAt?: Date | null;
+  settlementNotes?: string | null;
+  settledBy?: { name: string } | null;
   createdById: string | null;
   createdBy?: { name: string } | null;
   createdAt: Date;
@@ -104,6 +111,11 @@ function serializeExpense(e: {
     approvedByName: e.approvedBy?.name ?? null,
     approvedAt: e.approvedAt ? e.approvedAt.toISOString() : null,
     rejectionReason: e.rejectionReason ?? null,
+    poNumber: e.poNumber ?? null,
+    settledAmount: e.settledAmount ?? null,
+    settledAt: e.settledAt ? e.settledAt.toISOString() : null,
+    settlementNotes: e.settlementNotes ?? null,
+    settledByName: e.settledBy?.name ?? null,
     createdById: e.createdById,
     createdByName: e.createdBy?.name ?? null,
     createdAt: e.createdAt.toISOString(),
@@ -113,6 +125,7 @@ function serializeExpense(e: {
 const expenseInclude = {
   createdBy: { select: { name: true } },
   approvedBy: { select: { name: true } },
+  settledBy: { select: { name: true } },
 } as const;
 
 const ALLOWED_EVIDENCE_MIME = /^data:(application\/pdf|image\/(png|jpe?g|webp));base64,/i;
@@ -257,7 +270,7 @@ router.post(
       }
     }
 
-    const { category, description, amount, spentAt, evidenceUrl, evidenceFileName, workstreamId } = req.body || {};
+    const { category, description, amount, spentAt, evidenceUrl, evidenceFileName, workstreamId, poNumber } = req.body || {};
     const wsCheck = await validateWorkstreamId(projectId, workstreamId);
     if (!wsCheck.ok) {
       res.status(400).json({ error: wsCheck.error });
@@ -313,11 +326,14 @@ router.post(
     // self-approval round-trip would just be busywork). All other roles enter
     // PENDING and require a PM/MGMT to approve before it counts as cost.
     const isAutoApproved = role === "MANAGEMENT" || role === "SUPER_ADMIN";
+    const poNumberClean =
+      typeof poNumber === "string" && poNumber.trim() ? poNumber.trim().slice(0, 100) : null;
     const expense = await prisma.projectExpense.create({
       data: {
         projectId,
         workstreamId: wsCheck.workstreamId,
         category: String(category),
+        poNumber: poNumberClean,
         description: desc,
         amount: amt,
         spentAt: spentDate,
@@ -526,6 +542,71 @@ router.post(
       description: `Approved expense (${updated.category}) ${updated.description} = ${updated.amount}`,
       before: { status: before.status },
       after: { status: updated.status, approvedById: updated.approvedById, amount: updated.amount },
+    });
+    res.json(serializeExpense(updated as any));
+  },
+);
+
+// Settle an APPROVED cash advance — MGMT or the project's PM only. The
+// settled (actual) amount replaces the advance amount in project cost.
+router.post(
+  "/expenses/:expenseId/settle",
+  requireRole(...approverRoles),
+  async (req, res) => {
+    const userId = req.user!.sub;
+    const role = req.user!.role;
+    const before = await prisma.projectExpense.findUnique({
+      where: { id: String(req.params.expenseId) },
+      include: {
+        ...expenseInclude,
+        project: { select: { pmId: true, code: true, name: true, client: { select: { name: true } } } },
+      },
+    });
+    if (!before) {
+      res.status(404).json({ error: "Expense not found" });
+      return;
+    }
+    if (role === "PROJECT_MANAGER" && before.project.pmId !== userId) {
+      res.status(403).json({ error: "Project Manager can only settle expenses on assigned projects" });
+      return;
+    }
+    if (before.category !== "CASH_ADVANCE") {
+      res.status(400).json({ error: "Only cash advance expenses can be settled" });
+      return;
+    }
+    if (before.status !== "APPROVED") {
+      res.status(409).json({ error: `Cannot settle an expense in ${before.status} state` });
+      return;
+    }
+    const settled = Number(req.body?.settledAmount);
+    if (!isFinite(settled) || settled < 0) {
+      res.status(400).json({ error: "settledAmount must be a non-negative number" });
+      return;
+    }
+    const notes =
+      typeof req.body?.settlementNotes === "string" && req.body.settlementNotes.trim()
+        ? req.body.settlementNotes.trim().slice(0, 500)
+        : null;
+    const updated = await prisma.projectExpense.update({
+      where: { id: before.id },
+      data: {
+        settledAmount: settled,
+        settledAt: new Date(),
+        settledById: userId,
+        settlementNotes: notes,
+      },
+      include: {
+        ...expenseInclude,
+        project: { select: { pmId: true, code: true, name: true, client: { select: { name: true } } } },
+      },
+    });
+    await recordAudit(req, {
+      action: "expense.settled",
+      entityType: "ProjectExpense",
+      entityId: updated.id,
+      description: `Settled cash advance ${updated.description}: advance ${updated.amount} → actual ${settled}`,
+      before: { settledAmount: before.settledAmount },
+      after: { settledAmount: settled, settledById: userId },
     });
     res.json(serializeExpense(updated as any));
   },

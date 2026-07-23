@@ -87,6 +87,7 @@ router.post("/projects/:id/tasks", validateBody(CreateProjectTaskBody), async (r
     assigneeIds: rawAssigneeIds,
     progressPercent,
     billable,
+    plannedHours,
     parentTaskId,
     dependencyTaskIds: rawDependencyIds,
     workstreamId,
@@ -95,6 +96,15 @@ router.post("/projects/:id/tasks", validateBody(CreateProjectTaskBody), async (r
   if (!trimmedTitle) {
     res.status(400).json({ error: "title required" });
     return;
+  }
+  let plannedHoursClean: number | null = null;
+  if (plannedHours !== undefined && plannedHours !== null && plannedHours !== "") {
+    const ph = Number(plannedHours);
+    if (!isFinite(ph) || ph <= 0) {
+      res.status(400).json({ error: "plannedHours must be a positive number" });
+      return;
+    }
+    plannedHoursClean = ph;
   }
   const desc = typeof description === "string" ? description.trim() : null;
   let st = "TODO";
@@ -211,6 +221,7 @@ router.post("/projects/:id/tasks", validateBody(CreateProjectTaskBody), async (r
       status: st as "TODO" | "IN_PROGRESS" | "BLOCKED" | "DONE",
       progressPercent: pct,
       billable: billable === false ? false : true,
+      plannedHours: plannedHoursClean,
       startDate: start ?? null,
       endDate: end ?? null,
       assigneeId: primaryId,
@@ -290,6 +301,7 @@ router.patch("/tasks/:taskId", validateBody(UpdateTaskBody), async (req, res) =>
     assigneeIds: rawAssigneeIds,
     progressPercent,
     billable,
+    plannedHours,
     parentTaskId,
     dependencyTaskIds: rawDependencyIds,
     workstreamId,
@@ -334,6 +346,23 @@ router.patch("/tasks/:taskId", validateBody(UpdateTaskBody), async (req, res) =>
       return;
     }
     data.billable = billable === false ? false : true;
+  }
+
+  if (plannedHours !== undefined) {
+    if (!isManager) {
+      res.status(403).json({ error: "Only Management/PM can change planned hours" });
+      return;
+    }
+    if (plannedHours === null || plannedHours === "") {
+      data.plannedHours = null;
+    } else {
+      const ph = Number(plannedHours);
+      if (!isFinite(ph) || ph <= 0) {
+        res.status(400).json({ error: "plannedHours must be a positive number" });
+        return;
+      }
+      data.plannedHours = ph;
+    }
   }
 
   if (title !== undefined) {

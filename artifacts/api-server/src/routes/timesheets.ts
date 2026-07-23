@@ -187,6 +187,28 @@ function earliestAllowedWorkDate(today: Date, businessDays: number): Date {
   return d;
 }
 
+// F4: delivery roles must clock hours against a specific task, and a task
+// with plannedHours set caps total logged hours (all users, non-REJECTED).
+const MANDATORY_TASK_ROLES = new Set(["KONSULTAN", "TECHNICAL_WRITER", "ADMIN_PROJECT"]);
+
+async function checkTaskHoursCap(
+  taskId: string,
+  plannedHours: number | null,
+  addHours: number,
+): Promise<{ ok: true } | { ok: false; remainingHours: number; plannedHours: number }> {
+  if (plannedHours == null) return { ok: true };
+  const agg = await prisma.timesheet.aggregate({
+    where: { taskId, status: { in: ["DRAFT", "SUBMITTED", "APPROVED"] } },
+    _sum: { hours: true },
+  });
+  const used = agg._sum.hours ?? 0;
+  const remaining = Math.max(0, plannedHours - used);
+  if (addHours > remaining + 1e-9) {
+    return { ok: false, remainingHours: Math.round(remaining * 100) / 100, plannedHours };
+  }
+  return { ok: true };
+}
+
 router.post("/timesheets", validateBody(CreateTimesheetBody), async (req, res) => {
   const { projectId, workDate, hours, description, taskId, workstreamId } = req.body || {};
   // Zod guarantees presence + types; reject empty/whitespace strings before DB use.
@@ -234,6 +256,13 @@ router.post("/timesheets", validateBody(CreateTimesheetBody), async (req, res) =
   // so we never attach an unrelated/unauthorized task.
   let resolvedTaskId: string | null = null;
   let resolvedWorkstreamId: string | null = null;
+  if (!taskId && MANDATORY_TASK_ROLES.has(role)) {
+    res.status(400).json({
+      error: "You must select a task to log hours against",
+      code: "TASK_REQUIRED",
+    });
+    return;
+  }
   if (taskId) {
     const t = await prisma.task.findUnique({
       where: { id: String(taskId) },
@@ -242,6 +271,7 @@ router.post("/timesheets", validateBody(CreateTimesheetBody), async (req, res) =
         projectId: true,
         workstreamId: true,
         assigneeId: true,
+        plannedHours: true,
         assignees: { select: { userId: true } },
       },
     });
@@ -254,6 +284,16 @@ router.post("/timesheets", validateBody(CreateTimesheetBody), async (req, res) =
       t.assigneeId === userId || t.assignees.some((a) => a.userId === userId);
     if (!isAssignee) {
       res.status(403).json({ error: "you are not an assignee of this task" });
+      return;
+    }
+    const cap = await checkTaskHoursCap(t.id, t.plannedHours ?? null, hoursNum);
+    if (!cap.ok) {
+      res.status(400).json({
+        error: `Task hour cap exceeded: only ${cap.remainingHours}h of ${cap.plannedHours}h planned remain on this task`,
+        code: "TASK_HOURS_CAP_EXCEEDED",
+        remainingHours: cap.remainingHours,
+        plannedHours: cap.plannedHours,
+      });
       return;
     }
     resolvedTaskId = t.id;
@@ -380,10 +420,15 @@ router.post("/timesheets/bulk", validateBody(CreateBulkTimesheetsBody), async (r
       }
       let resolvedTaskId: string | null = null;
       let resolvedWsId: string | null = null;
+      if (!e.taskId && MANDATORY_TASK_ROLES.has(role)) {
+        results.push({ index: i, ok: false, error: "task selection is required for your role" });
+        failed++;
+        continue;
+      }
       if (e.taskId) {
         const t = await prisma.task.findUnique({
           where: { id: String(e.taskId) },
-          select: { id: true, projectId: true, workstreamId: true, assigneeId: true, assignees: { select: { userId: true } } },
+          select: { id: true, projectId: true, workstreamId: true, assigneeId: true, plannedHours: true, assignees: { select: { userId: true } } },
         });
         if (!t || t.projectId !== projectId) {
           results.push({ index: i, ok: false, error: "task does not belong to project" });
@@ -393,6 +438,16 @@ router.post("/timesheets/bulk", validateBody(CreateBulkTimesheetsBody), async (r
         const isAssignee = t.assigneeId === userId || t.assignees.some((a) => a.userId === userId);
         if (!isAssignee) {
           results.push({ index: i, ok: false, error: "not an assignee of task" });
+          failed++;
+          continue;
+        }
+        const cap = await checkTaskHoursCap(t.id, t.plannedHours ?? null, hoursNum);
+        if (!cap.ok) {
+          results.push({
+            index: i,
+            ok: false,
+            error: `task hour cap exceeded: only ${cap.remainingHours}h of ${cap.plannedHours}h planned remain`,
+          });
           failed++;
           continue;
         }

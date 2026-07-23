@@ -21,18 +21,19 @@ Management (PMO Director), Project Manager, Sales, Konsultan, Technical Writer, 
 
 - **User** — `seniority` JUNIOR/MID/SENIOR/PRINCIPAL, `businessUnitId`, `managerId` (PM→PMO), `principalId` (delivery user→Principal)
 - **BusinessUnit**, **Skill** + **UserSkill** — seeded BUs: Pentest, Governance (ex-GRC), Solution (ex-Threat Hunting), MSS, Forensic; 11 skills. Seed renames old BU names in place (FK-safe)
-- **Client**, **Project**, **Activity** (audit), **Document** (BAST/INVOICE/CONTRACT/REPORT/OTHER, base64)
-- **ProjectResource** (staffing: planned mandays + daily rate), **Timesheet** (DRAFT→SUBMITTED→APPROVED/REJECTED), **ProjectExpense** (PENDING/APPROVED/REJECTED)
-- **BillingMilestone** (Terms-of-Payment, PLANNED/INVOICED/PAID/CANCELLED), **Task** (+ TaskAssignee M:N, TaskDependency, TaskTimeLog; WBS via `parentTaskId`, `billable` flag)
-- **ProjectRaidItem**, **ChangeRequest**, **ProjectBaseline**, **PerformanceReview**, **UserLeave**, **TaskTemplate**, **Notification**
+- **Client**, **Project**, **Activity** (audit), **Document** (BAST/INVOICE/CONTRACT/REPORT/OTHER; `kind` FILE|LINK — LINK stores an https URL, no upload; BAST may carry `billingMilestoneId` to tie a BAST to a specific milestone)
+- **ProjectResource** (staffing: planned mandays + denormalized current `dailyRate`) + **ProjectResourceRate** (append-only cost/selling rate periods per resource; see Financials), **Timesheet** (DRAFT→SUBMITTED→APPROVED/REJECTED), **ProjectExpense** (PENDING/APPROVED/REJECTED; categories incl. CASH_ADVANCE/PURCHASE_ORDER with `poNumber`; CA settles via `POST /expenses/:id/settle` → `settledAmount/settledAt`)
+- **BillingMilestone** (Terms-of-Payment, PLANNED/INVOICED/PAID/CANCELLED), **Task** (+ TaskAssignee M:N, TaskDependency, TaskTimeLog; WBS via `parentTaskId`, `billable` flag; `plannedHours` = optional hour cap)
+- **ProjectRaidItem**, **ChangeRequest**, **ProjectBaseline**, **PerformanceReview**, **UserLeave**, **TaskTemplate**, **Notification**, **ProjectFeedback360** (peer review pairs auto-created on COMPLETE)
 
 ## Project lifecycle
 
 `DRAFT (Sales intake) → OBSERVATION (PM completed) → ACTIVE → PAUSE / COMPLETE → CLOSED`. Status gates live in `routes/projects.ts` PATCH (apply to all roles incl. MGMT, validated against effective state, fail 400 with a `missing[]` list):
 
 - **ACTIVE gate**: core Overview fields (client, description, dates, contractValue/plannedMandays/estimatedCost > 0), `pmId`, ≥1 ProjectResource, ≥1 Task, ≥1 ProjectRaidItem, BillingMilestone % summing to 100.
-- **COMPLETE gate**: all tasks DONE, no SUBMITTED Timesheet, no PENDING Expense, no PLANNED BillingMilestone, no OPEN RAID, ≥1 BAST Document.
-- Non-commercial projects (`kind` != CLIENT) skip the billing/BAST gates and hide Billing/Financials revenue.
+- **COMPLETE gate**: all tasks DONE, no SUBMITTED Timesheet, no PENDING Expense, no PLANNED BillingMilestone, no OPEN RAID, ≥1 BAST Document. On COMPLETE the server auto-issues the client survey token and auto-creates ProjectFeedback360 pairs (PM→each accepted resource, each→PM).
+- **CLOSED gate** (`CLOSE_REQUIREMENTS_INCOMPLETE` with `missing[]`): all 360 rows SUBMITTED + lessons-learned checklist note filled; CLIENT-kind also needs ≥1 SurveyResponse. Closing-checklist items can't be set DONE without their evidence (BAST_SIGNED→BAST doc, FINAL_REPORT_DELIVERED→REPORT doc, INVOICE_ISSUED→INVOICE doc or INVOICED milestone); NA stays allowed.
+- Non-commercial projects (`kind` != CLIENT) skip the billing/BAST/survey gates and hide Billing/Financials revenue.
 
 Intake: Sales create projects **only** via lead-convert (`POST /api/leads/:id/convert`); manual `POST /api/projects` is 403 for SALES. Server forces `status=DRAFT`, `salesId`, `pmId=null`. MGMT/PM keep manual create. PATCH field permissions: SALES (own DRAFT) `{code,name,description,clientId,contractValue}`; PM (own) all except `salesId`/`pmId`/`clientId`; MGMT full (setting `pmId` on a DRAFT that already has one → 409).
 
@@ -46,7 +47,7 @@ Editable by MGMT/assigned-PM/Sales-owner unless noted; each tab has its own `rou
 - **Resources** — Admin Project + Konsultan/TW teams (`ProjectResource`) + free-text Other Resources.
 - **RAID** (`routes/raid.ts`) — delivery team read (`canViewRaid`), MGMT/PM write. `riskScore = impact × likelihood` computed (never stored); `responseStrategy` editable.
 - **Expenses** (`routes/expenses.ts`) — MGMT auto-APPROVED, others PENDING; only APPROVED count toward `actualCost`. Receipt PDF at `GET /api/expenses/:id/receipt`.
-- **Timesheets** (`routes/timesheets.ts`) — PM-of-project & MGMT approve/reject (SUBMITTED-only, else 409); "Approve All Submitted".
+- **Timesheets** (`routes/timesheets.ts`) — PM-of-project & MGMT approve/reject (SUBMITTED-only, else 409); "Approve All Submitted". Task is mandatory for KONSULTAN/TW/ADMIN_PROJECT entries; when the task has `plannedHours`, total logged hours (DRAFT+SUBMITTED+APPROVED, all users) are capped → 400 `TASK_HOURS_CAP_EXCEEDED` + `remainingHours`.
 - **Billing** — `BillingMilestone` %, DPP/VAT via `splitVat()`; banner when % ≠ 100. Write = MGMT/assigned-PM.
 - **Change Requests** (`routes/change-requests.ts`) — SCOPE/SCHEDULE/COST; DRAFT→APPROVED→APPLIED or REJECTED. Apply is atomic (`updateMany` claim in `$transaction`); SCHEDULE/COST apply writes project fields + a new ProjectBaseline.
 
@@ -58,7 +59,7 @@ Persisted `Notification` rows (`lib/notifications.ts` `notifyUser`), surfaced in
 
 ## Financials (`routes/.../serializers.ts`)
 
-- `resourceCost` = Σ APPROVED timesheets `(hours/8) × dailyRate`; `additionalCost` = Σ APPROVED expenses; `actualCost = resourceCost + additionalCost`; `actualProfit = contractValue − actualCost`; `marginPct = actualProfit / contractValue × 100`.
+- `resourceCost` = Σ APPROVED timesheets `(hours/8) × rate`, where rate = newest ProjectResourceRate with `effectiveFrom <= workDate`, falling back to the resource's `dailyRate` (no history = old behavior). POST `/resources/:id/rates` re-syncs `dailyRate` to the newest in-effect period and, on the FIRST period, backfills a baseline row at the pre-change rate from project start so history is never repriced. `sellingRate` is display-only. `additionalCost` = Σ APPROVED expenses (settled CA counts at `settledAmount`); `actualCost = resourceCost + additionalCost`; `actualProfit = contractValue − actualCost`; `marginPct = actualProfit / contractValue × 100`.
 - **Forecast single source of truth**: `computeBurnRateForecast()` + `computeProfitOutlook()`; all callers derive from these, never recompute inline. When `actualMandays === 0`, forecast falls back to the intake estimate.
 - **Profit Outlook** — Initial Estimate → Actual → Projected; status EARLY/PROFIT/THIN/LOSS_RISK. By design, Margin/Health read actuals-so-far while Outlook projects to completion (a young project can show high margin + projected loss).
 - **Health** (`computeHealthScore`, 0-100), **EVM** (`computeEvm`: CPI/SPI/EAC/…, null-safe), **Baseline** (`ProjectBaseline`, one captured on ACTIVE, single-current invariant via `@@unique([projectId,version])`). All gated by `canViewProjectFinancials` (false for all PRINCIPAL_* and HR).

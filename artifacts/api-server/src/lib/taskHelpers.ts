@@ -11,6 +11,7 @@ export type TaskWithRelations = {
   status: string;
   progressPercent: number;
   billable?: boolean;
+  plannedHours?: number | null;
   startDate: Date | null;
   endDate: Date | null;
   assigneeId: string | null;
@@ -23,6 +24,7 @@ export type TaskWithRelations = {
   project?: { code: string; name: string; pmId: string | null } | null;
   workstreamId?: string | null;
   timeLogs?: { hours: number }[];
+  timesheets?: { hours: number; status: string }[];
   assignees?: { userId: string; user?: { id: string; name: string } | null }[];
   dependencies?: { id: string; dependsOnTaskId: string; dependsOnTask?: { title: string } | null }[];
   _count?: { subtasks?: number };
@@ -60,6 +62,12 @@ export function serializeTask(t: TaskWithRelations) {
     status: t.status,
     progressPercent: t.progressPercent ?? 0,
     billable: t.billable ?? true,
+    plannedHours: t.plannedHours ?? null,
+    timesheetHours: (t.timesheets ?? []).reduce(
+      (s: number, ts: { hours: number; status: string }) =>
+        s + (ts.status !== "REJECTED" ? ts.hours : 0),
+      0,
+    ),
     startDate: t.startDate ? t.startDate.toISOString() : null,
     endDate: t.endDate ? t.endDate.toISOString() : null,
     assigneeId: primary?.userId ?? null,
@@ -81,6 +89,7 @@ export const taskInclude = {
   createdBy: { select: { name: true } },
   project: { select: { code: true, name: true, pmId: true } },
   timeLogs: { select: { hours: true } },
+  timesheets: { select: { hours: true, status: true } },
   assignees: {
     include: { user: { select: { id: true, name: true } } },
     orderBy: { createdAt: "asc" },

@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/lib/auth";
 import { CalendarRange } from "lucide-react";
 
 function startOfWeek(d: Date): Date {
@@ -32,6 +33,10 @@ const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 export default function WeeklyEntryDialog({ isAutoApprove }: { isAutoApprove: boolean }) {
   const { toast } = useToast();
   const qc = useQueryClient();
+  const { user } = useAuth();
+  // Delivery roles must clock hours against an assigned task (server enforces
+  // per-entry); mirror it client-side so the whole batch doesn't fail.
+  const taskRequired = ["KONSULTAN", "TECHNICAL_WRITER", "ADMIN_PROJECT"].includes(user?.role ?? "");
   const [open, setOpen] = useState(false);
   const [weekStartIso, setWeekStartIso] = useState(startOfWeek(new Date()).toISOString().slice(0, 10));
   // grid[projectId][dayIndex] = hours
@@ -99,12 +104,23 @@ export default function WeeklyEntryDialog({ isAutoApprove }: { isAutoApprove: bo
 
   const submit = () => {
     const entries: Array<{ projectId: string; workDate: string; hours: number; taskId?: string; description?: string }> = [];
+    const missingTaskProjects: string[] = [];
     Object.entries(grid).forEach(([pid, row]) => {
       const taskId = taskByProject[pid] || undefined;
+      const rowHasHours = row.some((h) => h > 0);
+      if (rowHasHours && taskRequired && !taskId) missingTaskProjects.push(pid);
       row.forEach((h, i) => {
         if (h > 0) entries.push({ projectId: pid, workDate: days[i].iso, hours: h, ...(taskId ? { taskId } : {}), description: desc || `Weekly ${weekStartIso}` });
       });
     });
+    if (missingTaskProjects.length > 0) {
+      toast({
+        variant: "destructive",
+        title: "Task selection required",
+        description: "Your role must clock hours against an assigned task. Pick a task for every project row with hours.",
+      });
+      return;
+    }
     if (entries.length === 0) {
       toast({ variant: "destructive", title: "No hours entered yet" });
       return;

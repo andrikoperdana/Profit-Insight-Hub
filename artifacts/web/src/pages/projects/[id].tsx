@@ -2,6 +2,8 @@ import { useParams, Link } from "wouter";
 import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import {
   useGetProject,
+  useListMyFeedback360,
+  getListMyFeedback360QueryKey,
   useUpdateTask,
   getListProjectTasksQueryKey,
   useGetProjectFinancials,
@@ -101,6 +103,16 @@ export default function ProjectDetail() {
   const { data: project, isLoading } = useGetProject(id, {
     query: { queryKey: getGetProjectQueryKey(id), enabled: !!id }
   });
+
+  // Delivery members (Konsultan/TW) have no role-based access to the Closing
+  // tab, but must reach it to submit their 360 feedback after COMPLETE.
+  const { data: myFeedback360 } = useListMyFeedback360({
+    query: {
+      queryKey: getListMyFeedback360QueryKey(),
+      enabled: !!id && (project?.status === "COMPLETE" || project?.status === "CLOSED"),
+    },
+  });
+  const hasMy360Here = (myFeedback360 ?? []).some((f) => f.projectId === id);
 
   const updateProject = useUpdateProject({
     mutation: {
@@ -519,7 +531,8 @@ export default function ProjectDetail() {
           )}
           {((user?.role === "MANAGEMENT" || isSuperAdmin(user?.role)) ||
             (user?.role === "PROJECT_MANAGER" && project.pmId === user?.id) ||
-            (user?.role === "ADMIN_PROJECT" && project.adminProjectId === user?.id)) && (
+            (user?.role === "ADMIN_PROJECT" && project.adminProjectId === user?.id) ||
+            hasMy360Here) && (
             <TabsTrigger value="closing" data-testid="tab-trigger-closing">Closing</TabsTrigger>
           )}
         </TabsList>

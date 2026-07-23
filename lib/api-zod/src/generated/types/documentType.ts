@@ -12,5 +12,6 @@ export const DocumentType = {
   BAST: "BAST",
   INVOICE: "INVOICE",
   CONTRACT: "CONTRACT",
+  REPORT: "REPORT",
   OTHER: "OTHER",
 } as const;

@@ -26,6 +26,11 @@ export interface ProjectExpense {
   approvedByName?: string | null;
   approvedAt?: string | null;
   rejectionReason?: string | null;
+  poNumber?: string | null;
+  settledAmount?: number | null;
+  settledAt?: string | null;
+  settlementNotes?: string | null;
+  settledByName?: string | null;
   createdById?: string | null;
   createdByName?: string | null;
   createdAt: string;

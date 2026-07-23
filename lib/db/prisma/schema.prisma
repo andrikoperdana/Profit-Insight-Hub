@@ -59,7 +59,13 @@ enum DocumentType {
   BAST
   INVOICE
   CONTRACT
+  REPORT
   OTHER
+}
+
+enum DocumentKind {
+  FILE
+  LINK
 }
 
 enum TaskStatus {
@@ -116,6 +122,7 @@ model User {
 
   skills      UserSkill[]
   approvedExpenses ProjectExpense[] @relation("ExpenseApprover")
+  settledExpenses  ProjectExpense[] @relation("ExpenseSettler")
 
   projectsAsSales    Project[]         @relation("ProjectSales")
   projectsAsPm       Project[]         @relation("ProjectPm")
@@ -123,6 +130,7 @@ model User {
   projectsAsAdmin    Project[]         @relation("ProjectAdmin")
   resources          ProjectResource[]
   proposedResources  ProjectResource[] @relation("ResourceProposer")
+  createdResourceRates ProjectResourceRate[] @relation("ResourceRateCreator")
   timesheets         Timesheet[]
   approvedTimesheets Timesheet[]       @relation("TimesheetApprover")
   documentsUploaded  Document[]
@@ -145,6 +153,9 @@ model User {
   skillGoalsCreated         SkillDevelopmentGoal[]  @relation("SkillGoalCreator")
   skillProgressionsAsSubject SkillProgressionLog[]  @relation("SkillProgressionSubject")
   skillProgressionsLogged    SkillProgressionLog[]  @relation("SkillProgressionChanger")
+
+  feedback360AsReviewer ProjectFeedback360[] @relation("Feedback360Reviewer")
+  feedback360AsSubject  ProjectFeedback360[] @relation("Feedback360Subject")
 
   raidItemsOwned     ProjectRaidItem[] @relation("RaidOwner")
   raidItemsCreated   ProjectRaidItem[] @relation("RaidCreator")
@@ -233,6 +244,7 @@ model Project {
   raidItems       ProjectRaidItem[]
   perfProjectRatings PerformanceReviewProjectRating[]
   closingChecklist   ProjectClosingChecklistItem[]
+  feedback360     ProjectFeedback360[]
   workstreams     ProjectWorkstream[]
   reports         ProjectReport[]
   baselines       ProjectBaseline[]
@@ -404,6 +416,31 @@ model SurveyResponse {
   @@index([createdAt])
 }
 
+enum Feedback360Status {
+  PENDING
+  SUBMITTED
+}
+
+model ProjectFeedback360 {
+  id         String             @id @default(cuid())
+  projectId  String
+  project    Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  reviewerId String
+  reviewer   User               @relation("Feedback360Reviewer", fields: [reviewerId], references: [id], onDelete: Cascade)
+  subjectId  String
+  subject    User               @relation("Feedback360Subject", fields: [subjectId], references: [id], onDelete: Cascade)
+  rating     Int?
+  comment    String?            @db.Text
+  status     Feedback360Status  @default(PENDING)
+  submittedAt DateTime?
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+
+  @@unique([projectId, reviewerId, subjectId])
+  @@index([reviewerId, status])
+  @@index([projectId])
+}
+
 model AuditLog {
   id          String   @id @default(cuid())
   userId      String?
@@ -441,8 +478,27 @@ model ProjectResource {
   acceptedAt     DateTime?
   pendingPrincipalApproval Boolean @default(false)
   createdAt      DateTime @default(now())
+  rates          ProjectResourceRate[]
 
   @@unique([projectId, userId])
+}
+
+/// Append-only rate history for a project resource. `ProjectResource.dailyRate`
+/// stays as the denormalized *current* cost rate; history rows change what
+/// computeMetrics charges per timesheet workDate. sellingRate is display-only.
+model ProjectResourceRate {
+  id            String          @id @default(cuid())
+  resourceId    String
+  resource      ProjectResource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  costRate      Float
+  sellingRate   Float?
+  effectiveFrom DateTime
+  createdById   String?
+  createdBy     User?           @relation("ResourceRateCreator", fields: [createdById], references: [id])
+  createdAt     DateTime        @default(now())
+
+  @@unique([resourceId, effectiveFrom])
+  @@index([resourceId, effectiveFrom])
 }
 
 model Timesheet {
@@ -478,6 +534,7 @@ model Document {
   projectId     String
   project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
   type          DocumentType
+  kind          DocumentKind @default(FILE)
   fileName      String
   fileUrl       String       @db.Text
   invoiceNumber String?
@@ -536,6 +593,12 @@ model ProjectExpense {
   approvedBy       User?         @relation("ExpenseApprover", fields: [approvedById], references: [id])
   approvedAt       DateTime?
   rejectionReason  String?
+  poNumber         String?
+  settledAmount    Float?
+  settledAt        DateTime?
+  settlementNotes  String?
+  settledById      String?
+  settledBy        User?         @relation("ExpenseSettler", fields: [settledById], references: [id])
   createdById      String?
   createdBy        User?         @relation(fields: [createdById], references: [id])
   createdAt        DateTime      @default(now())
@@ -648,6 +711,7 @@ model Task {
   status       TaskStatus    @default(TODO)
   progressPercent Int        @default(0)
   billable     Boolean       @default(true)
+  plannedHours Float?
   startDate    DateTime?
   endDate      DateTime?
   assigneeId   String?

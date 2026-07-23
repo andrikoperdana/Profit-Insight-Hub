@@ -17,6 +17,7 @@ export interface CreateTaskBody {
    */
   progressPercent?: number;
   billable?: boolean;
+  plannedHours?: number | null;
   startDate?: string | null;
   endDate?: string | null;
   assigneeId?: string | null;

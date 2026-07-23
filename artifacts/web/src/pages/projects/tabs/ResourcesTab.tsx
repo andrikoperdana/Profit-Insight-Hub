@@ -20,6 +20,9 @@ import {
   useAcceptProjectResource,
   useRejectProjectResource,
   getListProjectResourcesQueryKey,
+  useListResourceRates,
+  useCreateResourceRate,
+  getListResourceRatesQueryKey,
   useListAvailableUsers,
   useListActiveAllUsers,
   useListUsersUnderSupervision,
@@ -55,7 +58,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   ArrowLeft, Building2, User, Calendar, DollarSign, TrendingUp, TrendingDown,
   Activity, Flame, Upload, FileText, Trash2, CheckCircle2, AlertCircle, Plus,
-  Pencil, AlertTriangle, Paperclip, X,
+  Pencil, AlertTriangle, Paperclip, X, History,
 } from "lucide-react";
 import { formatIDR, formatDate, formatPct } from "@/lib/format";
 import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
@@ -132,6 +135,7 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
     query: { enabled: canEdit, queryKey: ["users-active-all"] },
   });
   const [addingRole, setAddingRole] = useState<null | "KONSULTAN" | "TECHNICAL_WRITER" | "OTHER">(null);
+  const [rateResource, setRateResource] = useState<any | null>(null);
   const [form, setForm] = useState({ userId: "", roleInProject: "", plannedMandays: "10", dailyRate: "1500000" });
   const [formWorkstreamId, setFormWorkstreamId] = useState<string | null>(null);
   const [suggestRole, setSuggestRole] = useState<null | "KONSULTAN" | "TECHNICAL_WRITER">(null);
@@ -491,7 +495,23 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                             </span>
                           )}
                         </td>
-                        {showRate && <td className="py-2 pr-3 text-right font-mono">{formatIDR(r.dailyRate ?? 0)}</td>}
+                        {showRate && (
+                          <td className="py-2 pr-3 text-right font-mono">
+                            <span className="inline-flex items-center gap-1 justify-end">
+                              {formatIDR(r.dailyRate ?? 0)}
+                              {canEdit && (
+                                <button
+                                  type="button"
+                                  className="text-muted-foreground hover:text-foreground"
+                                  onClick={() => setRateResource(r)}
+                                  title="Rate history"
+                                >
+                                  <History className="h-3.5 w-3.5" />
+                                </button>
+                              )}
+                            </span>
+                          </td>
+                        )}
                         {showRate && <td className="py-2 pr-3 text-right font-mono">{formatIDR(planned * (r.dailyRate ?? 0))}</td>}
                         {(canEdit || canPrincipalManageRow(r)) && (
                           <td className="py-2 pr-3 text-right">
@@ -645,7 +665,23 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
                             </span>
                           )}
                         </td>
-                        {showRate && <td className="py-2 pr-3 text-right font-mono">{formatIDR(r.dailyRate ?? 0)}</td>}
+                        {showRate && (
+                          <td className="py-2 pr-3 text-right font-mono">
+                            <span className="inline-flex items-center gap-1 justify-end">
+                              {formatIDR(r.dailyRate ?? 0)}
+                              {canEdit && (
+                                <button
+                                  type="button"
+                                  className="text-muted-foreground hover:text-foreground"
+                                  onClick={() => setRateResource(r)}
+                                  title="Rate history"
+                                >
+                                  <History className="h-3.5 w-3.5" />
+                                </button>
+                              )}
+                            </span>
+                          </td>
+                        )}
                         {showRate && <td className="py-2 pr-3 text-right font-mono">{formatIDR(planned * (r.dailyRate ?? 0))}</td>}
                         {(canEdit || canPrincipalManageRow(r)) && (
                           <td className="py-2 pr-3 text-right">
@@ -976,7 +1012,174 @@ function ResourcesTab({ projectId, project }: { projectId: string; project: any 
           }}
         />
       )}
+
+      {rateResource && (
+        <RateHistoryDialog
+          resource={rateResource}
+          projectId={projectId}
+          canEdit={canEdit}
+          onClose={() => setRateResource(null)}
+        />
+      )}
     </div>
+  );
+}
+
+function RateHistoryDialog({
+  resource,
+  projectId,
+  canEdit,
+  onClose,
+}: {
+  resource: any;
+  projectId: string;
+  canEdit: boolean;
+  onClose: () => void;
+}) {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const { data: rates, isLoading } = useListResourceRates(resource.id, {
+    query: { queryKey: getListResourceRatesQueryKey(resource.id) },
+  });
+  const [form, setForm] = useState({
+    costRate: String(resource.dailyRate ?? ""),
+    sellingRate: "",
+    effectiveFrom: new Date().toISOString().slice(0, 10),
+  });
+  const createMutation = useCreateResourceRate({
+    mutation: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: getListResourceRatesQueryKey(resource.id) });
+        queryClient.invalidateQueries({ queryKey: getListProjectResourcesQueryKey(projectId) });
+        queryClient.invalidateQueries({ queryKey: getGetProjectQueryKey(projectId) });
+        queryClient.invalidateQueries({ queryKey: getGetProjectFinancialsQueryKey(projectId) });
+        toast({ title: "Rate period added" });
+      },
+      onError: (err: any) => {
+        toast({
+          title: "Failed to add rate period",
+          description: err?.body?.reason ?? err?.body?.error ?? err?.message ?? "Unknown error",
+          variant: "destructive",
+        });
+      },
+    },
+  });
+
+  const handleAdd = () => {
+    const costRate = Number(form.costRate);
+    if (!Number.isFinite(costRate) || costRate <= 0) {
+      toast({ title: "Cost rate must be greater than 0", variant: "destructive" });
+      return;
+    }
+    if (!form.effectiveFrom) {
+      toast({ title: "Effective date is required", variant: "destructive" });
+      return;
+    }
+    const sellingRate = form.sellingRate.trim() === "" ? null : Number(form.sellingRate);
+    if (sellingRate != null && (!Number.isFinite(sellingRate) || sellingRate < 0)) {
+      toast({ title: "Selling rate must be a valid number", variant: "destructive" });
+      return;
+    }
+    createMutation.mutate({
+      resourceId: resource.id,
+      data: { costRate, sellingRate, effectiveFrom: form.effectiveFrom },
+    });
+  };
+
+  const list: any[] = Array.isArray(rates) ? rates : [];
+
+  return (
+    <Dialog open onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Rate History — {resource.userName ?? "Resource"}</DialogTitle>
+          <DialogDescription>
+            Cost rate periods for this assignment. Timesheet costing uses the rate in effect on each work date;
+            dates before the earliest period fall back to the resource's base daily rate.
+          </DialogDescription>
+        </DialogHeader>
+
+        {isLoading ? (
+          <div className="py-4 text-sm text-muted-foreground">Loading…</div>
+        ) : list.length === 0 ? (
+          <div className="rounded-md border border-dashed border-border p-4 text-center text-sm text-muted-foreground">
+            No rate periods yet. The base daily rate {formatIDR(resource.dailyRate ?? 0)} applies to all dates.
+          </div>
+        ) : (
+          <div className="max-h-56 overflow-y-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-xs text-muted-foreground border-b border-border">
+                  <th className="py-1.5 pr-3 font-medium">Effective From</th>
+                  <th className="py-1.5 pr-3 font-medium text-right">Cost Rate</th>
+                  <th className="py-1.5 pr-3 font-medium text-right">Selling Rate</th>
+                  <th className="py-1.5 font-medium">Added By</th>
+                </tr>
+              </thead>
+              <tbody>
+                {list.map((rate: any) => (
+                  <tr key={rate.id} className="border-b border-border/40">
+                    <td className="py-1.5 pr-3">{formatDate(rate.effectiveFrom)}</td>
+                    <td className="py-1.5 pr-3 text-right font-mono">{formatIDR(rate.costRate ?? 0)}</td>
+                    <td className="py-1.5 pr-3 text-right font-mono">
+                      {rate.sellingRate != null ? formatIDR(rate.sellingRate) : <span className="text-muted-foreground">—</span>}
+                    </td>
+                    <td className="py-1.5 text-xs text-muted-foreground">{rate.createdByName ?? "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {canEdit && (
+          <div className="space-y-3 border-t border-border pt-3">
+            <div className="text-xs font-medium text-muted-foreground">Add rate period</div>
+            <div className="grid grid-cols-3 gap-2">
+              <div className="space-y-1">
+                <Label className="text-xs">Effective From</Label>
+                <Input
+                  type="date"
+                  value={form.effectiveFrom}
+                  onChange={(e) => setForm((f) => ({ ...f, effectiveFrom: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs">Cost Rate (IDR/day)</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  value={form.costRate}
+                  onChange={(e) => setForm((f) => ({ ...f, costRate: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs">Selling Rate (optional)</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  placeholder="—"
+                  value={form.sellingRate}
+                  onChange={(e) => setForm((f) => ({ ...f, sellingRate: e.target.value }))}
+                />
+              </div>
+            </div>
+            <p className="text-[11px] text-muted-foreground">
+              Selling rate is informational only; it is not used in cost or margin calculations.
+            </p>
+          </div>
+        )}
+
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Close</Button>
+          {canEdit && (
+            <Button onClick={handleAdd} disabled={createMutation.isPending}>
+              {createMutation.isPending ? "Saving..." : "Add Period"}
+            </Button>
+          )}
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 

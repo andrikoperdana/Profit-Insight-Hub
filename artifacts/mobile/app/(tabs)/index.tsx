@@ -47,6 +47,9 @@ export default function TrackScreen() {
   const queryClient = useQueryClient();
   const { user, signOut } = useAuth();
   const role = user?.role;
+  // Delivery roles must clock hours against an assigned task (server enforces
+  // with code TASK_REQUIRED); mirror it client-side for a clear UX.
+  const taskRequired = ["KONSULTAN", "TECHNICAL_WRITER", "ADMIN_PROJECT"].includes(role ?? "");
   const allowed = canLogHours(role);
   // Namespace the timer per user so a running timer can never bleed across
   // accounts on a shared phone (phone-only timer, no server session).
@@ -137,6 +140,10 @@ export default function TrackScreen() {
       Alert.alert("Pick a project", "Choose a project before clocking in.");
       return;
     }
+    if (taskRequired && !taskId) {
+      Alert.alert("Pick a task", "Your role must clock hours against an assigned task.");
+      return;
+    }
     if (!timerKey) return;
     const now = Date.now();
     const payload: ActiveTimer = { projectId, taskId, startedAt: now };
@@ -176,6 +183,10 @@ export default function TrackScreen() {
   const submitManual = () => {
     if (!projectId) {
       Alert.alert("Pick a project", "Choose a project first.");
+      return;
+    }
+    if (taskRequired && !taskId) {
+      Alert.alert("Pick a task", "Your role must clock hours against an assigned task.");
       return;
     }
     const hours = Number(manualHours.replace(",", "."));
@@ -305,7 +316,7 @@ export default function TrackScreen() {
             testID="project-select"
           />
           <SelectModal
-            label="Task (optional)"
+            label={taskRequired ? "Task (required)" : "Task (optional)"}
             placeholder={
               !projectId
                 ? "Pick a project first"

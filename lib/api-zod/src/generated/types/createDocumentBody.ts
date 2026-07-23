@@ -5,14 +5,17 @@
  * SecureProfit Hub API
  * OpenAPI spec version: 0.1.0
  */
+import type { DocumentKind } from "./documentKind";
 import type { DocumentType } from "./documentType";
 
 export interface CreateDocumentBody {
   type: DocumentType;
+  kind?: DocumentKind;
   fileName: string;
   fileUrl: string;
   invoiceNumber?: string;
   invoiceAmount?: number;
   invoiceStatus?: string;
   notes?: string;
+  billingMilestoneId?: string | null;
 }

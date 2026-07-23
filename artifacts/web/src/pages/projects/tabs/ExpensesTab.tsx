@@ -26,6 +26,7 @@ import {
   useRemoveProjectExpense,
   useApproveProjectExpense,
   useRejectProjectExpense,
+  useSettleProjectExpense,
   getListProjectExpensesQueryKey,
   getListClientsQueryKey,
   getGetProjectQueryKey,
@@ -81,6 +82,8 @@ const EXPENSE_CATEGORIES: { value: string; label: string }[] = [
   { value: "HARDWARE", label: "Hardware" },
   { value: "LICENSE", label: "License" },
   { value: "TRAVEL", label: "Travel" },
+  { value: "CASH_ADVANCE", label: "Cash Advance" },
+  { value: "PURCHASE_ORDER", label: "Purchase Order" },
   { value: "OTHER", label: "Other" },
 ];
 
@@ -102,6 +105,10 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
   const [category, setCategory] = useState<string>("SOFTWARE");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
+  const [poNumber, setPoNumber] = useState("");
+  const [settleTarget, setSettleTarget] = useState<any | null>(null);
+  const [settleAmount, setSettleAmount] = useState("");
+  const [settleNotes, setSettleNotes] = useState("");
   const [spentAt, setSpentAt] = useState<string>(new Date().toISOString().slice(0, 10));
   const [workstreamId, setWorkstreamId] = useState<string | null>(null);
   const [filterWorkstreamId, setFilterWorkstreamId] = useState<string | null>(null);
@@ -179,6 +186,20 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
     },
   });
 
+  const settleMutation = useSettleProjectExpense({
+    mutation: {
+      onSuccess: () => {
+        toast({ title: "Cash advance settled", description: "Project cost now uses the settled amount." });
+        setSettleTarget(null);
+        setSettleAmount("");
+        setSettleNotes("");
+        invalidateAll();
+      },
+      onError: (e: any) =>
+        toast({ variant: "destructive", title: "Failed to settle", description: e?.message ?? "Unknown error" }),
+    },
+  });
+
   const removeMutation = useRemoveProjectExpense({
     mutation: {
       onSuccess: () => {
@@ -210,16 +231,37 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
         evidenceUrl: evidence?.url,
         evidenceFileName: evidence?.name,
         workstreamId,
+        poNumber: category === "PURCHASE_ORDER" && poNumber.trim() ? poNumber.trim() : undefined,
       },
     });
     setWorkstreamId(null);
+    setPoNumber("");
+  }
+
+  function openSettleDialog(e: any) {
+    setSettleTarget(e);
+    setSettleAmount(e.settledAmount != null ? String(e.settledAmount) : String(e.amount ?? ""));
+    setSettleNotes(e.settlementNotes ?? "");
+  }
+
+  function handleSettle() {
+    if (!settleTarget) return;
+    const amt = Number(settleAmount);
+    if (!isFinite(amt) || amt < 0) {
+      toast({ variant: "destructive", title: "Invalid amount", description: "Settled amount must be zero or more." });
+      return;
+    }
+    settleMutation.mutate({
+      expenseId: settleTarget.id,
+      data: { settledAmount: amt, settlementNotes: settleNotes.trim() || undefined },
+    });
   }
 
   if (isLoading) return <LoadingPage />;
 
   const list = expenses ?? [];
   const totalApproved = list.reduce(
-    (s: number, e: any) => s + ((e.status === "APPROVED" ? e.amount : 0) ?? 0),
+    (s: number, e: any) => s + (e.status === "APPROVED" ? (e.settledAmount ?? e.amount ?? 0) : 0),
     0,
   );
   const totalPending = list.reduce(
@@ -302,6 +344,20 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
                   data-testid="input-expense-date"
                 />
               </div>
+              {category === "PURCHASE_ORDER" && (
+                <div className="md:col-span-3">
+                  <Label htmlFor="exp-po">PO Number</Label>
+                  <Input
+                    id="exp-po"
+                    value={poNumber}
+                    onChange={(e) => setPoNumber(e.target.value)}
+                    placeholder="e.g. PO/2026/07/0012"
+                    className="mt-1 font-mono"
+                    maxLength={100}
+                    data-testid="input-expense-po-number"
+                  />
+                </div>
+              )}
             </div>
             <div>
               <Label>Evidence (Invoice / Billing PDF)</Label>
@@ -395,7 +451,23 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
                       <td className="py-2 pr-3">
                         <Badge variant="outline" className="text-[10px]">{expenseCategoryLabel(e.category)}</Badge>
                       </td>
-                      <td className="py-2 pr-3">{e.description}</td>
+                      <td className="py-2 pr-3">
+                        <div>{e.description}</div>
+                        {e.poNumber && (
+                          <div className="text-xs text-muted-foreground font-mono">PO: {e.poNumber}</div>
+                        )}
+                        {e.settledAmount != null && (
+                          <div
+                            className="text-xs text-emerald-400"
+                            title={e.settlementNotes ?? ""}
+                            data-testid={`text-settled-info-${e.id}`}
+                          >
+                            Settled {formatIDR(e.settledAmount)}
+                            {e.settledByName ? ` by ${e.settledByName}` : ""}
+                            {e.settledAt ? ` on ${formatDate(e.settledAt)}` : ""}
+                          </div>
+                        )}
+                      </td>
                       <td className="py-2 pr-3 text-muted-foreground">{e.createdByName ?? "—"}</td>
                       <td className="py-2 pr-3">
                         {e.evidenceUrl ? (
@@ -417,7 +489,16 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
                       <td className="py-2 pr-3">
                         <ExpenseStatusBadge status={e.status ?? "PENDING"} reason={e.rejectionReason} />
                       </td>
-                      <td className="py-2 pr-3 text-right font-mono">{formatIDR(e.amount)}</td>
+                      <td className="py-2 pr-3 text-right font-mono">
+                        {e.settledAmount != null ? (
+                          <div>
+                            <span className="line-through text-muted-foreground text-xs mr-1">{formatIDR(e.amount)}</span>
+                            <span>{formatIDR(e.settledAmount)}</span>
+                          </div>
+                        ) : (
+                          formatIDR(e.amount)
+                        )}
+                      </td>
                       <td className="py-2 pr-3 text-right">
                         <div className="flex items-center justify-end gap-1">
                           {isApprover && e.status === "PENDING" && (
@@ -448,6 +529,17 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
                                 Reject
                               </Button>
                             </>
+                          )}
+                          {isApprover && e.status === "APPROVED" && e.category === "CASH_ADVANCE" && e.settledAmount == null && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-7 px-2 text-xs border-primary/40"
+                              data-testid={`button-settle-expense-${e.id}`}
+                              onClick={() => openSettleDialog(e)}
+                            >
+                              Settle
+                            </Button>
                           )}
                           {(e.status === "APPROVED" || e.status === "REJECTED") && (
                             <Button
@@ -500,6 +592,51 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
           )}
         </CardContent>
       </Card>
+
+      <Dialog open={settleTarget != null} onOpenChange={(open) => { if (!open) setSettleTarget(null); }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Settle Cash Advance</DialogTitle>
+            <DialogDescription>
+              Record the actual amount spent for "{settleTarget?.description}". The settled amount replaces the advance ({formatIDR(settleTarget?.amount ?? 0)}) in project cost.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div>
+              <Label htmlFor="settle-amount">Actual Amount Spent (IDR) *</Label>
+              <Input
+                id="settle-amount"
+                type="number"
+                min={0}
+                value={settleAmount}
+                onChange={(e) => setSettleAmount(e.target.value)}
+                className="mt-1 font-mono"
+                data-testid="input-settle-amount"
+              />
+            </div>
+            <div>
+              <Label htmlFor="settle-notes">Settlement Notes</Label>
+              <Textarea
+                id="settle-notes"
+                value={settleNotes}
+                onChange={(e) => setSettleNotes(e.target.value)}
+                placeholder="Optional — e.g. unused balance returned"
+                maxLength={500}
+                className="mt-1"
+                data-testid="input-settle-notes"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setSettleTarget(null)} data-testid="button-cancel-settle">
+              Cancel
+            </Button>
+            <Button onClick={handleSettle} disabled={settleMutation.isPending} data-testid="button-confirm-settle">
+              Settle
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

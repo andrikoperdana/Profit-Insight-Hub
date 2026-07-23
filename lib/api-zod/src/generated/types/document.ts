@@ -5,18 +5,22 @@
  * SecureProfit Hub API
  * OpenAPI spec version: 0.1.0
  */
+import type { DocumentKind } from "./documentKind";
 import type { DocumentType } from "./documentType";
 
 export interface Document {
   id: string;
   projectId: string;
   type: DocumentType;
+  kind?: DocumentKind;
   fileName: string;
   fileUrl: string;
   invoiceNumber?: string | null;
   invoiceAmount?: number | null;
   invoiceStatus?: string | null;
   notes?: string | null;
+  billingMilestoneId?: string | null;
+  billingMilestoneName?: string | null;
   uploadedById?: string | null;
   uploadedByName?: string | null;
   uploadedAt: string;

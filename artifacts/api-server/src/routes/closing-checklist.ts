@@ -55,6 +55,47 @@ function serialize(it: Awaited<ReturnType<typeof prisma.projectClosingChecklistI
   };
 }
 
+/**
+ * Returns an error message when the checklist item's evidence requirement is
+ * not met, or null when the item may be marked DONE.
+ */
+async function checkDoneRequirement(projectId: string, key: string): Promise<string | null> {
+  if (key === "BAST_SIGNED") {
+    const bast = await prisma.document.findFirst({
+      where: { projectId, type: "BAST", isLatest: true },
+      select: { id: true },
+    });
+    if (!bast) {
+      return "Upload or link a BAST document first (Documents tab) before marking this item done.";
+    }
+  }
+  if (key === "FINAL_REPORT_DELIVERED") {
+    const report = await prisma.document.findFirst({
+      where: { projectId, type: "REPORT", isLatest: true },
+      select: { id: true },
+    });
+    if (!report) {
+      return "Upload or link the final report (document type REPORT) before marking this item done.";
+    }
+  }
+  if (key === "INVOICE_ISSUED") {
+    const invoiceDoc = await prisma.document.findFirst({
+      where: { projectId, type: "INVOICE", isLatest: true },
+      select: { id: true },
+    });
+    if (!invoiceDoc) {
+      const invoicedMilestone = await prisma.billingMilestone.findFirst({
+        where: { projectId, status: { in: ["INVOICED", "PAID"] } },
+        select: { id: true },
+      });
+      if (!invoicedMilestone) {
+        return "Attach an invoice document or mark a billing milestone as invoiced before marking this item done.";
+      }
+    }
+  }
+  return null;
+}
+
 router.get("/projects/:id/closing-checklist", async (req, res) => {
   const projectId = String(req.params.id);
   if (!(await userCanAccessProject(projectId, req.user!))) {
@@ -83,6 +124,27 @@ router.patch("/projects/:id/closing-checklist/:itemId", async (req, res) => {
     if (!["PENDING", "DONE", "NA"].includes(String(status))) {
       res.status(400).json({ error: "status must be PENDING|DONE|NA" });
       return;
+    }
+    // Evidence-based items cannot be marked DONE unless the underlying
+    // document/link actually exists. NA stays allowed as the explicit
+    // "not applicable" escape hatch (e.g. non-commercial projects).
+    if (status === "DONE") {
+      const requirement = await checkDoneRequirement(projectId, item.key);
+      if (requirement) {
+        res.status(400).json({ error: requirement });
+        return;
+      }
+      // F6: lessons learned must actually be written down — marking the item
+      // DONE requires a non-empty note (incoming note wins over stored note).
+      if (item.key === "LESSONS_LEARNED") {
+        const effectiveNote = note !== undefined ? String(note ?? "").trim() : String(item.note ?? "").trim();
+        if (!effectiveNote) {
+          res.status(400).json({
+            error: "Write the lessons learned in the note field before marking this item done.",
+          });
+          return;
+        }
+      }
     }
     data.status = String(status);
     if (status === "DONE" || status === "NA") {

@@ -405,6 +405,20 @@ export default function TasksTab({ projectId, project }: TasksTabProps) {
                         >
                           {(t.loggedHours ?? 0).toFixed(1)}h
                         </button>
+                        {(t as any).plannedHours != null && (
+                          <div
+                            className={
+                              "text-[11px] " +
+                              (((t as any).timesheetHours ?? 0) >= (t as any).plannedHours
+                                ? "text-destructive"
+                                : "text-muted-foreground")
+                            }
+                            title="Clocked timesheet hours vs planned cap"
+                            data-testid={`text-task-cap-${t.id}`}
+                          >
+                            {((t as any).timesheetHours ?? 0).toFixed(1)} / {((t as any).plannedHours as number).toFixed(1)}h cap
+                          </div>
+                        )}
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center justify-end gap-1.5">
@@ -605,6 +619,9 @@ function TaskFormDialog({
   })();
   const [assigneeIds, setAssigneeIds] = useState<string[]>(initialAssigneeIds);
   const [billable, setBillable] = useState<boolean>(((task as any)?.billable ?? true) as boolean);
+  const [plannedHoursStr, setPlannedHoursStr] = useState<string>(
+    (task as any)?.plannedHours != null ? String((task as any).plannedHours) : "",
+  );
   const [parentTaskId, setParentTaskId] = useState<string>(((task as any)?.parentTaskId as string | null) ?? "");
   const initialDependencyIds: string[] = (() => {
     const list = (task as any)?.dependencies as { dependsOnTaskId: string }[] | undefined;
@@ -693,7 +710,11 @@ function TaskFormDialog({
   const startDateValid = isValidDate(startDate);
   const endDateValid = isValidDate(endDate);
   const datesValid = startDateValid && endDateValid;
-  const canSubmit = title.trim().length > 0 && datesValid && !submitting;
+  const plannedHoursTrimmed = plannedHoursStr.trim();
+  const plannedHoursNum = plannedHoursTrimmed === "" ? null : Number(plannedHoursTrimmed);
+  const plannedHoursValid =
+    plannedHoursNum === null || (isFinite(plannedHoursNum) && plannedHoursNum > 0);
+  const canSubmit = title.trim().length > 0 && datesValid && plannedHoursValid && !submitting;
 
   function handleSubmit() {
     if (!canSubmit) {
@@ -716,6 +737,7 @@ function TaskFormDialog({
       endDate: endDate || undefined,
       assigneeIds,
       billable,
+      plannedHours: plannedHoursNum ?? undefined,
       parentTaskId: parentTaskId || undefined,
       dependencyTaskIds,
       ...(useWorkstreams ? { workstreamId } : {}),
@@ -733,6 +755,7 @@ function TaskFormDialog({
           endDate: endDate || null,
           assigneeIds,
           billable,
+          plannedHours: plannedHoursNum,
           parentTaskId: parentTaskId || null,
           dependencyTaskIds,
           ...(useWorkstreams ? { workstreamId } : {}),
@@ -925,6 +948,24 @@ function TaskFormDialog({
             <span className="ml-auto text-[11px] text-muted-foreground">
               Default: on. Turn off for internal/training/non-billable tasks — hours are still recorded but won't count toward revenue.
             </span>
+          </div>
+          <div>
+            <Label>Planned Hours (cap)</Label>
+            <Input
+              type="number"
+              step="0.5"
+              min="0.5"
+              placeholder="No cap"
+              value={plannedHoursStr}
+              onChange={(e) => setPlannedHoursStr(e.target.value)}
+              data-testid="input-task-planned-hours"
+            />
+            <p className="mt-1 text-[11px] text-muted-foreground">
+              Optional. When set, timesheets against this task are rejected once total clocked hours reach this cap.
+            </p>
+            {!plannedHoursValid && (
+              <p className="mt-1 text-[11px] text-destructive">Planned hours must be a positive number.</p>
+            )}
           </div>
           <div>
             <Label>Status</Label>

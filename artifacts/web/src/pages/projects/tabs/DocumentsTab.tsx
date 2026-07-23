@@ -10,6 +10,8 @@ import {
   useListProjectDocuments,
   useCreateProjectDocument,
   useDeleteDocument,
+  useListBillingMilestones,
+  getListBillingMilestonesQueryKey,
   useListProjectResources,
   useAddProjectResource,
   useProposeProjectResource,
@@ -50,7 +52,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   ArrowLeft, Building2, User, Calendar, DollarSign, TrendingUp, TrendingDown,
   Activity, Flame, Upload, FileText, Trash2, CheckCircle2, AlertCircle, Plus,
-  Pencil, AlertTriangle, Paperclip, X,
+  Pencil, AlertTriangle, Paperclip, X, Link2,
 } from "lucide-react";
 import { formatIDR, formatDate, formatPct } from "@/lib/format";
 import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
@@ -81,12 +83,17 @@ function DocumentsTab({ projectId, projectStatus }: { projectId: string; project
   const { data: docs, isLoading } = useListProjectDocuments(projectId, undefined, {
     query: { queryKey: getListProjectDocumentsQueryKey(projectId), enabled: !!projectId },
   });
+  const { data: milestones } = useListBillingMilestones(projectId, {
+    query: { queryKey: getListBillingMilestonesQueryKey(projectId), enabled: !!projectId },
+  });
+  const [bastMilestoneId, setBastMilestoneId] = useState<string>("project");
 
   const createDoc = useCreateProjectDocument({
     mutation: {
       onSuccess: () => {
         qc.invalidateQueries({ queryKey: getListProjectDocumentsQueryKey(projectId) });
         qc.invalidateQueries({ queryKey: getGetProjectQueryKey(projectId) });
+        qc.invalidateQueries({ queryKey: getListBillingMilestonesQueryKey(projectId) });
         qc.invalidateQueries({ queryKey: ["/projects"] });
       },
     },
@@ -109,8 +116,51 @@ function DocumentsTab({ projectId, projectStatus }: { projectId: string; project
   const list = docs ?? [];
   const hasBast = list.some((d) => d.type === "BAST");
   const hasInvoice = list.some((d) => d.type === "INVOICE");
+  const hasReport = list.some((d) => d.type === "REPORT");
 
-  async function handleUpload(file: File, type: "BAST" | "INVOICE") {
+  const [linkOpen, setLinkOpen] = useState(false);
+  const [linkType, setLinkType] = useState<string>("REPORT");
+  const [linkName, setLinkName] = useState("");
+  const [linkUrl, setLinkUrl] = useState("");
+
+  async function handleAddLink() {
+    const name = linkName.trim();
+    const url = linkUrl.trim();
+    if (!name || !url) {
+      toast({ title: "Name and URL are required", variant: "destructive" });
+      return;
+    }
+    if (!/^https?:\/\//i.test(url)) {
+      toast({
+        title: "Invalid URL",
+        description: "The link must start with http:// or https://",
+        variant: "destructive",
+      });
+      return;
+    }
+    try {
+      await createDoc.mutateAsync({
+        id: projectId,
+        data: {
+          type: linkType as DocumentType,
+          kind: "LINK",
+          fileName: name,
+          fileUrl: url,
+          ...(linkType === "BAST" && bastMilestoneId !== "project"
+            ? { billingMilestoneId: bastMilestoneId }
+            : {}),
+        },
+      });
+      toast({ title: "Link added", description: name });
+      setLinkOpen(false);
+      setLinkName("");
+      setLinkUrl("");
+    } catch (e: any) {
+      toast({ title: "Failed to add link", description: e.message, variant: "destructive" });
+    }
+  }
+
+  async function handleUpload(file: File, type: "BAST" | "INVOICE" | "REPORT") {
     try {
       const fd = new FormData();
       fd.append("file", file);
@@ -127,7 +177,14 @@ function DocumentsTab({ projectId, projectStatus }: { projectId: string; project
       const { fileName, fileUrl } = await res.json();
       await createDoc.mutateAsync({
         id: projectId,
-        data: { type: type as DocumentType, fileName, fileUrl },
+        data: {
+          type: type as DocumentType,
+          fileName,
+          fileUrl,
+          ...(type === "BAST" && bastMilestoneId !== "project"
+            ? { billingMilestoneId: bastMilestoneId }
+            : {}),
+        },
       });
       toast({ title: `${type} uploaded`, description: fileName });
     } catch (e: any) {
@@ -162,13 +219,35 @@ function DocumentsTab({ projectId, projectStatus }: { projectId: string; project
       )}
 
       {canUpload && projectStatus !== "CLOSED" && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <UploadCard
             type="BAST"
             label="BAST"
             description="Handover Acceptance Report (PDF)"
             done={hasBast}
             onUpload={(f) => handleUpload(f, "BAST")}
+            extra={
+              (milestones ?? []).length > 0 ? (
+                <div className="mb-3">
+                  <Label className="text-xs text-muted-foreground mb-1.5 block">
+                    Link to Terms of Payment (optional)
+                  </Label>
+                  <Select value={bastMilestoneId} onValueChange={setBastMilestoneId}>
+                    <SelectTrigger data-testid="select-bast-milestone">
+                      <SelectValue placeholder="Project-level BAST" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="project">Project-level BAST</SelectItem>
+                      {(milestones ?? []).map((m) => (
+                        <SelectItem key={m.id} value={m.id}>
+                          {m.name} ({m.percentage.toFixed(0)}%)
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              ) : null
+            }
           />
           <UploadCard
             type="INVOICE"
@@ -177,13 +256,34 @@ function DocumentsTab({ projectId, projectStatus }: { projectId: string; project
             done={hasInvoice}
             onUpload={(f) => handleUpload(f, "INVOICE")}
           />
+          <UploadCard
+            type="REPORT"
+            label="Final Report"
+            description="Final deliverable report (PDF)"
+            done={hasReport}
+            onUpload={(f) => handleUpload(f, "REPORT")}
+          />
         </div>
       )}
 
       <Card className="border-border shadow-sm">
         <CardHeader>
-          <CardTitle className="text-base">All Documents</CardTitle>
-          <CardDescription>{list.length} file(s) uploaded</CardDescription>
+          <div className="flex items-center justify-between gap-2">
+            <div>
+              <CardTitle className="text-base">All Documents</CardTitle>
+              <CardDescription>{list.length} document(s)</CardDescription>
+            </div>
+            {canUpload && projectStatus !== "CLOSED" && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setLinkOpen(true)}
+                data-testid="button-add-link-doc"
+              >
+                <Link2 className="h-4 w-4 mr-2" /> Add Link
+              </Button>
+            )}
+          </div>
         </CardHeader>
         <CardContent>
           {list.length === 0 ? (
@@ -192,10 +292,19 @@ function DocumentsTab({ projectId, projectStatus }: { projectId: string; project
             <ul className="divide-y divide-border">
               {list.map((d) => (
                 <li key={d.id} className="flex items-center gap-3 py-3" data-testid={`doc-${d.type}`}>
-                  <FileText className="h-5 w-5 text-muted-foreground" />
+                  {d.kind === "LINK" ? (
+                    <Link2 className="h-5 w-5 text-muted-foreground" />
+                  ) : (
+                    <FileText className="h-5 w-5 text-muted-foreground" />
+                  )}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <Badge variant="outline" className="text-[10px]">{d.type}</Badge>
+                      {d.billingMilestoneName && (
+                        <Badge variant="outline" className="text-[10px] bg-blue-500/10 text-blue-400 border-blue-500/30">
+                          {d.billingMilestoneName}
+                        </Badge>
+                      )}
                       {d.version > 1 && (
                         <Badge variant="outline" className="text-[10px] bg-primary/10 text-primary border-primary/30">
                           v{d.version}
@@ -231,12 +340,71 @@ function DocumentsTab({ projectId, projectStatus }: { projectId: string; project
           )}
         </CardContent>
       </Card>
+
+      <Dialog open={linkOpen} onOpenChange={setLinkOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Add Link Document</DialogTitle>
+            <DialogDescription>
+              Register an external document (SharePoint, Google Drive, etc.) by its URL.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label className="text-xs mb-1.5 block">Document type</Label>
+              <Select value={linkType} onValueChange={setLinkType}>
+                <SelectTrigger data-testid="select-link-type">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="REPORT">Report</SelectItem>
+                  <SelectItem value="BAST">BAST</SelectItem>
+                  <SelectItem value="INVOICE">Invoice</SelectItem>
+                  <SelectItem value="CONTRACT">Contract</SelectItem>
+                  <SelectItem value="OTHER">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="text-xs mb-1.5 block">Document name</Label>
+              <Input
+                value={linkName}
+                onChange={(e) => setLinkName(e.target.value)}
+                placeholder="e.g. Final Pentest Report v2"
+                data-testid="input-link-name"
+              />
+            </div>
+            <div>
+              <Label className="text-xs mb-1.5 block">URL</Label>
+              <Input
+                value={linkUrl}
+                onChange={(e) => setLinkUrl(e.target.value)}
+                placeholder="https://…"
+                data-testid="input-link-url"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setLinkOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleAddLink}
+              disabled={createDoc.isPending}
+              data-testid="button-save-link-doc"
+            >
+              {createDoc.isPending ? "Saving…" : "Add Link"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
 
-function UploadCard({ type, label, description, done, onUpload }: {
+function UploadCard({ type, label, description, done, onUpload, extra }: {
   type: string; label: string; description: string; done: boolean; onUpload: (f: File) => void;
+  extra?: React.ReactNode;
 }) {
   const ref = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
@@ -253,6 +421,7 @@ function UploadCard({ type, label, description, done, onUpload }: {
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
+        {extra}
         <input
           ref={ref}
           type="file"

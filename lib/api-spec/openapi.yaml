@@ -770,6 +770,43 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/SuccessMessage" }
 
+  /resources/{resourceId}/rates:
+    get:
+      operationId: listResourceRates
+      tags: [resources]
+      description: |
+        Append-only rate history for a project resource, newest first.
+        Restricted to canViewDailyRate roles (MGMT / assigned PM / SUPER_ADMIN).
+      parameters:
+        - { name: resourceId, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ResourceRate" }
+    post:
+      operationId: createResourceRate
+      tags: [resources]
+      description: |
+        Adds a rate period. The resource's denormalized dailyRate is re-synced
+        to the newest period already in effect. sellingRate is display-only.
+      parameters:
+        - { name: resourceId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateResourceRateBody" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ResourceRate" }
+
   /principal/pending-resource-approvals:
     get:
       operationId: listPendingResourceApprovals
@@ -1367,6 +1404,30 @@ paths:
               required: [reason]
               properties:
                 reason: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ProjectExpense" }
+
+  /expenses/{expenseId}/settle:
+    post:
+      operationId: settleProjectExpense
+      tags: [expenses]
+      description: PM-of-project or MANAGEMENT settles an APPROVED cash advance with the actual spent amount.
+      parameters:
+        - { name: expenseId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [settledAmount]
+              properties:
+                settledAmount: { type: number }
+                settlementNotes: { type: string, nullable: true }
       responses:
         "200":
           description: OK
@@ -2064,6 +2125,52 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/ClosingChecklistItem" }
+
+  /feedback360/mine:
+    get:
+      operationId: listMyFeedback360
+      tags: [feedback360]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Feedback360" }
+
+  /feedback360/{id}:
+    patch:
+      operationId: submitFeedback360
+      tags: [feedback360]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SubmitFeedback360Body" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Feedback360" }
+
+  /projects/{id}/feedback360:
+    get:
+      operationId: listProjectFeedback360
+      tags: [feedback360]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Feedback360" }
 
   /documents/{id}:
     delete:
@@ -2893,7 +3000,11 @@ components:
 
     DocumentType:
       type: string
-      enum: [BAST, INVOICE, CONTRACT, OTHER]
+      enum: [BAST, INVOICE, CONTRACT, REPORT, OTHER]
+
+    DocumentKind:
+      type: string
+      enum: [FILE, LINK]
 
     TaskStatus:
       type: string
@@ -3027,6 +3138,9 @@ components:
         invoicedAt: { type: string, nullable: true }
         paidAt: { type: string, nullable: true }
         sortOrder: { type: integer }
+        bastDocumentId: { type: string, nullable: true }
+        bastFileName: { type: string, nullable: true }
+        bastUploadedAt: { type: string, nullable: true }
         createdAt: { type: string }
         updatedAt: { type: string }
 
@@ -3080,6 +3194,8 @@ components:
         status: { $ref: "#/components/schemas/TaskStatus" }
         progressPercent: { type: integer, minimum: 0, maximum: 100 }
         billable: { type: boolean }
+        plannedHours: { type: number, nullable: true, description: "Hour cap for this task (all users, non-rejected timesheets); null = uncapped" }
+        timesheetHours: { type: number, description: "Total non-rejected timesheet hours clocked against this task" }
         startDate: { type: string, nullable: true }
         endDate: { type: string, nullable: true }
         assigneeId: { type: string, nullable: true }
@@ -3107,6 +3223,7 @@ components:
         status: { $ref: "#/components/schemas/TaskStatus" }
         progressPercent: { type: integer, minimum: 0, maximum: 100 }
         billable: { type: boolean }
+        plannedHours: { type: number, nullable: true }
         startDate: { type: string, nullable: true }
         endDate: { type: string, nullable: true }
         assigneeId: { type: string, nullable: true }
@@ -3127,6 +3244,7 @@ components:
         status: { $ref: "#/components/schemas/TaskStatus" }
         progressPercent: { type: integer, minimum: 0, maximum: 100 }
         billable: { type: boolean }
+        plannedHours: { type: number, nullable: true }
         startDate: { type: string, nullable: true }
         endDate: { type: string, nullable: true }
         assigneeId: { type: string, nullable: true }
@@ -3588,7 +3706,7 @@ components:
         projectCode: { type: string, nullable: true }
         projectName: { type: string, nullable: true }
         clientName: { type: string, nullable: true }
-        category: { type: string, enum: [SOFTWARE, HARDWARE, LICENSE, TRAVEL, OTHER] }
+        category: { type: string, enum: [SOFTWARE, HARDWARE, LICENSE, TRAVEL, CASH_ADVANCE, PURCHASE_ORDER, OTHER] }
         description: { type: string }
         amount: { type: number }
         spentAt: { type: string }
@@ -3599,6 +3717,11 @@ components:
         approvedByName: { type: string, nullable: true }
         approvedAt: { type: string, nullable: true }
         rejectionReason: { type: string, nullable: true }
+        poNumber: { type: string, nullable: true }
+        settledAmount: { type: number, nullable: true }
+        settledAt: { type: string, nullable: true }
+        settlementNotes: { type: string, nullable: true }
+        settledByName: { type: string, nullable: true }
         createdById: { type: string, nullable: true }
         createdByName: { type: string, nullable: true }
         createdAt: { type: string }
@@ -3607,13 +3730,14 @@ components:
       type: object
       required: [category, description, amount]
       properties:
-        category: { type: string, enum: [SOFTWARE, HARDWARE, LICENSE, TRAVEL, OTHER] }
+        category: { type: string, enum: [SOFTWARE, HARDWARE, LICENSE, TRAVEL, CASH_ADVANCE, PURCHASE_ORDER, OTHER] }
         description: { type: string }
         amount: { type: number }
         spentAt: { type: string }
         evidenceUrl: { type: string, nullable: true, description: "Base64 data URL of supporting invoice/receipt PDF or image" }
         evidenceFileName: { type: string, nullable: true }
         workstreamId: { type: string, nullable: true }
+        poNumber: { type: string, nullable: true, description: "Purchase order number (PURCHASE_ORDER category)" }
 
     RaidType: { type: string, enum: [RISK, ASSUMPTION, ISSUE, DEPENDENCY] }
     RaidImpact: { type: string, enum: [LOW, MEDIUM, HIGH, CRITICAL] }
@@ -4158,12 +4282,15 @@ components:
         id: { type: string }
         projectId: { type: string }
         type: { $ref: "#/components/schemas/DocumentType" }
+        kind: { $ref: "#/components/schemas/DocumentKind" }
         fileName: { type: string }
         fileUrl: { type: string }
         invoiceNumber: { type: string, nullable: true }
         invoiceAmount: { type: number, nullable: true }
         invoiceStatus: { type: string, nullable: true }
         notes: { type: string, nullable: true }
+        billingMilestoneId: { type: string, nullable: true }
+        billingMilestoneName: { type: string, nullable: true }
         uploadedById: { type: string, nullable: true }
         uploadedByName: { type: string, nullable: true }
         uploadedAt: { type: string }
@@ -4256,17 +4383,66 @@ components:
         status: { type: string, enum: [PENDING, DONE, NA] }
         note: { type: string, nullable: true }
 
+    Feedback360:
+      type: object
+      required: [id, projectId, projectCode, projectName, reviewerId, reviewerName, subjectId, subjectName, status, createdAt]
+      properties:
+        id: { type: string }
+        projectId: { type: string }
+        projectCode: { type: string }
+        projectName: { type: string }
+        reviewerId: { type: string }
+        reviewerName: { type: string }
+        reviewerRole: { type: string }
+        subjectId: { type: string }
+        subjectName: { type: string }
+        subjectRole: { type: string }
+        rating: { type: integer, nullable: true }
+        comment: { type: string, nullable: true }
+        status: { type: string, enum: [PENDING, SUBMITTED] }
+        submittedAt: { type: string, nullable: true }
+        createdAt: { type: string }
+
+    SubmitFeedback360Body:
+      type: object
+      required: [rating]
+      properties:
+        rating: { type: integer, minimum: 1, maximum: 5 }
+        comment: { type: string, nullable: true }
+
+    ResourceRate:
+      type: object
+      required: [id, resourceId, costRate, effectiveFrom, createdAt]
+      properties:
+        id: { type: string }
+        resourceId: { type: string }
+        costRate: { type: number }
+        sellingRate: { type: number, nullable: true }
+        effectiveFrom: { type: string }
+        createdByName: { type: string, nullable: true }
+        createdAt: { type: string }
+
+    CreateResourceRateBody:
+      type: object
+      required: [costRate, effectiveFrom]
+      properties:
+        costRate: { type: number, minimum: 0 }
+        sellingRate: { type: number, minimum: 0, nullable: true }
+        effectiveFrom: { type: string }
+
     CreateDocumentBody:
       type: object
       required: [type, fileName, fileUrl]
       properties:
         type: { $ref: "#/components/schemas/DocumentType" }
+        kind: { $ref: "#/components/schemas/DocumentKind" }
         fileName: { type: string }
         fileUrl: { type: string }
         invoiceNumber: { type: string }
         invoiceAmount: { type: number }
         invoiceStatus: { type: string }
         notes: { type: string }
+        billingMilestoneId: { type: string, nullable: true }
 
     ProjectFinancials:
       type: object

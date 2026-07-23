@@ -55,6 +55,7 @@ import type {
   CreateProjectReportBody,
   CreateProjectTemplateBody,
   CreateProjectWorkstreamBody,
+  CreateResourceRateBody,
   CreateSkillBody,
   CreateSkillDevelopmentGoalBody,
   CreateTaskBody,
@@ -66,6 +67,7 @@ import type {
   Document,
   ExecutiveBriefingResult,
   ExecutiveBriefingState,
+  Feedback360,
   GetBillableUtilizationParams,
   GetInvoicePlanningParams,
   GetLeadsAnalyticsParams,
@@ -125,12 +127,15 @@ import type {
   ReportMeta,
   ReportResult,
   ResourcePlanningMatrix,
+  ResourceRate,
   ResourceUtilizationDetail,
+  SettleProjectExpenseBody,
   Skill,
   SkillDevelopmentGoal,
   SkillMatrix,
   SkillProgressionLog,
   StatusCount,
+  SubmitFeedback360Body,
   SuccessMessage,
   Task,
   TaskTemplate,
@@ -4246,6 +4251,179 @@ export const useRejectProjectResource = <
 };
 
 /**
+ * Append-only rate history for a project resource, newest first.
+Restricted to canViewDailyRate roles (MGMT / assigned PM / SUPER_ADMIN).
+
+ */
+export const getListResourceRatesUrl = (resourceId: string) => {
+  return `/api/resources/${resourceId}/rates`;
+};
+
+export const listResourceRates = async (
+  resourceId: string,
+  options?: RequestInit,
+): Promise<ResourceRate[]> => {
+  return customFetch<ResourceRate[]>(getListResourceRatesUrl(resourceId), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListResourceRatesQueryKey = (resourceId: string) => {
+  return [`/api/resources/${resourceId}/rates`] as const;
+};
+
+export const getListResourceRatesQueryOptions = <
+  TData = Awaited<ReturnType<typeof listResourceRates>>,
+  TError = ErrorType<unknown>,
+>(
+  resourceId: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listResourceRates>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getListResourceRatesQueryKey(resourceId);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listResourceRates>>
+  > = ({ signal }) =>
+    listResourceRates(resourceId, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!resourceId,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof listResourceRates>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListResourceRatesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listResourceRates>>
+>;
+export type ListResourceRatesQueryError = ErrorType<unknown>;
+
+export function useListResourceRates<
+  TData = Awaited<ReturnType<typeof listResourceRates>>,
+  TError = ErrorType<unknown>,
+>(
+  resourceId: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listResourceRates>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListResourceRatesQueryOptions(resourceId, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * Adds a rate period. The resource's denormalized dailyRate is re-synced
+to the newest period already in effect. sellingRate is display-only.
+
+ */
+export const getCreateResourceRateUrl = (resourceId: string) => {
+  return `/api/resources/${resourceId}/rates`;
+};
+
+export const createResourceRate = async (
+  resourceId: string,
+  createResourceRateBody: CreateResourceRateBody,
+  options?: RequestInit,
+): Promise<ResourceRate> => {
+  return customFetch<ResourceRate>(getCreateResourceRateUrl(resourceId), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createResourceRateBody),
+  });
+};
+
+export const getCreateResourceRateMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createResourceRate>>,
+    TError,
+    { resourceId: string; data: BodyType<CreateResourceRateBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createResourceRate>>,
+  TError,
+  { resourceId: string; data: BodyType<CreateResourceRateBody> },
+  TContext
+> => {
+  const mutationKey = ["createResourceRate"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createResourceRate>>,
+    { resourceId: string; data: BodyType<CreateResourceRateBody> }
+  > = (props) => {
+    const { resourceId, data } = props ?? {};
+
+    return createResourceRate(resourceId, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateResourceRateMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createResourceRate>>
+>;
+export type CreateResourceRateMutationBody = BodyType<CreateResourceRateBody>;
+export type CreateResourceRateMutationError = ErrorType<unknown>;
+
+export const useCreateResourceRate = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createResourceRate>>,
+    TError,
+    { resourceId: string; data: BodyType<CreateResourceRateBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createResourceRate>>,
+  TError,
+  { resourceId: string; data: BodyType<CreateResourceRateBody> },
+  TContext
+> => {
+  return useMutation(getCreateResourceRateMutationOptions(options));
+};
+
+/**
  * Lists ProjectResource rows awaiting the calling Principal's approval —
 PM-added supervised users (KONSULTAN / TECHNICAL_WRITER) whose
 principalId equals the caller.
@@ -7084,6 +7262,91 @@ export const useRejectProjectExpense = <
   TContext
 > => {
   return useMutation(getRejectProjectExpenseMutationOptions(options));
+};
+
+/**
+ * PM-of-project or MANAGEMENT settles an APPROVED cash advance with the actual spent amount.
+ */
+export const getSettleProjectExpenseUrl = (expenseId: string) => {
+  return `/api/expenses/${expenseId}/settle`;
+};
+
+export const settleProjectExpense = async (
+  expenseId: string,
+  settleProjectExpenseBody: SettleProjectExpenseBody,
+  options?: RequestInit,
+): Promise<ProjectExpense> => {
+  return customFetch<ProjectExpense>(getSettleProjectExpenseUrl(expenseId), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(settleProjectExpenseBody),
+  });
+};
+
+export const getSettleProjectExpenseMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof settleProjectExpense>>,
+    TError,
+    { expenseId: string; data: BodyType<SettleProjectExpenseBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof settleProjectExpense>>,
+  TError,
+  { expenseId: string; data: BodyType<SettleProjectExpenseBody> },
+  TContext
+> => {
+  const mutationKey = ["settleProjectExpense"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof settleProjectExpense>>,
+    { expenseId: string; data: BodyType<SettleProjectExpenseBody> }
+  > = (props) => {
+    const { expenseId, data } = props ?? {};
+
+    return settleProjectExpense(expenseId, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SettleProjectExpenseMutationResult = NonNullable<
+  Awaited<ReturnType<typeof settleProjectExpense>>
+>;
+export type SettleProjectExpenseMutationBody =
+  BodyType<SettleProjectExpenseBody>;
+export type SettleProjectExpenseMutationError = ErrorType<unknown>;
+
+export const useSettleProjectExpense = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof settleProjectExpense>>,
+    TError,
+    { expenseId: string; data: BodyType<SettleProjectExpenseBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof settleProjectExpense>>,
+  TError,
+  { expenseId: string; data: BodyType<SettleProjectExpenseBody> },
+  TContext
+> => {
+  return useMutation(getSettleProjectExpenseMutationOptions(options));
 };
 
 export const getListBusinessUnitsUrl = () => {
@@ -10873,6 +11136,236 @@ export const useUpdateProjectClosingChecklistItem = <
     getUpdateProjectClosingChecklistItemMutationOptions(options),
   );
 };
+
+export const getListMyFeedback360Url = () => {
+  return `/api/feedback360/mine`;
+};
+
+export const listMyFeedback360 = async (
+  options?: RequestInit,
+): Promise<Feedback360[]> => {
+  return customFetch<Feedback360[]>(getListMyFeedback360Url(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListMyFeedback360QueryKey = () => {
+  return [`/api/feedback360/mine`] as const;
+};
+
+export const getListMyFeedback360QueryOptions = <
+  TData = Awaited<ReturnType<typeof listMyFeedback360>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listMyFeedback360>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListMyFeedback360QueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listMyFeedback360>>
+  > = ({ signal }) => listMyFeedback360({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listMyFeedback360>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListMyFeedback360QueryResult = NonNullable<
+  Awaited<ReturnType<typeof listMyFeedback360>>
+>;
+export type ListMyFeedback360QueryError = ErrorType<unknown>;
+
+export function useListMyFeedback360<
+  TData = Awaited<ReturnType<typeof listMyFeedback360>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listMyFeedback360>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListMyFeedback360QueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getSubmitFeedback360Url = (id: string) => {
+  return `/api/feedback360/${id}`;
+};
+
+export const submitFeedback360 = async (
+  id: string,
+  submitFeedback360Body: SubmitFeedback360Body,
+  options?: RequestInit,
+): Promise<Feedback360> => {
+  return customFetch<Feedback360>(getSubmitFeedback360Url(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(submitFeedback360Body),
+  });
+};
+
+export const getSubmitFeedback360MutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof submitFeedback360>>,
+    TError,
+    { id: string; data: BodyType<SubmitFeedback360Body> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof submitFeedback360>>,
+  TError,
+  { id: string; data: BodyType<SubmitFeedback360Body> },
+  TContext
+> => {
+  const mutationKey = ["submitFeedback360"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof submitFeedback360>>,
+    { id: string; data: BodyType<SubmitFeedback360Body> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return submitFeedback360(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SubmitFeedback360MutationResult = NonNullable<
+  Awaited<ReturnType<typeof submitFeedback360>>
+>;
+export type SubmitFeedback360MutationBody = BodyType<SubmitFeedback360Body>;
+export type SubmitFeedback360MutationError = ErrorType<unknown>;
+
+export const useSubmitFeedback360 = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof submitFeedback360>>,
+    TError,
+    { id: string; data: BodyType<SubmitFeedback360Body> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof submitFeedback360>>,
+  TError,
+  { id: string; data: BodyType<SubmitFeedback360Body> },
+  TContext
+> => {
+  return useMutation(getSubmitFeedback360MutationOptions(options));
+};
+
+export const getListProjectFeedback360Url = (id: string) => {
+  return `/api/projects/${id}/feedback360`;
+};
+
+export const listProjectFeedback360 = async (
+  id: string,
+  options?: RequestInit,
+): Promise<Feedback360[]> => {
+  return customFetch<Feedback360[]>(getListProjectFeedback360Url(id), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListProjectFeedback360QueryKey = (id: string) => {
+  return [`/api/projects/${id}/feedback360`] as const;
+};
+
+export const getListProjectFeedback360QueryOptions = <
+  TData = Awaited<ReturnType<typeof listProjectFeedback360>>,
+  TError = ErrorType<unknown>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listProjectFeedback360>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getListProjectFeedback360QueryKey(id);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listProjectFeedback360>>
+  > = ({ signal }) => listProjectFeedback360(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof listProjectFeedback360>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListProjectFeedback360QueryResult = NonNullable<
+  Awaited<ReturnType<typeof listProjectFeedback360>>
+>;
+export type ListProjectFeedback360QueryError = ErrorType<unknown>;
+
+export function useListProjectFeedback360<
+  TData = Awaited<ReturnType<typeof listProjectFeedback360>>,
+  TError = ErrorType<unknown>,
+>(
+  id: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listProjectFeedback360>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListProjectFeedback360QueryOptions(id, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
 
 export const getDeleteDocumentUrl = (id: string) => {
   return `/api/documents/${id}`;

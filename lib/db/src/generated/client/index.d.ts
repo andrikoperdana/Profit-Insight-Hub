@@ -59,6 +59,11 @@ export type SurveyQuestion = $Result.DefaultSelection<Prisma.$SurveyQuestionPayl
  */
 export type SurveyResponse = $Result.DefaultSelection<Prisma.$SurveyResponsePayload>
 /**
+ * Model ProjectFeedback360
+ * 
+ */
+export type ProjectFeedback360 = $Result.DefaultSelection<Prisma.$ProjectFeedback360Payload>
+/**
  * Model AuditLog
  * 
  */
@@ -68,6 +73,13 @@ export type AuditLog = $Result.DefaultSelection<Prisma.$AuditLogPayload>
  * 
  */
 export type ProjectResource = $Result.DefaultSelection<Prisma.$ProjectResourcePayload>
+/**
+ * Model ProjectResourceRate
+ * Append-only rate history for a project resource. `ProjectResource.dailyRate`
+ * stays as the denormalized *current* cost rate; history rows change what
+ * computeMetrics charges per timesheet workDate. sellingRate is display-only.
+ */
+export type ProjectResourceRate = $Result.DefaultSelection<Prisma.$ProjectResourceRatePayload>
 /**
  * Model Timesheet
  * 
@@ -317,6 +329,14 @@ export const ProjectReportType: {
 export type ProjectReportType = (typeof ProjectReportType)[keyof typeof ProjectReportType]
 
 
+export const Feedback360Status: {
+  PENDING: 'PENDING',
+  SUBMITTED: 'SUBMITTED'
+};
+
+export type Feedback360Status = (typeof Feedback360Status)[keyof typeof Feedback360Status]
+
+
 export const TimesheetStatus: {
   DRAFT: 'DRAFT',
   SUBMITTED: 'SUBMITTED',
@@ -331,10 +351,19 @@ export const DocumentType: {
   BAST: 'BAST',
   INVOICE: 'INVOICE',
   CONTRACT: 'CONTRACT',
+  REPORT: 'REPORT',
   OTHER: 'OTHER'
 };
 
 export type DocumentType = (typeof DocumentType)[keyof typeof DocumentType]
+
+
+export const DocumentKind: {
+  FILE: 'FILE',
+  LINK: 'LINK'
+};
+
+export type DocumentKind = (typeof DocumentKind)[keyof typeof DocumentKind]
 
 
 export const ExpenseStatus: {
@@ -500,6 +529,10 @@ export type ProjectReportType = $Enums.ProjectReportType
 
 export const ProjectReportType: typeof $Enums.ProjectReportType
 
+export type Feedback360Status = $Enums.Feedback360Status
+
+export const Feedback360Status: typeof $Enums.Feedback360Status
+
 export type TimesheetStatus = $Enums.TimesheetStatus
 
 export const TimesheetStatus: typeof $Enums.TimesheetStatus
@@ -507,6 +540,10 @@ export const TimesheetStatus: typeof $Enums.TimesheetStatus
 export type DocumentType = $Enums.DocumentType
 
 export const DocumentType: typeof $Enums.DocumentType
+
+export type DocumentKind = $Enums.DocumentKind
+
+export const DocumentKind: typeof $Enums.DocumentKind
 
 export type ExpenseStatus = $Enums.ExpenseStatus
 
@@ -774,6 +811,16 @@ export class PrismaClient<
   get surveyResponse(): Prisma.SurveyResponseDelegate<ExtArgs>;
 
   /**
+   * `prisma.projectFeedback360`: Exposes CRUD operations for the **ProjectFeedback360** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProjectFeedback360s
+    * const projectFeedback360s = await prisma.projectFeedback360.findMany()
+    * ```
+    */
+  get projectFeedback360(): Prisma.ProjectFeedback360Delegate<ExtArgs>;
+
+  /**
    * `prisma.auditLog`: Exposes CRUD operations for the **AuditLog** model.
     * Example usage:
     * ```ts
@@ -792,6 +839,16 @@ export class PrismaClient<
     * ```
     */
   get projectResource(): Prisma.ProjectResourceDelegate<ExtArgs>;
+
+  /**
+   * `prisma.projectResourceRate`: Exposes CRUD operations for the **ProjectResourceRate** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProjectResourceRates
+    * const projectResourceRates = await prisma.projectResourceRate.findMany()
+    * ```
+    */
+  get projectResourceRate(): Prisma.ProjectResourceRateDelegate<ExtArgs>;
 
   /**
    * `prisma.timesheet`: Exposes CRUD operations for the **Timesheet** model.
@@ -1552,8 +1609,10 @@ export namespace Prisma {
     ProjectWorkstream: 'ProjectWorkstream',
     SurveyQuestion: 'SurveyQuestion',
     SurveyResponse: 'SurveyResponse',
+    ProjectFeedback360: 'ProjectFeedback360',
     AuditLog: 'AuditLog',
     ProjectResource: 'ProjectResource',
+    ProjectResourceRate: 'ProjectResourceRate',
     Timesheet: 'Timesheet',
     Document: 'Document',
     ProjectClosingChecklistItem: 'ProjectClosingChecklistItem',
@@ -1600,7 +1659,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "client" | "project" | "projectBaseline" | "changeRequest" | "projectReport" | "projectWorkstream" | "surveyQuestion" | "surveyResponse" | "auditLog" | "projectResource" | "timesheet" | "document" | "projectClosingChecklistItem" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "skillDevelopmentGoal" | "skillProgressionLog" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "projectTemplate" | "projectTemplateResource" | "projectTemplateMilestone" | "projectTemplateRaidItem" | "notification" | "projectRaidItem" | "performanceReview" | "performanceReviewProjectRating" | "invoiceSetting" | "appSetting" | "pipedriveStageMapping" | "xeroConnection"
+      modelProps: "user" | "client" | "project" | "projectBaseline" | "changeRequest" | "projectReport" | "projectWorkstream" | "surveyQuestion" | "surveyResponse" | "projectFeedback360" | "auditLog" | "projectResource" | "projectResourceRate" | "timesheet" | "document" | "projectClosingChecklistItem" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "skillDevelopmentGoal" | "skillProgressionLog" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "projectTemplate" | "projectTemplateResource" | "projectTemplateMilestone" | "projectTemplateRaidItem" | "notification" | "projectRaidItem" | "performanceReview" | "performanceReviewProjectRating" | "invoiceSetting" | "appSetting" | "pipedriveStageMapping" | "xeroConnection"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2234,6 +2293,76 @@ export namespace Prisma {
           }
         }
       }
+      ProjectFeedback360: {
+        payload: Prisma.$ProjectFeedback360Payload<ExtArgs>
+        fields: Prisma.ProjectFeedback360FieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProjectFeedback360FindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectFeedback360Payload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProjectFeedback360FindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectFeedback360Payload>
+          }
+          findFirst: {
+            args: Prisma.ProjectFeedback360FindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectFeedback360Payload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProjectFeedback360FindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectFeedback360Payload>
+          }
+          findMany: {
+            args: Prisma.ProjectFeedback360FindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectFeedback360Payload>[]
+          }
+          create: {
+            args: Prisma.ProjectFeedback360CreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectFeedback360Payload>
+          }
+          createMany: {
+            args: Prisma.ProjectFeedback360CreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProjectFeedback360CreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectFeedback360Payload>[]
+          }
+          delete: {
+            args: Prisma.ProjectFeedback360DeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectFeedback360Payload>
+          }
+          update: {
+            args: Prisma.ProjectFeedback360UpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectFeedback360Payload>
+          }
+          deleteMany: {
+            args: Prisma.ProjectFeedback360DeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProjectFeedback360UpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ProjectFeedback360UpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectFeedback360Payload>
+          }
+          aggregate: {
+            args: Prisma.ProjectFeedback360AggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProjectFeedback360>
+          }
+          groupBy: {
+            args: Prisma.ProjectFeedback360GroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProjectFeedback360GroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProjectFeedback360CountArgs<ExtArgs>
+            result: $Utils.Optional<ProjectFeedback360CountAggregateOutputType> | number
+          }
+        }
+      }
       AuditLog: {
         payload: Prisma.$AuditLogPayload<ExtArgs>
         fields: Prisma.AuditLogFieldRefs
@@ -2371,6 +2500,76 @@ export namespace Prisma {
           count: {
             args: Prisma.ProjectResourceCountArgs<ExtArgs>
             result: $Utils.Optional<ProjectResourceCountAggregateOutputType> | number
+          }
+        }
+      }
+      ProjectResourceRate: {
+        payload: Prisma.$ProjectResourceRatePayload<ExtArgs>
+        fields: Prisma.ProjectResourceRateFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProjectResourceRateFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectResourceRatePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProjectResourceRateFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectResourceRatePayload>
+          }
+          findFirst: {
+            args: Prisma.ProjectResourceRateFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectResourceRatePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProjectResourceRateFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectResourceRatePayload>
+          }
+          findMany: {
+            args: Prisma.ProjectResourceRateFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectResourceRatePayload>[]
+          }
+          create: {
+            args: Prisma.ProjectResourceRateCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectResourceRatePayload>
+          }
+          createMany: {
+            args: Prisma.ProjectResourceRateCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProjectResourceRateCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectResourceRatePayload>[]
+          }
+          delete: {
+            args: Prisma.ProjectResourceRateDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectResourceRatePayload>
+          }
+          update: {
+            args: Prisma.ProjectResourceRateUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectResourceRatePayload>
+          }
+          deleteMany: {
+            args: Prisma.ProjectResourceRateDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProjectResourceRateUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ProjectResourceRateUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProjectResourceRatePayload>
+          }
+          aggregate: {
+            args: Prisma.ProjectResourceRateAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProjectResourceRate>
+          }
+          groupBy: {
+            args: Prisma.ProjectResourceRateGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProjectResourceRateGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProjectResourceRateCountArgs<ExtArgs>
+            result: $Utils.Optional<ProjectResourceRateCountAggregateOutputType> | number
           }
         }
       }
@@ -4709,12 +4908,14 @@ export namespace Prisma {
     supervisees: number
     skills: number
     approvedExpenses: number
+    settledExpenses: number
     projectsAsSales: number
     projectsAsPm: number
     projectsAsTw: number
     projectsAsAdmin: number
     resources: number
     proposedResources: number
+    createdResourceRates: number
     timesheets: number
     approvedTimesheets: number
     documentsUploaded: number
@@ -4737,6 +4938,8 @@ export namespace Prisma {
     skillGoalsCreated: number
     skillProgressionsAsSubject: number
     skillProgressionsLogged: number
+    feedback360AsReviewer: number
+    feedback360AsSubject: number
     raidItemsOwned: number
     raidItemsCreated: number
     baselinesCreated: number
@@ -4752,12 +4955,14 @@ export namespace Prisma {
     supervisees?: boolean | UserCountOutputTypeCountSuperviseesArgs
     skills?: boolean | UserCountOutputTypeCountSkillsArgs
     approvedExpenses?: boolean | UserCountOutputTypeCountApprovedExpensesArgs
+    settledExpenses?: boolean | UserCountOutputTypeCountSettledExpensesArgs
     projectsAsSales?: boolean | UserCountOutputTypeCountProjectsAsSalesArgs
     projectsAsPm?: boolean | UserCountOutputTypeCountProjectsAsPmArgs
     projectsAsTw?: boolean | UserCountOutputTypeCountProjectsAsTwArgs
     projectsAsAdmin?: boolean | UserCountOutputTypeCountProjectsAsAdminArgs
     resources?: boolean | UserCountOutputTypeCountResourcesArgs
     proposedResources?: boolean | UserCountOutputTypeCountProposedResourcesArgs
+    createdResourceRates?: boolean | UserCountOutputTypeCountCreatedResourceRatesArgs
     timesheets?: boolean | UserCountOutputTypeCountTimesheetsArgs
     approvedTimesheets?: boolean | UserCountOutputTypeCountApprovedTimesheetsArgs
     documentsUploaded?: boolean | UserCountOutputTypeCountDocumentsUploadedArgs
@@ -4780,6 +4985,8 @@ export namespace Prisma {
     skillGoalsCreated?: boolean | UserCountOutputTypeCountSkillGoalsCreatedArgs
     skillProgressionsAsSubject?: boolean | UserCountOutputTypeCountSkillProgressionsAsSubjectArgs
     skillProgressionsLogged?: boolean | UserCountOutputTypeCountSkillProgressionsLoggedArgs
+    feedback360AsReviewer?: boolean | UserCountOutputTypeCountFeedback360AsReviewerArgs
+    feedback360AsSubject?: boolean | UserCountOutputTypeCountFeedback360AsSubjectArgs
     raidItemsOwned?: boolean | UserCountOutputTypeCountRaidItemsOwnedArgs
     raidItemsCreated?: boolean | UserCountOutputTypeCountRaidItemsCreatedArgs
     baselinesCreated?: boolean | UserCountOutputTypeCountBaselinesCreatedArgs
@@ -4832,6 +5039,13 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountSettledExpensesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectExpenseWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountProjectsAsSalesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectWhereInput
   }
@@ -4869,6 +5083,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountProposedResourcesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectResourceWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountCreatedResourceRatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectResourceRateWhereInput
   }
 
   /**
@@ -5028,6 +5249,20 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountFeedback360AsReviewerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectFeedback360WhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountFeedback360AsSubjectArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectFeedback360WhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountRaidItemsOwnedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectRaidItemWhereInput
   }
@@ -5138,6 +5373,7 @@ export namespace Prisma {
     raidItems: number
     perfProjectRatings: number
     closingChecklist: number
+    feedback360: number
     workstreams: number
     reports: number
     baselines: number
@@ -5156,6 +5392,7 @@ export namespace Prisma {
     raidItems?: boolean | ProjectCountOutputTypeCountRaidItemsArgs
     perfProjectRatings?: boolean | ProjectCountOutputTypeCountPerfProjectRatingsArgs
     closingChecklist?: boolean | ProjectCountOutputTypeCountClosingChecklistArgs
+    feedback360?: boolean | ProjectCountOutputTypeCountFeedback360Args
     workstreams?: boolean | ProjectCountOutputTypeCountWorkstreamsArgs
     reports?: boolean | ProjectCountOutputTypeCountReportsArgs
     baselines?: boolean | ProjectCountOutputTypeCountBaselinesArgs
@@ -5248,6 +5485,13 @@ export namespace Prisma {
    */
   export type ProjectCountOutputTypeCountClosingChecklistArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectClosingChecklistItemWhereInput
+  }
+
+  /**
+   * ProjectCountOutputType without action
+   */
+  export type ProjectCountOutputTypeCountFeedback360Args<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectFeedback360WhereInput
   }
 
   /**
@@ -5383,6 +5627,37 @@ export namespace Prisma {
    */
   export type ProjectWorkstreamCountOutputTypeCountReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectReportWhereInput
+  }
+
+
+  /**
+   * Count Type ProjectResourceCountOutputType
+   */
+
+  export type ProjectResourceCountOutputType = {
+    rates: number
+  }
+
+  export type ProjectResourceCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    rates?: boolean | ProjectResourceCountOutputTypeCountRatesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ProjectResourceCountOutputType without action
+   */
+  export type ProjectResourceCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectResourceCountOutputType
+     */
+    select?: ProjectResourceCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ProjectResourceCountOutputType without action
+   */
+  export type ProjectResourceCountOutputTypeCountRatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectResourceRateWhereInput
   }
 
 
@@ -6082,12 +6357,14 @@ export namespace Prisma {
     supervisees?: boolean | User$superviseesArgs<ExtArgs>
     skills?: boolean | User$skillsArgs<ExtArgs>
     approvedExpenses?: boolean | User$approvedExpensesArgs<ExtArgs>
+    settledExpenses?: boolean | User$settledExpensesArgs<ExtArgs>
     projectsAsSales?: boolean | User$projectsAsSalesArgs<ExtArgs>
     projectsAsPm?: boolean | User$projectsAsPmArgs<ExtArgs>
     projectsAsTw?: boolean | User$projectsAsTwArgs<ExtArgs>
     projectsAsAdmin?: boolean | User$projectsAsAdminArgs<ExtArgs>
     resources?: boolean | User$resourcesArgs<ExtArgs>
     proposedResources?: boolean | User$proposedResourcesArgs<ExtArgs>
+    createdResourceRates?: boolean | User$createdResourceRatesArgs<ExtArgs>
     timesheets?: boolean | User$timesheetsArgs<ExtArgs>
     approvedTimesheets?: boolean | User$approvedTimesheetsArgs<ExtArgs>
     documentsUploaded?: boolean | User$documentsUploadedArgs<ExtArgs>
@@ -6110,6 +6387,8 @@ export namespace Prisma {
     skillGoalsCreated?: boolean | User$skillGoalsCreatedArgs<ExtArgs>
     skillProgressionsAsSubject?: boolean | User$skillProgressionsAsSubjectArgs<ExtArgs>
     skillProgressionsLogged?: boolean | User$skillProgressionsLoggedArgs<ExtArgs>
+    feedback360AsReviewer?: boolean | User$feedback360AsReviewerArgs<ExtArgs>
+    feedback360AsSubject?: boolean | User$feedback360AsSubjectArgs<ExtArgs>
     raidItemsOwned?: boolean | User$raidItemsOwnedArgs<ExtArgs>
     raidItemsCreated?: boolean | User$raidItemsCreatedArgs<ExtArgs>
     baselinesCreated?: boolean | User$baselinesCreatedArgs<ExtArgs>
@@ -6172,12 +6451,14 @@ export namespace Prisma {
     supervisees?: boolean | User$superviseesArgs<ExtArgs>
     skills?: boolean | User$skillsArgs<ExtArgs>
     approvedExpenses?: boolean | User$approvedExpensesArgs<ExtArgs>
+    settledExpenses?: boolean | User$settledExpensesArgs<ExtArgs>
     projectsAsSales?: boolean | User$projectsAsSalesArgs<ExtArgs>
     projectsAsPm?: boolean | User$projectsAsPmArgs<ExtArgs>
     projectsAsTw?: boolean | User$projectsAsTwArgs<ExtArgs>
     projectsAsAdmin?: boolean | User$projectsAsAdminArgs<ExtArgs>
     resources?: boolean | User$resourcesArgs<ExtArgs>
     proposedResources?: boolean | User$proposedResourcesArgs<ExtArgs>
+    createdResourceRates?: boolean | User$createdResourceRatesArgs<ExtArgs>
     timesheets?: boolean | User$timesheetsArgs<ExtArgs>
     approvedTimesheets?: boolean | User$approvedTimesheetsArgs<ExtArgs>
     documentsUploaded?: boolean | User$documentsUploadedArgs<ExtArgs>
@@ -6200,6 +6481,8 @@ export namespace Prisma {
     skillGoalsCreated?: boolean | User$skillGoalsCreatedArgs<ExtArgs>
     skillProgressionsAsSubject?: boolean | User$skillProgressionsAsSubjectArgs<ExtArgs>
     skillProgressionsLogged?: boolean | User$skillProgressionsLoggedArgs<ExtArgs>
+    feedback360AsReviewer?: boolean | User$feedback360AsReviewerArgs<ExtArgs>
+    feedback360AsSubject?: boolean | User$feedback360AsSubjectArgs<ExtArgs>
     raidItemsOwned?: boolean | User$raidItemsOwnedArgs<ExtArgs>
     raidItemsCreated?: boolean | User$raidItemsCreatedArgs<ExtArgs>
     baselinesCreated?: boolean | User$baselinesCreatedArgs<ExtArgs>
@@ -6226,12 +6509,14 @@ export namespace Prisma {
       supervisees: Prisma.$UserPayload<ExtArgs>[]
       skills: Prisma.$UserSkillPayload<ExtArgs>[]
       approvedExpenses: Prisma.$ProjectExpensePayload<ExtArgs>[]
+      settledExpenses: Prisma.$ProjectExpensePayload<ExtArgs>[]
       projectsAsSales: Prisma.$ProjectPayload<ExtArgs>[]
       projectsAsPm: Prisma.$ProjectPayload<ExtArgs>[]
       projectsAsTw: Prisma.$ProjectPayload<ExtArgs>[]
       projectsAsAdmin: Prisma.$ProjectPayload<ExtArgs>[]
       resources: Prisma.$ProjectResourcePayload<ExtArgs>[]
       proposedResources: Prisma.$ProjectResourcePayload<ExtArgs>[]
+      createdResourceRates: Prisma.$ProjectResourceRatePayload<ExtArgs>[]
       timesheets: Prisma.$TimesheetPayload<ExtArgs>[]
       approvedTimesheets: Prisma.$TimesheetPayload<ExtArgs>[]
       documentsUploaded: Prisma.$DocumentPayload<ExtArgs>[]
@@ -6254,6 +6539,8 @@ export namespace Prisma {
       skillGoalsCreated: Prisma.$SkillDevelopmentGoalPayload<ExtArgs>[]
       skillProgressionsAsSubject: Prisma.$SkillProgressionLogPayload<ExtArgs>[]
       skillProgressionsLogged: Prisma.$SkillProgressionLogPayload<ExtArgs>[]
+      feedback360AsReviewer: Prisma.$ProjectFeedback360Payload<ExtArgs>[]
+      feedback360AsSubject: Prisma.$ProjectFeedback360Payload<ExtArgs>[]
       raidItemsOwned: Prisma.$ProjectRaidItemPayload<ExtArgs>[]
       raidItemsCreated: Prisma.$ProjectRaidItemPayload<ExtArgs>[]
       baselinesCreated: Prisma.$ProjectBaselinePayload<ExtArgs>[]
@@ -6652,12 +6939,14 @@ export namespace Prisma {
     supervisees<T extends User$superviseesArgs<ExtArgs> = {}>(args?: Subset<T, User$superviseesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany"> | Null>
     skills<T extends User$skillsArgs<ExtArgs> = {}>(args?: Subset<T, User$skillsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserSkillPayload<ExtArgs>, T, "findMany"> | Null>
     approvedExpenses<T extends User$approvedExpensesArgs<ExtArgs> = {}>(args?: Subset<T, User$approvedExpensesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectExpensePayload<ExtArgs>, T, "findMany"> | Null>
+    settledExpenses<T extends User$settledExpensesArgs<ExtArgs> = {}>(args?: Subset<T, User$settledExpensesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectExpensePayload<ExtArgs>, T, "findMany"> | Null>
     projectsAsSales<T extends User$projectsAsSalesArgs<ExtArgs> = {}>(args?: Subset<T, User$projectsAsSalesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany"> | Null>
     projectsAsPm<T extends User$projectsAsPmArgs<ExtArgs> = {}>(args?: Subset<T, User$projectsAsPmArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany"> | Null>
     projectsAsTw<T extends User$projectsAsTwArgs<ExtArgs> = {}>(args?: Subset<T, User$projectsAsTwArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany"> | Null>
     projectsAsAdmin<T extends User$projectsAsAdminArgs<ExtArgs> = {}>(args?: Subset<T, User$projectsAsAdminArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany"> | Null>
     resources<T extends User$resourcesArgs<ExtArgs> = {}>(args?: Subset<T, User$resourcesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectResourcePayload<ExtArgs>, T, "findMany"> | Null>
     proposedResources<T extends User$proposedResourcesArgs<ExtArgs> = {}>(args?: Subset<T, User$proposedResourcesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectResourcePayload<ExtArgs>, T, "findMany"> | Null>
+    createdResourceRates<T extends User$createdResourceRatesArgs<ExtArgs> = {}>(args?: Subset<T, User$createdResourceRatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectResourceRatePayload<ExtArgs>, T, "findMany"> | Null>
     timesheets<T extends User$timesheetsArgs<ExtArgs> = {}>(args?: Subset<T, User$timesheetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimesheetPayload<ExtArgs>, T, "findMany"> | Null>
     approvedTimesheets<T extends User$approvedTimesheetsArgs<ExtArgs> = {}>(args?: Subset<T, User$approvedTimesheetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimesheetPayload<ExtArgs>, T, "findMany"> | Null>
     documentsUploaded<T extends User$documentsUploadedArgs<ExtArgs> = {}>(args?: Subset<T, User$documentsUploadedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany"> | Null>
@@ -6680,6 +6969,8 @@ export namespace Prisma {
     skillGoalsCreated<T extends User$skillGoalsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$skillGoalsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SkillDevelopmentGoalPayload<ExtArgs>, T, "findMany"> | Null>
     skillProgressionsAsSubject<T extends User$skillProgressionsAsSubjectArgs<ExtArgs> = {}>(args?: Subset<T, User$skillProgressionsAsSubjectArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SkillProgressionLogPayload<ExtArgs>, T, "findMany"> | Null>
     skillProgressionsLogged<T extends User$skillProgressionsLoggedArgs<ExtArgs> = {}>(args?: Subset<T, User$skillProgressionsLoggedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SkillProgressionLogPayload<ExtArgs>, T, "findMany"> | Null>
+    feedback360AsReviewer<T extends User$feedback360AsReviewerArgs<ExtArgs> = {}>(args?: Subset<T, User$feedback360AsReviewerArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectFeedback360Payload<ExtArgs>, T, "findMany"> | Null>
+    feedback360AsSubject<T extends User$feedback360AsSubjectArgs<ExtArgs> = {}>(args?: Subset<T, User$feedback360AsSubjectArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectFeedback360Payload<ExtArgs>, T, "findMany"> | Null>
     raidItemsOwned<T extends User$raidItemsOwnedArgs<ExtArgs> = {}>(args?: Subset<T, User$raidItemsOwnedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectRaidItemPayload<ExtArgs>, T, "findMany"> | Null>
     raidItemsCreated<T extends User$raidItemsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$raidItemsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectRaidItemPayload<ExtArgs>, T, "findMany"> | Null>
     baselinesCreated<T extends User$baselinesCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$baselinesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectBaselinePayload<ExtArgs>, T, "findMany"> | Null>
@@ -7177,6 +7468,26 @@ export namespace Prisma {
   }
 
   /**
+   * User.settledExpenses
+   */
+  export type User$settledExpensesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectExpense
+     */
+    select?: ProjectExpenseSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectExpenseInclude<ExtArgs> | null
+    where?: ProjectExpenseWhereInput
+    orderBy?: ProjectExpenseOrderByWithRelationInput | ProjectExpenseOrderByWithRelationInput[]
+    cursor?: ProjectExpenseWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectExpenseScalarFieldEnum | ProjectExpenseScalarFieldEnum[]
+  }
+
+  /**
    * User.projectsAsSales
    */
   export type User$projectsAsSalesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7294,6 +7605,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProjectResourceScalarFieldEnum | ProjectResourceScalarFieldEnum[]
+  }
+
+  /**
+   * User.createdResourceRates
+   */
+  export type User$createdResourceRatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectResourceRate
+     */
+    select?: ProjectResourceRateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectResourceRateInclude<ExtArgs> | null
+    where?: ProjectResourceRateWhereInput
+    orderBy?: ProjectResourceRateOrderByWithRelationInput | ProjectResourceRateOrderByWithRelationInput[]
+    cursor?: ProjectResourceRateWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectResourceRateScalarFieldEnum | ProjectResourceRateScalarFieldEnum[]
   }
 
   /**
@@ -7734,6 +8065,46 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: SkillProgressionLogScalarFieldEnum | SkillProgressionLogScalarFieldEnum[]
+  }
+
+  /**
+   * User.feedback360AsReviewer
+   */
+  export type User$feedback360AsReviewerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectFeedback360
+     */
+    select?: ProjectFeedback360Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectFeedback360Include<ExtArgs> | null
+    where?: ProjectFeedback360WhereInput
+    orderBy?: ProjectFeedback360OrderByWithRelationInput | ProjectFeedback360OrderByWithRelationInput[]
+    cursor?: ProjectFeedback360WhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectFeedback360ScalarFieldEnum | ProjectFeedback360ScalarFieldEnum[]
+  }
+
+  /**
+   * User.feedback360AsSubject
+   */
+  export type User$feedback360AsSubjectArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectFeedback360
+     */
+    select?: ProjectFeedback360Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectFeedback360Include<ExtArgs> | null
+    where?: ProjectFeedback360WhereInput
+    orderBy?: ProjectFeedback360OrderByWithRelationInput | ProjectFeedback360OrderByWithRelationInput[]
+    cursor?: ProjectFeedback360WhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectFeedback360ScalarFieldEnum | ProjectFeedback360ScalarFieldEnum[]
   }
 
   /**
@@ -9471,6 +9842,7 @@ export namespace Prisma {
     raidItems?: boolean | Project$raidItemsArgs<ExtArgs>
     perfProjectRatings?: boolean | Project$perfProjectRatingsArgs<ExtArgs>
     closingChecklist?: boolean | Project$closingChecklistArgs<ExtArgs>
+    feedback360?: boolean | Project$feedback360Args<ExtArgs>
     workstreams?: boolean | Project$workstreamsArgs<ExtArgs>
     reports?: boolean | Project$reportsArgs<ExtArgs>
     baselines?: boolean | Project$baselinesArgs<ExtArgs>
@@ -9582,6 +9954,7 @@ export namespace Prisma {
     raidItems?: boolean | Project$raidItemsArgs<ExtArgs>
     perfProjectRatings?: boolean | Project$perfProjectRatingsArgs<ExtArgs>
     closingChecklist?: boolean | Project$closingChecklistArgs<ExtArgs>
+    feedback360?: boolean | Project$feedback360Args<ExtArgs>
     workstreams?: boolean | Project$workstreamsArgs<ExtArgs>
     reports?: boolean | Project$reportsArgs<ExtArgs>
     baselines?: boolean | Project$baselinesArgs<ExtArgs>
@@ -9615,6 +9988,7 @@ export namespace Prisma {
       raidItems: Prisma.$ProjectRaidItemPayload<ExtArgs>[]
       perfProjectRatings: Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>[]
       closingChecklist: Prisma.$ProjectClosingChecklistItemPayload<ExtArgs>[]
+      feedback360: Prisma.$ProjectFeedback360Payload<ExtArgs>[]
       workstreams: Prisma.$ProjectWorkstreamPayload<ExtArgs>[]
       reports: Prisma.$ProjectReportPayload<ExtArgs>[]
       baselines: Prisma.$ProjectBaselinePayload<ExtArgs>[]
@@ -10039,6 +10413,7 @@ export namespace Prisma {
     raidItems<T extends Project$raidItemsArgs<ExtArgs> = {}>(args?: Subset<T, Project$raidItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectRaidItemPayload<ExtArgs>, T, "findMany"> | Null>
     perfProjectRatings<T extends Project$perfProjectRatingsArgs<ExtArgs> = {}>(args?: Subset<T, Project$perfProjectRatingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>, T, "findMany"> | Null>
     closingChecklist<T extends Project$closingChecklistArgs<ExtArgs> = {}>(args?: Subset<T, Project$closingChecklistArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectClosingChecklistItemPayload<ExtArgs>, T, "findMany"> | Null>
+    feedback360<T extends Project$feedback360Args<ExtArgs> = {}>(args?: Subset<T, Project$feedback360Args<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectFeedback360Payload<ExtArgs>, T, "findMany"> | Null>
     workstreams<T extends Project$workstreamsArgs<ExtArgs> = {}>(args?: Subset<T, Project$workstreamsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "findMany"> | Null>
     reports<T extends Project$reportsArgs<ExtArgs> = {}>(args?: Subset<T, Project$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectReportPayload<ExtArgs>, T, "findMany"> | Null>
     baselines<T extends Project$baselinesArgs<ExtArgs> = {}>(args?: Subset<T, Project$baselinesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectBaselinePayload<ExtArgs>, T, "findMany"> | Null>
@@ -10705,6 +11080,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProjectClosingChecklistItemScalarFieldEnum | ProjectClosingChecklistItemScalarFieldEnum[]
+  }
+
+  /**
+   * Project.feedback360
+   */
+  export type Project$feedback360Args<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectFeedback360
+     */
+    select?: ProjectFeedback360Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectFeedback360Include<ExtArgs> | null
+    where?: ProjectFeedback360WhereInput
+    orderBy?: ProjectFeedback360OrderByWithRelationInput | ProjectFeedback360OrderByWithRelationInput[]
+    cursor?: ProjectFeedback360WhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectFeedback360ScalarFieldEnum | ProjectFeedback360ScalarFieldEnum[]
   }
 
   /**
@@ -17437,6 +17832,1045 @@ export namespace Prisma {
 
 
   /**
+   * Model ProjectFeedback360
+   */
+
+  export type AggregateProjectFeedback360 = {
+    _count: ProjectFeedback360CountAggregateOutputType | null
+    _avg: ProjectFeedback360AvgAggregateOutputType | null
+    _sum: ProjectFeedback360SumAggregateOutputType | null
+    _min: ProjectFeedback360MinAggregateOutputType | null
+    _max: ProjectFeedback360MaxAggregateOutputType | null
+  }
+
+  export type ProjectFeedback360AvgAggregateOutputType = {
+    rating: number | null
+  }
+
+  export type ProjectFeedback360SumAggregateOutputType = {
+    rating: number | null
+  }
+
+  export type ProjectFeedback360MinAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    reviewerId: string | null
+    subjectId: string | null
+    rating: number | null
+    comment: string | null
+    status: $Enums.Feedback360Status | null
+    submittedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProjectFeedback360MaxAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    reviewerId: string | null
+    subjectId: string | null
+    rating: number | null
+    comment: string | null
+    status: $Enums.Feedback360Status | null
+    submittedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProjectFeedback360CountAggregateOutputType = {
+    id: number
+    projectId: number
+    reviewerId: number
+    subjectId: number
+    rating: number
+    comment: number
+    status: number
+    submittedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ProjectFeedback360AvgAggregateInputType = {
+    rating?: true
+  }
+
+  export type ProjectFeedback360SumAggregateInputType = {
+    rating?: true
+  }
+
+  export type ProjectFeedback360MinAggregateInputType = {
+    id?: true
+    projectId?: true
+    reviewerId?: true
+    subjectId?: true
+    rating?: true
+    comment?: true
+    status?: true
+    submittedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProjectFeedback360MaxAggregateInputType = {
+    id?: true
+    projectId?: true
+    reviewerId?: true
+    subjectId?: true
+    rating?: true
+    comment?: true
+    status?: true
+    submittedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProjectFeedback360CountAggregateInputType = {
+    id?: true
+    projectId?: true
+    reviewerId?: true
+    subjectId?: true
+    rating?: true
+    comment?: true
+    status?: true
+    submittedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ProjectFeedback360AggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProjectFeedback360 to aggregate.
+     */
+    where?: ProjectFeedback360WhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectFeedback360s to fetch.
+     */
+    orderBy?: ProjectFeedback360OrderByWithRelationInput | ProjectFeedback360OrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProjectFeedback360WhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectFeedback360s from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectFeedback360s.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ProjectFeedback360s
+    **/
+    _count?: true | ProjectFeedback360CountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ProjectFeedback360AvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProjectFeedback360SumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProjectFeedback360MinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProjectFeedback360MaxAggregateInputType
+  }
+
+  export type GetProjectFeedback360AggregateType<T extends ProjectFeedback360AggregateArgs> = {
+        [P in keyof T & keyof AggregateProjectFeedback360]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProjectFeedback360[P]>
+      : GetScalarType<T[P], AggregateProjectFeedback360[P]>
+  }
+
+
+
+
+  export type ProjectFeedback360GroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectFeedback360WhereInput
+    orderBy?: ProjectFeedback360OrderByWithAggregationInput | ProjectFeedback360OrderByWithAggregationInput[]
+    by: ProjectFeedback360ScalarFieldEnum[] | ProjectFeedback360ScalarFieldEnum
+    having?: ProjectFeedback360ScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProjectFeedback360CountAggregateInputType | true
+    _avg?: ProjectFeedback360AvgAggregateInputType
+    _sum?: ProjectFeedback360SumAggregateInputType
+    _min?: ProjectFeedback360MinAggregateInputType
+    _max?: ProjectFeedback360MaxAggregateInputType
+  }
+
+  export type ProjectFeedback360GroupByOutputType = {
+    id: string
+    projectId: string
+    reviewerId: string
+    subjectId: string
+    rating: number | null
+    comment: string | null
+    status: $Enums.Feedback360Status
+    submittedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: ProjectFeedback360CountAggregateOutputType | null
+    _avg: ProjectFeedback360AvgAggregateOutputType | null
+    _sum: ProjectFeedback360SumAggregateOutputType | null
+    _min: ProjectFeedback360MinAggregateOutputType | null
+    _max: ProjectFeedback360MaxAggregateOutputType | null
+  }
+
+  type GetProjectFeedback360GroupByPayload<T extends ProjectFeedback360GroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProjectFeedback360GroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProjectFeedback360GroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProjectFeedback360GroupByOutputType[P]>
+            : GetScalarType<T[P], ProjectFeedback360GroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProjectFeedback360Select<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    reviewerId?: boolean
+    subjectId?: boolean
+    rating?: boolean
+    comment?: boolean
+    status?: boolean
+    submittedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    reviewer?: boolean | UserDefaultArgs<ExtArgs>
+    subject?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["projectFeedback360"]>
+
+  export type ProjectFeedback360SelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    reviewerId?: boolean
+    subjectId?: boolean
+    rating?: boolean
+    comment?: boolean
+    status?: boolean
+    submittedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    reviewer?: boolean | UserDefaultArgs<ExtArgs>
+    subject?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["projectFeedback360"]>
+
+  export type ProjectFeedback360SelectScalar = {
+    id?: boolean
+    projectId?: boolean
+    reviewerId?: boolean
+    subjectId?: boolean
+    rating?: boolean
+    comment?: boolean
+    status?: boolean
+    submittedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ProjectFeedback360Include<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    reviewer?: boolean | UserDefaultArgs<ExtArgs>
+    subject?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ProjectFeedback360IncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    reviewer?: boolean | UserDefaultArgs<ExtArgs>
+    subject?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $ProjectFeedback360Payload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ProjectFeedback360"
+    objects: {
+      project: Prisma.$ProjectPayload<ExtArgs>
+      reviewer: Prisma.$UserPayload<ExtArgs>
+      subject: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      projectId: string
+      reviewerId: string
+      subjectId: string
+      rating: number | null
+      comment: string | null
+      status: $Enums.Feedback360Status
+      submittedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["projectFeedback360"]>
+    composites: {}
+  }
+
+  type ProjectFeedback360GetPayload<S extends boolean | null | undefined | ProjectFeedback360DefaultArgs> = $Result.GetResult<Prisma.$ProjectFeedback360Payload, S>
+
+  type ProjectFeedback360CountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ProjectFeedback360FindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ProjectFeedback360CountAggregateInputType | true
+    }
+
+  export interface ProjectFeedback360Delegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProjectFeedback360'], meta: { name: 'ProjectFeedback360' } }
+    /**
+     * Find zero or one ProjectFeedback360 that matches the filter.
+     * @param {ProjectFeedback360FindUniqueArgs} args - Arguments to find a ProjectFeedback360
+     * @example
+     * // Get one ProjectFeedback360
+     * const projectFeedback360 = await prisma.projectFeedback360.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProjectFeedback360FindUniqueArgs>(args: SelectSubset<T, ProjectFeedback360FindUniqueArgs<ExtArgs>>): Prisma__ProjectFeedback360Client<$Result.GetResult<Prisma.$ProjectFeedback360Payload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one ProjectFeedback360 that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ProjectFeedback360FindUniqueOrThrowArgs} args - Arguments to find a ProjectFeedback360
+     * @example
+     * // Get one ProjectFeedback360
+     * const projectFeedback360 = await prisma.projectFeedback360.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProjectFeedback360FindUniqueOrThrowArgs>(args: SelectSubset<T, ProjectFeedback360FindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProjectFeedback360Client<$Result.GetResult<Prisma.$ProjectFeedback360Payload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first ProjectFeedback360 that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectFeedback360FindFirstArgs} args - Arguments to find a ProjectFeedback360
+     * @example
+     * // Get one ProjectFeedback360
+     * const projectFeedback360 = await prisma.projectFeedback360.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProjectFeedback360FindFirstArgs>(args?: SelectSubset<T, ProjectFeedback360FindFirstArgs<ExtArgs>>): Prisma__ProjectFeedback360Client<$Result.GetResult<Prisma.$ProjectFeedback360Payload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first ProjectFeedback360 that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectFeedback360FindFirstOrThrowArgs} args - Arguments to find a ProjectFeedback360
+     * @example
+     * // Get one ProjectFeedback360
+     * const projectFeedback360 = await prisma.projectFeedback360.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProjectFeedback360FindFirstOrThrowArgs>(args?: SelectSubset<T, ProjectFeedback360FindFirstOrThrowArgs<ExtArgs>>): Prisma__ProjectFeedback360Client<$Result.GetResult<Prisma.$ProjectFeedback360Payload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more ProjectFeedback360s that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectFeedback360FindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProjectFeedback360s
+     * const projectFeedback360s = await prisma.projectFeedback360.findMany()
+     * 
+     * // Get first 10 ProjectFeedback360s
+     * const projectFeedback360s = await prisma.projectFeedback360.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const projectFeedback360WithIdOnly = await prisma.projectFeedback360.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProjectFeedback360FindManyArgs>(args?: SelectSubset<T, ProjectFeedback360FindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectFeedback360Payload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a ProjectFeedback360.
+     * @param {ProjectFeedback360CreateArgs} args - Arguments to create a ProjectFeedback360.
+     * @example
+     * // Create one ProjectFeedback360
+     * const ProjectFeedback360 = await prisma.projectFeedback360.create({
+     *   data: {
+     *     // ... data to create a ProjectFeedback360
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProjectFeedback360CreateArgs>(args: SelectSubset<T, ProjectFeedback360CreateArgs<ExtArgs>>): Prisma__ProjectFeedback360Client<$Result.GetResult<Prisma.$ProjectFeedback360Payload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many ProjectFeedback360s.
+     * @param {ProjectFeedback360CreateManyArgs} args - Arguments to create many ProjectFeedback360s.
+     * @example
+     * // Create many ProjectFeedback360s
+     * const projectFeedback360 = await prisma.projectFeedback360.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProjectFeedback360CreateManyArgs>(args?: SelectSubset<T, ProjectFeedback360CreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ProjectFeedback360s and returns the data saved in the database.
+     * @param {ProjectFeedback360CreateManyAndReturnArgs} args - Arguments to create many ProjectFeedback360s.
+     * @example
+     * // Create many ProjectFeedback360s
+     * const projectFeedback360 = await prisma.projectFeedback360.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ProjectFeedback360s and only return the `id`
+     * const projectFeedback360WithIdOnly = await prisma.projectFeedback360.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProjectFeedback360CreateManyAndReturnArgs>(args?: SelectSubset<T, ProjectFeedback360CreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectFeedback360Payload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a ProjectFeedback360.
+     * @param {ProjectFeedback360DeleteArgs} args - Arguments to delete one ProjectFeedback360.
+     * @example
+     * // Delete one ProjectFeedback360
+     * const ProjectFeedback360 = await prisma.projectFeedback360.delete({
+     *   where: {
+     *     // ... filter to delete one ProjectFeedback360
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProjectFeedback360DeleteArgs>(args: SelectSubset<T, ProjectFeedback360DeleteArgs<ExtArgs>>): Prisma__ProjectFeedback360Client<$Result.GetResult<Prisma.$ProjectFeedback360Payload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one ProjectFeedback360.
+     * @param {ProjectFeedback360UpdateArgs} args - Arguments to update one ProjectFeedback360.
+     * @example
+     * // Update one ProjectFeedback360
+     * const projectFeedback360 = await prisma.projectFeedback360.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProjectFeedback360UpdateArgs>(args: SelectSubset<T, ProjectFeedback360UpdateArgs<ExtArgs>>): Prisma__ProjectFeedback360Client<$Result.GetResult<Prisma.$ProjectFeedback360Payload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more ProjectFeedback360s.
+     * @param {ProjectFeedback360DeleteManyArgs} args - Arguments to filter ProjectFeedback360s to delete.
+     * @example
+     * // Delete a few ProjectFeedback360s
+     * const { count } = await prisma.projectFeedback360.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProjectFeedback360DeleteManyArgs>(args?: SelectSubset<T, ProjectFeedback360DeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProjectFeedback360s.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectFeedback360UpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProjectFeedback360s
+     * const projectFeedback360 = await prisma.projectFeedback360.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProjectFeedback360UpdateManyArgs>(args: SelectSubset<T, ProjectFeedback360UpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ProjectFeedback360.
+     * @param {ProjectFeedback360UpsertArgs} args - Arguments to update or create a ProjectFeedback360.
+     * @example
+     * // Update or create a ProjectFeedback360
+     * const projectFeedback360 = await prisma.projectFeedback360.upsert({
+     *   create: {
+     *     // ... data to create a ProjectFeedback360
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProjectFeedback360 we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProjectFeedback360UpsertArgs>(args: SelectSubset<T, ProjectFeedback360UpsertArgs<ExtArgs>>): Prisma__ProjectFeedback360Client<$Result.GetResult<Prisma.$ProjectFeedback360Payload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of ProjectFeedback360s.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectFeedback360CountArgs} args - Arguments to filter ProjectFeedback360s to count.
+     * @example
+     * // Count the number of ProjectFeedback360s
+     * const count = await prisma.projectFeedback360.count({
+     *   where: {
+     *     // ... the filter for the ProjectFeedback360s we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProjectFeedback360CountArgs>(
+      args?: Subset<T, ProjectFeedback360CountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProjectFeedback360CountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProjectFeedback360.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectFeedback360AggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProjectFeedback360AggregateArgs>(args: Subset<T, ProjectFeedback360AggregateArgs>): Prisma.PrismaPromise<GetProjectFeedback360AggregateType<T>>
+
+    /**
+     * Group by ProjectFeedback360.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectFeedback360GroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProjectFeedback360GroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProjectFeedback360GroupByArgs['orderBy'] }
+        : { orderBy?: ProjectFeedback360GroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProjectFeedback360GroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProjectFeedback360GroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ProjectFeedback360 model
+   */
+  readonly fields: ProjectFeedback360FieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProjectFeedback360.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProjectFeedback360Client<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    reviewer<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    subject<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ProjectFeedback360 model
+   */ 
+  interface ProjectFeedback360FieldRefs {
+    readonly id: FieldRef<"ProjectFeedback360", 'String'>
+    readonly projectId: FieldRef<"ProjectFeedback360", 'String'>
+    readonly reviewerId: FieldRef<"ProjectFeedback360", 'String'>
+    readonly subjectId: FieldRef<"ProjectFeedback360", 'String'>
+    readonly rating: FieldRef<"ProjectFeedback360", 'Int'>
+    readonly comment: FieldRef<"ProjectFeedback360", 'String'>
+    readonly status: FieldRef<"ProjectFeedback360", 'Feedback360Status'>
+    readonly submittedAt: FieldRef<"ProjectFeedback360", 'DateTime'>
+    readonly createdAt: FieldRef<"ProjectFeedback360", 'DateTime'>
+    readonly updatedAt: FieldRef<"ProjectFeedback360", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ProjectFeedback360 findUnique
+   */
+  export type ProjectFeedback360FindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectFeedback360
+     */
+    select?: ProjectFeedback360Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectFeedback360Include<ExtArgs> | null
+    /**
+     * Filter, which ProjectFeedback360 to fetch.
+     */
+    where: ProjectFeedback360WhereUniqueInput
+  }
+
+  /**
+   * ProjectFeedback360 findUniqueOrThrow
+   */
+  export type ProjectFeedback360FindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectFeedback360
+     */
+    select?: ProjectFeedback360Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectFeedback360Include<ExtArgs> | null
+    /**
+     * Filter, which ProjectFeedback360 to fetch.
+     */
+    where: ProjectFeedback360WhereUniqueInput
+  }
+
+  /**
+   * ProjectFeedback360 findFirst
+   */
+  export type ProjectFeedback360FindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectFeedback360
+     */
+    select?: ProjectFeedback360Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectFeedback360Include<ExtArgs> | null
+    /**
+     * Filter, which ProjectFeedback360 to fetch.
+     */
+    where?: ProjectFeedback360WhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectFeedback360s to fetch.
+     */
+    orderBy?: ProjectFeedback360OrderByWithRelationInput | ProjectFeedback360OrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProjectFeedback360s.
+     */
+    cursor?: ProjectFeedback360WhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectFeedback360s from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectFeedback360s.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProjectFeedback360s.
+     */
+    distinct?: ProjectFeedback360ScalarFieldEnum | ProjectFeedback360ScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectFeedback360 findFirstOrThrow
+   */
+  export type ProjectFeedback360FindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectFeedback360
+     */
+    select?: ProjectFeedback360Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectFeedback360Include<ExtArgs> | null
+    /**
+     * Filter, which ProjectFeedback360 to fetch.
+     */
+    where?: ProjectFeedback360WhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectFeedback360s to fetch.
+     */
+    orderBy?: ProjectFeedback360OrderByWithRelationInput | ProjectFeedback360OrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProjectFeedback360s.
+     */
+    cursor?: ProjectFeedback360WhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectFeedback360s from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectFeedback360s.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProjectFeedback360s.
+     */
+    distinct?: ProjectFeedback360ScalarFieldEnum | ProjectFeedback360ScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectFeedback360 findMany
+   */
+  export type ProjectFeedback360FindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectFeedback360
+     */
+    select?: ProjectFeedback360Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectFeedback360Include<ExtArgs> | null
+    /**
+     * Filter, which ProjectFeedback360s to fetch.
+     */
+    where?: ProjectFeedback360WhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectFeedback360s to fetch.
+     */
+    orderBy?: ProjectFeedback360OrderByWithRelationInput | ProjectFeedback360OrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ProjectFeedback360s.
+     */
+    cursor?: ProjectFeedback360WhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectFeedback360s from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectFeedback360s.
+     */
+    skip?: number
+    distinct?: ProjectFeedback360ScalarFieldEnum | ProjectFeedback360ScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectFeedback360 create
+   */
+  export type ProjectFeedback360CreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectFeedback360
+     */
+    select?: ProjectFeedback360Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectFeedback360Include<ExtArgs> | null
+    /**
+     * The data needed to create a ProjectFeedback360.
+     */
+    data: XOR<ProjectFeedback360CreateInput, ProjectFeedback360UncheckedCreateInput>
+  }
+
+  /**
+   * ProjectFeedback360 createMany
+   */
+  export type ProjectFeedback360CreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ProjectFeedback360s.
+     */
+    data: ProjectFeedback360CreateManyInput | ProjectFeedback360CreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ProjectFeedback360 createManyAndReturn
+   */
+  export type ProjectFeedback360CreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectFeedback360
+     */
+    select?: ProjectFeedback360SelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many ProjectFeedback360s.
+     */
+    data: ProjectFeedback360CreateManyInput | ProjectFeedback360CreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectFeedback360IncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProjectFeedback360 update
+   */
+  export type ProjectFeedback360UpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectFeedback360
+     */
+    select?: ProjectFeedback360Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectFeedback360Include<ExtArgs> | null
+    /**
+     * The data needed to update a ProjectFeedback360.
+     */
+    data: XOR<ProjectFeedback360UpdateInput, ProjectFeedback360UncheckedUpdateInput>
+    /**
+     * Choose, which ProjectFeedback360 to update.
+     */
+    where: ProjectFeedback360WhereUniqueInput
+  }
+
+  /**
+   * ProjectFeedback360 updateMany
+   */
+  export type ProjectFeedback360UpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ProjectFeedback360s.
+     */
+    data: XOR<ProjectFeedback360UpdateManyMutationInput, ProjectFeedback360UncheckedUpdateManyInput>
+    /**
+     * Filter which ProjectFeedback360s to update
+     */
+    where?: ProjectFeedback360WhereInput
+  }
+
+  /**
+   * ProjectFeedback360 upsert
+   */
+  export type ProjectFeedback360UpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectFeedback360
+     */
+    select?: ProjectFeedback360Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectFeedback360Include<ExtArgs> | null
+    /**
+     * The filter to search for the ProjectFeedback360 to update in case it exists.
+     */
+    where: ProjectFeedback360WhereUniqueInput
+    /**
+     * In case the ProjectFeedback360 found by the `where` argument doesn't exist, create a new ProjectFeedback360 with this data.
+     */
+    create: XOR<ProjectFeedback360CreateInput, ProjectFeedback360UncheckedCreateInput>
+    /**
+     * In case the ProjectFeedback360 was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProjectFeedback360UpdateInput, ProjectFeedback360UncheckedUpdateInput>
+  }
+
+  /**
+   * ProjectFeedback360 delete
+   */
+  export type ProjectFeedback360DeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectFeedback360
+     */
+    select?: ProjectFeedback360Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectFeedback360Include<ExtArgs> | null
+    /**
+     * Filter which ProjectFeedback360 to delete.
+     */
+    where: ProjectFeedback360WhereUniqueInput
+  }
+
+  /**
+   * ProjectFeedback360 deleteMany
+   */
+  export type ProjectFeedback360DeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProjectFeedback360s to delete
+     */
+    where?: ProjectFeedback360WhereInput
+  }
+
+  /**
+   * ProjectFeedback360 without action
+   */
+  export type ProjectFeedback360DefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectFeedback360
+     */
+    select?: ProjectFeedback360Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectFeedback360Include<ExtArgs> | null
+  }
+
+
+  /**
    * Model AuditLog
    */
 
@@ -18710,6 +20144,8 @@ export namespace Prisma {
     workstream?: boolean | ProjectResource$workstreamArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     proposedBy?: boolean | ProjectResource$proposedByArgs<ExtArgs>
+    rates?: boolean | ProjectResource$ratesArgs<ExtArgs>
+    _count?: boolean | ProjectResourceCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["projectResource"]>
 
   export type ProjectResourceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -18751,6 +20187,8 @@ export namespace Prisma {
     workstream?: boolean | ProjectResource$workstreamArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
     proposedBy?: boolean | ProjectResource$proposedByArgs<ExtArgs>
+    rates?: boolean | ProjectResource$ratesArgs<ExtArgs>
+    _count?: boolean | ProjectResourceCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProjectResourceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
@@ -18766,6 +20204,7 @@ export namespace Prisma {
       workstream: Prisma.$ProjectWorkstreamPayload<ExtArgs> | null
       user: Prisma.$UserPayload<ExtArgs>
       proposedBy: Prisma.$UserPayload<ExtArgs> | null
+      rates: Prisma.$ProjectResourceRatePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -19148,6 +20587,7 @@ export namespace Prisma {
     workstream<T extends ProjectResource$workstreamArgs<ExtArgs> = {}>(args?: Subset<T, ProjectResource$workstreamArgs<ExtArgs>>): Prisma__ProjectWorkstreamClient<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     proposedBy<T extends ProjectResource$proposedByArgs<ExtArgs> = {}>(args?: Subset<T, ProjectResource$proposedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    rates<T extends ProjectResource$ratesArgs<ExtArgs> = {}>(args?: Subset<T, ProjectResource$ratesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectResourceRatePayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -19537,6 +20977,26 @@ export namespace Prisma {
   }
 
   /**
+   * ProjectResource.rates
+   */
+  export type ProjectResource$ratesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectResourceRate
+     */
+    select?: ProjectResourceRateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectResourceRateInclude<ExtArgs> | null
+    where?: ProjectResourceRateWhereInput
+    orderBy?: ProjectResourceRateOrderByWithRelationInput | ProjectResourceRateOrderByWithRelationInput[]
+    cursor?: ProjectResourceRateWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectResourceRateScalarFieldEnum | ProjectResourceRateScalarFieldEnum[]
+  }
+
+  /**
    * ProjectResource without action
    */
   export type ProjectResourceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -19548,6 +21008,1022 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ProjectResourceInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ProjectResourceRate
+   */
+
+  export type AggregateProjectResourceRate = {
+    _count: ProjectResourceRateCountAggregateOutputType | null
+    _avg: ProjectResourceRateAvgAggregateOutputType | null
+    _sum: ProjectResourceRateSumAggregateOutputType | null
+    _min: ProjectResourceRateMinAggregateOutputType | null
+    _max: ProjectResourceRateMaxAggregateOutputType | null
+  }
+
+  export type ProjectResourceRateAvgAggregateOutputType = {
+    costRate: number | null
+    sellingRate: number | null
+  }
+
+  export type ProjectResourceRateSumAggregateOutputType = {
+    costRate: number | null
+    sellingRate: number | null
+  }
+
+  export type ProjectResourceRateMinAggregateOutputType = {
+    id: string | null
+    resourceId: string | null
+    costRate: number | null
+    sellingRate: number | null
+    effectiveFrom: Date | null
+    createdById: string | null
+    createdAt: Date | null
+  }
+
+  export type ProjectResourceRateMaxAggregateOutputType = {
+    id: string | null
+    resourceId: string | null
+    costRate: number | null
+    sellingRate: number | null
+    effectiveFrom: Date | null
+    createdById: string | null
+    createdAt: Date | null
+  }
+
+  export type ProjectResourceRateCountAggregateOutputType = {
+    id: number
+    resourceId: number
+    costRate: number
+    sellingRate: number
+    effectiveFrom: number
+    createdById: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ProjectResourceRateAvgAggregateInputType = {
+    costRate?: true
+    sellingRate?: true
+  }
+
+  export type ProjectResourceRateSumAggregateInputType = {
+    costRate?: true
+    sellingRate?: true
+  }
+
+  export type ProjectResourceRateMinAggregateInputType = {
+    id?: true
+    resourceId?: true
+    costRate?: true
+    sellingRate?: true
+    effectiveFrom?: true
+    createdById?: true
+    createdAt?: true
+  }
+
+  export type ProjectResourceRateMaxAggregateInputType = {
+    id?: true
+    resourceId?: true
+    costRate?: true
+    sellingRate?: true
+    effectiveFrom?: true
+    createdById?: true
+    createdAt?: true
+  }
+
+  export type ProjectResourceRateCountAggregateInputType = {
+    id?: true
+    resourceId?: true
+    costRate?: true
+    sellingRate?: true
+    effectiveFrom?: true
+    createdById?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ProjectResourceRateAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProjectResourceRate to aggregate.
+     */
+    where?: ProjectResourceRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectResourceRates to fetch.
+     */
+    orderBy?: ProjectResourceRateOrderByWithRelationInput | ProjectResourceRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProjectResourceRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectResourceRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectResourceRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ProjectResourceRates
+    **/
+    _count?: true | ProjectResourceRateCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ProjectResourceRateAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProjectResourceRateSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProjectResourceRateMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProjectResourceRateMaxAggregateInputType
+  }
+
+  export type GetProjectResourceRateAggregateType<T extends ProjectResourceRateAggregateArgs> = {
+        [P in keyof T & keyof AggregateProjectResourceRate]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProjectResourceRate[P]>
+      : GetScalarType<T[P], AggregateProjectResourceRate[P]>
+  }
+
+
+
+
+  export type ProjectResourceRateGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectResourceRateWhereInput
+    orderBy?: ProjectResourceRateOrderByWithAggregationInput | ProjectResourceRateOrderByWithAggregationInput[]
+    by: ProjectResourceRateScalarFieldEnum[] | ProjectResourceRateScalarFieldEnum
+    having?: ProjectResourceRateScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProjectResourceRateCountAggregateInputType | true
+    _avg?: ProjectResourceRateAvgAggregateInputType
+    _sum?: ProjectResourceRateSumAggregateInputType
+    _min?: ProjectResourceRateMinAggregateInputType
+    _max?: ProjectResourceRateMaxAggregateInputType
+  }
+
+  export type ProjectResourceRateGroupByOutputType = {
+    id: string
+    resourceId: string
+    costRate: number
+    sellingRate: number | null
+    effectiveFrom: Date
+    createdById: string | null
+    createdAt: Date
+    _count: ProjectResourceRateCountAggregateOutputType | null
+    _avg: ProjectResourceRateAvgAggregateOutputType | null
+    _sum: ProjectResourceRateSumAggregateOutputType | null
+    _min: ProjectResourceRateMinAggregateOutputType | null
+    _max: ProjectResourceRateMaxAggregateOutputType | null
+  }
+
+  type GetProjectResourceRateGroupByPayload<T extends ProjectResourceRateGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProjectResourceRateGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProjectResourceRateGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProjectResourceRateGroupByOutputType[P]>
+            : GetScalarType<T[P], ProjectResourceRateGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProjectResourceRateSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    resourceId?: boolean
+    costRate?: boolean
+    sellingRate?: boolean
+    effectiveFrom?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    resource?: boolean | ProjectResourceDefaultArgs<ExtArgs>
+    createdBy?: boolean | ProjectResourceRate$createdByArgs<ExtArgs>
+  }, ExtArgs["result"]["projectResourceRate"]>
+
+  export type ProjectResourceRateSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    resourceId?: boolean
+    costRate?: boolean
+    sellingRate?: boolean
+    effectiveFrom?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    resource?: boolean | ProjectResourceDefaultArgs<ExtArgs>
+    createdBy?: boolean | ProjectResourceRate$createdByArgs<ExtArgs>
+  }, ExtArgs["result"]["projectResourceRate"]>
+
+  export type ProjectResourceRateSelectScalar = {
+    id?: boolean
+    resourceId?: boolean
+    costRate?: boolean
+    sellingRate?: boolean
+    effectiveFrom?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+  }
+
+  export type ProjectResourceRateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    resource?: boolean | ProjectResourceDefaultArgs<ExtArgs>
+    createdBy?: boolean | ProjectResourceRate$createdByArgs<ExtArgs>
+  }
+  export type ProjectResourceRateIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    resource?: boolean | ProjectResourceDefaultArgs<ExtArgs>
+    createdBy?: boolean | ProjectResourceRate$createdByArgs<ExtArgs>
+  }
+
+  export type $ProjectResourceRatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ProjectResourceRate"
+    objects: {
+      resource: Prisma.$ProjectResourcePayload<ExtArgs>
+      createdBy: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      resourceId: string
+      costRate: number
+      sellingRate: number | null
+      effectiveFrom: Date
+      createdById: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["projectResourceRate"]>
+    composites: {}
+  }
+
+  type ProjectResourceRateGetPayload<S extends boolean | null | undefined | ProjectResourceRateDefaultArgs> = $Result.GetResult<Prisma.$ProjectResourceRatePayload, S>
+
+  type ProjectResourceRateCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ProjectResourceRateFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ProjectResourceRateCountAggregateInputType | true
+    }
+
+  export interface ProjectResourceRateDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProjectResourceRate'], meta: { name: 'ProjectResourceRate' } }
+    /**
+     * Find zero or one ProjectResourceRate that matches the filter.
+     * @param {ProjectResourceRateFindUniqueArgs} args - Arguments to find a ProjectResourceRate
+     * @example
+     * // Get one ProjectResourceRate
+     * const projectResourceRate = await prisma.projectResourceRate.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProjectResourceRateFindUniqueArgs>(args: SelectSubset<T, ProjectResourceRateFindUniqueArgs<ExtArgs>>): Prisma__ProjectResourceRateClient<$Result.GetResult<Prisma.$ProjectResourceRatePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one ProjectResourceRate that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ProjectResourceRateFindUniqueOrThrowArgs} args - Arguments to find a ProjectResourceRate
+     * @example
+     * // Get one ProjectResourceRate
+     * const projectResourceRate = await prisma.projectResourceRate.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProjectResourceRateFindUniqueOrThrowArgs>(args: SelectSubset<T, ProjectResourceRateFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProjectResourceRateClient<$Result.GetResult<Prisma.$ProjectResourceRatePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first ProjectResourceRate that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectResourceRateFindFirstArgs} args - Arguments to find a ProjectResourceRate
+     * @example
+     * // Get one ProjectResourceRate
+     * const projectResourceRate = await prisma.projectResourceRate.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProjectResourceRateFindFirstArgs>(args?: SelectSubset<T, ProjectResourceRateFindFirstArgs<ExtArgs>>): Prisma__ProjectResourceRateClient<$Result.GetResult<Prisma.$ProjectResourceRatePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first ProjectResourceRate that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectResourceRateFindFirstOrThrowArgs} args - Arguments to find a ProjectResourceRate
+     * @example
+     * // Get one ProjectResourceRate
+     * const projectResourceRate = await prisma.projectResourceRate.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProjectResourceRateFindFirstOrThrowArgs>(args?: SelectSubset<T, ProjectResourceRateFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProjectResourceRateClient<$Result.GetResult<Prisma.$ProjectResourceRatePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more ProjectResourceRates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectResourceRateFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProjectResourceRates
+     * const projectResourceRates = await prisma.projectResourceRate.findMany()
+     * 
+     * // Get first 10 ProjectResourceRates
+     * const projectResourceRates = await prisma.projectResourceRate.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const projectResourceRateWithIdOnly = await prisma.projectResourceRate.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProjectResourceRateFindManyArgs>(args?: SelectSubset<T, ProjectResourceRateFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectResourceRatePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a ProjectResourceRate.
+     * @param {ProjectResourceRateCreateArgs} args - Arguments to create a ProjectResourceRate.
+     * @example
+     * // Create one ProjectResourceRate
+     * const ProjectResourceRate = await prisma.projectResourceRate.create({
+     *   data: {
+     *     // ... data to create a ProjectResourceRate
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProjectResourceRateCreateArgs>(args: SelectSubset<T, ProjectResourceRateCreateArgs<ExtArgs>>): Prisma__ProjectResourceRateClient<$Result.GetResult<Prisma.$ProjectResourceRatePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many ProjectResourceRates.
+     * @param {ProjectResourceRateCreateManyArgs} args - Arguments to create many ProjectResourceRates.
+     * @example
+     * // Create many ProjectResourceRates
+     * const projectResourceRate = await prisma.projectResourceRate.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProjectResourceRateCreateManyArgs>(args?: SelectSubset<T, ProjectResourceRateCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ProjectResourceRates and returns the data saved in the database.
+     * @param {ProjectResourceRateCreateManyAndReturnArgs} args - Arguments to create many ProjectResourceRates.
+     * @example
+     * // Create many ProjectResourceRates
+     * const projectResourceRate = await prisma.projectResourceRate.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ProjectResourceRates and only return the `id`
+     * const projectResourceRateWithIdOnly = await prisma.projectResourceRate.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProjectResourceRateCreateManyAndReturnArgs>(args?: SelectSubset<T, ProjectResourceRateCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectResourceRatePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a ProjectResourceRate.
+     * @param {ProjectResourceRateDeleteArgs} args - Arguments to delete one ProjectResourceRate.
+     * @example
+     * // Delete one ProjectResourceRate
+     * const ProjectResourceRate = await prisma.projectResourceRate.delete({
+     *   where: {
+     *     // ... filter to delete one ProjectResourceRate
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProjectResourceRateDeleteArgs>(args: SelectSubset<T, ProjectResourceRateDeleteArgs<ExtArgs>>): Prisma__ProjectResourceRateClient<$Result.GetResult<Prisma.$ProjectResourceRatePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one ProjectResourceRate.
+     * @param {ProjectResourceRateUpdateArgs} args - Arguments to update one ProjectResourceRate.
+     * @example
+     * // Update one ProjectResourceRate
+     * const projectResourceRate = await prisma.projectResourceRate.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProjectResourceRateUpdateArgs>(args: SelectSubset<T, ProjectResourceRateUpdateArgs<ExtArgs>>): Prisma__ProjectResourceRateClient<$Result.GetResult<Prisma.$ProjectResourceRatePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more ProjectResourceRates.
+     * @param {ProjectResourceRateDeleteManyArgs} args - Arguments to filter ProjectResourceRates to delete.
+     * @example
+     * // Delete a few ProjectResourceRates
+     * const { count } = await prisma.projectResourceRate.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProjectResourceRateDeleteManyArgs>(args?: SelectSubset<T, ProjectResourceRateDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProjectResourceRates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectResourceRateUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProjectResourceRates
+     * const projectResourceRate = await prisma.projectResourceRate.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProjectResourceRateUpdateManyArgs>(args: SelectSubset<T, ProjectResourceRateUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ProjectResourceRate.
+     * @param {ProjectResourceRateUpsertArgs} args - Arguments to update or create a ProjectResourceRate.
+     * @example
+     * // Update or create a ProjectResourceRate
+     * const projectResourceRate = await prisma.projectResourceRate.upsert({
+     *   create: {
+     *     // ... data to create a ProjectResourceRate
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProjectResourceRate we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProjectResourceRateUpsertArgs>(args: SelectSubset<T, ProjectResourceRateUpsertArgs<ExtArgs>>): Prisma__ProjectResourceRateClient<$Result.GetResult<Prisma.$ProjectResourceRatePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of ProjectResourceRates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectResourceRateCountArgs} args - Arguments to filter ProjectResourceRates to count.
+     * @example
+     * // Count the number of ProjectResourceRates
+     * const count = await prisma.projectResourceRate.count({
+     *   where: {
+     *     // ... the filter for the ProjectResourceRates we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProjectResourceRateCountArgs>(
+      args?: Subset<T, ProjectResourceRateCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProjectResourceRateCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProjectResourceRate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectResourceRateAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProjectResourceRateAggregateArgs>(args: Subset<T, ProjectResourceRateAggregateArgs>): Prisma.PrismaPromise<GetProjectResourceRateAggregateType<T>>
+
+    /**
+     * Group by ProjectResourceRate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProjectResourceRateGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProjectResourceRateGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProjectResourceRateGroupByArgs['orderBy'] }
+        : { orderBy?: ProjectResourceRateGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProjectResourceRateGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProjectResourceRateGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ProjectResourceRate model
+   */
+  readonly fields: ProjectResourceRateFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProjectResourceRate.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProjectResourceRateClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    resource<T extends ProjectResourceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectResourceDefaultArgs<ExtArgs>>): Prisma__ProjectResourceClient<$Result.GetResult<Prisma.$ProjectResourcePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    createdBy<T extends ProjectResourceRate$createdByArgs<ExtArgs> = {}>(args?: Subset<T, ProjectResourceRate$createdByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ProjectResourceRate model
+   */ 
+  interface ProjectResourceRateFieldRefs {
+    readonly id: FieldRef<"ProjectResourceRate", 'String'>
+    readonly resourceId: FieldRef<"ProjectResourceRate", 'String'>
+    readonly costRate: FieldRef<"ProjectResourceRate", 'Float'>
+    readonly sellingRate: FieldRef<"ProjectResourceRate", 'Float'>
+    readonly effectiveFrom: FieldRef<"ProjectResourceRate", 'DateTime'>
+    readonly createdById: FieldRef<"ProjectResourceRate", 'String'>
+    readonly createdAt: FieldRef<"ProjectResourceRate", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ProjectResourceRate findUnique
+   */
+  export type ProjectResourceRateFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectResourceRate
+     */
+    select?: ProjectResourceRateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectResourceRateInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectResourceRate to fetch.
+     */
+    where: ProjectResourceRateWhereUniqueInput
+  }
+
+  /**
+   * ProjectResourceRate findUniqueOrThrow
+   */
+  export type ProjectResourceRateFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectResourceRate
+     */
+    select?: ProjectResourceRateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectResourceRateInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectResourceRate to fetch.
+     */
+    where: ProjectResourceRateWhereUniqueInput
+  }
+
+  /**
+   * ProjectResourceRate findFirst
+   */
+  export type ProjectResourceRateFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectResourceRate
+     */
+    select?: ProjectResourceRateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectResourceRateInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectResourceRate to fetch.
+     */
+    where?: ProjectResourceRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectResourceRates to fetch.
+     */
+    orderBy?: ProjectResourceRateOrderByWithRelationInput | ProjectResourceRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProjectResourceRates.
+     */
+    cursor?: ProjectResourceRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectResourceRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectResourceRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProjectResourceRates.
+     */
+    distinct?: ProjectResourceRateScalarFieldEnum | ProjectResourceRateScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectResourceRate findFirstOrThrow
+   */
+  export type ProjectResourceRateFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectResourceRate
+     */
+    select?: ProjectResourceRateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectResourceRateInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectResourceRate to fetch.
+     */
+    where?: ProjectResourceRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectResourceRates to fetch.
+     */
+    orderBy?: ProjectResourceRateOrderByWithRelationInput | ProjectResourceRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProjectResourceRates.
+     */
+    cursor?: ProjectResourceRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectResourceRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectResourceRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProjectResourceRates.
+     */
+    distinct?: ProjectResourceRateScalarFieldEnum | ProjectResourceRateScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectResourceRate findMany
+   */
+  export type ProjectResourceRateFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectResourceRate
+     */
+    select?: ProjectResourceRateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectResourceRateInclude<ExtArgs> | null
+    /**
+     * Filter, which ProjectResourceRates to fetch.
+     */
+    where?: ProjectResourceRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProjectResourceRates to fetch.
+     */
+    orderBy?: ProjectResourceRateOrderByWithRelationInput | ProjectResourceRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ProjectResourceRates.
+     */
+    cursor?: ProjectResourceRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProjectResourceRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProjectResourceRates.
+     */
+    skip?: number
+    distinct?: ProjectResourceRateScalarFieldEnum | ProjectResourceRateScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectResourceRate create
+   */
+  export type ProjectResourceRateCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectResourceRate
+     */
+    select?: ProjectResourceRateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectResourceRateInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ProjectResourceRate.
+     */
+    data: XOR<ProjectResourceRateCreateInput, ProjectResourceRateUncheckedCreateInput>
+  }
+
+  /**
+   * ProjectResourceRate createMany
+   */
+  export type ProjectResourceRateCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ProjectResourceRates.
+     */
+    data: ProjectResourceRateCreateManyInput | ProjectResourceRateCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ProjectResourceRate createManyAndReturn
+   */
+  export type ProjectResourceRateCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectResourceRate
+     */
+    select?: ProjectResourceRateSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many ProjectResourceRates.
+     */
+    data: ProjectResourceRateCreateManyInput | ProjectResourceRateCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectResourceRateIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProjectResourceRate update
+   */
+  export type ProjectResourceRateUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectResourceRate
+     */
+    select?: ProjectResourceRateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectResourceRateInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ProjectResourceRate.
+     */
+    data: XOR<ProjectResourceRateUpdateInput, ProjectResourceRateUncheckedUpdateInput>
+    /**
+     * Choose, which ProjectResourceRate to update.
+     */
+    where: ProjectResourceRateWhereUniqueInput
+  }
+
+  /**
+   * ProjectResourceRate updateMany
+   */
+  export type ProjectResourceRateUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ProjectResourceRates.
+     */
+    data: XOR<ProjectResourceRateUpdateManyMutationInput, ProjectResourceRateUncheckedUpdateManyInput>
+    /**
+     * Filter which ProjectResourceRates to update
+     */
+    where?: ProjectResourceRateWhereInput
+  }
+
+  /**
+   * ProjectResourceRate upsert
+   */
+  export type ProjectResourceRateUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectResourceRate
+     */
+    select?: ProjectResourceRateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectResourceRateInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ProjectResourceRate to update in case it exists.
+     */
+    where: ProjectResourceRateWhereUniqueInput
+    /**
+     * In case the ProjectResourceRate found by the `where` argument doesn't exist, create a new ProjectResourceRate with this data.
+     */
+    create: XOR<ProjectResourceRateCreateInput, ProjectResourceRateUncheckedCreateInput>
+    /**
+     * In case the ProjectResourceRate was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProjectResourceRateUpdateInput, ProjectResourceRateUncheckedUpdateInput>
+  }
+
+  /**
+   * ProjectResourceRate delete
+   */
+  export type ProjectResourceRateDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectResourceRate
+     */
+    select?: ProjectResourceRateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectResourceRateInclude<ExtArgs> | null
+    /**
+     * Filter which ProjectResourceRate to delete.
+     */
+    where: ProjectResourceRateWhereUniqueInput
+  }
+
+  /**
+   * ProjectResourceRate deleteMany
+   */
+  export type ProjectResourceRateDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProjectResourceRates to delete
+     */
+    where?: ProjectResourceRateWhereInput
+  }
+
+  /**
+   * ProjectResourceRate.createdBy
+   */
+  export type ProjectResourceRate$createdByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * ProjectResourceRate without action
+   */
+  export type ProjectResourceRateDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectResourceRate
+     */
+    select?: ProjectResourceRateSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectResourceRateInclude<ExtArgs> | null
   }
 
 
@@ -20721,6 +23197,7 @@ export namespace Prisma {
     id: string | null
     projectId: string | null
     type: $Enums.DocumentType | null
+    kind: $Enums.DocumentKind | null
     fileName: string | null
     fileUrl: string | null
     invoiceNumber: string | null
@@ -20739,6 +23216,7 @@ export namespace Prisma {
     id: string | null
     projectId: string | null
     type: $Enums.DocumentType | null
+    kind: $Enums.DocumentKind | null
     fileName: string | null
     fileUrl: string | null
     invoiceNumber: string | null
@@ -20757,6 +23235,7 @@ export namespace Prisma {
     id: number
     projectId: number
     type: number
+    kind: number
     fileName: number
     fileUrl: number
     invoiceNumber: number
@@ -20787,6 +23266,7 @@ export namespace Prisma {
     id?: true
     projectId?: true
     type?: true
+    kind?: true
     fileName?: true
     fileUrl?: true
     invoiceNumber?: true
@@ -20805,6 +23285,7 @@ export namespace Prisma {
     id?: true
     projectId?: true
     type?: true
+    kind?: true
     fileName?: true
     fileUrl?: true
     invoiceNumber?: true
@@ -20823,6 +23304,7 @@ export namespace Prisma {
     id?: true
     projectId?: true
     type?: true
+    kind?: true
     fileName?: true
     fileUrl?: true
     invoiceNumber?: true
@@ -20928,6 +23410,7 @@ export namespace Prisma {
     id: string
     projectId: string
     type: $Enums.DocumentType
+    kind: $Enums.DocumentKind
     fileName: string
     fileUrl: string
     invoiceNumber: string | null
@@ -20965,6 +23448,7 @@ export namespace Prisma {
     id?: boolean
     projectId?: boolean
     type?: boolean
+    kind?: boolean
     fileName?: boolean
     fileUrl?: boolean
     invoiceNumber?: boolean
@@ -20989,6 +23473,7 @@ export namespace Prisma {
     id?: boolean
     projectId?: boolean
     type?: boolean
+    kind?: boolean
     fileName?: boolean
     fileUrl?: boolean
     invoiceNumber?: boolean
@@ -21011,6 +23496,7 @@ export namespace Prisma {
     id?: boolean
     projectId?: boolean
     type?: boolean
+    kind?: boolean
     fileName?: boolean
     fileUrl?: boolean
     invoiceNumber?: boolean
@@ -21053,6 +23539,7 @@ export namespace Prisma {
       id: string
       projectId: string
       type: $Enums.DocumentType
+      kind: $Enums.DocumentKind
       fileName: string
       fileUrl: string
       invoiceNumber: string | null
@@ -21466,6 +23953,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Document", 'String'>
     readonly projectId: FieldRef<"Document", 'String'>
     readonly type: FieldRef<"Document", 'DocumentType'>
+    readonly kind: FieldRef<"Document", 'DocumentKind'>
     readonly fileName: FieldRef<"Document", 'String'>
     readonly fileUrl: FieldRef<"Document", 'String'>
     readonly invoiceNumber: FieldRef<"Document", 'String'>
@@ -22949,10 +25437,12 @@ export namespace Prisma {
 
   export type ProjectExpenseAvgAggregateOutputType = {
     amount: number | null
+    settledAmount: number | null
   }
 
   export type ProjectExpenseSumAggregateOutputType = {
     amount: number | null
+    settledAmount: number | null
   }
 
   export type ProjectExpenseMinAggregateOutputType = {
@@ -22969,6 +25459,11 @@ export namespace Prisma {
     approvedById: string | null
     approvedAt: Date | null
     rejectionReason: string | null
+    poNumber: string | null
+    settledAmount: number | null
+    settledAt: Date | null
+    settlementNotes: string | null
+    settledById: string | null
     createdById: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -22988,6 +25483,11 @@ export namespace Prisma {
     approvedById: string | null
     approvedAt: Date | null
     rejectionReason: string | null
+    poNumber: string | null
+    settledAmount: number | null
+    settledAt: Date | null
+    settlementNotes: string | null
+    settledById: string | null
     createdById: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -23007,6 +25507,11 @@ export namespace Prisma {
     approvedById: number
     approvedAt: number
     rejectionReason: number
+    poNumber: number
+    settledAmount: number
+    settledAt: number
+    settlementNotes: number
+    settledById: number
     createdById: number
     createdAt: number
     updatedAt: number
@@ -23016,10 +25521,12 @@ export namespace Prisma {
 
   export type ProjectExpenseAvgAggregateInputType = {
     amount?: true
+    settledAmount?: true
   }
 
   export type ProjectExpenseSumAggregateInputType = {
     amount?: true
+    settledAmount?: true
   }
 
   export type ProjectExpenseMinAggregateInputType = {
@@ -23036,6 +25543,11 @@ export namespace Prisma {
     approvedById?: true
     approvedAt?: true
     rejectionReason?: true
+    poNumber?: true
+    settledAmount?: true
+    settledAt?: true
+    settlementNotes?: true
+    settledById?: true
     createdById?: true
     createdAt?: true
     updatedAt?: true
@@ -23055,6 +25567,11 @@ export namespace Prisma {
     approvedById?: true
     approvedAt?: true
     rejectionReason?: true
+    poNumber?: true
+    settledAmount?: true
+    settledAt?: true
+    settlementNotes?: true
+    settledById?: true
     createdById?: true
     createdAt?: true
     updatedAt?: true
@@ -23074,6 +25591,11 @@ export namespace Prisma {
     approvedById?: true
     approvedAt?: true
     rejectionReason?: true
+    poNumber?: true
+    settledAmount?: true
+    settledAt?: true
+    settlementNotes?: true
+    settledById?: true
     createdById?: true
     createdAt?: true
     updatedAt?: true
@@ -23180,6 +25702,11 @@ export namespace Prisma {
     approvedById: string | null
     approvedAt: Date | null
     rejectionReason: string | null
+    poNumber: string | null
+    settledAmount: number | null
+    settledAt: Date | null
+    settlementNotes: string | null
+    settledById: string | null
     createdById: string | null
     createdAt: Date
     updatedAt: Date
@@ -23218,12 +25745,18 @@ export namespace Prisma {
     approvedById?: boolean
     approvedAt?: boolean
     rejectionReason?: boolean
+    poNumber?: boolean
+    settledAmount?: boolean
+    settledAt?: boolean
+    settlementNotes?: boolean
+    settledById?: boolean
     createdById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     workstream?: boolean | ProjectExpense$workstreamArgs<ExtArgs>
     approvedBy?: boolean | ProjectExpense$approvedByArgs<ExtArgs>
+    settledBy?: boolean | ProjectExpense$settledByArgs<ExtArgs>
     createdBy?: boolean | ProjectExpense$createdByArgs<ExtArgs>
   }, ExtArgs["result"]["projectExpense"]>
 
@@ -23241,12 +25774,18 @@ export namespace Prisma {
     approvedById?: boolean
     approvedAt?: boolean
     rejectionReason?: boolean
+    poNumber?: boolean
+    settledAmount?: boolean
+    settledAt?: boolean
+    settlementNotes?: boolean
+    settledById?: boolean
     createdById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     workstream?: boolean | ProjectExpense$workstreamArgs<ExtArgs>
     approvedBy?: boolean | ProjectExpense$approvedByArgs<ExtArgs>
+    settledBy?: boolean | ProjectExpense$settledByArgs<ExtArgs>
     createdBy?: boolean | ProjectExpense$createdByArgs<ExtArgs>
   }, ExtArgs["result"]["projectExpense"]>
 
@@ -23264,6 +25803,11 @@ export namespace Prisma {
     approvedById?: boolean
     approvedAt?: boolean
     rejectionReason?: boolean
+    poNumber?: boolean
+    settledAmount?: boolean
+    settledAt?: boolean
+    settlementNotes?: boolean
+    settledById?: boolean
     createdById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -23273,12 +25817,14 @@ export namespace Prisma {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     workstream?: boolean | ProjectExpense$workstreamArgs<ExtArgs>
     approvedBy?: boolean | ProjectExpense$approvedByArgs<ExtArgs>
+    settledBy?: boolean | ProjectExpense$settledByArgs<ExtArgs>
     createdBy?: boolean | ProjectExpense$createdByArgs<ExtArgs>
   }
   export type ProjectExpenseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     workstream?: boolean | ProjectExpense$workstreamArgs<ExtArgs>
     approvedBy?: boolean | ProjectExpense$approvedByArgs<ExtArgs>
+    settledBy?: boolean | ProjectExpense$settledByArgs<ExtArgs>
     createdBy?: boolean | ProjectExpense$createdByArgs<ExtArgs>
   }
 
@@ -23288,6 +25834,7 @@ export namespace Prisma {
       project: Prisma.$ProjectPayload<ExtArgs>
       workstream: Prisma.$ProjectWorkstreamPayload<ExtArgs> | null
       approvedBy: Prisma.$UserPayload<ExtArgs> | null
+      settledBy: Prisma.$UserPayload<ExtArgs> | null
       createdBy: Prisma.$UserPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -23304,6 +25851,11 @@ export namespace Prisma {
       approvedById: string | null
       approvedAt: Date | null
       rejectionReason: string | null
+      poNumber: string | null
+      settledAmount: number | null
+      settledAt: Date | null
+      settlementNotes: string | null
+      settledById: string | null
       createdById: string | null
       createdAt: Date
       updatedAt: Date
@@ -23674,6 +26226,7 @@ export namespace Prisma {
     project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     workstream<T extends ProjectExpense$workstreamArgs<ExtArgs> = {}>(args?: Subset<T, ProjectExpense$workstreamArgs<ExtArgs>>): Prisma__ProjectWorkstreamClient<$Result.GetResult<Prisma.$ProjectWorkstreamPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     approvedBy<T extends ProjectExpense$approvedByArgs<ExtArgs> = {}>(args?: Subset<T, ProjectExpense$approvedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    settledBy<T extends ProjectExpense$settledByArgs<ExtArgs> = {}>(args?: Subset<T, ProjectExpense$settledByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     createdBy<T extends ProjectExpense$createdByArgs<ExtArgs> = {}>(args?: Subset<T, ProjectExpense$createdByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -23717,6 +26270,11 @@ export namespace Prisma {
     readonly approvedById: FieldRef<"ProjectExpense", 'String'>
     readonly approvedAt: FieldRef<"ProjectExpense", 'DateTime'>
     readonly rejectionReason: FieldRef<"ProjectExpense", 'String'>
+    readonly poNumber: FieldRef<"ProjectExpense", 'String'>
+    readonly settledAmount: FieldRef<"ProjectExpense", 'Float'>
+    readonly settledAt: FieldRef<"ProjectExpense", 'DateTime'>
+    readonly settlementNotes: FieldRef<"ProjectExpense", 'String'>
+    readonly settledById: FieldRef<"ProjectExpense", 'String'>
     readonly createdById: FieldRef<"ProjectExpense", 'String'>
     readonly createdAt: FieldRef<"ProjectExpense", 'DateTime'>
     readonly updatedAt: FieldRef<"ProjectExpense", 'DateTime'>
@@ -24056,6 +26614,21 @@ export namespace Prisma {
    * ProjectExpense.approvedBy
    */
   export type ProjectExpense$approvedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * ProjectExpense.settledBy
+   */
+  export type ProjectExpense$settledByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the User
      */
@@ -30221,10 +32794,12 @@ export namespace Prisma {
 
   export type TaskAvgAggregateOutputType = {
     progressPercent: number | null
+    plannedHours: number | null
   }
 
   export type TaskSumAggregateOutputType = {
     progressPercent: number | null
+    plannedHours: number | null
   }
 
   export type TaskMinAggregateOutputType = {
@@ -30236,6 +32811,7 @@ export namespace Prisma {
     status: $Enums.TaskStatus | null
     progressPercent: number | null
     billable: boolean | null
+    plannedHours: number | null
     startDate: Date | null
     endDate: Date | null
     assigneeId: string | null
@@ -30254,6 +32830,7 @@ export namespace Prisma {
     status: $Enums.TaskStatus | null
     progressPercent: number | null
     billable: boolean | null
+    plannedHours: number | null
     startDate: Date | null
     endDate: Date | null
     assigneeId: string | null
@@ -30272,6 +32849,7 @@ export namespace Prisma {
     status: number
     progressPercent: number
     billable: number
+    plannedHours: number
     startDate: number
     endDate: number
     assigneeId: number
@@ -30285,10 +32863,12 @@ export namespace Prisma {
 
   export type TaskAvgAggregateInputType = {
     progressPercent?: true
+    plannedHours?: true
   }
 
   export type TaskSumAggregateInputType = {
     progressPercent?: true
+    plannedHours?: true
   }
 
   export type TaskMinAggregateInputType = {
@@ -30300,6 +32880,7 @@ export namespace Prisma {
     status?: true
     progressPercent?: true
     billable?: true
+    plannedHours?: true
     startDate?: true
     endDate?: true
     assigneeId?: true
@@ -30318,6 +32899,7 @@ export namespace Prisma {
     status?: true
     progressPercent?: true
     billable?: true
+    plannedHours?: true
     startDate?: true
     endDate?: true
     assigneeId?: true
@@ -30336,6 +32918,7 @@ export namespace Prisma {
     status?: true
     progressPercent?: true
     billable?: true
+    plannedHours?: true
     startDate?: true
     endDate?: true
     assigneeId?: true
@@ -30441,6 +33024,7 @@ export namespace Prisma {
     status: $Enums.TaskStatus
     progressPercent: number
     billable: boolean
+    plannedHours: number | null
     startDate: Date | null
     endDate: Date | null
     assigneeId: string | null
@@ -30478,6 +33062,7 @@ export namespace Prisma {
     status?: boolean
     progressPercent?: boolean
     billable?: boolean
+    plannedHours?: boolean
     startDate?: boolean
     endDate?: boolean
     assigneeId?: boolean
@@ -30508,6 +33093,7 @@ export namespace Prisma {
     status?: boolean
     progressPercent?: boolean
     billable?: boolean
+    plannedHours?: boolean
     startDate?: boolean
     endDate?: boolean
     assigneeId?: boolean
@@ -30531,6 +33117,7 @@ export namespace Prisma {
     status?: boolean
     progressPercent?: boolean
     billable?: boolean
+    plannedHours?: boolean
     startDate?: boolean
     endDate?: boolean
     assigneeId?: boolean
@@ -30586,6 +33173,7 @@ export namespace Prisma {
       status: $Enums.TaskStatus
       progressPercent: number
       billable: boolean
+      plannedHours: number | null
       startDate: Date | null
       endDate: Date | null
       assigneeId: string | null
@@ -31005,6 +33593,7 @@ export namespace Prisma {
     readonly status: FieldRef<"Task", 'TaskStatus'>
     readonly progressPercent: FieldRef<"Task", 'Int'>
     readonly billable: FieldRef<"Task", 'Boolean'>
+    readonly plannedHours: FieldRef<"Task", 'Float'>
     readonly startDate: FieldRef<"Task", 'DateTime'>
     readonly endDate: FieldRef<"Task", 'DateTime'>
     readonly assigneeId: FieldRef<"Task", 'String'>
@@ -52501,6 +55090,22 @@ export namespace Prisma {
   export type SurveyResponseScalarFieldEnum = (typeof SurveyResponseScalarFieldEnum)[keyof typeof SurveyResponseScalarFieldEnum]
 
 
+  export const ProjectFeedback360ScalarFieldEnum: {
+    id: 'id',
+    projectId: 'projectId',
+    reviewerId: 'reviewerId',
+    subjectId: 'subjectId',
+    rating: 'rating',
+    comment: 'comment',
+    status: 'status',
+    submittedAt: 'submittedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ProjectFeedback360ScalarFieldEnum = (typeof ProjectFeedback360ScalarFieldEnum)[keyof typeof ProjectFeedback360ScalarFieldEnum]
+
+
   export const AuditLogScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
@@ -52536,6 +55141,19 @@ export namespace Prisma {
   export type ProjectResourceScalarFieldEnum = (typeof ProjectResourceScalarFieldEnum)[keyof typeof ProjectResourceScalarFieldEnum]
 
 
+  export const ProjectResourceRateScalarFieldEnum: {
+    id: 'id',
+    resourceId: 'resourceId',
+    costRate: 'costRate',
+    sellingRate: 'sellingRate',
+    effectiveFrom: 'effectiveFrom',
+    createdById: 'createdById',
+    createdAt: 'createdAt'
+  };
+
+  export type ProjectResourceRateScalarFieldEnum = (typeof ProjectResourceRateScalarFieldEnum)[keyof typeof ProjectResourceRateScalarFieldEnum]
+
+
   export const TimesheetScalarFieldEnum: {
     id: 'id',
     projectId: 'projectId',
@@ -52560,6 +55178,7 @@ export namespace Prisma {
     id: 'id',
     projectId: 'projectId',
     type: 'type',
+    kind: 'kind',
     fileName: 'fileName',
     fileUrl: 'fileUrl',
     invoiceNumber: 'invoiceNumber',
@@ -52608,6 +55227,11 @@ export namespace Prisma {
     approvedById: 'approvedById',
     approvedAt: 'approvedAt',
     rejectionReason: 'rejectionReason',
+    poNumber: 'poNumber',
+    settledAmount: 'settledAmount',
+    settledAt: 'settledAt',
+    settlementNotes: 'settlementNotes',
+    settledById: 'settledById',
     createdById: 'createdById',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -52704,6 +55328,7 @@ export namespace Prisma {
     status: 'status',
     progressPercent: 'progressPercent',
     billable: 'billable',
+    plannedHours: 'plannedHours',
     startDate: 'startDate',
     endDate: 'endDate',
     assigneeId: 'assigneeId',
@@ -53300,6 +55925,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Feedback360Status'
+   */
+  export type EnumFeedback360StatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Feedback360Status'>
+    
+
+
+  /**
+   * Reference to a field of type 'Feedback360Status[]'
+   */
+  export type ListEnumFeedback360StatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Feedback360Status[]'>
+    
+
+
+  /**
    * Reference to a field of type 'TimesheetStatus'
    */
   export type EnumTimesheetStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TimesheetStatus'>
@@ -53324,6 +55963,20 @@ export namespace Prisma {
    * Reference to a field of type 'DocumentType[]'
    */
   export type ListEnumDocumentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DocumentType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'DocumentKind'
+   */
+  export type EnumDocumentKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DocumentKind'>
+    
+
+
+  /**
+   * Reference to a field of type 'DocumentKind[]'
+   */
+  export type ListEnumDocumentKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DocumentKind[]'>
     
 
 
@@ -53540,12 +56193,14 @@ export namespace Prisma {
     supervisees?: UserListRelationFilter
     skills?: UserSkillListRelationFilter
     approvedExpenses?: ProjectExpenseListRelationFilter
+    settledExpenses?: ProjectExpenseListRelationFilter
     projectsAsSales?: ProjectListRelationFilter
     projectsAsPm?: ProjectListRelationFilter
     projectsAsTw?: ProjectListRelationFilter
     projectsAsAdmin?: ProjectListRelationFilter
     resources?: ProjectResourceListRelationFilter
     proposedResources?: ProjectResourceListRelationFilter
+    createdResourceRates?: ProjectResourceRateListRelationFilter
     timesheets?: TimesheetListRelationFilter
     approvedTimesheets?: TimesheetListRelationFilter
     documentsUploaded?: DocumentListRelationFilter
@@ -53568,6 +56223,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalListRelationFilter
     skillProgressionsAsSubject?: SkillProgressionLogListRelationFilter
     skillProgressionsLogged?: SkillProgressionLogListRelationFilter
+    feedback360AsReviewer?: ProjectFeedback360ListRelationFilter
+    feedback360AsSubject?: ProjectFeedback360ListRelationFilter
     raidItemsOwned?: ProjectRaidItemListRelationFilter
     raidItemsCreated?: ProjectRaidItemListRelationFilter
     baselinesCreated?: ProjectBaselineListRelationFilter
@@ -53603,12 +56260,14 @@ export namespace Prisma {
     supervisees?: UserOrderByRelationAggregateInput
     skills?: UserSkillOrderByRelationAggregateInput
     approvedExpenses?: ProjectExpenseOrderByRelationAggregateInput
+    settledExpenses?: ProjectExpenseOrderByRelationAggregateInput
     projectsAsSales?: ProjectOrderByRelationAggregateInput
     projectsAsPm?: ProjectOrderByRelationAggregateInput
     projectsAsTw?: ProjectOrderByRelationAggregateInput
     projectsAsAdmin?: ProjectOrderByRelationAggregateInput
     resources?: ProjectResourceOrderByRelationAggregateInput
     proposedResources?: ProjectResourceOrderByRelationAggregateInput
+    createdResourceRates?: ProjectResourceRateOrderByRelationAggregateInput
     timesheets?: TimesheetOrderByRelationAggregateInput
     approvedTimesheets?: TimesheetOrderByRelationAggregateInput
     documentsUploaded?: DocumentOrderByRelationAggregateInput
@@ -53631,6 +56290,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalOrderByRelationAggregateInput
     skillProgressionsAsSubject?: SkillProgressionLogOrderByRelationAggregateInput
     skillProgressionsLogged?: SkillProgressionLogOrderByRelationAggregateInput
+    feedback360AsReviewer?: ProjectFeedback360OrderByRelationAggregateInput
+    feedback360AsSubject?: ProjectFeedback360OrderByRelationAggregateInput
     raidItemsOwned?: ProjectRaidItemOrderByRelationAggregateInput
     raidItemsCreated?: ProjectRaidItemOrderByRelationAggregateInput
     baselinesCreated?: ProjectBaselineOrderByRelationAggregateInput
@@ -53669,12 +56330,14 @@ export namespace Prisma {
     supervisees?: UserListRelationFilter
     skills?: UserSkillListRelationFilter
     approvedExpenses?: ProjectExpenseListRelationFilter
+    settledExpenses?: ProjectExpenseListRelationFilter
     projectsAsSales?: ProjectListRelationFilter
     projectsAsPm?: ProjectListRelationFilter
     projectsAsTw?: ProjectListRelationFilter
     projectsAsAdmin?: ProjectListRelationFilter
     resources?: ProjectResourceListRelationFilter
     proposedResources?: ProjectResourceListRelationFilter
+    createdResourceRates?: ProjectResourceRateListRelationFilter
     timesheets?: TimesheetListRelationFilter
     approvedTimesheets?: TimesheetListRelationFilter
     documentsUploaded?: DocumentListRelationFilter
@@ -53697,6 +56360,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalListRelationFilter
     skillProgressionsAsSubject?: SkillProgressionLogListRelationFilter
     skillProgressionsLogged?: SkillProgressionLogListRelationFilter
+    feedback360AsReviewer?: ProjectFeedback360ListRelationFilter
+    feedback360AsSubject?: ProjectFeedback360ListRelationFilter
     raidItemsOwned?: ProjectRaidItemListRelationFilter
     raidItemsCreated?: ProjectRaidItemListRelationFilter
     baselinesCreated?: ProjectBaselineListRelationFilter
@@ -53898,6 +56563,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemListRelationFilter
     perfProjectRatings?: PerformanceReviewProjectRatingListRelationFilter
     closingChecklist?: ProjectClosingChecklistItemListRelationFilter
+    feedback360?: ProjectFeedback360ListRelationFilter
     workstreams?: ProjectWorkstreamListRelationFilter
     reports?: ProjectReportListRelationFilter
     baselines?: ProjectBaselineListRelationFilter
@@ -53959,6 +56625,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemOrderByRelationAggregateInput
     perfProjectRatings?: PerformanceReviewProjectRatingOrderByRelationAggregateInput
     closingChecklist?: ProjectClosingChecklistItemOrderByRelationAggregateInput
+    feedback360?: ProjectFeedback360OrderByRelationAggregateInput
     workstreams?: ProjectWorkstreamOrderByRelationAggregateInput
     reports?: ProjectReportOrderByRelationAggregateInput
     baselines?: ProjectBaselineOrderByRelationAggregateInput
@@ -54023,6 +56690,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemListRelationFilter
     perfProjectRatings?: PerformanceReviewProjectRatingListRelationFilter
     closingChecklist?: ProjectClosingChecklistItemListRelationFilter
+    feedback360?: ProjectFeedback360ListRelationFilter
     workstreams?: ProjectWorkstreamListRelationFilter
     reports?: ProjectReportListRelationFilter
     baselines?: ProjectBaselineListRelationFilter
@@ -54753,6 +57421,95 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"SurveyResponse"> | Date | string
   }
 
+  export type ProjectFeedback360WhereInput = {
+    AND?: ProjectFeedback360WhereInput | ProjectFeedback360WhereInput[]
+    OR?: ProjectFeedback360WhereInput[]
+    NOT?: ProjectFeedback360WhereInput | ProjectFeedback360WhereInput[]
+    id?: StringFilter<"ProjectFeedback360"> | string
+    projectId?: StringFilter<"ProjectFeedback360"> | string
+    reviewerId?: StringFilter<"ProjectFeedback360"> | string
+    subjectId?: StringFilter<"ProjectFeedback360"> | string
+    rating?: IntNullableFilter<"ProjectFeedback360"> | number | null
+    comment?: StringNullableFilter<"ProjectFeedback360"> | string | null
+    status?: EnumFeedback360StatusFilter<"ProjectFeedback360"> | $Enums.Feedback360Status
+    submittedAt?: DateTimeNullableFilter<"ProjectFeedback360"> | Date | string | null
+    createdAt?: DateTimeFilter<"ProjectFeedback360"> | Date | string
+    updatedAt?: DateTimeFilter<"ProjectFeedback360"> | Date | string
+    project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    reviewer?: XOR<UserRelationFilter, UserWhereInput>
+    subject?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type ProjectFeedback360OrderByWithRelationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    reviewerId?: SortOrder
+    subjectId?: SortOrder
+    rating?: SortOrderInput | SortOrder
+    comment?: SortOrderInput | SortOrder
+    status?: SortOrder
+    submittedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    project?: ProjectOrderByWithRelationInput
+    reviewer?: UserOrderByWithRelationInput
+    subject?: UserOrderByWithRelationInput
+  }
+
+  export type ProjectFeedback360WhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    projectId_reviewerId_subjectId?: ProjectFeedback360ProjectIdReviewerIdSubjectIdCompoundUniqueInput
+    AND?: ProjectFeedback360WhereInput | ProjectFeedback360WhereInput[]
+    OR?: ProjectFeedback360WhereInput[]
+    NOT?: ProjectFeedback360WhereInput | ProjectFeedback360WhereInput[]
+    projectId?: StringFilter<"ProjectFeedback360"> | string
+    reviewerId?: StringFilter<"ProjectFeedback360"> | string
+    subjectId?: StringFilter<"ProjectFeedback360"> | string
+    rating?: IntNullableFilter<"ProjectFeedback360"> | number | null
+    comment?: StringNullableFilter<"ProjectFeedback360"> | string | null
+    status?: EnumFeedback360StatusFilter<"ProjectFeedback360"> | $Enums.Feedback360Status
+    submittedAt?: DateTimeNullableFilter<"ProjectFeedback360"> | Date | string | null
+    createdAt?: DateTimeFilter<"ProjectFeedback360"> | Date | string
+    updatedAt?: DateTimeFilter<"ProjectFeedback360"> | Date | string
+    project?: XOR<ProjectRelationFilter, ProjectWhereInput>
+    reviewer?: XOR<UserRelationFilter, UserWhereInput>
+    subject?: XOR<UserRelationFilter, UserWhereInput>
+  }, "id" | "projectId_reviewerId_subjectId">
+
+  export type ProjectFeedback360OrderByWithAggregationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    reviewerId?: SortOrder
+    subjectId?: SortOrder
+    rating?: SortOrderInput | SortOrder
+    comment?: SortOrderInput | SortOrder
+    status?: SortOrder
+    submittedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ProjectFeedback360CountOrderByAggregateInput
+    _avg?: ProjectFeedback360AvgOrderByAggregateInput
+    _max?: ProjectFeedback360MaxOrderByAggregateInput
+    _min?: ProjectFeedback360MinOrderByAggregateInput
+    _sum?: ProjectFeedback360SumOrderByAggregateInput
+  }
+
+  export type ProjectFeedback360ScalarWhereWithAggregatesInput = {
+    AND?: ProjectFeedback360ScalarWhereWithAggregatesInput | ProjectFeedback360ScalarWhereWithAggregatesInput[]
+    OR?: ProjectFeedback360ScalarWhereWithAggregatesInput[]
+    NOT?: ProjectFeedback360ScalarWhereWithAggregatesInput | ProjectFeedback360ScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ProjectFeedback360"> | string
+    projectId?: StringWithAggregatesFilter<"ProjectFeedback360"> | string
+    reviewerId?: StringWithAggregatesFilter<"ProjectFeedback360"> | string
+    subjectId?: StringWithAggregatesFilter<"ProjectFeedback360"> | string
+    rating?: IntNullableWithAggregatesFilter<"ProjectFeedback360"> | number | null
+    comment?: StringNullableWithAggregatesFilter<"ProjectFeedback360"> | string | null
+    status?: EnumFeedback360StatusWithAggregatesFilter<"ProjectFeedback360"> | $Enums.Feedback360Status
+    submittedAt?: DateTimeNullableWithAggregatesFilter<"ProjectFeedback360"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ProjectFeedback360"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ProjectFeedback360"> | Date | string
+  }
+
   export type AuditLogWhereInput = {
     AND?: AuditLogWhereInput | AuditLogWhereInput[]
     OR?: AuditLogWhereInput[]
@@ -54858,6 +57615,7 @@ export namespace Prisma {
     workstream?: XOR<ProjectWorkstreamNullableRelationFilter, ProjectWorkstreamWhereInput> | null
     user?: XOR<UserRelationFilter, UserWhereInput>
     proposedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    rates?: ProjectResourceRateListRelationFilter
   }
 
   export type ProjectResourceOrderByWithRelationInput = {
@@ -54877,6 +57635,7 @@ export namespace Prisma {
     workstream?: ProjectWorkstreamOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
     proposedBy?: UserOrderByWithRelationInput
+    rates?: ProjectResourceRateOrderByRelationAggregateInput
   }
 
   export type ProjectResourceWhereUniqueInput = Prisma.AtLeast<{
@@ -54900,6 +57659,7 @@ export namespace Prisma {
     workstream?: XOR<ProjectWorkstreamNullableRelationFilter, ProjectWorkstreamWhereInput> | null
     user?: XOR<UserRelationFilter, UserWhereInput>
     proposedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    rates?: ProjectResourceRateListRelationFilter
   }, "id" | "projectId_userId">
 
   export type ProjectResourceOrderByWithAggregationInput = {
@@ -54938,6 +57698,77 @@ export namespace Prisma {
     acceptedAt?: DateTimeNullableWithAggregatesFilter<"ProjectResource"> | Date | string | null
     pendingPrincipalApproval?: BoolWithAggregatesFilter<"ProjectResource"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"ProjectResource"> | Date | string
+  }
+
+  export type ProjectResourceRateWhereInput = {
+    AND?: ProjectResourceRateWhereInput | ProjectResourceRateWhereInput[]
+    OR?: ProjectResourceRateWhereInput[]
+    NOT?: ProjectResourceRateWhereInput | ProjectResourceRateWhereInput[]
+    id?: StringFilter<"ProjectResourceRate"> | string
+    resourceId?: StringFilter<"ProjectResourceRate"> | string
+    costRate?: FloatFilter<"ProjectResourceRate"> | number
+    sellingRate?: FloatNullableFilter<"ProjectResourceRate"> | number | null
+    effectiveFrom?: DateTimeFilter<"ProjectResourceRate"> | Date | string
+    createdById?: StringNullableFilter<"ProjectResourceRate"> | string | null
+    createdAt?: DateTimeFilter<"ProjectResourceRate"> | Date | string
+    resource?: XOR<ProjectResourceRelationFilter, ProjectResourceWhereInput>
+    createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+  }
+
+  export type ProjectResourceRateOrderByWithRelationInput = {
+    id?: SortOrder
+    resourceId?: SortOrder
+    costRate?: SortOrder
+    sellingRate?: SortOrderInput | SortOrder
+    effectiveFrom?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    resource?: ProjectResourceOrderByWithRelationInput
+    createdBy?: UserOrderByWithRelationInput
+  }
+
+  export type ProjectResourceRateWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    resourceId_effectiveFrom?: ProjectResourceRateResourceIdEffectiveFromCompoundUniqueInput
+    AND?: ProjectResourceRateWhereInput | ProjectResourceRateWhereInput[]
+    OR?: ProjectResourceRateWhereInput[]
+    NOT?: ProjectResourceRateWhereInput | ProjectResourceRateWhereInput[]
+    resourceId?: StringFilter<"ProjectResourceRate"> | string
+    costRate?: FloatFilter<"ProjectResourceRate"> | number
+    sellingRate?: FloatNullableFilter<"ProjectResourceRate"> | number | null
+    effectiveFrom?: DateTimeFilter<"ProjectResourceRate"> | Date | string
+    createdById?: StringNullableFilter<"ProjectResourceRate"> | string | null
+    createdAt?: DateTimeFilter<"ProjectResourceRate"> | Date | string
+    resource?: XOR<ProjectResourceRelationFilter, ProjectResourceWhereInput>
+    createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+  }, "id" | "resourceId_effectiveFrom">
+
+  export type ProjectResourceRateOrderByWithAggregationInput = {
+    id?: SortOrder
+    resourceId?: SortOrder
+    costRate?: SortOrder
+    sellingRate?: SortOrderInput | SortOrder
+    effectiveFrom?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: ProjectResourceRateCountOrderByAggregateInput
+    _avg?: ProjectResourceRateAvgOrderByAggregateInput
+    _max?: ProjectResourceRateMaxOrderByAggregateInput
+    _min?: ProjectResourceRateMinOrderByAggregateInput
+    _sum?: ProjectResourceRateSumOrderByAggregateInput
+  }
+
+  export type ProjectResourceRateScalarWhereWithAggregatesInput = {
+    AND?: ProjectResourceRateScalarWhereWithAggregatesInput | ProjectResourceRateScalarWhereWithAggregatesInput[]
+    OR?: ProjectResourceRateScalarWhereWithAggregatesInput[]
+    NOT?: ProjectResourceRateScalarWhereWithAggregatesInput | ProjectResourceRateScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ProjectResourceRate"> | string
+    resourceId?: StringWithAggregatesFilter<"ProjectResourceRate"> | string
+    costRate?: FloatWithAggregatesFilter<"ProjectResourceRate"> | number
+    sellingRate?: FloatNullableWithAggregatesFilter<"ProjectResourceRate"> | number | null
+    effectiveFrom?: DateTimeWithAggregatesFilter<"ProjectResourceRate"> | Date | string
+    createdById?: StringNullableWithAggregatesFilter<"ProjectResourceRate"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ProjectResourceRate"> | Date | string
   }
 
   export type TimesheetWhereInput = {
@@ -55061,6 +57892,7 @@ export namespace Prisma {
     id?: StringFilter<"Document"> | string
     projectId?: StringFilter<"Document"> | string
     type?: EnumDocumentTypeFilter<"Document"> | $Enums.DocumentType
+    kind?: EnumDocumentKindFilter<"Document"> | $Enums.DocumentKind
     fileName?: StringFilter<"Document"> | string
     fileUrl?: StringFilter<"Document"> | string
     invoiceNumber?: StringNullableFilter<"Document"> | string | null
@@ -55084,6 +57916,7 @@ export namespace Prisma {
     id?: SortOrder
     projectId?: SortOrder
     type?: SortOrder
+    kind?: SortOrder
     fileName?: SortOrder
     fileUrl?: SortOrder
     invoiceNumber?: SortOrderInput | SortOrder
@@ -55110,6 +57943,7 @@ export namespace Prisma {
     NOT?: DocumentWhereInput | DocumentWhereInput[]
     projectId?: StringFilter<"Document"> | string
     type?: EnumDocumentTypeFilter<"Document"> | $Enums.DocumentType
+    kind?: EnumDocumentKindFilter<"Document"> | $Enums.DocumentKind
     fileName?: StringFilter<"Document"> | string
     fileUrl?: StringFilter<"Document"> | string
     invoiceNumber?: StringNullableFilter<"Document"> | string | null
@@ -55133,6 +57967,7 @@ export namespace Prisma {
     id?: SortOrder
     projectId?: SortOrder
     type?: SortOrder
+    kind?: SortOrder
     fileName?: SortOrder
     fileUrl?: SortOrder
     invoiceNumber?: SortOrderInput | SortOrder
@@ -55159,6 +57994,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Document"> | string
     projectId?: StringWithAggregatesFilter<"Document"> | string
     type?: EnumDocumentTypeWithAggregatesFilter<"Document"> | $Enums.DocumentType
+    kind?: EnumDocumentKindWithAggregatesFilter<"Document"> | $Enums.DocumentKind
     fileName?: StringWithAggregatesFilter<"Document"> | string
     fileUrl?: StringWithAggregatesFilter<"Document"> | string
     invoiceNumber?: StringNullableWithAggregatesFilter<"Document"> | string | null
@@ -55281,12 +58117,18 @@ export namespace Prisma {
     approvedById?: StringNullableFilter<"ProjectExpense"> | string | null
     approvedAt?: DateTimeNullableFilter<"ProjectExpense"> | Date | string | null
     rejectionReason?: StringNullableFilter<"ProjectExpense"> | string | null
+    poNumber?: StringNullableFilter<"ProjectExpense"> | string | null
+    settledAmount?: FloatNullableFilter<"ProjectExpense"> | number | null
+    settledAt?: DateTimeNullableFilter<"ProjectExpense"> | Date | string | null
+    settlementNotes?: StringNullableFilter<"ProjectExpense"> | string | null
+    settledById?: StringNullableFilter<"ProjectExpense"> | string | null
     createdById?: StringNullableFilter<"ProjectExpense"> | string | null
     createdAt?: DateTimeFilter<"ProjectExpense"> | Date | string
     updatedAt?: DateTimeFilter<"ProjectExpense"> | Date | string
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
     workstream?: XOR<ProjectWorkstreamNullableRelationFilter, ProjectWorkstreamWhereInput> | null
     approvedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    settledBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
   }
 
@@ -55304,12 +58146,18 @@ export namespace Prisma {
     approvedById?: SortOrderInput | SortOrder
     approvedAt?: SortOrderInput | SortOrder
     rejectionReason?: SortOrderInput | SortOrder
+    poNumber?: SortOrderInput | SortOrder
+    settledAmount?: SortOrderInput | SortOrder
+    settledAt?: SortOrderInput | SortOrder
+    settlementNotes?: SortOrderInput | SortOrder
+    settledById?: SortOrderInput | SortOrder
     createdById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     project?: ProjectOrderByWithRelationInput
     workstream?: ProjectWorkstreamOrderByWithRelationInput
     approvedBy?: UserOrderByWithRelationInput
+    settledBy?: UserOrderByWithRelationInput
     createdBy?: UserOrderByWithRelationInput
   }
 
@@ -55330,12 +58178,18 @@ export namespace Prisma {
     approvedById?: StringNullableFilter<"ProjectExpense"> | string | null
     approvedAt?: DateTimeNullableFilter<"ProjectExpense"> | Date | string | null
     rejectionReason?: StringNullableFilter<"ProjectExpense"> | string | null
+    poNumber?: StringNullableFilter<"ProjectExpense"> | string | null
+    settledAmount?: FloatNullableFilter<"ProjectExpense"> | number | null
+    settledAt?: DateTimeNullableFilter<"ProjectExpense"> | Date | string | null
+    settlementNotes?: StringNullableFilter<"ProjectExpense"> | string | null
+    settledById?: StringNullableFilter<"ProjectExpense"> | string | null
     createdById?: StringNullableFilter<"ProjectExpense"> | string | null
     createdAt?: DateTimeFilter<"ProjectExpense"> | Date | string
     updatedAt?: DateTimeFilter<"ProjectExpense"> | Date | string
     project?: XOR<ProjectRelationFilter, ProjectWhereInput>
     workstream?: XOR<ProjectWorkstreamNullableRelationFilter, ProjectWorkstreamWhereInput> | null
     approvedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    settledBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     createdBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
   }, "id">
 
@@ -55353,6 +58207,11 @@ export namespace Prisma {
     approvedById?: SortOrderInput | SortOrder
     approvedAt?: SortOrderInput | SortOrder
     rejectionReason?: SortOrderInput | SortOrder
+    poNumber?: SortOrderInput | SortOrder
+    settledAmount?: SortOrderInput | SortOrder
+    settledAt?: SortOrderInput | SortOrder
+    settlementNotes?: SortOrderInput | SortOrder
+    settledById?: SortOrderInput | SortOrder
     createdById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -55380,6 +58239,11 @@ export namespace Prisma {
     approvedById?: StringNullableWithAggregatesFilter<"ProjectExpense"> | string | null
     approvedAt?: DateTimeNullableWithAggregatesFilter<"ProjectExpense"> | Date | string | null
     rejectionReason?: StringNullableWithAggregatesFilter<"ProjectExpense"> | string | null
+    poNumber?: StringNullableWithAggregatesFilter<"ProjectExpense"> | string | null
+    settledAmount?: FloatNullableWithAggregatesFilter<"ProjectExpense"> | number | null
+    settledAt?: DateTimeNullableWithAggregatesFilter<"ProjectExpense"> | Date | string | null
+    settlementNotes?: StringNullableWithAggregatesFilter<"ProjectExpense"> | string | null
+    settledById?: StringNullableWithAggregatesFilter<"ProjectExpense"> | string | null
     createdById?: StringNullableWithAggregatesFilter<"ProjectExpense"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"ProjectExpense"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ProjectExpense"> | Date | string
@@ -55833,6 +58697,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
     progressPercent?: IntFilter<"Task"> | number
     billable?: BoolFilter<"Task"> | boolean
+    plannedHours?: FloatNullableFilter<"Task"> | number | null
     startDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     endDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     assigneeId?: StringNullableFilter<"Task"> | string | null
@@ -55862,6 +58727,7 @@ export namespace Prisma {
     status?: SortOrder
     progressPercent?: SortOrder
     billable?: SortOrder
+    plannedHours?: SortOrderInput | SortOrder
     startDate?: SortOrderInput | SortOrder
     endDate?: SortOrderInput | SortOrder
     assigneeId?: SortOrderInput | SortOrder
@@ -55894,6 +58760,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
     progressPercent?: IntFilter<"Task"> | number
     billable?: BoolFilter<"Task"> | boolean
+    plannedHours?: FloatNullableFilter<"Task"> | number | null
     startDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     endDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     assigneeId?: StringNullableFilter<"Task"> | string | null
@@ -55923,6 +58790,7 @@ export namespace Prisma {
     status?: SortOrder
     progressPercent?: SortOrder
     billable?: SortOrder
+    plannedHours?: SortOrderInput | SortOrder
     startDate?: SortOrderInput | SortOrder
     endDate?: SortOrderInput | SortOrder
     assigneeId?: SortOrderInput | SortOrder
@@ -55949,6 +58817,7 @@ export namespace Prisma {
     status?: EnumTaskStatusWithAggregatesFilter<"Task"> | $Enums.TaskStatus
     progressPercent?: IntWithAggregatesFilter<"Task"> | number
     billable?: BoolWithAggregatesFilter<"Task"> | boolean
+    plannedHours?: FloatNullableWithAggregatesFilter<"Task"> | number | null
     startDate?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
     endDate?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
     assigneeId?: StringNullableWithAggregatesFilter<"Task"> | string | null
@@ -57795,12 +60664,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -57823,6 +60694,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -57855,12 +60728,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -57883,6 +60758,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -57915,12 +60792,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -57943,6 +60822,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -57975,12 +60856,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -58003,6 +60886,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -58219,6 +61104,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360CreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
@@ -58275,6 +61161,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
@@ -58331,6 +61218,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
@@ -58387,6 +61275,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
@@ -59220,6 +62109,94 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ProjectFeedback360CreateInput = {
+    id?: string
+    rating?: number | null
+    comment?: string | null
+    status?: $Enums.Feedback360Status
+    submittedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutFeedback360Input
+    reviewer: UserCreateNestedOneWithoutFeedback360AsReviewerInput
+    subject: UserCreateNestedOneWithoutFeedback360AsSubjectInput
+  }
+
+  export type ProjectFeedback360UncheckedCreateInput = {
+    id?: string
+    projectId: string
+    reviewerId: string
+    subjectId: string
+    rating?: number | null
+    comment?: string | null
+    status?: $Enums.Feedback360Status
+    submittedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectFeedback360UpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFeedback360StatusFieldUpdateOperationsInput | $Enums.Feedback360Status
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutFeedback360NestedInput
+    reviewer?: UserUpdateOneRequiredWithoutFeedback360AsReviewerNestedInput
+    subject?: UserUpdateOneRequiredWithoutFeedback360AsSubjectNestedInput
+  }
+
+  export type ProjectFeedback360UncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    reviewerId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFeedback360StatusFieldUpdateOperationsInput | $Enums.Feedback360Status
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectFeedback360CreateManyInput = {
+    id?: string
+    projectId: string
+    reviewerId: string
+    subjectId: string
+    rating?: number | null
+    comment?: string | null
+    status?: $Enums.Feedback360Status
+    submittedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectFeedback360UpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFeedback360StatusFieldUpdateOperationsInput | $Enums.Feedback360Status
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectFeedback360UncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    reviewerId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFeedback360StatusFieldUpdateOperationsInput | $Enums.Feedback360Status
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type AuditLogCreateInput = {
     id?: string
     userName: string
@@ -59330,6 +62307,7 @@ export namespace Prisma {
     workstream?: ProjectWorkstreamCreateNestedOneWithoutResourcesInput
     user: UserCreateNestedOneWithoutResourcesInput
     proposedBy?: UserCreateNestedOneWithoutProposedResourcesInput
+    rates?: ProjectResourceRateCreateNestedManyWithoutResourceInput
   }
 
   export type ProjectResourceUncheckedCreateInput = {
@@ -59345,6 +62323,7 @@ export namespace Prisma {
     acceptedAt?: Date | string | null
     pendingPrincipalApproval?: boolean
     createdAt?: Date | string
+    rates?: ProjectResourceRateUncheckedCreateNestedManyWithoutResourceInput
   }
 
   export type ProjectResourceUpdateInput = {
@@ -59360,6 +62339,7 @@ export namespace Prisma {
     workstream?: ProjectWorkstreamUpdateOneWithoutResourcesNestedInput
     user?: UserUpdateOneRequiredWithoutResourcesNestedInput
     proposedBy?: UserUpdateOneWithoutProposedResourcesNestedInput
+    rates?: ProjectResourceRateUpdateManyWithoutResourceNestedInput
   }
 
   export type ProjectResourceUncheckedUpdateInput = {
@@ -59375,6 +62355,7 @@ export namespace Prisma {
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rates?: ProjectResourceRateUncheckedUpdateManyWithoutResourceNestedInput
   }
 
   export type ProjectResourceCreateManyInput = {
@@ -59415,6 +62396,74 @@ export namespace Prisma {
     proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectResourceRateCreateInput = {
+    id?: string
+    costRate: number
+    sellingRate?: number | null
+    effectiveFrom: Date | string
+    createdAt?: Date | string
+    resource: ProjectResourceCreateNestedOneWithoutRatesInput
+    createdBy?: UserCreateNestedOneWithoutCreatedResourceRatesInput
+  }
+
+  export type ProjectResourceRateUncheckedCreateInput = {
+    id?: string
+    resourceId: string
+    costRate: number
+    sellingRate?: number | null
+    effectiveFrom: Date | string
+    createdById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ProjectResourceRateUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    costRate?: FloatFieldUpdateOperationsInput | number
+    sellingRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    effectiveFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resource?: ProjectResourceUpdateOneRequiredWithoutRatesNestedInput
+    createdBy?: UserUpdateOneWithoutCreatedResourceRatesNestedInput
+  }
+
+  export type ProjectResourceRateUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    resourceId?: StringFieldUpdateOperationsInput | string
+    costRate?: FloatFieldUpdateOperationsInput | number
+    sellingRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    effectiveFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectResourceRateCreateManyInput = {
+    id?: string
+    resourceId: string
+    costRate: number
+    sellingRate?: number | null
+    effectiveFrom: Date | string
+    createdById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ProjectResourceRateUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    costRate?: FloatFieldUpdateOperationsInput | number
+    sellingRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    effectiveFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectResourceRateUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    resourceId?: StringFieldUpdateOperationsInput | string
+    costRate?: FloatFieldUpdateOperationsInput | number
+    sellingRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    effectiveFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -59535,6 +62584,7 @@ export namespace Prisma {
   export type DocumentCreateInput = {
     id?: string
     type: $Enums.DocumentType
+    kind?: $Enums.DocumentKind
     fileName: string
     fileUrl: string
     invoiceNumber?: string | null
@@ -59555,6 +62605,7 @@ export namespace Prisma {
     id?: string
     projectId: string
     type: $Enums.DocumentType
+    kind?: $Enums.DocumentKind
     fileName: string
     fileUrl: string
     invoiceNumber?: string | null
@@ -59573,6 +62624,7 @@ export namespace Prisma {
   export type DocumentUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    kind?: EnumDocumentKindFieldUpdateOperationsInput | $Enums.DocumentKind
     fileName?: StringFieldUpdateOperationsInput | string
     fileUrl?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59593,6 +62645,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    kind?: EnumDocumentKindFieldUpdateOperationsInput | $Enums.DocumentKind
     fileName?: StringFieldUpdateOperationsInput | string
     fileUrl?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59612,6 +62665,7 @@ export namespace Prisma {
     id?: string
     projectId: string
     type: $Enums.DocumentType
+    kind?: $Enums.DocumentKind
     fileName: string
     fileUrl: string
     invoiceNumber?: string | null
@@ -59629,6 +62683,7 @@ export namespace Prisma {
   export type DocumentUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    kind?: EnumDocumentKindFieldUpdateOperationsInput | $Enums.DocumentKind
     fileName?: StringFieldUpdateOperationsInput | string
     fileUrl?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59644,6 +62699,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    kind?: EnumDocumentKindFieldUpdateOperationsInput | $Enums.DocumentKind
     fileName?: StringFieldUpdateOperationsInput | string
     fileUrl?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -59765,11 +62821,16 @@ export namespace Prisma {
     status?: $Enums.ExpenseStatus
     approvedAt?: Date | string | null
     rejectionReason?: string | null
+    poNumber?: string | null
+    settledAmount?: number | null
+    settledAt?: Date | string | null
+    settlementNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutExpensesInput
     workstream?: ProjectWorkstreamCreateNestedOneWithoutExpensesInput
     approvedBy?: UserCreateNestedOneWithoutApprovedExpensesInput
+    settledBy?: UserCreateNestedOneWithoutSettledExpensesInput
     createdBy?: UserCreateNestedOneWithoutProjectExpensesInput
   }
 
@@ -59787,6 +62848,11 @@ export namespace Prisma {
     approvedById?: string | null
     approvedAt?: Date | string | null
     rejectionReason?: string | null
+    poNumber?: string | null
+    settledAmount?: number | null
+    settledAt?: Date | string | null
+    settlementNotes?: string | null
+    settledById?: string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -59803,11 +62869,16 @@ export namespace Prisma {
     status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
     approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    poNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    settledAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlementNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutExpensesNestedInput
     workstream?: ProjectWorkstreamUpdateOneWithoutExpensesNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedExpensesNestedInput
+    settledBy?: UserUpdateOneWithoutSettledExpensesNestedInput
     createdBy?: UserUpdateOneWithoutProjectExpensesNestedInput
   }
 
@@ -59825,6 +62896,11 @@ export namespace Prisma {
     approvedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    poNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    settledAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlementNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    settledById?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -59844,6 +62920,11 @@ export namespace Prisma {
     approvedById?: string | null
     approvedAt?: Date | string | null
     rejectionReason?: string | null
+    poNumber?: string | null
+    settledAmount?: number | null
+    settledAt?: Date | string | null
+    settlementNotes?: string | null
+    settledById?: string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -59860,6 +62941,10 @@ export namespace Prisma {
     status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
     approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    poNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    settledAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlementNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -59878,6 +62963,11 @@ export namespace Prisma {
     approvedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    poNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    settledAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlementNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    settledById?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -60335,6 +63425,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -60361,6 +63452,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -60383,6 +63475,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -60409,6 +63502,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -60433,6 +63527,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -60449,6 +63544,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -60464,6 +63560,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62620,6 +65717,12 @@ export namespace Prisma {
     none?: ProjectResourceWhereInput
   }
 
+  export type ProjectResourceRateListRelationFilter = {
+    every?: ProjectResourceRateWhereInput
+    some?: ProjectResourceRateWhereInput
+    none?: ProjectResourceRateWhereInput
+  }
+
   export type TimesheetListRelationFilter = {
     every?: TimesheetWhereInput
     some?: TimesheetWhereInput
@@ -62722,6 +65825,12 @@ export namespace Prisma {
     none?: SkillProgressionLogWhereInput
   }
 
+  export type ProjectFeedback360ListRelationFilter = {
+    every?: ProjectFeedback360WhereInput
+    some?: ProjectFeedback360WhereInput
+    none?: ProjectFeedback360WhereInput
+  }
+
   export type ProjectRaidItemListRelationFilter = {
     every?: ProjectRaidItemWhereInput
     some?: ProjectRaidItemWhereInput
@@ -62774,6 +65883,10 @@ export namespace Prisma {
   }
 
   export type ProjectResourceOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProjectResourceRateOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -62842,6 +65955,10 @@ export namespace Prisma {
   }
 
   export type SkillProgressionLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProjectFeedback360OrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -63896,6 +67013,81 @@ export namespace Prisma {
     _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
+  export type EnumFeedback360StatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.Feedback360Status | EnumFeedback360StatusFieldRefInput<$PrismaModel>
+    in?: $Enums.Feedback360Status[] | ListEnumFeedback360StatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Feedback360Status[] | ListEnumFeedback360StatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFeedback360StatusFilter<$PrismaModel> | $Enums.Feedback360Status
+  }
+
+  export type UserRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type ProjectFeedback360ProjectIdReviewerIdSubjectIdCompoundUniqueInput = {
+    projectId: string
+    reviewerId: string
+    subjectId: string
+  }
+
+  export type ProjectFeedback360CountOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    reviewerId?: SortOrder
+    subjectId?: SortOrder
+    rating?: SortOrder
+    comment?: SortOrder
+    status?: SortOrder
+    submittedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProjectFeedback360AvgOrderByAggregateInput = {
+    rating?: SortOrder
+  }
+
+  export type ProjectFeedback360MaxOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    reviewerId?: SortOrder
+    subjectId?: SortOrder
+    rating?: SortOrder
+    comment?: SortOrder
+    status?: SortOrder
+    submittedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProjectFeedback360MinOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    reviewerId?: SortOrder
+    subjectId?: SortOrder
+    rating?: SortOrder
+    comment?: SortOrder
+    status?: SortOrder
+    submittedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProjectFeedback360SumOrderByAggregateInput = {
+    rating?: SortOrder
+  }
+
+  export type EnumFeedback360StatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Feedback360Status | EnumFeedback360StatusFieldRefInput<$PrismaModel>
+    in?: $Enums.Feedback360Status[] | ListEnumFeedback360StatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Feedback360Status[] | ListEnumFeedback360StatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFeedback360StatusWithAggregatesFilter<$PrismaModel> | $Enums.Feedback360Status
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFeedback360StatusFilter<$PrismaModel>
+    _max?: NestedEnumFeedback360StatusFilter<$PrismaModel>
+  }
+
   export type AuditLogCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -63932,11 +67124,6 @@ export namespace Prisma {
     entityId?: SortOrder
     description?: SortOrder
     createdAt?: SortOrder
-  }
-
-  export type UserRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
   }
 
   export type ProjectResourceProjectIdUserIdCompoundUniqueInput = {
@@ -63997,6 +67184,56 @@ export namespace Prisma {
   export type ProjectResourceSumOrderByAggregateInput = {
     plannedMandays?: SortOrder
     dailyRate?: SortOrder
+  }
+
+  export type ProjectResourceRelationFilter = {
+    is?: ProjectResourceWhereInput
+    isNot?: ProjectResourceWhereInput
+  }
+
+  export type ProjectResourceRateResourceIdEffectiveFromCompoundUniqueInput = {
+    resourceId: string
+    effectiveFrom: Date | string
+  }
+
+  export type ProjectResourceRateCountOrderByAggregateInput = {
+    id?: SortOrder
+    resourceId?: SortOrder
+    costRate?: SortOrder
+    sellingRate?: SortOrder
+    effectiveFrom?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ProjectResourceRateAvgOrderByAggregateInput = {
+    costRate?: SortOrder
+    sellingRate?: SortOrder
+  }
+
+  export type ProjectResourceRateMaxOrderByAggregateInput = {
+    id?: SortOrder
+    resourceId?: SortOrder
+    costRate?: SortOrder
+    sellingRate?: SortOrder
+    effectiveFrom?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ProjectResourceRateMinOrderByAggregateInput = {
+    id?: SortOrder
+    resourceId?: SortOrder
+    costRate?: SortOrder
+    sellingRate?: SortOrder
+    effectiveFrom?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ProjectResourceRateSumOrderByAggregateInput = {
+    costRate?: SortOrder
+    sellingRate?: SortOrder
   }
 
   export type EnumTimesheetStatusFilter<$PrismaModel = never> = {
@@ -64087,6 +67324,13 @@ export namespace Prisma {
     not?: NestedEnumDocumentTypeFilter<$PrismaModel> | $Enums.DocumentType
   }
 
+  export type EnumDocumentKindFilter<$PrismaModel = never> = {
+    equals?: $Enums.DocumentKind | EnumDocumentKindFieldRefInput<$PrismaModel>
+    in?: $Enums.DocumentKind[] | ListEnumDocumentKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DocumentKind[] | ListEnumDocumentKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumDocumentKindFilter<$PrismaModel> | $Enums.DocumentKind
+  }
+
   export type DocumentNullableRelationFilter = {
     is?: DocumentWhereInput | null
     isNot?: DocumentWhereInput | null
@@ -64101,6 +67345,7 @@ export namespace Prisma {
     id?: SortOrder
     projectId?: SortOrder
     type?: SortOrder
+    kind?: SortOrder
     fileName?: SortOrder
     fileUrl?: SortOrder
     invoiceNumber?: SortOrder
@@ -64124,6 +67369,7 @@ export namespace Prisma {
     id?: SortOrder
     projectId?: SortOrder
     type?: SortOrder
+    kind?: SortOrder
     fileName?: SortOrder
     fileUrl?: SortOrder
     invoiceNumber?: SortOrder
@@ -64142,6 +67388,7 @@ export namespace Prisma {
     id?: SortOrder
     projectId?: SortOrder
     type?: SortOrder
+    kind?: SortOrder
     fileName?: SortOrder
     fileUrl?: SortOrder
     invoiceNumber?: SortOrder
@@ -64169,6 +67416,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDocumentTypeFilter<$PrismaModel>
     _max?: NestedEnumDocumentTypeFilter<$PrismaModel>
+  }
+
+  export type EnumDocumentKindWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DocumentKind | EnumDocumentKindFieldRefInput<$PrismaModel>
+    in?: $Enums.DocumentKind[] | ListEnumDocumentKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DocumentKind[] | ListEnumDocumentKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumDocumentKindWithAggregatesFilter<$PrismaModel> | $Enums.DocumentKind
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDocumentKindFilter<$PrismaModel>
+    _max?: NestedEnumDocumentKindFilter<$PrismaModel>
   }
 
   export type ProjectClosingChecklistItemProjectIdKeyCompoundUniqueInput = {
@@ -64247,6 +67504,11 @@ export namespace Prisma {
     approvedById?: SortOrder
     approvedAt?: SortOrder
     rejectionReason?: SortOrder
+    poNumber?: SortOrder
+    settledAmount?: SortOrder
+    settledAt?: SortOrder
+    settlementNotes?: SortOrder
+    settledById?: SortOrder
     createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -64254,6 +67516,7 @@ export namespace Prisma {
 
   export type ProjectExpenseAvgOrderByAggregateInput = {
     amount?: SortOrder
+    settledAmount?: SortOrder
   }
 
   export type ProjectExpenseMaxOrderByAggregateInput = {
@@ -64270,6 +67533,11 @@ export namespace Prisma {
     approvedById?: SortOrder
     approvedAt?: SortOrder
     rejectionReason?: SortOrder
+    poNumber?: SortOrder
+    settledAmount?: SortOrder
+    settledAt?: SortOrder
+    settlementNotes?: SortOrder
+    settledById?: SortOrder
     createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -64289,6 +67557,11 @@ export namespace Prisma {
     approvedById?: SortOrder
     approvedAt?: SortOrder
     rejectionReason?: SortOrder
+    poNumber?: SortOrder
+    settledAmount?: SortOrder
+    settledAt?: SortOrder
+    settlementNotes?: SortOrder
+    settledById?: SortOrder
     createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -64296,6 +67569,7 @@ export namespace Prisma {
 
   export type ProjectExpenseSumOrderByAggregateInput = {
     amount?: SortOrder
+    settledAmount?: SortOrder
   }
 
   export type EnumExpenseStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -64565,6 +67839,7 @@ export namespace Prisma {
     status?: SortOrder
     progressPercent?: SortOrder
     billable?: SortOrder
+    plannedHours?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
     assigneeId?: SortOrder
@@ -64576,6 +67851,7 @@ export namespace Prisma {
 
   export type TaskAvgOrderByAggregateInput = {
     progressPercent?: SortOrder
+    plannedHours?: SortOrder
   }
 
   export type TaskMaxOrderByAggregateInput = {
@@ -64587,6 +67863,7 @@ export namespace Prisma {
     status?: SortOrder
     progressPercent?: SortOrder
     billable?: SortOrder
+    plannedHours?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
     assigneeId?: SortOrder
@@ -64605,6 +67882,7 @@ export namespace Prisma {
     status?: SortOrder
     progressPercent?: SortOrder
     billable?: SortOrder
+    plannedHours?: SortOrder
     startDate?: SortOrder
     endDate?: SortOrder
     assigneeId?: SortOrder
@@ -64616,6 +67894,7 @@ export namespace Prisma {
 
   export type TaskSumOrderByAggregateInput = {
     progressPercent?: SortOrder
+    plannedHours?: SortOrder
   }
 
   export type EnumTaskStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -65934,6 +69213,13 @@ export namespace Prisma {
     connect?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
   }
 
+  export type ProjectExpenseCreateNestedManyWithoutSettledByInput = {
+    create?: XOR<ProjectExpenseCreateWithoutSettledByInput, ProjectExpenseUncheckedCreateWithoutSettledByInput> | ProjectExpenseCreateWithoutSettledByInput[] | ProjectExpenseUncheckedCreateWithoutSettledByInput[]
+    connectOrCreate?: ProjectExpenseCreateOrConnectWithoutSettledByInput | ProjectExpenseCreateOrConnectWithoutSettledByInput[]
+    createMany?: ProjectExpenseCreateManySettledByInputEnvelope
+    connect?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+  }
+
   export type ProjectCreateNestedManyWithoutSalesInput = {
     create?: XOR<ProjectCreateWithoutSalesInput, ProjectUncheckedCreateWithoutSalesInput> | ProjectCreateWithoutSalesInput[] | ProjectUncheckedCreateWithoutSalesInput[]
     connectOrCreate?: ProjectCreateOrConnectWithoutSalesInput | ProjectCreateOrConnectWithoutSalesInput[]
@@ -65974,6 +69260,13 @@ export namespace Prisma {
     connectOrCreate?: ProjectResourceCreateOrConnectWithoutProposedByInput | ProjectResourceCreateOrConnectWithoutProposedByInput[]
     createMany?: ProjectResourceCreateManyProposedByInputEnvelope
     connect?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
+  }
+
+  export type ProjectResourceRateCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<ProjectResourceRateCreateWithoutCreatedByInput, ProjectResourceRateUncheckedCreateWithoutCreatedByInput> | ProjectResourceRateCreateWithoutCreatedByInput[] | ProjectResourceRateUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: ProjectResourceRateCreateOrConnectWithoutCreatedByInput | ProjectResourceRateCreateOrConnectWithoutCreatedByInput[]
+    createMany?: ProjectResourceRateCreateManyCreatedByInputEnvelope
+    connect?: ProjectResourceRateWhereUniqueInput | ProjectResourceRateWhereUniqueInput[]
   }
 
   export type TimesheetCreateNestedManyWithoutUserInput = {
@@ -66130,6 +69423,20 @@ export namespace Prisma {
     connect?: SkillProgressionLogWhereUniqueInput | SkillProgressionLogWhereUniqueInput[]
   }
 
+  export type ProjectFeedback360CreateNestedManyWithoutReviewerInput = {
+    create?: XOR<ProjectFeedback360CreateWithoutReviewerInput, ProjectFeedback360UncheckedCreateWithoutReviewerInput> | ProjectFeedback360CreateWithoutReviewerInput[] | ProjectFeedback360UncheckedCreateWithoutReviewerInput[]
+    connectOrCreate?: ProjectFeedback360CreateOrConnectWithoutReviewerInput | ProjectFeedback360CreateOrConnectWithoutReviewerInput[]
+    createMany?: ProjectFeedback360CreateManyReviewerInputEnvelope
+    connect?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+  }
+
+  export type ProjectFeedback360CreateNestedManyWithoutSubjectInput = {
+    create?: XOR<ProjectFeedback360CreateWithoutSubjectInput, ProjectFeedback360UncheckedCreateWithoutSubjectInput> | ProjectFeedback360CreateWithoutSubjectInput[] | ProjectFeedback360UncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: ProjectFeedback360CreateOrConnectWithoutSubjectInput | ProjectFeedback360CreateOrConnectWithoutSubjectInput[]
+    createMany?: ProjectFeedback360CreateManySubjectInputEnvelope
+    connect?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+  }
+
   export type ProjectRaidItemCreateNestedManyWithoutOwnerInput = {
     create?: XOR<ProjectRaidItemCreateWithoutOwnerInput, ProjectRaidItemUncheckedCreateWithoutOwnerInput> | ProjectRaidItemCreateWithoutOwnerInput[] | ProjectRaidItemUncheckedCreateWithoutOwnerInput[]
     connectOrCreate?: ProjectRaidItemCreateOrConnectWithoutOwnerInput | ProjectRaidItemCreateOrConnectWithoutOwnerInput[]
@@ -66214,6 +69521,13 @@ export namespace Prisma {
     connect?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
   }
 
+  export type ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput = {
+    create?: XOR<ProjectExpenseCreateWithoutSettledByInput, ProjectExpenseUncheckedCreateWithoutSettledByInput> | ProjectExpenseCreateWithoutSettledByInput[] | ProjectExpenseUncheckedCreateWithoutSettledByInput[]
+    connectOrCreate?: ProjectExpenseCreateOrConnectWithoutSettledByInput | ProjectExpenseCreateOrConnectWithoutSettledByInput[]
+    createMany?: ProjectExpenseCreateManySettledByInputEnvelope
+    connect?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+  }
+
   export type ProjectUncheckedCreateNestedManyWithoutSalesInput = {
     create?: XOR<ProjectCreateWithoutSalesInput, ProjectUncheckedCreateWithoutSalesInput> | ProjectCreateWithoutSalesInput[] | ProjectUncheckedCreateWithoutSalesInput[]
     connectOrCreate?: ProjectCreateOrConnectWithoutSalesInput | ProjectCreateOrConnectWithoutSalesInput[]
@@ -66254,6 +69568,13 @@ export namespace Prisma {
     connectOrCreate?: ProjectResourceCreateOrConnectWithoutProposedByInput | ProjectResourceCreateOrConnectWithoutProposedByInput[]
     createMany?: ProjectResourceCreateManyProposedByInputEnvelope
     connect?: ProjectResourceWhereUniqueInput | ProjectResourceWhereUniqueInput[]
+  }
+
+  export type ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<ProjectResourceRateCreateWithoutCreatedByInput, ProjectResourceRateUncheckedCreateWithoutCreatedByInput> | ProjectResourceRateCreateWithoutCreatedByInput[] | ProjectResourceRateUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: ProjectResourceRateCreateOrConnectWithoutCreatedByInput | ProjectResourceRateCreateOrConnectWithoutCreatedByInput[]
+    createMany?: ProjectResourceRateCreateManyCreatedByInputEnvelope
+    connect?: ProjectResourceRateWhereUniqueInput | ProjectResourceRateWhereUniqueInput[]
   }
 
   export type TimesheetUncheckedCreateNestedManyWithoutUserInput = {
@@ -66408,6 +69729,20 @@ export namespace Prisma {
     connectOrCreate?: SkillProgressionLogCreateOrConnectWithoutChangedByInput | SkillProgressionLogCreateOrConnectWithoutChangedByInput[]
     createMany?: SkillProgressionLogCreateManyChangedByInputEnvelope
     connect?: SkillProgressionLogWhereUniqueInput | SkillProgressionLogWhereUniqueInput[]
+  }
+
+  export type ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput = {
+    create?: XOR<ProjectFeedback360CreateWithoutReviewerInput, ProjectFeedback360UncheckedCreateWithoutReviewerInput> | ProjectFeedback360CreateWithoutReviewerInput[] | ProjectFeedback360UncheckedCreateWithoutReviewerInput[]
+    connectOrCreate?: ProjectFeedback360CreateOrConnectWithoutReviewerInput | ProjectFeedback360CreateOrConnectWithoutReviewerInput[]
+    createMany?: ProjectFeedback360CreateManyReviewerInputEnvelope
+    connect?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+  }
+
+  export type ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput = {
+    create?: XOR<ProjectFeedback360CreateWithoutSubjectInput, ProjectFeedback360UncheckedCreateWithoutSubjectInput> | ProjectFeedback360CreateWithoutSubjectInput[] | ProjectFeedback360UncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: ProjectFeedback360CreateOrConnectWithoutSubjectInput | ProjectFeedback360CreateOrConnectWithoutSubjectInput[]
+    createMany?: ProjectFeedback360CreateManySubjectInputEnvelope
+    connect?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
   }
 
   export type ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput = {
@@ -66596,6 +69931,20 @@ export namespace Prisma {
     deleteMany?: ProjectExpenseScalarWhereInput | ProjectExpenseScalarWhereInput[]
   }
 
+  export type ProjectExpenseUpdateManyWithoutSettledByNestedInput = {
+    create?: XOR<ProjectExpenseCreateWithoutSettledByInput, ProjectExpenseUncheckedCreateWithoutSettledByInput> | ProjectExpenseCreateWithoutSettledByInput[] | ProjectExpenseUncheckedCreateWithoutSettledByInput[]
+    connectOrCreate?: ProjectExpenseCreateOrConnectWithoutSettledByInput | ProjectExpenseCreateOrConnectWithoutSettledByInput[]
+    upsert?: ProjectExpenseUpsertWithWhereUniqueWithoutSettledByInput | ProjectExpenseUpsertWithWhereUniqueWithoutSettledByInput[]
+    createMany?: ProjectExpenseCreateManySettledByInputEnvelope
+    set?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    disconnect?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    delete?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    connect?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    update?: ProjectExpenseUpdateWithWhereUniqueWithoutSettledByInput | ProjectExpenseUpdateWithWhereUniqueWithoutSettledByInput[]
+    updateMany?: ProjectExpenseUpdateManyWithWhereWithoutSettledByInput | ProjectExpenseUpdateManyWithWhereWithoutSettledByInput[]
+    deleteMany?: ProjectExpenseScalarWhereInput | ProjectExpenseScalarWhereInput[]
+  }
+
   export type ProjectUpdateManyWithoutSalesNestedInput = {
     create?: XOR<ProjectCreateWithoutSalesInput, ProjectUncheckedCreateWithoutSalesInput> | ProjectCreateWithoutSalesInput[] | ProjectUncheckedCreateWithoutSalesInput[]
     connectOrCreate?: ProjectCreateOrConnectWithoutSalesInput | ProjectCreateOrConnectWithoutSalesInput[]
@@ -66678,6 +70027,20 @@ export namespace Prisma {
     update?: ProjectResourceUpdateWithWhereUniqueWithoutProposedByInput | ProjectResourceUpdateWithWhereUniqueWithoutProposedByInput[]
     updateMany?: ProjectResourceUpdateManyWithWhereWithoutProposedByInput | ProjectResourceUpdateManyWithWhereWithoutProposedByInput[]
     deleteMany?: ProjectResourceScalarWhereInput | ProjectResourceScalarWhereInput[]
+  }
+
+  export type ProjectResourceRateUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<ProjectResourceRateCreateWithoutCreatedByInput, ProjectResourceRateUncheckedCreateWithoutCreatedByInput> | ProjectResourceRateCreateWithoutCreatedByInput[] | ProjectResourceRateUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: ProjectResourceRateCreateOrConnectWithoutCreatedByInput | ProjectResourceRateCreateOrConnectWithoutCreatedByInput[]
+    upsert?: ProjectResourceRateUpsertWithWhereUniqueWithoutCreatedByInput | ProjectResourceRateUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: ProjectResourceRateCreateManyCreatedByInputEnvelope
+    set?: ProjectResourceRateWhereUniqueInput | ProjectResourceRateWhereUniqueInput[]
+    disconnect?: ProjectResourceRateWhereUniqueInput | ProjectResourceRateWhereUniqueInput[]
+    delete?: ProjectResourceRateWhereUniqueInput | ProjectResourceRateWhereUniqueInput[]
+    connect?: ProjectResourceRateWhereUniqueInput | ProjectResourceRateWhereUniqueInput[]
+    update?: ProjectResourceRateUpdateWithWhereUniqueWithoutCreatedByInput | ProjectResourceRateUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: ProjectResourceRateUpdateManyWithWhereWithoutCreatedByInput | ProjectResourceRateUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: ProjectResourceRateScalarWhereInput | ProjectResourceRateScalarWhereInput[]
   }
 
   export type TimesheetUpdateManyWithoutUserNestedInput = {
@@ -66988,6 +70351,34 @@ export namespace Prisma {
     deleteMany?: SkillProgressionLogScalarWhereInput | SkillProgressionLogScalarWhereInput[]
   }
 
+  export type ProjectFeedback360UpdateManyWithoutReviewerNestedInput = {
+    create?: XOR<ProjectFeedback360CreateWithoutReviewerInput, ProjectFeedback360UncheckedCreateWithoutReviewerInput> | ProjectFeedback360CreateWithoutReviewerInput[] | ProjectFeedback360UncheckedCreateWithoutReviewerInput[]
+    connectOrCreate?: ProjectFeedback360CreateOrConnectWithoutReviewerInput | ProjectFeedback360CreateOrConnectWithoutReviewerInput[]
+    upsert?: ProjectFeedback360UpsertWithWhereUniqueWithoutReviewerInput | ProjectFeedback360UpsertWithWhereUniqueWithoutReviewerInput[]
+    createMany?: ProjectFeedback360CreateManyReviewerInputEnvelope
+    set?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    disconnect?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    delete?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    connect?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    update?: ProjectFeedback360UpdateWithWhereUniqueWithoutReviewerInput | ProjectFeedback360UpdateWithWhereUniqueWithoutReviewerInput[]
+    updateMany?: ProjectFeedback360UpdateManyWithWhereWithoutReviewerInput | ProjectFeedback360UpdateManyWithWhereWithoutReviewerInput[]
+    deleteMany?: ProjectFeedback360ScalarWhereInput | ProjectFeedback360ScalarWhereInput[]
+  }
+
+  export type ProjectFeedback360UpdateManyWithoutSubjectNestedInput = {
+    create?: XOR<ProjectFeedback360CreateWithoutSubjectInput, ProjectFeedback360UncheckedCreateWithoutSubjectInput> | ProjectFeedback360CreateWithoutSubjectInput[] | ProjectFeedback360UncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: ProjectFeedback360CreateOrConnectWithoutSubjectInput | ProjectFeedback360CreateOrConnectWithoutSubjectInput[]
+    upsert?: ProjectFeedback360UpsertWithWhereUniqueWithoutSubjectInput | ProjectFeedback360UpsertWithWhereUniqueWithoutSubjectInput[]
+    createMany?: ProjectFeedback360CreateManySubjectInputEnvelope
+    set?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    disconnect?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    delete?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    connect?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    update?: ProjectFeedback360UpdateWithWhereUniqueWithoutSubjectInput | ProjectFeedback360UpdateWithWhereUniqueWithoutSubjectInput[]
+    updateMany?: ProjectFeedback360UpdateManyWithWhereWithoutSubjectInput | ProjectFeedback360UpdateManyWithWhereWithoutSubjectInput[]
+    deleteMany?: ProjectFeedback360ScalarWhereInput | ProjectFeedback360ScalarWhereInput[]
+  }
+
   export type ProjectRaidItemUpdateManyWithoutOwnerNestedInput = {
     create?: XOR<ProjectRaidItemCreateWithoutOwnerInput, ProjectRaidItemUncheckedCreateWithoutOwnerInput> | ProjectRaidItemCreateWithoutOwnerInput[] | ProjectRaidItemUncheckedCreateWithoutOwnerInput[]
     connectOrCreate?: ProjectRaidItemCreateOrConnectWithoutOwnerInput | ProjectRaidItemCreateOrConnectWithoutOwnerInput[]
@@ -67156,6 +70547,20 @@ export namespace Prisma {
     deleteMany?: ProjectExpenseScalarWhereInput | ProjectExpenseScalarWhereInput[]
   }
 
+  export type ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput = {
+    create?: XOR<ProjectExpenseCreateWithoutSettledByInput, ProjectExpenseUncheckedCreateWithoutSettledByInput> | ProjectExpenseCreateWithoutSettledByInput[] | ProjectExpenseUncheckedCreateWithoutSettledByInput[]
+    connectOrCreate?: ProjectExpenseCreateOrConnectWithoutSettledByInput | ProjectExpenseCreateOrConnectWithoutSettledByInput[]
+    upsert?: ProjectExpenseUpsertWithWhereUniqueWithoutSettledByInput | ProjectExpenseUpsertWithWhereUniqueWithoutSettledByInput[]
+    createMany?: ProjectExpenseCreateManySettledByInputEnvelope
+    set?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    disconnect?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    delete?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    connect?: ProjectExpenseWhereUniqueInput | ProjectExpenseWhereUniqueInput[]
+    update?: ProjectExpenseUpdateWithWhereUniqueWithoutSettledByInput | ProjectExpenseUpdateWithWhereUniqueWithoutSettledByInput[]
+    updateMany?: ProjectExpenseUpdateManyWithWhereWithoutSettledByInput | ProjectExpenseUpdateManyWithWhereWithoutSettledByInput[]
+    deleteMany?: ProjectExpenseScalarWhereInput | ProjectExpenseScalarWhereInput[]
+  }
+
   export type ProjectUncheckedUpdateManyWithoutSalesNestedInput = {
     create?: XOR<ProjectCreateWithoutSalesInput, ProjectUncheckedCreateWithoutSalesInput> | ProjectCreateWithoutSalesInput[] | ProjectUncheckedCreateWithoutSalesInput[]
     connectOrCreate?: ProjectCreateOrConnectWithoutSalesInput | ProjectCreateOrConnectWithoutSalesInput[]
@@ -67238,6 +70643,20 @@ export namespace Prisma {
     update?: ProjectResourceUpdateWithWhereUniqueWithoutProposedByInput | ProjectResourceUpdateWithWhereUniqueWithoutProposedByInput[]
     updateMany?: ProjectResourceUpdateManyWithWhereWithoutProposedByInput | ProjectResourceUpdateManyWithWhereWithoutProposedByInput[]
     deleteMany?: ProjectResourceScalarWhereInput | ProjectResourceScalarWhereInput[]
+  }
+
+  export type ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<ProjectResourceRateCreateWithoutCreatedByInput, ProjectResourceRateUncheckedCreateWithoutCreatedByInput> | ProjectResourceRateCreateWithoutCreatedByInput[] | ProjectResourceRateUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: ProjectResourceRateCreateOrConnectWithoutCreatedByInput | ProjectResourceRateCreateOrConnectWithoutCreatedByInput[]
+    upsert?: ProjectResourceRateUpsertWithWhereUniqueWithoutCreatedByInput | ProjectResourceRateUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: ProjectResourceRateCreateManyCreatedByInputEnvelope
+    set?: ProjectResourceRateWhereUniqueInput | ProjectResourceRateWhereUniqueInput[]
+    disconnect?: ProjectResourceRateWhereUniqueInput | ProjectResourceRateWhereUniqueInput[]
+    delete?: ProjectResourceRateWhereUniqueInput | ProjectResourceRateWhereUniqueInput[]
+    connect?: ProjectResourceRateWhereUniqueInput | ProjectResourceRateWhereUniqueInput[]
+    update?: ProjectResourceRateUpdateWithWhereUniqueWithoutCreatedByInput | ProjectResourceRateUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: ProjectResourceRateUpdateManyWithWhereWithoutCreatedByInput | ProjectResourceRateUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: ProjectResourceRateScalarWhereInput | ProjectResourceRateScalarWhereInput[]
   }
 
   export type TimesheetUncheckedUpdateManyWithoutUserNestedInput = {
@@ -67546,6 +70965,34 @@ export namespace Prisma {
     update?: SkillProgressionLogUpdateWithWhereUniqueWithoutChangedByInput | SkillProgressionLogUpdateWithWhereUniqueWithoutChangedByInput[]
     updateMany?: SkillProgressionLogUpdateManyWithWhereWithoutChangedByInput | SkillProgressionLogUpdateManyWithWhereWithoutChangedByInput[]
     deleteMany?: SkillProgressionLogScalarWhereInput | SkillProgressionLogScalarWhereInput[]
+  }
+
+  export type ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput = {
+    create?: XOR<ProjectFeedback360CreateWithoutReviewerInput, ProjectFeedback360UncheckedCreateWithoutReviewerInput> | ProjectFeedback360CreateWithoutReviewerInput[] | ProjectFeedback360UncheckedCreateWithoutReviewerInput[]
+    connectOrCreate?: ProjectFeedback360CreateOrConnectWithoutReviewerInput | ProjectFeedback360CreateOrConnectWithoutReviewerInput[]
+    upsert?: ProjectFeedback360UpsertWithWhereUniqueWithoutReviewerInput | ProjectFeedback360UpsertWithWhereUniqueWithoutReviewerInput[]
+    createMany?: ProjectFeedback360CreateManyReviewerInputEnvelope
+    set?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    disconnect?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    delete?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    connect?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    update?: ProjectFeedback360UpdateWithWhereUniqueWithoutReviewerInput | ProjectFeedback360UpdateWithWhereUniqueWithoutReviewerInput[]
+    updateMany?: ProjectFeedback360UpdateManyWithWhereWithoutReviewerInput | ProjectFeedback360UpdateManyWithWhereWithoutReviewerInput[]
+    deleteMany?: ProjectFeedback360ScalarWhereInput | ProjectFeedback360ScalarWhereInput[]
+  }
+
+  export type ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput = {
+    create?: XOR<ProjectFeedback360CreateWithoutSubjectInput, ProjectFeedback360UncheckedCreateWithoutSubjectInput> | ProjectFeedback360CreateWithoutSubjectInput[] | ProjectFeedback360UncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: ProjectFeedback360CreateOrConnectWithoutSubjectInput | ProjectFeedback360CreateOrConnectWithoutSubjectInput[]
+    upsert?: ProjectFeedback360UpsertWithWhereUniqueWithoutSubjectInput | ProjectFeedback360UpsertWithWhereUniqueWithoutSubjectInput[]
+    createMany?: ProjectFeedback360CreateManySubjectInputEnvelope
+    set?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    disconnect?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    delete?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    connect?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    update?: ProjectFeedback360UpdateWithWhereUniqueWithoutSubjectInput | ProjectFeedback360UpdateWithWhereUniqueWithoutSubjectInput[]
+    updateMany?: ProjectFeedback360UpdateManyWithWhereWithoutSubjectInput | ProjectFeedback360UpdateManyWithWhereWithoutSubjectInput[]
+    deleteMany?: ProjectFeedback360ScalarWhereInput | ProjectFeedback360ScalarWhereInput[]
   }
 
   export type ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput = {
@@ -67859,6 +71306,13 @@ export namespace Prisma {
     connect?: ProjectClosingChecklistItemWhereUniqueInput | ProjectClosingChecklistItemWhereUniqueInput[]
   }
 
+  export type ProjectFeedback360CreateNestedManyWithoutProjectInput = {
+    create?: XOR<ProjectFeedback360CreateWithoutProjectInput, ProjectFeedback360UncheckedCreateWithoutProjectInput> | ProjectFeedback360CreateWithoutProjectInput[] | ProjectFeedback360UncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectFeedback360CreateOrConnectWithoutProjectInput | ProjectFeedback360CreateOrConnectWithoutProjectInput[]
+    createMany?: ProjectFeedback360CreateManyProjectInputEnvelope
+    connect?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+  }
+
   export type ProjectWorkstreamCreateNestedManyWithoutProjectInput = {
     create?: XOR<ProjectWorkstreamCreateWithoutProjectInput, ProjectWorkstreamUncheckedCreateWithoutProjectInput> | ProjectWorkstreamCreateWithoutProjectInput[] | ProjectWorkstreamUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutProjectInput | ProjectWorkstreamCreateOrConnectWithoutProjectInput[]
@@ -67962,6 +71416,13 @@ export namespace Prisma {
     connectOrCreate?: ProjectClosingChecklistItemCreateOrConnectWithoutProjectInput | ProjectClosingChecklistItemCreateOrConnectWithoutProjectInput[]
     createMany?: ProjectClosingChecklistItemCreateManyProjectInputEnvelope
     connect?: ProjectClosingChecklistItemWhereUniqueInput | ProjectClosingChecklistItemWhereUniqueInput[]
+  }
+
+  export type ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput = {
+    create?: XOR<ProjectFeedback360CreateWithoutProjectInput, ProjectFeedback360UncheckedCreateWithoutProjectInput> | ProjectFeedback360CreateWithoutProjectInput[] | ProjectFeedback360UncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectFeedback360CreateOrConnectWithoutProjectInput | ProjectFeedback360CreateOrConnectWithoutProjectInput[]
+    createMany?: ProjectFeedback360CreateManyProjectInputEnvelope
+    connect?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
   }
 
   export type ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput = {
@@ -68210,6 +71671,20 @@ export namespace Prisma {
     deleteMany?: ProjectClosingChecklistItemScalarWhereInput | ProjectClosingChecklistItemScalarWhereInput[]
   }
 
+  export type ProjectFeedback360UpdateManyWithoutProjectNestedInput = {
+    create?: XOR<ProjectFeedback360CreateWithoutProjectInput, ProjectFeedback360UncheckedCreateWithoutProjectInput> | ProjectFeedback360CreateWithoutProjectInput[] | ProjectFeedback360UncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectFeedback360CreateOrConnectWithoutProjectInput | ProjectFeedback360CreateOrConnectWithoutProjectInput[]
+    upsert?: ProjectFeedback360UpsertWithWhereUniqueWithoutProjectInput | ProjectFeedback360UpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: ProjectFeedback360CreateManyProjectInputEnvelope
+    set?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    disconnect?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    delete?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    connect?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    update?: ProjectFeedback360UpdateWithWhereUniqueWithoutProjectInput | ProjectFeedback360UpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: ProjectFeedback360UpdateManyWithWhereWithoutProjectInput | ProjectFeedback360UpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: ProjectFeedback360ScalarWhereInput | ProjectFeedback360ScalarWhereInput[]
+  }
+
   export type ProjectWorkstreamUpdateManyWithoutProjectNestedInput = {
     create?: XOR<ProjectWorkstreamCreateWithoutProjectInput, ProjectWorkstreamUncheckedCreateWithoutProjectInput> | ProjectWorkstreamCreateWithoutProjectInput[] | ProjectWorkstreamUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: ProjectWorkstreamCreateOrConnectWithoutProjectInput | ProjectWorkstreamCreateOrConnectWithoutProjectInput[]
@@ -68418,6 +71893,20 @@ export namespace Prisma {
     update?: ProjectClosingChecklistItemUpdateWithWhereUniqueWithoutProjectInput | ProjectClosingChecklistItemUpdateWithWhereUniqueWithoutProjectInput[]
     updateMany?: ProjectClosingChecklistItemUpdateManyWithWhereWithoutProjectInput | ProjectClosingChecklistItemUpdateManyWithWhereWithoutProjectInput[]
     deleteMany?: ProjectClosingChecklistItemScalarWhereInput | ProjectClosingChecklistItemScalarWhereInput[]
+  }
+
+  export type ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<ProjectFeedback360CreateWithoutProjectInput, ProjectFeedback360UncheckedCreateWithoutProjectInput> | ProjectFeedback360CreateWithoutProjectInput[] | ProjectFeedback360UncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ProjectFeedback360CreateOrConnectWithoutProjectInput | ProjectFeedback360CreateOrConnectWithoutProjectInput[]
+    upsert?: ProjectFeedback360UpsertWithWhereUniqueWithoutProjectInput | ProjectFeedback360UpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: ProjectFeedback360CreateManyProjectInputEnvelope
+    set?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    disconnect?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    delete?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    connect?: ProjectFeedback360WhereUniqueInput | ProjectFeedback360WhereUniqueInput[]
+    update?: ProjectFeedback360UpdateWithWhereUniqueWithoutProjectInput | ProjectFeedback360UpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: ProjectFeedback360UpdateManyWithWhereWithoutProjectInput | ProjectFeedback360UpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: ProjectFeedback360ScalarWhereInput | ProjectFeedback360ScalarWhereInput[]
   }
 
   export type ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput = {
@@ -68968,6 +72457,52 @@ export namespace Prisma {
     update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutSurveyResponsesInput, ProjectUpdateWithoutSurveyResponsesInput>, ProjectUncheckedUpdateWithoutSurveyResponsesInput>
   }
 
+  export type ProjectCreateNestedOneWithoutFeedback360Input = {
+    create?: XOR<ProjectCreateWithoutFeedback360Input, ProjectUncheckedCreateWithoutFeedback360Input>
+    connectOrCreate?: ProjectCreateOrConnectWithoutFeedback360Input
+    connect?: ProjectWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutFeedback360AsReviewerInput = {
+    create?: XOR<UserCreateWithoutFeedback360AsReviewerInput, UserUncheckedCreateWithoutFeedback360AsReviewerInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFeedback360AsReviewerInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutFeedback360AsSubjectInput = {
+    create?: XOR<UserCreateWithoutFeedback360AsSubjectInput, UserUncheckedCreateWithoutFeedback360AsSubjectInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFeedback360AsSubjectInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumFeedback360StatusFieldUpdateOperationsInput = {
+    set?: $Enums.Feedback360Status
+  }
+
+  export type ProjectUpdateOneRequiredWithoutFeedback360NestedInput = {
+    create?: XOR<ProjectCreateWithoutFeedback360Input, ProjectUncheckedCreateWithoutFeedback360Input>
+    connectOrCreate?: ProjectCreateOrConnectWithoutFeedback360Input
+    upsert?: ProjectUpsertWithoutFeedback360Input
+    connect?: ProjectWhereUniqueInput
+    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutFeedback360Input, ProjectUpdateWithoutFeedback360Input>, ProjectUncheckedUpdateWithoutFeedback360Input>
+  }
+
+  export type UserUpdateOneRequiredWithoutFeedback360AsReviewerNestedInput = {
+    create?: XOR<UserCreateWithoutFeedback360AsReviewerInput, UserUncheckedCreateWithoutFeedback360AsReviewerInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFeedback360AsReviewerInput
+    upsert?: UserUpsertWithoutFeedback360AsReviewerInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFeedback360AsReviewerInput, UserUpdateWithoutFeedback360AsReviewerInput>, UserUncheckedUpdateWithoutFeedback360AsReviewerInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutFeedback360AsSubjectNestedInput = {
+    create?: XOR<UserCreateWithoutFeedback360AsSubjectInput, UserUncheckedCreateWithoutFeedback360AsSubjectInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFeedback360AsSubjectInput
+    upsert?: UserUpsertWithoutFeedback360AsSubjectInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFeedback360AsSubjectInput, UserUpdateWithoutFeedback360AsSubjectInput>, UserUncheckedUpdateWithoutFeedback360AsSubjectInput>
+  }
+
   export type UserCreateNestedOneWithoutAuditLogsInput = {
     create?: XOR<UserCreateWithoutAuditLogsInput, UserUncheckedCreateWithoutAuditLogsInput>
     connectOrCreate?: UserCreateOrConnectWithoutAuditLogsInput
@@ -69008,6 +72543,20 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type ProjectResourceRateCreateNestedManyWithoutResourceInput = {
+    create?: XOR<ProjectResourceRateCreateWithoutResourceInput, ProjectResourceRateUncheckedCreateWithoutResourceInput> | ProjectResourceRateCreateWithoutResourceInput[] | ProjectResourceRateUncheckedCreateWithoutResourceInput[]
+    connectOrCreate?: ProjectResourceRateCreateOrConnectWithoutResourceInput | ProjectResourceRateCreateOrConnectWithoutResourceInput[]
+    createMany?: ProjectResourceRateCreateManyResourceInputEnvelope
+    connect?: ProjectResourceRateWhereUniqueInput | ProjectResourceRateWhereUniqueInput[]
+  }
+
+  export type ProjectResourceRateUncheckedCreateNestedManyWithoutResourceInput = {
+    create?: XOR<ProjectResourceRateCreateWithoutResourceInput, ProjectResourceRateUncheckedCreateWithoutResourceInput> | ProjectResourceRateCreateWithoutResourceInput[] | ProjectResourceRateUncheckedCreateWithoutResourceInput[]
+    connectOrCreate?: ProjectResourceRateCreateOrConnectWithoutResourceInput | ProjectResourceRateCreateOrConnectWithoutResourceInput[]
+    createMany?: ProjectResourceRateCreateManyResourceInputEnvelope
+    connect?: ProjectResourceRateWhereUniqueInput | ProjectResourceRateWhereUniqueInput[]
+  }
+
   export type ProjectUpdateOneRequiredWithoutResourcesNestedInput = {
     create?: XOR<ProjectCreateWithoutResourcesInput, ProjectUncheckedCreateWithoutResourcesInput>
     connectOrCreate?: ProjectCreateOrConnectWithoutResourcesInput
@@ -69042,6 +72591,64 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProposedResourcesInput, UserUpdateWithoutProposedResourcesInput>, UserUncheckedUpdateWithoutProposedResourcesInput>
+  }
+
+  export type ProjectResourceRateUpdateManyWithoutResourceNestedInput = {
+    create?: XOR<ProjectResourceRateCreateWithoutResourceInput, ProjectResourceRateUncheckedCreateWithoutResourceInput> | ProjectResourceRateCreateWithoutResourceInput[] | ProjectResourceRateUncheckedCreateWithoutResourceInput[]
+    connectOrCreate?: ProjectResourceRateCreateOrConnectWithoutResourceInput | ProjectResourceRateCreateOrConnectWithoutResourceInput[]
+    upsert?: ProjectResourceRateUpsertWithWhereUniqueWithoutResourceInput | ProjectResourceRateUpsertWithWhereUniqueWithoutResourceInput[]
+    createMany?: ProjectResourceRateCreateManyResourceInputEnvelope
+    set?: ProjectResourceRateWhereUniqueInput | ProjectResourceRateWhereUniqueInput[]
+    disconnect?: ProjectResourceRateWhereUniqueInput | ProjectResourceRateWhereUniqueInput[]
+    delete?: ProjectResourceRateWhereUniqueInput | ProjectResourceRateWhereUniqueInput[]
+    connect?: ProjectResourceRateWhereUniqueInput | ProjectResourceRateWhereUniqueInput[]
+    update?: ProjectResourceRateUpdateWithWhereUniqueWithoutResourceInput | ProjectResourceRateUpdateWithWhereUniqueWithoutResourceInput[]
+    updateMany?: ProjectResourceRateUpdateManyWithWhereWithoutResourceInput | ProjectResourceRateUpdateManyWithWhereWithoutResourceInput[]
+    deleteMany?: ProjectResourceRateScalarWhereInput | ProjectResourceRateScalarWhereInput[]
+  }
+
+  export type ProjectResourceRateUncheckedUpdateManyWithoutResourceNestedInput = {
+    create?: XOR<ProjectResourceRateCreateWithoutResourceInput, ProjectResourceRateUncheckedCreateWithoutResourceInput> | ProjectResourceRateCreateWithoutResourceInput[] | ProjectResourceRateUncheckedCreateWithoutResourceInput[]
+    connectOrCreate?: ProjectResourceRateCreateOrConnectWithoutResourceInput | ProjectResourceRateCreateOrConnectWithoutResourceInput[]
+    upsert?: ProjectResourceRateUpsertWithWhereUniqueWithoutResourceInput | ProjectResourceRateUpsertWithWhereUniqueWithoutResourceInput[]
+    createMany?: ProjectResourceRateCreateManyResourceInputEnvelope
+    set?: ProjectResourceRateWhereUniqueInput | ProjectResourceRateWhereUniqueInput[]
+    disconnect?: ProjectResourceRateWhereUniqueInput | ProjectResourceRateWhereUniqueInput[]
+    delete?: ProjectResourceRateWhereUniqueInput | ProjectResourceRateWhereUniqueInput[]
+    connect?: ProjectResourceRateWhereUniqueInput | ProjectResourceRateWhereUniqueInput[]
+    update?: ProjectResourceRateUpdateWithWhereUniqueWithoutResourceInput | ProjectResourceRateUpdateWithWhereUniqueWithoutResourceInput[]
+    updateMany?: ProjectResourceRateUpdateManyWithWhereWithoutResourceInput | ProjectResourceRateUpdateManyWithWhereWithoutResourceInput[]
+    deleteMany?: ProjectResourceRateScalarWhereInput | ProjectResourceRateScalarWhereInput[]
+  }
+
+  export type ProjectResourceCreateNestedOneWithoutRatesInput = {
+    create?: XOR<ProjectResourceCreateWithoutRatesInput, ProjectResourceUncheckedCreateWithoutRatesInput>
+    connectOrCreate?: ProjectResourceCreateOrConnectWithoutRatesInput
+    connect?: ProjectResourceWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutCreatedResourceRatesInput = {
+    create?: XOR<UserCreateWithoutCreatedResourceRatesInput, UserUncheckedCreateWithoutCreatedResourceRatesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCreatedResourceRatesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ProjectResourceUpdateOneRequiredWithoutRatesNestedInput = {
+    create?: XOR<ProjectResourceCreateWithoutRatesInput, ProjectResourceUncheckedCreateWithoutRatesInput>
+    connectOrCreate?: ProjectResourceCreateOrConnectWithoutRatesInput
+    upsert?: ProjectResourceUpsertWithoutRatesInput
+    connect?: ProjectResourceWhereUniqueInput
+    update?: XOR<XOR<ProjectResourceUpdateToOneWithWhereWithoutRatesInput, ProjectResourceUpdateWithoutRatesInput>, ProjectResourceUncheckedUpdateWithoutRatesInput>
+  }
+
+  export type UserUpdateOneWithoutCreatedResourceRatesNestedInput = {
+    create?: XOR<UserCreateWithoutCreatedResourceRatesInput, UserUncheckedCreateWithoutCreatedResourceRatesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCreatedResourceRatesInput
+    upsert?: UserUpsertWithoutCreatedResourceRatesInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCreatedResourceRatesInput, UserUpdateWithoutCreatedResourceRatesInput>, UserUncheckedUpdateWithoutCreatedResourceRatesInput>
   }
 
   export type ProjectCreateNestedOneWithoutTimesheetsInput = {
@@ -69166,6 +72773,10 @@ export namespace Prisma {
     set?: $Enums.DocumentType
   }
 
+  export type EnumDocumentKindFieldUpdateOperationsInput = {
+    set?: $Enums.DocumentKind
+  }
+
   export type ProjectUpdateOneRequiredWithoutDocumentsNestedInput = {
     create?: XOR<ProjectCreateWithoutDocumentsInput, ProjectUncheckedCreateWithoutDocumentsInput>
     connectOrCreate?: ProjectCreateOrConnectWithoutDocumentsInput
@@ -69280,6 +72891,12 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type UserCreateNestedOneWithoutSettledExpensesInput = {
+    create?: XOR<UserCreateWithoutSettledExpensesInput, UserUncheckedCreateWithoutSettledExpensesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSettledExpensesInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type UserCreateNestedOneWithoutProjectExpensesInput = {
     create?: XOR<UserCreateWithoutProjectExpensesInput, UserUncheckedCreateWithoutProjectExpensesInput>
     connectOrCreate?: UserCreateOrConnectWithoutProjectExpensesInput
@@ -69316,6 +72933,16 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutApprovedExpensesInput, UserUpdateWithoutApprovedExpensesInput>, UserUncheckedUpdateWithoutApprovedExpensesInput>
+  }
+
+  export type UserUpdateOneWithoutSettledExpensesNestedInput = {
+    create?: XOR<UserCreateWithoutSettledExpensesInput, UserUncheckedCreateWithoutSettledExpensesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSettledExpensesInput
+    upsert?: UserUpsertWithoutSettledExpensesInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSettledExpensesInput, UserUpdateWithoutSettledExpensesInput>, UserUncheckedUpdateWithoutSettledExpensesInput>
   }
 
   export type UserUpdateOneWithoutProjectExpensesNestedInput = {
@@ -71298,6 +74925,23 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type NestedEnumFeedback360StatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.Feedback360Status | EnumFeedback360StatusFieldRefInput<$PrismaModel>
+    in?: $Enums.Feedback360Status[] | ListEnumFeedback360StatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Feedback360Status[] | ListEnumFeedback360StatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFeedback360StatusFilter<$PrismaModel> | $Enums.Feedback360Status
+  }
+
+  export type NestedEnumFeedback360StatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Feedback360Status | EnumFeedback360StatusFieldRefInput<$PrismaModel>
+    in?: $Enums.Feedback360Status[] | ListEnumFeedback360StatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Feedback360Status[] | ListEnumFeedback360StatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumFeedback360StatusWithAggregatesFilter<$PrismaModel> | $Enums.Feedback360Status
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFeedback360StatusFilter<$PrismaModel>
+    _max?: NestedEnumFeedback360StatusFilter<$PrismaModel>
+  }
+
   export type NestedEnumTimesheetStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.TimesheetStatus | EnumTimesheetStatusFieldRefInput<$PrismaModel>
     in?: $Enums.TimesheetStatus[] | ListEnumTimesheetStatusFieldRefInput<$PrismaModel>
@@ -71322,6 +74966,13 @@ export namespace Prisma {
     not?: NestedEnumDocumentTypeFilter<$PrismaModel> | $Enums.DocumentType
   }
 
+  export type NestedEnumDocumentKindFilter<$PrismaModel = never> = {
+    equals?: $Enums.DocumentKind | EnumDocumentKindFieldRefInput<$PrismaModel>
+    in?: $Enums.DocumentKind[] | ListEnumDocumentKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DocumentKind[] | ListEnumDocumentKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumDocumentKindFilter<$PrismaModel> | $Enums.DocumentKind
+  }
+
   export type NestedEnumDocumentTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.DocumentType | EnumDocumentTypeFieldRefInput<$PrismaModel>
     in?: $Enums.DocumentType[] | ListEnumDocumentTypeFieldRefInput<$PrismaModel>
@@ -71330,6 +74981,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDocumentTypeFilter<$PrismaModel>
     _max?: NestedEnumDocumentTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumDocumentKindWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DocumentKind | EnumDocumentKindFieldRefInput<$PrismaModel>
+    in?: $Enums.DocumentKind[] | ListEnumDocumentKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.DocumentKind[] | ListEnumDocumentKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumDocumentKindWithAggregatesFilter<$PrismaModel> | $Enums.DocumentKind
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDocumentKindFilter<$PrismaModel>
+    _max?: NestedEnumDocumentKindFilter<$PrismaModel>
   }
 
   export type NestedEnumExpenseStatusFilter<$PrismaModel = never> = {
@@ -71603,12 +75264,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -71631,6 +75294,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -71662,12 +75327,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -71690,6 +75357,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -71726,12 +75395,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -71754,6 +75425,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -71785,12 +75458,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -71813,6 +75488,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -71854,12 +75531,14 @@ export namespace Prisma {
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -71882,6 +75561,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -71913,12 +75594,14 @@ export namespace Prisma {
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -71941,6 +75624,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -71977,12 +75662,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -72005,6 +75692,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -72036,12 +75725,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -72064,6 +75755,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -72119,10 +75812,15 @@ export namespace Prisma {
     status?: $Enums.ExpenseStatus
     approvedAt?: Date | string | null
     rejectionReason?: string | null
+    poNumber?: string | null
+    settledAmount?: number | null
+    settledAt?: Date | string | null
+    settlementNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutExpensesInput
     workstream?: ProjectWorkstreamCreateNestedOneWithoutExpensesInput
+    settledBy?: UserCreateNestedOneWithoutSettledExpensesInput
     createdBy?: UserCreateNestedOneWithoutProjectExpensesInput
   }
 
@@ -72139,6 +75837,11 @@ export namespace Prisma {
     status?: $Enums.ExpenseStatus
     approvedAt?: Date | string | null
     rejectionReason?: string | null
+    poNumber?: string | null
+    settledAmount?: number | null
+    settledAt?: Date | string | null
+    settlementNotes?: string | null
+    settledById?: string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -72151,6 +75854,62 @@ export namespace Prisma {
 
   export type ProjectExpenseCreateManyApprovedByInputEnvelope = {
     data: ProjectExpenseCreateManyApprovedByInput | ProjectExpenseCreateManyApprovedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProjectExpenseCreateWithoutSettledByInput = {
+    id?: string
+    category: string
+    description: string
+    amount: number
+    spentAt?: Date | string
+    evidenceUrl?: string | null
+    evidenceFileName?: string | null
+    status?: $Enums.ExpenseStatus
+    approvedAt?: Date | string | null
+    rejectionReason?: string | null
+    poNumber?: string | null
+    settledAmount?: number | null
+    settledAt?: Date | string | null
+    settlementNotes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutExpensesInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutExpensesInput
+    approvedBy?: UserCreateNestedOneWithoutApprovedExpensesInput
+    createdBy?: UserCreateNestedOneWithoutProjectExpensesInput
+  }
+
+  export type ProjectExpenseUncheckedCreateWithoutSettledByInput = {
+    id?: string
+    projectId: string
+    workstreamId?: string | null
+    category: string
+    description: string
+    amount: number
+    spentAt?: Date | string
+    evidenceUrl?: string | null
+    evidenceFileName?: string | null
+    status?: $Enums.ExpenseStatus
+    approvedById?: string | null
+    approvedAt?: Date | string | null
+    rejectionReason?: string | null
+    poNumber?: string | null
+    settledAmount?: number | null
+    settledAt?: Date | string | null
+    settlementNotes?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectExpenseCreateOrConnectWithoutSettledByInput = {
+    where: ProjectExpenseWhereUniqueInput
+    create: XOR<ProjectExpenseCreateWithoutSettledByInput, ProjectExpenseUncheckedCreateWithoutSettledByInput>
+  }
+
+  export type ProjectExpenseCreateManySettledByInputEnvelope = {
+    data: ProjectExpenseCreateManySettledByInput | ProjectExpenseCreateManySettledByInput[]
     skipDuplicates?: boolean
   }
 
@@ -72203,6 +75962,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360CreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
@@ -72258,6 +76018,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
@@ -72323,6 +76084,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360CreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
@@ -72378,6 +76140,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
@@ -72443,6 +76206,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360CreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
@@ -72498,6 +76262,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
@@ -72563,6 +76328,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360CreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
@@ -72618,6 +76384,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
@@ -72646,6 +76413,7 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutResourcesInput
     workstream?: ProjectWorkstreamCreateNestedOneWithoutResourcesInput
     proposedBy?: UserCreateNestedOneWithoutProposedResourcesInput
+    rates?: ProjectResourceRateCreateNestedManyWithoutResourceInput
   }
 
   export type ProjectResourceUncheckedCreateWithoutUserInput = {
@@ -72660,6 +76428,7 @@ export namespace Prisma {
     acceptedAt?: Date | string | null
     pendingPrincipalApproval?: boolean
     createdAt?: Date | string
+    rates?: ProjectResourceRateUncheckedCreateNestedManyWithoutResourceInput
   }
 
   export type ProjectResourceCreateOrConnectWithoutUserInput = {
@@ -72684,6 +76453,7 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutResourcesInput
     workstream?: ProjectWorkstreamCreateNestedOneWithoutResourcesInput
     user: UserCreateNestedOneWithoutResourcesInput
+    rates?: ProjectResourceRateCreateNestedManyWithoutResourceInput
   }
 
   export type ProjectResourceUncheckedCreateWithoutProposedByInput = {
@@ -72698,6 +76468,7 @@ export namespace Prisma {
     acceptedAt?: Date | string | null
     pendingPrincipalApproval?: boolean
     createdAt?: Date | string
+    rates?: ProjectResourceRateUncheckedCreateNestedManyWithoutResourceInput
   }
 
   export type ProjectResourceCreateOrConnectWithoutProposedByInput = {
@@ -72707,6 +76478,34 @@ export namespace Prisma {
 
   export type ProjectResourceCreateManyProposedByInputEnvelope = {
     data: ProjectResourceCreateManyProposedByInput | ProjectResourceCreateManyProposedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProjectResourceRateCreateWithoutCreatedByInput = {
+    id?: string
+    costRate: number
+    sellingRate?: number | null
+    effectiveFrom: Date | string
+    createdAt?: Date | string
+    resource: ProjectResourceCreateNestedOneWithoutRatesInput
+  }
+
+  export type ProjectResourceRateUncheckedCreateWithoutCreatedByInput = {
+    id?: string
+    resourceId: string
+    costRate: number
+    sellingRate?: number | null
+    effectiveFrom: Date | string
+    createdAt?: Date | string
+  }
+
+  export type ProjectResourceRateCreateOrConnectWithoutCreatedByInput = {
+    where: ProjectResourceRateWhereUniqueInput
+    create: XOR<ProjectResourceRateCreateWithoutCreatedByInput, ProjectResourceRateUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type ProjectResourceRateCreateManyCreatedByInputEnvelope = {
+    data: ProjectResourceRateCreateManyCreatedByInput | ProjectResourceRateCreateManyCreatedByInput[]
     skipDuplicates?: boolean
   }
 
@@ -72797,6 +76596,7 @@ export namespace Prisma {
   export type DocumentCreateWithoutUploadedByInput = {
     id?: string
     type: $Enums.DocumentType
+    kind?: $Enums.DocumentKind
     fileName: string
     fileUrl: string
     invoiceNumber?: string | null
@@ -72816,6 +76616,7 @@ export namespace Prisma {
     id?: string
     projectId: string
     type: $Enums.DocumentType
+    kind?: $Enums.DocumentKind
     fileName: string
     fileUrl: string
     invoiceNumber?: string | null
@@ -72913,11 +76714,16 @@ export namespace Prisma {
     status?: $Enums.ExpenseStatus
     approvedAt?: Date | string | null
     rejectionReason?: string | null
+    poNumber?: string | null
+    settledAmount?: number | null
+    settledAt?: Date | string | null
+    settlementNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutExpensesInput
     workstream?: ProjectWorkstreamCreateNestedOneWithoutExpensesInput
     approvedBy?: UserCreateNestedOneWithoutApprovedExpensesInput
+    settledBy?: UserCreateNestedOneWithoutSettledExpensesInput
   }
 
   export type ProjectExpenseUncheckedCreateWithoutCreatedByInput = {
@@ -72934,6 +76740,11 @@ export namespace Prisma {
     approvedById?: string | null
     approvedAt?: Date | string | null
     rejectionReason?: string | null
+    poNumber?: string | null
+    settledAmount?: number | null
+    settledAt?: Date | string | null
+    settlementNotes?: string | null
+    settledById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -72955,6 +76766,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -72980,6 +76792,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdById?: string | null
@@ -73011,6 +76824,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -73036,6 +76850,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -73578,6 +77393,74 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProjectFeedback360CreateWithoutReviewerInput = {
+    id?: string
+    rating?: number | null
+    comment?: string | null
+    status?: $Enums.Feedback360Status
+    submittedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutFeedback360Input
+    subject: UserCreateNestedOneWithoutFeedback360AsSubjectInput
+  }
+
+  export type ProjectFeedback360UncheckedCreateWithoutReviewerInput = {
+    id?: string
+    projectId: string
+    subjectId: string
+    rating?: number | null
+    comment?: string | null
+    status?: $Enums.Feedback360Status
+    submittedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectFeedback360CreateOrConnectWithoutReviewerInput = {
+    where: ProjectFeedback360WhereUniqueInput
+    create: XOR<ProjectFeedback360CreateWithoutReviewerInput, ProjectFeedback360UncheckedCreateWithoutReviewerInput>
+  }
+
+  export type ProjectFeedback360CreateManyReviewerInputEnvelope = {
+    data: ProjectFeedback360CreateManyReviewerInput | ProjectFeedback360CreateManyReviewerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProjectFeedback360CreateWithoutSubjectInput = {
+    id?: string
+    rating?: number | null
+    comment?: string | null
+    status?: $Enums.Feedback360Status
+    submittedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutFeedback360Input
+    reviewer: UserCreateNestedOneWithoutFeedback360AsReviewerInput
+  }
+
+  export type ProjectFeedback360UncheckedCreateWithoutSubjectInput = {
+    id?: string
+    projectId: string
+    reviewerId: string
+    rating?: number | null
+    comment?: string | null
+    status?: $Enums.Feedback360Status
+    submittedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectFeedback360CreateOrConnectWithoutSubjectInput = {
+    where: ProjectFeedback360WhereUniqueInput
+    create: XOR<ProjectFeedback360CreateWithoutSubjectInput, ProjectFeedback360UncheckedCreateWithoutSubjectInput>
+  }
+
+  export type ProjectFeedback360CreateManySubjectInputEnvelope = {
+    data: ProjectFeedback360CreateManySubjectInput | ProjectFeedback360CreateManySubjectInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ProjectRaidItemCreateWithoutOwnerInput = {
     id?: string
     type: $Enums.RaidType
@@ -74019,12 +77902,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -74047,6 +77932,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -74078,12 +77965,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -74106,6 +77995,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -74187,12 +78078,14 @@ export namespace Prisma {
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -74215,6 +78108,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -74246,12 +78141,14 @@ export namespace Prisma {
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -74274,6 +78171,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -74360,9 +78259,30 @@ export namespace Prisma {
     approvedById?: StringNullableFilter<"ProjectExpense"> | string | null
     approvedAt?: DateTimeNullableFilter<"ProjectExpense"> | Date | string | null
     rejectionReason?: StringNullableFilter<"ProjectExpense"> | string | null
+    poNumber?: StringNullableFilter<"ProjectExpense"> | string | null
+    settledAmount?: FloatNullableFilter<"ProjectExpense"> | number | null
+    settledAt?: DateTimeNullableFilter<"ProjectExpense"> | Date | string | null
+    settlementNotes?: StringNullableFilter<"ProjectExpense"> | string | null
+    settledById?: StringNullableFilter<"ProjectExpense"> | string | null
     createdById?: StringNullableFilter<"ProjectExpense"> | string | null
     createdAt?: DateTimeFilter<"ProjectExpense"> | Date | string
     updatedAt?: DateTimeFilter<"ProjectExpense"> | Date | string
+  }
+
+  export type ProjectExpenseUpsertWithWhereUniqueWithoutSettledByInput = {
+    where: ProjectExpenseWhereUniqueInput
+    update: XOR<ProjectExpenseUpdateWithoutSettledByInput, ProjectExpenseUncheckedUpdateWithoutSettledByInput>
+    create: XOR<ProjectExpenseCreateWithoutSettledByInput, ProjectExpenseUncheckedCreateWithoutSettledByInput>
+  }
+
+  export type ProjectExpenseUpdateWithWhereUniqueWithoutSettledByInput = {
+    where: ProjectExpenseWhereUniqueInput
+    data: XOR<ProjectExpenseUpdateWithoutSettledByInput, ProjectExpenseUncheckedUpdateWithoutSettledByInput>
+  }
+
+  export type ProjectExpenseUpdateManyWithWhereWithoutSettledByInput = {
+    where: ProjectExpenseScalarWhereInput
+    data: XOR<ProjectExpenseUpdateManyMutationInput, ProjectExpenseUncheckedUpdateManyWithoutSettledByInput>
   }
 
   export type ProjectUpsertWithWhereUniqueWithoutSalesInput = {
@@ -74523,6 +78443,35 @@ export namespace Prisma {
     data: XOR<ProjectResourceUpdateManyMutationInput, ProjectResourceUncheckedUpdateManyWithoutProposedByInput>
   }
 
+  export type ProjectResourceRateUpsertWithWhereUniqueWithoutCreatedByInput = {
+    where: ProjectResourceRateWhereUniqueInput
+    update: XOR<ProjectResourceRateUpdateWithoutCreatedByInput, ProjectResourceRateUncheckedUpdateWithoutCreatedByInput>
+    create: XOR<ProjectResourceRateCreateWithoutCreatedByInput, ProjectResourceRateUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type ProjectResourceRateUpdateWithWhereUniqueWithoutCreatedByInput = {
+    where: ProjectResourceRateWhereUniqueInput
+    data: XOR<ProjectResourceRateUpdateWithoutCreatedByInput, ProjectResourceRateUncheckedUpdateWithoutCreatedByInput>
+  }
+
+  export type ProjectResourceRateUpdateManyWithWhereWithoutCreatedByInput = {
+    where: ProjectResourceRateScalarWhereInput
+    data: XOR<ProjectResourceRateUpdateManyMutationInput, ProjectResourceRateUncheckedUpdateManyWithoutCreatedByInput>
+  }
+
+  export type ProjectResourceRateScalarWhereInput = {
+    AND?: ProjectResourceRateScalarWhereInput | ProjectResourceRateScalarWhereInput[]
+    OR?: ProjectResourceRateScalarWhereInput[]
+    NOT?: ProjectResourceRateScalarWhereInput | ProjectResourceRateScalarWhereInput[]
+    id?: StringFilter<"ProjectResourceRate"> | string
+    resourceId?: StringFilter<"ProjectResourceRate"> | string
+    costRate?: FloatFilter<"ProjectResourceRate"> | number
+    sellingRate?: FloatNullableFilter<"ProjectResourceRate"> | number | null
+    effectiveFrom?: DateTimeFilter<"ProjectResourceRate"> | Date | string
+    createdById?: StringNullableFilter<"ProjectResourceRate"> | string | null
+    createdAt?: DateTimeFilter<"ProjectResourceRate"> | Date | string
+  }
+
   export type TimesheetUpsertWithWhereUniqueWithoutUserInput = {
     where: TimesheetWhereUniqueInput
     update: XOR<TimesheetUpdateWithoutUserInput, TimesheetUncheckedUpdateWithoutUserInput>
@@ -74598,6 +78547,7 @@ export namespace Prisma {
     id?: StringFilter<"Document"> | string
     projectId?: StringFilter<"Document"> | string
     type?: EnumDocumentTypeFilter<"Document"> | $Enums.DocumentType
+    kind?: EnumDocumentKindFilter<"Document"> | $Enums.DocumentKind
     fileName?: StringFilter<"Document"> | string
     fileUrl?: StringFilter<"Document"> | string
     invoiceNumber?: StringNullableFilter<"Document"> | string | null
@@ -74717,6 +78667,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
     progressPercent?: IntFilter<"Task"> | number
     billable?: BoolFilter<"Task"> | boolean
+    plannedHours?: FloatNullableFilter<"Task"> | number | null
     startDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     endDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     assigneeId?: StringNullableFilter<"Task"> | string | null
@@ -75174,6 +79125,54 @@ export namespace Prisma {
     data: XOR<SkillProgressionLogUpdateManyMutationInput, SkillProgressionLogUncheckedUpdateManyWithoutChangedByInput>
   }
 
+  export type ProjectFeedback360UpsertWithWhereUniqueWithoutReviewerInput = {
+    where: ProjectFeedback360WhereUniqueInput
+    update: XOR<ProjectFeedback360UpdateWithoutReviewerInput, ProjectFeedback360UncheckedUpdateWithoutReviewerInput>
+    create: XOR<ProjectFeedback360CreateWithoutReviewerInput, ProjectFeedback360UncheckedCreateWithoutReviewerInput>
+  }
+
+  export type ProjectFeedback360UpdateWithWhereUniqueWithoutReviewerInput = {
+    where: ProjectFeedback360WhereUniqueInput
+    data: XOR<ProjectFeedback360UpdateWithoutReviewerInput, ProjectFeedback360UncheckedUpdateWithoutReviewerInput>
+  }
+
+  export type ProjectFeedback360UpdateManyWithWhereWithoutReviewerInput = {
+    where: ProjectFeedback360ScalarWhereInput
+    data: XOR<ProjectFeedback360UpdateManyMutationInput, ProjectFeedback360UncheckedUpdateManyWithoutReviewerInput>
+  }
+
+  export type ProjectFeedback360ScalarWhereInput = {
+    AND?: ProjectFeedback360ScalarWhereInput | ProjectFeedback360ScalarWhereInput[]
+    OR?: ProjectFeedback360ScalarWhereInput[]
+    NOT?: ProjectFeedback360ScalarWhereInput | ProjectFeedback360ScalarWhereInput[]
+    id?: StringFilter<"ProjectFeedback360"> | string
+    projectId?: StringFilter<"ProjectFeedback360"> | string
+    reviewerId?: StringFilter<"ProjectFeedback360"> | string
+    subjectId?: StringFilter<"ProjectFeedback360"> | string
+    rating?: IntNullableFilter<"ProjectFeedback360"> | number | null
+    comment?: StringNullableFilter<"ProjectFeedback360"> | string | null
+    status?: EnumFeedback360StatusFilter<"ProjectFeedback360"> | $Enums.Feedback360Status
+    submittedAt?: DateTimeNullableFilter<"ProjectFeedback360"> | Date | string | null
+    createdAt?: DateTimeFilter<"ProjectFeedback360"> | Date | string
+    updatedAt?: DateTimeFilter<"ProjectFeedback360"> | Date | string
+  }
+
+  export type ProjectFeedback360UpsertWithWhereUniqueWithoutSubjectInput = {
+    where: ProjectFeedback360WhereUniqueInput
+    update: XOR<ProjectFeedback360UpdateWithoutSubjectInput, ProjectFeedback360UncheckedUpdateWithoutSubjectInput>
+    create: XOR<ProjectFeedback360CreateWithoutSubjectInput, ProjectFeedback360UncheckedCreateWithoutSubjectInput>
+  }
+
+  export type ProjectFeedback360UpdateWithWhereUniqueWithoutSubjectInput = {
+    where: ProjectFeedback360WhereUniqueInput
+    data: XOR<ProjectFeedback360UpdateWithoutSubjectInput, ProjectFeedback360UncheckedUpdateWithoutSubjectInput>
+  }
+
+  export type ProjectFeedback360UpdateManyWithWhereWithoutSubjectInput = {
+    where: ProjectFeedback360ScalarWhereInput
+    data: XOR<ProjectFeedback360UpdateManyMutationInput, ProjectFeedback360UncheckedUpdateManyWithoutSubjectInput>
+  }
+
   export type ProjectRaidItemUpsertWithWhereUniqueWithoutOwnerInput = {
     where: ProjectRaidItemWhereUniqueInput
     update: XOR<ProjectRaidItemUpdateWithoutOwnerInput, ProjectRaidItemUncheckedUpdateWithoutOwnerInput>
@@ -75455,6 +79454,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360CreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
@@ -75510,6 +79510,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
@@ -75683,11 +79684,13 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -75710,6 +79713,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -75742,11 +79747,13 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -75769,6 +79776,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -75806,11 +79815,13 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -75833,6 +79844,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -75865,11 +79878,13 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -75892,6 +79907,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -75929,11 +79946,13 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -75956,6 +79975,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -75988,11 +80009,13 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -76015,6 +80038,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -76052,11 +80077,13 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -76079,6 +80106,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -76111,11 +80140,13 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -76138,6 +80169,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -76165,6 +80198,7 @@ export namespace Prisma {
     workstream?: ProjectWorkstreamCreateNestedOneWithoutResourcesInput
     user: UserCreateNestedOneWithoutResourcesInput
     proposedBy?: UserCreateNestedOneWithoutProposedResourcesInput
+    rates?: ProjectResourceRateCreateNestedManyWithoutResourceInput
   }
 
   export type ProjectResourceUncheckedCreateWithoutProjectInput = {
@@ -76179,6 +80213,7 @@ export namespace Prisma {
     acceptedAt?: Date | string | null
     pendingPrincipalApproval?: boolean
     createdAt?: Date | string
+    rates?: ProjectResourceRateUncheckedCreateNestedManyWithoutResourceInput
   }
 
   export type ProjectResourceCreateOrConnectWithoutProjectInput = {
@@ -76236,6 +80271,7 @@ export namespace Prisma {
   export type DocumentCreateWithoutProjectInput = {
     id?: string
     type: $Enums.DocumentType
+    kind?: $Enums.DocumentKind
     fileName: string
     fileUrl: string
     invoiceNumber?: string | null
@@ -76254,6 +80290,7 @@ export namespace Prisma {
   export type DocumentUncheckedCreateWithoutProjectInput = {
     id?: string
     type: $Enums.DocumentType
+    kind?: $Enums.DocumentKind
     fileName: string
     fileUrl: string
     invoiceNumber?: string | null
@@ -76346,10 +80383,15 @@ export namespace Prisma {
     status?: $Enums.ExpenseStatus
     approvedAt?: Date | string | null
     rejectionReason?: string | null
+    poNumber?: string | null
+    settledAmount?: number | null
+    settledAt?: Date | string | null
+    settlementNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     workstream?: ProjectWorkstreamCreateNestedOneWithoutExpensesInput
     approvedBy?: UserCreateNestedOneWithoutApprovedExpensesInput
+    settledBy?: UserCreateNestedOneWithoutSettledExpensesInput
     createdBy?: UserCreateNestedOneWithoutProjectExpensesInput
   }
 
@@ -76366,6 +80408,11 @@ export namespace Prisma {
     approvedById?: string | null
     approvedAt?: Date | string | null
     rejectionReason?: string | null
+    poNumber?: string | null
+    settledAmount?: number | null
+    settledAt?: Date | string | null
+    settlementNotes?: string | null
+    settledById?: string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -76388,6 +80435,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -76412,6 +80460,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -76604,6 +80653,40 @@ export namespace Prisma {
 
   export type ProjectClosingChecklistItemCreateManyProjectInputEnvelope = {
     data: ProjectClosingChecklistItemCreateManyProjectInput | ProjectClosingChecklistItemCreateManyProjectInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProjectFeedback360CreateWithoutProjectInput = {
+    id?: string
+    rating?: number | null
+    comment?: string | null
+    status?: $Enums.Feedback360Status
+    submittedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviewer: UserCreateNestedOneWithoutFeedback360AsReviewerInput
+    subject: UserCreateNestedOneWithoutFeedback360AsSubjectInput
+  }
+
+  export type ProjectFeedback360UncheckedCreateWithoutProjectInput = {
+    id?: string
+    reviewerId: string
+    subjectId: string
+    rating?: number | null
+    comment?: string | null
+    status?: $Enums.Feedback360Status
+    submittedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectFeedback360CreateOrConnectWithoutProjectInput = {
+    where: ProjectFeedback360WhereUniqueInput
+    create: XOR<ProjectFeedback360CreateWithoutProjectInput, ProjectFeedback360UncheckedCreateWithoutProjectInput>
+  }
+
+  export type ProjectFeedback360CreateManyProjectInputEnvelope = {
+    data: ProjectFeedback360CreateManyProjectInput | ProjectFeedback360CreateManyProjectInput[]
     skipDuplicates?: boolean
   }
 
@@ -76877,11 +80960,13 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -76904,6 +80989,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -76936,11 +81023,13 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -76963,6 +81052,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -77006,11 +81097,13 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -77033,6 +81126,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -77065,11 +81160,13 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -77092,6 +81189,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -77135,11 +81234,13 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -77162,6 +81263,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -77194,11 +81297,13 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -77221,6 +81326,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -77264,11 +81371,13 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -77291,6 +81400,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -77323,11 +81434,13 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -77350,6 +81463,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -77577,6 +81692,22 @@ export namespace Prisma {
     data: XOR<ProjectClosingChecklistItemUpdateManyMutationInput, ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectInput>
   }
 
+  export type ProjectFeedback360UpsertWithWhereUniqueWithoutProjectInput = {
+    where: ProjectFeedback360WhereUniqueInput
+    update: XOR<ProjectFeedback360UpdateWithoutProjectInput, ProjectFeedback360UncheckedUpdateWithoutProjectInput>
+    create: XOR<ProjectFeedback360CreateWithoutProjectInput, ProjectFeedback360UncheckedCreateWithoutProjectInput>
+  }
+
+  export type ProjectFeedback360UpdateWithWhereUniqueWithoutProjectInput = {
+    where: ProjectFeedback360WhereUniqueInput
+    data: XOR<ProjectFeedback360UpdateWithoutProjectInput, ProjectFeedback360UncheckedUpdateWithoutProjectInput>
+  }
+
+  export type ProjectFeedback360UpdateManyWithWhereWithoutProjectInput = {
+    where: ProjectFeedback360ScalarWhereInput
+    data: XOR<ProjectFeedback360UpdateManyMutationInput, ProjectFeedback360UncheckedUpdateManyWithoutProjectInput>
+  }
+
   export type ProjectWorkstreamUpsertWithWhereUniqueWithoutProjectInput = {
     where: ProjectWorkstreamWhereUniqueInput
     update: XOR<ProjectWorkstreamUpdateWithoutProjectInput, ProjectWorkstreamUncheckedUpdateWithoutProjectInput>
@@ -77712,6 +81843,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360CreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
     changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
@@ -77767,6 +81899,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
     changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
@@ -77848,12 +81981,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -77876,6 +82011,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
@@ -77907,12 +82044,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -77935,6 +82074,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
@@ -78010,6 +82151,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
     changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
@@ -78065,6 +82207,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
     changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
@@ -78158,12 +82301,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -78186,6 +82331,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
@@ -78217,12 +82364,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -78245,6 +82394,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
@@ -78304,6 +82455,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360CreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
@@ -78359,6 +82511,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
@@ -78391,12 +82544,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -78419,6 +82574,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -78450,12 +82607,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -78478,6 +82637,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -78514,12 +82675,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -78542,6 +82705,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -78573,12 +82738,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -78601,6 +82768,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -78716,6 +82885,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
@@ -78771,6 +82941,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
@@ -78809,12 +82980,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -78837,6 +83010,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -78868,12 +83043,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -78896,6 +83073,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -78938,12 +83117,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -78966,6 +83147,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -78997,12 +83180,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -79025,6 +83210,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -79100,6 +83287,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360CreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
     changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
@@ -79155,6 +83343,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
     changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
@@ -79238,12 +83427,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -79265,6 +83456,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -79297,12 +83490,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -79324,6 +83519,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -79400,6 +83597,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
     changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
@@ -79455,6 +83653,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
     changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
@@ -79550,12 +83749,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -79577,6 +83778,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -79609,12 +83812,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -79636,6 +83841,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -79696,6 +83903,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360CreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
     changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
@@ -79751,6 +83959,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
     changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
@@ -79802,6 +84011,7 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutResourcesInput
     user: UserCreateNestedOneWithoutResourcesInput
     proposedBy?: UserCreateNestedOneWithoutProposedResourcesInput
+    rates?: ProjectResourceRateCreateNestedManyWithoutResourceInput
   }
 
   export type ProjectResourceUncheckedCreateWithoutWorkstreamInput = {
@@ -79816,6 +84026,7 @@ export namespace Prisma {
     acceptedAt?: Date | string | null
     pendingPrincipalApproval?: boolean
     createdAt?: Date | string
+    rates?: ProjectResourceRateUncheckedCreateNestedManyWithoutResourceInput
   }
 
   export type ProjectResourceCreateOrConnectWithoutWorkstreamInput = {
@@ -79835,6 +84046,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -79859,6 +84071,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -79895,10 +84108,15 @@ export namespace Prisma {
     status?: $Enums.ExpenseStatus
     approvedAt?: Date | string | null
     rejectionReason?: string | null
+    poNumber?: string | null
+    settledAmount?: number | null
+    settledAt?: Date | string | null
+    settlementNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     project: ProjectCreateNestedOneWithoutExpensesInput
     approvedBy?: UserCreateNestedOneWithoutApprovedExpensesInput
+    settledBy?: UserCreateNestedOneWithoutSettledExpensesInput
     createdBy?: UserCreateNestedOneWithoutProjectExpensesInput
   }
 
@@ -79915,6 +84133,11 @@ export namespace Prisma {
     approvedById?: string | null
     approvedAt?: Date | string | null
     rejectionReason?: string | null
+    poNumber?: string | null
+    settledAmount?: number | null
+    settledAt?: Date | string | null
+    settlementNotes?: string | null
+    settledById?: string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -80139,6 +84362,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
     changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
@@ -80194,6 +84418,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
     changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
@@ -80379,6 +84604,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360CreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
@@ -80434,6 +84660,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
@@ -80505,6 +84732,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
@@ -80560,10 +84788,787 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
     changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectCreateWithoutFeedback360Input = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    currency?: string
+    exchangeRate?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    useWorkstreams?: boolean
+    surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
+    client: ClientCreateNestedOneWithoutProjectsInput
+    sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
+    pm?: UserCreateNestedOneWithoutProjectsAsPmInput
+    technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
+    adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    resources?: ProjectResourceCreateNestedManyWithoutProjectInput
+    timesheets?: TimesheetCreateNestedManyWithoutProjectInput
+    documents?: DocumentCreateNestedManyWithoutProjectInput
+    activities?: ActivityCreateNestedManyWithoutProjectInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
+    expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
+    tasks?: TaskCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
+    closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectUncheckedCreateWithoutFeedback360Input = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
+    clientId: string
+    salesId?: string | null
+    pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    currency?: string
+    exchangeRate?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    useWorkstreams?: boolean
+    surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutProjectInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
+    expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
+    closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutFeedback360Input = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutFeedback360Input, ProjectUncheckedCreateWithoutFeedback360Input>
+  }
+
+  export type UserCreateWithoutFeedback360AsReviewerInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    calendarTokenVersion?: number
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
+    skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
+    skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
+    skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserUncheckedCreateWithoutFeedback360AsReviewerInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnitId?: string | null
+    managerId?: string | null
+    principalId?: string | null
+    calendarTokenVersion?: number
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
+    skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
+    skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
+    skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserCreateOrConnectWithoutFeedback360AsReviewerInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFeedback360AsReviewerInput, UserUncheckedCreateWithoutFeedback360AsReviewerInput>
+  }
+
+  export type UserCreateWithoutFeedback360AsSubjectInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    calendarTokenVersion?: number
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
+    skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
+    skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
+    skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserUncheckedCreateWithoutFeedback360AsSubjectInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnitId?: string | null
+    managerId?: string | null
+    principalId?: string | null
+    calendarTokenVersion?: number
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
+    skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
+    skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
+    skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserCreateOrConnectWithoutFeedback360AsSubjectInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFeedback360AsSubjectInput, UserUncheckedCreateWithoutFeedback360AsSubjectInput>
+  }
+
+  export type ProjectUpsertWithoutFeedback360Input = {
+    update: XOR<ProjectUpdateWithoutFeedback360Input, ProjectUncheckedUpdateWithoutFeedback360Input>
+    create: XOR<ProjectCreateWithoutFeedback360Input, ProjectUncheckedCreateWithoutFeedback360Input>
+    where?: ProjectWhereInput
+  }
+
+  export type ProjectUpdateToOneWithWhereWithoutFeedback360Input = {
+    where?: ProjectWhereInput
+    data: XOR<ProjectUpdateWithoutFeedback360Input, ProjectUncheckedUpdateWithoutFeedback360Input>
+  }
+
+  export type ProjectUpdateWithoutFeedback360Input = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
+    sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
+    pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
+    technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
+    adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
+    timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUpdateManyWithoutProjectNestedInput
+    activities?: ActivityUpdateManyWithoutProjectNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
+    expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
+    closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutFeedback360Input = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
+    clientId?: StringFieldUpdateOperationsInput | string
+    salesId?: NullableStringFieldUpdateOperationsInput | string | null
+    pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutProjectNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
+    expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
+    closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type UserUpsertWithoutFeedback360AsReviewerInput = {
+    update: XOR<UserUpdateWithoutFeedback360AsReviewerInput, UserUncheckedUpdateWithoutFeedback360AsReviewerInput>
+    create: XOR<UserCreateWithoutFeedback360AsReviewerInput, UserUncheckedCreateWithoutFeedback360AsReviewerInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutFeedback360AsReviewerInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutFeedback360AsReviewerInput, UserUncheckedUpdateWithoutFeedback360AsReviewerInput>
+  }
+
+  export type UserUpdateWithoutFeedback360AsReviewerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
+    skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
+    skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
+    skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFeedback360AsReviewerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
+    skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
+    skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type UserUpsertWithoutFeedback360AsSubjectInput = {
+    update: XOR<UserUpdateWithoutFeedback360AsSubjectInput, UserUncheckedUpdateWithoutFeedback360AsSubjectInput>
+    create: XOR<UserCreateWithoutFeedback360AsSubjectInput, UserUncheckedCreateWithoutFeedback360AsSubjectInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutFeedback360AsSubjectInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutFeedback360AsSubjectInput, UserUncheckedUpdateWithoutFeedback360AsSubjectInput>
+  }
+
+  export type UserUpdateWithoutFeedback360AsSubjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
+    skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
+    skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
+    skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFeedback360AsSubjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
+    skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
+    skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
   }
 
   export type UserCreateWithoutAuditLogsInput = {
@@ -80588,12 +85593,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -80615,6 +85622,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -80647,12 +85656,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -80674,6 +85685,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -80722,12 +85735,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -80749,6 +85764,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -80781,12 +85798,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -80808,6 +85827,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -80867,6 +85888,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360CreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
@@ -80922,6 +85944,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
@@ -81006,11 +86029,13 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -81033,6 +86058,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -81065,11 +86092,13 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -81092,6 +86121,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -81129,11 +86160,13 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -81156,6 +86189,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -81188,11 +86223,13 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -81215,6 +86252,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -81228,6 +86267,34 @@ export namespace Prisma {
   export type UserCreateOrConnectWithoutProposedResourcesInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutProposedResourcesInput, UserUncheckedCreateWithoutProposedResourcesInput>
+  }
+
+  export type ProjectResourceRateCreateWithoutResourceInput = {
+    id?: string
+    costRate: number
+    sellingRate?: number | null
+    effectiveFrom: Date | string
+    createdAt?: Date | string
+    createdBy?: UserCreateNestedOneWithoutCreatedResourceRatesInput
+  }
+
+  export type ProjectResourceRateUncheckedCreateWithoutResourceInput = {
+    id?: string
+    costRate: number
+    sellingRate?: number | null
+    effectiveFrom: Date | string
+    createdById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ProjectResourceRateCreateOrConnectWithoutResourceInput = {
+    where: ProjectResourceRateWhereUniqueInput
+    create: XOR<ProjectResourceRateCreateWithoutResourceInput, ProjectResourceRateUncheckedCreateWithoutResourceInput>
+  }
+
+  export type ProjectResourceRateCreateManyResourceInputEnvelope = {
+    data: ProjectResourceRateCreateManyResourceInput | ProjectResourceRateCreateManyResourceInput[]
+    skipDuplicates?: boolean
   }
 
   export type ProjectUpsertWithoutResourcesInput = {
@@ -81290,6 +86357,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
@@ -81345,6 +86413,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
@@ -81441,11 +86510,13 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -81468,6 +86539,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -81500,11 +86573,13 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -81527,6 +86602,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -81570,11 +86647,13 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -81597,6 +86676,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -81629,11 +86710,13 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -81656,6 +86739,368 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type ProjectResourceRateUpsertWithWhereUniqueWithoutResourceInput = {
+    where: ProjectResourceRateWhereUniqueInput
+    update: XOR<ProjectResourceRateUpdateWithoutResourceInput, ProjectResourceRateUncheckedUpdateWithoutResourceInput>
+    create: XOR<ProjectResourceRateCreateWithoutResourceInput, ProjectResourceRateUncheckedCreateWithoutResourceInput>
+  }
+
+  export type ProjectResourceRateUpdateWithWhereUniqueWithoutResourceInput = {
+    where: ProjectResourceRateWhereUniqueInput
+    data: XOR<ProjectResourceRateUpdateWithoutResourceInput, ProjectResourceRateUncheckedUpdateWithoutResourceInput>
+  }
+
+  export type ProjectResourceRateUpdateManyWithWhereWithoutResourceInput = {
+    where: ProjectResourceRateScalarWhereInput
+    data: XOR<ProjectResourceRateUpdateManyMutationInput, ProjectResourceRateUncheckedUpdateManyWithoutResourceInput>
+  }
+
+  export type ProjectResourceCreateWithoutRatesInput = {
+    id?: string
+    roleInProject?: string | null
+    plannedMandays?: number
+    dailyRate?: number
+    proposedAt?: Date | string | null
+    acceptedAt?: Date | string | null
+    pendingPrincipalApproval?: boolean
+    createdAt?: Date | string
+    project: ProjectCreateNestedOneWithoutResourcesInput
+    workstream?: ProjectWorkstreamCreateNestedOneWithoutResourcesInput
+    user: UserCreateNestedOneWithoutResourcesInput
+    proposedBy?: UserCreateNestedOneWithoutProposedResourcesInput
+  }
+
+  export type ProjectResourceUncheckedCreateWithoutRatesInput = {
+    id?: string
+    projectId: string
+    workstreamId?: string | null
+    userId: string
+    roleInProject?: string | null
+    plannedMandays?: number
+    dailyRate?: number
+    proposedById?: string | null
+    proposedAt?: Date | string | null
+    acceptedAt?: Date | string | null
+    pendingPrincipalApproval?: boolean
+    createdAt?: Date | string
+  }
+
+  export type ProjectResourceCreateOrConnectWithoutRatesInput = {
+    where: ProjectResourceWhereUniqueInput
+    create: XOR<ProjectResourceCreateWithoutRatesInput, ProjectResourceUncheckedCreateWithoutRatesInput>
+  }
+
+  export type UserCreateWithoutCreatedResourceRatesInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    calendarTokenVersion?: number
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
+    skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
+    skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
+    skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserUncheckedCreateWithoutCreatedResourceRatesInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnitId?: string | null
+    managerId?: string | null
+    principalId?: string | null
+    calendarTokenVersion?: number
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
+    skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
+    skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
+    skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserCreateOrConnectWithoutCreatedResourceRatesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCreatedResourceRatesInput, UserUncheckedCreateWithoutCreatedResourceRatesInput>
+  }
+
+  export type ProjectResourceUpsertWithoutRatesInput = {
+    update: XOR<ProjectResourceUpdateWithoutRatesInput, ProjectResourceUncheckedUpdateWithoutRatesInput>
+    create: XOR<ProjectResourceCreateWithoutRatesInput, ProjectResourceUncheckedCreateWithoutRatesInput>
+    where?: ProjectResourceWhereInput
+  }
+
+  export type ProjectResourceUpdateToOneWithWhereWithoutRatesInput = {
+    where?: ProjectResourceWhereInput
+    data: XOR<ProjectResourceUpdateWithoutRatesInput, ProjectResourceUncheckedUpdateWithoutRatesInput>
+  }
+
+  export type ProjectResourceUpdateWithoutRatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    dailyRate?: FloatFieldUpdateOperationsInput | number
+    proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutResourcesNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutResourcesNestedInput
+    user?: UserUpdateOneRequiredWithoutResourcesNestedInput
+    proposedBy?: UserUpdateOneWithoutProposedResourcesNestedInput
+  }
+
+  export type ProjectResourceUncheckedUpdateWithoutRatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
+    roleInProject?: NullableStringFieldUpdateOperationsInput | string | null
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    dailyRate?: FloatFieldUpdateOperationsInput | number
+    proposedById?: NullableStringFieldUpdateOperationsInput | string | null
+    proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUpsertWithoutCreatedResourceRatesInput = {
+    update: XOR<UserUpdateWithoutCreatedResourceRatesInput, UserUncheckedUpdateWithoutCreatedResourceRatesInput>
+    create: XOR<UserCreateWithoutCreatedResourceRatesInput, UserUncheckedCreateWithoutCreatedResourceRatesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCreatedResourceRatesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCreatedResourceRatesInput, UserUncheckedUpdateWithoutCreatedResourceRatesInput>
+  }
+
+  export type UserUpdateWithoutCreatedResourceRatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
+    skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
+    skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
+    skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCreatedResourceRatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
+    skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
+    skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -81715,6 +87160,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360CreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
@@ -81770,6 +87216,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
@@ -81854,12 +87301,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
     activities?: ActivityCreateNestedManyWithoutUserInput
@@ -81881,6 +87330,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -81913,12 +87364,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
     activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
@@ -81940,6 +87393,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -81962,6 +87417,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -81987,6 +87443,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -82028,12 +87485,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
     activities?: ActivityCreateNestedManyWithoutUserInput
@@ -82055,6 +87514,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -82087,12 +87548,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
     activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
@@ -82114,6 +87577,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -82189,6 +87654,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
@@ -82244,6 +87710,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
@@ -82340,12 +87807,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
     activities?: ActivityUpdateManyWithoutUserNestedInput
@@ -82367,6 +87836,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -82399,12 +87870,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
@@ -82426,6 +87899,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -82454,6 +87929,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -82479,6 +87955,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -82526,12 +88003,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
     activities?: ActivityUpdateManyWithoutUserNestedInput
@@ -82553,6 +88032,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -82585,12 +88066,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
@@ -82612,6 +88095,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -82671,6 +88156,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360CreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
@@ -82726,6 +88212,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
@@ -82759,12 +88246,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     activities?: ActivityCreateNestedManyWithoutUserInput
@@ -82786,6 +88275,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -82818,12 +88309,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
@@ -82845,6 +88338,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -82863,6 +88358,7 @@ export namespace Prisma {
   export type DocumentCreateWithoutVersionsInput = {
     id?: string
     type: $Enums.DocumentType
+    kind?: $Enums.DocumentKind
     fileName: string
     fileUrl: string
     invoiceNumber?: string | null
@@ -82882,6 +88378,7 @@ export namespace Prisma {
     id?: string
     projectId: string
     type: $Enums.DocumentType
+    kind?: $Enums.DocumentKind
     fileName: string
     fileUrl: string
     invoiceNumber?: string | null
@@ -82904,6 +88401,7 @@ export namespace Prisma {
   export type DocumentCreateWithoutParentDocumentInput = {
     id?: string
     type: $Enums.DocumentType
+    kind?: $Enums.DocumentKind
     fileName: string
     fileUrl: string
     invoiceNumber?: string | null
@@ -82923,6 +88421,7 @@ export namespace Prisma {
     id?: string
     projectId: string
     type: $Enums.DocumentType
+    kind?: $Enums.DocumentKind
     fileName: string
     fileUrl: string
     invoiceNumber?: string | null
@@ -83060,6 +88559,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
@@ -83115,6 +88615,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
@@ -83154,12 +88655,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     activities?: ActivityUpdateManyWithoutUserNestedInput
@@ -83181,6 +88684,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -83213,12 +88718,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
@@ -83240,6 +88747,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -83264,6 +88773,7 @@ export namespace Prisma {
   export type DocumentUpdateWithoutVersionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    kind?: EnumDocumentKindFieldUpdateOperationsInput | $Enums.DocumentKind
     fileName?: StringFieldUpdateOperationsInput | string
     fileUrl?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -83283,6 +88793,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    kind?: EnumDocumentKindFieldUpdateOperationsInput | $Enums.DocumentKind
     fileName?: StringFieldUpdateOperationsInput | string
     fileUrl?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -83421,6 +88932,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360CreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
@@ -83476,6 +88988,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
@@ -83509,12 +89022,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -83536,6 +89051,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -83568,12 +89085,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -83595,6 +89114,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -83670,6 +89191,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
@@ -83725,6 +89247,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
@@ -83764,12 +89287,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -83791,6 +89316,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -83823,12 +89350,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -83850,6 +89379,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -83909,6 +89440,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360CreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
@@ -83964,6 +89496,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
@@ -84047,12 +89580,14 @@ export namespace Prisma {
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -84075,6 +89610,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -84106,12 +89643,14 @@ export namespace Prisma {
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -84134,6 +89673,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -84149,7 +89690,7 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutApprovedExpensesInput, UserUncheckedCreateWithoutApprovedExpensesInput>
   }
 
-  export type UserCreateWithoutProjectExpensesInput = {
+  export type UserCreateWithoutSettledExpensesInput = {
     id?: string
     email: string
     passwordHash: string
@@ -84177,6 +89718,139 @@ export namespace Prisma {
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
+    skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
+    skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
+    skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserUncheckedCreateWithoutSettledExpensesInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnitId?: string | null
+    managerId?: string | null
+    principalId?: string | null
+    calendarTokenVersion?: number
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
+    skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
+    skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
+    skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+  }
+
+  export type UserCreateOrConnectWithoutSettledExpensesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSettledExpensesInput, UserUncheckedCreateWithoutSettledExpensesInput>
+  }
+
+  export type UserCreateWithoutProjectExpensesInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    calendarTokenVersion?: number
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -84198,6 +89872,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -84230,12 +89906,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -84257,6 +89935,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -84332,6 +90012,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
@@ -84387,6 +90068,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
@@ -84482,12 +90164,14 @@ export namespace Prisma {
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -84510,6 +90194,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -84541,12 +90227,14 @@ export namespace Prisma {
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -84569,6 +90257,145 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type UserUpsertWithoutSettledExpensesInput = {
+    update: XOR<UserUpdateWithoutSettledExpensesInput, UserUncheckedUpdateWithoutSettledExpensesInput>
+    create: XOR<UserCreateWithoutSettledExpensesInput, UserUncheckedCreateWithoutSettledExpensesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSettledExpensesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSettledExpensesInput, UserUncheckedUpdateWithoutSettledExpensesInput>
+  }
+
+  export type UserUpdateWithoutSettledExpensesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
+    skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
+    skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
+    skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSettledExpensesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
+    skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
+    skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -84612,12 +90439,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -84639,6 +90468,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -84671,12 +90502,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -84698,6 +90531,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -84729,12 +90564,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -84757,6 +90594,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -84788,12 +90627,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -84816,6 +90657,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -85203,12 +91046,14 @@ export namespace Prisma {
     principal?: UserCreateNestedOneWithoutSuperviseesInput
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -85231,6 +91076,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -85262,12 +91109,14 @@ export namespace Prisma {
     reports?: UserUncheckedCreateNestedManyWithoutManagerInput
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -85290,6 +91139,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -85364,12 +91215,14 @@ export namespace Prisma {
     principal?: UserUpdateOneWithoutSuperviseesNestedInput
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -85392,6 +91245,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -85423,12 +91278,14 @@ export namespace Prisma {
     reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -85451,6 +91308,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -85516,12 +91375,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -85543,6 +91404,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -85575,12 +91438,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -85602,6 +91467,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -85666,12 +91533,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -85693,6 +91562,8 @@ export namespace Prisma {
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -85725,12 +91596,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -85752,6 +91625,8 @@ export namespace Prisma {
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -85800,12 +91675,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -85827,6 +91704,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -85859,12 +91738,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -85886,6 +91767,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -85962,12 +91845,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -85989,6 +91874,8 @@ export namespace Prisma {
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -86021,12 +91908,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -86048,6 +91937,8 @@ export namespace Prisma {
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -86080,12 +91971,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -86107,6 +92000,8 @@ export namespace Prisma {
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -86139,12 +92034,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -86166,6 +92063,8 @@ export namespace Prisma {
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -86230,12 +92129,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -86257,6 +92158,8 @@ export namespace Prisma {
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -86289,12 +92192,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -86316,6 +92221,8 @@ export namespace Prisma {
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -86364,12 +92271,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -86391,6 +92300,8 @@ export namespace Prisma {
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -86423,12 +92334,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -86450,6 +92363,8 @@ export namespace Prisma {
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -86526,12 +92441,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -86553,6 +92470,8 @@ export namespace Prisma {
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -86585,12 +92504,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -86612,6 +92533,8 @@ export namespace Prisma {
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -86644,12 +92567,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -86671,6 +92596,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -86703,12 +92630,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -86730,6 +92659,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -86794,6 +92725,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360CreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
@@ -86849,6 +92781,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
@@ -86893,12 +92826,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -86920,6 +92855,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -86952,12 +92889,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -86979,6 +92918,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -87049,6 +92990,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
@@ -87104,6 +93046,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
@@ -87159,6 +93102,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360CreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
@@ -87214,6 +93158,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
@@ -87298,12 +93243,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -87325,6 +93272,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -87357,12 +93306,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -87384,6 +93335,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -87421,12 +93374,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -87448,6 +93403,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -87480,12 +93437,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -87507,6 +93466,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -87529,6 +93490,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -87554,6 +93516,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -87580,6 +93543,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -87605,6 +93569,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -87825,6 +93790,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
@@ -87880,6 +93846,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
@@ -87976,12 +93943,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -88003,6 +93972,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -88035,12 +94006,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -88062,6 +94035,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -88105,12 +94080,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -88132,6 +94109,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -88164,12 +94143,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -88191,6 +94172,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -88219,6 +94202,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -88244,6 +94228,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -88371,6 +94356,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -88396,6 +94382,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -88422,6 +94409,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -88447,6 +94435,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -88484,6 +94473,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -88509,6 +94499,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -88541,6 +94532,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -88566,6 +94558,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -88629,6 +94622,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360CreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
@@ -88684,6 +94678,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
@@ -88749,6 +94744,7 @@ export namespace Prisma {
   export type DocumentCreateWithoutBillingMilestoneInput = {
     id?: string
     type: $Enums.DocumentType
+    kind?: $Enums.DocumentKind
     fileName: string
     fileUrl: string
     invoiceNumber?: string | null
@@ -88768,6 +94764,7 @@ export namespace Prisma {
     id?: string
     projectId: string
     type: $Enums.DocumentType
+    kind?: $Enums.DocumentKind
     fileName: string
     fileUrl: string
     invoiceNumber?: string | null
@@ -88852,6 +94849,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
@@ -88907,6 +94905,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
@@ -88993,6 +94992,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -89018,6 +95018,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -89059,12 +95060,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -89086,6 +95089,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -89118,12 +95123,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -89145,6 +95152,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -89178,6 +95187,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89203,6 +95213,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89250,12 +95261,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -89277,6 +95290,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -89309,12 +95324,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -89336,6 +95353,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -89353,6 +95372,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdAt?: Date | string
@@ -89378,6 +95398,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -89419,12 +95440,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -89446,6 +95469,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -89478,12 +95503,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -89505,6 +95532,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -89538,6 +95567,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89563,6 +95593,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -89610,12 +95641,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -89637,6 +95670,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -89669,12 +95704,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -89696,6 +95733,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -89761,12 +95800,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -89788,6 +95829,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -89820,12 +95863,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -89847,6 +95892,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -89966,12 +96013,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -89993,6 +96042,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -90025,12 +96076,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -90052,6 +96105,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -90165,12 +96220,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -90192,6 +96249,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -90224,12 +96283,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -90251,6 +96312,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -90370,12 +96433,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -90397,6 +96462,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -90429,12 +96496,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -90456,6 +96525,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -90488,12 +96559,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -90515,6 +96588,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -90547,12 +96622,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -90574,6 +96651,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -90622,12 +96701,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -90649,6 +96730,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -90681,12 +96764,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -90708,6 +96793,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -90769,12 +96856,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -90796,6 +96885,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -90828,12 +96919,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -90855,6 +96948,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -90990,12 +97085,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -91017,6 +97114,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -91049,12 +97148,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -91076,6 +97177,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -91182,12 +97285,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -91209,6 +97314,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -91241,12 +97348,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -91268,6 +97377,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -91476,12 +97587,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -91503,6 +97616,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -91535,12 +97650,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -91562,6 +97679,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -91984,12 +98103,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -92011,6 +98132,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -92043,12 +98166,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -92070,6 +98195,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -92118,12 +98245,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -92145,6 +98274,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -92177,12 +98308,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -92204,6 +98337,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -92263,6 +98398,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360CreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
@@ -92318,6 +98454,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
@@ -92351,12 +98488,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -92379,6 +98518,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
     changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
@@ -92410,12 +98551,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -92438,6 +98581,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
     changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
@@ -92474,12 +98619,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -92502,6 +98649,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
     changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
@@ -92533,12 +98682,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -92561,6 +98712,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
     changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
@@ -92635,6 +98788,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
@@ -92690,6 +98844,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
@@ -92729,12 +98884,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -92757,6 +98914,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
     changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
@@ -92788,12 +98947,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -92816,6 +98977,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
     changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
@@ -92858,12 +99021,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -92886,6 +99051,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
     changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
@@ -92917,12 +99084,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -92945,6 +99114,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
     changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
@@ -92976,12 +99147,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -93004,6 +99177,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -93035,12 +99210,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -93063,6 +99240,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -93099,12 +99278,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -93127,6 +99308,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -93158,12 +99341,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -93186,6 +99371,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -93263,12 +99450,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -93291,6 +99480,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -93322,12 +99513,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -93350,6 +99543,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -93392,12 +99587,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -93420,6 +99617,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -93451,12 +99650,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -93479,6 +99680,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -93600,6 +99803,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
     raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360CreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
     reports?: ProjectReportCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
@@ -93655,6 +99859,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
     raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput
     workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
     reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
     baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
@@ -93688,12 +99893,14 @@ export namespace Prisma {
     supervisees?: UserCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -93716,6 +99923,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
@@ -93747,12 +99956,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
     skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
     approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
     projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
     projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
     projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
     projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
     resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
     proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
     timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
     approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
     documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -93775,6 +99986,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
     raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
     raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
     baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
@@ -93902,6 +100115,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
@@ -93957,6 +100171,7 @@ export namespace Prisma {
     billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
@@ -93996,12 +100211,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -94024,6 +100241,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -94055,12 +100274,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -94083,6 +100304,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -94150,6 +100373,34 @@ export namespace Prisma {
     status?: $Enums.ExpenseStatus
     approvedAt?: Date | string | null
     rejectionReason?: string | null
+    poNumber?: string | null
+    settledAmount?: number | null
+    settledAt?: Date | string | null
+    settlementNotes?: string | null
+    settledById?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectExpenseCreateManySettledByInput = {
+    id?: string
+    projectId: string
+    workstreamId?: string | null
+    category: string
+    description: string
+    amount: number
+    spentAt?: Date | string
+    evidenceUrl?: string | null
+    evidenceFileName?: string | null
+    status?: $Enums.ExpenseStatus
+    approvedById?: string | null
+    approvedAt?: Date | string | null
+    rejectionReason?: string | null
+    poNumber?: string | null
+    settledAmount?: number | null
+    settledAt?: Date | string | null
+    settlementNotes?: string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -94343,6 +100594,15 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type ProjectResourceRateCreateManyCreatedByInput = {
+    id?: string
+    resourceId: string
+    costRate: number
+    sellingRate?: number | null
+    effectiveFrom: Date | string
+    createdAt?: Date | string
+  }
+
   export type TimesheetCreateManyUserInput = {
     id?: string
     projectId: string
@@ -94379,6 +100639,7 @@ export namespace Prisma {
     id?: string
     projectId: string
     type: $Enums.DocumentType
+    kind?: $Enums.DocumentKind
     fileName: string
     fileUrl: string
     invoiceNumber?: string | null
@@ -94427,6 +100688,11 @@ export namespace Prisma {
     approvedById?: string | null
     approvedAt?: Date | string | null
     rejectionReason?: string | null
+    poNumber?: string | null
+    settledAmount?: number | null
+    settledAt?: Date | string | null
+    settlementNotes?: string | null
+    settledById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -94440,6 +100706,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     createdById?: string | null
@@ -94457,6 +100724,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -94649,6 +100917,30 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type ProjectFeedback360CreateManyReviewerInput = {
+    id?: string
+    projectId: string
+    subjectId: string
+    rating?: number | null
+    comment?: string | null
+    status?: $Enums.Feedback360Status
+    submittedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectFeedback360CreateManySubjectInput = {
+    id?: string
+    projectId: string
+    reviewerId: string
+    rating?: number | null
+    comment?: string | null
+    status?: $Enums.Feedback360Status
+    submittedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type ProjectRaidItemCreateManyOwnerInput = {
     id?: string
     projectId: string
@@ -94813,12 +101105,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -94841,6 +101135,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -94872,12 +101168,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -94900,6 +101198,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -94950,12 +101250,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -94978,6 +101280,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -95009,12 +101313,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -95037,6 +101343,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -95098,10 +101406,15 @@ export namespace Prisma {
     status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
     approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    poNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    settledAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlementNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutExpensesNestedInput
     workstream?: ProjectWorkstreamUpdateOneWithoutExpensesNestedInput
+    settledBy?: UserUpdateOneWithoutSettledExpensesNestedInput
     createdBy?: UserUpdateOneWithoutProjectExpensesNestedInput
   }
 
@@ -95118,6 +101431,11 @@ export namespace Prisma {
     status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
     approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    poNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    settledAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlementNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    settledById?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -95136,6 +101454,80 @@ export namespace Prisma {
     status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
     approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    poNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    settledAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlementNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    settledById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectExpenseUpdateWithoutSettledByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    poNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    settledAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlementNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutExpensesNestedInput
+    workstream?: ProjectWorkstreamUpdateOneWithoutExpensesNestedInput
+    approvedBy?: UserUpdateOneWithoutApprovedExpensesNestedInput
+    createdBy?: UserUpdateOneWithoutProjectExpensesNestedInput
+  }
+
+  export type ProjectExpenseUncheckedUpdateWithoutSettledByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
+    approvedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    poNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    settledAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlementNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectExpenseUncheckedUpdateManyWithoutSettledByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    workstreamId?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    spentAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    evidenceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    evidenceFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
+    approvedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    poNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    settledAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlementNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -95190,6 +101582,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
@@ -95245,6 +101638,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
@@ -95340,6 +101734,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
@@ -95395,6 +101790,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
@@ -95490,6 +101886,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
@@ -95545,6 +101942,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
@@ -95640,6 +102038,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
@@ -95695,6 +102094,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
@@ -95753,6 +102153,7 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutResourcesNestedInput
     workstream?: ProjectWorkstreamUpdateOneWithoutResourcesNestedInput
     proposedBy?: UserUpdateOneWithoutProposedResourcesNestedInput
+    rates?: ProjectResourceRateUpdateManyWithoutResourceNestedInput
   }
 
   export type ProjectResourceUncheckedUpdateWithoutUserInput = {
@@ -95767,6 +102168,7 @@ export namespace Prisma {
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rates?: ProjectResourceRateUncheckedUpdateManyWithoutResourceNestedInput
   }
 
   export type ProjectResourceUncheckedUpdateManyWithoutUserInput = {
@@ -95795,6 +102197,7 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutResourcesNestedInput
     workstream?: ProjectWorkstreamUpdateOneWithoutResourcesNestedInput
     user?: UserUpdateOneRequiredWithoutResourcesNestedInput
+    rates?: ProjectResourceRateUpdateManyWithoutResourceNestedInput
   }
 
   export type ProjectResourceUncheckedUpdateWithoutProposedByInput = {
@@ -95809,6 +102212,7 @@ export namespace Prisma {
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rates?: ProjectResourceRateUncheckedUpdateManyWithoutResourceNestedInput
   }
 
   export type ProjectResourceUncheckedUpdateManyWithoutProposedByInput = {
@@ -95822,6 +102226,33 @@ export namespace Prisma {
     proposedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectResourceRateUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    costRate?: FloatFieldUpdateOperationsInput | number
+    sellingRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    effectiveFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resource?: ProjectResourceUpdateOneRequiredWithoutRatesNestedInput
+  }
+
+  export type ProjectResourceRateUncheckedUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    resourceId?: StringFieldUpdateOperationsInput | string
+    costRate?: FloatFieldUpdateOperationsInput | number
+    sellingRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    effectiveFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectResourceRateUncheckedUpdateManyWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    resourceId?: StringFieldUpdateOperationsInput | string
+    costRate?: FloatFieldUpdateOperationsInput | number
+    sellingRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    effectiveFrom?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -95924,6 +102355,7 @@ export namespace Prisma {
   export type DocumentUpdateWithoutUploadedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    kind?: EnumDocumentKindFieldUpdateOperationsInput | $Enums.DocumentKind
     fileName?: StringFieldUpdateOperationsInput | string
     fileUrl?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -95943,6 +102375,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    kind?: EnumDocumentKindFieldUpdateOperationsInput | $Enums.DocumentKind
     fileName?: StringFieldUpdateOperationsInput | string
     fileUrl?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -95961,6 +102394,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    kind?: EnumDocumentKindFieldUpdateOperationsInput | $Enums.DocumentKind
     fileName?: StringFieldUpdateOperationsInput | string
     fileUrl?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -96048,11 +102482,16 @@ export namespace Prisma {
     status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
     approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    poNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    settledAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlementNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutExpensesNestedInput
     workstream?: ProjectWorkstreamUpdateOneWithoutExpensesNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedExpensesNestedInput
+    settledBy?: UserUpdateOneWithoutSettledExpensesNestedInput
   }
 
   export type ProjectExpenseUncheckedUpdateWithoutCreatedByInput = {
@@ -96069,6 +102508,11 @@ export namespace Prisma {
     approvedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    poNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    settledAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlementNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    settledById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -96087,6 +102531,11 @@ export namespace Prisma {
     approvedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    poNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    settledAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlementNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    settledById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -96098,6 +102547,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -96123,6 +102573,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -96146,6 +102597,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -96161,6 +102613,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -96186,6 +102639,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -96209,6 +102663,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -96779,6 +103234,78 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ProjectFeedback360UpdateWithoutReviewerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFeedback360StatusFieldUpdateOperationsInput | $Enums.Feedback360Status
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutFeedback360NestedInput
+    subject?: UserUpdateOneRequiredWithoutFeedback360AsSubjectNestedInput
+  }
+
+  export type ProjectFeedback360UncheckedUpdateWithoutReviewerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFeedback360StatusFieldUpdateOperationsInput | $Enums.Feedback360Status
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectFeedback360UncheckedUpdateManyWithoutReviewerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFeedback360StatusFieldUpdateOperationsInput | $Enums.Feedback360Status
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectFeedback360UpdateWithoutSubjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFeedback360StatusFieldUpdateOperationsInput | $Enums.Feedback360Status
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutFeedback360NestedInput
+    reviewer?: UserUpdateOneRequiredWithoutFeedback360AsReviewerNestedInput
+  }
+
+  export type ProjectFeedback360UncheckedUpdateWithoutSubjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    reviewerId?: StringFieldUpdateOperationsInput | string
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFeedback360StatusFieldUpdateOperationsInput | $Enums.Feedback360Status
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectFeedback360UncheckedUpdateManyWithoutSubjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    reviewerId?: StringFieldUpdateOperationsInput | string
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFeedback360StatusFieldUpdateOperationsInput | $Enums.Feedback360Status
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ProjectRaidItemUpdateWithoutOwnerInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: EnumRaidTypeFieldUpdateOperationsInput | $Enums.RaidType
@@ -97334,6 +103861,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
@@ -97389,6 +103917,7 @@ export namespace Prisma {
     raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
     perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
     closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput
     workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
     reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
     baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
@@ -97557,6 +104086,7 @@ export namespace Prisma {
   export type DocumentCreateManyProjectInput = {
     id?: string
     type: $Enums.DocumentType
+    kind?: $Enums.DocumentKind
     fileName: string
     fileUrl: string
     invoiceNumber?: string | null
@@ -97602,6 +104132,11 @@ export namespace Prisma {
     approvedById?: string | null
     approvedAt?: Date | string | null
     rejectionReason?: string | null
+    poNumber?: string | null
+    settledAmount?: number | null
+    settledAt?: Date | string | null
+    settlementNotes?: string | null
+    settledById?: string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -97615,6 +104150,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -97684,6 +104220,18 @@ export namespace Prisma {
     completedAt?: Date | string | null
     completedById?: string | null
     sortOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProjectFeedback360CreateManyProjectInput = {
+    id?: string
+    reviewerId: string
+    subjectId: string
+    rating?: number | null
+    comment?: string | null
+    status?: $Enums.Feedback360Status
+    submittedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -97772,6 +104320,7 @@ export namespace Prisma {
     workstream?: ProjectWorkstreamUpdateOneWithoutResourcesNestedInput
     user?: UserUpdateOneRequiredWithoutResourcesNestedInput
     proposedBy?: UserUpdateOneWithoutProposedResourcesNestedInput
+    rates?: ProjectResourceRateUpdateManyWithoutResourceNestedInput
   }
 
   export type ProjectResourceUncheckedUpdateWithoutProjectInput = {
@@ -97786,6 +104335,7 @@ export namespace Prisma {
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rates?: ProjectResourceRateUncheckedUpdateManyWithoutResourceNestedInput
   }
 
   export type ProjectResourceUncheckedUpdateManyWithoutProjectInput = {
@@ -97853,6 +104403,7 @@ export namespace Prisma {
   export type DocumentUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    kind?: EnumDocumentKindFieldUpdateOperationsInput | $Enums.DocumentKind
     fileName?: StringFieldUpdateOperationsInput | string
     fileUrl?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -97871,6 +104422,7 @@ export namespace Prisma {
   export type DocumentUncheckedUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    kind?: EnumDocumentKindFieldUpdateOperationsInput | $Enums.DocumentKind
     fileName?: StringFieldUpdateOperationsInput | string
     fileUrl?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -97889,6 +104441,7 @@ export namespace Prisma {
   export type DocumentUncheckedUpdateManyWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    kind?: EnumDocumentKindFieldUpdateOperationsInput | $Enums.DocumentKind
     fileName?: StringFieldUpdateOperationsInput | string
     fileUrl?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -97968,10 +104521,15 @@ export namespace Prisma {
     status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
     approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    poNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    settledAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlementNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workstream?: ProjectWorkstreamUpdateOneWithoutExpensesNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedExpensesNestedInput
+    settledBy?: UserUpdateOneWithoutSettledExpensesNestedInput
     createdBy?: UserUpdateOneWithoutProjectExpensesNestedInput
   }
 
@@ -97988,6 +104546,11 @@ export namespace Prisma {
     approvedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    poNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    settledAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlementNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    settledById?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -98006,6 +104569,11 @@ export namespace Prisma {
     approvedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    poNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    settledAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlementNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    settledById?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -98018,6 +104586,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -98042,6 +104611,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -98065,6 +104635,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -98264,6 +104835,42 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedById?: NullableStringFieldUpdateOperationsInput | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectFeedback360UpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFeedback360StatusFieldUpdateOperationsInput | $Enums.Feedback360Status
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewer?: UserUpdateOneRequiredWithoutFeedback360AsReviewerNestedInput
+    subject?: UserUpdateOneRequiredWithoutFeedback360AsSubjectNestedInput
+  }
+
+  export type ProjectFeedback360UncheckedUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewerId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFeedback360StatusFieldUpdateOperationsInput | $Enums.Feedback360Status
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectFeedback360UncheckedUpdateManyWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewerId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumFeedback360StatusFieldUpdateOperationsInput | $Enums.Feedback360Status
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -98580,6 +105187,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -98602,6 +105210,11 @@ export namespace Prisma {
     approvedById?: string | null
     approvedAt?: Date | string | null
     rejectionReason?: string | null
+    poNumber?: string | null
+    settledAmount?: number | null
+    settledAt?: Date | string | null
+    settlementNotes?: string | null
+    settledById?: string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -98677,6 +105290,7 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutResourcesNestedInput
     user?: UserUpdateOneRequiredWithoutResourcesNestedInput
     proposedBy?: UserUpdateOneWithoutProposedResourcesNestedInput
+    rates?: ProjectResourceRateUpdateManyWithoutResourceNestedInput
   }
 
   export type ProjectResourceUncheckedUpdateWithoutWorkstreamInput = {
@@ -98691,6 +105305,7 @@ export namespace Prisma {
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pendingPrincipalApproval?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rates?: ProjectResourceRateUncheckedUpdateManyWithoutResourceNestedInput
   }
 
   export type ProjectResourceUncheckedUpdateManyWithoutWorkstreamInput = {
@@ -98714,6 +105329,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -98738,6 +105354,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -98761,6 +105378,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -98781,10 +105399,15 @@ export namespace Prisma {
     status?: EnumExpenseStatusFieldUpdateOperationsInput | $Enums.ExpenseStatus
     approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    poNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    settledAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlementNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutExpensesNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedExpensesNestedInput
+    settledBy?: UserUpdateOneWithoutSettledExpensesNestedInput
     createdBy?: UserUpdateOneWithoutProjectExpensesNestedInput
   }
 
@@ -98801,6 +105424,11 @@ export namespace Prisma {
     approvedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    poNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    settledAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlementNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    settledById?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -98819,6 +105447,11 @@ export namespace Prisma {
     approvedById?: NullableStringFieldUpdateOperationsInput | string | null
     approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
+    poNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    settledAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    settledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settlementNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    settledById?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -99000,10 +105633,47 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ProjectResourceRateCreateManyResourceInput = {
+    id?: string
+    costRate: number
+    sellingRate?: number | null
+    effectiveFrom: Date | string
+    createdById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ProjectResourceRateUpdateWithoutResourceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    costRate?: FloatFieldUpdateOperationsInput | number
+    sellingRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    effectiveFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: UserUpdateOneWithoutCreatedResourceRatesNestedInput
+  }
+
+  export type ProjectResourceRateUncheckedUpdateWithoutResourceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    costRate?: FloatFieldUpdateOperationsInput | number
+    sellingRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    effectiveFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectResourceRateUncheckedUpdateManyWithoutResourceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    costRate?: FloatFieldUpdateOperationsInput | number
+    sellingRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    effectiveFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type DocumentCreateManyParentDocumentInput = {
     id?: string
     projectId: string
     type: $Enums.DocumentType
+    kind?: $Enums.DocumentKind
     fileName: string
     fileUrl: string
     invoiceNumber?: string | null
@@ -99020,6 +105690,7 @@ export namespace Prisma {
   export type DocumentUpdateWithoutParentDocumentInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    kind?: EnumDocumentKindFieldUpdateOperationsInput | $Enums.DocumentKind
     fileName?: StringFieldUpdateOperationsInput | string
     fileUrl?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -99039,6 +105710,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    kind?: EnumDocumentKindFieldUpdateOperationsInput | $Enums.DocumentKind
     fileName?: StringFieldUpdateOperationsInput | string
     fileUrl?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -99057,6 +105729,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    kind?: EnumDocumentKindFieldUpdateOperationsInput | $Enums.DocumentKind
     fileName?: StringFieldUpdateOperationsInput | string
     fileUrl?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -99156,12 +105829,14 @@ export namespace Prisma {
     supervisees?: UserUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -99184,6 +105859,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
@@ -99215,12 +105892,14 @@ export namespace Prisma {
     supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
     skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
     approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
     projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
     timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
     approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
     documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -99243,6 +105922,8 @@ export namespace Prisma {
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
     raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
     raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
     baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -99563,6 +106244,7 @@ export namespace Prisma {
     status?: $Enums.TaskStatus
     progressPercent?: number
     billable?: boolean
+    plannedHours?: number | null
     startDate?: Date | string | null
     endDate?: Date | string | null
     assigneeId?: string | null
@@ -99621,6 +106303,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -99646,6 +106329,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -99669,6 +106353,7 @@ export namespace Prisma {
     status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
     progressPercent?: IntFieldUpdateOperationsInput | number
     billable?: BoolFieldUpdateOperationsInput | boolean
+    plannedHours?: NullableFloatFieldUpdateOperationsInput | number | null
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -99810,6 +106495,7 @@ export namespace Prisma {
     id?: string
     projectId: string
     type: $Enums.DocumentType
+    kind?: $Enums.DocumentKind
     fileName: string
     fileUrl: string
     invoiceNumber?: string | null
@@ -99826,6 +106512,7 @@ export namespace Prisma {
   export type DocumentUpdateWithoutBillingMilestoneInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    kind?: EnumDocumentKindFieldUpdateOperationsInput | $Enums.DocumentKind
     fileName?: StringFieldUpdateOperationsInput | string
     fileUrl?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -99845,6 +106532,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    kind?: EnumDocumentKindFieldUpdateOperationsInput | $Enums.DocumentKind
     fileName?: StringFieldUpdateOperationsInput | string
     fileUrl?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -99863,6 +106551,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     projectId?: StringFieldUpdateOperationsInput | string
     type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    kind?: EnumDocumentKindFieldUpdateOperationsInput | $Enums.DocumentKind
     fileName?: StringFieldUpdateOperationsInput | string
     fileUrl?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -100184,6 +106873,10 @@ export namespace Prisma {
      */
     export type ProjectWorkstreamCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProjectWorkstreamCountOutputTypeDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use ProjectResourceCountOutputTypeDefaultArgs instead
+     */
+    export type ProjectResourceCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProjectResourceCountOutputTypeDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use DocumentCountOutputTypeDefaultArgs instead
      */
     export type DocumentCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = DocumentCountOutputTypeDefaultArgs<ExtArgs>
@@ -100256,6 +106949,10 @@ export namespace Prisma {
      */
     export type SurveyResponseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SurveyResponseDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use ProjectFeedback360DefaultArgs instead
+     */
+    export type ProjectFeedback360Args<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProjectFeedback360DefaultArgs<ExtArgs>
+    /**
      * @deprecated Use AuditLogDefaultArgs instead
      */
     export type AuditLogArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = AuditLogDefaultArgs<ExtArgs>
@@ -100263,6 +106960,10 @@ export namespace Prisma {
      * @deprecated Use ProjectResourceDefaultArgs instead
      */
     export type ProjectResourceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProjectResourceDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ProjectResourceRateDefaultArgs instead
+     */
+    export type ProjectResourceRateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProjectResourceRateDefaultArgs<ExtArgs>
     /**
      * @deprecated Use TimesheetDefaultArgs instead
      */

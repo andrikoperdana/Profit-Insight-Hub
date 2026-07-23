@@ -307,7 +307,15 @@ export const DocumentType = {
   BAST: "BAST",
   INVOICE: "INVOICE",
   CONTRACT: "CONTRACT",
+  REPORT: "REPORT",
   OTHER: "OTHER",
+} as const;
+
+export type DocumentKind = (typeof DocumentKind)[keyof typeof DocumentKind];
+
+export const DocumentKind = {
+  FILE: "FILE",
+  LINK: "LINK",
 } as const;
 
 export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus];
@@ -444,6 +452,9 @@ export interface BillingMilestone {
   invoicedAt?: string | null;
   paidAt?: string | null;
   sortOrder: number;
+  bastDocumentId?: string | null;
+  bastFileName?: string | null;
+  bastUploadedAt?: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -494,6 +505,10 @@ export interface Task {
    */
   progressPercent: number;
   billable: boolean;
+  /** Hour cap for this task (all users, non-rejected timesheets); null = uncapped */
+  plannedHours?: number | null;
+  /** Total non-rejected timesheet hours clocked against this task */
+  timesheetHours?: number;
   startDate?: string | null;
   endDate?: string | null;
   assigneeId?: string | null;
@@ -519,6 +534,7 @@ export interface CreateTaskBody {
    */
   progressPercent?: number;
   billable?: boolean;
+  plannedHours?: number | null;
   startDate?: string | null;
   endDate?: string | null;
   assigneeId?: string | null;
@@ -538,6 +554,7 @@ export interface UpdateTaskBody {
    */
   progressPercent?: number;
   billable?: boolean;
+  plannedHours?: number | null;
   startDate?: string | null;
   endDate?: string | null;
   assigneeId?: string | null;
@@ -992,6 +1009,8 @@ export const ProjectExpenseCategory = {
   HARDWARE: "HARDWARE",
   LICENSE: "LICENSE",
   TRAVEL: "TRAVEL",
+  CASH_ADVANCE: "CASH_ADVANCE",
+  PURCHASE_ORDER: "PURCHASE_ORDER",
   OTHER: "OTHER",
 } as const;
 
@@ -1013,6 +1032,11 @@ export interface ProjectExpense {
   approvedByName?: string | null;
   approvedAt?: string | null;
   rejectionReason?: string | null;
+  poNumber?: string | null;
+  settledAmount?: number | null;
+  settledAt?: string | null;
+  settlementNotes?: string | null;
+  settledByName?: string | null;
   createdById?: string | null;
   createdByName?: string | null;
   createdAt: string;
@@ -1026,6 +1050,8 @@ export const AddProjectExpenseBodyCategory = {
   HARDWARE: "HARDWARE",
   LICENSE: "LICENSE",
   TRAVEL: "TRAVEL",
+  CASH_ADVANCE: "CASH_ADVANCE",
+  PURCHASE_ORDER: "PURCHASE_ORDER",
   OTHER: "OTHER",
 } as const;
 
@@ -1038,6 +1064,8 @@ export interface AddProjectExpenseBody {
   evidenceUrl?: string | null;
   evidenceFileName?: string | null;
   workstreamId?: string | null;
+  /** Purchase order number (PURCHASE_ORDER category) */
+  poNumber?: string | null;
 }
 
 export type RaidType = (typeof RaidType)[keyof typeof RaidType];
@@ -1350,12 +1378,15 @@ export interface Document {
   id: string;
   projectId: string;
   type: DocumentType;
+  kind?: DocumentKind;
   fileName: string;
   fileUrl: string;
   invoiceNumber?: string | null;
   invoiceAmount?: number | null;
   invoiceStatus?: string | null;
   notes?: string | null;
+  billingMilestoneId?: string | null;
+  billingMilestoneName?: string | null;
   uploadedById?: string | null;
   uploadedByName?: string | null;
   uploadedAt: string;
@@ -1749,14 +1780,69 @@ export interface UpdateClosingChecklistItemBody {
   note?: string | null;
 }
 
+export type Feedback360Status =
+  (typeof Feedback360Status)[keyof typeof Feedback360Status];
+
+export const Feedback360Status = {
+  PENDING: "PENDING",
+  SUBMITTED: "SUBMITTED",
+} as const;
+
+export interface Feedback360 {
+  id: string;
+  projectId: string;
+  projectCode: string;
+  projectName: string;
+  reviewerId: string;
+  reviewerName: string;
+  reviewerRole?: string;
+  subjectId: string;
+  subjectName: string;
+  subjectRole?: string;
+  rating?: number | null;
+  comment?: string | null;
+  status: Feedback360Status;
+  submittedAt?: string | null;
+  createdAt: string;
+}
+
+export interface SubmitFeedback360Body {
+  /**
+   * @minimum 1
+   * @maximum 5
+   */
+  rating: number;
+  comment?: string | null;
+}
+
+export interface ResourceRate {
+  id: string;
+  resourceId: string;
+  costRate: number;
+  sellingRate?: number | null;
+  effectiveFrom: string;
+  createdByName?: string | null;
+  createdAt: string;
+}
+
+export interface CreateResourceRateBody {
+  /** @minimum 0 */
+  costRate: number;
+  /** @minimum 0 */
+  sellingRate?: number | null;
+  effectiveFrom: string;
+}
+
 export interface CreateDocumentBody {
   type: DocumentType;
+  kind?: DocumentKind;
   fileName: string;
   fileUrl: string;
   invoiceNumber?: string;
   invoiceAmount?: number;
   invoiceStatus?: string;
   notes?: string;
+  billingMilestoneId?: string | null;
 }
 
 export type ProjectFinancialsProfitOutlookStatus =
@@ -2914,6 +3000,11 @@ export type AcknowledgePerformanceReviewBody = {
 
 export type RejectProjectExpenseBody = {
   reason: string;
+};
+
+export type SettleProjectExpenseBody = {
+  settledAmount: number;
+  settlementNotes?: string | null;
 };
 
 export type GetResourcePlanningParams = {

@@ -4,6 +4,9 @@ import {
   getGetProjectClosingChecklistQueryKey,
   getGetProjectQueryKey,
   useUpdateProject,
+  useListProjectFeedback360,
+  useSubmitFeedback360,
+  getListProjectFeedback360QueryKey,
   ProjectStatus,
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -16,7 +19,7 @@ import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/lib/auth";
 import { isSuperAdmin } from "@/lib/roles";
-import { CheckCircle2, Circle, MinusCircle, Lock } from "lucide-react";
+import { CheckCircle2, Circle, MinusCircle, Lock, Star } from "lucide-react";
 
 export default function ClosingTab({ projectId, project }: { projectId: string; project: any }) {
   const { user } = useAuth();
@@ -114,7 +117,185 @@ export default function ClosingTab({ projectId, project }: { projectId: string; 
           )}
         </CardContent>
       </Card>
+
+      {(project?.status === "COMPLETE" || project?.status === "CLOSED") && (
+        <Feedback360Card projectId={projectId} userId={user?.id} projectStatus={project?.status} />
+      )}
     </div>
+  );
+}
+
+function Feedback360Card({
+  projectId,
+  userId,
+  projectStatus,
+}: {
+  projectId: string;
+  userId?: string;
+  projectStatus?: string;
+}) {
+  const qc = useQueryClient();
+  const { toast } = useToast();
+  const { data: rows, isLoading } = useListProjectFeedback360(projectId);
+  const list = rows ?? [];
+  const submitted = list.filter((f) => f.status === "SUBMITTED").length;
+  const allSubmitted = list.length > 0 && submitted === list.length;
+
+  if (isLoading || list.length === 0) return null;
+
+  return (
+    <Card className="border-border" data-testid="card-feedback360">
+      <CardHeader>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <CardTitle className="text-base">360 Feedback</CardTitle>
+            <CardDescription>
+              PM and team members review each other after completion. All entries must be
+              submitted before the project can be closed.
+            </CardDescription>
+          </div>
+          <Badge
+            variant={allSubmitted ? "default" : "outline"}
+            className={allSubmitted ? "bg-emerald-500/20 text-emerald-500 border-emerald-500/30" : ""}
+            data-testid="badge-feedback360-progress"
+          >
+            {submitted}/{list.length} submitted
+          </Badge>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <ul className="divide-y divide-border">
+          {list.map((fb) => (
+            <Feedback360Row
+              key={fb.id}
+              fb={fb}
+              isMine={fb.reviewerId === userId}
+              canSubmit={fb.reviewerId === userId && fb.status === "PENDING" && projectStatus !== "CLOSED"}
+              onSubmitted={() =>
+                qc.invalidateQueries({ queryKey: getListProjectFeedback360QueryKey(projectId) })
+              }
+              toast={toast}
+            />
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
+  );
+}
+
+function Feedback360Row({
+  fb,
+  isMine,
+  canSubmit,
+  onSubmitted,
+  toast,
+}: {
+  fb: any;
+  isMine: boolean;
+  canSubmit: boolean;
+  onSubmitted: () => void;
+  toast: any;
+}) {
+  const [open, setOpen] = useState(false);
+  const [rating, setRating] = useState<number>(0);
+  const [comment, setComment] = useState("");
+
+  const submit = useSubmitFeedback360({
+    mutation: {
+      onSuccess: () => {
+        toast({ title: "Feedback submitted", description: "Thank you for your feedback." });
+        setOpen(false);
+        onSubmitted();
+      },
+      onError: (e: any) =>
+        toast({ variant: "destructive", title: "Failed to submit feedback", description: e?.message }),
+    },
+  });
+
+  return (
+    <li className="py-3" data-testid={`feedback360-row-${fb.id}`}>
+      <div className="flex items-start gap-3">
+        {fb.status === "SUBMITTED" ? (
+          <CheckCircle2 className="h-5 w-5 mt-0.5 shrink-0 text-emerald-500" />
+        ) : (
+          <Circle className="h-5 w-5 mt-0.5 shrink-0 text-muted-foreground/60" />
+        )}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <div className="text-sm">
+              <span className={isMine ? "font-medium" : ""}>{fb.reviewerName}</span>
+              <span className="text-muted-foreground"> reviews </span>
+              {fb.subjectName}
+              {isMine && <span className="text-xs text-muted-foreground"> (you)</span>}
+            </div>
+            <div className="flex items-center gap-2">
+              {fb.status === "SUBMITTED" && fb.rating != null && (
+                <span className="flex items-center gap-0.5 text-xs text-amber-500" data-testid={`feedback360-rating-${fb.id}`}>
+                  <Star className="h-3.5 w-3.5 fill-current" />
+                  {fb.rating}/5
+                </span>
+              )}
+              <Badge variant="outline" className="text-[10px]">{fb.status}</Badge>
+              {canSubmit && (
+                <Button
+                  size="sm"
+                  className="h-7 text-xs"
+                  onClick={() => setOpen(!open)}
+                  data-testid={`button-submit-feedback360-${fb.id}`}
+                >
+                  {open ? "Cancel" : "Give Feedback"}
+                </Button>
+              )}
+            </div>
+          </div>
+          {fb.status === "SUBMITTED" && fb.comment && (
+            <p className="text-xs text-muted-foreground mt-1 italic">"{fb.comment}"</p>
+          )}
+          {open && canSubmit && (
+            <div className="mt-3 space-y-2 rounded-md border border-border p-3">
+              <div className="flex items-center gap-1" data-testid="feedback360-star-picker">
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    onClick={() => setRating(n)}
+                    className="p-0.5"
+                    data-testid={`feedback360-star-${n}`}
+                  >
+                    <Star
+                      className={`h-5 w-5 ${n <= rating ? "text-amber-500 fill-current" : "text-muted-foreground/40"}`}
+                    />
+                  </button>
+                ))}
+                <span className="ml-2 text-xs text-muted-foreground">
+                  {rating > 0 ? `${rating}/5` : "Select a rating"}
+                </span>
+              </div>
+              <Textarea
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                rows={2}
+                className="text-xs"
+                placeholder="Comment (optional)"
+                data-testid="input-feedback360-comment"
+              />
+              <div className="flex justify-end">
+                <Button
+                  size="sm"
+                  disabled={rating < 1 || submit.isPending}
+                  onClick={() =>
+                    submit.mutate({ id: fb.id, data: { rating, comment: comment.trim() || null } })
+                  }
+                  data-testid="button-confirm-feedback360"
+                >
+                  Submit Feedback
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </li>
   );
 }
 

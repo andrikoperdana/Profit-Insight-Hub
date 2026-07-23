@@ -48,6 +48,7 @@ export type AuditAction =
   | "expense.deleted"
   | "expense.approved"
   | "expense.rejected"
+  | "expense.settled"
   | "skill.created"
   | "skill.updated"
   | "skill.deleted"
@@ -96,7 +97,8 @@ export type AuditAction =
   | "change_request.approved"
   | "change_request.rejected"
   | "change_request.applied"
-  | "change_request.deleted";
+  | "change_request.deleted"
+  | "feedback360.submitted";
 
 export type EntityType =
   | "User"
@@ -127,6 +129,7 @@ export type EntityType =
   | "XeroConnection"
   | "PipedriveStageMapping"
   | "ChangeRequest"
+  | "ProjectFeedback360"
   | "System";
 
 interface AuditInput {

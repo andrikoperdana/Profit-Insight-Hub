@@ -27,6 +27,9 @@ export interface BillingMilestone {
   invoicedAt?: string | null;
   paidAt?: string | null;
   sortOrder: number;
+  bastDocumentId?: string | null;
+  bastFileName?: string | null;
+  bastUploadedAt?: string | null;
   createdAt: string;
   updatedAt: string;
 }

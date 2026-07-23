@@ -7,8 +7,10 @@ import {
   usePushMilestoneToXero,
   useSyncXeroPayments,
   useListProjectWorkstreams,
+  useListProjectDocuments,
   getListBillingMilestonesQueryKey,
   getListProjectWorkstreamsQueryKey,
+  getListProjectDocumentsQueryKey,
   type BillingMilestone,
   type BillingMilestoneStatus,
   type ProjectWorkstream,
@@ -95,6 +97,15 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
       enabled: !!projectId && !!project.useWorkstreams,
     },
   });
+
+  const { data: projectDocs } = useListProjectDocuments(projectId, undefined, {
+    query: { queryKey: getListProjectDocumentsQueryKey(projectId), enabled: !!projectId },
+  });
+  const docUrlById = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const d of projectDocs ?? []) map.set(d.id, d.fileUrl);
+    return map;
+  }, [projectDocs]);
 
   const isManager =
     isSuperAdmin(user?.role) ||
@@ -327,6 +338,34 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
             </span>
           )}
         </TableCell>
+        <TableCell className="text-xs">
+          {m.bastDocumentId ? (
+            docUrlById.get(m.bastDocumentId) ? (
+              <a
+                href={docUrlById.get(m.bastDocumentId)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-emerald-500 hover:underline"
+                data-testid={`link-bast-${m.id}`}
+              >
+                <FileText className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate max-w-[140px]">{m.bastFileName ?? "BAST"}</span>
+              </a>
+            ) : (
+              <span className="flex items-center gap-1 text-emerald-500">
+                <FileText className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate max-w-[140px]">{m.bastFileName ?? "BAST"}</span>
+              </span>
+            )
+          ) : (
+            <span className="text-muted-foreground">—</span>
+          )}
+          {m.bastUploadedAt && (
+            <div className="text-[10px] text-muted-foreground mt-0.5">
+              {formatDate(m.bastUploadedAt)}
+            </div>
+          )}
+        </TableCell>
         <TableCell>
           <div className="flex items-center justify-end gap-1.5">
             {canPushXero && !m.xeroInvoiceId && m.status !== "CANCELLED" && (
@@ -502,6 +541,7 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
                   <TableHead>Due</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Invoice #</TableHead>
+                  <TableHead>BAST</TableHead>
                   <TableHead className="text-right w-[120px]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -513,7 +553,7 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
                       return (
                         <Fragment key={g.key}>
                           <TableRow className="bg-muted/50 hover:bg-muted/50 border-t-2 border-border">
-                            <TableCell colSpan={10} className="py-2">
+                            <TableCell colSpan={11} className="py-2">
                               <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-1.5">
                                 <div className="flex items-center gap-2">
                                   <Layers className="h-3.5 w-3.5 text-primary" />

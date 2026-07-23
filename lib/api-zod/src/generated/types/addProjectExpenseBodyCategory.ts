@@ -14,5 +14,7 @@ export const AddProjectExpenseBodyCategory = {
   HARDWARE: "HARDWARE",
   LICENSE: "LICENSE",
   TRAVEL: "TRAVEL",
+  CASH_ADVANCE: "CASH_ADVANCE",
+  PURCHASE_ORDER: "PURCHASE_ORDER",
   OTHER: "OTHER",
 } as const;

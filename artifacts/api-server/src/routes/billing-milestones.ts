@@ -114,6 +114,11 @@ function serialize(m: any) {
     xeroAmountCredited: m.xeroAmountCredited ?? null,
     xeroSyncedAt: m.xeroSyncedAt ? m.xeroSyncedAt.toISOString() : null,
     sortOrder: m.sortOrder,
+    bastDocumentId: m.invoiceDocuments?.[0]?.id ?? null,
+    bastFileName: m.invoiceDocuments?.[0]?.fileName ?? null,
+    bastUploadedAt: m.invoiceDocuments?.[0]?.uploadedAt
+      ? m.invoiceDocuments[0].uploadedAt.toISOString()
+      : null,
     createdAt: m.createdAt.toISOString(),
     updatedAt: m.updatedAt.toISOString(),
   };
@@ -268,6 +273,14 @@ router.get("/projects/:id/billing-milestones", async (req, res) => {
   }
   const rows = await prisma.billingMilestone.findMany({
     where: { projectId },
+    include: {
+      invoiceDocuments: {
+        where: { type: "BAST", isLatest: true },
+        select: { id: true, fileName: true, uploadedAt: true },
+        orderBy: { uploadedAt: "desc" },
+        take: 1,
+      },
+    },
     orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
   });
   res.json(rows.map(serialize));

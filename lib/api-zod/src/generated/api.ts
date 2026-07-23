@@ -1536,13 +1536,16 @@ export const GetProjectResponse = zod
           zod.object({
             id: zod.string(),
             projectId: zod.string(),
-            type: zod.enum(["BAST", "INVOICE", "CONTRACT", "OTHER"]),
+            type: zod.enum(["BAST", "INVOICE", "CONTRACT", "REPORT", "OTHER"]),
+            kind: zod.enum(["FILE", "LINK"]).optional(),
             fileName: zod.string(),
             fileUrl: zod.string(),
             invoiceNumber: zod.string().nullish(),
             invoiceAmount: zod.number().nullish(),
             invoiceStatus: zod.string().nullish(),
             notes: zod.string().nullish(),
+            billingMilestoneId: zod.string().nullish(),
+            billingMilestoneName: zod.string().nullish(),
             uploadedById: zod.string().nullish(),
             uploadedByName: zod.string().nullish(),
             uploadedAt: zod.string(),
@@ -1944,6 +1947,47 @@ export const RejectProjectResourceResponse = zod.object({
 });
 
 /**
+ * Append-only rate history for a project resource, newest first.
+Restricted to canViewDailyRate roles (MGMT / assigned PM / SUPER_ADMIN).
+
+ */
+export const ListResourceRatesParams = zod.object({
+  resourceId: zod.coerce.string(),
+});
+
+export const ListResourceRatesResponseItem = zod.object({
+  id: zod.string(),
+  resourceId: zod.string(),
+  costRate: zod.number(),
+  sellingRate: zod.number().nullish(),
+  effectiveFrom: zod.string(),
+  createdByName: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+export const ListResourceRatesResponse = zod.array(
+  ListResourceRatesResponseItem,
+);
+
+/**
+ * Adds a rate period. The resource's denormalized dailyRate is re-synced
+to the newest period already in effect. sellingRate is display-only.
+
+ */
+export const CreateResourceRateParams = zod.object({
+  resourceId: zod.coerce.string(),
+});
+
+export const createResourceRateBodyCostRateMin = 0;
+
+export const createResourceRateBodySellingRateMin = 0;
+
+export const CreateResourceRateBody = zod.object({
+  costRate: zod.number().min(createResourceRateBodyCostRateMin),
+  sellingRate: zod.number().min(createResourceRateBodySellingRateMin).nullish(),
+  effectiveFrom: zod.string(),
+});
+
+/**
  * Lists ProjectResource rows awaiting the calling Principal's approval —
 PM-added supervised users (KONSULTAN / TECHNICAL_WRITER) whose
 principalId equals the caller.
@@ -2233,7 +2277,15 @@ export const ListProjectExpensesResponseItem = zod.object({
   projectCode: zod.string().nullish(),
   projectName: zod.string().nullish(),
   clientName: zod.string().nullish(),
-  category: zod.enum(["SOFTWARE", "HARDWARE", "LICENSE", "TRAVEL", "OTHER"]),
+  category: zod.enum([
+    "SOFTWARE",
+    "HARDWARE",
+    "LICENSE",
+    "TRAVEL",
+    "CASH_ADVANCE",
+    "PURCHASE_ORDER",
+    "OTHER",
+  ]),
   description: zod.string(),
   amount: zod.number(),
   spentAt: zod.string(),
@@ -2244,6 +2296,11 @@ export const ListProjectExpensesResponseItem = zod.object({
   approvedByName: zod.string().nullish(),
   approvedAt: zod.string().nullish(),
   rejectionReason: zod.string().nullish(),
+  poNumber: zod.string().nullish(),
+  settledAmount: zod.number().nullish(),
+  settledAt: zod.string().nullish(),
+  settlementNotes: zod.string().nullish(),
+  settledByName: zod.string().nullish(),
   createdById: zod.string().nullish(),
   createdByName: zod.string().nullish(),
   createdAt: zod.string(),
@@ -2257,7 +2314,15 @@ export const AddProjectExpenseParams = zod.object({
 });
 
 export const AddProjectExpenseBody = zod.object({
-  category: zod.enum(["SOFTWARE", "HARDWARE", "LICENSE", "TRAVEL", "OTHER"]),
+  category: zod.enum([
+    "SOFTWARE",
+    "HARDWARE",
+    "LICENSE",
+    "TRAVEL",
+    "CASH_ADVANCE",
+    "PURCHASE_ORDER",
+    "OTHER",
+  ]),
   description: zod.string(),
   amount: zod.number(),
   spentAt: zod.string().optional(),
@@ -2267,6 +2332,10 @@ export const AddProjectExpenseBody = zod.object({
     .describe("Base64 data URL of supporting invoice\/receipt PDF or image"),
   evidenceFileName: zod.string().nullish(),
   workstreamId: zod.string().nullish(),
+  poNumber: zod
+    .string()
+    .nullish()
+    .describe("Purchase order number (PURCHASE_ORDER category)"),
 });
 
 /**
@@ -2281,7 +2350,15 @@ export const ListExpensesResponseItem = zod.object({
   projectCode: zod.string().nullish(),
   projectName: zod.string().nullish(),
   clientName: zod.string().nullish(),
-  category: zod.enum(["SOFTWARE", "HARDWARE", "LICENSE", "TRAVEL", "OTHER"]),
+  category: zod.enum([
+    "SOFTWARE",
+    "HARDWARE",
+    "LICENSE",
+    "TRAVEL",
+    "CASH_ADVANCE",
+    "PURCHASE_ORDER",
+    "OTHER",
+  ]),
   description: zod.string(),
   amount: zod.number(),
   spentAt: zod.string(),
@@ -2292,6 +2369,11 @@ export const ListExpensesResponseItem = zod.object({
   approvedByName: zod.string().nullish(),
   approvedAt: zod.string().nullish(),
   rejectionReason: zod.string().nullish(),
+  poNumber: zod.string().nullish(),
+  settledAmount: zod.number().nullish(),
+  settledAt: zod.string().nullish(),
+  settlementNotes: zod.string().nullish(),
+  settledByName: zod.string().nullish(),
   createdById: zod.string().nullish(),
   createdByName: zod.string().nullish(),
   createdAt: zod.string(),
@@ -3166,7 +3248,15 @@ export const ApproveProjectExpenseResponse = zod.object({
   projectCode: zod.string().nullish(),
   projectName: zod.string().nullish(),
   clientName: zod.string().nullish(),
-  category: zod.enum(["SOFTWARE", "HARDWARE", "LICENSE", "TRAVEL", "OTHER"]),
+  category: zod.enum([
+    "SOFTWARE",
+    "HARDWARE",
+    "LICENSE",
+    "TRAVEL",
+    "CASH_ADVANCE",
+    "PURCHASE_ORDER",
+    "OTHER",
+  ]),
   description: zod.string(),
   amount: zod.number(),
   spentAt: zod.string(),
@@ -3177,6 +3267,11 @@ export const ApproveProjectExpenseResponse = zod.object({
   approvedByName: zod.string().nullish(),
   approvedAt: zod.string().nullish(),
   rejectionReason: zod.string().nullish(),
+  poNumber: zod.string().nullish(),
+  settledAmount: zod.number().nullish(),
+  settledAt: zod.string().nullish(),
+  settlementNotes: zod.string().nullish(),
+  settledByName: zod.string().nullish(),
   createdById: zod.string().nullish(),
   createdByName: zod.string().nullish(),
   createdAt: zod.string(),
@@ -3200,7 +3295,15 @@ export const RejectProjectExpenseResponse = zod.object({
   projectCode: zod.string().nullish(),
   projectName: zod.string().nullish(),
   clientName: zod.string().nullish(),
-  category: zod.enum(["SOFTWARE", "HARDWARE", "LICENSE", "TRAVEL", "OTHER"]),
+  category: zod.enum([
+    "SOFTWARE",
+    "HARDWARE",
+    "LICENSE",
+    "TRAVEL",
+    "CASH_ADVANCE",
+    "PURCHASE_ORDER",
+    "OTHER",
+  ]),
   description: zod.string(),
   amount: zod.number(),
   spentAt: zod.string(),
@@ -3211,6 +3314,59 @@ export const RejectProjectExpenseResponse = zod.object({
   approvedByName: zod.string().nullish(),
   approvedAt: zod.string().nullish(),
   rejectionReason: zod.string().nullish(),
+  poNumber: zod.string().nullish(),
+  settledAmount: zod.number().nullish(),
+  settledAt: zod.string().nullish(),
+  settlementNotes: zod.string().nullish(),
+  settledByName: zod.string().nullish(),
+  createdById: zod.string().nullish(),
+  createdByName: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+
+/**
+ * PM-of-project or MANAGEMENT settles an APPROVED cash advance with the actual spent amount.
+ */
+export const SettleProjectExpenseParams = zod.object({
+  expenseId: zod.coerce.string(),
+});
+
+export const SettleProjectExpenseBody = zod.object({
+  settledAmount: zod.number(),
+  settlementNotes: zod.string().nullish(),
+});
+
+export const SettleProjectExpenseResponse = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  workstreamId: zod.string().nullish(),
+  projectCode: zod.string().nullish(),
+  projectName: zod.string().nullish(),
+  clientName: zod.string().nullish(),
+  category: zod.enum([
+    "SOFTWARE",
+    "HARDWARE",
+    "LICENSE",
+    "TRAVEL",
+    "CASH_ADVANCE",
+    "PURCHASE_ORDER",
+    "OTHER",
+  ]),
+  description: zod.string(),
+  amount: zod.number(),
+  spentAt: zod.string(),
+  evidenceUrl: zod.string().nullish(),
+  evidenceFileName: zod.string().nullish(),
+  status: zod.enum(["PENDING", "APPROVED", "REJECTED"]),
+  approvedById: zod.string().nullish(),
+  approvedByName: zod.string().nullish(),
+  approvedAt: zod.string().nullish(),
+  rejectionReason: zod.string().nullish(),
+  poNumber: zod.string().nullish(),
+  settledAmount: zod.number().nullish(),
+  settledAt: zod.string().nullish(),
+  settlementNotes: zod.string().nullish(),
+  settledByName: zod.string().nullish(),
   createdById: zod.string().nullish(),
   createdByName: zod.string().nullish(),
   createdAt: zod.string(),
@@ -4366,13 +4522,16 @@ export const ListProjectDocumentsQueryParams = zod.object({
 export const ListProjectDocumentsResponseItem = zod.object({
   id: zod.string(),
   projectId: zod.string(),
-  type: zod.enum(["BAST", "INVOICE", "CONTRACT", "OTHER"]),
+  type: zod.enum(["BAST", "INVOICE", "CONTRACT", "REPORT", "OTHER"]),
+  kind: zod.enum(["FILE", "LINK"]).optional(),
   fileName: zod.string(),
   fileUrl: zod.string(),
   invoiceNumber: zod.string().nullish(),
   invoiceAmount: zod.number().nullish(),
   invoiceStatus: zod.string().nullish(),
   notes: zod.string().nullish(),
+  billingMilestoneId: zod.string().nullish(),
+  billingMilestoneName: zod.string().nullish(),
   uploadedById: zod.string().nullish(),
   uploadedByName: zod.string().nullish(),
   uploadedAt: zod.string(),
@@ -4389,13 +4548,15 @@ export const CreateProjectDocumentParams = zod.object({
 });
 
 export const CreateProjectDocumentBody = zod.object({
-  type: zod.enum(["BAST", "INVOICE", "CONTRACT", "OTHER"]),
+  type: zod.enum(["BAST", "INVOICE", "CONTRACT", "REPORT", "OTHER"]),
+  kind: zod.enum(["FILE", "LINK"]).optional(),
   fileName: zod.string(),
   fileUrl: zod.string(),
   invoiceNumber: zod.string().optional(),
   invoiceAmount: zod.number().optional(),
   invoiceStatus: zod.string().optional(),
   notes: zod.string().optional(),
+  billingMilestoneId: zod.string().nullish(),
 });
 
 export const ListDocumentVersionsParams = zod.object({
@@ -4405,13 +4566,16 @@ export const ListDocumentVersionsParams = zod.object({
 export const ListDocumentVersionsResponseItem = zod.object({
   id: zod.string(),
   projectId: zod.string(),
-  type: zod.enum(["BAST", "INVOICE", "CONTRACT", "OTHER"]),
+  type: zod.enum(["BAST", "INVOICE", "CONTRACT", "REPORT", "OTHER"]),
+  kind: zod.enum(["FILE", "LINK"]).optional(),
   fileName: zod.string(),
   fileUrl: zod.string(),
   invoiceNumber: zod.string().nullish(),
   invoiceAmount: zod.number().nullish(),
   invoiceStatus: zod.string().nullish(),
   notes: zod.string().nullish(),
+  billingMilestoneId: zod.string().nullish(),
+  billingMilestoneName: zod.string().nullish(),
   uploadedById: zod.string().nullish(),
   uploadedByName: zod.string().nullish(),
   uploadedAt: zod.string(),
@@ -4464,6 +4628,81 @@ export const UpdateProjectClosingChecklistItemResponse = zod.object({
   sortOrder: zod.number(),
 });
 
+export const ListMyFeedback360ResponseItem = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  projectCode: zod.string(),
+  projectName: zod.string(),
+  reviewerId: zod.string(),
+  reviewerName: zod.string(),
+  reviewerRole: zod.string().optional(),
+  subjectId: zod.string(),
+  subjectName: zod.string(),
+  subjectRole: zod.string().optional(),
+  rating: zod.number().nullish(),
+  comment: zod.string().nullish(),
+  status: zod.enum(["PENDING", "SUBMITTED"]),
+  submittedAt: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+export const ListMyFeedback360Response = zod.array(
+  ListMyFeedback360ResponseItem,
+);
+
+export const SubmitFeedback360Params = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const submitFeedback360BodyRatingMax = 5;
+
+export const SubmitFeedback360Body = zod.object({
+  rating: zod.number().min(1).max(submitFeedback360BodyRatingMax),
+  comment: zod.string().nullish(),
+});
+
+export const SubmitFeedback360Response = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  projectCode: zod.string(),
+  projectName: zod.string(),
+  reviewerId: zod.string(),
+  reviewerName: zod.string(),
+  reviewerRole: zod.string().optional(),
+  subjectId: zod.string(),
+  subjectName: zod.string(),
+  subjectRole: zod.string().optional(),
+  rating: zod.number().nullish(),
+  comment: zod.string().nullish(),
+  status: zod.enum(["PENDING", "SUBMITTED"]),
+  submittedAt: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+
+export const ListProjectFeedback360Params = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const ListProjectFeedback360ResponseItem = zod.object({
+  id: zod.string(),
+  projectId: zod.string(),
+  projectCode: zod.string(),
+  projectName: zod.string(),
+  reviewerId: zod.string(),
+  reviewerName: zod.string(),
+  reviewerRole: zod.string().optional(),
+  subjectId: zod.string(),
+  subjectName: zod.string(),
+  subjectRole: zod.string().optional(),
+  rating: zod.number().nullish(),
+  comment: zod.string().nullish(),
+  status: zod.enum(["PENDING", "SUBMITTED"]),
+  submittedAt: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+export const ListProjectFeedback360Response = zod.array(
+  ListProjectFeedback360ResponseItem,
+);
+
 export const DeleteDocumentParams = zod.object({
   id: zod.coerce.string(),
 });
@@ -4494,6 +4733,16 @@ export const ListProjectTasksResponseItem = zod.object({
     .min(listProjectTasksResponseProgressPercentMin)
     .max(listProjectTasksResponseProgressPercentMax),
   billable: zod.boolean(),
+  plannedHours: zod
+    .number()
+    .nullish()
+    .describe(
+      "Hour cap for this task (all users, non-rejected timesheets); null = uncapped",
+    ),
+  timesheetHours: zod
+    .number()
+    .optional()
+    .describe("Total non-rejected timesheet hours clocked against this task"),
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   assigneeId: zod.string().nullish(),
@@ -4540,6 +4789,7 @@ export const CreateProjectTaskBody = zod.object({
     .max(createProjectTaskBodyProgressPercentMax)
     .optional(),
   billable: zod.boolean().optional(),
+  plannedHours: zod.number().nullish(),
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   assigneeId: zod.string().nullish(),
@@ -4566,6 +4816,16 @@ export const ListMyTasksResponseItem = zod.object({
     .min(listMyTasksResponseProgressPercentMin)
     .max(listMyTasksResponseProgressPercentMax),
   billable: zod.boolean(),
+  plannedHours: zod
+    .number()
+    .nullish()
+    .describe(
+      "Hour cap for this task (all users, non-rejected timesheets); null = uncapped",
+    ),
+  timesheetHours: zod
+    .number()
+    .optional()
+    .describe("Total non-rejected timesheet hours clocked against this task"),
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   assigneeId: zod.string().nullish(),
@@ -4612,6 +4872,7 @@ export const UpdateTaskBody = zod.object({
     .max(updateTaskBodyProgressPercentMax)
     .optional(),
   billable: zod.boolean().optional(),
+  plannedHours: zod.number().nullish(),
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   assigneeId: zod.string().nullish(),
@@ -4638,6 +4899,16 @@ export const UpdateTaskResponse = zod.object({
     .min(updateTaskResponseProgressPercentMin)
     .max(updateTaskResponseProgressPercentMax),
   billable: zod.boolean(),
+  plannedHours: zod
+    .number()
+    .nullish()
+    .describe(
+      "Hour cap for this task (all users, non-rejected timesheets); null = uncapped",
+    ),
+  timesheetHours: zod
+    .number()
+    .optional()
+    .describe("Total non-rejected timesheet hours clocked against this task"),
   startDate: zod.string().nullish(),
   endDate: zod.string().nullish(),
   assigneeId: zod.string().nullish(),
@@ -4836,6 +5107,9 @@ export const ListBillingMilestonesResponseItem = zod.object({
   invoicedAt: zod.string().nullish(),
   paidAt: zod.string().nullish(),
   sortOrder: zod.number(),
+  bastDocumentId: zod.string().nullish(),
+  bastFileName: zod.string().nullish(),
+  bastUploadedAt: zod.string().nullish(),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });
@@ -4896,6 +5170,9 @@ export const UpdateBillingMilestoneResponse = zod.object({
   invoicedAt: zod.string().nullish(),
   paidAt: zod.string().nullish(),
   sortOrder: zod.number(),
+  bastDocumentId: zod.string().nullish(),
+  bastFileName: zod.string().nullish(),
+  bastUploadedAt: zod.string().nullish(),
   createdAt: zod.string(),
   updatedAt: zod.string(),
 });

@@ -101,6 +101,8 @@ const CATEGORY_LABELS: Record<AddProjectExpenseBodyCategory, string> = {
   HARDWARE: "Hardware",
   LICENSE: "License",
   TRAVEL: "Travel",
+  CASH_ADVANCE: "Cash Advance",
+  PURCHASE_ORDER: "Purchase Order",
   OTHER: "Other",
 };
 

@@ -1,6 +1,8 @@
 import { Router, type IRouter } from "express";
 import { prisma, type UserRole } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
+import { validateBody } from "../middlewares/validate.js";
+import { CreateResourceRateBody } from "@workspace/api-zod";
 import { recordAudit } from "../lib/audit.js";
 import { canViewDailyRate } from "../lib/serializers.js";
 import { validateWorkstreamId } from "../lib/workstreams.js";
@@ -642,6 +644,167 @@ router.delete("/resources/:resourceId", async (req, res) => {
     before: { id: before.id, projectId: before.projectId, userId: before.userId, roleInProject: before.roleInProject, plannedMandays: before.plannedMandays, dailyRate: before.dailyRate },
   });
   res.json({ success: true });
+});
+
+// ---------------------------------------------------------------------------
+// Rate history (F2). Append-only ProjectResourceRate rows change what
+// computeMetrics charges per timesheet workDate; ProjectResource.dailyRate is
+// kept in sync as the denormalized *current* cost rate. sellingRate is
+// display-only and never enters cost math. Both are rate data, so read access
+// is limited to canViewDailyRate roles (MGMT/PM/SUPER_ADMIN).
+
+function serializeRate(r: {
+  id: string;
+  resourceId: string;
+  costRate: number;
+  sellingRate: number | null;
+  effectiveFrom: Date;
+  createdAt: Date;
+  createdBy?: { name: string } | null;
+}) {
+  return {
+    id: r.id,
+    resourceId: r.resourceId,
+    costRate: r.costRate,
+    sellingRate: r.sellingRate,
+    effectiveFrom: r.effectiveFrom.toISOString(),
+    createdByName: r.createdBy?.name ?? null,
+    createdAt: r.createdAt.toISOString(),
+  };
+}
+
+router.get("/resources/:resourceId/rates", async (req, res) => {
+  const role = req.user?.role;
+  if (!canViewDailyRate(role)) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  const resource = await prisma.projectResource.findUnique({
+    where: { id: String(req.params.resourceId) },
+    select: { id: true, projectId: true, project: { select: { pmId: true } } },
+  });
+  if (!resource) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  if (role === "PROJECT_MANAGER" && resource.project.pmId !== req.user!.sub) {
+    res.status(403).json({ error: "Only the assigned PM may view rate history on this project" });
+    return;
+  }
+  const rows = await prisma.projectResourceRate.findMany({
+    where: { resourceId: resource.id },
+    include: { createdBy: { select: { name: true } } },
+    orderBy: { effectiveFrom: "desc" },
+  });
+  res.json(rows.map(serializeRate));
+});
+
+router.post("/resources/:resourceId/rates", validateBody(CreateResourceRateBody), async (req, res) => {
+  const role = req.user?.role;
+  if (role !== "MANAGEMENT" && role !== "SUPER_ADMIN" && role !== "PROJECT_MANAGER") {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+  const resource = await prisma.projectResource.findUnique({
+    where: { id: String(req.params.resourceId) },
+    include: {
+      user: { select: { name: true } },
+      project: { select: { pmId: true, startDate: true } },
+    },
+  });
+  if (!resource) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  if (role === "PROJECT_MANAGER" && resource.project.pmId !== req.user!.sub) {
+    res.status(403).json({ error: "Only the assigned PM may set rates on this project" });
+    return;
+  }
+  const { costRate, sellingRate, effectiveFrom } = req.body || {};
+  const cost = Number(costRate);
+  if (!Number.isFinite(cost) || cost <= 0) {
+    res.status(400).json({ error: "costRate must be greater than 0" });
+    return;
+  }
+  let selling: number | null = null;
+  if (sellingRate !== undefined && sellingRate !== null && sellingRate !== "") {
+    selling = Number(sellingRate);
+    if (!Number.isFinite(selling) || selling < 0) {
+      res.status(400).json({ error: "sellingRate must be a non-negative number" });
+      return;
+    }
+  }
+  const eff = new Date(String(effectiveFrom || ""));
+  if (Number.isNaN(eff.getTime())) {
+    res.status(400).json({ error: "effectiveFrom must be a valid date" });
+    return;
+  }
+  try {
+    const created = await prisma.$transaction(async (tx) => {
+      // Retroactive-repricing guard: rateFor() falls back to the denormalized
+      // dailyRate for work dates before the earliest history row, and this
+      // route re-syncs dailyRate to the newest in-effect period below. Without
+      // a baseline row, adding the FIRST period would silently reprice every
+      // pre-existing timesheet at the new rate. So when the resource has no
+      // history yet, pin the pre-change dailyRate as a baseline period
+      // starting at the project start (or the assignment date).
+      const existingCount = await tx.projectResourceRate.count({
+        where: { resourceId: resource.id },
+      });
+      if (existingCount === 0) {
+        const baselineDate = resource.project.startDate ?? resource.createdAt;
+        if (baselineDate.getTime() < eff.getTime()) {
+          await tx.projectResourceRate.create({
+            data: {
+              resourceId: resource.id,
+              costRate: resource.dailyRate,
+              sellingRate: null,
+              effectiveFrom: baselineDate,
+              createdById: req.user!.sub,
+            },
+          });
+        }
+      }
+      const row = await tx.projectResourceRate.create({
+        data: {
+          resourceId: resource.id,
+          costRate: cost,
+          sellingRate: selling,
+          effectiveFrom: eff,
+          createdById: req.user!.sub,
+        },
+        include: { createdBy: { select: { name: true } } },
+      });
+      // Keep the denormalized current rate in sync: dailyRate mirrors the
+      // newest history row already in effect (effectiveFrom <= now).
+      const current = await tx.projectResourceRate.findFirst({
+        where: { resourceId: resource.id, effectiveFrom: { lte: new Date() } },
+        orderBy: { effectiveFrom: "desc" },
+        select: { costRate: true },
+      });
+      if (current) {
+        await tx.projectResource.update({
+          where: { id: resource.id },
+          data: { dailyRate: current.costRate },
+        });
+      }
+      return row;
+    });
+    await recordAudit(req, {
+      action: "resource.updated",
+      entityType: "ProjectResource",
+      entityId: resource.id,
+      description: `Rate period added for ${resource.user.name}: cost=${cost} effective ${eff.toISOString().slice(0, 10)}`,
+      after: { rateId: created.id, costRate: cost, sellingRate: selling, effectiveFrom: eff.toISOString() },
+    });
+    res.status(201).json(serializeRate(created));
+  } catch (e: any) {
+    if (e?.code === "P2002") {
+      res.status(409).json({ error: "A rate period with this effective date already exists for this resource" });
+      return;
+    }
+    throw e;
+  }
 });
 
 export default router;

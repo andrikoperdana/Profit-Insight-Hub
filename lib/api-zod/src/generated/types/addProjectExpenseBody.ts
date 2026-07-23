@@ -16,4 +16,6 @@ export interface AddProjectExpenseBody {
   evidenceUrl?: string | null;
   evidenceFileName?: string | null;
   workstreamId?: string | null;
+  /** Purchase order number (PURCHASE_ORDER category) */
+  poNumber?: string | null;
 }

@@ -8,7 +8,7 @@ export type ProjectWithRelations = Prisma.ProjectGetPayload<{
     pm: true;
     technicalWriter: true;
     adminProject: true;
-    resources: { include: { user: true } };
+    resources: { include: { user: true; rates: true } };
     timesheets: { include: { user: true } };
     expenses: true;
     raidItems: true;
@@ -47,18 +47,37 @@ export interface ProjectMetrics {
 }
 
 export function computeMetrics(project: ProjectWithRelations): ProjectMetrics {
-  // Map userId -> rate from resources (fallback to user.dailyRate via timesheet's user)
-  const rateMap = new Map<string, number>();
+  // Map userId -> rate resolution from resources. `dailyRate` is the
+  // denormalized current cost rate; when a resource has append-only rate
+  // history rows (ProjectResourceRate), the rate charged for a timesheet is
+  // the newest history row whose effectiveFrom <= workDate. Timesheets dated
+  // before the earliest history row (and resources with no history at all)
+  // fall back to `dailyRate`, so projects without history behave exactly as
+  // before.
+  type RatePeriod = { costRate: number; effectiveFrom: Date };
+  const rateMap = new Map<string, { dailyRate: number; periods: RatePeriod[] }>();
   for (const r of project.resources) {
-    rateMap.set(r.userId, r.dailyRate);
+    const periods = (((r as { rates?: RatePeriod[] }).rates ?? []) as RatePeriod[])
+      .slice()
+      .sort((a, b) => b.effectiveFrom.getTime() - a.effectiveFrom.getTime());
+    rateMap.set(r.userId, { dailyRate: r.dailyRate, periods });
   }
+  const rateFor = (userId: string, workDate: Date, fallback: number): number => {
+    const entry = rateMap.get(userId);
+    if (!entry) return fallback;
+    const t = workDate.getTime();
+    for (const p of entry.periods) {
+      if (p.effectiveFrom.getTime() <= t) return p.costRate;
+    }
+    return entry.dailyRate;
+  };
 
   let actualMandays = 0;
   let resourceCost = 0;
   let accruedResourceCost = 0;
   for (const ts of project.timesheets) {
     const days = ts.hours / 8;
-    const rate = rateMap.get(ts.userId) ?? ts.user?.dailyRate ?? 0;
+    const rate = rateFor(ts.userId, ts.workDate, ts.user?.dailyRate ?? 0);
     if (ts.status === "APPROVED") {
       actualMandays += days;
       resourceCost += days * rate;
@@ -71,8 +90,14 @@ export function computeMetrics(project: ProjectWithRelations): ProjectMetrics {
   // Only APPROVED expenses count toward actualCost. PENDING/REJECTED expenses
   // are visible in the Expenses tab for transparency but never inflate the
   // project's reported cost or shrink margin until a PM/MGMT approves them.
+  // Settled cash advances count at their settled (actual) amount instead of
+  // the original advance.
   const additionalCost = (project.expenses ?? []).reduce(
-    (sum, e) => sum + ((e as any).status === "APPROVED" ? (e.amount ?? 0) : 0),
+    (sum, e) =>
+      sum +
+      ((e as any).status === "APPROVED"
+        ? ((e as any).settledAmount ?? e.amount ?? 0)
+        : 0),
     0,
   );
   const actualCost = resourceCost + additionalCost;
@@ -298,7 +323,7 @@ export const projectInclude = {
   pm: true,
   technicalWriter: true,
   adminProject: true,
-  resources: { include: { user: true } },
+  resources: { include: { user: true, rates: true } },
   timesheets: { include: { user: true } },
   expenses: true,
   raidItems: true,
@@ -323,7 +348,13 @@ export const projectMetricsSelect = {
   contractValueIncludesVat: true,
   currency: true,
   exchangeRate: true,
-  resources: { select: { userId: true, dailyRate: true } },
+  resources: {
+    select: {
+      userId: true,
+      dailyRate: true,
+      rates: { select: { costRate: true, effectiveFrom: true } },
+    },
+  },
   timesheets: {
     select: {
       hours: true,
@@ -333,7 +364,7 @@ export const projectMetricsSelect = {
       user: { select: { dailyRate: true } },
     },
   },
-  expenses: { select: { amount: true, status: true } },
+  expenses: { select: { amount: true, status: true, settledAmount: true } },
 } as const;
 
 /**

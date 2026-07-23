@@ -204,6 +204,10 @@ export default function ConsultantDashboard() {
 function QuickLogCard({ loggedToday }: { loggedToday: number }) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
+  // Delivery roles must clock hours against an assigned task (server enforces
+  // with code TASK_REQUIRED); mirror it here for a clear UX.
+  const taskRequired = ["KONSULTAN", "TECHNICAL_WRITER", "ADMIN_PROJECT"].includes(user?.role ?? "");
   const { data: projects } = useListProjects({ status: "ACTIVE" });
   const { data: myTasks } = useListMyTasks({ query: { queryKey: getListMyTasksQueryKey() } });
   const [projectId, setProjectId] = useState<string>("");
@@ -242,7 +246,8 @@ function QuickLogCard({ loggedToday }: { loggedToday: number }) {
     const d = String(today.getDate()).padStart(2, "0");
     return `${y}-${m}-${d}`;
   })();
-  const canSubmit = projectId && hours > 0 && description.trim().length >= 5;
+  const canSubmit =
+    projectId && hours > 0 && description.trim().length >= 5 && (!taskRequired || !!taskId);
 
   const remaining = Math.max(0, 8 - loggedToday);
   const target8 = Math.min(100, (loggedToday / 8) * 100);
@@ -299,7 +304,7 @@ function QuickLogCard({ loggedToday }: { loggedToday: number }) {
           </div>
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-              Task <span className="text-muted-foreground/70 normal-case">(optional)</span>
+              Task {taskRequired ? <span className="normal-case">*</span> : <span className="text-muted-foreground/70 normal-case">(optional)</span>}
             </label>
             <Select
               value={taskId || "__none__"}
@@ -307,10 +312,10 @@ function QuickLogCard({ loggedToday }: { loggedToday: number }) {
               disabled={!projectId}
             >
               <SelectTrigger className="h-12 text-base bg-background" data-testid="select-quicklog-task">
-                <SelectValue placeholder={projectId ? "No task (general project work)" : "Select a project first"} />
+                <SelectValue placeholder={projectId ? (taskRequired ? "Select a task" : "No task (general project work)") : "Select a project first"} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="__none__">No task (general project work)</SelectItem>
+                {!taskRequired && <SelectItem value="__none__">No task (general project work)</SelectItem>}
                 {tasksForProject.map((t) => (
                   <SelectItem key={t.id} value={t.id}>
                     {t.title}

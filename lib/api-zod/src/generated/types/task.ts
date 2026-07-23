@@ -24,6 +24,10 @@ export interface Task {
    */
   progressPercent: number;
   billable: boolean;
+  /** Hour cap for this task (all users, non-rejected timesheets); null = uncapped */
+  plannedHours?: number | null;
+  /** Total non-rejected timesheet hours clocked against this task */
+  timesheetHours?: number;
   startDate?: string | null;
   endDate?: string | null;
   assigneeId?: string | null;

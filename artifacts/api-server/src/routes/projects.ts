@@ -15,7 +15,8 @@ import {
 import { recordAudit } from "../lib/audit.js";
 import { getAppSettings } from "../lib/app-settings.js";
 import { issueSurveyTokenIfMissing } from "../lib/surveyDefaults.js";
-import { notifyUsers } from "../lib/notifications.js";
+import { notifyUser, notifyUsers } from "../lib/notifications.js";
+import { createFeedback360PairsIfMissing, checkCloseRequirements } from "../lib/feedback360.js";
 import { userCanAccessProject } from "../lib/projectAccess.js";
 import {
   writeRoles,
@@ -483,6 +484,20 @@ router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdatePro
       });
       return;
     }
+    // F6: beyond the checklist, CLIENT projects need at least one client
+    // survey response, and every 360 feedback entry must be submitted.
+    const closeMissing = await checkCloseRequirements(
+      String(req.params.id),
+      beforeProj.kind,
+    );
+    if (closeMissing.length > 0) {
+      res.status(400).json({
+        error: `Cannot close this project yet. Please resolve the following first: ${closeMissing.join("; ")}.`,
+        code: "CLOSE_REQUIREMENTS_INCOMPLETE",
+        missing: closeMissing,
+      });
+      return;
+    }
   }
 
   // Non-commercial projects (INTERNAL / PRESALES / TRAINING) run internally
@@ -759,6 +774,33 @@ router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdatePro
       include: projectInclude,
     }) as typeof updated;
   }
+  // F6: on COMPLETE, release the client satisfaction survey early (CLIENT
+  // projects only) and seed 360 feedback pairs (PM <-> each accepted resource).
+  if (b.status === "COMPLETE" && beforeProj.status !== "COMPLETE" && updated.status === "COMPLETE") {
+    if (updated.kind === "CLIENT") {
+      await issueSurveyTokenIfMissing(updated.id);
+      if (updated.pmId) {
+        await notifyUser({
+          userId: updated.pmId,
+          type: "survey.released",
+          title: "Client survey ready to send",
+          message: `${updated.code} — ${updated.name} is complete. Share the client satisfaction survey link from the Closing tab.`,
+          link: `/projects/${updated.id}`,
+        });
+      }
+    }
+    const { created, reviewerIds } = await createFeedback360PairsIfMissing(updated.id);
+    if (created > 0) {
+      await notifyUsers(reviewerIds, {
+        type: "feedback360.requested",
+        title: "360 feedback requested",
+        message: `${updated.code} — ${updated.name} is complete. Please submit your 360 feedback for the project team.`,
+        link: `/projects/${updated.id}`,
+      });
+    }
+  }
+  // CLOSED backstop: projects that reach CLOSED without ever passing through
+  // the COMPLETE side effects still get a survey token issued.
   if (updated.status === "CLOSED" && !updated.surveyToken) {
     await issueSurveyTokenIfMissing(updated.id);
   }

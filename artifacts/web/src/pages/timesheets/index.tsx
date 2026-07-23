@@ -145,10 +145,20 @@ export default function TimesheetsWorkspace() {
   );
 }
 
+// Delivery roles must clock hours against a specific task (server enforces
+// with code TASK_REQUIRED); mirror it client-side for a better UX.
+const TASK_REQUIRED_ROLES = new Set<string>([
+  UserRole.KONSULTAN,
+  UserRole.TECHNICAL_WRITER,
+  UserRole.ADMIN_PROJECT,
+]);
+
 function LogTimeDialog({ isAutoApprove }: { isAutoApprove: boolean }) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
+  const { user } = useAuth();
+  const taskRequired = TASK_REQUIRED_ROLES.has(user?.role ?? "");
 
   const { data: projects } = useListProjects({ status: "ACTIVE" });
   // The user's own assigned tasks across all projects, fetched once and
@@ -196,7 +206,14 @@ function LogTimeDialog({ isAutoApprove }: { isAutoApprove: boolean }) {
         </DialogHeader>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit((d) =>
+            onSubmit={form.handleSubmit((d) => {
+              if (taskRequired && !d.taskId) {
+                form.setError("taskId", {
+                  type: "manual",
+                  message: "Task selection is required for your role",
+                });
+                return;
+              }
               createTs.mutate({
                 data: {
                   ...d,
@@ -204,8 +221,8 @@ function LogTimeDialog({ isAutoApprove }: { isAutoApprove: boolean }) {
                   // so the server keeps the column NULL.
                   ...(d.taskId ? { taskId: d.taskId } : { taskId: undefined }),
                 } as any,
-              }),
-            )}
+              });
+            })}
             className="space-y-4 pt-4"
           >
             <FormField control={form.control} name="projectId" render={({ field }) => (
@@ -222,7 +239,7 @@ function LogTimeDialog({ isAutoApprove }: { isAutoApprove: boolean }) {
             )} />
             <FormField control={form.control} name="taskId" render={({ field }) => (
               <FormItem>
-                <FormLabel>Task (optional)</FormLabel>
+                <FormLabel>{taskRequired ? "Task *" : "Task (optional)"}</FormLabel>
                 <Select
                   onValueChange={(v) => field.onChange(v === "__none" ? "" : v)}
                   value={field.value || "__none"}
@@ -230,11 +247,11 @@ function LogTimeDialog({ isAutoApprove }: { isAutoApprove: boolean }) {
                 >
                   <FormControl>
                     <SelectTrigger data-testid="select-timesheet-task">
-                      <SelectValue placeholder={selectedProjectId ? "Select task (optional)" : "Select project first"} />
+                      <SelectValue placeholder={selectedProjectId ? (taskRequired ? "Select task" : "Select task (optional)") : "Select project first"} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="__none">Not linked to a task</SelectItem>
+                    {!taskRequired && <SelectItem value="__none">Not linked to a task</SelectItem>}
                     {tasksForProject.map((t) => (
                       <SelectItem key={t.id} value={t.id}>{t.title}</SelectItem>
                     ))}
@@ -243,7 +260,9 @@ function LogTimeDialog({ isAutoApprove }: { isAutoApprove: boolean }) {
                 <FormDescription className="text-xs">
                   {selectedProjectId && tasksForProject.length === 0
                     ? "You aren't assigned to any active tasks on this project yet."
-                    : "Pick a task to link these hours to a specific piece of work."}
+                    : taskRequired
+                      ? "Your role must clock hours against an assigned task."
+                      : "Pick a task to link these hours to a specific piece of work."}
                 </FormDescription>
                 <FormMessage />
               </FormItem>

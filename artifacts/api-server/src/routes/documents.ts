@@ -3,6 +3,7 @@ import { prisma, type DocumentType, type Prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
 import { issueSurveyTokenIfMissing } from "../lib/surveyDefaults.js";
+import { checkCloseRequirements } from "../lib/feedback360.js";
 import {
   userCanAccessProject,
   userCanWriteProject,
@@ -12,18 +13,23 @@ const router: IRouter = Router();
 router.use(requireAuth);
 
 function serialize(
-  d: Prisma.DocumentGetPayload<{ include: { uploadedBy: true } }>,
+  d: Prisma.DocumentGetPayload<{
+    include: { uploadedBy: true; billingMilestone: { select: { name: true } } };
+  }>,
 ) {
   return {
     id: d.id,
     projectId: d.projectId,
     type: d.type,
+    kind: d.kind,
     fileName: d.fileName,
     fileUrl: d.fileUrl,
     invoiceNumber: d.invoiceNumber,
     invoiceAmount: d.invoiceAmount,
     invoiceStatus: d.invoiceStatus,
     notes: d.notes,
+    billingMilestoneId: d.billingMilestoneId ?? null,
+    billingMilestoneName: d.billingMilestone?.name ?? null,
     uploadedById: d.uploadedById,
     uploadedByName: d.uploadedBy?.name ?? null,
     uploadedAt: d.uploadedAt.toISOString(),
@@ -32,6 +38,11 @@ function serialize(
     isLatest: d.isLatest,
   };
 }
+
+const DOC_INCLUDE = {
+  uploadedBy: true,
+  billingMilestone: { select: { name: true } },
+} as const;
 
 router.get("/projects/:id/documents", async (req, res) => {
   if (!(await userCanAccessProject(String(req.params.id), req.user!))) {
@@ -44,7 +55,7 @@ router.get("/projects/:id/documents", async (req, res) => {
       projectId: String(req.params.id),
       ...(includeHistory ? {} : { isLatest: true }),
     },
-    include: { uploadedBy: true },
+    include: DOC_INCLUDE,
     orderBy: [{ uploadedAt: "desc" }],
   });
   res.json(docs.map(serialize));
@@ -79,7 +90,7 @@ router.get("/documents/:id/versions", async (req, res) => {
     if (!ids.length) break;
     const batch = await prisma.document.findMany({
       where: { id: { in: ids }, projectId: doc.projectId },
-      include: { uploadedBy: true },
+      include: DOC_INCLUDE,
     });
     collected.push(...batch);
     const children = await prisma.document.findMany({
@@ -98,9 +109,47 @@ router.post(
   async (req, res) => {
     const { type, fileName, fileUrl, invoiceNumber, invoiceAmount, invoiceStatus, notes } =
       req.body || {};
+    const rawMilestoneId = req.body?.billingMilestoneId;
+    const billingMilestoneId =
+      rawMilestoneId != null && String(rawMilestoneId).trim() !== ""
+        ? String(rawMilestoneId)
+        : null;
     if (!type || !fileName || !fileUrl) {
       res.status(400).json({ error: "type, fileName, fileUrl required" });
       return;
+    }
+    const kind = req.body?.kind === "LINK" ? "LINK" : "FILE";
+    if (kind === "LINK") {
+      // Link documents point to an external location (SharePoint, Drive, ...).
+      // Require an absolute http(s) URL so the UI can safely open it.
+      let parsed: URL | null = null;
+      try {
+        parsed = new URL(String(fileUrl));
+      } catch {
+        parsed = null;
+      }
+      if (!parsed || (parsed.protocol !== "https:" && parsed.protocol !== "http:")) {
+        res.status(400).json({ error: "Link documents require a valid http(s) URL" });
+        return;
+      }
+    }
+    if (billingMilestoneId) {
+      // Milestone-linked documents: only BAST (per Terms-of-Payment handover)
+      // and INVOICE make sense per milestone.
+      if (type !== "BAST" && type !== "INVOICE") {
+        res.status(400).json({
+          error: "billingMilestoneId can only be set on BAST or INVOICE documents",
+        });
+        return;
+      }
+      const milestone = await prisma.billingMilestone.findUnique({
+        where: { id: billingMilestoneId },
+        select: { id: true, projectId: true },
+      });
+      if (!milestone || milestone.projectId !== String(req.params.id)) {
+        res.status(400).json({ error: "billingMilestoneId does not belong to this project" });
+        return;
+      }
     }
     // FINANCE has a narrow cross-project write right: INVOICE and CONTRACT
     // documents on any project. They bypass the per-project ownership check
@@ -121,14 +170,21 @@ router.post(
     // Versioning: if a previous latest doc of same type exists for this project,
     // mark it as historical and link the new one as next version. INVOICE is
     // excluded (each invoice document is unique by invoiceNumber).
-    const VERSIONED_TYPES: DocumentType[] = ["BAST", "CONTRACT", "OTHER"];
+    const VERSIONED_TYPES: DocumentType[] = ["BAST", "CONTRACT", "REPORT", "OTHER"];
     const isVersioned = VERSIONED_TYPES.includes(type as DocumentType);
     const d = await prisma.$transaction(async (tx) => {
       let parentDocumentId: string | null = null;
       let nextVersion = 1;
       if (isVersioned) {
+        // Version chain is per (project, type, milestone): a BAST for termin 2
+        // must not supersede the BAST for termin 1 (or the project-level BAST).
         const prev = await tx.document.findFirst({
-          where: { projectId: String(req.params.id), type: type as DocumentType, isLatest: true },
+          where: {
+            projectId: String(req.params.id),
+            type: type as DocumentType,
+            isLatest: true,
+            billingMilestoneId: type === "BAST" ? billingMilestoneId : undefined,
+          },
           orderBy: { version: "desc" },
         });
         if (prev) {
@@ -141,18 +197,20 @@ router.post(
         data: {
           projectId: String(req.params.id),
           type: type as DocumentType,
+          kind,
           fileName: String(fileName),
           fileUrl: String(fileUrl),
           invoiceNumber: invoiceNumber || null,
           invoiceAmount: invoiceAmount != null ? Number(invoiceAmount) : null,
           invoiceStatus: invoiceStatus || null,
           notes: notes || null,
+          billingMilestoneId,
           uploadedById: req.user!.sub,
           version: nextVersion,
           parentDocumentId,
           isLatest: true,
         },
-        include: { uploadedBy: true },
+        include: DOC_INCLUDE,
       });
     });
     await prisma.activity.create({
@@ -179,7 +237,15 @@ router.post(
     if (project && project.status === "COMPLETE") {
       const hasBast = project.documents.some((doc) => doc.type === "BAST");
       const hasInvoice = project.documents.some((doc) => doc.type === "INVOICE");
-      if (hasBast && hasInvoice) {
+      // F6: auto-close must respect the same extra CLOSED requirements as the
+      // manual transition (survey response for CLIENT kind, all 360 submitted).
+      // When they are not met yet, skip auto-close; the project stays COMPLETE
+      // and can be closed manually once the requirements are satisfied.
+      const closeMissing =
+        hasBast && hasInvoice
+          ? await checkCloseRequirements(project.id, project.kind)
+          : [];
+      if (hasBast && hasInvoice && closeMissing.length === 0) {
         await prisma.project.update({
           where: { id: project.id },
           data: { status: "CLOSED" },
@@ -214,7 +280,7 @@ router.delete(
   async (req, res) => {
     const before = await prisma.document.findUnique({
       where: { id: String(req.params.id) },
-      include: { uploadedBy: true },
+      include: DOC_INCLUDE,
     });
     if (!before) {
       res.status(404).json({ error: "Not found" });
