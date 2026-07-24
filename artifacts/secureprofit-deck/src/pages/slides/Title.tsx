@@ -8,6 +8,7 @@ export default function Title() {
         crossOrigin="anonymous"
         alt="Cyber-security data visualization"
         className="absolute inset-0 w-full h-full object-cover opacity-60"
+        style={{ filter: "hue-rotate(215deg) saturate(0.9)" }}
       />
       <div className="absolute inset-0 bg-gradient-to-r from-bg via-bg/85 to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-t from-bg/95 via-transparent to-bg/40" />

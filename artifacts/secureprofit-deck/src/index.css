@@ -14,13 +14,13 @@
 }
 
 :root {
-  --slide-primary: #22c55e;
-  --slide-accent: #34d399;
-  --slide-bg: #0f172a;
-  --slide-bg-elevated: #1e293b;
-  --slide-text: #f1f5f9;
-  --slide-muted: #94a3b8;
-  --slide-border: #334155;
+  --slide-primary: #ef4444;
+  --slide-accent: #f87171;
+  --slide-bg: #0a0a0a;
+  --slide-bg-elevated: #171717;
+  --slide-text: #fafafa;
+  --slide-muted: #a3a3a3;
+  --slide-border: #2e2e2e;
   --font-display-family: "Space Grotesk", system-ui, sans-serif;
   --font-body-family: "Space Grotesk", system-ui, sans-serif;
   --font-mono-family: "JetBrains Mono", ui-monospace, monospace;

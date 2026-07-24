@@ -32,16 +32,16 @@ export default function StandardsCheck() {
           </ul>
         </div>
 
-        <div className="border border-amber-500/40 bg-amber-500/5 px-[1.6vw] py-[2vh]">
-          <div className="font-mono text-[0.78vw] text-amber-400 tracking-widest uppercase">Still simplified</div>
+        <div className="border border-neutral-500/40 bg-neutral-500/5 px-[1.6vw] py-[2vh]">
+          <div className="font-mono text-[0.78vw] text-neutral-300 tracking-widest uppercase">Still simplified</div>
           <ul className="text-[0.88vw] text-text leading-snug space-y-[0.55vh] mt-[1.4vh]">
-            <li>· One-off licenses fully expensed, <span className="text-amber-300">no amortisation</span></li>
-            <li>· Earned value uses manday burn, <span className="text-amber-300">no milestone weighting</span></li>
-            <li>· Payments tracked to milestone PAID (Xero) — <span className="text-amber-300">no AR aging</span></li>
-            <li>· No <span className="text-amber-300">multi-currency</span> — IDR only</li>
-            <li>· Overhead multiplier is <span className="text-amber-300">flat 1.8×</span>, not per-cost-centre</li>
+            <li>· One-off licenses fully expensed, <span className="text-neutral-100 font-semibold">no amortisation</span></li>
+            <li>· Earned value uses manday burn, <span className="text-neutral-100 font-semibold">no milestone weighting</span></li>
+            <li>· Payments tracked to milestone PAID (Xero) — <span className="text-neutral-100 font-semibold">no AR aging</span></li>
+            <li>· No <span className="text-neutral-100 font-semibold">multi-currency</span> — IDR only</li>
+            <li>· Overhead multiplier is <span className="text-neutral-100 font-semibold">flat 1.8×</span>, not per-cost-centre</li>
           </ul>
-          <div className="mt-[1.4vh] pt-[1vh] border-t border-amber-500/20 font-mono text-[0.74vw] text-amber-400/80 tracking-widest uppercase">
+          <div className="mt-[1.4vh] pt-[1vh] border-t border-neutral-500/20 font-mono text-[0.74vw] text-neutral-400 tracking-widest uppercase">
             Reconcile against Accurate / SAP / Xero for statutory filings
           </div>
         </div>

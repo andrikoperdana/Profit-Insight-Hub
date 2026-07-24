@@ -31,8 +31,8 @@ export default function ForecastHealth() {
           <div className="flex flex-wrap gap-[0.5vw] mt-[1.6vh]">
             <span className="font-mono text-[0.72vw] tracking-widest uppercase border border-border px-[0.6vw] py-[0.5vh] text-muted">Early</span>
             <span className="font-mono text-[0.72vw] tracking-widest uppercase border border-primary/50 px-[0.6vw] py-[0.5vh] text-primary">Profit</span>
-            <span className="font-mono text-[0.72vw] tracking-widest uppercase border border-amber-500/50 px-[0.6vw] py-[0.5vh] text-amber-400">Thin</span>
-            <span className="font-mono text-[0.72vw] tracking-widest uppercase border border-red-500/50 px-[0.6vw] py-[0.5vh] text-red-400">Loss risk</span>
+            <span className="font-mono text-[0.72vw] tracking-widest uppercase border border-neutral-400/50 px-[0.6vw] py-[0.5vh] text-neutral-300">Thin</span>
+            <span className="font-mono text-[0.72vw] tracking-widest uppercase border border-primary/60 px-[0.6vw] py-[0.5vh] text-primary">Loss risk</span>
           </div>
           <p className="text-[0.85vw] text-muted mt-[1.4vh] leading-snug">
             Before any hours are approved, the outlook falls back to the intake
