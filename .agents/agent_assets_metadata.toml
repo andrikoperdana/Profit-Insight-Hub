@@ -479,3 +479,9 @@ id = "NlFhkXaeg9bqM27UlEKdX"
 uri = "file://.local/outputs/SecureProfit-Hub-Deck.pptx"
 type = "slides"
 title = "SecureProfit Hub Deck (PPTX, tema merah-hitam-putih)"
+
+[[outputs]]
+id = "YmbbLN1eUBO-VRd7INWfq"
+uri = "file://.local/outputs/SecureProfit-Hub---Technical-Overview.pptx"
+type = "slides"
+title = "SecureProfit Hub - Technical Overview (PPTX)"

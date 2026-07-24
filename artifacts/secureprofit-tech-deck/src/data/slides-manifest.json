@@ -1,0 +1,82 @@
+[
+  {
+    "id": "5e78a4c4-7f4a-4232-8ec5-44fbbbdd78ed",
+    "position": 1,
+    "filepath": "src/pages/slides/Title.tsx",
+    "title": "Technical Overview",
+    "description": "Title slide introducing the SecureProfit Hub technical overview.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "c19928fb-7e5e-4e5f-9579-47589aff3648",
+    "position": 2,
+    "filepath": "src/pages/slides/SystemArchitecture.tsx",
+    "title": "System Architecture",
+    "description": "Web, mobile, and client portal talking to one Express API backed by PostgreSQL.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "4a0550e3-1f9d-4c70-9731-3afe58b29742",
+    "position": 3,
+    "filepath": "src/pages/slides/MonorepoLayout.tsx",
+    "title": "Monorepo Layout",
+    "description": "pnpm workspace tree: runnable apps in artifacts/, shared code in lib/.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "55707e58-72c4-4104-a802-292233cf6fb3",
+    "position": 4,
+    "filepath": "src/pages/slides/ContractFirstApi.tsx",
+    "title": "Contract-First API",
+    "description": "OpenAPI spec generates React Query hooks and Zod schemas consumed by all apps.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "e304a125-5fc4-4bea-9e8d-4c74b8cb0d7d",
+    "position": 5,
+    "filepath": "src/pages/slides/CoreDataModel.tsx",
+    "title": "Core Data Model",
+    "description": "ERD-style view: Client and User feed Project, which owns resources, tasks, timesheets, expenses, and billing.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "b281378b-76e6-4e96-9eeb-cef218b6a211",
+    "position": 6,
+    "filepath": "src/pages/slides/AuthRbac.tsx",
+    "title": "Authentication & Access Control",
+    "description": "Login to scoped query flow with JWT, role gates, and the twelve-role permission model.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "b60b4f0d-b323-45b2-abb2-402417be426f",
+    "position": 7,
+    "filepath": "src/pages/slides/ProjectLifecycle.tsx",
+    "title": "Project Lifecycle",
+    "description": "DRAFT to CLOSED state machine with server-enforced gates at each transition.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "17e93f47-dda7-4fe4-8eae-c759982a703d",
+    "position": 8,
+    "filepath": "src/pages/slides/HoursToMargin.tsx",
+    "title": "Data Flow: Hours to Margin",
+    "description": "Pipeline from logged hours through approval and rates to derived margin and forecast.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "875603af-cc43-4c32-be0f-f2ed94a07d0b",
+    "position": 9,
+    "filepath": "src/pages/slides/ExternalIntegrations.tsx",
+    "title": "External Integrations",
+    "description": "Xero, Pipedrive, and Resend connected through the API server as the single integration point.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "7c4abedd-b390-452b-b3c5-c5b2355e26e4",
+    "position": 10,
+    "filepath": "src/pages/slides/RuntimeDelivery.tsx",
+    "title": "Runtime & Delivery",
+    "description": "Closing slide: the stack, deployment model, and migration discipline.",
+    "speakerNotes": ""
+  }
+]
