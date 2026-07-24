@@ -4,14 +4,14 @@
     "position": 1,
     "filepath": "src/pages/slides/Title.tsx",
     "title": "SecureProfit Hub",
-    "description": "Role & workflow overview — ten roles, one flow, all the way to automatic CSAT.",
+    "description": "Management overview — twelve roles, one flow, from lead to satisfaction survey.",
     "speakerNotes": ""
   },
   {
     "id": "2d3a86fe-0e7e-4b45-9b41-0a37cf8d2b02",
     "position": 2,
     "filepath": "src/pages/slides/Roles.tsx",
-    "title": "Ten Roles",
+    "title": "Twelve Roles",
     "description": "A snapshot of every role active on the platform.",
     "speakerNotes": ""
   },
@@ -44,20 +44,28 @@
     "position": 6,
     "filepath": "src/pages/slides/Lifecycle.tsx",
     "title": "End-to-End Flow",
-    "description": "Seven stages from intake to automatic CSAT.",
+    "description": "Seven stages from lead conversion to the closing checklist.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "f6b2c9a1-4e8d-4f3a-9c7b-2d5e8a1b3c07",
+    "position": 7,
+    "filepath": "src/pages/slides/Gates.tsx",
+    "title": "Readiness Gates",
+    "description": "Server-enforced gates for ACTIVE, COMPLETE, and CLOSED — with the exact missing list.",
     "speakerNotes": ""
   },
   {
     "id": "7d3a86fe-0e7e-4b45-9b41-0a37cf8d2b07",
-    "position": 7,
+    "position": 8,
     "filepath": "src/pages/slides/StageIntake.tsx",
     "title": "Stage A — Intake",
-    "description": "Sales drafts, PMO assigns the PM, PM completes details.",
+    "description": "Sales converts the lead, PMO assigns the PM, PM completes details.",
     "speakerNotes": ""
   },
   {
     "id": "8d3a86fe-0e7e-4b45-9b41-0a37cf8d2b08",
-    "position": 8,
+    "position": 9,
     "filepath": "src/pages/slides/StageActive.tsx",
     "title": "Stage B — Execution",
     "description": "Resourcing, timesheets, tasks, and daily profit visibility.",
@@ -65,7 +73,7 @@
   },
   {
     "id": "bd3a86fe-0e7e-4b45-9b41-0a37cf8d2b0b",
-    "position": 9,
+    "position": 10,
     "filepath": "src/pages/slides/ProfitMath.tsx",
     "title": "How Profit Is Calculated",
     "description": "Total Revenue, Pipeline Value, and Average Margin — formulas and caveats.",
@@ -73,7 +81,7 @@
   },
   {
     "id": "cd3a86fe-0e7e-4b45-9b41-0a37cf8d2b0c",
-    "position": 10,
+    "position": 11,
     "filepath": "src/pages/slides/ProjectFinancials.tsx",
     "title": "Project Financials Tab",
     "description": "Seven tiles: Revenue, Estimated/Actual Cost, Actual & Forecast Profit, Burn Rate, Margin.",
@@ -81,7 +89,7 @@
   },
   {
     "id": "ed3a86fe-0e7e-4b45-9b41-0a37cf8d2b0e",
-    "position": 11,
+    "position": 12,
     "filepath": "src/pages/slides/FinanceUpgrade.tsx",
     "title": "Finance Upgrade — v2",
     "description": "Five PSAK 72 / accrual upgrades: Weighted Margin, Net Margin, Recognised Revenue, Accrued Cost, DPP/PPN.",
@@ -89,26 +97,42 @@
   },
   {
     "id": "dd3a86fe-0e7e-4b45-9b41-0a37cf8d2b0d",
-    "position": 12,
+    "position": 13,
     "filepath": "src/pages/slides/StandardsCheck.tsx",
     "title": "Standards Check",
     "description": "How the math compares to ASC 606 / PSAK 72 / PMBOK after the v2 upgrades.",
     "speakerNotes": ""
   },
   {
+    "id": "a3d7e1f9-6b2c-4d8a-8e4f-1c9b5a7d2e14",
+    "position": 14,
+    "filepath": "src/pages/slides/ForecastHealth.tsx",
+    "title": "Financial Intelligence",
+    "description": "Profit Outlook, Health Score, and earned value (CPI/SPI/EAC) per project.",
+    "speakerNotes": ""
+  },
+  {
     "id": "9d3a86fe-0e7e-4b45-9b41-0a37cf8d2b09",
-    "position": 13,
+    "position": 15,
     "filepath": "src/pages/slides/StageClose.tsx",
     "title": "Stage C — Closing & CSAT",
-    "description": "BAST, invoice, and the automatic satisfaction survey.",
+    "description": "BAST, completion gate, auto-issued survey & 360s, closing checklist.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "b8e4a2c6-9f1d-4b7e-a3c5-6d2f8e1a4b16",
+    "position": 16,
+    "filepath": "src/pages/slides/Integrations.tsx",
+    "title": "Integrations & Reach",
+    "description": "Xero, Pipedrive, email notifications, AI Executive Copilot, mobile app, client portal.",
     "speakerNotes": ""
   },
   {
     "id": "ad3a86fe-0e7e-4b45-9b41-0a37cf8d2b0a",
-    "position": 14,
+    "position": 17,
     "filepath": "src/pages/slides/Closing.tsx",
     "title": "Summary",
-    "description": "Ten roles, one path, profit and satisfaction measured.",
+    "description": "Twelve roles, one path, profit and satisfaction measured.",
     "speakerNotes": ""
   }
 ]

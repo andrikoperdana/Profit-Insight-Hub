@@ -12,9 +12,9 @@ export default function ProfitMath() {
           <span className="text-primary"> one source of truth.</span>
         </h2>
         <p className="mt-[1.8vh] text-[1.15vw] text-muted max-w-[64vw] leading-relaxed">
-          Every dashboard tile rolls up from project-level math computed server-side
-          on each request. No caching, no estimates — only approved timesheets and
-          recorded expenses count.
+          Every dashboard tile rolls up from project-level math computed
+          server-side by one shared engine — only approved timesheets and
+          approved expenses count.
         </p>
       </div>
 
@@ -70,13 +70,13 @@ export default function ProfitMath() {
           <div>
             <div className="font-mono text-[0.85vw] text-accent">resourceCost</div>
             <div className="text-[0.88vw] text-muted mt-[0.4vh] leading-snug">
-              Σ (hours / 8) × resource.dailyRate · APPROVED timesheets only
+              Σ (hours / 8) × rate effective on the work date · APPROVED only
             </div>
           </div>
           <div>
             <div className="font-mono text-[0.85vw] text-accent">additionalCost</div>
             <div className="text-[0.88vw] text-muted mt-[0.4vh] leading-snug">
-              Σ ProjectExpense.amount · software, hardware, license, travel, other
+              Σ APPROVED expenses · settled cash advances count at settlement
             </div>
           </div>
           <div>

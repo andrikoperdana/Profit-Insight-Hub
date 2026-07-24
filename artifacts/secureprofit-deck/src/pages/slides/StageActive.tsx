@@ -3,7 +3,7 @@ export default function StageActive() {
     <div className="w-screen h-screen overflow-hidden relative bg-bg text-text font-body px-[8vw] py-[7vh]">
       <div className="absolute top-0 left-[8vw] w-[0.25vw] h-[6vh] bg-primary" />
       <div className="absolute top-[6vh] left-[8vw] font-mono text-[0.95vw] tracking-[0.3em] text-primary uppercase">
-        08 / Stage B — Execution
+        09 / Stage B — Execution
       </div>
 
       <div className="pt-[7vh] max-w-[74vw]">
@@ -28,11 +28,11 @@ export default function StageActive() {
             </div>
             <div>
               <div className="font-display font-semibold text-[1.1vw]">Principal Tech Writer</div>
-              <div className="text-[0.9vw] text-muted mt-[0.3vh] leading-snug">Pick a writer from the Overview dropdown — assigned immediately.</div>
+              <div className="text-[0.9vw] text-muted mt-[0.3vh] leading-snug">Proposes a writer on the Resources tab. PM clicks Accept.</div>
             </div>
             <div>
               <div className="font-display font-semibold text-[1.1vw]">Principal Project Admin</div>
-              <div className="text-[0.9vw] text-muted mt-[0.3vh] leading-snug">Pick an admin from the Overview dropdown — assigned immediately.</div>
+              <div className="text-[0.9vw] text-muted mt-[0.3vh] leading-snug">Proposes an admin on the Resources tab. PM clicks Accept.</div>
             </div>
           </div>
         </div>
@@ -74,7 +74,7 @@ export default function StageActive() {
       </div>
 
       <div className="absolute bottom-[4vh] right-[8vw] font-mono text-[0.95vw] text-muted tracking-widest">
-        08 / 10
+        09 / 17
       </div>
     </div>
   );

@@ -24,14 +24,15 @@ export default function DeliverySquad() {
             Security Consultant
           </div>
           <div className="text-[0.95vw] text-muted mt-[1.2vh] leading-snug">
-            konsultan@itsecasia.com<br/>konsultan2@itsecasia.com
+            <span className="block">konsultan@secureprofit.id</span>
+            <span className="block">konsultan2@secureprofit.id</span>
           </div>
           <div className="border-t border-border my-[2vh]" />
           <ul className="text-[1vw] text-text leading-relaxed space-y-[0.6vh]">
             <li>· Run pentest, audit, or VA on assigned projects</li>
             <li>· Log daily timesheets (DRAFT → SUBMITTED) for PM approval</li>
             <li>· Work on PM-created tasks, clock in hours</li>
-            <li>· Max. 2 active projects in parallel</li>
+            <li>· Log time &amp; expenses on the go from the mobile app</li>
           </ul>
         </div>
 
@@ -41,7 +42,7 @@ export default function DeliverySquad() {
             Reporting
           </div>
           <div className="text-[0.95vw] text-muted mt-[1.2vh] leading-snug">
-            writer@itsecasia.com — Ayu Wulandari
+            writer@secureprofit.id — Ayu Wulandari
           </div>
           <div className="border-t border-border my-[2vh]" />
           <ul className="text-[1vw] text-text leading-relaxed space-y-[0.6vh]">
@@ -58,20 +59,20 @@ export default function DeliverySquad() {
             Closing &amp; Invoice
           </div>
           <div className="text-[0.95vw] text-muted mt-[1.2vh] leading-snug">
-            admin@itsecasia.com — Tono Setiawan
+            admin@secureprofit.id — Tono Setiawan
           </div>
           <div className="border-t border-border my-[2vh]" />
           <ul className="text-[1vw] text-text leading-relaxed space-y-[0.6vh]">
             <li>· Organize closing docs once a project completes</li>
             <li>· Generate BAST &amp; INVOICE when the project finishes</li>
             <li>· Closing-doc inbox with alerts for &gt;3 days complete</li>
-            <li>· Does not write code — focuses on documents &amp; circulation</li>
+            <li>· Keeps BAST, invoices &amp; the closing checklist moving</li>
           </ul>
         </div>
       </div>
 
       <div className="absolute bottom-[4vh] right-[8vw] font-mono text-[0.95vw] text-muted tracking-widest">
-        04 / 10
+        04 / 17
       </div>
     </div>
   );

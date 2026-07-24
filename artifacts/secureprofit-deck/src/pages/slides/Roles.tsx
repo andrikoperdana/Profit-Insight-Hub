@@ -8,17 +8,17 @@ export default function Roles() {
 
       <div className="pt-[7vh]">
         <h2 className="font-display font-bold text-[4.4vw] leading-[1] tracking-tight text-wrap-balance max-w-[72vw]">
-          Ten roles working
+          Twelve roles working
           <span className="text-primary"> on a single platform.</span>
         </h2>
         <p className="mt-[2vh] text-[1.3vw] text-muted max-w-[60vw] leading-relaxed">
-          Four delivery roles, three Principal supervisors, two commercial &amp;
-          governance roles, one system administrator — each with its own dashboard
-          and access scope.
+          Strategy, commercial, delivery, supervision, finance, people ops, and
+          system administration — each role gets its own dashboard and access
+          scope.
         </p>
       </div>
 
-      <div className="mt-[5vh] grid grid-cols-5 gap-[1.2vw]">
+      <div className="mt-[4vh] grid grid-cols-4 gap-[1.2vw]">
         <div className="border border-border bg-bg-elevated/40 px-[1vw] py-[1.6vh]">
           <div className="font-mono text-[0.7vw] text-primary tracking-widest uppercase">Strategy</div>
           <div className="font-display font-semibold text-[1.15vw] mt-[0.6vh]">PMO Director</div>
@@ -57,12 +57,22 @@ export default function Roles() {
         <div className="border border-primary/40 bg-primary/5 px-[1vw] py-[1.6vh]">
           <div className="font-mono text-[0.7vw] text-primary tracking-widest uppercase">Principal</div>
           <div className="font-display font-semibold text-[1.15vw] mt-[0.6vh]">Principal Tech Writer</div>
-          <div className="text-[0.85vw] text-muted mt-[0.3vh] leading-snug">Assigns writers to projects</div>
+          <div className="text-[0.85vw] text-muted mt-[0.3vh] leading-snug">Proposes writers to projects</div>
         </div>
         <div className="border border-primary/40 bg-primary/5 px-[1vw] py-[1.6vh]">
           <div className="font-mono text-[0.7vw] text-primary tracking-widest uppercase">Principal</div>
           <div className="font-display font-semibold text-[1.15vw] mt-[0.6vh]">Principal Project Admin</div>
-          <div className="text-[0.85vw] text-muted mt-[0.3vh] leading-snug">Assigns admins to projects</div>
+          <div className="text-[0.85vw] text-muted mt-[0.3vh] leading-snug">Proposes admins to projects</div>
+        </div>
+        <div className="border border-border bg-bg-elevated/40 px-[1vw] py-[1.6vh]">
+          <div className="font-mono text-[0.7vw] text-primary tracking-widest uppercase">Oversight</div>
+          <div className="font-display font-semibold text-[1.15vw] mt-[0.6vh]">Finance</div>
+          <div className="text-[0.85vw] text-muted mt-[0.3vh] leading-snug">Read-only P&amp;L, invoices, VAT recap</div>
+        </div>
+        <div className="border border-border bg-bg-elevated/40 px-[1vw] py-[1.6vh]">
+          <div className="font-mono text-[0.7vw] text-primary tracking-widest uppercase">People</div>
+          <div className="font-display font-semibold text-[1.15vw] mt-[0.6vh]">HR</div>
+          <div className="text-[0.85vw] text-muted mt-[0.3vh] leading-snug">Work hours, leaves, skill matrix</div>
         </div>
         <div className="border border-border bg-bg-elevated/40 px-[1vw] py-[1.6vh]">
           <div className="font-mono text-[0.7vw] text-primary tracking-widest uppercase">System</div>
@@ -72,7 +82,7 @@ export default function Roles() {
       </div>
 
       <div className="absolute bottom-[4vh] right-[8vw] font-mono text-[0.95vw] text-muted tracking-widest">
-        02 / 10
+        02 / 17
       </div>
     </div>
   );

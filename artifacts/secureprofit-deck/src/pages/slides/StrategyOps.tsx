@@ -24,12 +24,12 @@ export default function StrategyOps() {
             <div className="font-mono text-[0.8vw] text-primary tracking-widest uppercase">Management</div>
           </div>
           <div className="text-[1vw] text-muted mb-[1.5vh] leading-snug">
-            management@itsecasia.com — Adi Wibowo
+            management@secureprofit.id — Adi Wibowo
           </div>
           <ul className="text-[1vw] text-text leading-relaxed space-y-[0.6vh]">
             <li>· See the entire portfolio &amp; executive KPIs</li>
             <li>· Assign a PM to any DRAFT project created by Sales</li>
-            <li>· Track PM workload (PMAllocationCard) and project margins</li>
+            <li>· Track PM workload and project margins</li>
             <li>· Override any field, full BI &amp; financial access</li>
           </ul>
         </div>
@@ -40,7 +40,7 @@ export default function StrategyOps() {
             <div className="font-mono text-[0.8vw] text-primary tracking-widest uppercase">PM</div>
           </div>
           <div className="text-[1vw] text-muted mb-[1.5vh] leading-snug">
-            pm@itsecasia.com — Sari Pratiwi
+            pm@secureprofit.id — Sari Pratiwi
           </div>
           <ul className="text-[1vw] text-text leading-relaxed space-y-[0.6vh]">
             <li>· Complete project details (schedule, revenue, mandays, cost)</li>
@@ -56,11 +56,11 @@ export default function StrategyOps() {
             <div className="font-mono text-[0.8vw] text-primary tracking-widest uppercase">Commercial</div>
           </div>
           <div className="text-[1vw] text-muted mb-[1.5vh] leading-snug">
-            sales@itsecasia.com — Budi Santoso
+            sales@secureprofit.id — Budi Santoso
           </div>
           <ul className="text-[1vw] text-text leading-relaxed space-y-[0.6vh]">
-            <li>· Onboard new clients &amp; intake projects (4-field form)</li>
-            <li>· Upload contract &amp; SPK file at project kickoff</li>
+            <li>· Run the lead pipeline — projects start as converted leads</li>
+            <li>· Import open deals from Pipedrive CRM in one click</li>
             <li>· Track personal pipeline and revenue per client</li>
             <li>· Cannot see margin / cost — focused on revenue</li>
           </ul>
@@ -72,7 +72,7 @@ export default function StrategyOps() {
             <div className="font-mono text-[0.8vw] text-primary tracking-widest uppercase">System</div>
           </div>
           <div className="text-[1vw] text-muted mb-[1.5vh] leading-snug">
-            siteadmin@itsecasia.com — Rina Kartika
+            siteadmin@secureprofit.id — Rina Kartika
           </div>
           <ul className="text-[1vw] text-text leading-relaxed space-y-[0.6vh]">
             <li>· Manage users (create, deactivate, change role)</li>
@@ -84,7 +84,7 @@ export default function StrategyOps() {
       </div>
 
       <div className="absolute bottom-[4vh] right-[8vw] font-mono text-[0.95vw] text-muted tracking-widest">
-        03 / 10
+        03 / 17
       </div>
     </div>
   );

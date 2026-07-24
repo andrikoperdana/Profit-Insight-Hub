@@ -19,13 +19,14 @@ export default function Closing() {
             Summary
           </div>
           <h1 className="font-display font-bold text-[5.6vw] leading-[0.95] tracking-tight text-wrap-balance">
-            Ten roles, one path,
+            Twelve roles, one path,
             <span className="block text-primary">profit and satisfaction measured.</span>
           </h1>
           <p className="mt-[3.5vh] text-[1.4vw] text-muted max-w-[60vw] leading-snug">
             Sales starts. PMO directs. PM executes. Principals safeguard the
-            people. Consultants, writers, and admins deliver. Site Admin secures.
-            The client closes it with a CSAT — all on a single platform.
+            people. Consultants, writers, and admins deliver. Finance guards the
+            numbers, HR the people ops, Site Admin the system. The client closes
+            it with a survey — all on a single platform.
           </p>
         </div>
 
@@ -57,7 +58,7 @@ export default function Closing() {
         </div>
 
         <div className="absolute bottom-[4vh] right-[8vw] font-mono text-[0.95vw] text-muted tracking-widest">
-          10 / 10
+          17 / 17
         </div>
       </div>
     </div>

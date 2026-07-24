@@ -3,7 +3,7 @@ export default function StageIntake() {
     <div className="w-screen h-screen overflow-hidden relative bg-bg text-text font-body px-[8vw] py-[7vh]">
       <div className="absolute top-0 left-[8vw] w-[0.25vw] h-[6vh] bg-primary" />
       <div className="absolute top-[6vh] left-[8vw] font-mono text-[0.95vw] tracking-[0.3em] text-primary uppercase">
-        07 / Stage A — Intake
+        08 / Stage A — Intake
       </div>
 
       <div className="pt-[7vh] max-w-[74vw]">
@@ -21,10 +21,11 @@ export default function StageIntake() {
         <div className="border border-border bg-bg-elevated/40 px-[1.5vw] py-[2.6vh] relative">
           <div className="absolute top-[2vh] right-[1.5vw] font-mono text-[0.8vw] text-primary">→</div>
           <div className="font-mono text-[0.8vw] text-primary tracking-widest uppercase">Step 1 · Sales</div>
-          <div className="font-display font-semibold text-[1.7vw] mt-[1vh]">Create DRAFT</div>
+          <div className="font-display font-semibold text-[1.7vw] mt-[1vh]">Convert the lead</div>
           <div className="text-[1vw] text-muted mt-[1.5vh] leading-relaxed">
-            Page <span className="font-mono text-text">/projects/new</span>:
-            fill 4 fields — Name, SPK, Client, Contract Value. Click save.
+            Sales wins a lead on the pipeline and clicks
+            <span className="font-mono text-text"> Convert</span> — the system
+            creates the DRAFT project. Manual creation stays off for Sales.
           </div>
           <div className="border-t border-border my-[2vh]" />
           <div className="font-mono text-[0.8vw] text-primary tracking-widest uppercase mb-[1vh]">Result</div>
@@ -59,7 +60,7 @@ export default function StageIntake() {
           <div className="font-mono text-[0.8vw] text-primary tracking-widest uppercase">Step 3 · Project Manager</div>
           <div className="font-display font-semibold text-[1.7vw] mt-[1vh]">Complete the details</div>
           <div className="text-[1vw] text-muted mt-[1.5vh] leading-relaxed">
-            Open the project → "DraftCompletionCard" purple card on top. Fill in
+            Open the project → guided completion card on top. Fill in
             description, schedule, revenue, planned mandays, estimated cost.
           </div>
           <div className="border-t border-border my-[2vh]" />
@@ -83,7 +84,7 @@ export default function StageIntake() {
       </div>
 
       <div className="absolute bottom-[4vh] right-[8vw] font-mono text-[0.95vw] text-muted tracking-widest">
-        07 / 10
+        08 / 17
       </div>
     </div>
   );

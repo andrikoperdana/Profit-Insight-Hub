@@ -473,3 +473,9 @@ id = "DOAVmCqBzHQRVPc4gbIKW"
 uri = "file://exports/SecureProfit-Hub-Integrations-Technical-Guide-EN.docx"
 type = "word_document"
 title = "Integrations Technical Guide (Xero, Pipedrive, AI Copilot)"
+
+[[outputs]]
+id = "NlFhkXaeg9bqM27UlEKdX"
+uri = "file://.local/outputs/SecureProfit-Hub-Deck.pptx"
+type = "slides"
+title = "SecureProfit Hub Deck (PPTX)"

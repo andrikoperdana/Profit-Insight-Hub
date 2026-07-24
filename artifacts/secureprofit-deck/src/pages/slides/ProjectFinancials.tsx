@@ -12,7 +12,8 @@ export default function ProjectFinancials() {
           <span className="text-primary"> one live P&amp;L per project.</span>
         </h2>
         <p className="mt-[1.6vh] text-[1.1vw] text-muted max-w-[64vw] leading-relaxed">
-          Computed on every request from approved timesheets and recorded expenses — no caching, no manual rollup.
+          Computed from approved timesheets and approved expenses — with Profit
+          Outlook, Health Score, and earned value right below the tiles.
         </p>
       </div>
 

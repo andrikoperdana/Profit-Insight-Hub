@@ -23,7 +23,7 @@ export default function StandardsCheck() {
             <li>· <span className="font-mono text-accent">Revenue = contractValue</span> — matches Total Contract Price</li>
             <li>· <span className="font-mono text-accent">Mandays × dailyRate</span> — Time-and-Materials costing</li>
             <li>· <span className="font-mono text-accent">Burn Rate</span> — proxy for PMI Schedule Performance</li>
-            <li>· <span className="font-mono text-accent">Forecast linear</span> — EAC formula 1 (PMBOK)</li>
+            <li>· <span className="font-mono text-accent">EVM: CPI / SPI / EAC</span> vs the active baseline — PMBOK</li>
             <li>· <span className="font-mono text-accent">Recognised Revenue</span> = burn% × revenueNet — PSAK 72 §B18</li>
             <li>· <span className="font-mono text-accent">Accrued Cost</span> from SUBMITTED + APPROVED — accrual basis</li>
             <li>· <span className="font-mono text-accent">Net Margin</span> with overhead loader 1.8× — loaded rate</li>
@@ -36,8 +36,8 @@ export default function StandardsCheck() {
           <div className="font-mono text-[0.78vw] text-amber-400 tracking-widest uppercase">Still simplified</div>
           <ul className="text-[0.88vw] text-text leading-snug space-y-[0.55vh] mt-[1.4vh]">
             <li>· One-off licenses fully expensed, <span className="text-amber-300">no amortisation</span></li>
-            <li>· Forecast EAC <span className="text-amber-300">linear only</span> — no SPI/CPI composite</li>
-            <li>· Cash collection <span className="text-amber-300">not tracked</span> — Invoice → AR aging absent</li>
+            <li>· Earned value uses manday burn, <span className="text-amber-300">no milestone weighting</span></li>
+            <li>· Payments tracked to milestone PAID (Xero) — <span className="text-amber-300">no AR aging</span></li>
             <li>· No <span className="text-amber-300">multi-currency</span> — IDR only</li>
             <li>· Overhead multiplier is <span className="text-amber-300">flat 1.8×</span>, not per-cost-centre</li>
           </ul>

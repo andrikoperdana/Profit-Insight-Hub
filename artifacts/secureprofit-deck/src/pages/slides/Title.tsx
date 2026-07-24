@@ -24,16 +24,17 @@ export default function Title() {
 
         <div className="max-w-[72vw]">
           <div className="font-mono text-[1vw] tracking-[0.3em] text-primary uppercase mb-[3vh]">
-            Role &amp; Workflow Overview · v1.1
+            Management Overview · July 2026
           </div>
           <h1 className="font-display font-bold text-[6vw] leading-[0.95] tracking-tight text-text text-wrap-balance">
-            Ten roles, one flow,
-            <span className="block text-primary">from prospect to satisfaction survey.</span>
+            Twelve roles, one flow,
+            <span className="block text-primary">from lead to satisfaction survey.</span>
           </h1>
           <p className="mt-[3.5vh] text-[1.6vw] text-muted max-w-[58vw] leading-snug">
-            How Sales, PMO, PM, Consultants, Technical Writers, Project Admins,
-            three Principal supervisors, and the Site Admin collaborate on a
-            single platform — from project creation to the automatic CSAT.
+            How Sales, PMO, PMs, Consultants, Technical Writers, Project
+            Admins, three Principal supervisors, Finance, HR, and the Site
+            Admin run delivery on a single platform — from lead conversion to
+            the automatic client survey.
           </p>
         </div>
 
@@ -42,7 +43,7 @@ export default function Title() {
             Jakarta · 2026
           </div>
           <div className="font-mono text-[0.95vw] text-muted tracking-widest">
-            01 / 10
+            01 / 17
           </div>
         </div>
       </div>

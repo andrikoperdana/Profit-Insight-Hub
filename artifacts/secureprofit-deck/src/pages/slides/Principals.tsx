@@ -46,7 +46,7 @@ export default function Principals() {
           <div className="border-t border-primary/30 my-[2vh]" />
           <ul className="text-[1vw] text-text leading-relaxed space-y-[0.6vh]">
             <li>· Supervises every Technical Writer</li>
-            <li>· <span className="text-primary">Directly assigns</span> 1 writer per project</li>
+            <li>· <span className="text-primary">Proposes</span> writers to projects (PM accepts)</li>
             <li>· Ensures writing capacity is well distributed</li>
             <li>· Cannot see commercial / margin figures</li>
           </ul>
@@ -63,7 +63,7 @@ export default function Principals() {
           <div className="border-t border-primary/30 my-[2vh]" />
           <ul className="text-[1vw] text-text leading-relaxed space-y-[0.6vh]">
             <li>· Supervises every Project Admin</li>
-            <li>· <span className="text-primary">Directly assigns</span> 1 admin per project</li>
+            <li>· <span className="text-primary">Proposes</span> admins to projects (PM accepts)</li>
             <li>· Ensures every project has a closing admin</li>
             <li>· Cannot see commercial / margin figures</li>
           </ul>
@@ -73,14 +73,15 @@ export default function Principals() {
       <div className="mt-[4vh] border-t border-border pt-[2vh] flex items-center gap-[1vw] max-w-[80vw]">
         <span className="font-mono text-primary text-[1vw]">i</span>
         <span className="text-[1vw] text-muted leading-snug">
-          The Principal Consultant uses a <span className="text-text">propose → accept</span>
-          flow because a single project can need multiple consultants; Principal
-          TW and PA assign directly because only one person of each is needed per project.
+          Staffing is <span className="text-text">double-signed</span>: a Principal
+          proposes and the PM accepts — and when a PM adds a supervised person
+          directly, the Principal confirms it. Principals are scoped to their own
+          team on Resource Planning and Bench.
         </span>
       </div>
 
       <div className="absolute bottom-[4vh] right-[8vw] font-mono text-[0.95vw] text-muted tracking-widest">
-        05 / 10
+        05 / 17
       </div>
     </div>
   );
