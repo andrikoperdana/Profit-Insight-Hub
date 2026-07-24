@@ -223,6 +223,7 @@ export * from "./reassignLeadsBody";
 export * from "./reassignLeadsResult";
 export * from "./rejectProjectExpenseBody";
 export * from "./rejectTimesheetBody";
+export * from "./replaceProjectPmBody";
 export * from "./reportChartSpec";
 export * from "./reportChartSpecType";
 export * from "./reportColumnSpec";

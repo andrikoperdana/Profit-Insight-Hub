@@ -1529,6 +1529,13 @@ export interface UpdateProjectBody {
   contractFileName?: string | null;
 }
 
+export interface ReplaceProjectPmBody {
+  /** The user id of the new Project Manager */
+  pmId: string;
+  /** Required handover reason, shown in the project activity history */
+  reason: string;
+}
+
 export interface UpdateProjectReportBody {
   reportCoverUrl?: string | null;
   reportLink?: string | null;

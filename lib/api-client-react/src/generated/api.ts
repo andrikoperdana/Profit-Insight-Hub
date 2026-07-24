@@ -129,6 +129,7 @@ import type {
   ReassignLeadsResult,
   RejectProjectExpenseBody,
   RejectTimesheetBody,
+  ReplaceProjectPmBody,
   ReportFilterOption,
   ReportMeta,
   ReportResult,
@@ -4091,6 +4092,93 @@ export function useGetProjectFinancials<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * Replace the Project Manager on a running (non-DRAFT) project.
+MANAGEMENT only. Requires a reason; records a project activity entry
+and notifies both the new and previous PM.
+
+ */
+export const getReplaceProjectPmUrl = (id: string) => {
+  return `/api/projects/${id}/replace-pm`;
+};
+
+export const replaceProjectPm = async (
+  id: string,
+  replaceProjectPmBody: ReplaceProjectPmBody,
+  options?: RequestInit,
+): Promise<Project> => {
+  return customFetch<Project>(getReplaceProjectPmUrl(id), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(replaceProjectPmBody),
+  });
+};
+
+export const getReplaceProjectPmMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof replaceProjectPm>>,
+    TError,
+    { id: string; data: BodyType<ReplaceProjectPmBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof replaceProjectPm>>,
+  TError,
+  { id: string; data: BodyType<ReplaceProjectPmBody> },
+  TContext
+> => {
+  const mutationKey = ["replaceProjectPm"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof replaceProjectPm>>,
+    { id: string; data: BodyType<ReplaceProjectPmBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return replaceProjectPm(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ReplaceProjectPmMutationResult = NonNullable<
+  Awaited<ReturnType<typeof replaceProjectPm>>
+>;
+export type ReplaceProjectPmMutationBody = BodyType<ReplaceProjectPmBody>;
+export type ReplaceProjectPmMutationError = ErrorType<unknown>;
+
+export const useReplaceProjectPm = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof replaceProjectPm>>,
+    TError,
+    { id: string; data: BodyType<ReplaceProjectPmBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof replaceProjectPm>>,
+  TError,
+  { id: string; data: BodyType<ReplaceProjectPmBody> },
+  TContext
+> => {
+  return useMutation(getReplaceProjectPmMutationOptions(options));
+};
 
 export const getListProjectResourcesUrl = (id: string) => {
   return `/api/projects/${id}/resources`;

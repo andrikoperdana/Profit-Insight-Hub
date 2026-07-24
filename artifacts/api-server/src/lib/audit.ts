@@ -12,6 +12,7 @@ export type AuditAction =
   | "project.created"
   | "project.updated"
   | "project.status_changed"
+  | "project.pm_replaced"
   | "project.deleted"
   | "project.restored"
   | "project.auto_closed"

@@ -738,6 +738,28 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/ProjectFinancials" }
 
+  /projects/{id}/replace-pm:
+    post:
+      operationId: replaceProjectPm
+      tags: [projects]
+      description: |
+        Replace the Project Manager on a running (non-DRAFT) project.
+        MANAGEMENT only. Requires a reason; records a project activity entry
+        and notifies both the new and previous PM.
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ReplaceProjectPmBody" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Project" }
+
   /projects/{id}/resources:
     get:
       operationId: listProjectResources
@@ -4166,6 +4188,13 @@ components:
         spkFileName: { type: string, nullable: true }
         contractFileUrl: { type: string, nullable: true }
         contractFileName: { type: string, nullable: true }
+
+    ReplaceProjectPmBody:
+      type: object
+      required: [pmId, reason]
+      properties:
+        pmId: { type: string, description: "The user id of the new Project Manager" }
+        reason: { type: string, description: "Required handover reason, shown in the project activity history" }
 
     UpdateProjectReportBody:
       type: object

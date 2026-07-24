@@ -1978,6 +1978,133 @@ export const GetProjectFinancialsResponse = zod.object({
     .optional(),
 });
 
+/**
+ * Replace the Project Manager on a running (non-DRAFT) project.
+MANAGEMENT only. Requires a reason; records a project activity entry
+and notifies both the new and previous PM.
+
+ */
+export const ReplaceProjectPmParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const ReplaceProjectPmBody = zod.object({
+  pmId: zod.string().describe("The user id of the new Project Manager"),
+  reason: zod
+    .string()
+    .describe(
+      "Required handover reason, shown in the project activity history",
+    ),
+});
+
+export const ReplaceProjectPmResponse = zod.object({
+  id: zod.string(),
+  code: zod.string(),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  status: zod.enum([
+    "DRAFT",
+    "OBSERVATION",
+    "ACTIVE",
+    "NO_NEED_CONSULTANT",
+    "PAUSE",
+    "COMPLETE",
+    "CLOSED",
+  ]),
+  kind: zod
+    .enum(["CLIENT", "INTERNAL", "PRESALES", "TRAINING"])
+    .optional()
+    .describe(
+      "Project category. CLIENT = paid engagement (default, all financial\nreports include). INTERNAL\/PRESALES\/TRAINING = non-billable initiatives\nexcluded from VAT recap, billing aging, cash inflow forecast, and\nPPN detail reports.\n",
+    ),
+  clientId: zod.string().optional(),
+  clientName: zod.string().optional(),
+  salesId: zod.string().nullish(),
+  salesName: zod.string().nullish(),
+  pmId: zod.string().nullish(),
+  pmName: zod.string().nullish(),
+  technicalWriterId: zod.string().nullish(),
+  technicalWriterName: zod.string().nullish(),
+  adminProjectId: zod.string().nullish(),
+  adminProjectName: zod.string().nullish(),
+  startDate: zod.string().nullish(),
+  endDate: zod.string().nullish(),
+  contractValue: zod.number(),
+  currency: zod.string().nullish(),
+  exchangeRate: zod.number().nullish(),
+  vatPercent: zod.number().optional(),
+  contractValueIncludesVat: zod.boolean().optional(),
+  useWorkstreams: zod
+    .boolean()
+    .optional()
+    .describe(
+      "If true, project is split into Workstreams; per-workstream pickers become available on resources\/tasks\/expenses\/billing.",
+    ),
+  revenueNet: zod.number().optional(),
+  vatAmount: zod.number().optional(),
+  recognizedRevenue: zod.number().optional(),
+  accruedCost: zod.number().optional(),
+  loadedResourceCost: zod.number().optional(),
+  netActualCost: zod.number().optional(),
+  netActualProfit: zod.number().optional(),
+  netMarginPct: zod.number().optional(),
+  overheadMultiplier: zod.number().optional(),
+  estimatedCost: zod.number(),
+  estimatedProfit: zod.number(),
+  plannedMandays: zod.number(),
+  actualMandays: zod.number().optional(),
+  actualCost: zod.number(),
+  resourceCost: zod.number(),
+  additionalCost: zod.number(),
+  actualProfit: zod.number().optional(),
+  marginPct: zod.number().optional(),
+  reportCoverUrl: zod.string().nullish(),
+  reportLink: zod.string().nullish(),
+  reportSubmittedAt: zod.string().nullish(),
+  lastStatusReason: zod.string().nullish(),
+  healthScore: zod
+    .number()
+    .nullish()
+    .describe(
+      "0-100 composite health score. Null for DRAFT\/CLOSED projects or callers without financial visibility.",
+    ),
+  healthLabel: zod.enum(["HEALTHY", "AT_RISK", "CRITICAL"]).nullish(),
+  healthComponents: zod
+    .object({
+      margin: zod.number().optional(),
+      raid: zod.number().optional(),
+      expenses: zod.number().optional(),
+      billing: zod.number().optional(),
+      schedule: zod.number().optional(),
+    })
+    .nullish(),
+  healthReasons: zod.array(zod.string()).nullish(),
+  profitOutlook: zod
+    .object({
+      status: zod.enum(["PROFIT", "THIN", "LOSS_RISK", "EARLY"]).optional(),
+      contractValue: zod.number().optional(),
+      estimatedCost: zod.number().optional(),
+      estimatedProfit: zod.number().optional(),
+      estimatedMarginPct: zod.number().optional(),
+      actualCost: zod.number().optional(),
+      actualProfit: zod.number().optional(),
+      actualMarginPct: zod.number().optional(),
+      forecastCost: zod.number().optional(),
+      forecastProfit: zod.number().optional(),
+      forecastMarginPct: zod.number().optional(),
+      progressPct: zod.number().optional(),
+    })
+    .nullish()
+    .describe(
+      "Plain-language profit\/loss outlook. Null for callers without financial visibility.",
+    ),
+  spkFileUrl: zod.string().nullish(),
+  spkFileName: zod.string().nullish(),
+  contractFileUrl: zod.string().nullish(),
+  contractFileName: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+
 export const ListProjectResourcesParams = zod.object({
   id: zod.coerce.string(),
 });

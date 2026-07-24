@@ -438,6 +438,19 @@ router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdatePro
     return;
   }
 
+  // Non-DRAFT PM changes must go through the dedicated Replace PM flow so the
+  // handover reason, audit trail, and notifications are always recorded.
+  if (
+    b.pmId !== undefined &&
+    beforeProj.status !== "DRAFT" &&
+    (b.pmId || null) !== beforeProj.pmId
+  ) {
+    res.status(400).json({
+      error: "Use the Replace PM action to change the Project Manager on a non-draft project",
+    });
+    return;
+  }
+
   if (b.contractValue !== undefined && Number(b.contractValue) < 0) {
     res.status(400).json({ error: "contractValue must be non-negative" });
     return;
@@ -849,6 +862,108 @@ router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdatePro
       description: `Updated project ${updated.code}`,
       before: serializeProject(beforeProj),
       after: serializeProject(updated),
+    });
+  }
+  res.json(serializeProject(updated, req.user?.role));
+});
+
+// Replace the PM on a running (non-DRAFT) project. MANAGEMENT only.
+// Records a project activity entry + audit trail and notifies both PMs.
+router.post("/projects/:id/replace-pm", async (req, res) => {
+  const role = req.user!.role;
+  if (role !== "MANAGEMENT" && role !== "SUPER_ADMIN") {
+    res.status(403).json({ error: "Only Management can replace a Project Manager" });
+    return;
+  }
+  const id = String(req.params.id);
+  const project = await prisma.project.findUnique({
+    where: { id },
+    select: {
+      id: true, code: true, name: true, status: true, deletedAt: true,
+      pmId: true, pm: { select: { id: true, name: true } },
+    },
+  });
+  if (!project || project.deletedAt) {
+    res.status(404).json({ error: "Project not found" });
+    return;
+  }
+  if (project.status === "DRAFT") {
+    res.status(400).json({
+      error: "Draft projects use the PM assignment flow on the Management dashboard",
+    });
+    return;
+  }
+  const newPmId = String(req.body?.pmId ?? "").trim();
+  const reason = String(req.body?.reason ?? "").trim();
+  if (!newPmId) {
+    res.status(400).json({ error: "pmId is required" });
+    return;
+  }
+  if (!reason) {
+    res.status(400).json({ error: "A handover reason is required" });
+    return;
+  }
+  if (reason.length > 500) {
+    res.status(400).json({ error: "reason must be at most 500 characters" });
+    return;
+  }
+  if (newPmId === project.pmId) {
+    res.status(400).json({ error: "This user is already the Project Manager of this project" });
+    return;
+  }
+  const newPm = await prisma.user.findUnique({
+    where: { id: newPmId },
+    select: { id: true, name: true, role: true, isActive: true },
+  });
+  if (!newPm || !newPm.isActive) {
+    res.status(400).json({ error: "Selected user not found or inactive" });
+    return;
+  }
+  if (newPm.role !== "PROJECT_MANAGER" && newPm.role !== "MANAGEMENT") {
+    res.status(400).json({ error: "The new PM must have the Project Manager or Management role" });
+    return;
+  }
+
+  const oldPm = project.pm;
+  const reasonNote = ` — Reason: ${reason.slice(0, 200)}`;
+  const updated = await prisma.$transaction(async (tx) => {
+    const proj = await tx.project.update({
+      where: { id },
+      data: { pmId: newPmId },
+      include: projectInclude,
+    });
+    await tx.activity.create({
+      data: {
+        type: "project.pm_replaced",
+        message: `Project ${proj.code} PM replaced: ${oldPm?.name ?? "(none)"} → ${newPm.name}${reasonNote}`,
+        userId: req.user!.sub,
+        projectId: proj.id,
+      },
+    });
+    return proj;
+  });
+  await recordAudit(req, {
+    action: "project.pm_replaced",
+    entityType: "Project",
+    entityId: updated.id,
+    description: `${updated.code}: PM ${oldPm?.name ?? "(none)"} → ${newPm.name}${reasonNote}`,
+    before: { pmId: project.pmId, pmName: oldPm?.name ?? null },
+    after: { pmId: newPm.id, pmName: newPm.name, reason },
+  });
+  await notifyUser({
+    userId: newPm.id,
+    type: "project.pm_assigned",
+    title: "You are now the Project Manager",
+    message: `${updated.code} — ${updated.name}. Handover from ${oldPm?.name ?? "previous PM"}. Reason: ${reason.slice(0, 200)}`,
+    link: `/projects/${updated.id}`,
+  });
+  if (oldPm && oldPm.id !== newPm.id) {
+    await notifyUser({
+      userId: oldPm.id,
+      type: "project.pm_handover",
+      title: "Project handed over",
+      message: `${updated.code} — ${updated.name} has been handed over to ${newPm.name}. Reason: ${reason.slice(0, 200)}`,
+      link: `/projects/${updated.id}`,
     });
   }
   res.json(serializeProject(updated, req.user?.role));

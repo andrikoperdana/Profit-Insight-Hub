@@ -19,6 +19,8 @@ import {
   getListProjectResourcesQueryKey,
   useListAvailableUsers,
   useListActiveAllUsers,
+  getListActiveAllUsersQueryKey,
+  useReplaceProjectPm,
   useListUsersUnderSupervision,
   useListClients,
   useListTimesheets,
@@ -106,6 +108,41 @@ function OverviewTab({ project }: { project: any }) {
   const isDraft = project.status === ProjectStatus.DRAFT;
   const isSalesDraftEdit = isDraft && user?.role === "SALES";
   const canPickClient = isSuperAdmin(user?.role) || user?.role === "MANAGEMENT" || isSalesDraftEdit;
+
+  const canReplacePm =
+    (isSuperAdmin(user?.role) || user?.role === "MANAGEMENT") && !isDraft;
+  const [replacePmOpen, setReplacePmOpen] = useState(false);
+  const [newPmId, setNewPmId] = useState("");
+  const [pmReason, setPmReason] = useState("");
+  const { data: allActiveUsers } = useListActiveAllUsers({
+    query: { queryKey: getListActiveAllUsersQueryKey(), enabled: replacePmOpen },
+  });
+  const pmCandidates = (allActiveUsers ?? []).filter(
+    (u: any) =>
+      (u.role === "PROJECT_MANAGER" || u.role === "MANAGEMENT") &&
+      u.id !== project.pmId,
+  );
+  const replacePm = useReplaceProjectPm({
+    mutation: {
+      onSuccess: async () => {
+        toast({
+          title: "Project Manager replaced",
+          description: "The handover has been recorded and both PMs were notified.",
+        });
+        await qc.invalidateQueries({ queryKey: getGetProjectQueryKey(project.id) });
+        setReplacePmOpen(false);
+        setNewPmId("");
+        setPmReason("");
+      },
+      onError: (err: any) => {
+        toast({
+          variant: "destructive",
+          title: "Failed to replace PM",
+          description: err?.message ?? "Unknown error",
+        });
+      },
+    },
+  });
 
   const { data: clients } = useListClients({
     query: {
@@ -290,7 +327,23 @@ function OverviewTab({ project }: { project: any }) {
               <>
                 <InfoRow icon={<Building2 className="h-4 w-4" />} label="Client" value={project.clientName ?? "-"} />
                 <InfoRow icon={<User className="h-4 w-4" />} label="Sales" value={project.salesName ?? "-"} />
-                <InfoRow icon={<User className="h-4 w-4" />} label="Project Manager" value={project.pmName ?? "-"} />
+                <div className="flex items-end justify-between gap-2">
+                  <div className="flex-1 min-w-0">
+                    <InfoRow icon={<User className="h-4 w-4" />} label="Project Manager" value={project.pmName ?? "-"} />
+                  </div>
+                  {canReplacePm && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="text-xs text-muted-foreground shrink-0"
+                      onClick={() => setReplacePmOpen(true)}
+                      data-testid="button-replace-pm"
+                    >
+                      <Pencil className="h-3 w-3 mr-1" />
+                      Replace
+                    </Button>
+                  )}
+                </div>
                 <InfoRow
                   icon={<FileText className="h-4 w-4" />}
                   label="SPK / PO Number"
@@ -660,6 +713,90 @@ function OverviewTab({ project }: { project: any }) {
               data-testid="button-overview-confirm-save"
             >
               {update.isPending ? "Saving…" : "Confirm & Save"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={replacePmOpen}
+        onOpenChange={(o) => {
+          if (replacePm.isPending) return;
+          setReplacePmOpen(o);
+          if (!o) {
+            setNewPmId("");
+            setPmReason("");
+          }
+        }}
+      >
+        <DialogContent data-testid="dialog-replace-pm">
+          <DialogHeader>
+            <DialogTitle>Replace Project Manager</DialogTitle>
+            <DialogDescription>
+              Current PM: {project.pmName ?? "-"}. The new PM immediately gains
+              full access to this project, and the change is recorded in the
+              project history.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="replace-pm-select">New Project Manager *</Label>
+              <Select value={newPmId} onValueChange={setNewPmId}>
+                <SelectTrigger id="replace-pm-select" className="mt-1" data-testid="select-replace-pm">
+                  <SelectValue placeholder="Select the new PM" />
+                </SelectTrigger>
+                <SelectContent>
+                  {pmCandidates.length === 0 ? (
+                    <div className="px-3 py-2 text-sm text-muted-foreground">
+                      No eligible PMs available
+                    </div>
+                  ) : (
+                    pmCandidates.map((u: any) => (
+                      <SelectItem key={u.id} value={u.id}>
+                        {u.name} ({RoleLabels[u.role as keyof typeof RoleLabels] ?? u.role})
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="replace-pm-reason">Handover reason *</Label>
+              <Textarea
+                id="replace-pm-reason"
+                className="mt-1"
+                rows={3}
+                maxLength={500}
+                placeholder="e.g. PM is on extended leave; workload rebalancing"
+                value={pmReason}
+                onChange={(e) => setPmReason(e.target.value)}
+                data-testid="input-replace-pm-reason"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Shown in the project activity history and sent to both PMs.
+              </p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="ghost"
+              onClick={() => setReplacePmOpen(false)}
+              disabled={replacePm.isPending}
+              data-testid="button-replace-pm-cancel"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() =>
+                replacePm.mutate({
+                  id: project.id,
+                  data: { pmId: newPmId, reason: pmReason.trim() },
+                })
+              }
+              disabled={!newPmId || !pmReason.trim() || replacePm.isPending}
+              data-testid="button-replace-pm-confirm"
+            >
+              {replacePm.isPending ? "Replacing…" : "Replace PM"}
             </Button>
           </DialogFooter>
         </DialogContent>

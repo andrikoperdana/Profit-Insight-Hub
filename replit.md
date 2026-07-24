@@ -42,7 +42,7 @@ Intake: Sales create projects **only** via lead-convert (`POST /api/leads/:id/co
 
 Editable by MGMT/assigned-PM/Sales-owner unless noted; each tab has its own `routes/` file. A read-only printable digest of all tabs lives at `/projects/:id/summary` (`pages/projects/summary/`).
 
-- **Overview** — inline edit → "Review & Save" dialog → PATCH; hidden on DRAFT.
+- **Overview** — inline edit → "Review & Save" dialog → PATCH; hidden on DRAFT. MGMT-only "Replace PM" button (non-DRAFT): `POST /projects/:id/replace-pm` `{pmId, reason}` — new PM must be active PROJECT_MANAGER/MANAGEMENT; writes Activity `project.pm_replaced` + audit, notifies new PM (`project.pm_assigned`) and old PM (`project.pm_handover`). DRAFT keeps the Management-dashboard assignment flow.
 - **Timeline** — drag-and-drop Gantt + dependency arrows; client-only Critical Path (`gantt/criticalPath.ts`).
 - **Tasks** — MGMT/PM CRUD; assignees only change status + log hours. `parentTaskId`/`dependencyTaskIds[]` cycle-checked; `billable` default true (non-billable excluded from revenue/margin).
 - **Resources** — Admin Project + Konsultan/TW teams (`ProjectResource`) + free-text Other Resources.
@@ -122,5 +122,4 @@ Routes: `/login`, `/` (dashboard), `/projects`(+`/new`,`/:id`,`/:id/summary`), `
 
 ## Seed credentials (password: `password123`)
 
-- Main (`@secureprofit.id`): `management@` (Adi Wibowo), `pm@` (Sari Pratiwi), `pm2@` (Yusuf Maulana), `sales@` (Budi Santoso), `konsultan@` (Rian Hidayat), `konsultan2@` (Dewi Lestari), `writer@` (Ayu Wulandari), `admin@` (Tono Setiawan), `finance@` (Maya Anggraini), `siteadmin@` (Rina Kartika).
-- Principals + HR (`@itsecasia.com`): `principal.kon.h7q4@` (Bayu Prasetyo), `principal.tw.m9k2@` (Indah Kusumawardani), `principal.ap.r3n8@` (Fajar Nugroho), `hr@` (Sinta Permata).
+- All accounts use `@itsecasia.com`: `management@` (Adi Wibowo), `pm@` (Sari Pratiwi), `pm2@` (Yusuf Maulana), `sales@` (Budi Santoso), `konsultan@` (Rian Hidayat), `konsultan2@` (Dewi Lestari), `writer@` (Ayu Wulandari), `admin@` (Tono Setiawan), `finance@` (Maya Anggraini), `siteadmin@` (Rina Kartika), `principal.kon.h7q4@` (Bayu Prasetyo), `principal.tw.m9k2@` (Indah Kusumawardani), `principal.ap.r3n8@` (Fajar Nugroho), `hr@` (Sinta Permata).
