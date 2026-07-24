@@ -627,6 +627,76 @@ export interface AuthResponse {
   user: User;
 }
 
+export interface GoogleAuthConfig {
+  clientId: string | null;
+}
+
+export interface GoogleLoginBody {
+  /** Google ID token (JWT credential) from Google Identity Services */
+  credential: string;
+}
+
+export type GoogleLoginResponseStatus =
+  (typeof GoogleLoginResponseStatus)[keyof typeof GoogleLoginResponseStatus];
+
+export const GoogleLoginResponseStatus = {
+  AUTHENTICATED: "AUTHENTICATED",
+  PENDING_APPROVAL: "PENDING_APPROVAL",
+} as const;
+
+/**
+ * AUTHENTICATED includes token+user. PENDING_APPROVAL means an access
+request was created (or already exists) and is awaiting Site Admin review.
+
+ */
+export interface GoogleLoginResponse {
+  status: GoogleLoginResponseStatus;
+  token?: string;
+  user?: User;
+}
+
+export type AccessRequestStatus =
+  (typeof AccessRequestStatus)[keyof typeof AccessRequestStatus];
+
+export const AccessRequestStatus = {
+  PENDING: "PENDING",
+  APPROVED: "APPROVED",
+  REJECTED: "REJECTED",
+} as const;
+
+export interface AccessRequest {
+  id: string;
+  email: string;
+  name: string;
+  status: AccessRequestStatus;
+  decidedById?: string | null;
+  decidedByName?: string | null;
+  decidedAt?: string | null;
+  createdUserId?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type ApproveAccessRequestBodySeniority =
+  | (typeof ApproveAccessRequestBodySeniority)[keyof typeof ApproveAccessRequestBodySeniority]
+  | null;
+
+export const ApproveAccessRequestBodySeniority = {
+  JUNIOR: "JUNIOR",
+  MID: "MID",
+  SENIOR: "SENIOR",
+  PRINCIPAL: "PRINCIPAL",
+} as const;
+
+export interface ApproveAccessRequestBody {
+  role: UserRole;
+  /** Override the display name (defaults to the Google profile name) */
+  name?: string;
+  title?: string | null;
+  seniority?: ApproveAccessRequestBodySeniority;
+  businessUnitId?: string | null;
+}
+
 export type CreateUserBodySeniority =
   | (typeof CreateUserBodySeniority)[keyof typeof CreateUserBodySeniority]
   | null;
@@ -2922,6 +2992,10 @@ export type ListProjectReportsParams = {
    * @maximum 100
    */
   pageSize?: number;
+};
+
+export type ListAccessRequestsParams = {
+  status?: AccessRequestStatus;
 };
 
 export type GetLeadsAnalyticsParams = {

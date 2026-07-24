@@ -1,12 +1,17 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Clock } from "lucide-react";
+import { Clock, Hourglass } from "lucide-react";
 import itsecLogo from "@assets/Logo_ITSEC_RedE_White.png";
 import itsecLogoDark from "@assets/Logo_ITSEC_RedE_Dark.png";
 import { useLocation } from "wouter";
-import { useEffect, useState } from "react";
-import { useLogin } from "@workspace/api-client-react";
+import { useEffect, useRef, useState } from "react";
+import {
+  useLogin,
+  useGoogleLogin,
+  useGetGoogleAuthConfig,
+  getGetGoogleAuthConfigQueryKey,
+} from "@workspace/api-client-react";
 import { useAuth } from "@/lib/auth";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { consumeSessionExpired, consumePostLoginRedirect } from "@/lib/session";
@@ -72,6 +77,88 @@ export default function Login() {
     loginMutation.mutate({ data });
   };
 
+  // ---- Google SSO (Google Identity Services ID-token flow) ----
+  // The client ID is served by the API (public by design); when it is null the
+  // Google button is hidden entirely and password login is unaffected.
+  const { data: googleConfig } = useGetGoogleAuthConfig({
+    query: { queryKey: getGetGoogleAuthConfigQueryKey(), staleTime: Infinity },
+  });
+  const googleClientId = googleConfig?.clientId ?? null;
+  const googleBtnRef = useRef<HTMLDivElement>(null);
+  const [ssoPending, setSsoPending] = useState(false);
+
+  const googleLoginMutation = useGoogleLogin({
+    mutation: {
+      onSuccess: (data) => {
+        if (data.status === "AUTHENTICATED" && data.token && data.user) {
+          setAuth(data.token, data.user);
+          return;
+        }
+        setSsoPending(true);
+        toast({
+          title: "Access request submitted",
+          description: "A Site Admin must approve your request before you can sign in.",
+        });
+      },
+      onError: (error: any) => {
+        toast({
+          variant: "destructive",
+          title: "Google sign-in failed",
+          description: error?.message || "Please try again or use your password.",
+        });
+      },
+    },
+  });
+  // `mutate` is referenced from the GIS callback registered once below; keep a
+  // ref so the callback never captures a stale closure.
+  const googleMutateRef = useRef(googleLoginMutation.mutate);
+  googleMutateRef.current = googleLoginMutation.mutate;
+
+  useEffect(() => {
+    if (!googleClientId) return;
+    let cancelled = false;
+
+    const render = () => {
+      const google = (window as any).google;
+      if (cancelled || !google?.accounts?.id || !googleBtnRef.current) return;
+      google.accounts.id.initialize({
+        client_id: googleClientId,
+        callback: (resp: { credential?: string }) => {
+          if (resp?.credential) {
+            googleMutateRef.current({ data: { credential: resp.credential } });
+          }
+        },
+      });
+      google.accounts.id.renderButton(googleBtnRef.current, {
+        theme: "filled_black",
+        size: "large",
+        text: "signin_with",
+        shape: "rect",
+        logo_alignment: "left",
+        width: 320,
+      });
+    };
+
+    if ((window as any).google?.accounts?.id) {
+      render();
+      return () => { cancelled = true; };
+    }
+    const src = "https://accounts.google.com/gsi/client";
+    let script = document.querySelector<HTMLScriptElement>(`script[src="${src}"]`);
+    if (!script) {
+      script = document.createElement("script");
+      script.src = src;
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+    script.addEventListener("load", render);
+    return () => {
+      cancelled = true;
+      script?.removeEventListener("load", render);
+    };
+  }, [googleClientId]);
+
   const seedUsers = [
     { email: "superadmin@itsecasia.com", role: "Super Admin" },
     { email: "management@itsecasia.com", role: "PMO Director" },
@@ -107,6 +194,17 @@ export default function Login() {
             <AlertTitle>Session expired</AlertTitle>
             <AlertDescription>
               Your session has ended. Please sign in again to continue.
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {ssoPending && (
+          <Alert className="bg-card/80 backdrop-blur-sm border-primary/30" data-testid="alert-sso-pending">
+            <Hourglass className="h-4 w-4" />
+            <AlertTitle>Awaiting approval</AlertTitle>
+            <AlertDescription>
+              Your access request has been submitted. A Site Admin will review it —
+              once approved you can sign in with Google.
             </AlertDescription>
           </Alert>
         )}
@@ -154,6 +252,27 @@ export default function Login() {
                 </Button>
               </form>
             </Form>
+
+            {googleClientId && (
+              <>
+                <div className="relative my-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-border/60" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-card px-2 text-muted-foreground">or</span>
+                  </div>
+                </div>
+                <div className="flex justify-center" data-testid="button-google-signin">
+                  <div ref={googleBtnRef} />
+                </div>
+                {googleLoginMutation.isPending && (
+                  <p className="mt-2 text-center text-xs text-muted-foreground">
+                    Signing in with Google…
+                  </p>
+                )}
+              </>
+            )}
           </CardContent>
         </Card>
 

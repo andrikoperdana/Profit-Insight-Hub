@@ -12,6 +12,7 @@ Full-stack web app for an Indonesian IT security consulting firm. Tracks project
 - **DB** (`lib/db`): PostgreSQL via Prisma. Schema `lib/db/prisma/schema.prisma`; client generated to `lib/db/src/generated/client/`
 - **API contract** (`lib/api-spec`): OpenAPI 3 → React Query hooks (`lib/api-client-react`) + zod schemas (`lib/api-zod`)
 - **Auth**: `POST /api/auth/login` → `{ token, user }`. Token in `localStorage["auth_token"]`; `custom-fetch.ts` attaches `Authorization: Bearer` and redirects to `/login` on 401
+- **Google SSO** (web only, GIS ID-token flow): `GET /api/auth/google/config` → `{clientId|null}` (button hidden when null); `POST /api/auth/google` verifies the ID token (audience=`GOOGLE_CLIENT_ID` secret, `email_verified` required). Known active user → sign-in; unknown `@itsecasia.com` email → PENDING **AccessRequest** (`{status:"PENDING_APPROVAL"}` response); other domains/REJECTED → 403. Site Admin approves (creates User with role/seniority/BU; random-UUID placeholder passwordHash) or rejects from the Site Admin dashboard (`routes/access-requests.ts`, SITE_ADMIN-only; approve/reject use atomic PENDING claims). Server reads `GOOGLE_CLIENT_ID` at module load — restart api-server after changing the secret.
 
 ## Roles
 

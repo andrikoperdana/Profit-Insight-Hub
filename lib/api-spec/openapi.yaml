@@ -25,6 +25,7 @@ tags:
   - name: performance-reviews
   - name: pipedrive
   - name: executive-copilot
+  - name: access-requests
 
 paths:
   /reports:
@@ -263,6 +264,79 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /auth/google/config:
+    get:
+      operationId: getGoogleAuthConfig
+      tags: [auth]
+      responses:
+        "200":
+          description: Public Google SSO configuration (clientId is null when SSO is not configured)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/GoogleAuthConfig" }
+
+  /auth/google:
+    post:
+      operationId: googleLogin
+      tags: [auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/GoogleLoginBody" }
+      responses:
+        "200":
+          description: Signed in, or an access request was created/is pending
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/GoogleLoginResponse" }
+
+  /access-requests:
+    get:
+      operationId: listAccessRequests
+      tags: [access-requests]
+      parameters:
+        - { name: status, in: query, required: false, schema: { $ref: "#/components/schemas/AccessRequestStatus" } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/AccessRequest" }
+
+  /access-requests/{id}/approve:
+    post:
+      operationId: approveAccessRequest
+      tags: [access-requests]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ApproveAccessRequestBody" }
+      responses:
+        "201":
+          description: User created from the access request
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+
+  /access-requests/{id}/reject:
+    post:
+      operationId: rejectAccessRequest
+      tags: [access-requests]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AccessRequest" }
 
   /users:
     get:
@@ -3313,6 +3387,58 @@ components:
       properties:
         token: { type: string }
         user: { $ref: "#/components/schemas/User" }
+
+    GoogleAuthConfig:
+      type: object
+      required: [clientId]
+      properties:
+        clientId: { type: string, nullable: true }
+
+    GoogleLoginBody:
+      type: object
+      required: [credential]
+      properties:
+        credential: { type: string, description: "Google ID token (JWT credential) from Google Identity Services" }
+
+    GoogleLoginResponse:
+      type: object
+      required: [status]
+      description: |
+        AUTHENTICATED includes token+user. PENDING_APPROVAL means an access
+        request was created (or already exists) and is awaiting Site Admin review.
+      properties:
+        status: { type: string, enum: [AUTHENTICATED, PENDING_APPROVAL] }
+        token: { type: string }
+        user: { $ref: "#/components/schemas/User" }
+
+    AccessRequestStatus:
+      type: string
+      enum: [PENDING, APPROVED, REJECTED]
+
+    AccessRequest:
+      type: object
+      required: [id, email, name, status, createdAt, updatedAt]
+      properties:
+        id: { type: string }
+        email: { type: string }
+        name: { type: string }
+        status: { $ref: "#/components/schemas/AccessRequestStatus" }
+        decidedById: { type: string, nullable: true }
+        decidedByName: { type: string, nullable: true }
+        decidedAt: { type: string, nullable: true }
+        createdUserId: { type: string, nullable: true }
+        createdAt: { type: string }
+        updatedAt: { type: string }
+
+    ApproveAccessRequestBody:
+      type: object
+      required: [role]
+      properties:
+        role: { $ref: "#/components/schemas/UserRole" }
+        name: { type: string, description: "Override the display name (defaults to the Google profile name)" }
+        title: { type: string, nullable: true }
+        seniority: { type: string, nullable: true, enum: [JUNIOR, MID, SENIOR, PRINCIPAL, null] }
+        businessUnitId: { type: string, nullable: true }
 
     CreateUserBody:
       type: object

@@ -282,4 +282,6 @@ export type {
   TimesheetStatus,
   DocumentType,
   ProjectReportType,
+  AccessRequest,
+  AccessRequestStatus,
 } from "./generated/client/index.js";

@@ -166,7 +166,37 @@ model User {
   perfReviewsAuthored     PerformanceReview[]              @relation("PerfReviewReviewer")
   perfProjectRatingsGiven PerformanceReviewProjectRating[] @relation("PerfProjRater")
 
+  accessRequestsDecided AccessRequest[] @relation("AccessRequestDecider")
+  accessRequestOrigin   AccessRequest?  @relation("AccessRequestCreatedUser")
+
   calendarTokenVersion Int @default(0)
+}
+
+enum AccessRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// Google SSO access request: created when a verified @itsecasia.com Google
+// account signs in but has no User yet. Site Admin approves (creates the User)
+// or rejects from the dashboard. email is unique so repeated sign-in attempts
+// upsert the same row instead of stacking duplicates.
+model AccessRequest {
+  id            String              @id @default(cuid())
+  email         String              @unique
+  name          String
+  googleSub     String
+  status        AccessRequestStatus @default(PENDING)
+  decidedById   String?
+  decidedBy     User?               @relation("AccessRequestDecider", fields: [decidedById], references: [id])
+  decidedAt     DateTime?
+  createdUserId String?             @unique
+  createdUser   User?               @relation("AccessRequestCreatedUser", fields: [createdUserId], references: [id])
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  @@index([status, createdAt])
 }
 
 model Client {

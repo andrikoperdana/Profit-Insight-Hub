@@ -23,6 +23,7 @@
     "csv-parse": "^6.2.1",
     "exceljs": "^4.4.0",
     "express": "^5",
+    "google-auth-library": "^10.9.0",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.2.0",
     "pdf-lib": "^1.17.1",

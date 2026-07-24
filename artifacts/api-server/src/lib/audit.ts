@@ -98,7 +98,10 @@ export type AuditAction =
   | "change_request.rejected"
   | "change_request.applied"
   | "change_request.deleted"
-  | "feedback360.submitted";
+  | "feedback360.submitted"
+  | "access_request.created"
+  | "access_request.approved"
+  | "access_request.rejected";
 
 export type EntityType =
   | "User"
@@ -130,6 +133,7 @@ export type EntityType =
   | "PipedriveStageMapping"
   | "ChangeRequest"
   | "ProjectFeedback360"
+  | "AccessRequest"
   | "System";
 
 interface AuditInput {

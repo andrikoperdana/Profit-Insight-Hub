@@ -17,6 +17,7 @@ import type {
 } from "@tanstack/react-query";
 
 import type {
+  AccessRequest,
   AcknowledgePerformanceReviewBody,
   ActiveUser,
   ActivityItem,
@@ -26,6 +27,7 @@ import type {
   ApplyProjectTemplateBody,
   ApplyTaskTemplate201,
   ApplyTaskTemplateBody,
+  ApproveAccessRequestBody,
   AuthResponse,
   AvailableUser,
   BillableUtilization,
@@ -77,6 +79,9 @@ import type {
   GetTopPerformersParams,
   GetUserProjectAssignments200,
   GetVatRecapParams,
+  GoogleAuthConfig,
+  GoogleLoginBody,
+  GoogleLoginResponse,
   HealthStatus,
   ImportLeadsBody,
   ImportLeadsResult,
@@ -85,6 +90,7 @@ import type {
   LeadActivity,
   LeadAnalytics,
   LeadOwnerOption,
+  ListAccessRequestsParams,
   ListAvailableUsersParams,
   ListLeavesParams,
   ListPerformanceReviewsParams,
@@ -1509,6 +1515,404 @@ export const useLogout = <
   TContext
 > => {
   return useMutation(getLogoutMutationOptions(options));
+};
+
+export const getGetGoogleAuthConfigUrl = () => {
+  return `/api/auth/google/config`;
+};
+
+export const getGoogleAuthConfig = async (
+  options?: RequestInit,
+): Promise<GoogleAuthConfig> => {
+  return customFetch<GoogleAuthConfig>(getGetGoogleAuthConfigUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetGoogleAuthConfigQueryKey = () => {
+  return [`/api/auth/google/config`] as const;
+};
+
+export const getGetGoogleAuthConfigQueryOptions = <
+  TData = Awaited<ReturnType<typeof getGoogleAuthConfig>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getGoogleAuthConfig>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetGoogleAuthConfigQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getGoogleAuthConfig>>
+  > = ({ signal }) => getGoogleAuthConfig({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getGoogleAuthConfig>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetGoogleAuthConfigQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getGoogleAuthConfig>>
+>;
+export type GetGoogleAuthConfigQueryError = ErrorType<unknown>;
+
+export function useGetGoogleAuthConfig<
+  TData = Awaited<ReturnType<typeof getGoogleAuthConfig>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getGoogleAuthConfig>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetGoogleAuthConfigQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getGoogleLoginUrl = () => {
+  return `/api/auth/google`;
+};
+
+export const googleLogin = async (
+  googleLoginBody: GoogleLoginBody,
+  options?: RequestInit,
+): Promise<GoogleLoginResponse> => {
+  return customFetch<GoogleLoginResponse>(getGoogleLoginUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(googleLoginBody),
+  });
+};
+
+export const getGoogleLoginMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof googleLogin>>,
+    TError,
+    { data: BodyType<GoogleLoginBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof googleLogin>>,
+  TError,
+  { data: BodyType<GoogleLoginBody> },
+  TContext
+> => {
+  const mutationKey = ["googleLogin"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof googleLogin>>,
+    { data: BodyType<GoogleLoginBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return googleLogin(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type GoogleLoginMutationResult = NonNullable<
+  Awaited<ReturnType<typeof googleLogin>>
+>;
+export type GoogleLoginMutationBody = BodyType<GoogleLoginBody>;
+export type GoogleLoginMutationError = ErrorType<unknown>;
+
+export const useGoogleLogin = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof googleLogin>>,
+    TError,
+    { data: BodyType<GoogleLoginBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof googleLogin>>,
+  TError,
+  { data: BodyType<GoogleLoginBody> },
+  TContext
+> => {
+  return useMutation(getGoogleLoginMutationOptions(options));
+};
+
+export const getListAccessRequestsUrl = (params?: ListAccessRequestsParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/access-requests?${stringifiedParams}`
+    : `/api/access-requests`;
+};
+
+export const listAccessRequests = async (
+  params?: ListAccessRequestsParams,
+  options?: RequestInit,
+): Promise<AccessRequest[]> => {
+  return customFetch<AccessRequest[]>(getListAccessRequestsUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListAccessRequestsQueryKey = (
+  params?: ListAccessRequestsParams,
+) => {
+  return [`/api/access-requests`, ...(params ? [params] : [])] as const;
+};
+
+export const getListAccessRequestsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listAccessRequests>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListAccessRequestsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listAccessRequests>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getListAccessRequestsQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listAccessRequests>>
+  > = ({ signal }) => listAccessRequests(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listAccessRequests>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListAccessRequestsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listAccessRequests>>
+>;
+export type ListAccessRequestsQueryError = ErrorType<unknown>;
+
+export function useListAccessRequests<
+  TData = Awaited<ReturnType<typeof listAccessRequests>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListAccessRequestsParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listAccessRequests>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListAccessRequestsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+export const getApproveAccessRequestUrl = (id: string) => {
+  return `/api/access-requests/${id}/approve`;
+};
+
+export const approveAccessRequest = async (
+  id: string,
+  approveAccessRequestBody: ApproveAccessRequestBody,
+  options?: RequestInit,
+): Promise<User> => {
+  return customFetch<User>(getApproveAccessRequestUrl(id), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(approveAccessRequestBody),
+  });
+};
+
+export const getApproveAccessRequestMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof approveAccessRequest>>,
+    TError,
+    { id: string; data: BodyType<ApproveAccessRequestBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof approveAccessRequest>>,
+  TError,
+  { id: string; data: BodyType<ApproveAccessRequestBody> },
+  TContext
+> => {
+  const mutationKey = ["approveAccessRequest"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof approveAccessRequest>>,
+    { id: string; data: BodyType<ApproveAccessRequestBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return approveAccessRequest(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ApproveAccessRequestMutationResult = NonNullable<
+  Awaited<ReturnType<typeof approveAccessRequest>>
+>;
+export type ApproveAccessRequestMutationBody =
+  BodyType<ApproveAccessRequestBody>;
+export type ApproveAccessRequestMutationError = ErrorType<unknown>;
+
+export const useApproveAccessRequest = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof approveAccessRequest>>,
+    TError,
+    { id: string; data: BodyType<ApproveAccessRequestBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof approveAccessRequest>>,
+  TError,
+  { id: string; data: BodyType<ApproveAccessRequestBody> },
+  TContext
+> => {
+  return useMutation(getApproveAccessRequestMutationOptions(options));
+};
+
+export const getRejectAccessRequestUrl = (id: string) => {
+  return `/api/access-requests/${id}/reject`;
+};
+
+export const rejectAccessRequest = async (
+  id: string,
+  options?: RequestInit,
+): Promise<AccessRequest> => {
+  return customFetch<AccessRequest>(getRejectAccessRequestUrl(id), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getRejectAccessRequestMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof rejectAccessRequest>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof rejectAccessRequest>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["rejectAccessRequest"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof rejectAccessRequest>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return rejectAccessRequest(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RejectAccessRequestMutationResult = NonNullable<
+  Awaited<ReturnType<typeof rejectAccessRequest>>
+>;
+
+export type RejectAccessRequestMutationError = ErrorType<unknown>;
+
+export const useRejectAccessRequest = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof rejectAccessRequest>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof rejectAccessRequest>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getRejectAccessRequestMutationOptions(options));
 };
 
 export const getListUsersUrl = () => {

@@ -629,6 +629,151 @@ export const LogoutResponse = zod.object({
   message: zod.string().optional(),
 });
 
+export const GetGoogleAuthConfigResponse = zod.object({
+  clientId: zod.string().nullable(),
+});
+
+export const GoogleLoginBody = zod.object({
+  credential: zod
+    .string()
+    .describe("Google ID token (JWT credential) from Google Identity Services"),
+});
+
+export const GoogleLoginResponse = zod
+  .object({
+    status: zod.enum(["AUTHENTICATED", "PENDING_APPROVAL"]),
+    token: zod.string().optional(),
+    user: zod
+      .object({
+        id: zod.string(),
+        email: zod.string(),
+        name: zod.string(),
+        role: zod.enum([
+          "MANAGEMENT",
+          "PROJECT_MANAGER",
+          "SALES",
+          "KONSULTAN",
+          "TECHNICAL_WRITER",
+          "ADMIN_PROJECT",
+          "PRINCIPAL_KONSULTAN",
+          "PRINCIPAL_TECHNICAL_WRITER",
+          "PRINCIPAL_ADMIN_PROJECT",
+          "FINANCE",
+          "HR",
+          "SITE_ADMIN",
+          "SUPER_ADMIN",
+        ]),
+        title: zod.string().nullish(),
+        dailyRate: zod.number().nullish(),
+        seniority: zod
+          .union([
+            zod.literal("JUNIOR"),
+            zod.literal("MID"),
+            zod.literal("SENIOR"),
+            zod.literal("PRINCIPAL"),
+            zod.literal(null),
+          ])
+          .nullish(),
+        businessUnitId: zod.string().nullish(),
+        businessUnitName: zod.string().nullish(),
+        skills: zod
+          .array(
+            zod.object({
+              skillId: zod.string(),
+              name: zod.string(),
+              category: zod.string().nullish(),
+              proficiency: zod.number().optional(),
+            }),
+          )
+          .optional(),
+        isActive: zod.boolean(),
+        avatarDataUrl: zod.string().nullish(),
+        managerId: zod.string().nullish(),
+        principalId: zod.string().nullish(),
+        createdAt: zod.string(),
+      })
+      .optional(),
+  })
+  .describe(
+    "AUTHENTICATED includes token+user. PENDING_APPROVAL means an access\nrequest was created (or already exists) and is awaiting Site Admin review.\n",
+  );
+
+export const ListAccessRequestsQueryParams = zod.object({
+  status: zod.enum(["PENDING", "APPROVED", "REJECTED"]).optional(),
+});
+
+export const ListAccessRequestsResponseItem = zod.object({
+  id: zod.string(),
+  email: zod.string(),
+  name: zod.string(),
+  status: zod.enum(["PENDING", "APPROVED", "REJECTED"]),
+  decidedById: zod.string().nullish(),
+  decidedByName: zod.string().nullish(),
+  decidedAt: zod.string().nullish(),
+  createdUserId: zod.string().nullish(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+export const ListAccessRequestsResponse = zod.array(
+  ListAccessRequestsResponseItem,
+);
+
+export const ApproveAccessRequestParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const ApproveAccessRequestBody = zod.object({
+  role: zod.enum([
+    "MANAGEMENT",
+    "PROJECT_MANAGER",
+    "SALES",
+    "KONSULTAN",
+    "TECHNICAL_WRITER",
+    "ADMIN_PROJECT",
+    "PRINCIPAL_KONSULTAN",
+    "PRINCIPAL_TECHNICAL_WRITER",
+    "PRINCIPAL_ADMIN_PROJECT",
+    "FINANCE",
+    "HR",
+    "SITE_ADMIN",
+    "SUPER_ADMIN",
+  ]),
+  name: zod
+    .string()
+    .optional()
+    .describe(
+      "Override the display name (defaults to the Google profile name)",
+    ),
+  title: zod.string().nullish(),
+  seniority: zod
+    .union([
+      zod.literal("JUNIOR"),
+      zod.literal("MID"),
+      zod.literal("SENIOR"),
+      zod.literal("PRINCIPAL"),
+      zod.literal(null),
+    ])
+    .nullish(),
+  businessUnitId: zod.string().nullish(),
+});
+
+export const RejectAccessRequestParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const RejectAccessRequestResponse = zod.object({
+  id: zod.string(),
+  email: zod.string(),
+  name: zod.string(),
+  status: zod.enum(["PENDING", "APPROVED", "REJECTED"]),
+  decidedById: zod.string().nullish(),
+  decidedByName: zod.string().nullish(),
+  decidedAt: zod.string().nullish(),
+  createdUserId: zod.string().nullish(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+});
+
 export const ListUsersResponseItem = zod.object({
   id: zod.string(),
   email: zod.string(),

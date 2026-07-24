@@ -19,6 +19,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
+ * Model AccessRequest
+ * 
+ */
+export type AccessRequest = $Result.DefaultSelection<Prisma.$AccessRequestPayload>
+/**
  * Model Client
  * 
  */
@@ -269,6 +274,15 @@ export const Seniority: {
 export type Seniority = (typeof Seniority)[keyof typeof Seniority]
 
 
+export const AccessRequestStatus: {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+};
+
+export type AccessRequestStatus = (typeof AccessRequestStatus)[keyof typeof AccessRequestStatus]
+
+
 export const ProjectStatus: {
   DRAFT: 'DRAFT',
   OBSERVATION: 'OBSERVATION',
@@ -505,6 +519,10 @@ export type Seniority = $Enums.Seniority
 
 export const Seniority: typeof $Enums.Seniority
 
+export type AccessRequestStatus = $Enums.AccessRequestStatus
+
+export const AccessRequestStatus: typeof $Enums.AccessRequestStatus
+
 export type ProjectStatus = $Enums.ProjectStatus
 
 export const ProjectStatus: typeof $Enums.ProjectStatus
@@ -729,6 +747,16 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs>;
+
+  /**
+   * `prisma.accessRequest`: Exposes CRUD operations for the **AccessRequest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AccessRequests
+    * const accessRequests = await prisma.accessRequest.findMany()
+    * ```
+    */
+  get accessRequest(): Prisma.AccessRequestDelegate<ExtArgs>;
 
   /**
    * `prisma.client`: Exposes CRUD operations for the **Client** model.
@@ -1601,6 +1629,7 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
+    AccessRequest: 'AccessRequest',
     Client: 'Client',
     Project: 'Project',
     ProjectBaseline: 'ProjectBaseline',
@@ -1659,7 +1688,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "client" | "project" | "projectBaseline" | "changeRequest" | "projectReport" | "projectWorkstream" | "surveyQuestion" | "surveyResponse" | "projectFeedback360" | "auditLog" | "projectResource" | "projectResourceRate" | "timesheet" | "document" | "projectClosingChecklistItem" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "skillDevelopmentGoal" | "skillProgressionLog" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "projectTemplate" | "projectTemplateResource" | "projectTemplateMilestone" | "projectTemplateRaidItem" | "notification" | "projectRaidItem" | "performanceReview" | "performanceReviewProjectRating" | "invoiceSetting" | "appSetting" | "pipedriveStageMapping" | "xeroConnection"
+      modelProps: "user" | "accessRequest" | "client" | "project" | "projectBaseline" | "changeRequest" | "projectReport" | "projectWorkstream" | "surveyQuestion" | "surveyResponse" | "projectFeedback360" | "auditLog" | "projectResource" | "projectResourceRate" | "timesheet" | "document" | "projectClosingChecklistItem" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "skillDevelopmentGoal" | "skillProgressionLog" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "projectTemplate" | "projectTemplateResource" | "projectTemplateMilestone" | "projectTemplateRaidItem" | "notification" | "projectRaidItem" | "performanceReview" | "performanceReviewProjectRating" | "invoiceSetting" | "appSetting" | "pipedriveStageMapping" | "xeroConnection"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1730,6 +1759,76 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>
             result: $Utils.Optional<UserCountAggregateOutputType> | number
+          }
+        }
+      }
+      AccessRequest: {
+        payload: Prisma.$AccessRequestPayload<ExtArgs>
+        fields: Prisma.AccessRequestFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AccessRequestFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessRequestPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AccessRequestFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessRequestPayload>
+          }
+          findFirst: {
+            args: Prisma.AccessRequestFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessRequestPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AccessRequestFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessRequestPayload>
+          }
+          findMany: {
+            args: Prisma.AccessRequestFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessRequestPayload>[]
+          }
+          create: {
+            args: Prisma.AccessRequestCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessRequestPayload>
+          }
+          createMany: {
+            args: Prisma.AccessRequestCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AccessRequestCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessRequestPayload>[]
+          }
+          delete: {
+            args: Prisma.AccessRequestDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessRequestPayload>
+          }
+          update: {
+            args: Prisma.AccessRequestUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessRequestPayload>
+          }
+          deleteMany: {
+            args: Prisma.AccessRequestDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AccessRequestUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.AccessRequestUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AccessRequestPayload>
+          }
+          aggregate: {
+            args: Prisma.AccessRequestAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAccessRequest>
+          }
+          groupBy: {
+            args: Prisma.AccessRequestGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AccessRequestGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AccessRequestCountArgs<ExtArgs>
+            result: $Utils.Optional<AccessRequestCountAggregateOutputType> | number
           }
         }
       }
@@ -4948,6 +5047,7 @@ export namespace Prisma {
     perfReviewsSubject: number
     perfReviewsAuthored: number
     perfProjectRatingsGiven: number
+    accessRequestsDecided: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4995,6 +5095,7 @@ export namespace Prisma {
     perfReviewsSubject?: boolean | UserCountOutputTypeCountPerfReviewsSubjectArgs
     perfReviewsAuthored?: boolean | UserCountOutputTypeCountPerfReviewsAuthoredArgs
     perfProjectRatingsGiven?: boolean | UserCountOutputTypeCountPerfProjectRatingsGivenArgs
+    accessRequestsDecided?: boolean | UserCountOutputTypeCountAccessRequestsDecidedArgs
   }
 
   // Custom InputTypes
@@ -5314,6 +5415,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountPerfProjectRatingsGivenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PerformanceReviewProjectRatingWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAccessRequestsDecidedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AccessRequestWhereInput
   }
 
 
@@ -6397,6 +6505,8 @@ export namespace Prisma {
     perfReviewsSubject?: boolean | User$perfReviewsSubjectArgs<ExtArgs>
     perfReviewsAuthored?: boolean | User$perfReviewsAuthoredArgs<ExtArgs>
     perfProjectRatingsGiven?: boolean | User$perfProjectRatingsGivenArgs<ExtArgs>
+    accessRequestsDecided?: boolean | User$accessRequestsDecidedArgs<ExtArgs>
+    accessRequestOrigin?: boolean | User$accessRequestOriginArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -6491,6 +6601,8 @@ export namespace Prisma {
     perfReviewsSubject?: boolean | User$perfReviewsSubjectArgs<ExtArgs>
     perfReviewsAuthored?: boolean | User$perfReviewsAuthoredArgs<ExtArgs>
     perfProjectRatingsGiven?: boolean | User$perfProjectRatingsGivenArgs<ExtArgs>
+    accessRequestsDecided?: boolean | User$accessRequestsDecidedArgs<ExtArgs>
+    accessRequestOrigin?: boolean | User$accessRequestOriginArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6549,6 +6661,8 @@ export namespace Prisma {
       perfReviewsSubject: Prisma.$PerformanceReviewPayload<ExtArgs>[]
       perfReviewsAuthored: Prisma.$PerformanceReviewPayload<ExtArgs>[]
       perfProjectRatingsGiven: Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>[]
+      accessRequestsDecided: Prisma.$AccessRequestPayload<ExtArgs>[]
+      accessRequestOrigin: Prisma.$AccessRequestPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6979,6 +7093,8 @@ export namespace Prisma {
     perfReviewsSubject<T extends User$perfReviewsSubjectArgs<ExtArgs> = {}>(args?: Subset<T, User$perfReviewsSubjectArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PerformanceReviewPayload<ExtArgs>, T, "findMany"> | Null>
     perfReviewsAuthored<T extends User$perfReviewsAuthoredArgs<ExtArgs> = {}>(args?: Subset<T, User$perfReviewsAuthoredArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PerformanceReviewPayload<ExtArgs>, T, "findMany"> | Null>
     perfProjectRatingsGiven<T extends User$perfProjectRatingsGivenArgs<ExtArgs> = {}>(args?: Subset<T, User$perfProjectRatingsGivenArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PerformanceReviewProjectRatingPayload<ExtArgs>, T, "findMany"> | Null>
+    accessRequestsDecided<T extends User$accessRequestsDecidedArgs<ExtArgs> = {}>(args?: Subset<T, User$accessRequestsDecidedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessRequestPayload<ExtArgs>, T, "findMany"> | Null>
+    accessRequestOrigin<T extends User$accessRequestOriginArgs<ExtArgs> = {}>(args?: Subset<T, User$accessRequestOriginArgs<ExtArgs>>): Prisma__AccessRequestClient<$Result.GetResult<Prisma.$AccessRequestPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8268,6 +8384,41 @@ export namespace Prisma {
   }
 
   /**
+   * User.accessRequestsDecided
+   */
+  export type User$accessRequestsDecidedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessRequest
+     */
+    select?: AccessRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessRequestInclude<ExtArgs> | null
+    where?: AccessRequestWhereInput
+    orderBy?: AccessRequestOrderByWithRelationInput | AccessRequestOrderByWithRelationInput[]
+    cursor?: AccessRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AccessRequestScalarFieldEnum | AccessRequestScalarFieldEnum[]
+  }
+
+  /**
+   * User.accessRequestOrigin
+   */
+  export type User$accessRequestOriginArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessRequest
+     */
+    select?: AccessRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessRequestInclude<ExtArgs> | null
+    where?: AccessRequestWhereInput
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8279,6 +8430,1035 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model AccessRequest
+   */
+
+  export type AggregateAccessRequest = {
+    _count: AccessRequestCountAggregateOutputType | null
+    _min: AccessRequestMinAggregateOutputType | null
+    _max: AccessRequestMaxAggregateOutputType | null
+  }
+
+  export type AccessRequestMinAggregateOutputType = {
+    id: string | null
+    email: string | null
+    name: string | null
+    googleSub: string | null
+    status: $Enums.AccessRequestStatus | null
+    decidedById: string | null
+    decidedAt: Date | null
+    createdUserId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AccessRequestMaxAggregateOutputType = {
+    id: string | null
+    email: string | null
+    name: string | null
+    googleSub: string | null
+    status: $Enums.AccessRequestStatus | null
+    decidedById: string | null
+    decidedAt: Date | null
+    createdUserId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AccessRequestCountAggregateOutputType = {
+    id: number
+    email: number
+    name: number
+    googleSub: number
+    status: number
+    decidedById: number
+    decidedAt: number
+    createdUserId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type AccessRequestMinAggregateInputType = {
+    id?: true
+    email?: true
+    name?: true
+    googleSub?: true
+    status?: true
+    decidedById?: true
+    decidedAt?: true
+    createdUserId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AccessRequestMaxAggregateInputType = {
+    id?: true
+    email?: true
+    name?: true
+    googleSub?: true
+    status?: true
+    decidedById?: true
+    decidedAt?: true
+    createdUserId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AccessRequestCountAggregateInputType = {
+    id?: true
+    email?: true
+    name?: true
+    googleSub?: true
+    status?: true
+    decidedById?: true
+    decidedAt?: true
+    createdUserId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type AccessRequestAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AccessRequest to aggregate.
+     */
+    where?: AccessRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AccessRequests to fetch.
+     */
+    orderBy?: AccessRequestOrderByWithRelationInput | AccessRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AccessRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AccessRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AccessRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AccessRequests
+    **/
+    _count?: true | AccessRequestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AccessRequestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AccessRequestMaxAggregateInputType
+  }
+
+  export type GetAccessRequestAggregateType<T extends AccessRequestAggregateArgs> = {
+        [P in keyof T & keyof AggregateAccessRequest]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAccessRequest[P]>
+      : GetScalarType<T[P], AggregateAccessRequest[P]>
+  }
+
+
+
+
+  export type AccessRequestGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AccessRequestWhereInput
+    orderBy?: AccessRequestOrderByWithAggregationInput | AccessRequestOrderByWithAggregationInput[]
+    by: AccessRequestScalarFieldEnum[] | AccessRequestScalarFieldEnum
+    having?: AccessRequestScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AccessRequestCountAggregateInputType | true
+    _min?: AccessRequestMinAggregateInputType
+    _max?: AccessRequestMaxAggregateInputType
+  }
+
+  export type AccessRequestGroupByOutputType = {
+    id: string
+    email: string
+    name: string
+    googleSub: string
+    status: $Enums.AccessRequestStatus
+    decidedById: string | null
+    decidedAt: Date | null
+    createdUserId: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: AccessRequestCountAggregateOutputType | null
+    _min: AccessRequestMinAggregateOutputType | null
+    _max: AccessRequestMaxAggregateOutputType | null
+  }
+
+  type GetAccessRequestGroupByPayload<T extends AccessRequestGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AccessRequestGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AccessRequestGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AccessRequestGroupByOutputType[P]>
+            : GetScalarType<T[P], AccessRequestGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AccessRequestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    email?: boolean
+    name?: boolean
+    googleSub?: boolean
+    status?: boolean
+    decidedById?: boolean
+    decidedAt?: boolean
+    createdUserId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    decidedBy?: boolean | AccessRequest$decidedByArgs<ExtArgs>
+    createdUser?: boolean | AccessRequest$createdUserArgs<ExtArgs>
+  }, ExtArgs["result"]["accessRequest"]>
+
+  export type AccessRequestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    email?: boolean
+    name?: boolean
+    googleSub?: boolean
+    status?: boolean
+    decidedById?: boolean
+    decidedAt?: boolean
+    createdUserId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    decidedBy?: boolean | AccessRequest$decidedByArgs<ExtArgs>
+    createdUser?: boolean | AccessRequest$createdUserArgs<ExtArgs>
+  }, ExtArgs["result"]["accessRequest"]>
+
+  export type AccessRequestSelectScalar = {
+    id?: boolean
+    email?: boolean
+    name?: boolean
+    googleSub?: boolean
+    status?: boolean
+    decidedById?: boolean
+    decidedAt?: boolean
+    createdUserId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type AccessRequestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    decidedBy?: boolean | AccessRequest$decidedByArgs<ExtArgs>
+    createdUser?: boolean | AccessRequest$createdUserArgs<ExtArgs>
+  }
+  export type AccessRequestIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    decidedBy?: boolean | AccessRequest$decidedByArgs<ExtArgs>
+    createdUser?: boolean | AccessRequest$createdUserArgs<ExtArgs>
+  }
+
+  export type $AccessRequestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AccessRequest"
+    objects: {
+      decidedBy: Prisma.$UserPayload<ExtArgs> | null
+      createdUser: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      email: string
+      name: string
+      googleSub: string
+      status: $Enums.AccessRequestStatus
+      decidedById: string | null
+      decidedAt: Date | null
+      createdUserId: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["accessRequest"]>
+    composites: {}
+  }
+
+  type AccessRequestGetPayload<S extends boolean | null | undefined | AccessRequestDefaultArgs> = $Result.GetResult<Prisma.$AccessRequestPayload, S>
+
+  type AccessRequestCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<AccessRequestFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: AccessRequestCountAggregateInputType | true
+    }
+
+  export interface AccessRequestDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AccessRequest'], meta: { name: 'AccessRequest' } }
+    /**
+     * Find zero or one AccessRequest that matches the filter.
+     * @param {AccessRequestFindUniqueArgs} args - Arguments to find a AccessRequest
+     * @example
+     * // Get one AccessRequest
+     * const accessRequest = await prisma.accessRequest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AccessRequestFindUniqueArgs>(args: SelectSubset<T, AccessRequestFindUniqueArgs<ExtArgs>>): Prisma__AccessRequestClient<$Result.GetResult<Prisma.$AccessRequestPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one AccessRequest that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {AccessRequestFindUniqueOrThrowArgs} args - Arguments to find a AccessRequest
+     * @example
+     * // Get one AccessRequest
+     * const accessRequest = await prisma.accessRequest.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AccessRequestFindUniqueOrThrowArgs>(args: SelectSubset<T, AccessRequestFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AccessRequestClient<$Result.GetResult<Prisma.$AccessRequestPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first AccessRequest that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AccessRequestFindFirstArgs} args - Arguments to find a AccessRequest
+     * @example
+     * // Get one AccessRequest
+     * const accessRequest = await prisma.accessRequest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AccessRequestFindFirstArgs>(args?: SelectSubset<T, AccessRequestFindFirstArgs<ExtArgs>>): Prisma__AccessRequestClient<$Result.GetResult<Prisma.$AccessRequestPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first AccessRequest that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AccessRequestFindFirstOrThrowArgs} args - Arguments to find a AccessRequest
+     * @example
+     * // Get one AccessRequest
+     * const accessRequest = await prisma.accessRequest.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AccessRequestFindFirstOrThrowArgs>(args?: SelectSubset<T, AccessRequestFindFirstOrThrowArgs<ExtArgs>>): Prisma__AccessRequestClient<$Result.GetResult<Prisma.$AccessRequestPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more AccessRequests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AccessRequestFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AccessRequests
+     * const accessRequests = await prisma.accessRequest.findMany()
+     * 
+     * // Get first 10 AccessRequests
+     * const accessRequests = await prisma.accessRequest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const accessRequestWithIdOnly = await prisma.accessRequest.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AccessRequestFindManyArgs>(args?: SelectSubset<T, AccessRequestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessRequestPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a AccessRequest.
+     * @param {AccessRequestCreateArgs} args - Arguments to create a AccessRequest.
+     * @example
+     * // Create one AccessRequest
+     * const AccessRequest = await prisma.accessRequest.create({
+     *   data: {
+     *     // ... data to create a AccessRequest
+     *   }
+     * })
+     * 
+     */
+    create<T extends AccessRequestCreateArgs>(args: SelectSubset<T, AccessRequestCreateArgs<ExtArgs>>): Prisma__AccessRequestClient<$Result.GetResult<Prisma.$AccessRequestPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many AccessRequests.
+     * @param {AccessRequestCreateManyArgs} args - Arguments to create many AccessRequests.
+     * @example
+     * // Create many AccessRequests
+     * const accessRequest = await prisma.accessRequest.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AccessRequestCreateManyArgs>(args?: SelectSubset<T, AccessRequestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AccessRequests and returns the data saved in the database.
+     * @param {AccessRequestCreateManyAndReturnArgs} args - Arguments to create many AccessRequests.
+     * @example
+     * // Create many AccessRequests
+     * const accessRequest = await prisma.accessRequest.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AccessRequests and only return the `id`
+     * const accessRequestWithIdOnly = await prisma.accessRequest.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AccessRequestCreateManyAndReturnArgs>(args?: SelectSubset<T, AccessRequestCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessRequestPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a AccessRequest.
+     * @param {AccessRequestDeleteArgs} args - Arguments to delete one AccessRequest.
+     * @example
+     * // Delete one AccessRequest
+     * const AccessRequest = await prisma.accessRequest.delete({
+     *   where: {
+     *     // ... filter to delete one AccessRequest
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AccessRequestDeleteArgs>(args: SelectSubset<T, AccessRequestDeleteArgs<ExtArgs>>): Prisma__AccessRequestClient<$Result.GetResult<Prisma.$AccessRequestPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one AccessRequest.
+     * @param {AccessRequestUpdateArgs} args - Arguments to update one AccessRequest.
+     * @example
+     * // Update one AccessRequest
+     * const accessRequest = await prisma.accessRequest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AccessRequestUpdateArgs>(args: SelectSubset<T, AccessRequestUpdateArgs<ExtArgs>>): Prisma__AccessRequestClient<$Result.GetResult<Prisma.$AccessRequestPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more AccessRequests.
+     * @param {AccessRequestDeleteManyArgs} args - Arguments to filter AccessRequests to delete.
+     * @example
+     * // Delete a few AccessRequests
+     * const { count } = await prisma.accessRequest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AccessRequestDeleteManyArgs>(args?: SelectSubset<T, AccessRequestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AccessRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AccessRequestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AccessRequests
+     * const accessRequest = await prisma.accessRequest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AccessRequestUpdateManyArgs>(args: SelectSubset<T, AccessRequestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one AccessRequest.
+     * @param {AccessRequestUpsertArgs} args - Arguments to update or create a AccessRequest.
+     * @example
+     * // Update or create a AccessRequest
+     * const accessRequest = await prisma.accessRequest.upsert({
+     *   create: {
+     *     // ... data to create a AccessRequest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AccessRequest we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AccessRequestUpsertArgs>(args: SelectSubset<T, AccessRequestUpsertArgs<ExtArgs>>): Prisma__AccessRequestClient<$Result.GetResult<Prisma.$AccessRequestPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of AccessRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AccessRequestCountArgs} args - Arguments to filter AccessRequests to count.
+     * @example
+     * // Count the number of AccessRequests
+     * const count = await prisma.accessRequest.count({
+     *   where: {
+     *     // ... the filter for the AccessRequests we want to count
+     *   }
+     * })
+    **/
+    count<T extends AccessRequestCountArgs>(
+      args?: Subset<T, AccessRequestCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AccessRequestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AccessRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AccessRequestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AccessRequestAggregateArgs>(args: Subset<T, AccessRequestAggregateArgs>): Prisma.PrismaPromise<GetAccessRequestAggregateType<T>>
+
+    /**
+     * Group by AccessRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AccessRequestGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AccessRequestGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AccessRequestGroupByArgs['orderBy'] }
+        : { orderBy?: AccessRequestGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AccessRequestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAccessRequestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AccessRequest model
+   */
+  readonly fields: AccessRequestFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AccessRequest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AccessRequestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    decidedBy<T extends AccessRequest$decidedByArgs<ExtArgs> = {}>(args?: Subset<T, AccessRequest$decidedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    createdUser<T extends AccessRequest$createdUserArgs<ExtArgs> = {}>(args?: Subset<T, AccessRequest$createdUserArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AccessRequest model
+   */ 
+  interface AccessRequestFieldRefs {
+    readonly id: FieldRef<"AccessRequest", 'String'>
+    readonly email: FieldRef<"AccessRequest", 'String'>
+    readonly name: FieldRef<"AccessRequest", 'String'>
+    readonly googleSub: FieldRef<"AccessRequest", 'String'>
+    readonly status: FieldRef<"AccessRequest", 'AccessRequestStatus'>
+    readonly decidedById: FieldRef<"AccessRequest", 'String'>
+    readonly decidedAt: FieldRef<"AccessRequest", 'DateTime'>
+    readonly createdUserId: FieldRef<"AccessRequest", 'String'>
+    readonly createdAt: FieldRef<"AccessRequest", 'DateTime'>
+    readonly updatedAt: FieldRef<"AccessRequest", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AccessRequest findUnique
+   */
+  export type AccessRequestFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessRequest
+     */
+    select?: AccessRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which AccessRequest to fetch.
+     */
+    where: AccessRequestWhereUniqueInput
+  }
+
+  /**
+   * AccessRequest findUniqueOrThrow
+   */
+  export type AccessRequestFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessRequest
+     */
+    select?: AccessRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which AccessRequest to fetch.
+     */
+    where: AccessRequestWhereUniqueInput
+  }
+
+  /**
+   * AccessRequest findFirst
+   */
+  export type AccessRequestFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessRequest
+     */
+    select?: AccessRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which AccessRequest to fetch.
+     */
+    where?: AccessRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AccessRequests to fetch.
+     */
+    orderBy?: AccessRequestOrderByWithRelationInput | AccessRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AccessRequests.
+     */
+    cursor?: AccessRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AccessRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AccessRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AccessRequests.
+     */
+    distinct?: AccessRequestScalarFieldEnum | AccessRequestScalarFieldEnum[]
+  }
+
+  /**
+   * AccessRequest findFirstOrThrow
+   */
+  export type AccessRequestFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessRequest
+     */
+    select?: AccessRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which AccessRequest to fetch.
+     */
+    where?: AccessRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AccessRequests to fetch.
+     */
+    orderBy?: AccessRequestOrderByWithRelationInput | AccessRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AccessRequests.
+     */
+    cursor?: AccessRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AccessRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AccessRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AccessRequests.
+     */
+    distinct?: AccessRequestScalarFieldEnum | AccessRequestScalarFieldEnum[]
+  }
+
+  /**
+   * AccessRequest findMany
+   */
+  export type AccessRequestFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessRequest
+     */
+    select?: AccessRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which AccessRequests to fetch.
+     */
+    where?: AccessRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AccessRequests to fetch.
+     */
+    orderBy?: AccessRequestOrderByWithRelationInput | AccessRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AccessRequests.
+     */
+    cursor?: AccessRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AccessRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AccessRequests.
+     */
+    skip?: number
+    distinct?: AccessRequestScalarFieldEnum | AccessRequestScalarFieldEnum[]
+  }
+
+  /**
+   * AccessRequest create
+   */
+  export type AccessRequestCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessRequest
+     */
+    select?: AccessRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AccessRequest.
+     */
+    data: XOR<AccessRequestCreateInput, AccessRequestUncheckedCreateInput>
+  }
+
+  /**
+   * AccessRequest createMany
+   */
+  export type AccessRequestCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AccessRequests.
+     */
+    data: AccessRequestCreateManyInput | AccessRequestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AccessRequest createManyAndReturn
+   */
+  export type AccessRequestCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessRequest
+     */
+    select?: AccessRequestSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many AccessRequests.
+     */
+    data: AccessRequestCreateManyInput | AccessRequestCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessRequestIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AccessRequest update
+   */
+  export type AccessRequestUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessRequest
+     */
+    select?: AccessRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AccessRequest.
+     */
+    data: XOR<AccessRequestUpdateInput, AccessRequestUncheckedUpdateInput>
+    /**
+     * Choose, which AccessRequest to update.
+     */
+    where: AccessRequestWhereUniqueInput
+  }
+
+  /**
+   * AccessRequest updateMany
+   */
+  export type AccessRequestUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AccessRequests.
+     */
+    data: XOR<AccessRequestUpdateManyMutationInput, AccessRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which AccessRequests to update
+     */
+    where?: AccessRequestWhereInput
+  }
+
+  /**
+   * AccessRequest upsert
+   */
+  export type AccessRequestUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessRequest
+     */
+    select?: AccessRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessRequestInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AccessRequest to update in case it exists.
+     */
+    where: AccessRequestWhereUniqueInput
+    /**
+     * In case the AccessRequest found by the `where` argument doesn't exist, create a new AccessRequest with this data.
+     */
+    create: XOR<AccessRequestCreateInput, AccessRequestUncheckedCreateInput>
+    /**
+     * In case the AccessRequest was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AccessRequestUpdateInput, AccessRequestUncheckedUpdateInput>
+  }
+
+  /**
+   * AccessRequest delete
+   */
+  export type AccessRequestDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessRequest
+     */
+    select?: AccessRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessRequestInclude<ExtArgs> | null
+    /**
+     * Filter which AccessRequest to delete.
+     */
+    where: AccessRequestWhereUniqueInput
+  }
+
+  /**
+   * AccessRequest deleteMany
+   */
+  export type AccessRequestDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AccessRequests to delete
+     */
+    where?: AccessRequestWhereInput
+  }
+
+  /**
+   * AccessRequest.decidedBy
+   */
+  export type AccessRequest$decidedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * AccessRequest.createdUser
+   */
+  export type AccessRequest$createdUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * AccessRequest without action
+   */
+  export type AccessRequestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AccessRequest
+     */
+    select?: AccessRequestSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccessRequestInclude<ExtArgs> | null
   }
 
 
@@ -54913,6 +56093,22 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+  export const AccessRequestScalarFieldEnum: {
+    id: 'id',
+    email: 'email',
+    name: 'name',
+    googleSub: 'googleSub',
+    status: 'status',
+    decidedById: 'decidedById',
+    decidedAt: 'decidedAt',
+    createdUserId: 'createdUserId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type AccessRequestScalarFieldEnum = (typeof AccessRequestScalarFieldEnum)[keyof typeof AccessRequestScalarFieldEnum]
+
+
   export const ClientScalarFieldEnum: {
     id: 'id',
     name: 'name',
@@ -55834,6 +57030,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'AccessRequestStatus'
+   */
+  export type EnumAccessRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AccessRequestStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'AccessRequestStatus[]'
+   */
+  export type ListEnumAccessRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AccessRequestStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'ProjectStatus'
    */
   export type EnumProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectStatus'>
@@ -56233,6 +57443,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewListRelationFilter
     perfReviewsAuthored?: PerformanceReviewListRelationFilter
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingListRelationFilter
+    accessRequestsDecided?: AccessRequestListRelationFilter
+    accessRequestOrigin?: XOR<AccessRequestNullableRelationFilter, AccessRequestWhereInput> | null
   }
 
   export type UserOrderByWithRelationInput = {
@@ -56300,6 +57512,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewOrderByRelationAggregateInput
     perfReviewsAuthored?: PerformanceReviewOrderByRelationAggregateInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingOrderByRelationAggregateInput
+    accessRequestsDecided?: AccessRequestOrderByRelationAggregateInput
+    accessRequestOrigin?: AccessRequestOrderByWithRelationInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -56370,6 +57584,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewListRelationFilter
     perfReviewsAuthored?: PerformanceReviewListRelationFilter
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingListRelationFilter
+    accessRequestsDecided?: AccessRequestListRelationFilter
+    accessRequestOrigin?: XOR<AccessRequestNullableRelationFilter, AccessRequestWhereInput> | null
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -56418,6 +57634,89 @@ export namespace Prisma {
     managerId?: StringNullableWithAggregatesFilter<"User"> | string | null
     principalId?: StringNullableWithAggregatesFilter<"User"> | string | null
     calendarTokenVersion?: IntWithAggregatesFilter<"User"> | number
+  }
+
+  export type AccessRequestWhereInput = {
+    AND?: AccessRequestWhereInput | AccessRequestWhereInput[]
+    OR?: AccessRequestWhereInput[]
+    NOT?: AccessRequestWhereInput | AccessRequestWhereInput[]
+    id?: StringFilter<"AccessRequest"> | string
+    email?: StringFilter<"AccessRequest"> | string
+    name?: StringFilter<"AccessRequest"> | string
+    googleSub?: StringFilter<"AccessRequest"> | string
+    status?: EnumAccessRequestStatusFilter<"AccessRequest"> | $Enums.AccessRequestStatus
+    decidedById?: StringNullableFilter<"AccessRequest"> | string | null
+    decidedAt?: DateTimeNullableFilter<"AccessRequest"> | Date | string | null
+    createdUserId?: StringNullableFilter<"AccessRequest"> | string | null
+    createdAt?: DateTimeFilter<"AccessRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"AccessRequest"> | Date | string
+    decidedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    createdUser?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+  }
+
+  export type AccessRequestOrderByWithRelationInput = {
+    id?: SortOrder
+    email?: SortOrder
+    name?: SortOrder
+    googleSub?: SortOrder
+    status?: SortOrder
+    decidedById?: SortOrderInput | SortOrder
+    decidedAt?: SortOrderInput | SortOrder
+    createdUserId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    decidedBy?: UserOrderByWithRelationInput
+    createdUser?: UserOrderByWithRelationInput
+  }
+
+  export type AccessRequestWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    email?: string
+    createdUserId?: string
+    AND?: AccessRequestWhereInput | AccessRequestWhereInput[]
+    OR?: AccessRequestWhereInput[]
+    NOT?: AccessRequestWhereInput | AccessRequestWhereInput[]
+    name?: StringFilter<"AccessRequest"> | string
+    googleSub?: StringFilter<"AccessRequest"> | string
+    status?: EnumAccessRequestStatusFilter<"AccessRequest"> | $Enums.AccessRequestStatus
+    decidedById?: StringNullableFilter<"AccessRequest"> | string | null
+    decidedAt?: DateTimeNullableFilter<"AccessRequest"> | Date | string | null
+    createdAt?: DateTimeFilter<"AccessRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"AccessRequest"> | Date | string
+    decidedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    createdUser?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+  }, "id" | "email" | "createdUserId">
+
+  export type AccessRequestOrderByWithAggregationInput = {
+    id?: SortOrder
+    email?: SortOrder
+    name?: SortOrder
+    googleSub?: SortOrder
+    status?: SortOrder
+    decidedById?: SortOrderInput | SortOrder
+    decidedAt?: SortOrderInput | SortOrder
+    createdUserId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: AccessRequestCountOrderByAggregateInput
+    _max?: AccessRequestMaxOrderByAggregateInput
+    _min?: AccessRequestMinOrderByAggregateInput
+  }
+
+  export type AccessRequestScalarWhereWithAggregatesInput = {
+    AND?: AccessRequestScalarWhereWithAggregatesInput | AccessRequestScalarWhereWithAggregatesInput[]
+    OR?: AccessRequestScalarWhereWithAggregatesInput[]
+    NOT?: AccessRequestScalarWhereWithAggregatesInput | AccessRequestScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AccessRequest"> | string
+    email?: StringWithAggregatesFilter<"AccessRequest"> | string
+    name?: StringWithAggregatesFilter<"AccessRequest"> | string
+    googleSub?: StringWithAggregatesFilter<"AccessRequest"> | string
+    status?: EnumAccessRequestStatusWithAggregatesFilter<"AccessRequest"> | $Enums.AccessRequestStatus
+    decidedById?: StringNullableWithAggregatesFilter<"AccessRequest"> | string | null
+    decidedAt?: DateTimeNullableWithAggregatesFilter<"AccessRequest"> | Date | string | null
+    createdUserId?: StringNullableWithAggregatesFilter<"AccessRequest"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"AccessRequest"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"AccessRequest"> | Date | string
   }
 
   export type ClientWhereInput = {
@@ -60704,6 +62003,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -60768,6 +62069,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUpdateInput = {
@@ -60832,6 +62135,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -60896,6 +62201,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -60953,6 +62260,95 @@ export namespace Prisma {
     managerId?: NullableStringFieldUpdateOperationsInput | string | null
     principalId?: NullableStringFieldUpdateOperationsInput | string | null
     calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type AccessRequestCreateInput = {
+    id?: string
+    email: string
+    name: string
+    googleSub: string
+    status?: $Enums.AccessRequestStatus
+    decidedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    decidedBy?: UserCreateNestedOneWithoutAccessRequestsDecidedInput
+    createdUser?: UserCreateNestedOneWithoutAccessRequestOriginInput
+  }
+
+  export type AccessRequestUncheckedCreateInput = {
+    id?: string
+    email: string
+    name: string
+    googleSub: string
+    status?: $Enums.AccessRequestStatus
+    decidedById?: string | null
+    decidedAt?: Date | string | null
+    createdUserId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AccessRequestUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    googleSub?: StringFieldUpdateOperationsInput | string
+    status?: EnumAccessRequestStatusFieldUpdateOperationsInput | $Enums.AccessRequestStatus
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    decidedBy?: UserUpdateOneWithoutAccessRequestsDecidedNestedInput
+    createdUser?: UserUpdateOneWithoutAccessRequestOriginNestedInput
+  }
+
+  export type AccessRequestUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    googleSub?: StringFieldUpdateOperationsInput | string
+    status?: EnumAccessRequestStatusFieldUpdateOperationsInput | $Enums.AccessRequestStatus
+    decidedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AccessRequestCreateManyInput = {
+    id?: string
+    email: string
+    name: string
+    googleSub: string
+    status?: $Enums.AccessRequestStatus
+    decidedById?: string | null
+    decidedAt?: Date | string | null
+    createdUserId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AccessRequestUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    googleSub?: StringFieldUpdateOperationsInput | string
+    status?: EnumAccessRequestStatusFieldUpdateOperationsInput | $Enums.AccessRequestStatus
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AccessRequestUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    googleSub?: StringFieldUpdateOperationsInput | string
+    status?: EnumAccessRequestStatusFieldUpdateOperationsInput | $Enums.AccessRequestStatus
+    decidedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ClientCreateInput = {
@@ -65861,6 +67257,17 @@ export namespace Prisma {
     none?: PerformanceReviewProjectRatingWhereInput
   }
 
+  export type AccessRequestListRelationFilter = {
+    every?: AccessRequestWhereInput
+    some?: AccessRequestWhereInput
+    none?: AccessRequestWhereInput
+  }
+
+  export type AccessRequestNullableRelationFilter = {
+    is?: AccessRequestWhereInput | null
+    isNot?: AccessRequestWhereInput | null
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -65979,6 +67386,10 @@ export namespace Prisma {
   }
 
   export type PerformanceReviewProjectRatingOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AccessRequestOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -66174,6 +67585,62 @@ export namespace Prisma {
     _sum?: NestedIntFilter<$PrismaModel>
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type EnumAccessRequestStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.AccessRequestStatus | EnumAccessRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AccessRequestStatus[] | ListEnumAccessRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AccessRequestStatus[] | ListEnumAccessRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAccessRequestStatusFilter<$PrismaModel> | $Enums.AccessRequestStatus
+  }
+
+  export type AccessRequestCountOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    name?: SortOrder
+    googleSub?: SortOrder
+    status?: SortOrder
+    decidedById?: SortOrder
+    decidedAt?: SortOrder
+    createdUserId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AccessRequestMaxOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    name?: SortOrder
+    googleSub?: SortOrder
+    status?: SortOrder
+    decidedById?: SortOrder
+    decidedAt?: SortOrder
+    createdUserId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AccessRequestMinOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    name?: SortOrder
+    googleSub?: SortOrder
+    status?: SortOrder
+    decidedById?: SortOrder
+    decidedAt?: SortOrder
+    createdUserId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumAccessRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AccessRequestStatus | EnumAccessRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AccessRequestStatus[] | ListEnumAccessRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AccessRequestStatus[] | ListEnumAccessRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAccessRequestStatusWithAggregatesFilter<$PrismaModel> | $Enums.AccessRequestStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAccessRequestStatusFilter<$PrismaModel>
+    _max?: NestedEnumAccessRequestStatusFilter<$PrismaModel>
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -69493,6 +70960,19 @@ export namespace Prisma {
     connect?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
   }
 
+  export type AccessRequestCreateNestedManyWithoutDecidedByInput = {
+    create?: XOR<AccessRequestCreateWithoutDecidedByInput, AccessRequestUncheckedCreateWithoutDecidedByInput> | AccessRequestCreateWithoutDecidedByInput[] | AccessRequestUncheckedCreateWithoutDecidedByInput[]
+    connectOrCreate?: AccessRequestCreateOrConnectWithoutDecidedByInput | AccessRequestCreateOrConnectWithoutDecidedByInput[]
+    createMany?: AccessRequestCreateManyDecidedByInputEnvelope
+    connect?: AccessRequestWhereUniqueInput | AccessRequestWhereUniqueInput[]
+  }
+
+  export type AccessRequestCreateNestedOneWithoutCreatedUserInput = {
+    create?: XOR<AccessRequestCreateWithoutCreatedUserInput, AccessRequestUncheckedCreateWithoutCreatedUserInput>
+    connectOrCreate?: AccessRequestCreateOrConnectWithoutCreatedUserInput
+    connect?: AccessRequestWhereUniqueInput
+  }
+
   export type UserUncheckedCreateNestedManyWithoutManagerInput = {
     create?: XOR<UserCreateWithoutManagerInput, UserUncheckedCreateWithoutManagerInput> | UserCreateWithoutManagerInput[] | UserUncheckedCreateWithoutManagerInput[]
     connectOrCreate?: UserCreateOrConnectWithoutManagerInput | UserCreateOrConnectWithoutManagerInput[]
@@ -69799,6 +71279,19 @@ export namespace Prisma {
     connectOrCreate?: PerformanceReviewProjectRatingCreateOrConnectWithoutRatedByInput | PerformanceReviewProjectRatingCreateOrConnectWithoutRatedByInput[]
     createMany?: PerformanceReviewProjectRatingCreateManyRatedByInputEnvelope
     connect?: PerformanceReviewProjectRatingWhereUniqueInput | PerformanceReviewProjectRatingWhereUniqueInput[]
+  }
+
+  export type AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput = {
+    create?: XOR<AccessRequestCreateWithoutDecidedByInput, AccessRequestUncheckedCreateWithoutDecidedByInput> | AccessRequestCreateWithoutDecidedByInput[] | AccessRequestUncheckedCreateWithoutDecidedByInput[]
+    connectOrCreate?: AccessRequestCreateOrConnectWithoutDecidedByInput | AccessRequestCreateOrConnectWithoutDecidedByInput[]
+    createMany?: AccessRequestCreateManyDecidedByInputEnvelope
+    connect?: AccessRequestWhereUniqueInput | AccessRequestWhereUniqueInput[]
+  }
+
+  export type AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput = {
+    create?: XOR<AccessRequestCreateWithoutCreatedUserInput, AccessRequestUncheckedCreateWithoutCreatedUserInput>
+    connectOrCreate?: AccessRequestCreateOrConnectWithoutCreatedUserInput
+    connect?: AccessRequestWhereUniqueInput
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -70491,6 +71984,30 @@ export namespace Prisma {
     deleteMany?: PerformanceReviewProjectRatingScalarWhereInput | PerformanceReviewProjectRatingScalarWhereInput[]
   }
 
+  export type AccessRequestUpdateManyWithoutDecidedByNestedInput = {
+    create?: XOR<AccessRequestCreateWithoutDecidedByInput, AccessRequestUncheckedCreateWithoutDecidedByInput> | AccessRequestCreateWithoutDecidedByInput[] | AccessRequestUncheckedCreateWithoutDecidedByInput[]
+    connectOrCreate?: AccessRequestCreateOrConnectWithoutDecidedByInput | AccessRequestCreateOrConnectWithoutDecidedByInput[]
+    upsert?: AccessRequestUpsertWithWhereUniqueWithoutDecidedByInput | AccessRequestUpsertWithWhereUniqueWithoutDecidedByInput[]
+    createMany?: AccessRequestCreateManyDecidedByInputEnvelope
+    set?: AccessRequestWhereUniqueInput | AccessRequestWhereUniqueInput[]
+    disconnect?: AccessRequestWhereUniqueInput | AccessRequestWhereUniqueInput[]
+    delete?: AccessRequestWhereUniqueInput | AccessRequestWhereUniqueInput[]
+    connect?: AccessRequestWhereUniqueInput | AccessRequestWhereUniqueInput[]
+    update?: AccessRequestUpdateWithWhereUniqueWithoutDecidedByInput | AccessRequestUpdateWithWhereUniqueWithoutDecidedByInput[]
+    updateMany?: AccessRequestUpdateManyWithWhereWithoutDecidedByInput | AccessRequestUpdateManyWithWhereWithoutDecidedByInput[]
+    deleteMany?: AccessRequestScalarWhereInput | AccessRequestScalarWhereInput[]
+  }
+
+  export type AccessRequestUpdateOneWithoutCreatedUserNestedInput = {
+    create?: XOR<AccessRequestCreateWithoutCreatedUserInput, AccessRequestUncheckedCreateWithoutCreatedUserInput>
+    connectOrCreate?: AccessRequestCreateOrConnectWithoutCreatedUserInput
+    upsert?: AccessRequestUpsertWithoutCreatedUserInput
+    disconnect?: AccessRequestWhereInput | boolean
+    delete?: AccessRequestWhereInput | boolean
+    connect?: AccessRequestWhereUniqueInput
+    update?: XOR<XOR<AccessRequestUpdateToOneWithWhereWithoutCreatedUserInput, AccessRequestUpdateWithoutCreatedUserInput>, AccessRequestUncheckedUpdateWithoutCreatedUserInput>
+  }
+
   export type UserUncheckedUpdateManyWithoutManagerNestedInput = {
     create?: XOR<UserCreateWithoutManagerInput, UserUncheckedCreateWithoutManagerInput> | UserCreateWithoutManagerInput[] | UserUncheckedCreateWithoutManagerInput[]
     connectOrCreate?: UserCreateOrConnectWithoutManagerInput | UserCreateOrConnectWithoutManagerInput[]
@@ -71105,6 +72622,66 @@ export namespace Prisma {
     update?: PerformanceReviewProjectRatingUpdateWithWhereUniqueWithoutRatedByInput | PerformanceReviewProjectRatingUpdateWithWhereUniqueWithoutRatedByInput[]
     updateMany?: PerformanceReviewProjectRatingUpdateManyWithWhereWithoutRatedByInput | PerformanceReviewProjectRatingUpdateManyWithWhereWithoutRatedByInput[]
     deleteMany?: PerformanceReviewProjectRatingScalarWhereInput | PerformanceReviewProjectRatingScalarWhereInput[]
+  }
+
+  export type AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput = {
+    create?: XOR<AccessRequestCreateWithoutDecidedByInput, AccessRequestUncheckedCreateWithoutDecidedByInput> | AccessRequestCreateWithoutDecidedByInput[] | AccessRequestUncheckedCreateWithoutDecidedByInput[]
+    connectOrCreate?: AccessRequestCreateOrConnectWithoutDecidedByInput | AccessRequestCreateOrConnectWithoutDecidedByInput[]
+    upsert?: AccessRequestUpsertWithWhereUniqueWithoutDecidedByInput | AccessRequestUpsertWithWhereUniqueWithoutDecidedByInput[]
+    createMany?: AccessRequestCreateManyDecidedByInputEnvelope
+    set?: AccessRequestWhereUniqueInput | AccessRequestWhereUniqueInput[]
+    disconnect?: AccessRequestWhereUniqueInput | AccessRequestWhereUniqueInput[]
+    delete?: AccessRequestWhereUniqueInput | AccessRequestWhereUniqueInput[]
+    connect?: AccessRequestWhereUniqueInput | AccessRequestWhereUniqueInput[]
+    update?: AccessRequestUpdateWithWhereUniqueWithoutDecidedByInput | AccessRequestUpdateWithWhereUniqueWithoutDecidedByInput[]
+    updateMany?: AccessRequestUpdateManyWithWhereWithoutDecidedByInput | AccessRequestUpdateManyWithWhereWithoutDecidedByInput[]
+    deleteMany?: AccessRequestScalarWhereInput | AccessRequestScalarWhereInput[]
+  }
+
+  export type AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput = {
+    create?: XOR<AccessRequestCreateWithoutCreatedUserInput, AccessRequestUncheckedCreateWithoutCreatedUserInput>
+    connectOrCreate?: AccessRequestCreateOrConnectWithoutCreatedUserInput
+    upsert?: AccessRequestUpsertWithoutCreatedUserInput
+    disconnect?: AccessRequestWhereInput | boolean
+    delete?: AccessRequestWhereInput | boolean
+    connect?: AccessRequestWhereUniqueInput
+    update?: XOR<XOR<AccessRequestUpdateToOneWithWhereWithoutCreatedUserInput, AccessRequestUpdateWithoutCreatedUserInput>, AccessRequestUncheckedUpdateWithoutCreatedUserInput>
+  }
+
+  export type UserCreateNestedOneWithoutAccessRequestsDecidedInput = {
+    create?: XOR<UserCreateWithoutAccessRequestsDecidedInput, UserUncheckedCreateWithoutAccessRequestsDecidedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAccessRequestsDecidedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutAccessRequestOriginInput = {
+    create?: XOR<UserCreateWithoutAccessRequestOriginInput, UserUncheckedCreateWithoutAccessRequestOriginInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAccessRequestOriginInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumAccessRequestStatusFieldUpdateOperationsInput = {
+    set?: $Enums.AccessRequestStatus
+  }
+
+  export type UserUpdateOneWithoutAccessRequestsDecidedNestedInput = {
+    create?: XOR<UserCreateWithoutAccessRequestsDecidedInput, UserUncheckedCreateWithoutAccessRequestsDecidedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAccessRequestsDecidedInput
+    upsert?: UserUpsertWithoutAccessRequestsDecidedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAccessRequestsDecidedInput, UserUpdateWithoutAccessRequestsDecidedInput>, UserUncheckedUpdateWithoutAccessRequestsDecidedInput>
+  }
+
+  export type UserUpdateOneWithoutAccessRequestOriginNestedInput = {
+    create?: XOR<UserCreateWithoutAccessRequestOriginInput, UserUncheckedCreateWithoutAccessRequestOriginInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAccessRequestOriginInput
+    upsert?: UserUpsertWithoutAccessRequestOriginInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAccessRequestOriginInput, UserUpdateWithoutAccessRequestOriginInput>, UserUncheckedUpdateWithoutAccessRequestOriginInput>
   }
 
   export type ProjectCreateNestedManyWithoutClientInput = {
@@ -74747,6 +76324,23 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type NestedEnumAccessRequestStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.AccessRequestStatus | EnumAccessRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AccessRequestStatus[] | ListEnumAccessRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AccessRequestStatus[] | ListEnumAccessRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAccessRequestStatusFilter<$PrismaModel> | $Enums.AccessRequestStatus
+  }
+
+  export type NestedEnumAccessRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AccessRequestStatus | EnumAccessRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AccessRequestStatus[] | ListEnumAccessRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AccessRequestStatus[] | ListEnumAccessRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAccessRequestStatusWithAggregatesFilter<$PrismaModel> | $Enums.AccessRequestStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAccessRequestStatusFilter<$PrismaModel>
+    _max?: NestedEnumAccessRequestStatusFilter<$PrismaModel>
+  }
+
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -75304,6 +76898,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutReportsInput = {
@@ -75367,6 +76963,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutReportsInput = {
@@ -75435,6 +77033,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutManagerInput = {
@@ -75498,6 +77098,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutManagerInput = {
@@ -75571,6 +77173,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutSuperviseesInput = {
@@ -75634,6 +77238,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutSuperviseesInput = {
@@ -75702,6 +77308,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutPrincipalInput = {
@@ -75765,6 +77373,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutPrincipalInput = {
@@ -77835,6 +79445,69 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AccessRequestCreateWithoutDecidedByInput = {
+    id?: string
+    email: string
+    name: string
+    googleSub: string
+    status?: $Enums.AccessRequestStatus
+    decidedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdUser?: UserCreateNestedOneWithoutAccessRequestOriginInput
+  }
+
+  export type AccessRequestUncheckedCreateWithoutDecidedByInput = {
+    id?: string
+    email: string
+    name: string
+    googleSub: string
+    status?: $Enums.AccessRequestStatus
+    decidedAt?: Date | string | null
+    createdUserId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AccessRequestCreateOrConnectWithoutDecidedByInput = {
+    where: AccessRequestWhereUniqueInput
+    create: XOR<AccessRequestCreateWithoutDecidedByInput, AccessRequestUncheckedCreateWithoutDecidedByInput>
+  }
+
+  export type AccessRequestCreateManyDecidedByInputEnvelope = {
+    data: AccessRequestCreateManyDecidedByInput | AccessRequestCreateManyDecidedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AccessRequestCreateWithoutCreatedUserInput = {
+    id?: string
+    email: string
+    name: string
+    googleSub: string
+    status?: $Enums.AccessRequestStatus
+    decidedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    decidedBy?: UserCreateNestedOneWithoutAccessRequestsDecidedInput
+  }
+
+  export type AccessRequestUncheckedCreateWithoutCreatedUserInput = {
+    id?: string
+    email: string
+    name: string
+    googleSub: string
+    status?: $Enums.AccessRequestStatus
+    decidedById?: string | null
+    decidedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AccessRequestCreateOrConnectWithoutCreatedUserInput = {
+    where: AccessRequestWhereUniqueInput
+    create: XOR<AccessRequestCreateWithoutCreatedUserInput, AccessRequestUncheckedCreateWithoutCreatedUserInput>
+  }
+
   export type BusinessUnitUpsertWithoutUsersInput = {
     update: XOR<BusinessUnitUpdateWithoutUsersInput, BusinessUnitUncheckedUpdateWithoutUsersInput>
     create: XOR<BusinessUnitCreateWithoutUsersInput, BusinessUnitUncheckedCreateWithoutUsersInput>
@@ -77942,6 +79615,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReportsInput = {
@@ -78005,6 +79680,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutManagerInput = {
@@ -78118,6 +79795,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSuperviseesInput = {
@@ -78181,6 +79860,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUpsertWithWhereUniqueWithoutPrincipalInput = {
@@ -79405,6 +81086,625 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"PerformanceReviewProjectRating"> | Date | string
   }
 
+  export type AccessRequestUpsertWithWhereUniqueWithoutDecidedByInput = {
+    where: AccessRequestWhereUniqueInput
+    update: XOR<AccessRequestUpdateWithoutDecidedByInput, AccessRequestUncheckedUpdateWithoutDecidedByInput>
+    create: XOR<AccessRequestCreateWithoutDecidedByInput, AccessRequestUncheckedCreateWithoutDecidedByInput>
+  }
+
+  export type AccessRequestUpdateWithWhereUniqueWithoutDecidedByInput = {
+    where: AccessRequestWhereUniqueInput
+    data: XOR<AccessRequestUpdateWithoutDecidedByInput, AccessRequestUncheckedUpdateWithoutDecidedByInput>
+  }
+
+  export type AccessRequestUpdateManyWithWhereWithoutDecidedByInput = {
+    where: AccessRequestScalarWhereInput
+    data: XOR<AccessRequestUpdateManyMutationInput, AccessRequestUncheckedUpdateManyWithoutDecidedByInput>
+  }
+
+  export type AccessRequestScalarWhereInput = {
+    AND?: AccessRequestScalarWhereInput | AccessRequestScalarWhereInput[]
+    OR?: AccessRequestScalarWhereInput[]
+    NOT?: AccessRequestScalarWhereInput | AccessRequestScalarWhereInput[]
+    id?: StringFilter<"AccessRequest"> | string
+    email?: StringFilter<"AccessRequest"> | string
+    name?: StringFilter<"AccessRequest"> | string
+    googleSub?: StringFilter<"AccessRequest"> | string
+    status?: EnumAccessRequestStatusFilter<"AccessRequest"> | $Enums.AccessRequestStatus
+    decidedById?: StringNullableFilter<"AccessRequest"> | string | null
+    decidedAt?: DateTimeNullableFilter<"AccessRequest"> | Date | string | null
+    createdUserId?: StringNullableFilter<"AccessRequest"> | string | null
+    createdAt?: DateTimeFilter<"AccessRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"AccessRequest"> | Date | string
+  }
+
+  export type AccessRequestUpsertWithoutCreatedUserInput = {
+    update: XOR<AccessRequestUpdateWithoutCreatedUserInput, AccessRequestUncheckedUpdateWithoutCreatedUserInput>
+    create: XOR<AccessRequestCreateWithoutCreatedUserInput, AccessRequestUncheckedCreateWithoutCreatedUserInput>
+    where?: AccessRequestWhereInput
+  }
+
+  export type AccessRequestUpdateToOneWithWhereWithoutCreatedUserInput = {
+    where?: AccessRequestWhereInput
+    data: XOR<AccessRequestUpdateWithoutCreatedUserInput, AccessRequestUncheckedUpdateWithoutCreatedUserInput>
+  }
+
+  export type AccessRequestUpdateWithoutCreatedUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    googleSub?: StringFieldUpdateOperationsInput | string
+    status?: EnumAccessRequestStatusFieldUpdateOperationsInput | $Enums.AccessRequestStatus
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    decidedBy?: UserUpdateOneWithoutAccessRequestsDecidedNestedInput
+  }
+
+  export type AccessRequestUncheckedUpdateWithoutCreatedUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    googleSub?: StringFieldUpdateOperationsInput | string
+    status?: EnumAccessRequestStatusFieldUpdateOperationsInput | $Enums.AccessRequestStatus
+    decidedById?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserCreateWithoutAccessRequestsDecidedInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    calendarTokenVersion?: number
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
+    skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
+    skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
+    skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
+  }
+
+  export type UserUncheckedCreateWithoutAccessRequestsDecidedInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnitId?: string | null
+    managerId?: string | null
+    principalId?: string | null
+    calendarTokenVersion?: number
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
+    skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
+    skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
+    skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAccessRequestsDecidedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAccessRequestsDecidedInput, UserUncheckedCreateWithoutAccessRequestsDecidedInput>
+  }
+
+  export type UserCreateWithoutAccessRequestOriginInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    calendarTokenVersion?: number
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
+    skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
+    skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
+    skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+  }
+
+  export type UserUncheckedCreateWithoutAccessRequestOriginInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnitId?: string | null
+    managerId?: string | null
+    principalId?: string | null
+    calendarTokenVersion?: number
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
+    skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
+    skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
+    skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+  }
+
+  export type UserCreateOrConnectWithoutAccessRequestOriginInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAccessRequestOriginInput, UserUncheckedCreateWithoutAccessRequestOriginInput>
+  }
+
+  export type UserUpsertWithoutAccessRequestsDecidedInput = {
+    update: XOR<UserUpdateWithoutAccessRequestsDecidedInput, UserUncheckedUpdateWithoutAccessRequestsDecidedInput>
+    create: XOR<UserCreateWithoutAccessRequestsDecidedInput, UserUncheckedCreateWithoutAccessRequestsDecidedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAccessRequestsDecidedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAccessRequestsDecidedInput, UserUncheckedUpdateWithoutAccessRequestsDecidedInput>
+  }
+
+  export type UserUpdateWithoutAccessRequestsDecidedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
+    skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
+    skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
+    skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAccessRequestsDecidedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
+    skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
+    skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
+  }
+
+  export type UserUpsertWithoutAccessRequestOriginInput = {
+    update: XOR<UserUpdateWithoutAccessRequestOriginInput, UserUncheckedUpdateWithoutAccessRequestOriginInput>
+    create: XOR<UserCreateWithoutAccessRequestOriginInput, UserUncheckedCreateWithoutAccessRequestOriginInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAccessRequestOriginInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAccessRequestOriginInput, UserUncheckedUpdateWithoutAccessRequestOriginInput>
+  }
+
+  export type UserUpdateWithoutAccessRequestOriginInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
+    skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
+    skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
+    skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAccessRequestOriginInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
+    skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
+    skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+  }
+
   export type ProjectCreateWithoutClientInput = {
     id?: string
     code: string
@@ -79723,6 +82023,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutProjectsAsSalesInput = {
@@ -79786,6 +82088,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutProjectsAsSalesInput = {
@@ -79854,6 +82158,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutProjectsAsPmInput = {
@@ -79917,6 +82223,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutProjectsAsPmInput = {
@@ -79985,6 +82293,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutProjectsAsTwInput = {
@@ -80048,6 +82358,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutProjectsAsTwInput = {
@@ -80116,6 +82428,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutProjectsAsAdminInput = {
@@ -80179,6 +82493,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutProjectsAsAdminInput = {
@@ -80999,6 +83315,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsAsSalesInput = {
@@ -81062,6 +83380,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUpsertWithoutProjectsAsPmInput = {
@@ -81136,6 +83456,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsAsPmInput = {
@@ -81199,6 +83521,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUpsertWithoutProjectsAsTwInput = {
@@ -81273,6 +83597,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsAsTwInput = {
@@ -81336,6 +83662,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUpsertWithoutProjectsAsAdminInput = {
@@ -81410,6 +83738,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsAsAdminInput = {
@@ -81473,6 +83803,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type ProjectResourceUpsertWithWhereUniqueWithoutProjectInput = {
@@ -82020,6 +84352,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutBaselinesCreatedInput = {
@@ -82083,6 +84417,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutBaselinesCreatedInput = {
@@ -82340,6 +84676,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBaselinesCreatedInput = {
@@ -82403,6 +84741,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type ProjectCreateWithoutChangeRequestsInput = {
@@ -82583,6 +84923,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutChangeRequestsRequestedInput = {
@@ -82646,6 +84988,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutChangeRequestsRequestedInput = {
@@ -82714,6 +85058,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutChangeRequestsDecidedInput = {
@@ -82777,6 +85123,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutChangeRequestsDecidedInput = {
@@ -83019,6 +85367,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutChangeRequestsRequestedInput = {
@@ -83082,6 +85432,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUpsertWithoutChangeRequestsDecidedInput = {
@@ -83156,6 +85508,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutChangeRequestsDecidedInput = {
@@ -83219,6 +85573,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type ProjectBaselineUpsertWithWhereUniqueWithoutChangeRequestInput = {
@@ -83466,6 +85822,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutProjectReportsCreatedInput = {
@@ -83529,6 +85887,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutProjectReportsCreatedInput = {
@@ -83788,6 +86148,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectReportsCreatedInput = {
@@ -83851,6 +86213,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type ProjectCreateWithoutWorkstreamsInput = {
@@ -84973,6 +87337,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutFeedback360AsReviewerInput = {
@@ -85036,6 +87402,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutFeedback360AsReviewerInput = {
@@ -85104,6 +87472,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutFeedback360AsSubjectInput = {
@@ -85167,6 +87537,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutFeedback360AsSubjectInput = {
@@ -85369,6 +87741,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeedback360AsReviewerInput = {
@@ -85432,6 +87806,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUpsertWithoutFeedback360AsSubjectInput = {
@@ -85506,6 +87882,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeedback360AsSubjectInput = {
@@ -85569,6 +87947,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserCreateWithoutAuditLogsInput = {
@@ -85632,6 +88012,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -85695,6 +88077,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -85774,6 +88158,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -85837,6 +88223,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type ProjectCreateWithoutResourcesInput = {
@@ -86068,6 +88456,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutResourcesInput = {
@@ -86131,6 +88521,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutResourcesInput = {
@@ -86199,6 +88591,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutProposedResourcesInput = {
@@ -86262,6 +88656,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutProposedResourcesInput = {
@@ -86549,6 +88945,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutResourcesInput = {
@@ -86612,6 +89010,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUpsertWithoutProposedResourcesInput = {
@@ -86686,6 +89086,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProposedResourcesInput = {
@@ -86749,6 +89151,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type ProjectResourceRateUpsertWithWhereUniqueWithoutResourceInput = {
@@ -86863,6 +89267,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutCreatedResourceRatesInput = {
@@ -86926,6 +89332,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutCreatedResourceRatesInput = {
@@ -87046,6 +89454,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedResourceRatesInput = {
@@ -87109,6 +89519,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type ProjectCreateWithoutTimesheetsInput = {
@@ -87340,6 +89752,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutTimesheetsInput = {
@@ -87403,6 +89817,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutTimesheetsInput = {
@@ -87524,6 +89940,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutApprovedTimesheetsInput = {
@@ -87587,6 +90005,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutApprovedTimesheetsInput = {
@@ -87846,6 +90266,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTimesheetsInput = {
@@ -87909,6 +90331,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type TaskUpsertWithoutTimesheetsInput = {
@@ -88042,6 +90466,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutApprovedTimesheetsInput = {
@@ -88105,6 +90531,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type ProjectCreateWithoutDocumentsInput = {
@@ -88285,6 +90713,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutDocumentsUploadedInput = {
@@ -88348,6 +90778,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutDocumentsUploadedInput = {
@@ -88694,6 +91126,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDocumentsUploadedInput = {
@@ -88757,6 +91191,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type DocumentUpsertWithoutVersionsInput = {
@@ -89061,6 +91497,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutClosingChecklistsCompletedInput = {
@@ -89124,6 +91562,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutClosingChecklistsCompletedInput = {
@@ -89326,6 +91766,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutClosingChecklistsCompletedInput = {
@@ -89389,6 +91831,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type ProjectCreateWithoutExpensesInput = {
@@ -89620,6 +92064,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutApprovedExpensesInput = {
@@ -89683,6 +92129,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutApprovedExpensesInput = {
@@ -89751,6 +92199,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutSettledExpensesInput = {
@@ -89814,6 +92264,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutSettledExpensesInput = {
@@ -89882,6 +92334,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutProjectExpensesInput = {
@@ -89945,6 +92399,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutProjectExpensesInput = {
@@ -90204,6 +92660,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutApprovedExpensesInput = {
@@ -90267,6 +92725,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUpsertWithoutSettledExpensesInput = {
@@ -90341,6 +92801,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSettledExpensesInput = {
@@ -90404,6 +92866,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUpsertWithoutProjectExpensesInput = {
@@ -90478,6 +92942,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectExpensesInput = {
@@ -90541,6 +93007,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserCreateWithoutBusinessUnitInput = {
@@ -90604,6 +93072,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutBusinessUnitInput = {
@@ -90667,6 +93137,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutBusinessUnitInput = {
@@ -91086,6 +93558,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutSkillsInput = {
@@ -91149,6 +93623,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutSkillsInput = {
@@ -91255,6 +93731,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSkillsInput = {
@@ -91318,6 +93796,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type SkillUpsertWithoutUsersInput = {
@@ -91414,6 +93894,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutSkillGoalsAsSubjectInput = {
@@ -91477,6 +93959,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutSkillGoalsAsSubjectInput = {
@@ -91572,6 +94056,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutSkillGoalsCreatedInput = {
@@ -91635,6 +94121,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutSkillGoalsCreatedInput = {
@@ -91714,6 +94202,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSkillGoalsAsSubjectInput = {
@@ -91777,6 +94267,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type SkillUpsertWithoutDevelopmentGoalsInput = {
@@ -91884,6 +94376,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSkillGoalsCreatedInput = {
@@ -91947,6 +94441,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserCreateWithoutSkillProgressionsAsSubjectInput = {
@@ -92010,6 +94506,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutSkillProgressionsAsSubjectInput = {
@@ -92073,6 +94571,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutSkillProgressionsAsSubjectInput = {
@@ -92168,6 +94668,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutSkillProgressionsLoggedInput = {
@@ -92231,6 +94733,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutSkillProgressionsLoggedInput = {
@@ -92310,6 +94814,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSkillProgressionsAsSubjectInput = {
@@ -92373,6 +94879,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type SkillUpsertWithoutProgressionLogsInput = {
@@ -92480,6 +94988,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSkillProgressionsLoggedInput = {
@@ -92543,6 +95053,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserCreateWithoutActivitiesInput = {
@@ -92606,6 +95118,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutActivitiesInput = {
@@ -92669,6 +95183,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutActivitiesInput = {
@@ -92865,6 +95381,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutActivitiesInput = {
@@ -92928,6 +95446,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type ProjectUpsertWithoutActivitiesInput = {
@@ -93282,6 +95802,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutTasksAssignedInput = {
@@ -93345,6 +95867,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutTasksAssignedInput = {
@@ -93413,6 +95937,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutTasksCreatedInput = {
@@ -93476,6 +96002,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutTasksCreatedInput = {
@@ -93982,6 +96510,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTasksAssignedInput = {
@@ -94045,6 +96575,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUpsertWithoutTasksCreatedInput = {
@@ -94119,6 +96651,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTasksCreatedInput = {
@@ -94182,6 +96716,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type TaskUpsertWithoutSubtasksInput = {
@@ -95099,6 +97635,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutTaskAssignmentsInput = {
@@ -95162,6 +97700,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutTaskAssignmentsInput = {
@@ -95300,6 +97840,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTaskAssignmentsInput = {
@@ -95363,6 +97905,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type TaskCreateWithoutTimeLogsInput = {
@@ -95479,6 +98023,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutTaskTimeLogsInput = {
@@ -95542,6 +98088,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutTaskTimeLogsInput = {
@@ -95680,6 +98228,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTaskTimeLogsInput = {
@@ -95743,6 +98293,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type ClientCreateWithoutLeadsInput = {
@@ -95839,6 +98391,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutLeadsOwnedInput = {
@@ -95902,6 +98456,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutLeadsOwnedInput = {
@@ -96052,6 +98608,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLeadsOwnedInput = {
@@ -96115,6 +98673,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type LeadActivityUpsertWithWhereUniqueWithoutLeadInput = {
@@ -96259,6 +98819,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutLeadActivitiesInput = {
@@ -96322,6 +98884,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutLeadActivitiesInput = {
@@ -96472,6 +99036,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLeadActivitiesInput = {
@@ -96535,6 +99101,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserCreateWithoutLeavesInput = {
@@ -96598,6 +99166,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutLeavesInput = {
@@ -96661,6 +99231,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutLeavesInput = {
@@ -96740,6 +99312,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLeavesInput = {
@@ -96803,6 +99377,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type BusinessUnitCreateWithoutTaskTemplatesInput = {
@@ -96895,6 +99471,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutTaskTemplatesCreatedInput = {
@@ -96958,6 +99536,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutTaskTemplatesCreatedInput = {
@@ -97124,6 +99704,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTaskTemplatesCreatedInput = {
@@ -97187,6 +99769,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type ProjectTemplateUpsertWithWhereUniqueWithoutTaskTemplateInput = {
@@ -97324,6 +99908,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutProjectTemplatesCreatedInput = {
@@ -97387,6 +99973,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutProjectTemplatesCreatedInput = {
@@ -97626,6 +100214,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectTemplatesCreatedInput = {
@@ -97689,6 +100279,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type ProjectTemplateResourceUpsertWithWhereUniqueWithoutTemplateInput = {
@@ -98142,6 +100734,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -98205,6 +100799,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -98284,6 +100880,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -98347,6 +100945,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type ProjectCreateWithoutRaidItemsInput = {
@@ -98527,6 +101127,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutRaidItemsOwnedInput = {
@@ -98590,6 +101192,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutRaidItemsOwnedInput = {
@@ -98658,6 +101262,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutRaidItemsCreatedInput = {
@@ -98721,6 +101327,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutRaidItemsCreatedInput = {
@@ -98923,6 +101531,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRaidItemsOwnedInput = {
@@ -98986,6 +101596,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUpsertWithoutRaidItemsCreatedInput = {
@@ -99060,6 +101672,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRaidItemsCreatedInput = {
@@ -99123,6 +101737,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserCreateWithoutPerfReviewsSubjectInput = {
@@ -99186,6 +101802,8 @@ export namespace Prisma {
     changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutPerfReviewsSubjectInput = {
@@ -99249,6 +101867,8 @@ export namespace Prisma {
     changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutPerfReviewsSubjectInput = {
@@ -99317,6 +101937,8 @@ export namespace Prisma {
     changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutPerfReviewsAuthoredInput = {
@@ -99380,6 +102002,8 @@ export namespace Prisma {
     changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutPerfReviewsAuthoredInput = {
@@ -99489,6 +102113,8 @@ export namespace Prisma {
     changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPerfReviewsSubjectInput = {
@@ -99552,6 +102178,8 @@ export namespace Prisma {
     changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUpsertWithoutPerfReviewsAuthoredInput = {
@@ -99626,6 +102254,8 @@ export namespace Prisma {
     changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPerfReviewsAuthoredInput = {
@@ -99689,6 +102319,8 @@ export namespace Prisma {
     changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type PerformanceReviewProjectRatingUpsertWithWhereUniqueWithoutReviewInput = {
@@ -99932,6 +102564,8 @@ export namespace Prisma {
     changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserUncheckedCreateWithoutPerfProjectRatingsGivenInput = {
@@ -99995,6 +102629,8 @@ export namespace Prisma {
     changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
     perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
     perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
   }
 
   export type UserCreateOrConnectWithoutPerfProjectRatingsGivenInput = {
@@ -100250,6 +102886,8 @@ export namespace Prisma {
     changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPerfProjectRatingsGivenInput = {
@@ -100313,6 +102951,8 @@ export namespace Prisma {
     changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserCreateManyManagerInput = {
@@ -101084,6 +103724,18 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type AccessRequestCreateManyDecidedByInput = {
+    id?: string
+    email: string
+    name: string
+    googleSub: string
+    status?: $Enums.AccessRequestStatus
+    decidedAt?: Date | string | null
+    createdUserId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type UserUpdateWithoutManagerInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
@@ -101145,6 +103797,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutManagerInput = {
@@ -101208,6 +103862,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutManagerInput = {
@@ -101290,6 +103946,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPrincipalInput = {
@@ -101353,6 +104011,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutPrincipalInput = {
@@ -103743,6 +106403,42 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type AccessRequestUpdateWithoutDecidedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    googleSub?: StringFieldUpdateOperationsInput | string
+    status?: EnumAccessRequestStatusFieldUpdateOperationsInput | $Enums.AccessRequestStatus
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdUser?: UserUpdateOneWithoutAccessRequestOriginNestedInput
+  }
+
+  export type AccessRequestUncheckedUpdateWithoutDecidedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    googleSub?: StringFieldUpdateOperationsInput | string
+    status?: EnumAccessRequestStatusFieldUpdateOperationsInput | $Enums.AccessRequestStatus
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AccessRequestUncheckedUpdateManyWithoutDecidedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    googleSub?: StringFieldUpdateOperationsInput | string
+    status?: EnumAccessRequestStatusFieldUpdateOperationsInput | $Enums.AccessRequestStatus
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ProjectCreateManyClientInput = {
     id?: string
     code: string
@@ -105869,6 +108565,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBusinessUnitInput = {
@@ -105932,6 +108630,8 @@ export namespace Prisma {
     perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
     perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
     perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutBusinessUnitInput = {
@@ -106916,6 +109616,10 @@ export namespace Prisma {
      * @deprecated Use UserDefaultArgs instead
      */
     export type UserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use AccessRequestDefaultArgs instead
+     */
+    export type AccessRequestArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = AccessRequestDefaultArgs<ExtArgs>
     /**
      * @deprecated Use ClientDefaultArgs instead
      */

@@ -51,6 +51,7 @@ import xeroRouter from "./xero.js";
 import pipedriveRouter from "./pipedrive.js";
 import clientPortalRouter from "./client-portal.js";
 import executiveCopilotRouter from "./executive-copilot.js";
+import accessRequestsRouter from "./access-requests.js";
 
 const router: IRouter = Router();
 
@@ -78,6 +79,7 @@ router.use(pipedriveRouter);
 // per-route, so this ordering is safe.
 router.use(clientPortalRouter);
 router.use(usersRouter);
+router.use(accessRequestsRouter);
 router.use(clientsRouter);
 router.use(projectsRouter);
 router.use(projectDemoSeedRouter);
