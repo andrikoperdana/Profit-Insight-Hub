@@ -23,9 +23,10 @@ function splitVat(
  * GET /api/revenue-recognition
  *
  * Revenue-recognition recap across commercial (CLIENT) projects. A milestone
- * is "recognized" when either:
- *   1. its BAST is uploaded AND the milestone is INVOICED/PAID (primary path), or
- *   2. its per-milestone report link is filed (alternative path).
+ * is "recognized" when ANY of the following holds:
+ *   1. its BAST document is uploaded, or
+ *   2. the milestone is PAID, or
+ *   3. its per-milestone report link is filed.
  * CANCELLED milestones are excluded entirely.
  *
  * Access: MANAGEMENT / FINANCE / SUPER_ADMIN see every project; a
@@ -67,6 +68,7 @@ router.get("/revenue-recognition", async (req, res) => {
           percentage: true,
           amount: true,
           invoicedAt: true,
+          paidAt: true,
           reportUrl: true,
           reportFiledAt: true,
           workstream: { select: { name: true } },
@@ -120,15 +122,18 @@ router.get("/revenue-recognition", async (req, res) => {
       const { dpp, total: gross } = splitVat(base, vatPct, includesVat);
       const bast = m.invoiceDocuments[0] ?? null;
       const invoiced = m.status === "INVOICED" || m.status === "PAID";
-      const viaBastInvoice = !!bast && invoiced;
+      const viaBast = !!bast;
+      const viaPaid = m.status === "PAID";
       const viaReport = !!m.reportUrl;
-      const recognized = viaBastInvoice || viaReport;
-      const basis = viaBastInvoice ? "BAST_INVOICE" : viaReport ? "REPORT" : null;
-      const recognizedAt = viaBastInvoice
-        ? (m.invoicedAt ?? bast?.uploadedAt ?? null)
-        : viaReport
-          ? m.reportFiledAt
-          : null;
+      const recognized = viaBast || viaPaid || viaReport;
+      const basis = viaBast ? "BAST" : viaPaid ? "PAID" : viaReport ? "REPORT" : null;
+      const recognizedAt = viaBast
+        ? (bast?.uploadedAt ?? null)
+        : viaPaid
+          ? (m.paidAt ?? m.invoicedAt ?? null)
+          : viaReport
+            ? m.reportFiledAt
+            : null;
 
       totalDpp += dpp;
       totalGross += gross;

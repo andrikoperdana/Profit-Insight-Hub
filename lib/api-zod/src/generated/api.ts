@@ -5399,7 +5399,7 @@ export const GetRevenueRecognitionResponse = zod.object({
           basis: zod
             .string()
             .nullish()
-            .describe("BAST_INVOICE or REPORT when recognized"),
+            .describe("BAST, PAID or REPORT when recognized"),
           hasBast: zod.boolean(),
           invoiced: zod.boolean(),
           reportUrl: zod.string().nullish(),

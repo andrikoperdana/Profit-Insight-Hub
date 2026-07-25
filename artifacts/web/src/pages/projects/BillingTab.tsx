@@ -867,7 +867,7 @@ function MilestoneFormDialog({
                 data-testid="input-milestone-report-url"
               />
               <p className="text-xs text-muted-foreground mt-1">
-                Alternative evidence for revenue recognition when the BAST/invoice path is not yet complete.
+                Counts as revenue-recognition evidence when the BAST or payment is not yet in.
               </p>
             </div>
           )}

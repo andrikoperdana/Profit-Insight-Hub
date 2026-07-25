@@ -3295,7 +3295,7 @@ components:
         dpp: { type: number }
         gross: { type: number }
         recognized: { type: boolean }
-        basis: { type: string, nullable: true, description: "BAST_INVOICE or REPORT when recognized" }
+        basis: { type: string, nullable: true, description: "BAST, PAID or REPORT when recognized" }
         hasBast: { type: boolean }
         invoiced: { type: boolean }
         reportUrl: { type: string, nullable: true }

@@ -46,10 +46,17 @@ function formatDate(iso?: string | null) {
 }
 
 function BasisBadge({ m }: { m: RevenueRecognitionMilestone }) {
-  if (m.basis === "BAST_INVOICE") {
+  if (m.basis === "BAST") {
     return (
       <Badge variant="outline" className="border-emerald-500/40 text-emerald-500 gap-1">
-        <FileCheck2 className="h-3 w-3" /> BAST + Invoice
+        <FileCheck2 className="h-3 w-3" /> BAST
+      </Badge>
+    );
+  }
+  if (m.basis === "PAID") {
+    return (
+      <Badge variant="outline" className="border-emerald-500/40 text-emerald-500 gap-1">
+        <FileCheck2 className="h-3 w-3" /> Paid
       </Badge>
     );
   }
@@ -179,8 +186,16 @@ function ProjectRow({ p }: { p: RevenueRecognitionProject }) {
                           <span className={m.hasBast ? "text-emerald-500" : "text-muted-foreground"}>
                             BAST {m.hasBast ? "uploaded" : "missing"}
                           </span>
-                          <span className={m.invoiced ? "text-emerald-500" : "text-muted-foreground"}>
-                            {m.invoiced ? "Invoiced/Paid" : "Not invoiced"}
+                          <span
+                            className={
+                              m.status === "PAID" ? "text-emerald-500" : "text-muted-foreground"
+                            }
+                          >
+                            {m.status === "PAID"
+                              ? "Paid"
+                              : m.invoiced
+                                ? "Invoiced (not paid)"
+                                : "Not invoiced"}
                           </span>
                           {m.reportUrl ? (
                             <a
@@ -258,9 +273,8 @@ export default function RevenueRecognitionPage() {
         <div>
           <h1 className="text-2xl font-bold">Revenue Recognition</h1>
           <p className="text-sm text-muted-foreground">
-            A milestone is recognized when its BAST is uploaded and it is invoiced/paid, or when
-            its report link is filed. Commercial (client) projects only; cancelled milestones
-            excluded.
+            A milestone is recognized when its BAST is uploaded, it is paid, or its report link
+            is filed. Commercial (client) projects only; cancelled milestones excluded.
           </p>
         </div>
       </div>

@@ -15,7 +15,7 @@ export interface RevenueRecognitionMilestone {
   dpp: number;
   gross: number;
   recognized: boolean;
-  /** BAST_INVOICE or REPORT when recognized */
+  /** BAST, PAID or REPORT when recognized */
   basis?: string | null;
   hasBast: boolean;
   invoiced: boolean;
