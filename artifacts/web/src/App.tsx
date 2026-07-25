@@ -36,6 +36,7 @@ const BusinessUnitsPage = lazy(() => import("@/pages/business-units"));
 const ResourcePlanningPage = lazy(() => import("@/pages/resource-planning"));
 const InvoicePlanningPage = lazy(() => import("@/pages/invoice-planning"));
 const VatRecapPage = lazy(() => import("@/pages/vat-recap"));
+const RevenueRecognitionPage = lazy(() => import("@/pages/revenue-recognition"));
 const InvoiceSettingsPage = lazy(() => import("@/pages/invoice-settings"));
 const TopPerformersPage = lazy(() => import("@/pages/top-performers"));
 const SurveyResultsPage = lazy(() => import("@/pages/survey-results"));
@@ -179,6 +180,7 @@ function Router() {
         <Route path="/resource-planning" component={() => <ProtectedRoute component={ResourcePlanningPage} />} />
         <Route path="/invoice-planning" component={() => <ProtectedRoute component={InvoicePlanningPage} />} />
         <Route path="/vat-recap" component={() => <ProtectedRoute component={VatRecapPage} />} />
+        <Route path="/revenue-recognition" component={() => <ProtectedRoute component={RevenueRecognitionPage} allowRoles={["MANAGEMENT","FINANCE","PROJECT_MANAGER"]} />} />
         <Route path="/invoice-settings" component={() => <ProtectedRoute component={InvoiceSettingsPage} allowRoles={["MANAGEMENT","FINANCE"]} />} />
         <Route path="/top-performers" component={() => <ProtectedRoute component={TopPerformersPage} />} />
         <Route path="/survey-results" component={() => <ProtectedRoute component={SurveyResultsPage} />} />

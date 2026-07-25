@@ -73,6 +73,7 @@ Persisted `Notification` rows (`lib/notifications.ts` `notifyUser`), surfaced in
 
 - `/executive-copilot` (MGMT) — AI Executive Copilot briefing page (not a chatbot). All numbers computed deterministically (`api-server/src/lib/executive-copilot.ts` `buildExecutiveCopilotFacts`); LLM (gpt-5.4) only narrates prose + Top 5 actions. Portfolio health score/label deterministic and overwritten onto the validated AI JSON. Split endpoints: `POST /executive-copilot/briefing/generate` (button-driven, incurs AI cost) + `GET /executive-copilot/briefing` (cached only). Module-level cache + single-flight + 10min stale flag. Never sends docs/rates/raw timesheets to the LLM; never logs provider body.
 - `/vat-recap` (MGMT) — 12-month + annual VAT breakdown of INVOICED/PAID milestones.
+- `/revenue-recognition` (MGMT/FINANCE/PM — PM own projects only) — milestone recognized when (BAST doc + INVOICED/PAID) OR per-milestone `reportUrl` filed (rule B). Only kind=CLIENT, CANCELLED excluded; DPP via splitVat, By Project + By PM (hidden for PM). `BillingMilestone.reportUrl/reportFiledAt` set via milestone PATCH (http(s)-validated; filedAt stamped on set/change, cleared on empty); "Report" column + edit-dialog field in Billing tab.
 - `/resource-planning` (PM/MGMT/HR/Principal_*) — BU-grouped weekly mandays.
 - `/bench` (PM/MGMT/HR/Principal_*) — utilization detail.
 - `/skill-matrix` (PM/MGMT/HR) — users × skills + gaps.

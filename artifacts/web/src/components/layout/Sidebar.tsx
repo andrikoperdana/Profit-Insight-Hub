@@ -30,6 +30,7 @@ import {
   CheckSquare,
   FileText,
   Sparkles,
+  CircleDollarSign,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -147,6 +148,9 @@ export default function Sidebar() {
       ? [{ href: "/top-performers", label: "Top Performers", icon: Trophy }]
       : []),
     ...(sa || user?.role === "MANAGEMENT" || isFinance ? [{ href: "/vat-recap", label: "VAT Recap", icon: Receipt }] : []),
+    ...(sa || user?.role === "MANAGEMENT" || isFinance || user?.role === "PROJECT_MANAGER"
+      ? [{ href: "/revenue-recognition", label: "Revenue Recognition", icon: CircleDollarSign }]
+      : []),
     ...(sa || user?.role === "MANAGEMENT" || isFinance ? [{ href: "/invoice-settings", label: "Invoice Settings", icon: FileText }] : []),
     ...(sa || user?.role === "MANAGEMENT" || user?.role === "SALES" ? [{ href: "/survey-results", label: "Survey Results", icon: ClipboardList }] : []),
     ...(sa || user?.role === "MANAGEMENT" ? [{ href: "/settings/survey-template", label: "Survey Template", icon: ClipboardList }] : []),

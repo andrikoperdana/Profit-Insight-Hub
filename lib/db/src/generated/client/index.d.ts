@@ -36269,6 +36269,8 @@ export namespace Prisma {
     xeroSyncedAt: Date | null
     invoicedAt: Date | null
     paidAt: Date | null
+    reportUrl: string | null
+    reportFiledAt: Date | null
     sortOrder: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -36293,6 +36295,8 @@ export namespace Prisma {
     xeroSyncedAt: Date | null
     invoicedAt: Date | null
     paidAt: Date | null
+    reportUrl: string | null
+    reportFiledAt: Date | null
     sortOrder: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -36317,6 +36321,8 @@ export namespace Prisma {
     xeroSyncedAt: number
     invoicedAt: number
     paidAt: number
+    reportUrl: number
+    reportFiledAt: number
     sortOrder: number
     createdAt: number
     updatedAt: number
@@ -36361,6 +36367,8 @@ export namespace Prisma {
     xeroSyncedAt?: true
     invoicedAt?: true
     paidAt?: true
+    reportUrl?: true
+    reportFiledAt?: true
     sortOrder?: true
     createdAt?: true
     updatedAt?: true
@@ -36385,6 +36393,8 @@ export namespace Prisma {
     xeroSyncedAt?: true
     invoicedAt?: true
     paidAt?: true
+    reportUrl?: true
+    reportFiledAt?: true
     sortOrder?: true
     createdAt?: true
     updatedAt?: true
@@ -36409,6 +36419,8 @@ export namespace Prisma {
     xeroSyncedAt?: true
     invoicedAt?: true
     paidAt?: true
+    reportUrl?: true
+    reportFiledAt?: true
     sortOrder?: true
     createdAt?: true
     updatedAt?: true
@@ -36520,6 +36532,8 @@ export namespace Prisma {
     xeroSyncedAt: Date | null
     invoicedAt: Date | null
     paidAt: Date | null
+    reportUrl: string | null
+    reportFiledAt: Date | null
     sortOrder: number
     createdAt: Date
     updatedAt: Date
@@ -36563,6 +36577,8 @@ export namespace Prisma {
     xeroSyncedAt?: boolean
     invoicedAt?: boolean
     paidAt?: boolean
+    reportUrl?: boolean
+    reportFiledAt?: boolean
     sortOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -36591,6 +36607,8 @@ export namespace Prisma {
     xeroSyncedAt?: boolean
     invoicedAt?: boolean
     paidAt?: boolean
+    reportUrl?: boolean
+    reportFiledAt?: boolean
     sortOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -36617,6 +36635,8 @@ export namespace Prisma {
     xeroSyncedAt?: boolean
     invoicedAt?: boolean
     paidAt?: boolean
+    reportUrl?: boolean
+    reportFiledAt?: boolean
     sortOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -36659,6 +36679,8 @@ export namespace Prisma {
       xeroSyncedAt: Date | null
       invoicedAt: Date | null
       paidAt: Date | null
+      reportUrl: string | null
+      reportFiledAt: Date | null
       sortOrder: number
       createdAt: Date
       updatedAt: Date
@@ -37076,6 +37098,8 @@ export namespace Prisma {
     readonly xeroSyncedAt: FieldRef<"BillingMilestone", 'DateTime'>
     readonly invoicedAt: FieldRef<"BillingMilestone", 'DateTime'>
     readonly paidAt: FieldRef<"BillingMilestone", 'DateTime'>
+    readonly reportUrl: FieldRef<"BillingMilestone", 'String'>
+    readonly reportFiledAt: FieldRef<"BillingMilestone", 'DateTime'>
     readonly sortOrder: FieldRef<"BillingMilestone", 'Int'>
     readonly createdAt: FieldRef<"BillingMilestone", 'DateTime'>
     readonly updatedAt: FieldRef<"BillingMilestone", 'DateTime'>
@@ -56566,6 +56590,8 @@ export namespace Prisma {
     xeroSyncedAt: 'xeroSyncedAt',
     invoicedAt: 'invoicedAt',
     paidAt: 'paidAt',
+    reportUrl: 'reportUrl',
+    reportFiledAt: 'reportFiledAt',
     sortOrder: 'sortOrder',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -60202,6 +60228,8 @@ export namespace Prisma {
     xeroSyncedAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     invoicedAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     paidAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
+    reportUrl?: StringNullableFilter<"BillingMilestone"> | string | null
+    reportFiledAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     sortOrder?: IntFilter<"BillingMilestone"> | number
     createdAt?: DateTimeFilter<"BillingMilestone"> | Date | string
     updatedAt?: DateTimeFilter<"BillingMilestone"> | Date | string
@@ -60229,6 +60257,8 @@ export namespace Prisma {
     xeroSyncedAt?: SortOrderInput | SortOrder
     invoicedAt?: SortOrderInput | SortOrder
     paidAt?: SortOrderInput | SortOrder
+    reportUrl?: SortOrderInput | SortOrder
+    reportFiledAt?: SortOrderInput | SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -60259,6 +60289,8 @@ export namespace Prisma {
     xeroSyncedAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     invoicedAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     paidAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
+    reportUrl?: StringNullableFilter<"BillingMilestone"> | string | null
+    reportFiledAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     sortOrder?: IntFilter<"BillingMilestone"> | number
     createdAt?: DateTimeFilter<"BillingMilestone"> | Date | string
     updatedAt?: DateTimeFilter<"BillingMilestone"> | Date | string
@@ -60286,6 +60318,8 @@ export namespace Prisma {
     xeroSyncedAt?: SortOrderInput | SortOrder
     invoicedAt?: SortOrderInput | SortOrder
     paidAt?: SortOrderInput | SortOrder
+    reportUrl?: SortOrderInput | SortOrder
+    reportFiledAt?: SortOrderInput | SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -60318,6 +60352,8 @@ export namespace Prisma {
     xeroSyncedAt?: DateTimeNullableWithAggregatesFilter<"BillingMilestone"> | Date | string | null
     invoicedAt?: DateTimeNullableWithAggregatesFilter<"BillingMilestone"> | Date | string | null
     paidAt?: DateTimeNullableWithAggregatesFilter<"BillingMilestone"> | Date | string | null
+    reportUrl?: StringNullableWithAggregatesFilter<"BillingMilestone"> | string | null
+    reportFiledAt?: DateTimeNullableWithAggregatesFilter<"BillingMilestone"> | Date | string | null
     sortOrder?: IntWithAggregatesFilter<"BillingMilestone"> | number
     createdAt?: DateTimeWithAggregatesFilter<"BillingMilestone"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"BillingMilestone"> | Date | string
@@ -65030,6 +65066,8 @@ export namespace Prisma {
     xeroSyncedAt?: Date | string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
+    reportUrl?: string | null
+    reportFiledAt?: Date | string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -65057,6 +65095,8 @@ export namespace Prisma {
     xeroSyncedAt?: Date | string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
+    reportUrl?: string | null
+    reportFiledAt?: Date | string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -65080,6 +65120,8 @@ export namespace Prisma {
     xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reportUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportFiledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65107,6 +65149,8 @@ export namespace Prisma {
     xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reportUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportFiledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65132,6 +65176,8 @@ export namespace Prisma {
     xeroSyncedAt?: Date | string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
+    reportUrl?: string | null
+    reportFiledAt?: Date | string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -65154,6 +65200,8 @@ export namespace Prisma {
     xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reportUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportFiledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65178,6 +65226,8 @@ export namespace Prisma {
     xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reportUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportFiledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -69431,6 +69481,8 @@ export namespace Prisma {
     xeroSyncedAt?: SortOrder
     invoicedAt?: SortOrder
     paidAt?: SortOrder
+    reportUrl?: SortOrder
+    reportFiledAt?: SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -69464,6 +69516,8 @@ export namespace Prisma {
     xeroSyncedAt?: SortOrder
     invoicedAt?: SortOrder
     paidAt?: SortOrder
+    reportUrl?: SortOrder
+    reportFiledAt?: SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -69488,6 +69542,8 @@ export namespace Prisma {
     xeroSyncedAt?: SortOrder
     invoicedAt?: SortOrder
     paidAt?: SortOrder
+    reportUrl?: SortOrder
+    reportFiledAt?: SortOrder
     sortOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -82819,6 +82875,8 @@ export namespace Prisma {
     xeroSyncedAt?: Date | string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
+    reportUrl?: string | null
+    reportFiledAt?: Date | string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -82844,6 +82902,8 @@ export namespace Prisma {
     xeroSyncedAt?: Date | string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
+    reportUrl?: string | null
+    reportFiledAt?: Date | string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -83971,6 +84031,8 @@ export namespace Prisma {
     xeroSyncedAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     invoicedAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     paidAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
+    reportUrl?: StringNullableFilter<"BillingMilestone"> | string | null
+    reportFiledAt?: DateTimeNullableFilter<"BillingMilestone"> | Date | string | null
     sortOrder?: IntFilter<"BillingMilestone"> | number
     createdAt?: DateTimeFilter<"BillingMilestone"> | Date | string
     updatedAt?: DateTimeFilter<"BillingMilestone"> | Date | string
@@ -86534,6 +86596,8 @@ export namespace Prisma {
     xeroSyncedAt?: Date | string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
+    reportUrl?: string | null
+    reportFiledAt?: Date | string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -86559,6 +86623,8 @@ export namespace Prisma {
     xeroSyncedAt?: Date | string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
+    reportUrl?: string | null
+    reportFiledAt?: Date | string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -90895,6 +90961,8 @@ export namespace Prisma {
     xeroSyncedAt?: Date | string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
+    reportUrl?: string | null
+    reportFiledAt?: Date | string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -90921,6 +90989,8 @@ export namespace Prisma {
     xeroSyncedAt?: Date | string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
+    reportUrl?: string | null
+    reportFiledAt?: Date | string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -91288,6 +91358,8 @@ export namespace Prisma {
     xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reportUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportFiledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -91314,6 +91386,8 @@ export namespace Prisma {
     xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reportUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportFiledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -106874,6 +106948,8 @@ export namespace Prisma {
     xeroSyncedAt?: Date | string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
+    reportUrl?: string | null
+    reportFiledAt?: Date | string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -107358,6 +107434,8 @@ export namespace Prisma {
     xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reportUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportFiledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -107383,6 +107461,8 @@ export namespace Prisma {
     xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reportUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportFiledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -107407,6 +107487,8 @@ export namespace Prisma {
     xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reportUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportFiledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -107934,6 +108016,8 @@ export namespace Prisma {
     xeroSyncedAt?: Date | string | null
     invoicedAt?: Date | string | null
     paidAt?: Date | string | null
+    reportUrl?: string | null
+    reportFiledAt?: Date | string | null
     sortOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -108170,6 +108254,8 @@ export namespace Prisma {
     xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reportUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportFiledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108195,6 +108281,8 @@ export namespace Prisma {
     xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reportUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportFiledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108219,6 +108307,8 @@ export namespace Prisma {
     xeroSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     invoicedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reportUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportFiledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sortOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

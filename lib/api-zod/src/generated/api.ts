@@ -5355,6 +5355,72 @@ export const GetVatRecapResponse = zod.object({
   }),
 });
 
+/**
+ * @summary Revenue recognition recap per project and per PM
+ */
+export const GetRevenueRecognitionResponse = zod.object({
+  totals: zod.object({
+    totalDpp: zod.number(),
+    totalGross: zod.number(),
+    recognizedDpp: zod.number(),
+    recognizedGross: zod.number(),
+    unrecognizedDpp: zod.number(),
+    recognizedPct: zod.number(),
+    projectCount: zod.number(),
+    milestoneCount: zod.number(),
+    recognizedCount: zod.number(),
+  }),
+  projects: zod.array(
+    zod.object({
+      projectId: zod.string(),
+      code: zod.string(),
+      name: zod.string(),
+      clientName: zod.string().nullish(),
+      pmId: zod.string().nullish(),
+      pmName: zod.string().nullish(),
+      status: zod.string(),
+      totalDpp: zod.number(),
+      totalGross: zod.number(),
+      recognizedDpp: zod.number(),
+      recognizedGross: zod.number(),
+      unrecognizedDpp: zod.number(),
+      recognizedPct: zod.number(),
+      milestoneCount: zod.number(),
+      recognizedCount: zod.number(),
+      milestones: zod.array(
+        zod.object({
+          id: zod.string(),
+          name: zod.string(),
+          workstreamName: zod.string().nullish(),
+          status: zod.enum(["PLANNED", "INVOICED", "PAID", "CANCELLED"]),
+          dpp: zod.number(),
+          gross: zod.number(),
+          recognized: zod.boolean(),
+          basis: zod
+            .string()
+            .nullish()
+            .describe("BAST_INVOICE or REPORT when recognized"),
+          hasBast: zod.boolean(),
+          invoiced: zod.boolean(),
+          reportUrl: zod.string().nullish(),
+          reportFiledAt: zod.string().nullish(),
+          recognizedAt: zod.string().nullish(),
+        }),
+      ),
+    }),
+  ),
+  byPm: zod.array(
+    zod.object({
+      pmId: zod.string().nullish(),
+      pmName: zod.string(),
+      projectCount: zod.number(),
+      totalDpp: zod.number(),
+      recognizedDpp: zod.number(),
+      recognizedPct: zod.number(),
+    }),
+  ),
+});
+
 export const ListBillingMilestonesParams = zod.object({
   id: zod.coerce.string(),
 });
@@ -5378,6 +5444,8 @@ export const ListBillingMilestonesResponseItem = zod.object({
   xeroSyncedAt: zod.string().nullish(),
   invoicedAt: zod.string().nullish(),
   paidAt: zod.string().nullish(),
+  reportUrl: zod.string().nullish(),
+  reportFiledAt: zod.string().nullish(),
   sortOrder: zod.number(),
   bastDocumentId: zod.string().nullish(),
   bastFileName: zod.string().nullish(),
@@ -5418,6 +5486,7 @@ export const UpdateBillingMilestoneBody = zod.object({
   invoiceNumber: zod.string().nullish(),
   invoicedAt: zod.string().nullish(),
   paidAt: zod.string().nullish(),
+  reportUrl: zod.string().nullish(),
   sortOrder: zod.number().optional(),
   workstreamId: zod.string().nullish(),
 });
@@ -5441,6 +5510,8 @@ export const UpdateBillingMilestoneResponse = zod.object({
   xeroSyncedAt: zod.string().nullish(),
   invoicedAt: zod.string().nullish(),
   paidAt: zod.string().nullish(),
+  reportUrl: zod.string().nullish(),
+  reportFiledAt: zod.string().nullish(),
   sortOrder: zod.number(),
   bastDocumentId: zod.string().nullish(),
   bastFileName: zod.string().nullish(),

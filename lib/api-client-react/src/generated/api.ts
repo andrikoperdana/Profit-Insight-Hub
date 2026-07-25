@@ -136,6 +136,7 @@ import type {
   ResourcePlanningMatrix,
   ResourceRate,
   ResourceUtilizationDetail,
+  RevenueRecognition,
   SettleProjectExpenseBody,
   Skill,
   SkillDevelopmentGoal,
@@ -12671,6 +12672,81 @@ export function useGetVatRecap<
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetVatRecapQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Revenue recognition recap per project and per PM
+ */
+export const getGetRevenueRecognitionUrl = () => {
+  return `/api/revenue-recognition`;
+};
+
+export const getRevenueRecognition = async (
+  options?: RequestInit,
+): Promise<RevenueRecognition> => {
+  return customFetch<RevenueRecognition>(getGetRevenueRecognitionUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetRevenueRecognitionQueryKey = () => {
+  return [`/api/revenue-recognition`] as const;
+};
+
+export const getGetRevenueRecognitionQueryOptions = <
+  TData = Awaited<ReturnType<typeof getRevenueRecognition>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getRevenueRecognition>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetRevenueRecognitionQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getRevenueRecognition>>
+  > = ({ signal }) => getRevenueRecognition({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getRevenueRecognition>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetRevenueRecognitionQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRevenueRecognition>>
+>;
+export type GetRevenueRecognitionQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Revenue recognition recap per project and per PM
+ */
+
+export function useGetRevenueRecognition<
+  TData = Awaited<ReturnType<typeof getRevenueRecognition>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getRevenueRecognition>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetRevenueRecognitionQueryOptions(options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

@@ -366,6 +366,27 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
             </div>
           )}
         </TableCell>
+        <TableCell className="text-xs">
+          {m.reportUrl ? (
+            <a
+              href={m.reportUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-blue-400 hover:underline"
+              data-testid={`link-report-${m.id}`}
+            >
+              <Link2 className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate max-w-[120px]">Report</span>
+            </a>
+          ) : (
+            <span className="text-muted-foreground">—</span>
+          )}
+          {m.reportUrl && m.reportFiledAt && (
+            <div className="text-[10px] text-muted-foreground mt-0.5">
+              {formatDate(m.reportFiledAt)}
+            </div>
+          )}
+        </TableCell>
         <TableCell>
           <div className="flex items-center justify-end gap-1.5">
             {canPushXero && !m.xeroInvoiceId && m.status !== "CANCELLED" && (
@@ -542,6 +563,7 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
                   <TableHead>Status</TableHead>
                   <TableHead>Invoice #</TableHead>
                   <TableHead>BAST</TableHead>
+                  <TableHead>Report</TableHead>
                   <TableHead className="text-right w-[120px]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -553,7 +575,7 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
                       return (
                         <Fragment key={g.key}>
                           <TableRow className="bg-muted/50 hover:bg-muted/50 border-t-2 border-border">
-                            <TableCell colSpan={11} className="py-2">
+                            <TableCell colSpan={12} className="py-2">
                               <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-1.5">
                                 <div className="flex items-center gap-2">
                                   <Layers className="h-3.5 w-3.5 text-primary" />
@@ -670,6 +692,7 @@ function MilestoneFormDialog({
   const [dueDate, setDueDate] = useState(milestone?.dueDate ? milestone.dueDate.slice(0, 10) : "");
   const [status, setStatus] = useState<BillingMilestoneStatus>(milestone?.status ?? "PLANNED");
   const [invoiceNumber, setInvoiceNumber] = useState(milestone?.invoiceNumber ?? "");
+  const [reportUrl, setReportUrl] = useState(milestone?.reportUrl ?? "");
   const [workstreamId, setWorkstreamId] = useState<string | null>(
     (milestone as any)?.workstreamId ?? null,
   );
@@ -720,7 +743,7 @@ function MilestoneFormDialog({
     if (editing && milestone) {
       update.mutate({
         milestoneId: milestone.id,
-        data: { ...payload, status } as any,
+        data: { ...payload, status, reportUrl: reportUrl.trim() || null } as any,
       });
     } else {
       create.mutate({ id: projectId, data: payload as any });
@@ -832,6 +855,20 @@ function MilestoneFormDialog({
                   placeholder="e.g. INV-2026-001"
                 />
               </div>
+            </div>
+          )}
+          {editing && (
+            <div>
+              <Label>Report Link</Label>
+              <Input
+                value={reportUrl}
+                onChange={(e) => setReportUrl(e.target.value)}
+                placeholder="https:// link to the shared report folder"
+                data-testid="input-milestone-report-url"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Alternative evidence for revenue recognition when the BAST/invoice path is not yet complete.
+              </p>
             </div>
           )}
         </div>

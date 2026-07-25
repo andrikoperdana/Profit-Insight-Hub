@@ -451,6 +451,8 @@ export interface BillingMilestone {
   xeroSyncedAt?: string | null;
   invoicedAt?: string | null;
   paidAt?: string | null;
+  reportUrl?: string | null;
+  reportFiledAt?: string | null;
   sortOrder: number;
   bastDocumentId?: string | null;
   bastFileName?: string | null;
@@ -480,8 +482,72 @@ export interface UpdateBillingMilestoneBody {
   invoiceNumber?: string | null;
   invoicedAt?: string | null;
   paidAt?: string | null;
+  reportUrl?: string | null;
   sortOrder?: number;
   workstreamId?: string | null;
+}
+
+export interface RevenueRecognitionMilestone {
+  id: string;
+  name: string;
+  workstreamName?: string | null;
+  status: BillingMilestoneStatus;
+  dpp: number;
+  gross: number;
+  recognized: boolean;
+  /** BAST_INVOICE or REPORT when recognized */
+  basis?: string | null;
+  hasBast: boolean;
+  invoiced: boolean;
+  reportUrl?: string | null;
+  reportFiledAt?: string | null;
+  recognizedAt?: string | null;
+}
+
+export interface RevenueRecognitionProject {
+  projectId: string;
+  code: string;
+  name: string;
+  clientName?: string | null;
+  pmId?: string | null;
+  pmName?: string | null;
+  status: string;
+  totalDpp: number;
+  totalGross: number;
+  recognizedDpp: number;
+  recognizedGross: number;
+  unrecognizedDpp: number;
+  recognizedPct: number;
+  milestoneCount: number;
+  recognizedCount: number;
+  milestones: RevenueRecognitionMilestone[];
+}
+
+export interface RevenueRecognitionPmGroup {
+  pmId?: string | null;
+  pmName: string;
+  projectCount: number;
+  totalDpp: number;
+  recognizedDpp: number;
+  recognizedPct: number;
+}
+
+export interface RevenueRecognitionTotals {
+  totalDpp: number;
+  totalGross: number;
+  recognizedDpp: number;
+  recognizedGross: number;
+  unrecognizedDpp: number;
+  recognizedPct: number;
+  projectCount: number;
+  milestoneCount: number;
+  recognizedCount: number;
+}
+
+export interface RevenueRecognition {
+  totals: RevenueRecognitionTotals;
+  projects: RevenueRecognitionProject[];
+  byPm: RevenueRecognitionPmGroup[];
 }
 
 export interface TaskDependencyRef {

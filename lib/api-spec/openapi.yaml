@@ -2422,6 +2422,19 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/VatRecap" }
 
+  /revenue-recognition:
+    get:
+      operationId: getRevenueRecognition
+      summary: Revenue recognition recap per project and per PM
+      tags: [BillingMilestones]
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: Recognized revenue rollup
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RevenueRecognition" }
+
   /projects/{id}/billing-milestones:
     get:
       operationId: listBillingMilestones
@@ -3233,6 +3246,8 @@ components:
         xeroSyncedAt: { type: string, nullable: true }
         invoicedAt: { type: string, nullable: true }
         paidAt: { type: string, nullable: true }
+        reportUrl: { type: string, nullable: true }
+        reportFiledAt: { type: string, nullable: true }
         sortOrder: { type: integer }
         bastDocumentId: { type: string, nullable: true }
         bastFileName: { type: string, nullable: true }
@@ -3265,8 +3280,87 @@ components:
         invoiceNumber: { type: string, nullable: true }
         invoicedAt: { type: string, nullable: true }
         paidAt: { type: string, nullable: true }
+        reportUrl: { type: string, nullable: true }
         sortOrder: { type: integer }
         workstreamId: { type: string, nullable: true }
+
+    RevenueRecognitionMilestone:
+      type: object
+      required: [id, name, status, dpp, gross, recognized, hasBast, invoiced]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        workstreamName: { type: string, nullable: true }
+        status: { $ref: "#/components/schemas/BillingMilestoneStatus" }
+        dpp: { type: number }
+        gross: { type: number }
+        recognized: { type: boolean }
+        basis: { type: string, nullable: true, description: "BAST_INVOICE or REPORT when recognized" }
+        hasBast: { type: boolean }
+        invoiced: { type: boolean }
+        reportUrl: { type: string, nullable: true }
+        reportFiledAt: { type: string, nullable: true }
+        recognizedAt: { type: string, nullable: true }
+
+    RevenueRecognitionProject:
+      type: object
+      required: [projectId, code, name, status, totalDpp, totalGross, recognizedDpp, recognizedGross, unrecognizedDpp, recognizedPct, milestoneCount, recognizedCount, milestones]
+      properties:
+        projectId: { type: string }
+        code: { type: string }
+        name: { type: string }
+        clientName: { type: string, nullable: true }
+        pmId: { type: string, nullable: true }
+        pmName: { type: string, nullable: true }
+        status: { type: string }
+        totalDpp: { type: number }
+        totalGross: { type: number }
+        recognizedDpp: { type: number }
+        recognizedGross: { type: number }
+        unrecognizedDpp: { type: number }
+        recognizedPct: { type: number }
+        milestoneCount: { type: integer }
+        recognizedCount: { type: integer }
+        milestones:
+          type: array
+          items: { $ref: "#/components/schemas/RevenueRecognitionMilestone" }
+
+    RevenueRecognitionPmGroup:
+      type: object
+      required: [pmName, projectCount, totalDpp, recognizedDpp, recognizedPct]
+      properties:
+        pmId: { type: string, nullable: true }
+        pmName: { type: string }
+        projectCount: { type: integer }
+        totalDpp: { type: number }
+        recognizedDpp: { type: number }
+        recognizedPct: { type: number }
+
+    RevenueRecognitionTotals:
+      type: object
+      required: [totalDpp, totalGross, recognizedDpp, recognizedGross, unrecognizedDpp, recognizedPct, projectCount, milestoneCount, recognizedCount]
+      properties:
+        totalDpp: { type: number }
+        totalGross: { type: number }
+        recognizedDpp: { type: number }
+        recognizedGross: { type: number }
+        unrecognizedDpp: { type: number }
+        recognizedPct: { type: number }
+        projectCount: { type: integer }
+        milestoneCount: { type: integer }
+        recognizedCount: { type: integer }
+
+    RevenueRecognition:
+      type: object
+      required: [totals, projects, byPm]
+      properties:
+        totals: { $ref: "#/components/schemas/RevenueRecognitionTotals" }
+        projects:
+          type: array
+          items: { $ref: "#/components/schemas/RevenueRecognitionProject" }
+        byPm:
+          type: array
+          items: { $ref: "#/components/schemas/RevenueRecognitionPmGroup" }
 
     TaskDependencyRef:
       type: object

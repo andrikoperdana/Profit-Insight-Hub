@@ -107,6 +107,8 @@ function serialize(m: any) {
     invoiceNumber: m.invoiceNumber,
     invoicedAt: m.invoicedAt ? m.invoicedAt.toISOString() : null,
     paidAt: m.paidAt ? m.paidAt.toISOString() : null,
+    reportUrl: m.reportUrl ?? null,
+    reportFiledAt: m.reportFiledAt ? m.reportFiledAt.toISOString() : null,
     xeroInvoiceId: m.xeroInvoiceId ?? null,
     xeroInvoiceNumber: m.xeroInvoiceNumber ?? null,
     xeroAmountDue: m.xeroAmountDue ?? null,
@@ -382,7 +384,7 @@ router.patch("/billing-milestones/:milestoneId", validateBody(UpdateBillingMiles
     res.status(403).json({ error: "Only Management or assigned PM can edit billing milestones" });
     return;
   }
-  const { name, description, percentage, amount, dueDate, status, invoiceNumber, invoicedAt, paidAt, sortOrder, workstreamId } =
+  const { name, description, percentage, amount, dueDate, status, invoiceNumber, invoicedAt, paidAt, reportUrl, sortOrder, workstreamId } =
     req.body || {};
   const data: Record<string, unknown> = {};
   if (workstreamId !== undefined) {
@@ -472,6 +474,30 @@ router.patch("/billing-milestones/:milestoneId", validateBody(UpdateBillingMiles
     }
     data.paidAt = d;
   }
+  if (reportUrl !== undefined) {
+    if (reportUrl === null || String(reportUrl).trim() === "") {
+      data.reportUrl = null;
+      data.reportFiledAt = null;
+    } else {
+      const raw = String(reportUrl).trim();
+      // Require an absolute http(s) URL so the UI can safely open it (same
+      // rule as LINK-kind documents).
+      let parsed: URL | null = null;
+      try {
+        parsed = new URL(raw);
+      } catch {
+        parsed = null;
+      }
+      if (!parsed || (parsed.protocol !== "https:" && parsed.protocol !== "http:")) {
+        res.status(400).json({ error: "Report link must be a valid http(s) URL" });
+        return;
+      }
+      data.reportUrl = raw;
+      // Stamp the filing time whenever the link is first set or changed; an
+      // unchanged URL keeps its original timestamp.
+      if (raw !== before.reportUrl) data.reportFiledAt = new Date();
+    }
+  }
   if (sortOrder !== undefined && sortOrder !== null) {
     const n = Number(sortOrder);
     if (!isFinite(n)) {
@@ -490,8 +516,8 @@ router.patch("/billing-milestones/:milestoneId", validateBody(UpdateBillingMiles
     entityType: "BillingMilestone",
     entityId: updated.id,
     description: `Updated billing milestone "${updated.name}"`,
-    before: { name: before.name, status: before.status, percentage: before.percentage },
-    after: { name: updated.name, status: updated.status, percentage: updated.percentage },
+    before: { name: before.name, status: before.status, percentage: before.percentage, reportUrl: before.reportUrl },
+    after: { name: updated.name, status: updated.status, percentage: updated.percentage, reportUrl: updated.reportUrl },
   });
   res.json(serialize(updated));
 });

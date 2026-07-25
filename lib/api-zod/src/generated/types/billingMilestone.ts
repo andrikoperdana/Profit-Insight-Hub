@@ -26,6 +26,8 @@ export interface BillingMilestone {
   xeroSyncedAt?: string | null;
   invoicedAt?: string | null;
   paidAt?: string | null;
+  reportUrl?: string | null;
+  reportFiledAt?: string | null;
   sortOrder: number;
   bastDocumentId?: string | null;
   bastFileName?: string | null;
