@@ -56,8 +56,17 @@ router.get("/revenue-recognition", async (req, res) => {
       vatPercent: true,
       contractValueIncludesVat: true,
       pmId: true,
-      pm: { select: { id: true, name: true } },
+      pm: {
+        select: {
+          id: true,
+          name: true,
+          role: true,
+          businessUnit: { select: { id: true, name: true } },
+          manager: { select: { id: true, name: true } },
+        },
+      },
       client: { select: { name: true } },
+      workstreams: { select: { businessUnit: { select: { id: true, name: true } } } },
       billingMilestones: {
         where: { status: { not: "CANCELLED" } },
         orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
@@ -71,7 +80,7 @@ router.get("/revenue-recognition", async (req, res) => {
           paidAt: true,
           reportUrl: true,
           reportFiledAt: true,
-          workstream: { select: { name: true } },
+          workstream: { select: { name: true, businessUnit: { select: { id: true, name: true } } } },
           invoiceDocuments: {
             where: { type: "BAST", isLatest: true },
             select: { id: true, uploadedAt: true },
@@ -93,6 +102,25 @@ router.get("/revenue-recognition", async (req, res) => {
   };
   const pmBuckets = new Map<string, PmBucket>();
 
+  type BuBucket = {
+    businessUnitId: string | null;
+    businessUnitName: string;
+    projectIds: Set<string>;
+    milestoneCount: number;
+    totalDpp: number;
+    recognizedDpp: number;
+  };
+  const buBuckets = new Map<string, BuBucket>();
+
+  type PmoBucket = {
+    directorId: string | null;
+    directorName: string;
+    projectCount: number;
+    totalDpp: number;
+    recognizedDpp: number;
+  };
+  const pmoBuckets = new Map<string, PmoBucket>();
+
   const outProjects = [];
   const totals = {
     totalDpp: 0,
@@ -110,6 +138,16 @@ router.get("/revenue-recognition", async (req, res) => {
     if (p.billingMilestones.length === 0) continue;
     const vatPct = p.vatPercent ?? 11;
     const includesVat = p.contractValueIncludesVat ?? true;
+
+    // Business-unit fallback for milestones without a workstream: if every
+    // BU-assigned workstream of the project points at the same BU use it,
+    // otherwise fall back to the PM's own BU (may be null).
+    const wsBus = new Map<string, { id: string; name: string }>();
+    for (const w of p.workstreams) {
+      if (w.businessUnit) wsBus.set(w.businessUnit.id, w.businessUnit);
+    }
+    const projectFallbackBu =
+      wsBus.size === 1 ? [...wsBus.values()][0] : (p.pm?.businessUnit ?? null);
 
     let totalDpp = 0;
     let totalGross = 0;
@@ -142,6 +180,25 @@ router.get("/revenue-recognition", async (req, res) => {
         recognizedGross += gross;
         recognizedCount += 1;
       }
+
+      const bu = m.workstream?.businessUnit ?? projectFallbackBu;
+      const buKey = bu?.id ?? "__none";
+      let buBucket = buBuckets.get(buKey);
+      if (!buBucket) {
+        buBucket = {
+          businessUnitId: bu?.id ?? null,
+          businessUnitName: bu?.name ?? "Unassigned",
+          projectIds: new Set<string>(),
+          milestoneCount: 0,
+          totalDpp: 0,
+          recognizedDpp: 0,
+        };
+        buBuckets.set(buKey, buBucket);
+      }
+      buBucket.projectIds.add(p.id);
+      buBucket.milestoneCount += 1;
+      buBucket.totalDpp += dpp;
+      if (recognized) buBucket.recognizedDpp += dpp;
 
       return {
         id: m.id,
@@ -202,6 +259,29 @@ router.get("/revenue-recognition", async (req, res) => {
     bucket.projectCount += 1;
     bucket.totalDpp += totalDpp;
     bucket.recognizedDpp += recognizedDpp;
+
+    // PMO Director attribution: the PM's manager. A MANAGEMENT user acting
+    // as PM is their own director.
+    const director = p.pm
+      ? p.pm.role === "MANAGEMENT"
+        ? { id: p.pm.id, name: p.pm.name }
+        : (p.pm.manager ?? null)
+      : null;
+    const pmoKey = director?.id ?? "__none";
+    let pmoBucket = pmoBuckets.get(pmoKey);
+    if (!pmoBucket) {
+      pmoBucket = {
+        directorId: director?.id ?? null,
+        directorName: director?.name ?? "Unassigned",
+        projectCount: 0,
+        totalDpp: 0,
+        recognizedDpp: 0,
+      };
+      pmoBuckets.set(pmoKey, pmoBucket);
+    }
+    pmoBucket.projectCount += 1;
+    pmoBucket.totalDpp += totalDpp;
+    pmoBucket.recognizedDpp += recognizedDpp;
   }
 
   totals.unrecognizedDpp = totals.totalDpp - totals.recognizedDpp;
@@ -218,7 +298,30 @@ router.get("/revenue-recognition", async (req, res) => {
     }))
     .sort((a, b) => b.totalDpp - a.totalDpp);
 
-  res.json({ totals, projects: outProjects, byPm });
+  const byBusinessUnit = Array.from(buBuckets.values())
+    .map((b) => ({
+      businessUnitId: b.businessUnitId,
+      businessUnitName: b.businessUnitName,
+      projectCount: b.projectIds.size,
+      milestoneCount: b.milestoneCount,
+      totalDpp: b.totalDpp,
+      recognizedDpp: b.recognizedDpp,
+      recognizedPct: b.totalDpp > 0 ? (b.recognizedDpp / b.totalDpp) * 100 : 0,
+    }))
+    .sort((a, b) => b.totalDpp - a.totalDpp);
+
+  const byPmoDirector = Array.from(pmoBuckets.values())
+    .map((b) => ({
+      directorId: b.directorId,
+      directorName: b.directorName,
+      projectCount: b.projectCount,
+      totalDpp: b.totalDpp,
+      recognizedDpp: b.recognizedDpp,
+      recognizedPct: b.totalDpp > 0 ? (b.recognizedDpp / b.totalDpp) * 100 : 0,
+    }))
+    .sort((a, b) => b.totalDpp - a.totalDpp);
+
+  res.json({ totals, projects: outProjects, byPm, byBusinessUnit, byPmoDirector });
 });
 
 export default router;

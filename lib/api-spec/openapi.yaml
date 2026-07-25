@@ -3350,9 +3350,32 @@ components:
         milestoneCount: { type: integer }
         recognizedCount: { type: integer }
 
+    RevenueRecognitionBuGroup:
+      type: object
+      required: [businessUnitName, projectCount, milestoneCount, totalDpp, recognizedDpp, recognizedPct]
+      properties:
+        businessUnitId: { type: string, nullable: true }
+        businessUnitName: { type: string }
+        projectCount: { type: integer }
+        milestoneCount: { type: integer }
+        totalDpp: { type: number }
+        recognizedDpp: { type: number }
+        recognizedPct: { type: number }
+
+    RevenueRecognitionPmoGroup:
+      type: object
+      required: [directorName, projectCount, totalDpp, recognizedDpp, recognizedPct]
+      properties:
+        directorId: { type: string, nullable: true }
+        directorName: { type: string }
+        projectCount: { type: integer }
+        totalDpp: { type: number }
+        recognizedDpp: { type: number }
+        recognizedPct: { type: number }
+
     RevenueRecognition:
       type: object
-      required: [totals, projects, byPm]
+      required: [totals, projects, byPm, byBusinessUnit, byPmoDirector]
       properties:
         totals: { $ref: "#/components/schemas/RevenueRecognitionTotals" }
         projects:
@@ -3361,6 +3384,12 @@ components:
         byPm:
           type: array
           items: { $ref: "#/components/schemas/RevenueRecognitionPmGroup" }
+        byBusinessUnit:
+          type: array
+          items: { $ref: "#/components/schemas/RevenueRecognitionBuGroup" }
+        byPmoDirector:
+          type: array
+          items: { $ref: "#/components/schemas/RevenueRecognitionPmoGroup" }
 
     TaskDependencyRef:
       type: object

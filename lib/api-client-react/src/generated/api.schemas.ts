@@ -544,10 +544,31 @@ export interface RevenueRecognitionTotals {
   recognizedCount: number;
 }
 
+export interface RevenueRecognitionBuGroup {
+  businessUnitId?: string | null;
+  businessUnitName: string;
+  projectCount: number;
+  milestoneCount: number;
+  totalDpp: number;
+  recognizedDpp: number;
+  recognizedPct: number;
+}
+
+export interface RevenueRecognitionPmoGroup {
+  directorId?: string | null;
+  directorName: string;
+  projectCount: number;
+  totalDpp: number;
+  recognizedDpp: number;
+  recognizedPct: number;
+}
+
 export interface RevenueRecognition {
   totals: RevenueRecognitionTotals;
   projects: RevenueRecognitionProject[];
   byPm: RevenueRecognitionPmGroup[];
+  byBusinessUnit: RevenueRecognitionBuGroup[];
+  byPmoDirector: RevenueRecognitionPmoGroup[];
 }
 
 export interface TaskDependencyRef {

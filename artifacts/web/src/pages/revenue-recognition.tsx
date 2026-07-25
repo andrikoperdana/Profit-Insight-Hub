@@ -278,7 +278,7 @@ export default function RevenueRecognitionPage() {
     );
   }
 
-  const { totals, projects, byPm } = data;
+  const { totals, projects, byPm, byBusinessUnit, byPmoDirector } = data;
 
   return (
     <div className="p-6 space-y-5" data-testid="page-revenue-recognition">
@@ -344,6 +344,16 @@ export default function RevenueRecognitionPage() {
               By Project Manager
             </TabsTrigger>
           )}
+          {seesByPm && (
+            <TabsTrigger value="bu" data-testid="tab-revrec-bu">
+              By Business Unit
+            </TabsTrigger>
+          )}
+          {seesByPm && (
+            <TabsTrigger value="pmo" data-testid="tab-revrec-pmo">
+              By PMO Director
+            </TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value="projects">
@@ -406,6 +416,131 @@ export default function RevenueRecognitionPage() {
                       {byPm.map((g) => (
                         <TableRow key={g.pmId ?? "none"} data-testid={`row-revrec-pm-${g.pmId ?? "none"}`}>
                           <TableCell className="font-medium">{g.pmName}</TableCell>
+                          <TableCell className="text-right font-mono text-sm">
+                            {g.projectCount}
+                          </TableCell>
+                          <TableCell className="text-right font-mono text-sm">
+                            {formatIDR(g.totalDpp)}
+                          </TableCell>
+                          <TableCell className="text-right font-mono text-sm text-emerald-500">
+                            {formatIDR(g.recognizedDpp)}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <Progress value={g.recognizedPct} className="h-2" />
+                              <span className="text-xs font-mono whitespace-nowrap">
+                                {g.recognizedPct.toFixed(0)}%
+                              </span>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
+
+        {seesByPm && (
+          <TabsContent value="bu">
+            <Card className="rounded-xl border-border shadow-sm">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base">By Business Unit</CardTitle>
+                <p className="text-xs text-muted-foreground">
+                  Milestones are attributed to the business unit of their workstream; milestones
+                  without a workstream fall back to the project&apos;s single workstream BU or the
+                  PM&apos;s business unit.
+                </p>
+              </CardHeader>
+              <CardContent className="p-0">
+                {byBusinessUnit.length === 0 ? (
+                  <div className="p-8 text-center text-sm text-muted-foreground">
+                    No data available.
+                  </div>
+                ) : (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Business Unit</TableHead>
+                        <TableHead className="text-right">Projects</TableHead>
+                        <TableHead className="text-right">Milestones</TableHead>
+                        <TableHead className="text-right">Total DPP</TableHead>
+                        <TableHead className="text-right">Recognized</TableHead>
+                        <TableHead className="w-[200px]">Progress</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {byBusinessUnit.map((g) => (
+                        <TableRow
+                          key={g.businessUnitId ?? "none"}
+                          data-testid={`row-revrec-bu-${g.businessUnitId ?? "none"}`}
+                        >
+                          <TableCell className="font-medium">{g.businessUnitName}</TableCell>
+                          <TableCell className="text-right font-mono text-sm">
+                            {g.projectCount}
+                          </TableCell>
+                          <TableCell className="text-right font-mono text-sm">
+                            {g.milestoneCount}
+                          </TableCell>
+                          <TableCell className="text-right font-mono text-sm">
+                            {formatIDR(g.totalDpp)}
+                          </TableCell>
+                          <TableCell className="text-right font-mono text-sm text-emerald-500">
+                            {formatIDR(g.recognizedDpp)}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <Progress value={g.recognizedPct} className="h-2" />
+                              <span className="text-xs font-mono whitespace-nowrap">
+                                {g.recognizedPct.toFixed(0)}%
+                              </span>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
+
+        {seesByPm && (
+          <TabsContent value="pmo">
+            <Card className="rounded-xl border-border shadow-sm">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base">By PMO Director</CardTitle>
+                <p className="text-xs text-muted-foreground">
+                  Projects are attributed to the director their PM reports to. A Management user
+                  acting as PM counts as their own director.
+                </p>
+              </CardHeader>
+              <CardContent className="p-0">
+                {byPmoDirector.length === 0 ? (
+                  <div className="p-8 text-center text-sm text-muted-foreground">
+                    No data available.
+                  </div>
+                ) : (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>PMO Director</TableHead>
+                        <TableHead className="text-right">Projects</TableHead>
+                        <TableHead className="text-right">Total DPP</TableHead>
+                        <TableHead className="text-right">Recognized</TableHead>
+                        <TableHead className="w-[200px]">Progress</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {byPmoDirector.map((g) => (
+                        <TableRow
+                          key={g.directorId ?? "none"}
+                          data-testid={`row-revrec-pmo-${g.directorId ?? "none"}`}
+                        >
+                          <TableCell className="font-medium">{g.directorName}</TableCell>
                           <TableCell className="text-right font-mono text-sm">
                             {g.projectCount}
                           </TableCell>

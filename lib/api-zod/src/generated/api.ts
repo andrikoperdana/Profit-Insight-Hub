@@ -5419,6 +5419,27 @@ export const GetRevenueRecognitionResponse = zod.object({
       recognizedPct: zod.number(),
     }),
   ),
+  byBusinessUnit: zod.array(
+    zod.object({
+      businessUnitId: zod.string().nullish(),
+      businessUnitName: zod.string(),
+      projectCount: zod.number(),
+      milestoneCount: zod.number(),
+      totalDpp: zod.number(),
+      recognizedDpp: zod.number(),
+      recognizedPct: zod.number(),
+    }),
+  ),
+  byPmoDirector: zod.array(
+    zod.object({
+      directorId: zod.string().nullish(),
+      directorName: zod.string(),
+      projectCount: zod.number(),
+      totalDpp: zod.number(),
+      recognizedDpp: zod.number(),
+      recognizedPct: zod.number(),
+    }),
+  ),
 });
 
 export const ListBillingMilestonesParams = zod.object({

@@ -5,7 +5,9 @@
  * SecureProfit Hub API
  * OpenAPI spec version: 0.1.0
  */
+import type { RevenueRecognitionBuGroup } from "./revenueRecognitionBuGroup";
 import type { RevenueRecognitionPmGroup } from "./revenueRecognitionPmGroup";
+import type { RevenueRecognitionPmoGroup } from "./revenueRecognitionPmoGroup";
 import type { RevenueRecognitionProject } from "./revenueRecognitionProject";
 import type { RevenueRecognitionTotals } from "./revenueRecognitionTotals";
 
@@ -13,4 +15,6 @@ export interface RevenueRecognition {
   totals: RevenueRecognitionTotals;
   projects: RevenueRecognitionProject[];
   byPm: RevenueRecognitionPmGroup[];
+  byBusinessUnit: RevenueRecognitionBuGroup[];
+  byPmoDirector: RevenueRecognitionPmoGroup[];
 }
