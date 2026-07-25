@@ -20,6 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   CircleDollarSign,
   ChevronDown,
@@ -27,6 +28,7 @@ import {
   Link2,
   FileCheck2,
   AlertCircle,
+  Info,
 } from "lucide-react";
 import { formatIDR } from "@/lib/format";
 
@@ -74,11 +76,13 @@ function StatCard({
   label,
   value,
   sub,
+  hint,
   tone = "muted",
 }: {
   label: string;
   value: string;
   sub?: string;
+  hint?: string;
   tone?: "muted" | "success" | "warning";
 }) {
   const toneMap = {
@@ -89,7 +93,19 @@ function StatCard({
   return (
     <Card className="rounded-xl border-border shadow-sm">
       <CardContent className="p-4">
-        <div className="text-xs text-muted-foreground uppercase tracking-wide">{label}</div>
+        <div className="flex items-center gap-1 text-xs text-muted-foreground uppercase tracking-wide">
+          <span>{label}</span>
+          {hint && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Info className="h-3.5 w-3.5 shrink-0 cursor-help normal-case" />
+              </TooltipTrigger>
+              <TooltipContent className="max-w-[280px] text-xs normal-case tracking-normal">
+                {hint}
+              </TooltipContent>
+            </Tooltip>
+          )}
+        </div>
         <div className={`text-xl font-bold mt-1 ${toneMap[tone]}`}>{value}</div>
         {sub && <div className="text-xs text-muted-foreground mt-0.5">{sub}</div>}
       </CardContent>
@@ -284,22 +300,33 @@ export default function RevenueRecognitionPage() {
           label="Total Revenue (DPP)"
           value={formatIDR(totals.totalDpp)}
           sub={`${totals.projectCount} projects · ${totals.milestoneCount} milestones`}
+          hint="Total contracted (planned) revenue from all payment terms of client projects. DPP is the tax base: the value before VAT."
         />
         <StatCard
           label="Recognized (DPP)"
           value={formatIDR(totals.recognizedDpp)}
           sub={`${totals.recognizedCount} of ${totals.milestoneCount} milestones`}
           tone="success"
+          hint="Revenue you can already book: milestones with a BAST uploaded, already paid, or a report link filed."
         />
         <StatCard
           label="Unrecognized (DPP)"
           value={formatIDR(totals.unrecognizedDpp)}
           tone="warning"
+          hint="Contracted revenue still waiting for evidence: no BAST, not paid, and no report link yet."
         />
         <Card className="rounded-xl border-border shadow-sm">
           <CardContent className="p-4">
-            <div className="text-xs text-muted-foreground uppercase tracking-wide">
-              Recognized %
+            <div className="flex items-center gap-1 text-xs text-muted-foreground uppercase tracking-wide">
+              <span>Recognized %</span>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Info className="h-3.5 w-3.5 shrink-0 cursor-help" />
+                </TooltipTrigger>
+                <TooltipContent className="max-w-[280px] text-xs normal-case tracking-normal">
+                  Share of total contracted revenue that is already recognized.
+                </TooltipContent>
+              </Tooltip>
             </div>
             <div className="text-xl font-bold mt-1">{totals.recognizedPct.toFixed(1)}%</div>
             <Progress value={totals.recognizedPct} className="h-2 mt-2" />
