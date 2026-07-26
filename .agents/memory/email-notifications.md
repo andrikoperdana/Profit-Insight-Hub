@@ -10,7 +10,7 @@ Email is a **best-effort side effect of `notifyUser`** (api-server `lib/email.ts
 ## Product decisions (the "why")
 - **Important-only scope, not all notifications.** Owner chose "start with important, expand if quota stays safe." Set = `timesheet.submitted/approved/rejected`, `expense.rejected`, `INVOICE_DUE_SOON`, `PROJECT_OVERRUN`, `LOW_MARGIN`.
   **Why:** Resend free tier is 100 emails/day, 3000/month; emailing every notification per-event (esp. timesheet-awaiting-approval) could blow the cap. Expand the `EMAIL_NOTIFICATION_TYPES` set later if volume allows.
-- **No scheduler.** Daily rules (`notificationRules.ts`) still only fire when Management opens the dashboard (`POST /api/notifications/run-checks`); emails go out then. Owner explicitly declined a scheduled deployment for guaranteed daily sends.
+- **In-process scheduler (July 2026).** Daily rules (`notificationRules.ts`) now run via a 15-min `setInterval` in api-server `index.ts` guarded by an atomic DB claim on `AppSetting.notificationChecksLastRunAt` (only one instance runs per hour); MGMT dashboard-load trigger + manual run-checks remain. No separate scheduled deployment (owner declined one) — this only fires while an instance is alive, so autoscale scale-to-zero still means no sends during full idle.
 
 ## Guardrails (do not regress)
 - **Never log the raw provider response body.** Resend error JSON can echo the recipient address / message content (PII). Log only `{status, domain, errorCode}` (errorCode = parsed `name`), plus `{type,userId,domain}` for the outcome. Never log the API key or full email address.

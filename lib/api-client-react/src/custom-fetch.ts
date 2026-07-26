@@ -20,6 +20,13 @@ export type AuthTokenGetter = () => Promise<string | null> | string | null;
 const NO_BODY_STATUS = new Set([204, 205, 304]);
 const DEFAULT_JSON_ACCEPT = "application/json, application/problem+json";
 
+// sessionStorage keys shared with the web app's session helpers
+// (artifacts/web/src/lib/session.ts imports these — single source of truth).
+// Written here on a 401 so the login page can show a "session expired" notice
+// and return the user to where they were.
+export const SESSION_EXPIRED_KEY = "session_expired";
+export const POST_LOGIN_REDIRECT_KEY = "post_login_redirect";
+
 // ---------------------------------------------------------------------------
 // Module-level configuration
 // ---------------------------------------------------------------------------
@@ -430,13 +437,12 @@ export async function customFetch<T = unknown>(
       localStorage.removeItem("auth_user");
       // Flag the expiry and remember where the user was, so the login page can
       // show a "session expired" message and return them here after re-auth.
-      // Keys must match the web app's lib/session.ts (this shared lib cannot
-      // import from the web artifact).
+      // The web app's lib/session.ts imports these key constants from this lib.
       try {
-        sessionStorage.setItem("session_expired", "1");
+        sessionStorage.setItem(SESSION_EXPIRED_KEY, "1");
         const here = window.location.pathname + window.location.search;
         if (!here.includes("/login")) {
-          sessionStorage.setItem("post_login_redirect", here);
+          sessionStorage.setItem(POST_LOGIN_REDIRECT_KEY, here);
         }
       } catch {
         /* ignore sessionStorage errors */

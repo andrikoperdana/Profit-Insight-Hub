@@ -231,6 +231,11 @@ export type InvoiceSetting = $Result.DefaultSelection<Prisma.$InvoiceSettingPayl
  */
 export type AppSetting = $Result.DefaultSelection<Prisma.$AppSettingPayload>
 /**
+ * Model ExecutiveBriefing
+ * 
+ */
+export type ExecutiveBriefing = $Result.DefaultSelection<Prisma.$ExecutiveBriefingPayload>
+/**
  * Model PipedriveStageMapping
  * 
  */
@@ -1169,6 +1174,16 @@ export class PrismaClient<
   get appSetting(): Prisma.AppSettingDelegate<ExtArgs>;
 
   /**
+   * `prisma.executiveBriefing`: Exposes CRUD operations for the **ExecutiveBriefing** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ExecutiveBriefings
+    * const executiveBriefings = await prisma.executiveBriefing.findMany()
+    * ```
+    */
+  get executiveBriefing(): Prisma.ExecutiveBriefingDelegate<ExtArgs>;
+
+  /**
    * `prisma.pipedriveStageMapping`: Exposes CRUD operations for the **PipedriveStageMapping** model.
     * Example usage:
     * ```ts
@@ -1671,6 +1686,7 @@ export namespace Prisma {
     PerformanceReviewProjectRating: 'PerformanceReviewProjectRating',
     InvoiceSetting: 'InvoiceSetting',
     AppSetting: 'AppSetting',
+    ExecutiveBriefing: 'ExecutiveBriefing',
     PipedriveStageMapping: 'PipedriveStageMapping',
     XeroConnection: 'XeroConnection'
   };
@@ -1688,7 +1704,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "accessRequest" | "client" | "project" | "projectBaseline" | "changeRequest" | "projectReport" | "projectWorkstream" | "surveyQuestion" | "surveyResponse" | "projectFeedback360" | "auditLog" | "projectResource" | "projectResourceRate" | "timesheet" | "document" | "projectClosingChecklistItem" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "skillDevelopmentGoal" | "skillProgressionLog" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "projectTemplate" | "projectTemplateResource" | "projectTemplateMilestone" | "projectTemplateRaidItem" | "notification" | "projectRaidItem" | "performanceReview" | "performanceReviewProjectRating" | "invoiceSetting" | "appSetting" | "pipedriveStageMapping" | "xeroConnection"
+      modelProps: "user" | "accessRequest" | "client" | "project" | "projectBaseline" | "changeRequest" | "projectReport" | "projectWorkstream" | "surveyQuestion" | "surveyResponse" | "projectFeedback360" | "auditLog" | "projectResource" | "projectResourceRate" | "timesheet" | "document" | "projectClosingChecklistItem" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "skillDevelopmentGoal" | "skillProgressionLog" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "projectTemplate" | "projectTemplateResource" | "projectTemplateMilestone" | "projectTemplateRaidItem" | "notification" | "projectRaidItem" | "performanceReview" | "performanceReviewProjectRating" | "invoiceSetting" | "appSetting" | "executiveBriefing" | "pipedriveStageMapping" | "xeroConnection"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4699,6 +4715,76 @@ export namespace Prisma {
           count: {
             args: Prisma.AppSettingCountArgs<ExtArgs>
             result: $Utils.Optional<AppSettingCountAggregateOutputType> | number
+          }
+        }
+      }
+      ExecutiveBriefing: {
+        payload: Prisma.$ExecutiveBriefingPayload<ExtArgs>
+        fields: Prisma.ExecutiveBriefingFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ExecutiveBriefingFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExecutiveBriefingPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ExecutiveBriefingFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExecutiveBriefingPayload>
+          }
+          findFirst: {
+            args: Prisma.ExecutiveBriefingFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExecutiveBriefingPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ExecutiveBriefingFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExecutiveBriefingPayload>
+          }
+          findMany: {
+            args: Prisma.ExecutiveBriefingFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExecutiveBriefingPayload>[]
+          }
+          create: {
+            args: Prisma.ExecutiveBriefingCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExecutiveBriefingPayload>
+          }
+          createMany: {
+            args: Prisma.ExecutiveBriefingCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ExecutiveBriefingCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExecutiveBriefingPayload>[]
+          }
+          delete: {
+            args: Prisma.ExecutiveBriefingDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExecutiveBriefingPayload>
+          }
+          update: {
+            args: Prisma.ExecutiveBriefingUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExecutiveBriefingPayload>
+          }
+          deleteMany: {
+            args: Prisma.ExecutiveBriefingDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ExecutiveBriefingUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ExecutiveBriefingUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExecutiveBriefingPayload>
+          }
+          aggregate: {
+            args: Prisma.ExecutiveBriefingAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateExecutiveBriefing>
+          }
+          groupBy: {
+            args: Prisma.ExecutiveBriefingGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ExecutiveBriefingGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ExecutiveBriefingCountArgs<ExtArgs>
+            result: $Utils.Optional<ExecutiveBriefingCountAggregateOutputType> | number
           }
         }
       }
@@ -53154,6 +53240,7 @@ export namespace Prisma {
     pipedriveSyncStartedAt: Date | null
     pipedriveSyncFinishedAt: Date | null
     pipedriveSyncError: string | null
+    notificationChecksLastRunAt: Date | null
     updatedAt: Date | null
     updatedById: string | null
   }
@@ -53176,6 +53263,7 @@ export namespace Prisma {
     pipedriveSyncStartedAt: Date | null
     pipedriveSyncFinishedAt: Date | null
     pipedriveSyncError: string | null
+    notificationChecksLastRunAt: Date | null
     updatedAt: Date | null
     updatedById: string | null
   }
@@ -53199,6 +53287,7 @@ export namespace Prisma {
     pipedriveSyncFinishedAt: number
     pipedriveSyncError: number
     pipedriveSyncResult: number
+    notificationChecksLastRunAt: number
     updatedAt: number
     updatedById: number
     _all: number
@@ -53241,6 +53330,7 @@ export namespace Prisma {
     pipedriveSyncStartedAt?: true
     pipedriveSyncFinishedAt?: true
     pipedriveSyncError?: true
+    notificationChecksLastRunAt?: true
     updatedAt?: true
     updatedById?: true
   }
@@ -53263,6 +53353,7 @@ export namespace Prisma {
     pipedriveSyncStartedAt?: true
     pipedriveSyncFinishedAt?: true
     pipedriveSyncError?: true
+    notificationChecksLastRunAt?: true
     updatedAt?: true
     updatedById?: true
   }
@@ -53286,6 +53377,7 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: true
     pipedriveSyncError?: true
     pipedriveSyncResult?: true
+    notificationChecksLastRunAt?: true
     updatedAt?: true
     updatedById?: true
     _all?: true
@@ -53396,6 +53488,7 @@ export namespace Prisma {
     pipedriveSyncFinishedAt: Date | null
     pipedriveSyncError: string | null
     pipedriveSyncResult: JsonValue | null
+    notificationChecksLastRunAt: Date | null
     updatedAt: Date
     updatedById: string | null
     _count: AppSettingCountAggregateOutputType | null
@@ -53438,6 +53531,7 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: boolean
     pipedriveSyncError?: boolean
     pipedriveSyncResult?: boolean
+    notificationChecksLastRunAt?: boolean
     updatedAt?: boolean
     updatedById?: boolean
   }, ExtArgs["result"]["appSetting"]>
@@ -53461,6 +53555,7 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: boolean
     pipedriveSyncError?: boolean
     pipedriveSyncResult?: boolean
+    notificationChecksLastRunAt?: boolean
     updatedAt?: boolean
     updatedById?: boolean
   }, ExtArgs["result"]["appSetting"]>
@@ -53484,6 +53579,7 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: boolean
     pipedriveSyncError?: boolean
     pipedriveSyncResult?: boolean
+    notificationChecksLastRunAt?: boolean
     updatedAt?: boolean
     updatedById?: boolean
   }
@@ -53511,6 +53607,7 @@ export namespace Prisma {
       pipedriveSyncFinishedAt: Date | null
       pipedriveSyncError: string | null
       pipedriveSyncResult: Prisma.JsonValue | null
+      notificationChecksLastRunAt: Date | null
       updatedAt: Date
       updatedById: string | null
     }, ExtArgs["result"]["appSetting"]>
@@ -53924,6 +54021,7 @@ export namespace Prisma {
     readonly pipedriveSyncFinishedAt: FieldRef<"AppSetting", 'DateTime'>
     readonly pipedriveSyncError: FieldRef<"AppSetting", 'String'>
     readonly pipedriveSyncResult: FieldRef<"AppSetting", 'Json'>
+    readonly notificationChecksLastRunAt: FieldRef<"AppSetting", 'DateTime'>
     readonly updatedAt: FieldRef<"AppSetting", 'DateTime'>
     readonly updatedById: FieldRef<"AppSetting", 'String'>
   }
@@ -54211,6 +54309,880 @@ export namespace Prisma {
      * Select specific fields to fetch from the AppSetting
      */
     select?: AppSettingSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ExecutiveBriefing
+   */
+
+  export type AggregateExecutiveBriefing = {
+    _count: ExecutiveBriefingCountAggregateOutputType | null
+    _min: ExecutiveBriefingMinAggregateOutputType | null
+    _max: ExecutiveBriefingMaxAggregateOutputType | null
+  }
+
+  export type ExecutiveBriefingMinAggregateOutputType = {
+    id: string | null
+    generatedAt: Date | null
+    model: string | null
+    updatedAt: Date | null
+  }
+
+  export type ExecutiveBriefingMaxAggregateOutputType = {
+    id: string | null
+    generatedAt: Date | null
+    model: string | null
+    updatedAt: Date | null
+  }
+
+  export type ExecutiveBriefingCountAggregateOutputType = {
+    id: number
+    generatedAt: number
+    model: number
+    payload: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ExecutiveBriefingMinAggregateInputType = {
+    id?: true
+    generatedAt?: true
+    model?: true
+    updatedAt?: true
+  }
+
+  export type ExecutiveBriefingMaxAggregateInputType = {
+    id?: true
+    generatedAt?: true
+    model?: true
+    updatedAt?: true
+  }
+
+  export type ExecutiveBriefingCountAggregateInputType = {
+    id?: true
+    generatedAt?: true
+    model?: true
+    payload?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ExecutiveBriefingAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExecutiveBriefing to aggregate.
+     */
+    where?: ExecutiveBriefingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExecutiveBriefings to fetch.
+     */
+    orderBy?: ExecutiveBriefingOrderByWithRelationInput | ExecutiveBriefingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ExecutiveBriefingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExecutiveBriefings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExecutiveBriefings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ExecutiveBriefings
+    **/
+    _count?: true | ExecutiveBriefingCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ExecutiveBriefingMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ExecutiveBriefingMaxAggregateInputType
+  }
+
+  export type GetExecutiveBriefingAggregateType<T extends ExecutiveBriefingAggregateArgs> = {
+        [P in keyof T & keyof AggregateExecutiveBriefing]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateExecutiveBriefing[P]>
+      : GetScalarType<T[P], AggregateExecutiveBriefing[P]>
+  }
+
+
+
+
+  export type ExecutiveBriefingGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExecutiveBriefingWhereInput
+    orderBy?: ExecutiveBriefingOrderByWithAggregationInput | ExecutiveBriefingOrderByWithAggregationInput[]
+    by: ExecutiveBriefingScalarFieldEnum[] | ExecutiveBriefingScalarFieldEnum
+    having?: ExecutiveBriefingScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ExecutiveBriefingCountAggregateInputType | true
+    _min?: ExecutiveBriefingMinAggregateInputType
+    _max?: ExecutiveBriefingMaxAggregateInputType
+  }
+
+  export type ExecutiveBriefingGroupByOutputType = {
+    id: string
+    generatedAt: Date
+    model: string
+    payload: JsonValue
+    updatedAt: Date
+    _count: ExecutiveBriefingCountAggregateOutputType | null
+    _min: ExecutiveBriefingMinAggregateOutputType | null
+    _max: ExecutiveBriefingMaxAggregateOutputType | null
+  }
+
+  type GetExecutiveBriefingGroupByPayload<T extends ExecutiveBriefingGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ExecutiveBriefingGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ExecutiveBriefingGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ExecutiveBriefingGroupByOutputType[P]>
+            : GetScalarType<T[P], ExecutiveBriefingGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ExecutiveBriefingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    generatedAt?: boolean
+    model?: boolean
+    payload?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["executiveBriefing"]>
+
+  export type ExecutiveBriefingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    generatedAt?: boolean
+    model?: boolean
+    payload?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["executiveBriefing"]>
+
+  export type ExecutiveBriefingSelectScalar = {
+    id?: boolean
+    generatedAt?: boolean
+    model?: boolean
+    payload?: boolean
+    updatedAt?: boolean
+  }
+
+
+  export type $ExecutiveBriefingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ExecutiveBriefing"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      generatedAt: Date
+      model: string
+      payload: Prisma.JsonValue
+      updatedAt: Date
+    }, ExtArgs["result"]["executiveBriefing"]>
+    composites: {}
+  }
+
+  type ExecutiveBriefingGetPayload<S extends boolean | null | undefined | ExecutiveBriefingDefaultArgs> = $Result.GetResult<Prisma.$ExecutiveBriefingPayload, S>
+
+  type ExecutiveBriefingCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ExecutiveBriefingFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ExecutiveBriefingCountAggregateInputType | true
+    }
+
+  export interface ExecutiveBriefingDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ExecutiveBriefing'], meta: { name: 'ExecutiveBriefing' } }
+    /**
+     * Find zero or one ExecutiveBriefing that matches the filter.
+     * @param {ExecutiveBriefingFindUniqueArgs} args - Arguments to find a ExecutiveBriefing
+     * @example
+     * // Get one ExecutiveBriefing
+     * const executiveBriefing = await prisma.executiveBriefing.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ExecutiveBriefingFindUniqueArgs>(args: SelectSubset<T, ExecutiveBriefingFindUniqueArgs<ExtArgs>>): Prisma__ExecutiveBriefingClient<$Result.GetResult<Prisma.$ExecutiveBriefingPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one ExecutiveBriefing that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ExecutiveBriefingFindUniqueOrThrowArgs} args - Arguments to find a ExecutiveBriefing
+     * @example
+     * // Get one ExecutiveBriefing
+     * const executiveBriefing = await prisma.executiveBriefing.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ExecutiveBriefingFindUniqueOrThrowArgs>(args: SelectSubset<T, ExecutiveBriefingFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ExecutiveBriefingClient<$Result.GetResult<Prisma.$ExecutiveBriefingPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first ExecutiveBriefing that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExecutiveBriefingFindFirstArgs} args - Arguments to find a ExecutiveBriefing
+     * @example
+     * // Get one ExecutiveBriefing
+     * const executiveBriefing = await prisma.executiveBriefing.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ExecutiveBriefingFindFirstArgs>(args?: SelectSubset<T, ExecutiveBriefingFindFirstArgs<ExtArgs>>): Prisma__ExecutiveBriefingClient<$Result.GetResult<Prisma.$ExecutiveBriefingPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first ExecutiveBriefing that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExecutiveBriefingFindFirstOrThrowArgs} args - Arguments to find a ExecutiveBriefing
+     * @example
+     * // Get one ExecutiveBriefing
+     * const executiveBriefing = await prisma.executiveBriefing.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ExecutiveBriefingFindFirstOrThrowArgs>(args?: SelectSubset<T, ExecutiveBriefingFindFirstOrThrowArgs<ExtArgs>>): Prisma__ExecutiveBriefingClient<$Result.GetResult<Prisma.$ExecutiveBriefingPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more ExecutiveBriefings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExecutiveBriefingFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ExecutiveBriefings
+     * const executiveBriefings = await prisma.executiveBriefing.findMany()
+     * 
+     * // Get first 10 ExecutiveBriefings
+     * const executiveBriefings = await prisma.executiveBriefing.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const executiveBriefingWithIdOnly = await prisma.executiveBriefing.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ExecutiveBriefingFindManyArgs>(args?: SelectSubset<T, ExecutiveBriefingFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExecutiveBriefingPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a ExecutiveBriefing.
+     * @param {ExecutiveBriefingCreateArgs} args - Arguments to create a ExecutiveBriefing.
+     * @example
+     * // Create one ExecutiveBriefing
+     * const ExecutiveBriefing = await prisma.executiveBriefing.create({
+     *   data: {
+     *     // ... data to create a ExecutiveBriefing
+     *   }
+     * })
+     * 
+     */
+    create<T extends ExecutiveBriefingCreateArgs>(args: SelectSubset<T, ExecutiveBriefingCreateArgs<ExtArgs>>): Prisma__ExecutiveBriefingClient<$Result.GetResult<Prisma.$ExecutiveBriefingPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many ExecutiveBriefings.
+     * @param {ExecutiveBriefingCreateManyArgs} args - Arguments to create many ExecutiveBriefings.
+     * @example
+     * // Create many ExecutiveBriefings
+     * const executiveBriefing = await prisma.executiveBriefing.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ExecutiveBriefingCreateManyArgs>(args?: SelectSubset<T, ExecutiveBriefingCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ExecutiveBriefings and returns the data saved in the database.
+     * @param {ExecutiveBriefingCreateManyAndReturnArgs} args - Arguments to create many ExecutiveBriefings.
+     * @example
+     * // Create many ExecutiveBriefings
+     * const executiveBriefing = await prisma.executiveBriefing.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ExecutiveBriefings and only return the `id`
+     * const executiveBriefingWithIdOnly = await prisma.executiveBriefing.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ExecutiveBriefingCreateManyAndReturnArgs>(args?: SelectSubset<T, ExecutiveBriefingCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExecutiveBriefingPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a ExecutiveBriefing.
+     * @param {ExecutiveBriefingDeleteArgs} args - Arguments to delete one ExecutiveBriefing.
+     * @example
+     * // Delete one ExecutiveBriefing
+     * const ExecutiveBriefing = await prisma.executiveBriefing.delete({
+     *   where: {
+     *     // ... filter to delete one ExecutiveBriefing
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ExecutiveBriefingDeleteArgs>(args: SelectSubset<T, ExecutiveBriefingDeleteArgs<ExtArgs>>): Prisma__ExecutiveBriefingClient<$Result.GetResult<Prisma.$ExecutiveBriefingPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one ExecutiveBriefing.
+     * @param {ExecutiveBriefingUpdateArgs} args - Arguments to update one ExecutiveBriefing.
+     * @example
+     * // Update one ExecutiveBriefing
+     * const executiveBriefing = await prisma.executiveBriefing.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ExecutiveBriefingUpdateArgs>(args: SelectSubset<T, ExecutiveBriefingUpdateArgs<ExtArgs>>): Prisma__ExecutiveBriefingClient<$Result.GetResult<Prisma.$ExecutiveBriefingPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more ExecutiveBriefings.
+     * @param {ExecutiveBriefingDeleteManyArgs} args - Arguments to filter ExecutiveBriefings to delete.
+     * @example
+     * // Delete a few ExecutiveBriefings
+     * const { count } = await prisma.executiveBriefing.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ExecutiveBriefingDeleteManyArgs>(args?: SelectSubset<T, ExecutiveBriefingDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ExecutiveBriefings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExecutiveBriefingUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ExecutiveBriefings
+     * const executiveBriefing = await prisma.executiveBriefing.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ExecutiveBriefingUpdateManyArgs>(args: SelectSubset<T, ExecutiveBriefingUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ExecutiveBriefing.
+     * @param {ExecutiveBriefingUpsertArgs} args - Arguments to update or create a ExecutiveBriefing.
+     * @example
+     * // Update or create a ExecutiveBriefing
+     * const executiveBriefing = await prisma.executiveBriefing.upsert({
+     *   create: {
+     *     // ... data to create a ExecutiveBriefing
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ExecutiveBriefing we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ExecutiveBriefingUpsertArgs>(args: SelectSubset<T, ExecutiveBriefingUpsertArgs<ExtArgs>>): Prisma__ExecutiveBriefingClient<$Result.GetResult<Prisma.$ExecutiveBriefingPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of ExecutiveBriefings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExecutiveBriefingCountArgs} args - Arguments to filter ExecutiveBriefings to count.
+     * @example
+     * // Count the number of ExecutiveBriefings
+     * const count = await prisma.executiveBriefing.count({
+     *   where: {
+     *     // ... the filter for the ExecutiveBriefings we want to count
+     *   }
+     * })
+    **/
+    count<T extends ExecutiveBriefingCountArgs>(
+      args?: Subset<T, ExecutiveBriefingCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ExecutiveBriefingCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ExecutiveBriefing.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExecutiveBriefingAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ExecutiveBriefingAggregateArgs>(args: Subset<T, ExecutiveBriefingAggregateArgs>): Prisma.PrismaPromise<GetExecutiveBriefingAggregateType<T>>
+
+    /**
+     * Group by ExecutiveBriefing.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExecutiveBriefingGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ExecutiveBriefingGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ExecutiveBriefingGroupByArgs['orderBy'] }
+        : { orderBy?: ExecutiveBriefingGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ExecutiveBriefingGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetExecutiveBriefingGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ExecutiveBriefing model
+   */
+  readonly fields: ExecutiveBriefingFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ExecutiveBriefing.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ExecutiveBriefingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ExecutiveBriefing model
+   */ 
+  interface ExecutiveBriefingFieldRefs {
+    readonly id: FieldRef<"ExecutiveBriefing", 'String'>
+    readonly generatedAt: FieldRef<"ExecutiveBriefing", 'DateTime'>
+    readonly model: FieldRef<"ExecutiveBriefing", 'String'>
+    readonly payload: FieldRef<"ExecutiveBriefing", 'Json'>
+    readonly updatedAt: FieldRef<"ExecutiveBriefing", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ExecutiveBriefing findUnique
+   */
+  export type ExecutiveBriefingFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutiveBriefing
+     */
+    select?: ExecutiveBriefingSelect<ExtArgs> | null
+    /**
+     * Filter, which ExecutiveBriefing to fetch.
+     */
+    where: ExecutiveBriefingWhereUniqueInput
+  }
+
+  /**
+   * ExecutiveBriefing findUniqueOrThrow
+   */
+  export type ExecutiveBriefingFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutiveBriefing
+     */
+    select?: ExecutiveBriefingSelect<ExtArgs> | null
+    /**
+     * Filter, which ExecutiveBriefing to fetch.
+     */
+    where: ExecutiveBriefingWhereUniqueInput
+  }
+
+  /**
+   * ExecutiveBriefing findFirst
+   */
+  export type ExecutiveBriefingFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutiveBriefing
+     */
+    select?: ExecutiveBriefingSelect<ExtArgs> | null
+    /**
+     * Filter, which ExecutiveBriefing to fetch.
+     */
+    where?: ExecutiveBriefingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExecutiveBriefings to fetch.
+     */
+    orderBy?: ExecutiveBriefingOrderByWithRelationInput | ExecutiveBriefingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExecutiveBriefings.
+     */
+    cursor?: ExecutiveBriefingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExecutiveBriefings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExecutiveBriefings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExecutiveBriefings.
+     */
+    distinct?: ExecutiveBriefingScalarFieldEnum | ExecutiveBriefingScalarFieldEnum[]
+  }
+
+  /**
+   * ExecutiveBriefing findFirstOrThrow
+   */
+  export type ExecutiveBriefingFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutiveBriefing
+     */
+    select?: ExecutiveBriefingSelect<ExtArgs> | null
+    /**
+     * Filter, which ExecutiveBriefing to fetch.
+     */
+    where?: ExecutiveBriefingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExecutiveBriefings to fetch.
+     */
+    orderBy?: ExecutiveBriefingOrderByWithRelationInput | ExecutiveBriefingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExecutiveBriefings.
+     */
+    cursor?: ExecutiveBriefingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExecutiveBriefings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExecutiveBriefings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExecutiveBriefings.
+     */
+    distinct?: ExecutiveBriefingScalarFieldEnum | ExecutiveBriefingScalarFieldEnum[]
+  }
+
+  /**
+   * ExecutiveBriefing findMany
+   */
+  export type ExecutiveBriefingFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutiveBriefing
+     */
+    select?: ExecutiveBriefingSelect<ExtArgs> | null
+    /**
+     * Filter, which ExecutiveBriefings to fetch.
+     */
+    where?: ExecutiveBriefingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExecutiveBriefings to fetch.
+     */
+    orderBy?: ExecutiveBriefingOrderByWithRelationInput | ExecutiveBriefingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ExecutiveBriefings.
+     */
+    cursor?: ExecutiveBriefingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExecutiveBriefings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExecutiveBriefings.
+     */
+    skip?: number
+    distinct?: ExecutiveBriefingScalarFieldEnum | ExecutiveBriefingScalarFieldEnum[]
+  }
+
+  /**
+   * ExecutiveBriefing create
+   */
+  export type ExecutiveBriefingCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutiveBriefing
+     */
+    select?: ExecutiveBriefingSelect<ExtArgs> | null
+    /**
+     * The data needed to create a ExecutiveBriefing.
+     */
+    data: XOR<ExecutiveBriefingCreateInput, ExecutiveBriefingUncheckedCreateInput>
+  }
+
+  /**
+   * ExecutiveBriefing createMany
+   */
+  export type ExecutiveBriefingCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ExecutiveBriefings.
+     */
+    data: ExecutiveBriefingCreateManyInput | ExecutiveBriefingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ExecutiveBriefing createManyAndReturn
+   */
+  export type ExecutiveBriefingCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutiveBriefing
+     */
+    select?: ExecutiveBriefingSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many ExecutiveBriefings.
+     */
+    data: ExecutiveBriefingCreateManyInput | ExecutiveBriefingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ExecutiveBriefing update
+   */
+  export type ExecutiveBriefingUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutiveBriefing
+     */
+    select?: ExecutiveBriefingSelect<ExtArgs> | null
+    /**
+     * The data needed to update a ExecutiveBriefing.
+     */
+    data: XOR<ExecutiveBriefingUpdateInput, ExecutiveBriefingUncheckedUpdateInput>
+    /**
+     * Choose, which ExecutiveBriefing to update.
+     */
+    where: ExecutiveBriefingWhereUniqueInput
+  }
+
+  /**
+   * ExecutiveBriefing updateMany
+   */
+  export type ExecutiveBriefingUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ExecutiveBriefings.
+     */
+    data: XOR<ExecutiveBriefingUpdateManyMutationInput, ExecutiveBriefingUncheckedUpdateManyInput>
+    /**
+     * Filter which ExecutiveBriefings to update
+     */
+    where?: ExecutiveBriefingWhereInput
+  }
+
+  /**
+   * ExecutiveBriefing upsert
+   */
+  export type ExecutiveBriefingUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutiveBriefing
+     */
+    select?: ExecutiveBriefingSelect<ExtArgs> | null
+    /**
+     * The filter to search for the ExecutiveBriefing to update in case it exists.
+     */
+    where: ExecutiveBriefingWhereUniqueInput
+    /**
+     * In case the ExecutiveBriefing found by the `where` argument doesn't exist, create a new ExecutiveBriefing with this data.
+     */
+    create: XOR<ExecutiveBriefingCreateInput, ExecutiveBriefingUncheckedCreateInput>
+    /**
+     * In case the ExecutiveBriefing was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ExecutiveBriefingUpdateInput, ExecutiveBriefingUncheckedUpdateInput>
+  }
+
+  /**
+   * ExecutiveBriefing delete
+   */
+  export type ExecutiveBriefingDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutiveBriefing
+     */
+    select?: ExecutiveBriefingSelect<ExtArgs> | null
+    /**
+     * Filter which ExecutiveBriefing to delete.
+     */
+    where: ExecutiveBriefingWhereUniqueInput
+  }
+
+  /**
+   * ExecutiveBriefing deleteMany
+   */
+  export type ExecutiveBriefingDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExecutiveBriefings to delete
+     */
+    where?: ExecutiveBriefingWhereInput
+  }
+
+  /**
+   * ExecutiveBriefing without action
+   */
+  export type ExecutiveBriefingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExecutiveBriefing
+     */
+    select?: ExecutiveBriefingSelect<ExtArgs> | null
   }
 
 
@@ -56876,11 +57848,23 @@ export namespace Prisma {
     pipedriveSyncFinishedAt: 'pipedriveSyncFinishedAt',
     pipedriveSyncError: 'pipedriveSyncError',
     pipedriveSyncResult: 'pipedriveSyncResult',
+    notificationChecksLastRunAt: 'notificationChecksLastRunAt',
     updatedAt: 'updatedAt',
     updatedById: 'updatedById'
   };
 
   export type AppSettingScalarFieldEnum = (typeof AppSettingScalarFieldEnum)[keyof typeof AppSettingScalarFieldEnum]
+
+
+  export const ExecutiveBriefingScalarFieldEnum: {
+    id: 'id',
+    generatedAt: 'generatedAt',
+    model: 'model',
+    payload: 'payload',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ExecutiveBriefingScalarFieldEnum = (typeof ExecutiveBriefingScalarFieldEnum)[keyof typeof ExecutiveBriefingScalarFieldEnum]
 
 
   export const PipedriveStageMappingScalarFieldEnum: {
@@ -61734,6 +62718,7 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
     pipedriveSyncError?: StringNullableFilter<"AppSetting"> | string | null
     pipedriveSyncResult?: JsonNullableFilter<"AppSetting">
+    notificationChecksLastRunAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
     updatedAt?: DateTimeFilter<"AppSetting"> | Date | string
     updatedById?: StringNullableFilter<"AppSetting"> | string | null
   }
@@ -61757,6 +62742,7 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: SortOrderInput | SortOrder
     pipedriveSyncError?: SortOrderInput | SortOrder
     pipedriveSyncResult?: SortOrderInput | SortOrder
+    notificationChecksLastRunAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrderInput | SortOrder
   }
@@ -61783,6 +62769,7 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
     pipedriveSyncError?: StringNullableFilter<"AppSetting"> | string | null
     pipedriveSyncResult?: JsonNullableFilter<"AppSetting">
+    notificationChecksLastRunAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
     updatedAt?: DateTimeFilter<"AppSetting"> | Date | string
     updatedById?: StringNullableFilter<"AppSetting"> | string | null
   }, "id">
@@ -61806,6 +62793,7 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: SortOrderInput | SortOrder
     pipedriveSyncError?: SortOrderInput | SortOrder
     pipedriveSyncResult?: SortOrderInput | SortOrder
+    notificationChecksLastRunAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrderInput | SortOrder
     _count?: AppSettingCountOrderByAggregateInput
@@ -61837,8 +62825,61 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: DateTimeNullableWithAggregatesFilter<"AppSetting"> | Date | string | null
     pipedriveSyncError?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
     pipedriveSyncResult?: JsonNullableWithAggregatesFilter<"AppSetting">
+    notificationChecksLastRunAt?: DateTimeNullableWithAggregatesFilter<"AppSetting"> | Date | string | null
     updatedAt?: DateTimeWithAggregatesFilter<"AppSetting"> | Date | string
     updatedById?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
+  }
+
+  export type ExecutiveBriefingWhereInput = {
+    AND?: ExecutiveBriefingWhereInput | ExecutiveBriefingWhereInput[]
+    OR?: ExecutiveBriefingWhereInput[]
+    NOT?: ExecutiveBriefingWhereInput | ExecutiveBriefingWhereInput[]
+    id?: StringFilter<"ExecutiveBriefing"> | string
+    generatedAt?: DateTimeFilter<"ExecutiveBriefing"> | Date | string
+    model?: StringFilter<"ExecutiveBriefing"> | string
+    payload?: JsonFilter<"ExecutiveBriefing">
+    updatedAt?: DateTimeFilter<"ExecutiveBriefing"> | Date | string
+  }
+
+  export type ExecutiveBriefingOrderByWithRelationInput = {
+    id?: SortOrder
+    generatedAt?: SortOrder
+    model?: SortOrder
+    payload?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ExecutiveBriefingWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ExecutiveBriefingWhereInput | ExecutiveBriefingWhereInput[]
+    OR?: ExecutiveBriefingWhereInput[]
+    NOT?: ExecutiveBriefingWhereInput | ExecutiveBriefingWhereInput[]
+    generatedAt?: DateTimeFilter<"ExecutiveBriefing"> | Date | string
+    model?: StringFilter<"ExecutiveBriefing"> | string
+    payload?: JsonFilter<"ExecutiveBriefing">
+    updatedAt?: DateTimeFilter<"ExecutiveBriefing"> | Date | string
+  }, "id">
+
+  export type ExecutiveBriefingOrderByWithAggregationInput = {
+    id?: SortOrder
+    generatedAt?: SortOrder
+    model?: SortOrder
+    payload?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ExecutiveBriefingCountOrderByAggregateInput
+    _max?: ExecutiveBriefingMaxOrderByAggregateInput
+    _min?: ExecutiveBriefingMinOrderByAggregateInput
+  }
+
+  export type ExecutiveBriefingScalarWhereWithAggregatesInput = {
+    AND?: ExecutiveBriefingScalarWhereWithAggregatesInput | ExecutiveBriefingScalarWhereWithAggregatesInput[]
+    OR?: ExecutiveBriefingScalarWhereWithAggregatesInput[]
+    NOT?: ExecutiveBriefingScalarWhereWithAggregatesInput | ExecutiveBriefingScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ExecutiveBriefing"> | string
+    generatedAt?: DateTimeWithAggregatesFilter<"ExecutiveBriefing"> | Date | string
+    model?: StringWithAggregatesFilter<"ExecutiveBriefing"> | string
+    payload?: JsonWithAggregatesFilter<"ExecutiveBriefing">
+    updatedAt?: DateTimeWithAggregatesFilter<"ExecutiveBriefing"> | Date | string
   }
 
   export type PipedriveStageMappingWhereInput = {
@@ -66734,6 +67775,7 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: Date | string | null
     pipedriveSyncError?: string | null
     pipedriveSyncResult?: NullableJsonNullValueInput | InputJsonValue
+    notificationChecksLastRunAt?: Date | string | null
     updatedAt?: Date | string
     updatedById?: string | null
   }
@@ -66757,6 +67799,7 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: Date | string | null
     pipedriveSyncError?: string | null
     pipedriveSyncResult?: NullableJsonNullValueInput | InputJsonValue
+    notificationChecksLastRunAt?: Date | string | null
     updatedAt?: Date | string
     updatedById?: string | null
   }
@@ -66780,6 +67823,7 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pipedriveSyncError?: NullableStringFieldUpdateOperationsInput | string | null
     pipedriveSyncResult?: NullableJsonNullValueInput | InputJsonValue
+    notificationChecksLastRunAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -66803,6 +67847,7 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pipedriveSyncError?: NullableStringFieldUpdateOperationsInput | string | null
     pipedriveSyncResult?: NullableJsonNullValueInput | InputJsonValue
+    notificationChecksLastRunAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -66826,6 +67871,7 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: Date | string | null
     pipedriveSyncError?: string | null
     pipedriveSyncResult?: NullableJsonNullValueInput | InputJsonValue
+    notificationChecksLastRunAt?: Date | string | null
     updatedAt?: Date | string
     updatedById?: string | null
   }
@@ -66849,6 +67895,7 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pipedriveSyncError?: NullableStringFieldUpdateOperationsInput | string | null
     pipedriveSyncResult?: NullableJsonNullValueInput | InputJsonValue
+    notificationChecksLastRunAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -66872,8 +67919,65 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pipedriveSyncError?: NullableStringFieldUpdateOperationsInput | string | null
     pipedriveSyncResult?: NullableJsonNullValueInput | InputJsonValue
+    notificationChecksLastRunAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ExecutiveBriefingCreateInput = {
+    id?: string
+    generatedAt: Date | string
+    model: string
+    payload: JsonNullValueInput | InputJsonValue
+    updatedAt?: Date | string
+  }
+
+  export type ExecutiveBriefingUncheckedCreateInput = {
+    id?: string
+    generatedAt: Date | string
+    model: string
+    payload: JsonNullValueInput | InputJsonValue
+    updatedAt?: Date | string
+  }
+
+  export type ExecutiveBriefingUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    model?: StringFieldUpdateOperationsInput | string
+    payload?: JsonNullValueInput | InputJsonValue
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExecutiveBriefingUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    model?: StringFieldUpdateOperationsInput | string
+    payload?: JsonNullValueInput | InputJsonValue
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExecutiveBriefingCreateManyInput = {
+    id?: string
+    generatedAt: Date | string
+    model: string
+    payload: JsonNullValueInput | InputJsonValue
+    updatedAt?: Date | string
+  }
+
+  export type ExecutiveBriefingUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    model?: StringFieldUpdateOperationsInput | string
+    payload?: JsonNullValueInput | InputJsonValue
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExecutiveBriefingUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    model?: StringFieldUpdateOperationsInput | string
+    payload?: JsonNullValueInput | InputJsonValue
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PipedriveStageMappingCreateInput = {
@@ -70548,6 +71652,7 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: SortOrder
     pipedriveSyncError?: SortOrder
     pipedriveSyncResult?: SortOrder
+    notificationChecksLastRunAt?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrder
   }
@@ -70579,6 +71684,7 @@ export namespace Prisma {
     pipedriveSyncStartedAt?: SortOrder
     pipedriveSyncFinishedAt?: SortOrder
     pipedriveSyncError?: SortOrder
+    notificationChecksLastRunAt?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrder
   }
@@ -70601,6 +71707,7 @@ export namespace Prisma {
     pipedriveSyncStartedAt?: SortOrder
     pipedriveSyncFinishedAt?: SortOrder
     pipedriveSyncError?: SortOrder
+    notificationChecksLastRunAt?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrder
   }
@@ -70612,6 +71719,28 @@ export namespace Prisma {
     budgetOverrunPct?: SortOrder
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
+  }
+
+  export type ExecutiveBriefingCountOrderByAggregateInput = {
+    id?: SortOrder
+    generatedAt?: SortOrder
+    model?: SortOrder
+    payload?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ExecutiveBriefingMaxOrderByAggregateInput = {
+    id?: SortOrder
+    generatedAt?: SortOrder
+    model?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ExecutiveBriefingMinOrderByAggregateInput = {
+    id?: SortOrder
+    generatedAt?: SortOrder
+    model?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type PipedriveStageMappingCountOrderByAggregateInput = {
@@ -109874,6 +111003,10 @@ export namespace Prisma {
      * @deprecated Use AppSettingDefaultArgs instead
      */
     export type AppSettingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = AppSettingDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ExecutiveBriefingDefaultArgs instead
+     */
+    export type ExecutiveBriefingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ExecutiveBriefingDefaultArgs<ExtArgs>
     /**
      * @deprecated Use PipedriveStageMappingDefaultArgs instead
      */

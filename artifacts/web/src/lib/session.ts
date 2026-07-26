@@ -1,11 +1,12 @@
 // Helpers for surfacing an expired session on the login page and returning the
 // user to where they were after re-authenticating.
 //
-// The string keys below are ALSO written directly by the shared fetch layer
-// (lib/api-client-react/src/custom-fetch.ts) on a 401 response. That lib cannot
-// import from this web artifact, so the literals MUST stay in sync there.
-const SESSION_EXPIRED_KEY = "session_expired";
-const POST_LOGIN_REDIRECT_KEY = "post_login_redirect";
+// The shared fetch layer (lib/api-client-react custom-fetch) writes these keys
+// on a 401 response; import the constants from there so they can never drift.
+import {
+  SESSION_EXPIRED_KEY,
+  POST_LOGIN_REDIRECT_KEY,
+} from "@workspace/api-client-react";
 
 // Flag the session as expired and remember the current location so the login
 // page can show a message and bounce the user back after they sign in again.

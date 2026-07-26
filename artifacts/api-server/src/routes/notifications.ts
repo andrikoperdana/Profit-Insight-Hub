@@ -12,6 +12,9 @@ router.use(requireAuth);
 // wasteful and piles onto the cold-start request burst. Throttle it to at most
 // one real run per window across all callers, and coalesce concurrent triggers
 // onto a single in-flight run. Failures are never cached.
+// Intentionally per-instance: cross-instance duplicate runs are harmless
+// because the rules engine dedups per notification (user/type/link, 24h).
+// The scheduled run in index.ts additionally claims through the DB.
 type ChecksResult = Awaited<ReturnType<typeof runAllNotificationChecks>>;
 const RUN_CHECKS_TTL_MS = 10 * 60_000;
 let lastChecksResult: ChecksResult | null = null;

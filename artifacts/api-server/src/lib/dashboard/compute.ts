@@ -7,7 +7,7 @@ import {
 } from "../serializers.js";
 import type { ProjectWithRelations } from "../serializers.js";
 import { isPrincipalRole } from "../roles.js";
-import { classifyProject, type ProjectType } from "../projectType.js";
+import { classifyProject, type ProjectType } from "@workspace/shared";
 
 // Pure, request-agnostic dashboard compute functions. The individual
 // /dashboard/* route handlers delegate here, and GET /dashboard/overview

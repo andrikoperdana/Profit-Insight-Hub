@@ -11,6 +11,7 @@ import {
 import { runPaymentSync } from "./routes/xero.js";
 import { xeroConfigured } from "./lib/xero.js";
 import { getAppSettings, APP_SETTINGS_ID } from "./lib/app-settings.js";
+import { runAllNotificationChecks } from "./lib/notificationRules.js";
 import {
   pipedriveConfigured,
   claimPipedriveSync,
@@ -138,6 +139,51 @@ const pipedrivePoll = setInterval(() => {
     });
 }, PIPEDRIVE_POLL_MS);
 pipedrivePoll.unref();
+
+// Scheduled notification-rules run. Previously the rules engine only fired
+// when a MANAGEMENT user loaded the dashboard (POST /notifications/run-checks);
+// if nobody logged in, no daily notifications/emails went out. This interval
+// runs the same engine at most once per hour, claimed atomically through the
+// AppSetting row so concurrent autoscale instances never double-run (same
+// DB-claim pattern as the Pipedrive poll). Per-notification 24h dedup inside
+// the engine makes any residual overlap harmless. The dashboard-triggered
+// route stays as a backstop and is unaffected.
+const NOTIFICATION_TICK_MS = 15 * 60_000; // how often we try to claim
+const NOTIFICATION_RUN_EVERY_MS = 60 * 60_000; // min gap between actual runs
+// The AppSetting "default" row is not guaranteed to exist (readers tolerate
+// null); updateMany on a missing row would match 0 rows and the scheduler
+// would silently never run. Ensure it exists once at startup.
+const notificationClaimReady = prisma.appSetting
+  .upsert({ where: { id: APP_SETTINGS_ID }, create: { id: APP_SETTINGS_ID }, update: {} })
+  .then(() => true)
+  .catch((err) => {
+    logger.warn({ err }, "AppSetting ensure for notification scheduler failed (continuing)");
+    return false;
+  });
+const notificationPoll = setInterval(() => {
+  (async () => {
+    await notificationClaimReady;
+    // Atomic cross-instance claim: only the instance whose UPDATE matches the
+    // row (last run null or older than the gap) runs the engine this window.
+    // IMPORTANT: use prisma directly, never getAppSettings() (60s cache).
+    const claimed = await prisma.appSetting.updateMany({
+      where: {
+        id: APP_SETTINGS_ID,
+        OR: [
+          { notificationChecksLastRunAt: null },
+          { notificationChecksLastRunAt: { lt: new Date(Date.now() - NOTIFICATION_RUN_EVERY_MS) } },
+        ],
+      },
+      data: { notificationChecksLastRunAt: new Date() },
+    });
+    if (claimed.count !== 1) return;
+    const result = await runAllNotificationChecks();
+    if (result.total > 0) {
+      logger.info(result, "Scheduled notification checks created notifications");
+    }
+  })().catch((err) => logger.warn({ err }, "Scheduled notification checks failed (continuing)"));
+}, NOTIFICATION_TICK_MS);
+notificationPoll.unref();
 
 // Graceful shutdown: on deploy rollover / container stop, stop accepting new
 // connections, let in-flight requests finish, close the DB pool cleanly, then

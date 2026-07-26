@@ -6,20 +6,17 @@ description: The "session expired" + return-path UX is wired through two session
 The web "session expired -> sign in -> return to last page" flow is driven by two
 sessionStorage keys: `session_expired` and `post_login_redirect`.
 
-**Constraint:** these key literals exist in TWO places that cannot import each
-other:
-- `artifacts/web/src/lib/session.ts` (markSessionExpired / consumeSessionExpired /
-  consumePostLoginRedirect) — the canonical helpers used by the web app.
-- `lib/api-client-react/src/custom-fetch.ts` 401 handler — writes the same two
-  keys inline as string literals, because the shared client lib can't import from
-  the web artifact.
+**Single source:** the key literals are defined ONCE in
+`lib/api-client-react/src/custom-fetch.ts` (exported `SESSION_EXPIRED_KEY` /
+`POST_LOGIN_REDIRECT_KEY` via the package barrel); `artifacts/web/src/lib/session.ts`
+imports them. The lib is the single source because the web artifact can depend
+on the lib but not vice versa.
 
 **Why:** a 401 from the server and a client-side idle logout must produce the
 *same* login-page UX. The shared fetch layer owns the 401 path; the web app owns
-the idle path. If one side renames a key, the other silently stops showing the
-expired notice / loses the return path.
+the idle path.
 
-**How to apply:** change both sides in lockstep. The expiry path also stores
+**How to apply:** rename keys only in custom-fetch.ts. The expiry path also stores
 `window.location.pathname + window.location.search` (includes the app BASE_URL
 prefix); `consumePostLoginRedirect()` strips that prefix to a wouter-relative
 path and ignores `/login`.

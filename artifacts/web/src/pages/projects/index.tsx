@@ -7,7 +7,7 @@ import { formatMoney } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
 import { canCreateProject, canViewProjectFinancials } from "@/lib/roles";
 import { exportSheets, exportCsv } from "@/lib/exports";
-import { classifyProject } from "@/lib/projectType";
+import { classifyProject } from "@workspace/shared";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

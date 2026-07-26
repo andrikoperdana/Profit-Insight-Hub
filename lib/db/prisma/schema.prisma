@@ -1191,8 +1191,24 @@ model AppSetting {
   pipedriveSyncFinishedAt DateTime?
   pipedriveSyncError      String?   @db.Text
   pipedriveSyncResult     Json?
+  // Cross-instance claim timestamp for the scheduled notification-rules run
+  // (see api-server index.ts scheduler). Claimed atomically via updateMany.
+  notificationChecksLastRunAt DateTime?
   updatedAt             DateTime @updatedAt
   updatedById           String?
+}
+
+// Last generated Executive Copilot briefing, persisted so it survives restarts
+// and is visible across autoscale instances. Single portfolio-wide row
+// (id = "default"); payload holds { facts, briefing } JSON. Deliberately a
+// separate table (NOT an AppSetting column): AppSetting is read on hot paths
+// and a multi-KB blob would inflate every read.
+model ExecutiveBriefing {
+  id          String   @id @default("default")
+  generatedAt DateTime
+  model       String
+  payload     Json
+  updatedAt   DateTime @updatedAt
 }
 
 model PipedriveStageMapping {

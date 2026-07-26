@@ -2,7 +2,7 @@ import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { computeMetrics, projectInclude } from "../lib/serializers.js";
-import { classifyProject, PROJECT_TYPES, type ProjectType } from "../lib/projectType.js";
+import { classifyProject, PROJECT_TYPES, type ProjectType } from "@workspace/shared";
 
 const router: IRouter = Router();
 

@@ -445,6 +445,9 @@ interface XeroTaxRate {
 }
 
 const CHART_TTL_MS = 30 * 60_000;
+// Intentionally per-instance (in-memory): reference data keyed by tenant with
+// a long TTL; clearXeroChartCache() only clears THIS instance, which is fine —
+// other instances refresh on TTL expiry at worst.
 const chartCache = new Map<
   string,
   { at: number; accounts: XeroAccount[]; taxRates: XeroTaxRate[] }

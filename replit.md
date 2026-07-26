@@ -6,7 +6,7 @@ Full-stack web app for an Indonesian IT security consulting firm. Tracks project
 
 ## Stack
 
-- **Monorepo**: pnpm workspace (`lib/` shared, `artifacts/` runnable apps)
+- **Monorepo**: pnpm workspace (`lib/` shared, `artifacts/` runnable apps). `lib/shared` (`@workspace/shared`) holds cross-app domain constants — canonical project-type taxonomy (`projectType.ts`) used by both api-server and web (no duplicated copies)
 - **Frontend** (`artifacts/web`): React + Vite + TS + Tailwind v4 + shadcn/ui + Recharts, wouter routing, dark cyber-green theme
 - **Backend** (`artifacts/api-server`): Node + Express + Pino, JWT auth (HS256), bcryptjs
 - **DB** (`lib/db`): PostgreSQL via Prisma. Schema `lib/db/prisma/schema.prisma`; client generated to `lib/db/src/generated/client/`
@@ -54,7 +54,7 @@ Editable by MGMT/assigned-PM/Sales-owner unless noted; each tab has its own `rou
 
 ## Notifications
 
-Persisted `Notification` rows (`lib/notifications.ts` `notifyUser`), surfaced in the Header bell (`GET /api/notifications`, polled 60s). Timesheet submit notifies the PM; approve/reject notifies the submitter. Daily lead/project rules dedup by day and fire only on MGMT dashboard load (no scheduler).
+Persisted `Notification` rows (`lib/notifications.ts` `notifyUser`), surfaced in the Header bell (`GET /api/notifications`, polled 60s). Timesheet submit notifies the PM; approve/reject notifies the submitter. Daily lead/project rules dedup by day and run via a server scheduler (`index.ts`): 15-min `setInterval` with an atomic DB claim on `AppSetting.notificationChecksLastRunAt` (updateMany where null or >60min old) so only one instance runs them per hour; MGMT dashboard-load trigger + manual `POST /notifications/run-checks` remain.
 
 **Email** (`lib/email.ts`, Resend) — best-effort side effect of `notifyUser`, **important types only**. Global kill-switch `AppSetting.emailNotificationsEnabled` **defaults disabled** (Settings → Email Notifications, MGMT/SUPER_ADMIN). Never blocks/throws, 5s timeout, never logs the provider response body (PII). Optional env levers (sane defaults in code): `EMAIL_SEND_ALLOWLIST` (gate rollout vs bouncy seed emails), `EMAIL_SEND_BLOCKLIST_DOMAINS`, `EMAIL_FROM`, `APP_BASE_URL`, `EMAIL_LOGO_URL`, `EMAIL_REPLY_TO`.
 
@@ -71,7 +71,7 @@ Persisted `Notification` rows (`lib/notifications.ts` `notifyUser`), surfaced in
 
 ## Feature pages (route — roles — purpose)
 
-- `/executive-copilot` (MGMT) — AI Executive Copilot briefing page (not a chatbot). All numbers computed deterministically (`api-server/src/lib/executive-copilot.ts` `buildExecutiveCopilotFacts`); LLM (gpt-5.4) only narrates prose + Top 5 actions. Portfolio health score/label deterministic and overwritten onto the validated AI JSON. Split endpoints: `POST /executive-copilot/briefing/generate` (button-driven, incurs AI cost) + `GET /executive-copilot/briefing` (cached only). Module-level cache + single-flight + 10min stale flag. Never sends docs/rates/raw timesheets to the LLM; never logs provider body.
+- `/executive-copilot` (MGMT) — AI Executive Copilot briefing page (not a chatbot). All numbers computed deterministically (`api-server/src/lib/executive-copilot.ts` `buildExecutiveCopilotFacts`); LLM (gpt-5.4) only narrates prose + Top 5 actions. Portfolio health score/label deterministic and overwritten onto the validated AI JSON. Split endpoints: `POST /executive-copilot/briefing/generate` (button-driven, incurs AI cost) + `GET /executive-copilot/briefing` (cached only). Briefing persisted to `ExecutiveBriefing` DB row (id "default") on generate; reads go L1 memory-if-fresh → DB read-through (survives restarts/instances), 10min stale flag, single-flight generate. Other TtlCaches (dashboard, portfolio monitor, resource planning, Xero chart) are intentionally per-instance. Never sends docs/rates/raw timesheets to the LLM; never logs provider body.
 - `/vat-recap` (MGMT) — 12-month + annual VAT breakdown of INVOICED/PAID milestones.
 - `/revenue-recognition` (MGMT/FINANCE/PM — PM own projects only) — milestone recognized when BAST doc uploaded OR status PAID OR per-milestone `reportUrl` filed (any one suffices; basis priority BAST > PAID > REPORT). Only kind=CLIENT, CANCELLED excluded; DPP via splitVat; tabs By Project + By PM + By Business Unit + By PMO Director (all group tabs hidden for PM). BU attribution: milestone workstream BU → project's single-workstream BU → PM's BU → Unassigned. PMO Director = PM's manager (MGMT user acting as PM counts as own director). `BillingMilestone.reportUrl/reportFiledAt` set via milestone PATCH (http(s)-validated; filedAt stamped on set/change, cleared on empty); "Report" column + edit-dialog field in Billing tab.
 - `/resource-planning` (PM/MGMT/HR/Principal_*) — BU-grouped weekly mandays.

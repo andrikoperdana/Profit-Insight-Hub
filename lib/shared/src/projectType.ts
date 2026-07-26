@@ -1,3 +1,7 @@
+// Single source of truth for project-type classification, shared by the web
+// app and the API server (artifacts must not import from each other). The
+// RULES order is significant: first match wins (e.g. MSS before SOC so
+// "managed soc" classifies as MSS).
 export const PROJECT_TYPES = [
   "Pentest",
   "VAPT",

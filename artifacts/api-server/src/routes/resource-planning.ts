@@ -11,6 +11,9 @@ router.use(requireAuth);
 // key those by window params only. Principals see a scoped subset (their direct
 // supervisees), so their cache key is additionally namespaced by user id (see
 // `cacheKey` below). 30s matches the frontend React Query staleTime.
+// Intentionally per-instance (in-memory): exists to absorb request herds on a
+// single instance; a shared/DB cache would add a remote round-trip per hit and
+// cross-instance staleness is bounded by the 30s TTL anyway.
 const planningCache = new TtlCache<unknown>(30_000);
 
 // Returns the Monday (UTC) of the ISO week containing `d`.

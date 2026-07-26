@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import { prisma, Prisma } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
 import { openai } from "@workspace/integrations-openai-ai-server";
 import { GenerateExecutiveBriefingResponse } from "@workspace/api-zod";
@@ -31,11 +32,70 @@ interface BriefingResult {
   briefing: BriefingNarrative;
 }
 
-// Last generated briefing, kept in-process. Identical for every executive
-// viewer (portfolio-wide, no per-user scope), so a single slot is correct.
+// L1: last generated briefing, kept in-process for cheap reads. Identical for
+// every executive viewer (portfolio-wide, no per-user scope), so a single slot
+// is correct. The durable copy lives in the ExecutiveBriefing DB row (single
+// "default" row) so a briefing generated on one autoscale instance is visible
+// on every other instance and survives restarts; loadBriefing() reads through
+// to it whenever the L1 copy is missing or older than STALE_MS.
 let lastResult: BriefingResult | null = null;
-// Single-flight: concurrent generates share one in-flight LLM call.
+// Single-flight: concurrent generates on THIS instance share one in-flight LLM
+// call. Deliberately per-instance — generation is button-driven and rare, so a
+// duplicate LLM call across instances is unlikely and harmless (last write wins).
 let pendingGenerate: Promise<BriefingResult> | null = null;
+
+const BRIEFING_ID = "default";
+
+async function persistBriefing(result: BriefingResult): Promise<void> {
+  const data = {
+    generatedAt: new Date(result.generatedAt),
+    model: result.model,
+    // Facts/briefing are plain JSON-serializable objects; the cast bridges the
+    // interface (no index signature) to Prisma's InputJsonValue.
+    payload: { facts: result.facts, briefing: result.briefing } as unknown as Prisma.InputJsonValue,
+  };
+  await prisma.executiveBriefing.upsert({
+    where: { id: BRIEFING_ID },
+    create: { id: BRIEFING_ID, ...data },
+    update: data,
+  });
+}
+
+// Returns the newest known briefing: the in-process copy when still fresh,
+// otherwise reads through to the persisted row (which may have been written by
+// another instance) and rehydrates L1 from it when newer. `stale` on the
+// returned object is NOT meaningful here — callers recompute it from
+// generatedAt at response time.
+async function loadBriefing(): Promise<BriefingResult | null> {
+  if (lastResult) {
+    const ageMs = Date.now() - new Date(lastResult.generatedAt).getTime();
+    if (ageMs <= STALE_MS) return lastResult;
+  }
+  try {
+    const row = await prisma.executiveBriefing.findUnique({ where: { id: BRIEFING_ID } });
+    if (row) {
+      const rowGeneratedAt = row.generatedAt.toISOString();
+      if (!lastResult || rowGeneratedAt > lastResult.generatedAt) {
+        // We wrote this payload shape ourselves in persistBriefing().
+        const payload = row.payload as unknown as {
+          facts: ExecutiveCopilotFacts;
+          briefing: BriefingNarrative;
+        };
+        lastResult = {
+          generatedAt: rowGeneratedAt,
+          model: row.model,
+          stale: false,
+          facts: payload.facts,
+          briefing: payload.briefing,
+        };
+      }
+    }
+  } catch {
+    // DB read failure must not take down the endpoint — fall back to whatever
+    // this instance has in memory (possibly null).
+  }
+  return lastResult;
+}
 
 function isExecutive(role: string | null | undefined): boolean {
   return role === "MANAGEMENT" || role === "SUPER_ADMIN";
@@ -144,6 +204,17 @@ router.post("/executive-copilot/briefing/generate", async (req, res) => {
       pendingGenerate = null;
     }
     lastResult = result;
+    // Persist so other instances (and future restarts) see this briefing. A
+    // persist failure must not waste the LLM call — serve the result anyway;
+    // this instance still has it in memory.
+    try {
+      await persistBriefing(result);
+    } catch (err) {
+      req.log.warn(
+        { err: err instanceof Error ? err.message : "unknown" },
+        "executive briefing persist failed (serving from memory)",
+      );
+    }
     res.json(result);
   } catch (err) {
     req.log.error(
@@ -156,38 +227,40 @@ router.post("/executive-copilot/briefing/generate", async (req, res) => {
   }
 });
 
-router.get("/executive-copilot/briefing", (req, res) => {
+router.get("/executive-copilot/briefing", async (req, res) => {
   if (!isExecutive(req.user?.role)) {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
-  if (!lastResult) {
+  const result = await loadBriefing();
+  if (!result) {
     res.json({ hasBriefing: false });
     return;
   }
-  const ageMs = Date.now() - new Date(lastResult.generatedAt).getTime();
+  const ageMs = Date.now() - new Date(result.generatedAt).getTime();
   res.json({
     hasBriefing: true,
-    result: { ...lastResult, stale: ageMs > STALE_MS },
+    result: { ...result, stale: ageMs > STALE_MS },
   });
 });
 
 // Professional PDF export of the current cached briefing. Binary stream (not in
 // the OpenAPI codegen) — the frontend downloads it with an auth header. Numbers
 // come from the deterministic facts; the AI prose is narrative only.
-router.get("/executive-copilot/briefing/export.pdf", (req, res) => {
+router.get("/executive-copilot/briefing/export.pdf", async (req, res) => {
   if (!isExecutive(req.user?.role)) {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
-  if (!lastResult) {
+  const result = await loadBriefing();
+  if (!result) {
     res.status(409).json({ error: "Generate a briefing first." });
     return;
   }
   try {
-    const ageMs = Date.now() - new Date(lastResult.generatedAt).getTime();
+    const ageMs = Date.now() - new Date(result.generatedAt).getTime();
     streamExecutiveBriefingPdf(res, {
-      ...lastResult,
+      ...result,
       stale: ageMs > STALE_MS,
     });
   } catch (err) {

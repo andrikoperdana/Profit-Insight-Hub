@@ -15,6 +15,10 @@ router.use(requireAuth);
 // Resource-utilization detail is expensive (loads recent timesheets + active
 // assignments for the whole eligible workforce). Cache per caller scope for a
 // short window; 30s matches the frontend React Query staleTime.
+// NOTE: all TtlCaches in this file are intentionally per-instance (in-memory):
+// they absorb request herds on a single instance; a shared/DB cache would add
+// a remote round-trip per hit and cross-instance staleness is bounded by the
+// 30s TTL anyway.
 const utilizationDetailCache = new TtlCache<unknown>(30_000);
 
 // Read-only portfolio aggregations (summary KPIs, profit trend, status mix,

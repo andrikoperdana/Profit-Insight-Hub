@@ -10,6 +10,8 @@ const router: IRouter = Router();
 // Read-only portfolio aggregation (margins, costs, hours, invoice forecast) over
 // every commercial project. Re-scans projects + timesheets + milestones on each
 // call; cache per year for a short window matching the frontend staleTime (30s).
+// Intentionally per-instance (in-memory): absorbs request herds on a single
+// instance; cross-instance staleness is bounded by the 30s TTL.
 const portfolioCache = new TtlCache<unknown>(30_000);
 
 // --- date helpers (UTC-anchored to avoid timezone drift) --------------------
