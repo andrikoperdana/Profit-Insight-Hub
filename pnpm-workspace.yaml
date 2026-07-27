@@ -1,47 +1,10 @@
-# ============================================================================
-# SECURITY: Minimum release age for npm packages (supply-chain attack defense)
-# ============================================================================
-#
-# This setting requires that any npm package version must have been published
-# for at least 1 day (1440 minutes) before pnpm will allow installing it.
-# This is a critical defense against supply-chain attacks. In most cases,
-# malicious npm releases are discovered and pulled within hours, so a 1-day
-# delay provides a strong safety buffer.
-#
-# DO NOT DISABLE THIS SETTING. Removing or setting it to 0 is considered
-# extremely dangerous and leaves the entire workspace vulnerable to supply-
-# chain attacks, which have been the #1 vector for npm ecosystem compromises.
-#
-# If you absolutely need to install a package before the 1-day window has
-# passed (e.g. an urgent security bugfix), you can add it to the
-# `minimumReleaseAgeExclude` allowlist below. Only consider doing this for
-# packages released by trusted organizations with an impeccable security
-# posture (e.g. Replit packsges, react from Meta, typescript from Microsoft). Even then,
-# remove the exclusion once the 1-day window has passed.
-#
-# Example:
-#   minimumReleaseAgeExclude:
-#     - react
-#     - typescript
-#
-# ============================================================================
-minimumReleaseAge: 1440
-
-minimumReleaseAgeExclude:
-  # Exclude @replit scoped packages from the minimum release age check.
-  # These are published by Replit and trusted — the supply-chain attack vector
-  # this setting guards against does not apply to our own packages.
-  - '@replit/*'
-  - stripe-replit-sync
-  # tmp@0.2.6 was just published; it's the security fix for GHSA-ph9p-34f9-6g65.
-  # Remove this exclusion once the 1-day window has passed.
-  - tmp
-
 packages:
   - artifacts/*
   - lib/*
   - lib/integrations/*
   - scripts
+
+autoInstallPeers: false
 
 catalog:
   '@replit/vite-plugin-cartographer': ^0.5.1
@@ -58,9 +21,7 @@ catalog:
   drizzle-orm: ^0.45.1
   framer-motion: ^12.23.24
   lucide-react: ^0.545.0
-  # Must be this exact version because expo requires it
   react: 19.1.0
-  # Must be this exact version because expo requires it
   react-dom: 19.1.0
   tailwind-merge: ^3.3.1
   tailwindcss: ^4.1.14
@@ -69,7 +30,12 @@ catalog:
   wouter: ^3.3.5
   zod: ^3.25.76
 
-autoInstallPeers: false
+minimumReleaseAge: 1440
+
+minimumReleaseAgeExclude:
+  - '@replit/*'
+  - stripe-replit-sync
+  - tmp
 
 onlyBuiltDependencies:
   - '@swc/core'
@@ -78,151 +44,115 @@ onlyBuiltDependencies:
   - unrs-resolver
 
 overrides:
-  # replit uses linux-x64 only, we can exclude all other platforms
-  "esbuild>@esbuild/darwin-arm64": "-"
-  "esbuild>@esbuild/darwin-x64": "-"
-  "esbuild>@esbuild/freebsd-arm64": "-"
-  "esbuild>@esbuild/freebsd-x64": "-"
-  "esbuild>@esbuild/linux-arm": "-"
-  "esbuild>@esbuild/linux-arm64": "-"
-  "esbuild>@esbuild/linux-ia32": "-"
-  "esbuild>@esbuild/linux-loong64": "-"
-  "esbuild>@esbuild/linux-mips64el": "-"
-  "esbuild>@esbuild/linux-ppc64": "-"
-  "esbuild>@esbuild/linux-riscv64": "-"
-  "esbuild>@esbuild/linux-s390x": "-"
-  "esbuild>@esbuild/netbsd-arm64": "-"
-  "esbuild>@esbuild/netbsd-x64": "-"
-  "esbuild>@esbuild/openbsd-arm64": "-"
-  "esbuild>@esbuild/openbsd-x64": "-"
-  "esbuild>@esbuild/sunos-x64": "-"
-  "esbuild>@esbuild/win32-arm64": "-"
-  "esbuild>@esbuild/win32-ia32": "-"
-  "esbuild>@esbuild/win32-x64": "-"
-  "esbuild>@esbuild/aix-ppc64": '-'
-  "esbuild>@esbuild/android-arm": '-'
-  "esbuild>@esbuild/android-arm64": '-'
-  "esbuild>@esbuild/android-x64": '-'
-  "esbuild>@esbuild/openharmony-arm64": '-'
-  "lightningcss>lightningcss-android-arm64": "-"
-  "lightningcss>lightningcss-darwin-arm64": "-"
-  "lightningcss>lightningcss-darwin-x64": "-"
-  "lightningcss>lightningcss-freebsd-x64": "-"
-  "lightningcss>lightningcss-linux-arm-gnueabihf": "-"
-  "lightningcss>lightningcss-linux-arm64-gnu": "-"
-  "lightningcss>lightningcss-linux-arm64-musl": "-"
-  "lightningcss>lightningcss-linux-x64-musl": "-"
-  "lightningcss>lightningcss-win32-arm64-msvc": "-"
-  "lightningcss>lightningcss-win32-x64-msvc": "-"
-  "@tailwindcss/oxide>@tailwindcss/oxide-android-arm64": "-"
-  "@tailwindcss/oxide>@tailwindcss/oxide-darwin-arm64": "-"
-  "@tailwindcss/oxide>@tailwindcss/oxide-darwin-x64": "-"
-  "@tailwindcss/oxide>@tailwindcss/oxide-freebsd-x64": "-"
-  "@tailwindcss/oxide>@tailwindcss/oxide-linux-arm-gnueabihf": "-"
-  "@tailwindcss/oxide>@tailwindcss/oxide-linux-arm64-gnu": "-"
-  "@tailwindcss/oxide>@tailwindcss/oxide-linux-arm64-musl": "-"
-  "@tailwindcss/oxide>@tailwindcss/oxide-win32-arm64-msvc": "-"
-  "@tailwindcss/oxide>@tailwindcss/oxide-win32-x64-msvc": "-"
-  "@tailwindcss/oxide>@tailwindcss/oxide-linux-x64-musl": "-"
-  "rollup>@rollup/rollup-android-arm-eabi": "-"
-  "rollup>@rollup/rollup-android-arm64": "-"
-  "rollup>@rollup/rollup-darwin-arm64": "-"
-  "rollup>@rollup/rollup-darwin-x64": "-"
-  "rollup>@rollup/rollup-freebsd-arm64": "-"
-  "rollup>@rollup/rollup-freebsd-x64": "-"
-  "rollup>@rollup/rollup-linux-arm-gnueabihf": "-"
-  "rollup>@rollup/rollup-linux-arm-musleabihf": "-"
-  "rollup>@rollup/rollup-linux-arm64-gnu": "-"
-  "rollup>@rollup/rollup-linux-arm64-musl": "-"
-  "rollup>@rollup/rollup-linux-loong64-gnu": "-"
-  "rollup>@rollup/rollup-linux-loong64-musl": "-"
-  "rollup>@rollup/rollup-linux-ppc64-gnu": "-"
-  "rollup>@rollup/rollup-linux-ppc64-musl": "-"
-  "rollup>@rollup/rollup-linux-riscv64-gnu": "-"
-  "rollup>@rollup/rollup-linux-riscv64-musl": "-"
-  "rollup>@rollup/rollup-linux-s390x-gnu": "-"
-  "rollup>@rollup/rollup-linux-x64-musl": "-"
-  "rollup>@rollup/rollup-openbsd-x64": "-"
-  "rollup>@rollup/rollup-openharmony-arm64": "-"
-  "rollup>@rollup/rollup-win32-arm64-msvc": "-"
-  "rollup>@rollup/rollup-win32-ia32-msvc": "-"
-  "rollup>@rollup/rollup-win32-x64-gnu": "-"
-  "rollup>@rollup/rollup-win32-x64-msvc": "-"
-  "@expo/ngrok-bin>@expo/ngrok-bin-darwin-arm64": "-"
-  "@expo/ngrok-bin>@expo/ngrok-bin-darwin-x64": "-"
-  "@expo/ngrok-bin>@expo/ngrok-bin-freebsd-ia32": "-"
-  "@expo/ngrok-bin>@expo/ngrok-bin-freebsd-x64": "-"
-  "@expo/ngrok-bin>@expo/ngrok-bin-linux-arm64": "-"
-  "@expo/ngrok-bin>@expo/ngrok-bin-linux-arm": "-"
-  "@expo/ngrok-bin>@expo/ngrok-bin-linux-ia32": "-"
-  "@expo/ngrok-bin>@expo/ngrok-bin-sunos-x64": "-"
-  "@expo/ngrok-bin>@expo/ngrok-bin-win32-ia32": "-"
-  "@expo/ngrok-bin>@expo/ngrok-bin-win32-x64": "-"
-  # drizzle-kit uses esbuild internally on an older version that's vulnerable, this overrides it
-  "@esbuild-kit/esm-loader": "npm:tsx@^4.21.0"
-  # GHSA-g7r4-m6w7-qqqr: esbuild arbitrary file read in dev server (Windows alternate paths)
-  esbuild: "^0.28.1"
-  # ── Security CVE overrides ──────────────────────────────────────────────────
-  # GHSA-v2wj-q39q-566r / GHSA-p9ff-h696-f583 / GHSA-4w7w-66w2-5vf9: vite CVEs
-  # GHSA-fx2h-pf6j-xcff / GHSA-v6wh-96g9-6wx3: vite fs.deny bypass + NTLMv2 hash disclosure
-  # Global override forces vitest's bundled vite peer to also use the patched version
-  vite: "^7.3.5"
-  # GHSA-3v7f-55p6-f55p / GHSA-c2c7-rcm5-vvqj: picomatch ReDoS (2.x path)
-  "micromatch>picomatch": "^2.3.2"
-  # GHSA-3v7f-55p6-f55p / GHSA-c2c7-rcm5-vvqj: picomatch ReDoS (4.x path via vitest/vite)
-  "vitest>picomatch": "^4.0.4"
-  "vite>picomatch": "^4.0.4"
-  # GHSA-q8mj-m7cp-5q26: qs DoS via stringify with null values
-  qs: "^6.15.2"
-  # GHSA-4c8g-83qw-93j6 / GHSA-v2hh-gcrm-f6hx: fast-uri IDN canonicalization + backslash host confusion
-  fast-uri: "^3.1.4"
-  # GHSA-qx2v-qp2m-jg93: PostCSS XSS via unescaped </style>
-  postcss: "^8.5.10"
-  # GHSA-w5hq-g745-h8pq: uuid missing buffer bounds check in v3/v5/v6
-  uuid: "^11.1.1"
-  # GHSA-27v5-c462-wpq7 / GHSA-j3q9-mxjg-w52f: path-to-regexp ReDoS
-  # Scoped to the `router` npm package only — express@4's own path-to-regexp@0.1.x
-  # must NOT be overridden (different major API, would break Express route matching)
-  "router>path-to-regexp": "^8.4.0"
-  # GHSA-48c2-rrv3-qjmp: yaml prototype pollution / ReDoS
-  yaml: "^2.8.3"
-  # GHSA-f886-m6hf-6m8v / GHSA-3jxr-9vmj-r5cp: brace-expansion zero-step hang + exponential DoS
-  brace-expansion: "^2.1.2"
-  # GHSA-f23m-r3pf-42rh / GHSA-r5fr-rjxr-66jc: lodash prototype pollution / code injection
-  lodash: "^4.18.0"
-  # GHSA-ph9p-34f9-6g65: tmp predictable temp-file names (symlink attack)
-  # GHSA-7c78-jf6q-g5cm: tmp type-confusion path traversal
-  tmp: "^0.2.7"
-  # GHSA-72gw-mp4g-v24j / GHSA-3p4h-7m6x-2hcm: multer DoS via deeply nested fields / incomplete abort cleanup
-  multer: "^2.2.0"
-  # GHSA-hmw2-7cc7-3qxx: form-data CRLF injection via unescaped field names/filenames
-  form-data: "^4.0.6"
-  # GHSA-76mc-f452-cxcm / GHSA-hpcv-96wg-7vj8 / GHSA-r47g-fvhr-h676 / GHSA-rp9w-3fw7-7cwq / GHSA-vxr8-fq34-vvx9 / GHSA-gvmj-g25r-r7wr / GHSA-c2j3-45gr-mqc4: multiple DOMPurify XSS bypasses
-  # Note: GHSA-x4vx-rjvf-j5p4 has no upstream patch; all others are fixed in >=3.4.12
-  dompurify: "^3.4.12"
-  # GHSA-4x5r-pxfx-6jf8: @babel/core arbitrary file read via sourceMappingURL comment
-  "@babel/core": "^7.29.6"
-  # GHSA-h67p-54hq-rp68 / GHSA-52cp-r559-cp3m: js-yaml quadratic-complexity DoS in merge key handling
-  js-yaml: "^4.3.0"
-  # GHSA-6v5v-wf23-fmfq: markdown-it quadratic complexity DoS in smartquotes rule
-  markdown-it: "^14.2.0"
-  # GHSA-g8m3-5g58-fq7m / GHSA-vxpw-j846-p89q / GHSA-p88m-4jfj-68fv / GHSA-35p6-xmwp-9g52: undici CVEs in 6.26.0
-  undici: "^6.27.0"
-  # GHSA-23hp-3jrh-7fpw / GHSA-8x88-c5mf-7j5w / GHSA-gvwx-54wh-qm9j / GHSA-w8wr-v893-vjvp: node-tar DoS + infinite loop + PAX crash
-  tar: ">=7.5.19"
-  # GHSA-395f-4hp3-45gv: shell-quote quadratic-complexity DoS in parse()
-  shell-quote: ">=1.9.0"
-  # GHSA-v245-v573-v5vm: linkify-it quadratic-complexity DoS in mailto: validator
-  linkify-it: ">=5.0.2"
-  # GHSA-v422-hmwv-36x6: body-parser DoS when invalid limit value disables size enforcement
-  body-parser: "^2.3.0"
+  '@babel/core': ^7.29.6
+  '@esbuild-kit/esm-loader': npm:tsx@^4.21.0
+  '@expo/ngrok-bin>@expo/ngrok-bin-darwin-arm64': '-'
+  '@expo/ngrok-bin>@expo/ngrok-bin-darwin-x64': '-'
+  '@expo/ngrok-bin>@expo/ngrok-bin-freebsd-ia32': '-'
+  '@expo/ngrok-bin>@expo/ngrok-bin-freebsd-x64': '-'
+  '@expo/ngrok-bin>@expo/ngrok-bin-linux-arm': '-'
+  '@expo/ngrok-bin>@expo/ngrok-bin-linux-arm64': '-'
+  '@expo/ngrok-bin>@expo/ngrok-bin-linux-ia32': '-'
+  '@expo/ngrok-bin>@expo/ngrok-bin-sunos-x64': '-'
+  '@expo/ngrok-bin>@expo/ngrok-bin-win32-ia32': '-'
+  '@expo/ngrok-bin>@expo/ngrok-bin-win32-x64': '-'
+  '@tailwindcss/oxide>@tailwindcss/oxide-android-arm64': '-'
+  '@tailwindcss/oxide>@tailwindcss/oxide-darwin-arm64': '-'
+  '@tailwindcss/oxide>@tailwindcss/oxide-darwin-x64': '-'
+  '@tailwindcss/oxide>@tailwindcss/oxide-freebsd-x64': '-'
+  '@tailwindcss/oxide>@tailwindcss/oxide-linux-arm-gnueabihf': '-'
+  '@tailwindcss/oxide>@tailwindcss/oxide-linux-arm64-gnu': '-'
+  '@tailwindcss/oxide>@tailwindcss/oxide-linux-arm64-musl': '-'
+  '@tailwindcss/oxide>@tailwindcss/oxide-linux-x64-musl': '-'
+  '@tailwindcss/oxide>@tailwindcss/oxide-win32-arm64-msvc': '-'
+  '@tailwindcss/oxide>@tailwindcss/oxide-win32-x64-msvc': '-'
+  body-parser: ^2.3.0
+  brace-expansion: '>=5.0.8'
+  brace-expansion@<=5.0.7: '>=5.0.8'
+  dompurify: ^3.4.12
+  esbuild: ^0.28.1
+  esbuild>@esbuild/aix-ppc64: '-'
+  esbuild>@esbuild/android-arm: '-'
+  esbuild>@esbuild/android-arm64: '-'
+  esbuild>@esbuild/android-x64: '-'
+  esbuild>@esbuild/darwin-arm64: '-'
+  esbuild>@esbuild/darwin-x64: '-'
+  esbuild>@esbuild/freebsd-arm64: '-'
+  esbuild>@esbuild/freebsd-x64: '-'
+  esbuild>@esbuild/linux-arm: '-'
+  esbuild>@esbuild/linux-arm64: '-'
+  esbuild>@esbuild/linux-ia32: '-'
+  esbuild>@esbuild/linux-loong64: '-'
+  esbuild>@esbuild/linux-mips64el: '-'
+  esbuild>@esbuild/linux-ppc64: '-'
+  esbuild>@esbuild/linux-riscv64: '-'
+  esbuild>@esbuild/linux-s390x: '-'
+  esbuild>@esbuild/netbsd-arm64: '-'
+  esbuild>@esbuild/netbsd-x64: '-'
+  esbuild>@esbuild/openbsd-arm64: '-'
+  esbuild>@esbuild/openbsd-x64: '-'
+  esbuild>@esbuild/openharmony-arm64: '-'
+  esbuild>@esbuild/sunos-x64: '-'
+  esbuild>@esbuild/win32-arm64: '-'
+  esbuild>@esbuild/win32-ia32: '-'
+  esbuild>@esbuild/win32-x64: '-'
+  fast-uri: ^3.1.4
+  form-data: ^4.0.6
+  js-yaml: ^4.3.0
+  lightningcss>lightningcss-android-arm64: '-'
+  lightningcss>lightningcss-darwin-arm64: '-'
+  lightningcss>lightningcss-darwin-x64: '-'
+  lightningcss>lightningcss-freebsd-x64: '-'
+  lightningcss>lightningcss-linux-arm-gnueabihf: '-'
+  lightningcss>lightningcss-linux-arm64-gnu: '-'
+  lightningcss>lightningcss-linux-arm64-musl: '-'
+  lightningcss>lightningcss-linux-x64-musl: '-'
+  lightningcss>lightningcss-win32-arm64-msvc: '-'
+  lightningcss>lightningcss-win32-x64-msvc: '-'
+  linkify-it: '>=5.0.2'
+  lodash: ^4.18.0
+  markdown-it: ^14.2.0
+  micromatch>picomatch: ^2.3.2
+  multer: ^2.2.0
+  postcss: ^8.5.10
+  postcss@<=8.5.17: '>=8.5.18'
+  qs: ^6.15.2
+  rollup>@rollup/rollup-android-arm-eabi: '-'
+  rollup>@rollup/rollup-android-arm64: '-'
+  rollup>@rollup/rollup-darwin-arm64: '-'
+  rollup>@rollup/rollup-darwin-x64: '-'
+  rollup>@rollup/rollup-freebsd-arm64: '-'
+  rollup>@rollup/rollup-freebsd-x64: '-'
+  rollup>@rollup/rollup-linux-arm-gnueabihf: '-'
+  rollup>@rollup/rollup-linux-arm-musleabihf: '-'
+  rollup>@rollup/rollup-linux-arm64-gnu: '-'
+  rollup>@rollup/rollup-linux-arm64-musl: '-'
+  rollup>@rollup/rollup-linux-loong64-gnu: '-'
+  rollup>@rollup/rollup-linux-loong64-musl: '-'
+  rollup>@rollup/rollup-linux-ppc64-gnu: '-'
+  rollup>@rollup/rollup-linux-ppc64-musl: '-'
+  rollup>@rollup/rollup-linux-riscv64-gnu: '-'
+  rollup>@rollup/rollup-linux-riscv64-musl: '-'
+  rollup>@rollup/rollup-linux-s390x-gnu: '-'
+  rollup>@rollup/rollup-linux-x64-musl: '-'
+  rollup>@rollup/rollup-openbsd-x64: '-'
+  rollup>@rollup/rollup-openharmony-arm64: '-'
+  rollup>@rollup/rollup-win32-arm64-msvc: '-'
+  rollup>@rollup/rollup-win32-ia32-msvc: '-'
+  rollup>@rollup/rollup-win32-x64-gnu: '-'
+  rollup>@rollup/rollup-win32-x64-msvc: '-'
+  router>path-to-regexp: ^8.4.0
+  shell-quote: '>=1.9.0'
+  tar: '>=7.5.19'
+  tmp: ^0.2.7
+  undici: ^6.27.0
+  uuid: ^11.1.1
+  vite: ^7.3.5
+  vite>picomatch: ^4.0.4
+  vitest>picomatch: ^4.0.4
+  yaml: ^2.8.3
 
 packageExtensions:
-  # react-native-worklets@0.5.x's babel plugin does a bare `require("@babel/generator")`
-  # but never declares it. It used to resolve via hoisting, but the `@babel/core` override
-  # above re-isolated worklets into a subtree where @babel/generator is no longer reachable,
-  # crashing the Metro/babel transform with "Cannot find module '@babel/generator'" and
-  # breaking the Expo mobile production build. Declare it so pnpm links it into the subtree.
   react-native-worklets:
     dependencies:
-      "@babel/generator": "^7.29.6"
+      '@babel/generator': ^7.29.6
