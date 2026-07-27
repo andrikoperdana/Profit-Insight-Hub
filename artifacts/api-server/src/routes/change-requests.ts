@@ -280,6 +280,15 @@ router.post("/change-requests/:crId/approve", async (req, res) => {
     res.status(403).json({ error: "Only PM-of-project or Management can approve change requests" });
     return;
   }
+  // Separation of duties: a Project Manager may never approve a change
+  // request they raised themselves — approving (and later applying) a CR
+  // re-baselines committed cost/schedule/contract value, so a PM's own CR
+  // requires independent Management sign-off.
+  const isMgmt = req.user!.role === "MANAGEMENT" || req.user!.role === "SUPER_ADMIN";
+  if (!isMgmt && before.requestedById === req.user!.sub) {
+    res.status(403).json({ error: "You cannot approve a change request you created; it requires Management review" });
+    return;
+  }
   if (before.status !== "DRAFT") {
     res.status(409).json({ error: "Only DRAFT change requests can be approved" });
     return;

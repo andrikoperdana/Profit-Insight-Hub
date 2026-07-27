@@ -536,12 +536,17 @@ router.post("/performance-reviews/:id/project-ratings", async (req, res) => {
   const id = String(req.params.id);
   const review = await prisma.performanceReview.findUnique({ where: { id } });
   if (!review) { res.status(404).json({ error: "Review not found" }); return; }
-  if (!(await canAccessReview(review, req.user!))) {
-    res.status(403).json({ error: "Not allowed to view this review" });
+  // Write-level guard: only the original reviewer (or Management) may add or
+  // overwrite project ratings — a read-scope check would let any PM who
+  // shares the subject on another project tamper with the recorded scores.
+  if (!(await canEditReview(review, req.user!))) {
+    res.status(403).json({ error: "Not allowed to edit this review" });
     return;
   }
-  if (review.status === "ACKNOWLEDGED") {
-    res.status(409).json({ error: "Cannot add ratings after acknowledgement" });
+  // Ratings are part of the review content: lock them once the review leaves
+  // DRAFT so a SUBMITTED review is read-only for the subject to acknowledge.
+  if (review.status !== "DRAFT") {
+    res.status(409).json({ error: "Ratings can only be added while the review is in DRAFT" });
     return;
   }
   const body = req.body || {};
@@ -616,15 +621,16 @@ router.delete("/performance-reviews/:id/project-ratings/:ratingId", async (req, 
   if (!rating || rating.reviewId !== id) { res.status(404).json({ error: "Rating not found" }); return; }
   const review = await prisma.performanceReview.findUnique({ where: { id } });
   if (!review) { res.status(404).json({ error: "Review not found" }); return; }
-  if (review.status === "ACKNOWLEDGED") {
-    res.status(409).json({ error: "Cannot delete ratings after acknowledgement" });
+  // Write-level guard: same rules as adding/updating ratings — only the
+  // original reviewer (or Management) may mutate review content.
+  if (!(await canEditReview(review, req.user!))) {
+    res.status(403).json({ error: "Not allowed to edit this review" });
     return;
   }
-  // Caller must still have access to the parent review (subject must be in
-  // their allowed-subject set). This prevents a former rater whose scope has
-  // changed (e.g., subject no longer on their project) from deleting via known IDs.
-  if (!(await canAccessReview(review, req.user!))) {
-    res.status(403).json({ error: "Forbidden" });
+  // Ratings are part of the review content: lock them once the review leaves
+  // DRAFT so a SUBMITTED review stays read-only for the subject to acknowledge.
+  if (review.status !== "DRAFT") {
+    res.status(409).json({ error: "Ratings can only be removed while the review is in DRAFT" });
     return;
   }
   const isMgmt = req.user!.role === "MANAGEMENT" || req.user!.role === "SUPER_ADMIN";
