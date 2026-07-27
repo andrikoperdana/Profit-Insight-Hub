@@ -204,7 +204,21 @@ router.get("/dashboard/billable-utilization", async (req, res) => {
   res.json(await dash.computeBillableUtilization(role, req.user!.sub, days));
 });
 
-router.get("/dashboard/utilization", async (_req, res) => {
+router.get("/dashboard/utilization", async (req, res) => {
+  // Workforce-wide utilization (userIds, planned/actual mandays) is
+  // management/HR data. Mirror /dashboard/resource-utilization-detail's gate.
+  const utilRole = req.user!.role;
+  if (
+    utilRole !== "MANAGEMENT" &&
+    utilRole !== "SUPER_ADMIN" &&
+    utilRole !== "PROJECT_MANAGER" &&
+    utilRole !== "FINANCE" &&
+    utilRole !== "HR" &&
+    !isPrincipalRole(utilRole)
+  ) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
   const users = await prisma.user.findMany({
     where: { isActive: true, deletedAt: null, role: { in: ["KONSULTAN", "TECHNICAL_WRITER"] } },
     include: { resources: true },

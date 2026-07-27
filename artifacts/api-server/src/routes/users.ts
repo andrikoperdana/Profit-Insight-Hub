@@ -214,12 +214,36 @@ router.get("/users/available", async (req, res) => {
 });
 
 router.get("/users/:id", async (req, res) => {
+  const targetId = String(req.params.id);
+  const callerId = req.user!.sub;
+  const callerRole = req.user!.role;
+
+  // serializeUser exposes HR/commercial data (email, dailyRate, seniority,
+  // manager/principal links). Mirror the /users directory allowlist: only
+  // self, privileged roles, or a Principal viewing a direct supervisee.
+  const isSelf = callerId === targetId;
+  const ALWAYS_ALLOWED = new Set([
+    "SITE_ADMIN", "MANAGEMENT", "SUPER_ADMIN",
+    "PROJECT_MANAGER", "SALES", "HR", "FINANCE",
+  ]);
+  const isAlwaysAllowed = ALWAYS_ALLOWED.has(callerRole);
+  const isPrincipalCaller = callerRole.startsWith("PRINCIPAL_");
+  if (!isSelf && !isAlwaysAllowed && !isPrincipalCaller) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
+
   const u = await prisma.user.findUnique({
-    where: { id: req.params.id },
+    where: { id: targetId },
     include: userInclude,
   });
   if (!u) {
     res.status(404).json({ error: "Not found" });
+    return;
+  }
+  // Principals can only see their direct supervisees (or themselves).
+  if (isPrincipalCaller && !isSelf && !isAlwaysAllowed && u.principalId !== callerId) {
+    res.status(403).json({ error: "Forbidden" });
     return;
   }
   res.json(serializeUser(u));
