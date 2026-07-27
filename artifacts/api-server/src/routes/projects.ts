@@ -25,6 +25,7 @@ import {
   parseSafeDate,
 } from "../lib/projectValidators.js";
 import { parsePagination, setTotalCount } from "../lib/pagination.js";
+import { splitVat } from "../lib/invoicing.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -1233,9 +1234,7 @@ router.get("/projects/:id/financials", async (req, res) => {
   const months = Array.from(monthlyMap.keys()).sort();
   const vatPct = (p as any).vatPercent ?? 11;
   const includesVat = (p as any).contractValueIncludesVat ?? true;
-  const revenueNet = includesVat
-    ? p.contractValue / (1 + vatPct / 100)
-    : p.contractValue;
+  const revenueNet = splitVat(p.contractValue, vatPct, includesVat).dpp;
   const perMonthRev = months.length > 0 ? revenueNet / months.length : 0;
   const monthly = months.map((month) => ({
     month,

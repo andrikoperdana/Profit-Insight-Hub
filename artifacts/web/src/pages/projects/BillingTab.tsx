@@ -37,6 +37,7 @@ import { useAuth } from "@/lib/auth";
 import { canInvoiceProjectStatus, isSuperAdmin } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate, formatIDR } from "@/lib/format";
+import { splitVat } from "@workspace/shared";
 import { EmptyState } from "@/components/common/EmptyState";
 import { WorkstreamPicker } from "./components/WorkstreamPicker";
 import { downloadAuthed, postAuthed } from "@/lib/exports";
@@ -66,20 +67,6 @@ interface BillingTabProps {
     contractValueIncludesVat?: boolean;
     useWorkstreams?: boolean;
   };
-}
-
-function splitVat(
-  amount: number,
-  vatPercent: number,
-  includesVat: boolean,
-): { dpp: number; vat: number; gross: number } {
-  if (!isFinite(amount) || amount <= 0) return { dpp: 0, vat: 0, gross: 0 };
-  if (includesVat) {
-    const dpp = amount / (1 + vatPercent / 100);
-    return { dpp, vat: amount - dpp, gross: amount };
-  }
-  const vat = amount * (vatPercent / 100);
-  return { dpp: amount, vat, gross: amount + vat };
 }
 
 export default function BillingTab({ projectId, project }: BillingTabProps) {
@@ -230,7 +217,7 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
     let paidVat = 0, outstandingVat = 0;
     for (const m of list) {
       if (m.status !== "INVOICED" && m.status !== "PAID") continue;
-      const { dpp, vat, gross } = splitVat(amountFor(m), vatPercent, includesVat);
+      const { dpp, vat, total: gross } = splitVat(amountFor(m), vatPercent, includesVat);
       invoicedGross += gross;
       invoicedDPP += dpp;
       invoicedVat += vat;
@@ -274,7 +261,7 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
       }
       g.items.push(m);
       if (m.status !== "CANCELLED") {
-        const { gross } = splitVat(amountFor(m), vatPercent, includesVat);
+        const { total: gross } = splitVat(amountFor(m), vatPercent, includesVat);
         g.totalGross += gross;
         if (m.status === "INVOICED" || m.status === "PAID") g.invoicedGross += gross;
         if (m.status === "PAID") g.paidGross += gross;
@@ -310,7 +297,7 @@ export default function BillingTab({ projectId, project }: BillingTabProps) {
         <TableCell className="text-right font-mono">{m.percentage.toFixed(1)}%</TableCell>
         <TableCell className="text-right font-mono text-xs">{formatIDR(split.dpp)}</TableCell>
         <TableCell className="text-right font-mono text-xs text-amber-400">{formatIDR(split.vat)}</TableCell>
-        <TableCell className="text-right font-mono font-semibold">{formatIDR(split.gross)}</TableCell>
+        <TableCell className="text-right font-mono font-semibold">{formatIDR(split.total)}</TableCell>
         <TableCell className="text-xs whitespace-nowrap">{m.dueDate ? formatDate(m.dueDate) : "—"}</TableCell>
         <TableCell>
           <Badge variant="outline" className={STATUS_STYLE[m.status]}>

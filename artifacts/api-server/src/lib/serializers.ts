@@ -1,5 +1,6 @@
 import type { Prisma } from "@workspace/db";
 import { getOverheadMultiplier } from "./overhead.js";
+import { splitVat } from "./invoicing.js";
 
 export type ProjectWithRelations = Prisma.ProjectGetPayload<{
   include: {
@@ -111,12 +112,11 @@ export function computeMetrics(project: ProjectWithRelations): ProjectMetrics {
   // DPP (net revenue) vs gross including PPN
   const vatPercent = (project as any).vatPercent ?? 11;
   const contractValueIncludesVat = (project as any).contractValueIncludesVat ?? true;
-  const revenueNet = contractValueIncludesVat
-    ? project.contractValue / (1 + vatPercent / 100)
-    : project.contractValue;
-  const vatAmount = contractValueIncludesVat
-    ? project.contractValue - revenueNet
-    : project.contractValue * (vatPercent / 100);
+  const { dpp: revenueNet, vat: vatAmount } = splitVat(
+    project.contractValue,
+    vatPercent,
+    contractValueIncludesVat,
+  );
 
   // Recognized revenue (PSAK 72 / ASC 606) — % completion via mandays burn
   const burnRatePct =

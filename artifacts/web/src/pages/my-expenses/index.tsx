@@ -24,6 +24,7 @@ import { formatDate, formatIDR } from "@/lib/format";
 import { exportCsv } from "@/lib/exports";
 import { useToast } from "@/hooks/use-toast";
 import { triggerExpenseReceiptDownload } from "@/components/dashboard/MyExpensesCard";
+import { shrinkImageFileIfNeeded } from "@/lib/shrinkImage";
 
 const EXPENSE_CATEGORIES = [
   { value: "SOFTWARE", label: "Software" },
@@ -286,6 +287,8 @@ function SubmitExpenseDialog() {
   const [spentAt, setSpentAt] = useState(new Date().toISOString().slice(0, 10));
   const [evidence, setEvidence] = useState<{ name: string; url: string } | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
+  // Bumped on every new pick/clear so stale async reads can't resurrect old files.
+  const fileTokenRef = useRef(0);
 
   const ALLOWED = ["application/pdf", "image/png", "image/jpeg", "image/webp"];
   const MAX_BYTES = 8 * 1024 * 1024;
@@ -301,7 +304,7 @@ function SubmitExpenseDialog() {
     setDescription("");
     setAmount("");
     setSpentAt(new Date().toISOString().slice(0, 10));
-    setEvidence(null);
+    (fileTokenRef.current++, setEvidence(null));
     if (fileRef.current) fileRef.current.value = "";
   };
 
@@ -318,24 +321,30 @@ function SubmitExpenseDialog() {
     },
   });
 
-  function handleFile(file: File | null) {
-    if (!file) { setEvidence(null); return; }
+  async function handleFile(file: File | null) {
+    const token = ++fileTokenRef.current;
+    if (!file) { (fileTokenRef.current++, setEvidence(null)); return; }
     if (!ALLOWED.includes(file.type)) {
       toast({ variant: "destructive", title: "Unsupported file", description: "Use PDF or image (PNG/JPEG/WebP)." });
       if (fileRef.current) fileRef.current.value = "";
       return;
     }
-    if (file.size > MAX_BYTES) {
+    // Large photos are downscaled client-side (same behavior as the mobile
+    // app) so they upload fast and fit under the server's evidence cap.
+    const prepared = await shrinkImageFileIfNeeded(file);
+    if (token !== fileTokenRef.current) return; // superseded by a newer pick/clear
+    if (prepared.size > MAX_BYTES) {
       toast({ variant: "destructive", title: "File too large", description: "Max 8MB." });
       if (fileRef.current) fileRef.current.value = "";
       return;
     }
     const reader = new FileReader();
     reader.onload = (ev) => {
+      if (token !== fileTokenRef.current) return; // superseded meanwhile
       const url = String(ev.target?.result ?? "");
-      if (url) setEvidence({ name: file.name, url });
+      if (url) setEvidence({ name: prepared.name, url });
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(prepared);
   }
 
   function handleSubmit() {
@@ -472,7 +481,7 @@ function SubmitExpenseDialog() {
                   <span className="max-w-[240px] truncate" title={evidence.name}>{evidence.name}</span>
                   <button
                     type="button"
-                    onClick={() => { setEvidence(null); if (fileRef.current) fileRef.current.value = ""; }}
+                    onClick={() => { (fileTokenRef.current++, setEvidence(null)); if (fileRef.current) fileRef.current.value = ""; }}
                     className="ml-1 text-muted-foreground hover:text-destructive"
                     title="Remove attachment"
                   >

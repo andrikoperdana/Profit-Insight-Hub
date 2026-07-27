@@ -1,5 +1,6 @@
 import { prisma } from "@workspace/db";
 import { computeMetrics, projectInclude } from "../lib/serializers.js";
+import { splitVat } from "../lib/invoicing.js";
 import type { ReportDefinition, ReportContext, ReportResult, ReportRow } from "./types.js";
 
 const projectStatusBadgeMap = {
@@ -533,11 +534,7 @@ const billingAging: ReportDefinition = {
     let rows: ReportRow[] = milestones.map((m) => {
       const p = projectMap.get(m.projectId)!;
       const gross = m.amount ?? (p.contractValue * (m.percentage ?? 0)) / 100;
-      const vatPct = p.vatPercent ?? 11;
-      const includesVat = p.contractValueIncludesVat ?? true;
-      const dpp = includesVat ? gross / (1 + vatPct / 100) : gross;
-      const vat = includesVat ? gross - dpp : gross * (vatPct / 100);
-      const total = dpp + vat;
+      const { dpp, vat, total } = splitVat(gross, p.vatPercent ?? 11, p.contractValueIncludesVat ?? true);
       const due = m.dueDate ? new Date(m.dueDate) : null;
       const isOpen = m.status === "PLANNED" || m.status === "INVOICED";
       const daysOverdue = due && isOpen ? Math.max(0, Math.ceil((today.getTime() - due.getTime()) / (24 * 3600 * 1000))) : 0;
@@ -622,11 +619,7 @@ const cashInflowForecast: ReportDefinition = {
       const slot = monthly[key];
       if (!slot) continue;
       const gross = ms.amount ?? (p.contractValue * (ms.percentage ?? 0)) / 100;
-      const vatPct = p.vatPercent ?? 11;
-      const includesVat = p.contractValueIncludesVat ?? true;
-      const dpp = includesVat ? gross / (1 + vatPct / 100) : gross;
-      const vat = includesVat ? gross - dpp : gross * (vatPct / 100);
-      const total = dpp + vat;
+      const { dpp, vat, total } = splitVat(gross, p.vatPercent ?? 11, p.contractValueIncludesVat ?? true);
       slot.count += 1;
       slot.dpp += dpp;
       slot.vat += vat;
@@ -775,10 +768,7 @@ const ppnDetail: ReportDefinition = {
       .map((m) => {
         const p = projectMap.get(m.projectId)!;
         const gross = m.amount ?? (p.contractValue * (m.percentage ?? 0)) / 100;
-        const vatPct = p.vatPercent ?? 11;
-        const includesVat = p.contractValueIncludesVat ?? true;
-        const dpp = includesVat ? gross / (1 + vatPct / 100) : gross;
-        const vat = includesVat ? gross - dpp : gross * (vatPct / 100);
+        const { dpp, vat, total } = splitVat(gross, p.vatPercent ?? 11, p.contractValueIncludesVat ?? true);
         return {
           invoicedAt: m.invoicedAt ? m.invoicedAt.toISOString() : null,
           invoiceNumber: m.invoiceNumber ?? "-",
@@ -788,7 +778,7 @@ const ppnDetail: ReportDefinition = {
           milestoneName: m.name,
           dpp,
           vat,
-          total: dpp + vat,
+          total,
           status: m.status,
           paidAt: m.paidAt ? m.paidAt.toISOString() : null,
         };

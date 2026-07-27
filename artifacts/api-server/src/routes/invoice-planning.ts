@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
 import { canViewAllProjects } from "../lib/roles.js";
+import { splitVat } from "../lib/invoicing.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -26,15 +27,6 @@ function addMonthsUtc(d: Date, n: number): Date {
 }
 function isoDate(d: Date): string {
   return d.toISOString().slice(0, 10);
-}
-
-function splitVat(gross: number, vatPct: number, includesVat: boolean) {
-  if (includesVat) {
-    const dpp = gross / (1 + vatPct / 100);
-    return { dpp, vat: gross - dpp, total: gross };
-  }
-  const vat = gross * (vatPct / 100);
-  return { dpp: gross, vat, total: gross + vat };
 }
 
 /**

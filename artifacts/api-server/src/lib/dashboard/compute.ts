@@ -7,6 +7,7 @@ import {
 } from "../serializers.js";
 import type { ProjectWithRelations } from "../serializers.js";
 import { isPrincipalRole } from "../roles.js";
+import { splitVat } from "../invoicing.js";
 import { classifyProject, type ProjectType } from "@workspace/shared";
 
 // Pure, request-agnostic dashboard compute functions. The individual
@@ -102,9 +103,7 @@ export async function computeProfitTrend() {
     if (months.size > 0) {
       const vatPct = (p as any).vatPercent ?? 11;
       const includesVat = (p as any).contractValueIncludesVat ?? true;
-      const revenueNet = includesVat
-        ? p.contractValue / (1 + vatPct / 100)
-        : p.contractValue;
+      const revenueNet = splitVat(p.contractValue, vatPct, includesVat).dpp;
       const rev = revenueNet / months.size;
       for (const m of months) {
         const cur = monthly.get(m)!;
@@ -687,14 +686,6 @@ function addMonthsUtc(d: Date, n: number): Date {
 }
 function isoDate(d: Date): string {
   return d.toISOString().slice(0, 10);
-}
-function splitVat(gross: number, vatPct: number, includesVat: boolean) {
-  if (includesVat) {
-    const dpp = gross / (1 + vatPct / 100);
-    return { dpp, vat: gross - dpp, total: gross };
-  }
-  const vat = gross * (vatPct / 100);
-  return { dpp: gross, vat, total: gross + vat };
 }
 
 export async function computeCashFlowForecast() {

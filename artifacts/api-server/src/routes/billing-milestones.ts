@@ -182,18 +182,7 @@ router.get("/billing-milestones/vat-recap", async (req, res) => {
     const vatPct = r.project.vatPercent ?? 11;
     const includesVat = r.project.contractValueIncludesVat ?? true;
     const baseAmount = r.amount ?? (cv * (r.percentage || 0)) / 100;
-    let dpp: number;
-    let vat: number;
-    let gross: number;
-    if (includesVat) {
-      gross = baseAmount;
-      dpp = baseAmount / (1 + vatPct / 100);
-      vat = gross - dpp;
-    } else {
-      dpp = baseAmount;
-      vat = baseAmount * (vatPct / 100);
-      gross = dpp + vat;
-    }
+    const { dpp, vat, total: gross } = splitVat(baseAmount, vatPct, includesVat);
     b.milestoneCount += 1;
     if (r.status === "PAID") {
       b.paidCount += 1;

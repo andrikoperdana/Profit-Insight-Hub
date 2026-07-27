@@ -75,6 +75,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis,
 } from "recharts";
+import { shrinkImageFileIfNeeded } from "@/lib/shrinkImage";
 
 
 const EXPENSE_CATEGORIES: { value: string; label: string }[] = [
@@ -114,28 +115,36 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
   const [filterWorkstreamId, setFilterWorkstreamId] = useState<string | null>(null);
   const [evidence, setEvidence] = useState<{ name: string; url: string } | null>(null);
   const evidenceInputRef = useRef<HTMLInputElement | null>(null);
+  // Bumped on every new pick/clear so stale async reads can't resurrect old files.
+  const evidenceTokenRef = useRef(0);
 
   const ALLOWED_EVIDENCE_TYPES = ["application/pdf", "image/png", "image/jpeg", "image/webp"];
   const MAX_EVIDENCE_BYTES = 8 * 1024 * 1024;
 
-  function handleEvidenceChange(file: File | null) {
-    if (!file) { setEvidence(null); return; }
+  async function handleEvidenceChange(file: File | null) {
+    const token = ++evidenceTokenRef.current;
+    if (!file) { (evidenceTokenRef.current++, setEvidence(null)); return; }
     if (!ALLOWED_EVIDENCE_TYPES.includes(file.type)) {
       toast({ variant: "destructive", title: "Unsupported file", description: "Use PDF or image (PNG/JPEG/WebP)." });
       if (evidenceInputRef.current) evidenceInputRef.current.value = "";
       return;
     }
-    if (file.size > MAX_EVIDENCE_BYTES) {
+    // Large photos are downscaled client-side (same behavior as the mobile
+    // app) so they upload fast and fit under the server's evidence cap.
+    const prepared = await shrinkImageFileIfNeeded(file);
+    if (token !== evidenceTokenRef.current) return; // superseded by a newer pick/clear
+    if (prepared.size > MAX_EVIDENCE_BYTES) {
       toast({ variant: "destructive", title: "File too large", description: "Max 8MB." });
       if (evidenceInputRef.current) evidenceInputRef.current.value = "";
       return;
     }
     const reader = new FileReader();
     reader.onload = (ev) => {
+      if (token !== evidenceTokenRef.current) return; // superseded meanwhile
       const url = String(ev.target?.result ?? "");
-      if (url) setEvidence({ name: file.name, url });
+      if (url) setEvidence({ name: prepared.name, url });
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(prepared);
   }
 
   const invalidateAll = () => {
@@ -155,7 +164,7 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
         toast({ title: "Expense saved", description: "Project total cost updated." });
         setDescription("");
         setAmount("");
-        setEvidence(null);
+        (evidenceTokenRef.current++, setEvidence(null));
         if (evidenceInputRef.current) evidenceInputRef.current.value = "";
         invalidateAll();
       },
@@ -387,7 +396,7 @@ function ExpensesTab({ projectId, project }: { projectId: string; project: any }
                     <button
                       type="button"
                       onClick={() => {
-                        setEvidence(null);
+                        (evidenceTokenRef.current++, setEvidence(null));
                         if (evidenceInputRef.current) evidenceInputRef.current.value = "";
                       }}
                       className="ml-1 text-muted-foreground hover:text-destructive"

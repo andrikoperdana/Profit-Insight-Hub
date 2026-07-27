@@ -1,30 +1,15 @@
 import { prisma } from "@workspace/db";
 
 /**
- * Shared invoice math + numbering, used by the PDF invoice generator
- * (routes/billing-milestones.ts), the Xero invoice push (routes/xero.ts) and
- * revenue recognition (routes/revenue-recognition.ts) so billing stays
- * consistent everywhere.
+ * Shared invoice numbering + VAT math, used by the PDF invoice generator
+ * (routes/billing-milestones.ts), the Xero invoice push (routes/xero.ts),
+ * revenue recognition (routes/revenue-recognition.ts) and invoice planning
+ * (routes/invoice-planning.ts) so billing stays consistent everywhere.
  *
- * NOTE: routes/invoice-planning.ts intentionally still has its own splitVat
- * copy — it rounds differently, and reconciling the two is a separate planned
- * task. Don't point it here without aligning that behavior first.
+ * splitVat itself lives in @workspace/shared so the web UI runs the exact
+ * same math as the server; it is re-exported here for server-side imports.
  */
-
-/** Split a gross amount into DPP (taxable base), VAT and total. */
-export function splitVat(
-  gross: number,
-  vatPct: number,
-  includesVat: boolean,
-): { dpp: number; vat: number; total: number } {
-  if (!isFinite(gross) || gross <= 0) return { dpp: 0, vat: 0, total: 0 };
-  if (includesVat) {
-    const dpp = gross / (1 + vatPct / 100);
-    return { dpp, vat: gross - dpp, total: gross };
-  }
-  const vat = gross * (vatPct / 100);
-  return { dpp: gross, vat, total: gross + vat };
-}
+export { splitVat } from "@workspace/shared";
 
 /**
  * Allocate the next sequential invoice number for the given date in the format

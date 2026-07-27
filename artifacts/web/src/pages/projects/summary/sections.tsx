@@ -28,6 +28,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatIDR, formatMoney, formatDate, formatPct } from "@/lib/format";
+import { splitVat } from "@workspace/shared";
 import {
   HealthBadge,
   MarginBadge,
@@ -690,20 +691,6 @@ const BILLING_STATUS_STYLE: Record<string, string> = {
   CANCELLED: "bg-amber-500/15 text-amber-300 border-amber-500/30",
 };
 
-function splitVat(
-  amount: number,
-  vatPercent: number,
-  includesVat: boolean,
-): { dpp: number; vat: number; gross: number } {
-  if (!isFinite(amount) || amount <= 0) return { dpp: 0, vat: 0, gross: 0 };
-  if (includesVat) {
-    const dpp = amount / (1 + vatPercent / 100);
-    return { dpp, vat: amount - dpp, gross: amount };
-  }
-  const vat = amount * (vatPercent / 100);
-  return { dpp: amount, vat, gross: amount + vat };
-}
-
 export function BillingSection({ projectId, project }: { projectId: string; project: any }) {
   const { data, isLoading, isError, error } = useListBillingMilestones(projectId, {
     query: { queryKey: getListBillingMilestonesQueryKey(projectId), enabled: !!projectId },
@@ -722,7 +709,7 @@ export function BillingSection({ projectId, project }: { projectId: string; proj
     for (const m of milestones) {
       if (m.status !== "CANCELLED") totalPct += m.percentage || 0;
       if (m.status === "INVOICED" || m.status === "PAID") {
-        const { vat, gross } = splitVat(amountFor(m), vatPercent, includesVat);
+        const { vat, total: gross } = splitVat(amountFor(m), vatPercent, includesVat);
         invoicedGross += gross;
         if (m.status === "PAID") paidGross += gross;
         else outstandingVat += vat;
@@ -787,7 +774,7 @@ export function BillingSection({ projectId, project }: { projectId: string; proj
                       {formatIDR(split.vat)}
                     </TableCell>
                     <TableCell className="text-right font-mono text-xs font-semibold">
-                      {formatIDR(split.gross)}
+                      {formatIDR(split.total)}
                     </TableCell>
                     <TableCell className="text-xs whitespace-nowrap">
                       {m.dueDate ? formatDate(m.dueDate) : "—"}
