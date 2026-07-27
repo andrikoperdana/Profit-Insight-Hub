@@ -5,11 +5,14 @@ import {
   customFetch,
   getListExpensesQueryKey,
   useAddProjectExpense,
+  useApproveProjectExpense,
   useListExpenses,
   useListProjects,
+  useRejectProjectExpense,
 } from "@workspace/api-client-react";
 import * as DocumentPicker from "expo-document-picker";
 import { File } from "expo-file-system";
+import * as Haptics from "expo-haptics";
 import * as ImagePicker from "expo-image-picker";
 import React, { useMemo, useState } from "react";
 import {
@@ -42,7 +45,8 @@ import {
 import { useAuth } from "@/contexts/auth";
 import { useColors } from "@/hooks/useColors";
 import { formatIDR, formatShortDate, todayYMD } from "@/lib/format";
-import { canViewTeamExpenses, expensesAutoApproved } from "@/lib/roles";
+import { canDecideExpenses, canViewTeamExpenses, expensesAutoApproved } from "@/lib/roles";
+import { shrinkImageIfNeeded } from "@/lib/shrinkImage";
 
 const MY_EXPENSES_KEY = ["my-expenses", "mobile"] as const;
 
@@ -142,6 +146,9 @@ function ExpenseCard({
   approvedByName,
   hasReceipt,
   expenseId,
+  onApprove,
+  onReject,
+  deciding,
 }: {
   projectLabel: string;
   submitterName?: string | null;
@@ -154,6 +161,9 @@ function ExpenseCard({
   approvedByName?: string | null;
   hasReceipt: boolean;
   expenseId: string;
+  onApprove?: () => void;
+  onReject?: () => void;
+  deciding?: boolean;
 }) {
   const colors = useColors();
   return (
@@ -200,6 +210,29 @@ function ExpenseCard({
         </Text>
       ) : null}
       {hasReceipt ? <ReceiptButton expenseId={expenseId} /> : null}
+      {status === "PENDING" && onApprove && onReject ? (
+        <View style={styles.decisionRow}>
+          <View style={{ flex: 1 }}>
+            <Button
+              label="Reject"
+              variant="ghost"
+              icon="x"
+              onPress={onReject}
+              disabled={deciding}
+              testID={`button-reject-expense-${expenseId}`}
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Button
+              label="Approve"
+              icon="check"
+              onPress={onApprove}
+              loading={deciding}
+              testID={`button-approve-expense-${expenseId}`}
+            />
+          </View>
+        </View>
+      ) : null}
     </Card>
   );
 }
@@ -224,6 +257,61 @@ export default function ExpensesScreen() {
     query: { enabled: teamEnabled, queryKey: getListExpensesQueryKey() },
   });
   const teamRows = teamQuery.data ?? [];
+
+  // PM / MGMT decide pending claims straight from the Team view, mirroring the
+  // timesheet approval flow. The server re-checks the role and (for PMs) that
+  // the claim belongs to one of their projects.
+  const qc = useQueryClient();
+  const canDecide = canDecideExpenses(user?.role);
+  const approveMutation = useApproveProjectExpense();
+  const rejectMutation = useRejectProjectExpense();
+  const [rejectTarget, setRejectTarget] = useState<string | null>(null);
+  const [rejectReason, setRejectReason] = useState("");
+
+  const buzz = () => {
+    if (Platform.OS !== "web") {
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    }
+  };
+
+  const approveExpense = (expenseId: string) => {
+    approveMutation.mutate(
+      { expenseId },
+      {
+        onSuccess: () => {
+          buzz();
+          void qc.invalidateQueries();
+        },
+        onError: (e: unknown) =>
+          Alert.alert(
+            "Approve failed",
+            e instanceof Error ? e.message : "Could not approve this claim.",
+          ),
+      },
+    );
+  };
+
+  const submitRejectExpense = () => {
+    if (!rejectTarget) return;
+    const reason = rejectReason.trim();
+    if (!reason) return;
+    rejectMutation.mutate(
+      { expenseId: rejectTarget, data: { reason } },
+      {
+        onSuccess: () => {
+          buzz();
+          setRejectTarget(null);
+          setRejectReason("");
+          void qc.invalidateQueries();
+        },
+        onError: (e: unknown) =>
+          Alert.alert(
+            "Reject failed",
+            e instanceof Error ? e.message : "Could not reject this claim.",
+          ),
+      },
+    );
+  };
 
   const kpi = useMemo(() => {
     const acc = { total: 0, approved: 0, pending: 0, rejected: 0 };
@@ -268,6 +356,25 @@ export default function ExpensesScreen() {
               approvedByName={item.approvedByName}
               hasReceipt={item.status === "APPROVED" || item.status === "REJECTED"}
               expenseId={item.id}
+              onApprove={
+                canDecide && item.status === "PENDING"
+                  ? () => approveExpense(item.id)
+                  : undefined
+              }
+              onReject={
+                canDecide && item.status === "PENDING"
+                  ? () => {
+                      setRejectTarget(item.id);
+                      setRejectReason("");
+                    }
+                  : undefined
+              }
+              deciding={
+                (approveMutation.isPending &&
+                  approveMutation.variables?.expenseId === item.id) ||
+                (rejectMutation.isPending &&
+                  rejectMutation.variables?.expenseId === item.id)
+              }
             />
           )}
           ListEmptyComponent={
@@ -284,6 +391,61 @@ export default function ExpensesScreen() {
             )
           }
         />
+
+        {/* Reject reason modal — a decision needs a written reason, same as
+            timesheet rejections. */}
+        <Modal
+          visible={!!rejectTarget}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setRejectTarget(null)}
+        >
+          <Pressable style={styles.overlay} onPress={() => setRejectTarget(null)}>
+            <Pressable
+              style={[
+                styles.rejectModal,
+                {
+                  backgroundColor: colors.card,
+                  borderColor: colors.border,
+                  borderRadius: colors.radius,
+                },
+              ]}
+              onPress={(e) => e.stopPropagation()}
+            >
+              <Text style={[styles.rejectModalTitle, { color: colors.foreground }]}>
+                Reject expense claim
+              </Text>
+              <TextField
+                label="Reason"
+                value={rejectReason}
+                onChangeText={setRejectReason}
+                placeholder="Why is this claim being rejected?"
+                autoCapitalize="sentences"
+                multiline
+                testID="input-reject-expense-reason"
+              />
+              <View style={styles.decisionRow}>
+                <View style={{ flex: 1 }}>
+                  <Button
+                    label="Cancel"
+                    variant="ghost"
+                    onPress={() => setRejectTarget(null)}
+                  />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Button
+                    label="Confirm Reject"
+                    variant="destructive"
+                    onPress={submitRejectExpense}
+                    loading={rejectMutation.isPending}
+                    disabled={!rejectReason.trim()}
+                    testID="button-confirm-reject-expense"
+                  />
+                </View>
+              </View>
+            </Pressable>
+          </Pressable>
+        </Modal>
       </View>
     );
   }
@@ -521,6 +683,8 @@ function SubmitExpenseModal({
     name: string | null | undefined;
     mimeType: string | null | undefined;
     size: number | null | undefined;
+    width?: number | null;
+    height?: number | null;
   }) {
     setError(null);
     const mime = resolveEvidenceMime(asset.name, asset.mimeType);
@@ -528,23 +692,43 @@ function SubmitExpenseModal({
       setError("Unsupported file. Attach a PDF or image (PNG, JPEG, or WebP).");
       return;
     }
-    if (typeof asset.size === "number" && asset.size > MAX_EVIDENCE_BYTES) {
+    const isImage = mime !== "application/pdf";
+    // Oversized PDFs are rejected outright; oversized photos are shrunk below.
+    if (!isImage && typeof asset.size === "number" && asset.size > MAX_EVIDENCE_BYTES) {
       setError("File too large. The receipt must be 8 MB or smaller.");
       return;
     }
     setAttaching(true);
     try {
-      const base64 = await new File(asset.uri).base64();
+      let fileUri = asset.uri;
+      let fileMime = mime;
+      let fileName = asset.name?.trim() || "";
+      if (isImage) {
+        // Large photos are downscaled and re-encoded as JPEG so they upload
+        // fast and never trip the server's 8 MB evidence cap.
+        const shrunk = await shrinkImageIfNeeded({
+          uri: asset.uri,
+          mime,
+          name: fileName || `receipt-${Date.now()}.${mime.split("/")[1]}`,
+          size: asset.size,
+          width: asset.width,
+          height: asset.height,
+        });
+        fileUri = shrunk.uri;
+        fileMime = shrunk.mime;
+        fileName = shrunk.name;
+      }
+      const base64 = await new File(fileUri).base64();
       // Roughly recover the raw byte count from the base64 string length.
       const approxBytes = Math.floor((base64.length * 3) / 4);
       if (approxBytes > MAX_EVIDENCE_BYTES) {
         setError("File too large. The receipt must be 8 MB or smaller.");
         return;
       }
-      const fallbackExt = mime === "application/pdf" ? "pdf" : mime.split("/")[1];
+      const fallbackExt = fileMime === "application/pdf" ? "pdf" : fileMime.split("/")[1];
       setEvidence({
-        url: `data:${mime};base64,${base64}`,
-        name: asset.name?.trim() || `receipt.${fallbackExt}`,
+        url: `data:${fileMime};base64,${base64}`,
+        name: fileName || `receipt.${fallbackExt}`,
       });
     } catch {
       setError("Could not read the selected file. Please try again.");
@@ -588,6 +772,8 @@ function SubmitExpenseModal({
         name: a.fileName ?? `receipt-${Date.now()}.jpg`,
         mimeType: a.mimeType ?? "image/jpeg",
         size: a.fileSize,
+        width: a.width,
+        height: a.height,
       });
     } catch {
       setError("Could not open the camera. Please try again.");
@@ -761,7 +947,8 @@ function SubmitExpenseModal({
                 </View>
               )}
               <Text style={[styles.evidenceHint, { color: colors.mutedForeground }]}>
-                PDF or image (PNG, JPEG, WebP), up to 8 MB.
+                PDF or image (PNG, JPEG, WebP), up to 8 MB. Large photos are
+                shrunk automatically.
               </Text>
             </View>
 
@@ -841,6 +1028,15 @@ const styles = StyleSheet.create({
   },
   evidenceName: { flex: 1, fontSize: 14, fontFamily: "Inter_500Medium" },
   evidenceHint: { fontSize: 12, fontFamily: "Inter_400Regular" },
+  decisionRow: { flexDirection: "row", gap: 10, marginTop: 2 },
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.6)",
+    justifyContent: "center",
+    padding: 24,
+  },
+  rejectModal: { borderWidth: 1, padding: 20, gap: 16 },
+  rejectModalTitle: { fontSize: 18, fontFamily: "Inter_700Bold" },
   modalHeader: {
     flexDirection: "row",
     alignItems: "center",

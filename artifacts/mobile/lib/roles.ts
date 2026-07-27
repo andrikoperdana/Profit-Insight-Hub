@@ -42,6 +42,21 @@ export function canViewTeamExpenses(role: UserRole | undefined | null): boolean 
 }
 
 /**
+ * Roles that can decide (approve/reject) expense claims from the phone.
+ * Mirrors the server's approverRoles in routes/expenses.ts: MANAGEMENT,
+ * SUPER_ADMIN and the project's PM. SALES can view team expenses but never
+ * decides them, and the server additionally verifies a PM owns the claim's
+ * project before accepting the decision.
+ */
+export function canDecideExpenses(role: UserRole | undefined | null): boolean {
+  return (
+    role === "MANAGEMENT" ||
+    role === "SUPER_ADMIN" ||
+    role === "PROJECT_MANAGER"
+  );
+}
+
+/**
  * Roles whose expense submissions are auto-approved on the server (no PM
  * approval step). Mirrors the server allowlist in routes/expenses.ts:
  * MANAGEMENT and SUPER_ADMIN.

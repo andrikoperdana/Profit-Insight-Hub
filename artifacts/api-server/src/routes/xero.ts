@@ -4,6 +4,7 @@ import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
 import { logger } from "../lib/logger.js";
 import { canInvoiceProjectStatus } from "../lib/roles.js";
+import { splitVat, nextInvoiceNumber } from "../lib/invoicing.js";
 import {
   xeroConfigured,
   signState,
@@ -46,37 +47,6 @@ function redirectUri(): string | null {
   if (!base) return null;
   const origin = base.startsWith("http://") || base.startsWith("https://") ? base : `https://${base}`;
   return `${origin.replace(/\/+$/, "")}/api/xero/callback`;
-}
-
-function splitVat(
-  gross: number,
-  vatPct: number,
-  includesVat: boolean,
-): { dpp: number; vat: number; total: number } {
-  if (!isFinite(gross) || gross <= 0) return { dpp: 0, vat: 0, total: 0 };
-  if (includesVat) {
-    const dpp = gross / (1 + vatPct / 100);
-    return { dpp, vat: gross - dpp, total: gross };
-  }
-  const vat = gross * (vatPct / 100);
-  return { dpp: gross, vat, total: gross + vat };
-}
-
-async function nextInvoiceNumber(date: Date): Promise<string> {
-  const year = date.getUTCFullYear();
-  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-  const prefix = `INV/${year}/${month}/`;
-  const existing = await prisma.billingMilestone.findMany({
-    where: { invoiceNumber: { startsWith: prefix } },
-    select: { invoiceNumber: true },
-  });
-  let max = 0;
-  for (const row of existing) {
-    const suffix = row.invoiceNumber?.slice(prefix.length) ?? "";
-    const n = parseInt(suffix, 10);
-    if (Number.isFinite(n) && n > max) max = n;
-  }
-  return `${prefix}${String(max + 1).padStart(4, "0")}`;
 }
 
 // Postgres advisory-lock namespace for serializing per-milestone Xero invoice

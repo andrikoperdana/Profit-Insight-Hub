@@ -8,42 +8,7 @@ import { canViewAllProjects, canInvoiceProjectStatus } from "../lib/roles.js";
 import { validateWorkstreamId } from "../lib/workstreams.js";
 import { buildInvoicePdf } from "../lib/invoice-pdf.js";
 import { getInvoiceIssuer } from "../lib/invoice-config.js";
-
-function splitVat(
-  gross: number,
-  vatPct: number,
-  includesVat: boolean,
-): { dpp: number; vat: number; total: number } {
-  if (!isFinite(gross) || gross <= 0) return { dpp: 0, vat: 0, total: 0 };
-  if (includesVat) {
-    const dpp = gross / (1 + vatPct / 100);
-    return { dpp, vat: gross - dpp, total: gross };
-  }
-  const vat = gross * (vatPct / 100);
-  return { dpp: gross, vat, total: gross + vat };
-}
-
-/**
- * Allocate the next sequential invoice number for the given date in the format
- * INV/YYYY/MM/NNNN. The sequence is derived from existing BillingMilestone
- * invoiceNumbers sharing the same year/month prefix.
- */
-async function nextInvoiceNumber(date: Date): Promise<string> {
-  const year = date.getUTCFullYear();
-  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-  const prefix = `INV/${year}/${month}/`;
-  const existing = await prisma.billingMilestone.findMany({
-    where: { invoiceNumber: { startsWith: prefix } },
-    select: { invoiceNumber: true },
-  });
-  let max = 0;
-  for (const row of existing) {
-    const suffix = row.invoiceNumber?.slice(prefix.length) ?? "";
-    const n = parseInt(suffix, 10);
-    if (Number.isFinite(n) && n > max) max = n;
-  }
-  return `${prefix}${String(max + 1).padStart(4, "0")}`;
-}
+import { splitVat, nextInvoiceNumber } from "../lib/invoicing.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);

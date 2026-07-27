@@ -42,3 +42,4 @@
 - [Public endpoint rate limiting](public-rate-limiting.md) — public routes must use the DB-backed rateLimitAllow (shared/restart-proof, memory fallback); write endpoints add a token-keyed cap since forwarded IPs are spoofable.
 - [Uploads file serving authz](uploads-file-serving.md) — /api/files needs Document-backed project authz + magic-byte PDF check + random .pdf names + attachment disposition; never express.static over uploads.
 - [requireAuth no-prefix cascade](requireauth-cascade.md) — per-request middleware DB lookups multiply by router mount position; keep the req.user guard; quantized latency = count middleware round trips.
+- [Stuck merges hand-applied on main](stuck-merge-hand-apply.md) — mobile receipt shrink, expense approve/reject, shared invoicing were re-done on main; late platform merges may duplicate them.
