@@ -65,10 +65,63 @@ function serveManifest(platform, res) {
   res.end(manifest);
 }
 
+// Only allow RFC 3986 host[:port] characters: hostname labels
+// (alphanumeric, dots, hyphens) with an optional numeric port.
+const VALID_HOST_RE = /^[a-zA-Z0-9.-]+(:\d{1,5})?$/;
+
+// Explicit allowlist of hosts this server may reflect into the landing
+// page. Built from deployment/environment configuration, never from
+// request data. ALLOWED_HOSTS is a comma-separated override/extension.
+function buildAllowedHosts() {
+  const hosts = new Set();
+  const add = (value) => {
+    if (typeof value !== "string") return;
+    for (const entry of value.split(",")) {
+      const h = entry.trim().toLowerCase();
+      if (h && VALID_HOST_RE.test(h)) {
+        hosts.add(h);
+        // Also allow the bare hostname without an explicit port.
+        hosts.add(h.replace(/:\d+$/, ""));
+      }
+    }
+  };
+  add(process.env.ALLOWED_HOSTS);
+  add(process.env.REPLIT_DOMAINS);
+  add(process.env.REPLIT_DEV_DOMAIN);
+  add(process.env.REPLIT_EXPO_DEV_DOMAIN);
+  add("localhost");
+  add("127.0.0.1");
+  return hosts;
+}
+
+const ALLOWED_HOSTS = buildAllowedHosts();
+
+// Returns the canonical (lowercased, trimmed) host[:port] string if the
+// value is syntactically valid AND its hostname is on the allowlist;
+// otherwise null.
+function sanitizeHost(rawHost, allowedHosts = ALLOWED_HOSTS) {
+  const raw = Array.isArray(rawHost) ? rawHost[0] : rawHost;
+  if (typeof raw !== "string") return null;
+  const host = raw.trim().toLowerCase();
+  if (!VALID_HOST_RE.test(host)) return null;
+  const hostname = host.replace(/:\d+$/, "");
+  if (!allowedHosts.has(host) && !allowedHosts.has(hostname)) return null;
+  return host;
+}
+
 function serveLandingPage(req, res, landingPageTemplate, appName) {
   const forwardedProto = req.headers["x-forwarded-proto"];
-  const protocol = forwardedProto || "https";
-  const host = req.headers["x-forwarded-host"] || req.headers["host"];
+  const protocol = forwardedProto === "http" ? "http" : "https";
+  const host =
+    sanitizeHost(req.headers["x-forwarded-host"]) ||
+    sanitizeHost(req.headers["host"]);
+
+  if (!host) {
+    res.writeHead(400, { "content-type": "text/plain; charset=utf-8" });
+    res.end("Bad Request: invalid Host header");
+    return;
+  }
+
   const baseUrl = `${protocol}://${host}`;
   const expsUrl = `${host}`;
 
