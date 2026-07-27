@@ -267,7 +267,7 @@ router.put(
 // Inbound webhook (UNAUTHENTICATED). Pipedrive sends a ping on deal changes;
 // we treat it as a hint and re-fetch the deal by id (never trust the payload
 // body as the source of truth). Auth is a shared secret compared in constant
-// time; when no secret is configured the endpoint accepts (pre-setup phase).
+// time; when no secret is configured the endpoint rejects all requests.
 // ---------------------------------------------------------------------------
 
 function constantTimeEqual(a: string, b: string): boolean {
@@ -317,7 +317,9 @@ function extractDealId(body: unknown): number | null {
 router.post("/pipedrive/webhook", async (req: Request, res: Response) => {
   const settings = await prisma.appSetting.findUnique({ where: { id: APP_SETTINGS_ID } });
   const secret = settings?.pipedriveWebhookSecret ?? null;
-  if (secret && !webhookSecretMatches(req, secret)) {
+  // Reject all requests until a webhook secret is configured; an open
+  // "pre-setup" endpoint would allow unauthenticated deal imports.
+  if (!secret || !webhookSecretMatches(req, secret)) {
     res.status(401).json({ error: "unauthorized" });
     return;
   }

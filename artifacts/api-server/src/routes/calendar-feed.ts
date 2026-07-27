@@ -65,7 +65,7 @@ router.get("/ics", async (req, res) => {
   }
   let payload: { sub: string; kind: string; cv?: number };
   try {
-    payload = jwt.verify(tokenRaw, SECRET) as any;
+    payload = jwt.verify(tokenRaw, SECRET, { algorithms: ["HS256"] }) as any;
   } catch {
     res.status(401).type("text/plain").send("Invalid token");
     return;

@@ -21,7 +21,7 @@ export function signToken(payload: JwtPayload): string {
 
 export function verifyToken(token: string): JwtPayload | null {
   try {
-    return jwt.verify(token, SECRET) as unknown as JwtPayload;
+    return jwt.verify(token, SECRET, { algorithms: ["HS256"] }) as unknown as JwtPayload;
   } catch {
     return null;
   }
