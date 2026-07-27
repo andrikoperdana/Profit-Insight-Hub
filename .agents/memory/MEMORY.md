@@ -39,4 +39,5 @@
 - [BU rename & project taxonomy](bu-rename-and-project-taxonomy.md) — BU renames are FK-safe UPDATE-in-place (seed rename loop); workstream code "GRC" is a stable key; projectType.ts canonical in lib/shared, MSS rule before SOC.
 - [Rate history baseline backfill](rate-history-baseline-backfill.md) — denormalized current value + history fallback must backfill a baseline row on the FIRST period or old records reprice retroactively.
 - [BOD doc pipeline](bod-doc-pipeline.md) — regenerate board DOCX via bod-* scripts (shots in ≤6-batches, SVG→PNG, docx builder); deep links need sync auth init; COMPLETE gate = invoiced not paid.
+- [Public endpoint rate limiting](public-rate-limiting.md) — public routes must use the DB-backed rateLimitAllow (shared/restart-proof, memory fallback); write endpoints add a token-keyed cap since forwarded IPs are spoofable.
 - [requireAuth no-prefix cascade](requireauth-cascade.md) — per-request middleware DB lookups multiply by router mount position; keep the req.user guard; quantized latency = count middleware round trips.

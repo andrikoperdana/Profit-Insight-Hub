@@ -59,6 +59,11 @@ export type ProjectWorkstream = $Result.DefaultSelection<Prisma.$ProjectWorkstre
  */
 export type SurveyQuestion = $Result.DefaultSelection<Prisma.$SurveyQuestionPayload>
 /**
+ * Model RateLimitCounter
+ * 
+ */
+export type RateLimitCounter = $Result.DefaultSelection<Prisma.$RateLimitCounterPayload>
+/**
  * Model SurveyResponse
  * 
  */
@@ -832,6 +837,16 @@ export class PrismaClient<
     * ```
     */
   get surveyQuestion(): Prisma.SurveyQuestionDelegate<ExtArgs>;
+
+  /**
+   * `prisma.rateLimitCounter`: Exposes CRUD operations for the **RateLimitCounter** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RateLimitCounters
+    * const rateLimitCounters = await prisma.rateLimitCounter.findMany()
+    * ```
+    */
+  get rateLimitCounter(): Prisma.RateLimitCounterDelegate<ExtArgs>;
 
   /**
    * `prisma.surveyResponse`: Exposes CRUD operations for the **SurveyResponse** model.
@@ -1652,6 +1667,7 @@ export namespace Prisma {
     ProjectReport: 'ProjectReport',
     ProjectWorkstream: 'ProjectWorkstream',
     SurveyQuestion: 'SurveyQuestion',
+    RateLimitCounter: 'RateLimitCounter',
     SurveyResponse: 'SurveyResponse',
     ProjectFeedback360: 'ProjectFeedback360',
     AuditLog: 'AuditLog',
@@ -1704,7 +1720,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "accessRequest" | "client" | "project" | "projectBaseline" | "changeRequest" | "projectReport" | "projectWorkstream" | "surveyQuestion" | "surveyResponse" | "projectFeedback360" | "auditLog" | "projectResource" | "projectResourceRate" | "timesheet" | "document" | "projectClosingChecklistItem" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "skillDevelopmentGoal" | "skillProgressionLog" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "projectTemplate" | "projectTemplateResource" | "projectTemplateMilestone" | "projectTemplateRaidItem" | "notification" | "projectRaidItem" | "performanceReview" | "performanceReviewProjectRating" | "invoiceSetting" | "appSetting" | "executiveBriefing" | "pipedriveStageMapping" | "xeroConnection"
+      modelProps: "user" | "accessRequest" | "client" | "project" | "projectBaseline" | "changeRequest" | "projectReport" | "projectWorkstream" | "surveyQuestion" | "rateLimitCounter" | "surveyResponse" | "projectFeedback360" | "auditLog" | "projectResource" | "projectResourceRate" | "timesheet" | "document" | "projectClosingChecklistItem" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "skillDevelopmentGoal" | "skillProgressionLog" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "projectTemplate" | "projectTemplateResource" | "projectTemplateMilestone" | "projectTemplateRaidItem" | "notification" | "projectRaidItem" | "performanceReview" | "performanceReviewProjectRating" | "invoiceSetting" | "appSetting" | "executiveBriefing" | "pipedriveStageMapping" | "xeroConnection"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2335,6 +2351,76 @@ export namespace Prisma {
           count: {
             args: Prisma.SurveyQuestionCountArgs<ExtArgs>
             result: $Utils.Optional<SurveyQuestionCountAggregateOutputType> | number
+          }
+        }
+      }
+      RateLimitCounter: {
+        payload: Prisma.$RateLimitCounterPayload<ExtArgs>
+        fields: Prisma.RateLimitCounterFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RateLimitCounterFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RateLimitCounterPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RateLimitCounterFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RateLimitCounterPayload>
+          }
+          findFirst: {
+            args: Prisma.RateLimitCounterFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RateLimitCounterPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RateLimitCounterFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RateLimitCounterPayload>
+          }
+          findMany: {
+            args: Prisma.RateLimitCounterFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RateLimitCounterPayload>[]
+          }
+          create: {
+            args: Prisma.RateLimitCounterCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RateLimitCounterPayload>
+          }
+          createMany: {
+            args: Prisma.RateLimitCounterCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RateLimitCounterCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RateLimitCounterPayload>[]
+          }
+          delete: {
+            args: Prisma.RateLimitCounterDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RateLimitCounterPayload>
+          }
+          update: {
+            args: Prisma.RateLimitCounterUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RateLimitCounterPayload>
+          }
+          deleteMany: {
+            args: Prisma.RateLimitCounterDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RateLimitCounterUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.RateLimitCounterUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RateLimitCounterPayload>
+          }
+          aggregate: {
+            args: Prisma.RateLimitCounterAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRateLimitCounter>
+          }
+          groupBy: {
+            args: Prisma.RateLimitCounterGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RateLimitCounterGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RateLimitCounterCountArgs<ExtArgs>
+            result: $Utils.Optional<RateLimitCounterCountAggregateOutputType> | number
           }
         }
       }
@@ -18133,6 +18219,894 @@ export namespace Prisma {
      * Select specific fields to fetch from the SurveyQuestion
      */
     select?: SurveyQuestionSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * Model RateLimitCounter
+   */
+
+  export type AggregateRateLimitCounter = {
+    _count: RateLimitCounterCountAggregateOutputType | null
+    _avg: RateLimitCounterAvgAggregateOutputType | null
+    _sum: RateLimitCounterSumAggregateOutputType | null
+    _min: RateLimitCounterMinAggregateOutputType | null
+    _max: RateLimitCounterMaxAggregateOutputType | null
+  }
+
+  export type RateLimitCounterAvgAggregateOutputType = {
+    count: number | null
+  }
+
+  export type RateLimitCounterSumAggregateOutputType = {
+    count: number | null
+  }
+
+  export type RateLimitCounterMinAggregateOutputType = {
+    key: string | null
+    count: number | null
+    resetAt: Date | null
+  }
+
+  export type RateLimitCounterMaxAggregateOutputType = {
+    key: string | null
+    count: number | null
+    resetAt: Date | null
+  }
+
+  export type RateLimitCounterCountAggregateOutputType = {
+    key: number
+    count: number
+    resetAt: number
+    _all: number
+  }
+
+
+  export type RateLimitCounterAvgAggregateInputType = {
+    count?: true
+  }
+
+  export type RateLimitCounterSumAggregateInputType = {
+    count?: true
+  }
+
+  export type RateLimitCounterMinAggregateInputType = {
+    key?: true
+    count?: true
+    resetAt?: true
+  }
+
+  export type RateLimitCounterMaxAggregateInputType = {
+    key?: true
+    count?: true
+    resetAt?: true
+  }
+
+  export type RateLimitCounterCountAggregateInputType = {
+    key?: true
+    count?: true
+    resetAt?: true
+    _all?: true
+  }
+
+  export type RateLimitCounterAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RateLimitCounter to aggregate.
+     */
+    where?: RateLimitCounterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RateLimitCounters to fetch.
+     */
+    orderBy?: RateLimitCounterOrderByWithRelationInput | RateLimitCounterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RateLimitCounterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RateLimitCounters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RateLimitCounters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned RateLimitCounters
+    **/
+    _count?: true | RateLimitCounterCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: RateLimitCounterAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RateLimitCounterSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RateLimitCounterMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RateLimitCounterMaxAggregateInputType
+  }
+
+  export type GetRateLimitCounterAggregateType<T extends RateLimitCounterAggregateArgs> = {
+        [P in keyof T & keyof AggregateRateLimitCounter]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRateLimitCounter[P]>
+      : GetScalarType<T[P], AggregateRateLimitCounter[P]>
+  }
+
+
+
+
+  export type RateLimitCounterGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RateLimitCounterWhereInput
+    orderBy?: RateLimitCounterOrderByWithAggregationInput | RateLimitCounterOrderByWithAggregationInput[]
+    by: RateLimitCounterScalarFieldEnum[] | RateLimitCounterScalarFieldEnum
+    having?: RateLimitCounterScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RateLimitCounterCountAggregateInputType | true
+    _avg?: RateLimitCounterAvgAggregateInputType
+    _sum?: RateLimitCounterSumAggregateInputType
+    _min?: RateLimitCounterMinAggregateInputType
+    _max?: RateLimitCounterMaxAggregateInputType
+  }
+
+  export type RateLimitCounterGroupByOutputType = {
+    key: string
+    count: number
+    resetAt: Date
+    _count: RateLimitCounterCountAggregateOutputType | null
+    _avg: RateLimitCounterAvgAggregateOutputType | null
+    _sum: RateLimitCounterSumAggregateOutputType | null
+    _min: RateLimitCounterMinAggregateOutputType | null
+    _max: RateLimitCounterMaxAggregateOutputType | null
+  }
+
+  type GetRateLimitCounterGroupByPayload<T extends RateLimitCounterGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RateLimitCounterGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RateLimitCounterGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RateLimitCounterGroupByOutputType[P]>
+            : GetScalarType<T[P], RateLimitCounterGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RateLimitCounterSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    key?: boolean
+    count?: boolean
+    resetAt?: boolean
+  }, ExtArgs["result"]["rateLimitCounter"]>
+
+  export type RateLimitCounterSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    key?: boolean
+    count?: boolean
+    resetAt?: boolean
+  }, ExtArgs["result"]["rateLimitCounter"]>
+
+  export type RateLimitCounterSelectScalar = {
+    key?: boolean
+    count?: boolean
+    resetAt?: boolean
+  }
+
+
+  export type $RateLimitCounterPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RateLimitCounter"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      key: string
+      count: number
+      resetAt: Date
+    }, ExtArgs["result"]["rateLimitCounter"]>
+    composites: {}
+  }
+
+  type RateLimitCounterGetPayload<S extends boolean | null | undefined | RateLimitCounterDefaultArgs> = $Result.GetResult<Prisma.$RateLimitCounterPayload, S>
+
+  type RateLimitCounterCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<RateLimitCounterFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: RateLimitCounterCountAggregateInputType | true
+    }
+
+  export interface RateLimitCounterDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RateLimitCounter'], meta: { name: 'RateLimitCounter' } }
+    /**
+     * Find zero or one RateLimitCounter that matches the filter.
+     * @param {RateLimitCounterFindUniqueArgs} args - Arguments to find a RateLimitCounter
+     * @example
+     * // Get one RateLimitCounter
+     * const rateLimitCounter = await prisma.rateLimitCounter.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RateLimitCounterFindUniqueArgs>(args: SelectSubset<T, RateLimitCounterFindUniqueArgs<ExtArgs>>): Prisma__RateLimitCounterClient<$Result.GetResult<Prisma.$RateLimitCounterPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one RateLimitCounter that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {RateLimitCounterFindUniqueOrThrowArgs} args - Arguments to find a RateLimitCounter
+     * @example
+     * // Get one RateLimitCounter
+     * const rateLimitCounter = await prisma.rateLimitCounter.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RateLimitCounterFindUniqueOrThrowArgs>(args: SelectSubset<T, RateLimitCounterFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RateLimitCounterClient<$Result.GetResult<Prisma.$RateLimitCounterPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first RateLimitCounter that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RateLimitCounterFindFirstArgs} args - Arguments to find a RateLimitCounter
+     * @example
+     * // Get one RateLimitCounter
+     * const rateLimitCounter = await prisma.rateLimitCounter.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RateLimitCounterFindFirstArgs>(args?: SelectSubset<T, RateLimitCounterFindFirstArgs<ExtArgs>>): Prisma__RateLimitCounterClient<$Result.GetResult<Prisma.$RateLimitCounterPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first RateLimitCounter that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RateLimitCounterFindFirstOrThrowArgs} args - Arguments to find a RateLimitCounter
+     * @example
+     * // Get one RateLimitCounter
+     * const rateLimitCounter = await prisma.rateLimitCounter.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RateLimitCounterFindFirstOrThrowArgs>(args?: SelectSubset<T, RateLimitCounterFindFirstOrThrowArgs<ExtArgs>>): Prisma__RateLimitCounterClient<$Result.GetResult<Prisma.$RateLimitCounterPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more RateLimitCounters that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RateLimitCounterFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all RateLimitCounters
+     * const rateLimitCounters = await prisma.rateLimitCounter.findMany()
+     * 
+     * // Get first 10 RateLimitCounters
+     * const rateLimitCounters = await prisma.rateLimitCounter.findMany({ take: 10 })
+     * 
+     * // Only select the `key`
+     * const rateLimitCounterWithKeyOnly = await prisma.rateLimitCounter.findMany({ select: { key: true } })
+     * 
+     */
+    findMany<T extends RateLimitCounterFindManyArgs>(args?: SelectSubset<T, RateLimitCounterFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RateLimitCounterPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a RateLimitCounter.
+     * @param {RateLimitCounterCreateArgs} args - Arguments to create a RateLimitCounter.
+     * @example
+     * // Create one RateLimitCounter
+     * const RateLimitCounter = await prisma.rateLimitCounter.create({
+     *   data: {
+     *     // ... data to create a RateLimitCounter
+     *   }
+     * })
+     * 
+     */
+    create<T extends RateLimitCounterCreateArgs>(args: SelectSubset<T, RateLimitCounterCreateArgs<ExtArgs>>): Prisma__RateLimitCounterClient<$Result.GetResult<Prisma.$RateLimitCounterPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many RateLimitCounters.
+     * @param {RateLimitCounterCreateManyArgs} args - Arguments to create many RateLimitCounters.
+     * @example
+     * // Create many RateLimitCounters
+     * const rateLimitCounter = await prisma.rateLimitCounter.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RateLimitCounterCreateManyArgs>(args?: SelectSubset<T, RateLimitCounterCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many RateLimitCounters and returns the data saved in the database.
+     * @param {RateLimitCounterCreateManyAndReturnArgs} args - Arguments to create many RateLimitCounters.
+     * @example
+     * // Create many RateLimitCounters
+     * const rateLimitCounter = await prisma.rateLimitCounter.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many RateLimitCounters and only return the `key`
+     * const rateLimitCounterWithKeyOnly = await prisma.rateLimitCounter.createManyAndReturn({ 
+     *   select: { key: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends RateLimitCounterCreateManyAndReturnArgs>(args?: SelectSubset<T, RateLimitCounterCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RateLimitCounterPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a RateLimitCounter.
+     * @param {RateLimitCounterDeleteArgs} args - Arguments to delete one RateLimitCounter.
+     * @example
+     * // Delete one RateLimitCounter
+     * const RateLimitCounter = await prisma.rateLimitCounter.delete({
+     *   where: {
+     *     // ... filter to delete one RateLimitCounter
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RateLimitCounterDeleteArgs>(args: SelectSubset<T, RateLimitCounterDeleteArgs<ExtArgs>>): Prisma__RateLimitCounterClient<$Result.GetResult<Prisma.$RateLimitCounterPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one RateLimitCounter.
+     * @param {RateLimitCounterUpdateArgs} args - Arguments to update one RateLimitCounter.
+     * @example
+     * // Update one RateLimitCounter
+     * const rateLimitCounter = await prisma.rateLimitCounter.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RateLimitCounterUpdateArgs>(args: SelectSubset<T, RateLimitCounterUpdateArgs<ExtArgs>>): Prisma__RateLimitCounterClient<$Result.GetResult<Prisma.$RateLimitCounterPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more RateLimitCounters.
+     * @param {RateLimitCounterDeleteManyArgs} args - Arguments to filter RateLimitCounters to delete.
+     * @example
+     * // Delete a few RateLimitCounters
+     * const { count } = await prisma.rateLimitCounter.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RateLimitCounterDeleteManyArgs>(args?: SelectSubset<T, RateLimitCounterDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RateLimitCounters.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RateLimitCounterUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many RateLimitCounters
+     * const rateLimitCounter = await prisma.rateLimitCounter.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RateLimitCounterUpdateManyArgs>(args: SelectSubset<T, RateLimitCounterUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one RateLimitCounter.
+     * @param {RateLimitCounterUpsertArgs} args - Arguments to update or create a RateLimitCounter.
+     * @example
+     * // Update or create a RateLimitCounter
+     * const rateLimitCounter = await prisma.rateLimitCounter.upsert({
+     *   create: {
+     *     // ... data to create a RateLimitCounter
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the RateLimitCounter we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RateLimitCounterUpsertArgs>(args: SelectSubset<T, RateLimitCounterUpsertArgs<ExtArgs>>): Prisma__RateLimitCounterClient<$Result.GetResult<Prisma.$RateLimitCounterPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of RateLimitCounters.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RateLimitCounterCountArgs} args - Arguments to filter RateLimitCounters to count.
+     * @example
+     * // Count the number of RateLimitCounters
+     * const count = await prisma.rateLimitCounter.count({
+     *   where: {
+     *     // ... the filter for the RateLimitCounters we want to count
+     *   }
+     * })
+    **/
+    count<T extends RateLimitCounterCountArgs>(
+      args?: Subset<T, RateLimitCounterCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RateLimitCounterCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a RateLimitCounter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RateLimitCounterAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RateLimitCounterAggregateArgs>(args: Subset<T, RateLimitCounterAggregateArgs>): Prisma.PrismaPromise<GetRateLimitCounterAggregateType<T>>
+
+    /**
+     * Group by RateLimitCounter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RateLimitCounterGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RateLimitCounterGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RateLimitCounterGroupByArgs['orderBy'] }
+        : { orderBy?: RateLimitCounterGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RateLimitCounterGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRateLimitCounterGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the RateLimitCounter model
+   */
+  readonly fields: RateLimitCounterFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for RateLimitCounter.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RateLimitCounterClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the RateLimitCounter model
+   */ 
+  interface RateLimitCounterFieldRefs {
+    readonly key: FieldRef<"RateLimitCounter", 'String'>
+    readonly count: FieldRef<"RateLimitCounter", 'Int'>
+    readonly resetAt: FieldRef<"RateLimitCounter", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * RateLimitCounter findUnique
+   */
+  export type RateLimitCounterFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitCounter
+     */
+    select?: RateLimitCounterSelect<ExtArgs> | null
+    /**
+     * Filter, which RateLimitCounter to fetch.
+     */
+    where: RateLimitCounterWhereUniqueInput
+  }
+
+  /**
+   * RateLimitCounter findUniqueOrThrow
+   */
+  export type RateLimitCounterFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitCounter
+     */
+    select?: RateLimitCounterSelect<ExtArgs> | null
+    /**
+     * Filter, which RateLimitCounter to fetch.
+     */
+    where: RateLimitCounterWhereUniqueInput
+  }
+
+  /**
+   * RateLimitCounter findFirst
+   */
+  export type RateLimitCounterFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitCounter
+     */
+    select?: RateLimitCounterSelect<ExtArgs> | null
+    /**
+     * Filter, which RateLimitCounter to fetch.
+     */
+    where?: RateLimitCounterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RateLimitCounters to fetch.
+     */
+    orderBy?: RateLimitCounterOrderByWithRelationInput | RateLimitCounterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RateLimitCounters.
+     */
+    cursor?: RateLimitCounterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RateLimitCounters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RateLimitCounters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RateLimitCounters.
+     */
+    distinct?: RateLimitCounterScalarFieldEnum | RateLimitCounterScalarFieldEnum[]
+  }
+
+  /**
+   * RateLimitCounter findFirstOrThrow
+   */
+  export type RateLimitCounterFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitCounter
+     */
+    select?: RateLimitCounterSelect<ExtArgs> | null
+    /**
+     * Filter, which RateLimitCounter to fetch.
+     */
+    where?: RateLimitCounterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RateLimitCounters to fetch.
+     */
+    orderBy?: RateLimitCounterOrderByWithRelationInput | RateLimitCounterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RateLimitCounters.
+     */
+    cursor?: RateLimitCounterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RateLimitCounters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RateLimitCounters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RateLimitCounters.
+     */
+    distinct?: RateLimitCounterScalarFieldEnum | RateLimitCounterScalarFieldEnum[]
+  }
+
+  /**
+   * RateLimitCounter findMany
+   */
+  export type RateLimitCounterFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitCounter
+     */
+    select?: RateLimitCounterSelect<ExtArgs> | null
+    /**
+     * Filter, which RateLimitCounters to fetch.
+     */
+    where?: RateLimitCounterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RateLimitCounters to fetch.
+     */
+    orderBy?: RateLimitCounterOrderByWithRelationInput | RateLimitCounterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing RateLimitCounters.
+     */
+    cursor?: RateLimitCounterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RateLimitCounters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RateLimitCounters.
+     */
+    skip?: number
+    distinct?: RateLimitCounterScalarFieldEnum | RateLimitCounterScalarFieldEnum[]
+  }
+
+  /**
+   * RateLimitCounter create
+   */
+  export type RateLimitCounterCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitCounter
+     */
+    select?: RateLimitCounterSelect<ExtArgs> | null
+    /**
+     * The data needed to create a RateLimitCounter.
+     */
+    data: XOR<RateLimitCounterCreateInput, RateLimitCounterUncheckedCreateInput>
+  }
+
+  /**
+   * RateLimitCounter createMany
+   */
+  export type RateLimitCounterCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many RateLimitCounters.
+     */
+    data: RateLimitCounterCreateManyInput | RateLimitCounterCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RateLimitCounter createManyAndReturn
+   */
+  export type RateLimitCounterCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitCounter
+     */
+    select?: RateLimitCounterSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many RateLimitCounters.
+     */
+    data: RateLimitCounterCreateManyInput | RateLimitCounterCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RateLimitCounter update
+   */
+  export type RateLimitCounterUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitCounter
+     */
+    select?: RateLimitCounterSelect<ExtArgs> | null
+    /**
+     * The data needed to update a RateLimitCounter.
+     */
+    data: XOR<RateLimitCounterUpdateInput, RateLimitCounterUncheckedUpdateInput>
+    /**
+     * Choose, which RateLimitCounter to update.
+     */
+    where: RateLimitCounterWhereUniqueInput
+  }
+
+  /**
+   * RateLimitCounter updateMany
+   */
+  export type RateLimitCounterUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update RateLimitCounters.
+     */
+    data: XOR<RateLimitCounterUpdateManyMutationInput, RateLimitCounterUncheckedUpdateManyInput>
+    /**
+     * Filter which RateLimitCounters to update
+     */
+    where?: RateLimitCounterWhereInput
+  }
+
+  /**
+   * RateLimitCounter upsert
+   */
+  export type RateLimitCounterUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitCounter
+     */
+    select?: RateLimitCounterSelect<ExtArgs> | null
+    /**
+     * The filter to search for the RateLimitCounter to update in case it exists.
+     */
+    where: RateLimitCounterWhereUniqueInput
+    /**
+     * In case the RateLimitCounter found by the `where` argument doesn't exist, create a new RateLimitCounter with this data.
+     */
+    create: XOR<RateLimitCounterCreateInput, RateLimitCounterUncheckedCreateInput>
+    /**
+     * In case the RateLimitCounter was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RateLimitCounterUpdateInput, RateLimitCounterUncheckedUpdateInput>
+  }
+
+  /**
+   * RateLimitCounter delete
+   */
+  export type RateLimitCounterDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitCounter
+     */
+    select?: RateLimitCounterSelect<ExtArgs> | null
+    /**
+     * Filter which RateLimitCounter to delete.
+     */
+    where: RateLimitCounterWhereUniqueInput
+  }
+
+  /**
+   * RateLimitCounter deleteMany
+   */
+  export type RateLimitCounterDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RateLimitCounters to delete
+     */
+    where?: RateLimitCounterWhereInput
+  }
+
+  /**
+   * RateLimitCounter without action
+   */
+  export type RateLimitCounterDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RateLimitCounter
+     */
+    select?: RateLimitCounterSelect<ExtArgs> | null
   }
 
 
@@ -57268,6 +58242,15 @@ export namespace Prisma {
   export type SurveyQuestionScalarFieldEnum = (typeof SurveyQuestionScalarFieldEnum)[keyof typeof SurveyQuestionScalarFieldEnum]
 
 
+  export const RateLimitCounterScalarFieldEnum: {
+    key: 'key',
+    count: 'count',
+    resetAt: 'resetAt'
+  };
+
+  export type RateLimitCounterScalarFieldEnum = (typeof RateLimitCounterScalarFieldEnum)[keyof typeof RateLimitCounterScalarFieldEnum]
+
+
   export const SurveyResponseScalarFieldEnum: {
     id: 'id',
     projectId: 'projectId',
@@ -59658,6 +60641,50 @@ export namespace Prisma {
     isActive?: BoolWithAggregatesFilter<"SurveyQuestion"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"SurveyQuestion"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"SurveyQuestion"> | Date | string
+  }
+
+  export type RateLimitCounterWhereInput = {
+    AND?: RateLimitCounterWhereInput | RateLimitCounterWhereInput[]
+    OR?: RateLimitCounterWhereInput[]
+    NOT?: RateLimitCounterWhereInput | RateLimitCounterWhereInput[]
+    key?: StringFilter<"RateLimitCounter"> | string
+    count?: IntFilter<"RateLimitCounter"> | number
+    resetAt?: DateTimeFilter<"RateLimitCounter"> | Date | string
+  }
+
+  export type RateLimitCounterOrderByWithRelationInput = {
+    key?: SortOrder
+    count?: SortOrder
+    resetAt?: SortOrder
+  }
+
+  export type RateLimitCounterWhereUniqueInput = Prisma.AtLeast<{
+    key?: string
+    AND?: RateLimitCounterWhereInput | RateLimitCounterWhereInput[]
+    OR?: RateLimitCounterWhereInput[]
+    NOT?: RateLimitCounterWhereInput | RateLimitCounterWhereInput[]
+    count?: IntFilter<"RateLimitCounter"> | number
+    resetAt?: DateTimeFilter<"RateLimitCounter"> | Date | string
+  }, "key">
+
+  export type RateLimitCounterOrderByWithAggregationInput = {
+    key?: SortOrder
+    count?: SortOrder
+    resetAt?: SortOrder
+    _count?: RateLimitCounterCountOrderByAggregateInput
+    _avg?: RateLimitCounterAvgOrderByAggregateInput
+    _max?: RateLimitCounterMaxOrderByAggregateInput
+    _min?: RateLimitCounterMinOrderByAggregateInput
+    _sum?: RateLimitCounterSumOrderByAggregateInput
+  }
+
+  export type RateLimitCounterScalarWhereWithAggregatesInput = {
+    AND?: RateLimitCounterScalarWhereWithAggregatesInput | RateLimitCounterScalarWhereWithAggregatesInput[]
+    OR?: RateLimitCounterScalarWhereWithAggregatesInput[]
+    NOT?: RateLimitCounterScalarWhereWithAggregatesInput | RateLimitCounterScalarWhereWithAggregatesInput[]
+    key?: StringWithAggregatesFilter<"RateLimitCounter"> | string
+    count?: IntWithAggregatesFilter<"RateLimitCounter"> | number
+    resetAt?: DateTimeWithAggregatesFilter<"RateLimitCounter"> | Date | string
   }
 
   export type SurveyResponseWhereInput = {
@@ -64504,6 +65531,48 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RateLimitCounterCreateInput = {
+    key: string
+    count: number
+    resetAt: Date | string
+  }
+
+  export type RateLimitCounterUncheckedCreateInput = {
+    key: string
+    count: number
+    resetAt: Date | string
+  }
+
+  export type RateLimitCounterUpdateInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+    resetAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RateLimitCounterUncheckedUpdateInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+    resetAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RateLimitCounterCreateManyInput = {
+    key: string
+    count: number
+    resetAt: Date | string
+  }
+
+  export type RateLimitCounterUpdateManyMutationInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+    resetAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RateLimitCounterUncheckedUpdateManyInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+    resetAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SurveyResponseCreateInput = {
@@ -69509,6 +70578,32 @@ export namespace Prisma {
 
   export type SurveyQuestionSumOrderByAggregateInput = {
     order?: SortOrder
+  }
+
+  export type RateLimitCounterCountOrderByAggregateInput = {
+    key?: SortOrder
+    count?: SortOrder
+    resetAt?: SortOrder
+  }
+
+  export type RateLimitCounterAvgOrderByAggregateInput = {
+    count?: SortOrder
+  }
+
+  export type RateLimitCounterMaxOrderByAggregateInput = {
+    key?: SortOrder
+    count?: SortOrder
+    resetAt?: SortOrder
+  }
+
+  export type RateLimitCounterMinOrderByAggregateInput = {
+    key?: SortOrder
+    count?: SortOrder
+    resetAt?: SortOrder
+  }
+
+  export type RateLimitCounterSumOrderByAggregateInput = {
+    count?: SortOrder
   }
   export type JsonFilter<$PrismaModel = never> = 
     | PatchUndefined<
@@ -110867,6 +111962,10 @@ export namespace Prisma {
      * @deprecated Use SurveyQuestionDefaultArgs instead
      */
     export type SurveyQuestionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SurveyQuestionDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use RateLimitCounterDefaultArgs instead
+     */
+    export type RateLimitCounterArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = RateLimitCounterDefaultArgs<ExtArgs>
     /**
      * @deprecated Use SurveyResponseDefaultArgs instead
      */

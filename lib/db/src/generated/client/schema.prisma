@@ -431,6 +431,19 @@ model SurveyQuestion {
   updatedAt DateTime @updatedAt
 }
 
+// Shared fixed-window rate-limit counters for public (unauthenticated)
+// endpoints. Kept in the DB so limits survive restarts and apply across all
+// instances (an in-process Map resets on every deploy and multiplies by N
+// workers). Rows are upserted atomically and expired rows are cleaned up
+// opportunistically.
+model RateLimitCounter {
+  key     String   @id
+  count   Int
+  resetAt DateTime
+
+  @@index([resetAt])
+}
+
 model SurveyResponse {
   id                String   @id @default(cuid())
   projectId         String

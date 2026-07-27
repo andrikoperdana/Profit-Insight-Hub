@@ -3,6 +3,7 @@ import { randomBytes } from "node:crypto";
 import { prisma, type ProjectStatus } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
+import { rateLimitAllow, clientIp } from "../lib/rateLimit.js";
 
 const router: IRouter = Router();
 
@@ -56,43 +57,27 @@ function friendlyTaskStatus(status: string): string {
 }
 
 // ---------------------------------------------------------------------------
-// Lightweight in-memory rate limit for the public endpoint. Keyed by IP, this
-// is only a basic abuse deterrent (the token itself is the real gate). It is a
-// best-effort, per-instance limiter — fine for a low-traffic share link.
-// ---------------------------------------------------------------------------
-const RL_WINDOW_MS = 60_000;
-const RL_MAX = 60;
-const rlHits = new Map<string, { count: number; resetAt: number }>();
-
+// Rate limit for the public endpoint. Keyed by IP, this is a basic abuse
+// deterrent (the token itself is the real gate). Counters are shared via the
+// DB (see lib/rateLimit.ts) so the limit survives restarts and applies across
+// all instances.
+//
 // Returns true when the request is allowed; on rejection it writes a 429 and
 // returns false. Called inline (not as Express middleware) so the route stays a
 // single-handler — a second handler argument degrades req typing and Prisma
 // relation-select inference for the whole handler.
-function rateLimitPublic(req: Request, res: Response): boolean {
-  const now = Date.now();
-  const ip = req.ip || req.socket.remoteAddress || "unknown";
-  const entry = rlHits.get(ip);
-  if (!entry || entry.resetAt < now) {
-    rlHits.set(ip, { count: 1, resetAt: now + RL_WINDOW_MS });
-  } else {
-    entry.count += 1;
-    if (entry.count > RL_MAX) {
-      res.status(429).json({ error: "Too many requests" });
-      return false;
-    }
-  }
-  // Opportunistic cleanup so the map can't grow unbounded.
-  if (rlHits.size > 5000) {
-    for (const [k, v] of rlHits) if (v.resetAt < now) rlHits.delete(k);
-  }
-  return true;
+// ---------------------------------------------------------------------------
+async function rateLimitPublic(req: Request, res: Response): Promise<boolean> {
+  const allowed = await rateLimitAllow(`portal:ip:${clientIp(req)}`, 60, 60_000);
+  if (!allowed) res.status(429).json({ error: "Too many requests" });
+  return allowed;
 }
 
 // ---------------------------------------------------------------------------
 // PUBLIC — no auth. Returns a strictly whitelisted view of one project.
 // ---------------------------------------------------------------------------
 router.get("/public/client-portal/:token", async (req, res) => {
-  if (!rateLimitPublic(req, res)) return;
+  if (!(await rateLimitPublic(req, res))) return;
 
   // Never let this page be indexed or cached by intermediaries.
   res.setHeader("X-Robots-Tag", "noindex, nofollow");

@@ -6,6 +6,7 @@ import { ensureDefaultSurveyQuestions, issueSurveyTokenIfMissing } from "../lib/
 import ExcelJS from "exceljs";
 import PDFDocument from "pdfkit";
 import { randomBytes } from "node:crypto";
+import { rateLimitAllow, clientIp } from "../lib/rateLimit.js";
 
 const router: IRouter = Router();
 
@@ -89,6 +90,15 @@ function surveyLinkUnavailable(project: {
 }
 
 router.get("/public/surveys/:token", async (req, res) => {
+  // Per-IP abuse deterrent, mirroring the public client portal. The token is
+  // the primary gate; the DB-backed counter survives restarts and is shared
+  // across instances.
+  if (!(await rateLimitAllow(`survey:get:ip:${clientIp(req)}`, 60, 60_000))) {
+    res.status(429).json({ error: "Too many requests" });
+    return;
+  }
+  res.setHeader("X-Robots-Tag", "noindex, nofollow");
+  res.setHeader("Cache-Control", "private, no-store");
   const project = await prisma.project.findUnique({
     where: { surveyToken: req.params.token },
     include: { client: true },
@@ -116,6 +126,25 @@ router.get("/public/surveys/:token", async (req, res) => {
 });
 
 router.post("/public/surveys/:token", async (req, res) => {
+  // Submission flood protection. Two independent caps:
+  //   - per-IP: 10 submissions/min (forwarded-for headers are ultimately
+  //     spoofable, so this alone is not sufficient)
+  //   - per-token: 30 submissions/hour regardless of source IP — a survey
+  //     link is legitimately shared with a handful of client stakeholders,
+  //     so a small hourly cap stops bulk CSAT poisoning without blocking
+  //     real respondents. Token-keyed, so it cannot be bypassed by IP
+  //     rotation or header spoofing.
+  // Both are DB-backed (survive restarts, shared across instances).
+  const ipAllowed = await rateLimitAllow(`survey:post:ip:${clientIp(req)}`, 10, 60_000);
+  const tokenAllowed = await rateLimitAllow(
+    `survey:post:token:${String(req.params.token)}`,
+    30,
+    60 * 60_000,
+  );
+  if (!ipAllowed || !tokenAllowed) {
+    res.status(429).json({ error: "Too many requests" });
+    return;
+  }
   const project = await prisma.project.findUnique({
     where: { surveyToken: req.params.token },
   });
@@ -157,6 +186,12 @@ router.post("/public/surveys/:token", async (req, res) => {
 
   const submitterName = body.submitterName ? String(body.submitterName).slice(0, 200) : null;
   const submitterEmail = body.submitterEmail ? String(body.submitterEmail).slice(0, 200) : null;
+  // These values are rendered in management-facing PDF/Excel exports — reject
+  // obviously malformed emails rather than storing arbitrary strings verbatim.
+  if (submitterEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(submitterEmail)) {
+    res.status(400).json({ error: "Invalid email address" });
+    return;
+  }
 
   const created = await prisma.surveyResponse.create({
     data: {

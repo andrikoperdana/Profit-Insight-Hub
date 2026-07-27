@@ -9,6 +9,12 @@ import { gateEnabled, readGateCookie, verifyGateToken } from "./lib/site-gate.js
 
 const app: Express = express();
 
+// The app always runs behind the platform reverse proxy (dev preview and
+// autoscale deployments), so req.ip must be derived from X-Forwarded-For or
+// every client shares the proxy's address — which would make per-IP rate
+// limits on the public endpoints throttle everyone (or no one) collectively.
+app.set("trust proxy", true);
+
 app.use(
   pinoHttp({
     logger,
