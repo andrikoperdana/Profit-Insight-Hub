@@ -133,6 +133,21 @@ user's OWN login: new XERO_CLIENT_ID/SECRET + XERO_WEBHOOK_KEY, same-org reconne
 must be logged in as the app's creator; expected Xero client id length 32, secret 48,
 webhook key 88 — exact lengths are the cheap paste-error check (never echo values).
 
+## Redirect URI: prod REPLIT_DOMAINS[0] is the .replit.app domain, NOT the custom domain
+redirectUri() falls back XERO_REDIRECT_URI → APP_BASE_URL → REPLIT_DOMAINS[0]. On the
+autoscale deployment REPLIT_DOMAINS[0] = profit-insight-hub.replit.app, so the fallback
+sent a callback the (2026-07) Xero app never registered → generic
+login.xero.com/identity/error page, detail = "invalid_request / Invalid redirect_uri".
+**Fix (2026-07-27):** production env var XERO_REDIRECT_URI=https://psa4pmo.xyz/api/xero/callback
+(deployments snapshot env → takes effect only after a republish). The current Xero app
+registers ONLY the psa4pmo.xyz callback.
+**Diagnose fast:** build the authorize URL yourself with the REAL scopes from lib/xero.ts
+(an empty scope param errors identically — a probe without scopes proves nothing) and
+fetch with redirect:"manual": Location → /identity/error = bad client/redirect_uri;
+→ /identity/user/login = config OK. Get prod's exact URL: POST /api/site-gate/login
+(creds = SITE_GATE_USER/PASS production env vars, sets sp_gate cookie; /api/auth/login is
+gated too) → login management@ with PROD_MGMT_PASSWORD → POST /api/xero/connect-url.
+
 ## App binds to ONE org; switching orgs needs soft-disconnect + stale-id cleanup
 `completeConnection` auto-picks the first ORGANISATION tenant from `/connections`
 (`find(ORGANISATION) ?? tenants[0]`) and stores its `tenantId`; every API call sends

@@ -94,6 +94,7 @@ PENTEST_CRED_KEY = "c0DwaEmyLQNqs094k8HIZyKx+tP/48XBlsDah+V7HoA="
 SITE_GATE_USER = "itsecasia"
 SITE_GATE_PASS = "@Its3c@Asia2026"
 DB_USE_PGBOUNCER = "1"
+XERO_REDIRECT_URI = "https://psa4pmo.xyz/api/xero/callback"
 
 [userenv.shared]
 PIPEDRIVE_API_DOMAIN = "https://itsecaustralia.pipedrive.com"
