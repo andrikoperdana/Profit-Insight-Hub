@@ -485,3 +485,9 @@ id = "YmbbLN1eUBO-VRd7INWfq"
 uri = "file://.local/outputs/SecureProfit-Hub---Technical-Overview.pptx"
 type = "slides"
 title = "SecureProfit Hub - Technical Overview (PPTX)"
+
+[[outputs]]
+id = "Nc7vmUZLWwEDHX-876WF4"
+uri = "file://docs/SecureProfit-Hub-AI-Features-Manual.docx"
+type = "word_document"
+title = "AI Features Manual (EN + ID)"
