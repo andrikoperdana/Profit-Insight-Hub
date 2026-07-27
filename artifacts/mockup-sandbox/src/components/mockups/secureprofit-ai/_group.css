@@ -1,0 +1,70 @@
+/* SecureProfit Hub theme (dark default) — copied from artifacts/web/src/index.css .dark block.
+   Import this from every component in this group: import "./_group.css"; */
+
+:root {
+  --button-outline: rgba(255, 255, 255, 0.1);
+  --badge-outline: rgba(255, 255, 255, 0.05);
+  --elevate-1: rgba(255, 255, 255, 0.04);
+  --elevate-2: rgba(255, 255, 255, 0.09);
+
+  /* ITSEC — neutral black surfaces */
+  --background: 0 0% 4%;
+  --foreground: 0 0% 96%;
+
+  --card: 0 0% 7%;
+  --card-foreground: 0 0% 96%;
+  --card-border: 0 0% 15%;
+
+  --popover: 0 0% 7%;
+  --popover-foreground: 0 0% 96%;
+  --popover-border: 0 0% 15%;
+
+  /* ITSEC Red */
+  --primary: 357 88% 47%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 0 0% 14%;
+  --secondary-foreground: 0 0% 98%;
+
+  --muted: 0 0% 14%;
+  --muted-foreground: 0 0% 64%;
+
+  --accent: 0 0% 16%;
+  --accent-foreground: 0 0% 98%;
+
+  --destructive: 0 62% 46%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 0 0% 15%;
+  --input: 0 0% 15%;
+  --ring: 357 88% 47%;
+
+  --sidebar: 0 0% 5%;
+  --sidebar-foreground: 0 0% 90%;
+  --sidebar-border: 0 0% 13%;
+  --sidebar-primary: 357 88% 47%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 0 0% 14%;
+  --sidebar-accent-foreground: 0 0% 98%;
+  --sidebar-ring: 357 88% 47%;
+
+  --chart-1: 357 88% 47%;
+  --chart-2: 5 85% 60%;
+  --chart-3: 25 90% 58%;
+  --chart-4: 43 90% 60%;
+  --chart-5: 0 0% 62%;
+
+  /* Semantic status colors (use arbitrary values, e.g. text-[hsl(var(--success))]) */
+  --success: 142 71% 45%;
+  --success-foreground: 0 0% 100%;
+  --warning: 38 92% 50%;
+  --warning-foreground: 222 47% 11%;
+
+  --radius: 0.75rem;
+}
+
+body {
+  font-family: "DM Sans", "Inter", sans-serif;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
