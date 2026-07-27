@@ -127,7 +127,7 @@ function milestoneAmount(
   return ms.amount ?? (contractValue * (ms.percentage ?? 0)) / 100;
 }
 
-async function buildUtilizationFacts(
+export async function buildUtilizationFacts(
   now: Date,
 ): Promise<ExecutiveCopilotUtilizationFacts> {
   const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());

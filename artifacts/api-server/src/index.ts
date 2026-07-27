@@ -12,6 +12,7 @@ import { runPaymentSync } from "./routes/xero.js";
 import { xeroConfigured } from "./lib/xero.js";
 import { getAppSettings, APP_SETTINGS_ID } from "./lib/app-settings.js";
 import { runAllNotificationChecks } from "./lib/notificationRules.js";
+import { maybeGenerateWeeklyDigest } from "./lib/ai-digest.js";
 import {
   pipedriveConfigured,
   claimPipedriveSync,
@@ -180,6 +181,15 @@ const notificationPoll = setInterval(() => {
     const result = await runAllNotificationChecks();
     if (result.total > 0) {
       logger.info(result, "Scheduled notification checks created notifications");
+    }
+    // Monday-morning (WIB) AI weekly digest rides the same hourly claim, so at
+    // most one instance attempts it per window; the unique weekKey row makes
+    // generation idempotent across instances.
+    try {
+      const digest = await maybeGenerateWeeklyDigest();
+      if (digest) logger.info({ weekKey: digest.weekKey }, "Weekly AI digest generated");
+    } catch (err) {
+      logger.warn({ err }, "Weekly AI digest generation failed (continuing)");
     }
   })().catch((err) => logger.warn({ err }, "Scheduled notification checks failed (continuing)"));
 }, NOTIFICATION_TICK_MS);

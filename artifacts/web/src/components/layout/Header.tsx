@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import Sidebar from "./Sidebar";
+import AssistantSheet from "@/components/ai/AssistantSheet";
 import { Link } from "wouter";
 
 export default function Header() {
@@ -106,6 +107,7 @@ export default function Header() {
       <div className="flex-1" />
 
       <div className="flex items-center space-x-2">
+        <AssistantSheet />
         <Button
           variant="ghost"
           size="icon"
@@ -199,6 +201,13 @@ export default function Header() {
                 </Link>
               </DropdownMenuItem>
             )}
+
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href="/alerts" className="flex items-center justify-center cursor-pointer text-xs text-primary">
+                View all alerts
+              </Link>
+            </DropdownMenuItem>
 
             {isConsultant && rejectedCount > 0 && (
               <DropdownMenuItem asChild>

@@ -48,6 +48,84 @@ function formatIDRShort(n: number): string {
 }
 
 /**
+ * Shared cost math for the overrun/low-margin rules: approved labor cost per
+ * project (and per user within it) at the project-resource dailyRate, plus
+ * approved expenses. Timesheets from users without a resource row cost 0,
+ * matching the original behavior of both checks.
+ */
+function computeProjectCosts(
+  projects: { id: string; resources: { userId: string; dailyRate: number }[] }[],
+  timesheets: { projectId: string; userId: string; hours: number }[],
+  expenses: { projectId: string; amount: number }[],
+) {
+  const rate = new Map<string, number>();
+  for (const p of projects) for (const r of p.resources) rate.set(`${p.id}:${r.userId}`, r.dailyRate);
+  const laborByProjectUser = new Map<string, Map<string, number>>();
+  const costByProject = new Map<string, number>();
+  for (const t of timesheets) {
+    const cost = (t.hours / 8) * (rate.get(`${t.projectId}:${t.userId}`) ?? 0);
+    if (cost === 0) continue;
+    let perUser = laborByProjectUser.get(t.projectId);
+    if (!perUser) {
+      perUser = new Map();
+      laborByProjectUser.set(t.projectId, perUser);
+    }
+    perUser.set(t.userId, (perUser.get(t.userId) ?? 0) + cost);
+    costByProject.set(t.projectId, (costByProject.get(t.projectId) ?? 0) + cost);
+  }
+  const expenseByProject = new Map<string, number>();
+  for (const e of expenses) {
+    expenseByProject.set(e.projectId, (expenseByProject.get(e.projectId) ?? 0) + e.amount);
+    costByProject.set(e.projectId, (costByProject.get(e.projectId) ?? 0) + e.amount);
+  }
+  return { costByProject, laborByProjectUser, expenseByProject };
+}
+
+function topContributorUserIds(
+  projectIds: string[],
+  laborByProjectUser: Map<string, Map<string, number>>,
+  perProject = 2,
+): string[] {
+  const ids = new Set<string>();
+  for (const pid of projectIds) {
+    const perUser = laborByProjectUser.get(pid);
+    if (!perUser) continue;
+    [...perUser.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, perProject)
+      .forEach(([uid]) => ids.add(uid));
+  }
+  return [...ids];
+}
+
+async function fetchUserNames(ids: string[]): Promise<Map<string, string>> {
+  if (ids.length === 0) return new Map();
+  const rows = await prisma.user.findMany({ where: { id: { in: ids } }, select: { id: true, name: true } });
+  return new Map(rows.map((r) => [r.id, r.name]));
+}
+
+/**
+ * Deterministic "why" appended to cost alerts: names the top labor
+ * contributors and the expense share. No AI involved — real numbers only.
+ */
+function costDriverSentence(
+  labor: Map<string, number> | undefined,
+  expenseTotal: number,
+  nameById: Map<string, string>,
+): string {
+  const parts: string[] = [];
+  if (labor && labor.size > 0) {
+    const top = [...labor.entries()].sort((a, b) => b[1] - a[1]).slice(0, 2);
+    for (const [uid, cost] of top) {
+      parts.push(`${nameById.get(uid) ?? "unassigned rate"} ${formatIDRShort(cost)} labor`);
+    }
+  }
+  if (expenseTotal > 0) parts.push(`expenses ${formatIDRShort(expenseTotal)}`);
+  if (parts.length === 0) return "";
+  return ` Main cost drivers: ${parts.join(", ")}.`;
+}
+
+/**
  * Rule 1: Billing milestones with dueDate within the configurable
  * invoiceDueSoonDays horizon, still PLANNED or INVOICED. Notify PM of
  * project and adminProject (if assigned).
@@ -112,28 +190,27 @@ async function checkProjectOverrun(): Promise<number> {
     }),
   ]);
 
-  const rateByProjectUser = new Map<string, number>();
-  for (const p of projects) {
-    for (const r of p.resources) rateByProjectUser.set(`${p.id}:${r.userId}`, r.dailyRate);
-  }
-  const costByProject = new Map<string, number>();
-  for (const t of timesheets) {
-    const rate = rateByProjectUser.get(`${t.projectId}:${t.userId}`) ?? 0;
-    costByProject.set(t.projectId, (costByProject.get(t.projectId) ?? 0) + (t.hours / 8) * rate);
-  }
-  for (const e of expenses) {
-    costByProject.set(e.projectId, (costByProject.get(e.projectId) ?? 0) + e.amount);
-  }
+  const { costByProject, laborByProjectUser, expenseByProject } = computeProjectCosts(
+    projects,
+    timesheets,
+    expenses,
+  );
 
   const mgmt = await prisma.user.findMany({ where: { role: "MANAGEMENT", deletedAt: null }, select: { id: true } });
+  const flagged = projects.filter(
+    (p) => ((costByProject.get(p.id) ?? 0) / p.contractValue) * 100 >= budgetOverrunPct,
+  );
+  const nameById = await fetchUserNames(
+    topContributorUserIds(flagged.map((f) => f.id), laborByProjectUser),
+  );
   let created = 0;
-  for (const p of projects) {
+  for (const p of flagged) {
     const actual = costByProject.get(p.id) ?? 0;
     const pct = (actual / p.contractValue) * 100;
-    if (pct < budgetOverrunPct) continue;
     const link = `/projects/${p.id}`;
     const title = pct >= 100 ? `Budget exceeded: ${p.name}` : `Budget nearing limit: ${p.name}`;
-    const message = `Actual cost has reached ${pct.toFixed(0)}% of the contract value (${formatIDRShort(actual)} / ${formatIDRShort(p.contractValue)}).`;
+    const cause = costDriverSentence(laborByProjectUser.get(p.id), expenseByProject.get(p.id) ?? 0, nameById);
+    const message = `Actual cost has reached ${pct.toFixed(0)}% of the contract value (${formatIDRShort(actual)} / ${formatIDRShort(p.contractValue)}).${cause}`;
     const recipients = new Set<string>([...(p.pmId ? [p.pmId] : []), ...mgmt.map((m) => m.id)]);
     for (const userId of recipients) {
       if (await notifyOnceDaily({ userId, type: "PROJECT_OVERRUN", title, message, link })) created++;
@@ -201,26 +278,28 @@ async function checkLowMargin(): Promise<number> {
       select: { projectId: true, amount: true },
     }),
   ]);
-  const rateMap = new Map<string, number>();
-  for (const p of projects) for (const r of p.resources) rateMap.set(`${p.id}:${r.userId}`, r.dailyRate);
-  const costByProject = new Map<string, number>();
-  for (const t of timesheets) {
-    const rate = rateMap.get(`${t.projectId}:${t.userId}`) ?? 0;
-    costByProject.set(t.projectId, (costByProject.get(t.projectId) ?? 0) + (t.hours / 8) * rate);
-  }
-  for (const e of expenses) {
-    costByProject.set(e.projectId, (costByProject.get(e.projectId) ?? 0) + e.amount);
-  }
+  const { costByProject, laborByProjectUser, expenseByProject } = computeProjectCosts(
+    projects,
+    timesheets,
+    expenses,
+  );
   const mgmt = await prisma.user.findMany({ where: { role: "MANAGEMENT", deletedAt: null }, select: { id: true } });
-  let created = 0;
-  for (const p of projects) {
+  const flagged = projects.filter((p) => {
     const actual = costByProject.get(p.id) ?? 0;
-    if (actual === 0) continue; // skip "0 cost" projects
+    if (actual === 0) return false; // skip "0 cost" projects
+    return ((p.contractValue - actual) / p.contractValue) * 100 < lowMarginPct;
+  });
+  const nameById = await fetchUserNames(
+    topContributorUserIds(flagged.map((f) => f.id), laborByProjectUser),
+  );
+  let created = 0;
+  for (const p of flagged) {
+    const actual = costByProject.get(p.id) ?? 0;
     const profit = p.contractValue - actual;
     const marginPct = (profit / p.contractValue) * 100;
-    if (marginPct >= lowMarginPct) continue;
     const title = marginPct < 0 ? `Negative margin: ${p.name}` : `Thin margin: ${p.name}`;
-    const message = `Current margin is ${marginPct.toFixed(1)}% (${formatIDRShort(profit)} of ${formatIDRShort(p.contractValue)}).`;
+    const cause = costDriverSentence(laborByProjectUser.get(p.id), expenseByProject.get(p.id) ?? 0, nameById);
+    const message = `Current margin is ${marginPct.toFixed(1)}% (${formatIDRShort(profit)} of ${formatIDRShort(p.contractValue)}).${cause}`;
     const link = `/projects/${p.id}`;
     const recipients = new Set<string>([...(p.pmId ? [p.pmId] : []), ...mgmt.map((m) => m.id)]);
     for (const userId of recipients) {

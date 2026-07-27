@@ -6934,3 +6934,127 @@ export const GenerateExecutiveBriefingResponse = zod.object({
       .max(generateExecutiveBriefingResponseBriefingRecommendedActionsMax),
   }),
 });
+
+/**
+ * @summary Ask the AI data assistant a question (tool-calling over live, role-scoped data).
+ */
+export const aiAssistantChatBodyMessagesItemContentMax = 4000;
+
+export const aiAssistantChatBodyMessagesMax = 30;
+
+export const AiAssistantChatBody = zod.object({
+  messages: zod
+    .array(
+      zod.object({
+        role: zod.enum(["user", "assistant"]),
+        content: zod
+          .string()
+          .min(1)
+          .max(aiAssistantChatBodyMessagesItemContentMax),
+      }),
+    )
+    .min(1)
+    .max(aiAssistantChatBodyMessagesMax),
+});
+
+export const AiAssistantChatResponse = zod.object({
+  reply: zod.string(),
+  model: zod.string(),
+  generatedAt: zod.string(),
+});
+
+/**
+ * @summary Generate an AI project report draft for a given month (project PM/TW or management).
+ */
+
+export const generateAiReportDraftBodyPeriodMonthRegExp = new RegExp(
+  "^\\d{4}-\\d{2}$",
+);
+
+export const GenerateAiReportDraftBody = zod.object({
+  projectId: zod.string().min(1),
+  periodMonth: zod.string().regex(generateAiReportDraftBodyPeriodMonthRegExp),
+  language: zod.enum(["id", "en"]).optional(),
+});
+
+export const generateAiReportDraftResponseDraftAchievementsMax = 8;
+
+export const generateAiReportDraftResponseDraftIssuesRisksMax = 8;
+
+export const generateAiReportDraftResponseDraftNextPlansMax = 8;
+
+export const GenerateAiReportDraftResponse = zod.object({
+  generatedAt: zod.string(),
+  model: zod.string(),
+  projectId: zod.string(),
+  projectName: zod.string(),
+  periodMonth: zod.string(),
+  draft: zod.object({
+    executiveSummary: zod.string(),
+    achievements: zod
+      .array(zod.string())
+      .min(1)
+      .max(generateAiReportDraftResponseDraftAchievementsMax),
+    issuesRisks: zod
+      .array(zod.string())
+      .max(generateAiReportDraftResponseDraftIssuesRisksMax),
+    nextPlans: zod
+      .array(zod.string())
+      .min(1)
+      .max(generateAiReportDraftResponseDraftNextPlansMax),
+    dataNotes: zod.string().nullish(),
+  }),
+});
+
+/**
+ * @summary Return the latest stored AI weekly digest (management only, no AI call).
+ */
+export const getAiWeeklyDigestResponseDigestOneHighlightsMax = 6;
+
+export const GetAiWeeklyDigestResponse = zod.object({
+  hasDigest: zod.boolean(),
+  digest: zod
+    .object({
+      weekKey: zod.string(),
+      generatedAt: zod.string(),
+      model: zod.string(),
+      headline: zod.string(),
+      highlights: zod
+        .array(
+          zod.object({
+            title: zod.string(),
+            detail: zod.string(),
+            severity: zod.enum(["CRITICAL", "WARNING", "INFO"]),
+            link: zod.string().nullish(),
+          }),
+        )
+        .min(1)
+        .max(getAiWeeklyDigestResponseDigestOneHighlightsMax),
+      narrative: zod.string(),
+    })
+    .nullish(),
+});
+
+/**
+ * @summary Generate (or regenerate) this week's AI digest now (management only, incurs AI cost).
+ */
+export const generateAiWeeklyDigestResponseHighlightsMax = 6;
+
+export const GenerateAiWeeklyDigestResponse = zod.object({
+  weekKey: zod.string(),
+  generatedAt: zod.string(),
+  model: zod.string(),
+  headline: zod.string(),
+  highlights: zod
+    .array(
+      zod.object({
+        title: zod.string(),
+        detail: zod.string(),
+        severity: zod.enum(["CRITICAL", "WARNING", "INFO"]),
+        link: zod.string().nullish(),
+      }),
+    )
+    .min(1)
+    .max(generateAiWeeklyDigestResponseHighlightsMax),
+  narrative: zod.string(),
+});

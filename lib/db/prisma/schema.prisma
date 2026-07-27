@@ -1224,6 +1224,18 @@ model ExecutiveBriefing {
   updatedAt   DateTime @updatedAt
 }
 
+// AI weekly digest: one row per ISO week (id = weekKey like "2026-W31", WIB).
+// Same durable-JSON pattern as ExecutiveBriefing: deterministic facts are
+// computed first, the LLM only phrases them, and the validated result is
+// stored so every MGMT reader sees the same digest without re-generating.
+model AiWeeklyDigest {
+  id          String   @id
+  generatedAt DateTime
+  model       String
+  payload     Json
+  createdAt   DateTime @default(now())
+}
+
 model PipedriveStageMapping {
   id                  String    @id @default(cuid())
   pipedrivePipelineId Int

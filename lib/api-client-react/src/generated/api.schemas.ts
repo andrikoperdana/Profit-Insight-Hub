@@ -3068,6 +3068,113 @@ export interface UpdateProjectWorkstreamBody {
   sortOrder?: number;
 }
 
+export type AiChatMessageRole =
+  (typeof AiChatMessageRole)[keyof typeof AiChatMessageRole];
+
+export const AiChatMessageRole = {
+  user: "user",
+  assistant: "assistant",
+} as const;
+
+export interface AiChatMessage {
+  role: AiChatMessageRole;
+  /**
+   * @minLength 1
+   * @maxLength 4000
+   */
+  content: string;
+}
+
+export interface AiChatBody {
+  /**
+   * @minItems 1
+   * @maxItems 30
+   */
+  messages: AiChatMessage[];
+}
+
+export interface AiChatResponse {
+  reply: string;
+  model: string;
+  generatedAt: string;
+}
+
+export type AiReportDraftBodyLanguage =
+  (typeof AiReportDraftBodyLanguage)[keyof typeof AiReportDraftBodyLanguage];
+
+export const AiReportDraftBodyLanguage = {
+  id: "id",
+  en: "en",
+} as const;
+
+export interface AiReportDraftBody {
+  /** @minLength 1 */
+  projectId: string;
+  /** @pattern ^\d{4}-\d{2}$ */
+  periodMonth: string;
+  language?: AiReportDraftBodyLanguage;
+}
+
+export interface AiReportDraftContent {
+  executiveSummary: string;
+  /**
+   * @minItems 1
+   * @maxItems 8
+   */
+  achievements: string[];
+  /** @maxItems 8 */
+  issuesRisks: string[];
+  /**
+   * @minItems 1
+   * @maxItems 8
+   */
+  nextPlans: string[];
+  dataNotes?: string | null;
+}
+
+export interface AiReportDraftResult {
+  generatedAt: string;
+  model: string;
+  projectId: string;
+  projectName: string;
+  periodMonth: string;
+  draft: AiReportDraftContent;
+}
+
+export type AiWeeklyDigestHighlightSeverity =
+  (typeof AiWeeklyDigestHighlightSeverity)[keyof typeof AiWeeklyDigestHighlightSeverity];
+
+export const AiWeeklyDigestHighlightSeverity = {
+  CRITICAL: "CRITICAL",
+  WARNING: "WARNING",
+  INFO: "INFO",
+} as const;
+
+export interface AiWeeklyDigestHighlight {
+  title: string;
+  detail: string;
+  severity: AiWeeklyDigestHighlightSeverity;
+  link?: string | null;
+}
+
+export interface AiWeeklyDigestResult {
+  weekKey: string;
+  generatedAt: string;
+  model: string;
+  headline: string;
+  /**
+   * @minItems 1
+   * @maxItems 6
+   */
+  highlights: AiWeeklyDigestHighlight[];
+  narrative: string;
+}
+
+export interface AiWeeklyDigestState {
+  hasDigest: boolean;
+  digest?: AiWeeklyDigestResult | null;
+}
+
 export type GetReportOptionsParams = {
   source: string;
 };

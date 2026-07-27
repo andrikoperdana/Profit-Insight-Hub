@@ -241,6 +241,11 @@ export type AppSetting = $Result.DefaultSelection<Prisma.$AppSettingPayload>
  */
 export type ExecutiveBriefing = $Result.DefaultSelection<Prisma.$ExecutiveBriefingPayload>
 /**
+ * Model AiWeeklyDigest
+ * 
+ */
+export type AiWeeklyDigest = $Result.DefaultSelection<Prisma.$AiWeeklyDigestPayload>
+/**
  * Model PipedriveStageMapping
  * 
  */
@@ -1199,6 +1204,16 @@ export class PrismaClient<
   get executiveBriefing(): Prisma.ExecutiveBriefingDelegate<ExtArgs>;
 
   /**
+   * `prisma.aiWeeklyDigest`: Exposes CRUD operations for the **AiWeeklyDigest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AiWeeklyDigests
+    * const aiWeeklyDigests = await prisma.aiWeeklyDigest.findMany()
+    * ```
+    */
+  get aiWeeklyDigest(): Prisma.AiWeeklyDigestDelegate<ExtArgs>;
+
+  /**
    * `prisma.pipedriveStageMapping`: Exposes CRUD operations for the **PipedriveStageMapping** model.
     * Example usage:
     * ```ts
@@ -1703,6 +1718,7 @@ export namespace Prisma {
     InvoiceSetting: 'InvoiceSetting',
     AppSetting: 'AppSetting',
     ExecutiveBriefing: 'ExecutiveBriefing',
+    AiWeeklyDigest: 'AiWeeklyDigest',
     PipedriveStageMapping: 'PipedriveStageMapping',
     XeroConnection: 'XeroConnection'
   };
@@ -1720,7 +1736,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "accessRequest" | "client" | "project" | "projectBaseline" | "changeRequest" | "projectReport" | "projectWorkstream" | "surveyQuestion" | "rateLimitCounter" | "surveyResponse" | "projectFeedback360" | "auditLog" | "projectResource" | "projectResourceRate" | "timesheet" | "document" | "projectClosingChecklistItem" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "skillDevelopmentGoal" | "skillProgressionLog" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "projectTemplate" | "projectTemplateResource" | "projectTemplateMilestone" | "projectTemplateRaidItem" | "notification" | "projectRaidItem" | "performanceReview" | "performanceReviewProjectRating" | "invoiceSetting" | "appSetting" | "executiveBriefing" | "pipedriveStageMapping" | "xeroConnection"
+      modelProps: "user" | "accessRequest" | "client" | "project" | "projectBaseline" | "changeRequest" | "projectReport" | "projectWorkstream" | "surveyQuestion" | "rateLimitCounter" | "surveyResponse" | "projectFeedback360" | "auditLog" | "projectResource" | "projectResourceRate" | "timesheet" | "document" | "projectClosingChecklistItem" | "projectExpense" | "businessUnit" | "skill" | "userSkill" | "skillDevelopmentGoal" | "skillProgressionLog" | "activity" | "task" | "taskDependency" | "billingMilestone" | "taskAssignee" | "taskTimeLog" | "lead" | "leadActivity" | "userLeave" | "taskTemplate" | "projectTemplate" | "projectTemplateResource" | "projectTemplateMilestone" | "projectTemplateRaidItem" | "notification" | "projectRaidItem" | "performanceReview" | "performanceReviewProjectRating" | "invoiceSetting" | "appSetting" | "executiveBriefing" | "aiWeeklyDigest" | "pipedriveStageMapping" | "xeroConnection"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4871,6 +4887,76 @@ export namespace Prisma {
           count: {
             args: Prisma.ExecutiveBriefingCountArgs<ExtArgs>
             result: $Utils.Optional<ExecutiveBriefingCountAggregateOutputType> | number
+          }
+        }
+      }
+      AiWeeklyDigest: {
+        payload: Prisma.$AiWeeklyDigestPayload<ExtArgs>
+        fields: Prisma.AiWeeklyDigestFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AiWeeklyDigestFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiWeeklyDigestPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AiWeeklyDigestFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiWeeklyDigestPayload>
+          }
+          findFirst: {
+            args: Prisma.AiWeeklyDigestFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiWeeklyDigestPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AiWeeklyDigestFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiWeeklyDigestPayload>
+          }
+          findMany: {
+            args: Prisma.AiWeeklyDigestFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiWeeklyDigestPayload>[]
+          }
+          create: {
+            args: Prisma.AiWeeklyDigestCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiWeeklyDigestPayload>
+          }
+          createMany: {
+            args: Prisma.AiWeeklyDigestCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AiWeeklyDigestCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiWeeklyDigestPayload>[]
+          }
+          delete: {
+            args: Prisma.AiWeeklyDigestDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiWeeklyDigestPayload>
+          }
+          update: {
+            args: Prisma.AiWeeklyDigestUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiWeeklyDigestPayload>
+          }
+          deleteMany: {
+            args: Prisma.AiWeeklyDigestDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AiWeeklyDigestUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.AiWeeklyDigestUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiWeeklyDigestPayload>
+          }
+          aggregate: {
+            args: Prisma.AiWeeklyDigestAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAiWeeklyDigest>
+          }
+          groupBy: {
+            args: Prisma.AiWeeklyDigestGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AiWeeklyDigestGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AiWeeklyDigestCountArgs<ExtArgs>
+            result: $Utils.Optional<AiWeeklyDigestCountAggregateOutputType> | number
           }
         }
       }
@@ -56161,6 +56247,880 @@ export namespace Prisma {
 
 
   /**
+   * Model AiWeeklyDigest
+   */
+
+  export type AggregateAiWeeklyDigest = {
+    _count: AiWeeklyDigestCountAggregateOutputType | null
+    _min: AiWeeklyDigestMinAggregateOutputType | null
+    _max: AiWeeklyDigestMaxAggregateOutputType | null
+  }
+
+  export type AiWeeklyDigestMinAggregateOutputType = {
+    id: string | null
+    generatedAt: Date | null
+    model: string | null
+    createdAt: Date | null
+  }
+
+  export type AiWeeklyDigestMaxAggregateOutputType = {
+    id: string | null
+    generatedAt: Date | null
+    model: string | null
+    createdAt: Date | null
+  }
+
+  export type AiWeeklyDigestCountAggregateOutputType = {
+    id: number
+    generatedAt: number
+    model: number
+    payload: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type AiWeeklyDigestMinAggregateInputType = {
+    id?: true
+    generatedAt?: true
+    model?: true
+    createdAt?: true
+  }
+
+  export type AiWeeklyDigestMaxAggregateInputType = {
+    id?: true
+    generatedAt?: true
+    model?: true
+    createdAt?: true
+  }
+
+  export type AiWeeklyDigestCountAggregateInputType = {
+    id?: true
+    generatedAt?: true
+    model?: true
+    payload?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type AiWeeklyDigestAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AiWeeklyDigest to aggregate.
+     */
+    where?: AiWeeklyDigestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AiWeeklyDigests to fetch.
+     */
+    orderBy?: AiWeeklyDigestOrderByWithRelationInput | AiWeeklyDigestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AiWeeklyDigestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AiWeeklyDigests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AiWeeklyDigests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AiWeeklyDigests
+    **/
+    _count?: true | AiWeeklyDigestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AiWeeklyDigestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AiWeeklyDigestMaxAggregateInputType
+  }
+
+  export type GetAiWeeklyDigestAggregateType<T extends AiWeeklyDigestAggregateArgs> = {
+        [P in keyof T & keyof AggregateAiWeeklyDigest]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAiWeeklyDigest[P]>
+      : GetScalarType<T[P], AggregateAiWeeklyDigest[P]>
+  }
+
+
+
+
+  export type AiWeeklyDigestGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AiWeeklyDigestWhereInput
+    orderBy?: AiWeeklyDigestOrderByWithAggregationInput | AiWeeklyDigestOrderByWithAggregationInput[]
+    by: AiWeeklyDigestScalarFieldEnum[] | AiWeeklyDigestScalarFieldEnum
+    having?: AiWeeklyDigestScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AiWeeklyDigestCountAggregateInputType | true
+    _min?: AiWeeklyDigestMinAggregateInputType
+    _max?: AiWeeklyDigestMaxAggregateInputType
+  }
+
+  export type AiWeeklyDigestGroupByOutputType = {
+    id: string
+    generatedAt: Date
+    model: string
+    payload: JsonValue
+    createdAt: Date
+    _count: AiWeeklyDigestCountAggregateOutputType | null
+    _min: AiWeeklyDigestMinAggregateOutputType | null
+    _max: AiWeeklyDigestMaxAggregateOutputType | null
+  }
+
+  type GetAiWeeklyDigestGroupByPayload<T extends AiWeeklyDigestGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AiWeeklyDigestGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AiWeeklyDigestGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AiWeeklyDigestGroupByOutputType[P]>
+            : GetScalarType<T[P], AiWeeklyDigestGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AiWeeklyDigestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    generatedAt?: boolean
+    model?: boolean
+    payload?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["aiWeeklyDigest"]>
+
+  export type AiWeeklyDigestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    generatedAt?: boolean
+    model?: boolean
+    payload?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["aiWeeklyDigest"]>
+
+  export type AiWeeklyDigestSelectScalar = {
+    id?: boolean
+    generatedAt?: boolean
+    model?: boolean
+    payload?: boolean
+    createdAt?: boolean
+  }
+
+
+  export type $AiWeeklyDigestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AiWeeklyDigest"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      generatedAt: Date
+      model: string
+      payload: Prisma.JsonValue
+      createdAt: Date
+    }, ExtArgs["result"]["aiWeeklyDigest"]>
+    composites: {}
+  }
+
+  type AiWeeklyDigestGetPayload<S extends boolean | null | undefined | AiWeeklyDigestDefaultArgs> = $Result.GetResult<Prisma.$AiWeeklyDigestPayload, S>
+
+  type AiWeeklyDigestCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<AiWeeklyDigestFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: AiWeeklyDigestCountAggregateInputType | true
+    }
+
+  export interface AiWeeklyDigestDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AiWeeklyDigest'], meta: { name: 'AiWeeklyDigest' } }
+    /**
+     * Find zero or one AiWeeklyDigest that matches the filter.
+     * @param {AiWeeklyDigestFindUniqueArgs} args - Arguments to find a AiWeeklyDigest
+     * @example
+     * // Get one AiWeeklyDigest
+     * const aiWeeklyDigest = await prisma.aiWeeklyDigest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AiWeeklyDigestFindUniqueArgs>(args: SelectSubset<T, AiWeeklyDigestFindUniqueArgs<ExtArgs>>): Prisma__AiWeeklyDigestClient<$Result.GetResult<Prisma.$AiWeeklyDigestPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one AiWeeklyDigest that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {AiWeeklyDigestFindUniqueOrThrowArgs} args - Arguments to find a AiWeeklyDigest
+     * @example
+     * // Get one AiWeeklyDigest
+     * const aiWeeklyDigest = await prisma.aiWeeklyDigest.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AiWeeklyDigestFindUniqueOrThrowArgs>(args: SelectSubset<T, AiWeeklyDigestFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AiWeeklyDigestClient<$Result.GetResult<Prisma.$AiWeeklyDigestPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first AiWeeklyDigest that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiWeeklyDigestFindFirstArgs} args - Arguments to find a AiWeeklyDigest
+     * @example
+     * // Get one AiWeeklyDigest
+     * const aiWeeklyDigest = await prisma.aiWeeklyDigest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AiWeeklyDigestFindFirstArgs>(args?: SelectSubset<T, AiWeeklyDigestFindFirstArgs<ExtArgs>>): Prisma__AiWeeklyDigestClient<$Result.GetResult<Prisma.$AiWeeklyDigestPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first AiWeeklyDigest that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiWeeklyDigestFindFirstOrThrowArgs} args - Arguments to find a AiWeeklyDigest
+     * @example
+     * // Get one AiWeeklyDigest
+     * const aiWeeklyDigest = await prisma.aiWeeklyDigest.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AiWeeklyDigestFindFirstOrThrowArgs>(args?: SelectSubset<T, AiWeeklyDigestFindFirstOrThrowArgs<ExtArgs>>): Prisma__AiWeeklyDigestClient<$Result.GetResult<Prisma.$AiWeeklyDigestPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more AiWeeklyDigests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiWeeklyDigestFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AiWeeklyDigests
+     * const aiWeeklyDigests = await prisma.aiWeeklyDigest.findMany()
+     * 
+     * // Get first 10 AiWeeklyDigests
+     * const aiWeeklyDigests = await prisma.aiWeeklyDigest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const aiWeeklyDigestWithIdOnly = await prisma.aiWeeklyDigest.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AiWeeklyDigestFindManyArgs>(args?: SelectSubset<T, AiWeeklyDigestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AiWeeklyDigestPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a AiWeeklyDigest.
+     * @param {AiWeeklyDigestCreateArgs} args - Arguments to create a AiWeeklyDigest.
+     * @example
+     * // Create one AiWeeklyDigest
+     * const AiWeeklyDigest = await prisma.aiWeeklyDigest.create({
+     *   data: {
+     *     // ... data to create a AiWeeklyDigest
+     *   }
+     * })
+     * 
+     */
+    create<T extends AiWeeklyDigestCreateArgs>(args: SelectSubset<T, AiWeeklyDigestCreateArgs<ExtArgs>>): Prisma__AiWeeklyDigestClient<$Result.GetResult<Prisma.$AiWeeklyDigestPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many AiWeeklyDigests.
+     * @param {AiWeeklyDigestCreateManyArgs} args - Arguments to create many AiWeeklyDigests.
+     * @example
+     * // Create many AiWeeklyDigests
+     * const aiWeeklyDigest = await prisma.aiWeeklyDigest.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AiWeeklyDigestCreateManyArgs>(args?: SelectSubset<T, AiWeeklyDigestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AiWeeklyDigests and returns the data saved in the database.
+     * @param {AiWeeklyDigestCreateManyAndReturnArgs} args - Arguments to create many AiWeeklyDigests.
+     * @example
+     * // Create many AiWeeklyDigests
+     * const aiWeeklyDigest = await prisma.aiWeeklyDigest.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AiWeeklyDigests and only return the `id`
+     * const aiWeeklyDigestWithIdOnly = await prisma.aiWeeklyDigest.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AiWeeklyDigestCreateManyAndReturnArgs>(args?: SelectSubset<T, AiWeeklyDigestCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AiWeeklyDigestPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a AiWeeklyDigest.
+     * @param {AiWeeklyDigestDeleteArgs} args - Arguments to delete one AiWeeklyDigest.
+     * @example
+     * // Delete one AiWeeklyDigest
+     * const AiWeeklyDigest = await prisma.aiWeeklyDigest.delete({
+     *   where: {
+     *     // ... filter to delete one AiWeeklyDigest
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AiWeeklyDigestDeleteArgs>(args: SelectSubset<T, AiWeeklyDigestDeleteArgs<ExtArgs>>): Prisma__AiWeeklyDigestClient<$Result.GetResult<Prisma.$AiWeeklyDigestPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one AiWeeklyDigest.
+     * @param {AiWeeklyDigestUpdateArgs} args - Arguments to update one AiWeeklyDigest.
+     * @example
+     * // Update one AiWeeklyDigest
+     * const aiWeeklyDigest = await prisma.aiWeeklyDigest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AiWeeklyDigestUpdateArgs>(args: SelectSubset<T, AiWeeklyDigestUpdateArgs<ExtArgs>>): Prisma__AiWeeklyDigestClient<$Result.GetResult<Prisma.$AiWeeklyDigestPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more AiWeeklyDigests.
+     * @param {AiWeeklyDigestDeleteManyArgs} args - Arguments to filter AiWeeklyDigests to delete.
+     * @example
+     * // Delete a few AiWeeklyDigests
+     * const { count } = await prisma.aiWeeklyDigest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AiWeeklyDigestDeleteManyArgs>(args?: SelectSubset<T, AiWeeklyDigestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AiWeeklyDigests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiWeeklyDigestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AiWeeklyDigests
+     * const aiWeeklyDigest = await prisma.aiWeeklyDigest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AiWeeklyDigestUpdateManyArgs>(args: SelectSubset<T, AiWeeklyDigestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one AiWeeklyDigest.
+     * @param {AiWeeklyDigestUpsertArgs} args - Arguments to update or create a AiWeeklyDigest.
+     * @example
+     * // Update or create a AiWeeklyDigest
+     * const aiWeeklyDigest = await prisma.aiWeeklyDigest.upsert({
+     *   create: {
+     *     // ... data to create a AiWeeklyDigest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AiWeeklyDigest we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AiWeeklyDigestUpsertArgs>(args: SelectSubset<T, AiWeeklyDigestUpsertArgs<ExtArgs>>): Prisma__AiWeeklyDigestClient<$Result.GetResult<Prisma.$AiWeeklyDigestPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of AiWeeklyDigests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiWeeklyDigestCountArgs} args - Arguments to filter AiWeeklyDigests to count.
+     * @example
+     * // Count the number of AiWeeklyDigests
+     * const count = await prisma.aiWeeklyDigest.count({
+     *   where: {
+     *     // ... the filter for the AiWeeklyDigests we want to count
+     *   }
+     * })
+    **/
+    count<T extends AiWeeklyDigestCountArgs>(
+      args?: Subset<T, AiWeeklyDigestCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AiWeeklyDigestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AiWeeklyDigest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiWeeklyDigestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AiWeeklyDigestAggregateArgs>(args: Subset<T, AiWeeklyDigestAggregateArgs>): Prisma.PrismaPromise<GetAiWeeklyDigestAggregateType<T>>
+
+    /**
+     * Group by AiWeeklyDigest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiWeeklyDigestGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AiWeeklyDigestGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AiWeeklyDigestGroupByArgs['orderBy'] }
+        : { orderBy?: AiWeeklyDigestGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AiWeeklyDigestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAiWeeklyDigestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AiWeeklyDigest model
+   */
+  readonly fields: AiWeeklyDigestFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AiWeeklyDigest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AiWeeklyDigestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AiWeeklyDigest model
+   */ 
+  interface AiWeeklyDigestFieldRefs {
+    readonly id: FieldRef<"AiWeeklyDigest", 'String'>
+    readonly generatedAt: FieldRef<"AiWeeklyDigest", 'DateTime'>
+    readonly model: FieldRef<"AiWeeklyDigest", 'String'>
+    readonly payload: FieldRef<"AiWeeklyDigest", 'Json'>
+    readonly createdAt: FieldRef<"AiWeeklyDigest", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AiWeeklyDigest findUnique
+   */
+  export type AiWeeklyDigestFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiWeeklyDigest
+     */
+    select?: AiWeeklyDigestSelect<ExtArgs> | null
+    /**
+     * Filter, which AiWeeklyDigest to fetch.
+     */
+    where: AiWeeklyDigestWhereUniqueInput
+  }
+
+  /**
+   * AiWeeklyDigest findUniqueOrThrow
+   */
+  export type AiWeeklyDigestFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiWeeklyDigest
+     */
+    select?: AiWeeklyDigestSelect<ExtArgs> | null
+    /**
+     * Filter, which AiWeeklyDigest to fetch.
+     */
+    where: AiWeeklyDigestWhereUniqueInput
+  }
+
+  /**
+   * AiWeeklyDigest findFirst
+   */
+  export type AiWeeklyDigestFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiWeeklyDigest
+     */
+    select?: AiWeeklyDigestSelect<ExtArgs> | null
+    /**
+     * Filter, which AiWeeklyDigest to fetch.
+     */
+    where?: AiWeeklyDigestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AiWeeklyDigests to fetch.
+     */
+    orderBy?: AiWeeklyDigestOrderByWithRelationInput | AiWeeklyDigestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AiWeeklyDigests.
+     */
+    cursor?: AiWeeklyDigestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AiWeeklyDigests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AiWeeklyDigests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AiWeeklyDigests.
+     */
+    distinct?: AiWeeklyDigestScalarFieldEnum | AiWeeklyDigestScalarFieldEnum[]
+  }
+
+  /**
+   * AiWeeklyDigest findFirstOrThrow
+   */
+  export type AiWeeklyDigestFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiWeeklyDigest
+     */
+    select?: AiWeeklyDigestSelect<ExtArgs> | null
+    /**
+     * Filter, which AiWeeklyDigest to fetch.
+     */
+    where?: AiWeeklyDigestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AiWeeklyDigests to fetch.
+     */
+    orderBy?: AiWeeklyDigestOrderByWithRelationInput | AiWeeklyDigestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AiWeeklyDigests.
+     */
+    cursor?: AiWeeklyDigestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AiWeeklyDigests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AiWeeklyDigests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AiWeeklyDigests.
+     */
+    distinct?: AiWeeklyDigestScalarFieldEnum | AiWeeklyDigestScalarFieldEnum[]
+  }
+
+  /**
+   * AiWeeklyDigest findMany
+   */
+  export type AiWeeklyDigestFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiWeeklyDigest
+     */
+    select?: AiWeeklyDigestSelect<ExtArgs> | null
+    /**
+     * Filter, which AiWeeklyDigests to fetch.
+     */
+    where?: AiWeeklyDigestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AiWeeklyDigests to fetch.
+     */
+    orderBy?: AiWeeklyDigestOrderByWithRelationInput | AiWeeklyDigestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AiWeeklyDigests.
+     */
+    cursor?: AiWeeklyDigestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AiWeeklyDigests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AiWeeklyDigests.
+     */
+    skip?: number
+    distinct?: AiWeeklyDigestScalarFieldEnum | AiWeeklyDigestScalarFieldEnum[]
+  }
+
+  /**
+   * AiWeeklyDigest create
+   */
+  export type AiWeeklyDigestCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiWeeklyDigest
+     */
+    select?: AiWeeklyDigestSelect<ExtArgs> | null
+    /**
+     * The data needed to create a AiWeeklyDigest.
+     */
+    data: XOR<AiWeeklyDigestCreateInput, AiWeeklyDigestUncheckedCreateInput>
+  }
+
+  /**
+   * AiWeeklyDigest createMany
+   */
+  export type AiWeeklyDigestCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AiWeeklyDigests.
+     */
+    data: AiWeeklyDigestCreateManyInput | AiWeeklyDigestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AiWeeklyDigest createManyAndReturn
+   */
+  export type AiWeeklyDigestCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiWeeklyDigest
+     */
+    select?: AiWeeklyDigestSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many AiWeeklyDigests.
+     */
+    data: AiWeeklyDigestCreateManyInput | AiWeeklyDigestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AiWeeklyDigest update
+   */
+  export type AiWeeklyDigestUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiWeeklyDigest
+     */
+    select?: AiWeeklyDigestSelect<ExtArgs> | null
+    /**
+     * The data needed to update a AiWeeklyDigest.
+     */
+    data: XOR<AiWeeklyDigestUpdateInput, AiWeeklyDigestUncheckedUpdateInput>
+    /**
+     * Choose, which AiWeeklyDigest to update.
+     */
+    where: AiWeeklyDigestWhereUniqueInput
+  }
+
+  /**
+   * AiWeeklyDigest updateMany
+   */
+  export type AiWeeklyDigestUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AiWeeklyDigests.
+     */
+    data: XOR<AiWeeklyDigestUpdateManyMutationInput, AiWeeklyDigestUncheckedUpdateManyInput>
+    /**
+     * Filter which AiWeeklyDigests to update
+     */
+    where?: AiWeeklyDigestWhereInput
+  }
+
+  /**
+   * AiWeeklyDigest upsert
+   */
+  export type AiWeeklyDigestUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiWeeklyDigest
+     */
+    select?: AiWeeklyDigestSelect<ExtArgs> | null
+    /**
+     * The filter to search for the AiWeeklyDigest to update in case it exists.
+     */
+    where: AiWeeklyDigestWhereUniqueInput
+    /**
+     * In case the AiWeeklyDigest found by the `where` argument doesn't exist, create a new AiWeeklyDigest with this data.
+     */
+    create: XOR<AiWeeklyDigestCreateInput, AiWeeklyDigestUncheckedCreateInput>
+    /**
+     * In case the AiWeeklyDigest was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AiWeeklyDigestUpdateInput, AiWeeklyDigestUncheckedUpdateInput>
+  }
+
+  /**
+   * AiWeeklyDigest delete
+   */
+  export type AiWeeklyDigestDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiWeeklyDigest
+     */
+    select?: AiWeeklyDigestSelect<ExtArgs> | null
+    /**
+     * Filter which AiWeeklyDigest to delete.
+     */
+    where: AiWeeklyDigestWhereUniqueInput
+  }
+
+  /**
+   * AiWeeklyDigest deleteMany
+   */
+  export type AiWeeklyDigestDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AiWeeklyDigests to delete
+     */
+    where?: AiWeeklyDigestWhereInput
+  }
+
+  /**
+   * AiWeeklyDigest without action
+   */
+  export type AiWeeklyDigestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiWeeklyDigest
+     */
+    select?: AiWeeklyDigestSelect<ExtArgs> | null
+  }
+
+
+  /**
    * Model PipedriveStageMapping
    */
 
@@ -58848,6 +59808,17 @@ export namespace Prisma {
   };
 
   export type ExecutiveBriefingScalarFieldEnum = (typeof ExecutiveBriefingScalarFieldEnum)[keyof typeof ExecutiveBriefingScalarFieldEnum]
+
+
+  export const AiWeeklyDigestScalarFieldEnum: {
+    id: 'id',
+    generatedAt: 'generatedAt',
+    model: 'model',
+    payload: 'payload',
+    createdAt: 'createdAt'
+  };
+
+  export type AiWeeklyDigestScalarFieldEnum = (typeof AiWeeklyDigestScalarFieldEnum)[keyof typeof AiWeeklyDigestScalarFieldEnum]
 
 
   export const PipedriveStageMappingScalarFieldEnum: {
@@ -63907,6 +64878,58 @@ export namespace Prisma {
     model?: StringWithAggregatesFilter<"ExecutiveBriefing"> | string
     payload?: JsonWithAggregatesFilter<"ExecutiveBriefing">
     updatedAt?: DateTimeWithAggregatesFilter<"ExecutiveBriefing"> | Date | string
+  }
+
+  export type AiWeeklyDigestWhereInput = {
+    AND?: AiWeeklyDigestWhereInput | AiWeeklyDigestWhereInput[]
+    OR?: AiWeeklyDigestWhereInput[]
+    NOT?: AiWeeklyDigestWhereInput | AiWeeklyDigestWhereInput[]
+    id?: StringFilter<"AiWeeklyDigest"> | string
+    generatedAt?: DateTimeFilter<"AiWeeklyDigest"> | Date | string
+    model?: StringFilter<"AiWeeklyDigest"> | string
+    payload?: JsonFilter<"AiWeeklyDigest">
+    createdAt?: DateTimeFilter<"AiWeeklyDigest"> | Date | string
+  }
+
+  export type AiWeeklyDigestOrderByWithRelationInput = {
+    id?: SortOrder
+    generatedAt?: SortOrder
+    model?: SortOrder
+    payload?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AiWeeklyDigestWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: AiWeeklyDigestWhereInput | AiWeeklyDigestWhereInput[]
+    OR?: AiWeeklyDigestWhereInput[]
+    NOT?: AiWeeklyDigestWhereInput | AiWeeklyDigestWhereInput[]
+    generatedAt?: DateTimeFilter<"AiWeeklyDigest"> | Date | string
+    model?: StringFilter<"AiWeeklyDigest"> | string
+    payload?: JsonFilter<"AiWeeklyDigest">
+    createdAt?: DateTimeFilter<"AiWeeklyDigest"> | Date | string
+  }, "id">
+
+  export type AiWeeklyDigestOrderByWithAggregationInput = {
+    id?: SortOrder
+    generatedAt?: SortOrder
+    model?: SortOrder
+    payload?: SortOrder
+    createdAt?: SortOrder
+    _count?: AiWeeklyDigestCountOrderByAggregateInput
+    _max?: AiWeeklyDigestMaxOrderByAggregateInput
+    _min?: AiWeeklyDigestMinOrderByAggregateInput
+  }
+
+  export type AiWeeklyDigestScalarWhereWithAggregatesInput = {
+    AND?: AiWeeklyDigestScalarWhereWithAggregatesInput | AiWeeklyDigestScalarWhereWithAggregatesInput[]
+    OR?: AiWeeklyDigestScalarWhereWithAggregatesInput[]
+    NOT?: AiWeeklyDigestScalarWhereWithAggregatesInput | AiWeeklyDigestScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AiWeeklyDigest"> | string
+    generatedAt?: DateTimeWithAggregatesFilter<"AiWeeklyDigest"> | Date | string
+    model?: StringWithAggregatesFilter<"AiWeeklyDigest"> | string
+    payload?: JsonWithAggregatesFilter<"AiWeeklyDigest">
+    createdAt?: DateTimeWithAggregatesFilter<"AiWeeklyDigest"> | Date | string
   }
 
   export type PipedriveStageMappingWhereInput = {
@@ -69049,6 +70072,62 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type AiWeeklyDigestCreateInput = {
+    id: string
+    generatedAt: Date | string
+    model: string
+    payload: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type AiWeeklyDigestUncheckedCreateInput = {
+    id: string
+    generatedAt: Date | string
+    model: string
+    payload: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type AiWeeklyDigestUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    model?: StringFieldUpdateOperationsInput | string
+    payload?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AiWeeklyDigestUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    model?: StringFieldUpdateOperationsInput | string
+    payload?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AiWeeklyDigestCreateManyInput = {
+    id: string
+    generatedAt: Date | string
+    model: string
+    payload: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type AiWeeklyDigestUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    model?: StringFieldUpdateOperationsInput | string
+    payload?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AiWeeklyDigestUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    model?: StringFieldUpdateOperationsInput | string
+    payload?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type PipedriveStageMappingCreateInput = {
     id?: string
     pipedrivePipelineId: number
@@ -72836,6 +73915,28 @@ export namespace Prisma {
     generatedAt?: SortOrder
     model?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type AiWeeklyDigestCountOrderByAggregateInput = {
+    id?: SortOrder
+    generatedAt?: SortOrder
+    model?: SortOrder
+    payload?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AiWeeklyDigestMaxOrderByAggregateInput = {
+    id?: SortOrder
+    generatedAt?: SortOrder
+    model?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AiWeeklyDigestMinOrderByAggregateInput = {
+    id?: SortOrder
+    generatedAt?: SortOrder
+    model?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type PipedriveStageMappingCountOrderByAggregateInput = {
@@ -112106,6 +113207,10 @@ export namespace Prisma {
      * @deprecated Use ExecutiveBriefingDefaultArgs instead
      */
     export type ExecutiveBriefingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ExecutiveBriefingDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use AiWeeklyDigestDefaultArgs instead
+     */
+    export type AiWeeklyDigestArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = AiWeeklyDigestDefaultArgs<ExtArgs>
     /**
      * @deprecated Use PipedriveStageMappingDefaultArgs instead
      */

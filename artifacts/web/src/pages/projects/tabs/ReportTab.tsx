@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { formatDate } from "@/lib/format";
 import { EmptyState } from "@/components/common/EmptyState";
+import AiReportDraftDialog from "@/components/ai/AiReportDraftDialog";
 import { useAuth } from "@/lib/auth";
 import { isSuperAdmin } from "@/lib/roles";
 import { useToast } from "@/hooks/use-toast";
@@ -240,9 +241,12 @@ function ReportTab({ projectId, project }: { projectId: string; project: any }) 
             </CardDescription>
           </div>
           {canEdit && (
-            <Button onClick={openCreate} size="sm" data-testid="button-add-report">
-              <Plus className="h-4 w-4 mr-1" /> Add report
-            </Button>
+            <div className="flex flex-wrap gap-2 justify-end">
+              <AiReportDraftDialog projectId={projectId} projectName={project.name ?? ""} />
+              <Button onClick={openCreate} size="sm" data-testid="button-add-report">
+                <Plus className="h-4 w-4 mr-1" /> Add report
+              </Button>
+            </div>
           )}
         </CardHeader>
         <CardContent className="space-y-4">

@@ -23,6 +23,12 @@ import type {
   ActivityItem,
   AddProjectExpenseBody,
   AddResourceBody,
+  AiChatBody,
+  AiChatResponse,
+  AiReportDraftBody,
+  AiReportDraftResult,
+  AiWeeklyDigestResult,
+  AiWeeklyDigestState,
   ApplyProjectTemplate201,
   ApplyProjectTemplateBody,
   ApplyTaskTemplate201,
@@ -14728,4 +14734,332 @@ export const useGenerateExecutiveBriefing = <
   TContext
 > => {
   return useMutation(getGenerateExecutiveBriefingMutationOptions(options));
+};
+
+/**
+ * @summary Ask the AI data assistant a question (tool-calling over live, role-scoped data).
+ */
+export const getAiAssistantChatUrl = () => {
+  return `/api/ai/assistant/chat`;
+};
+
+export const aiAssistantChat = async (
+  aiChatBody: AiChatBody,
+  options?: RequestInit,
+): Promise<AiChatResponse> => {
+  return customFetch<AiChatResponse>(getAiAssistantChatUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(aiChatBody),
+  });
+};
+
+export const getAiAssistantChatMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof aiAssistantChat>>,
+    TError,
+    { data: BodyType<AiChatBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof aiAssistantChat>>,
+  TError,
+  { data: BodyType<AiChatBody> },
+  TContext
+> => {
+  const mutationKey = ["aiAssistantChat"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof aiAssistantChat>>,
+    { data: BodyType<AiChatBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return aiAssistantChat(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type AiAssistantChatMutationResult = NonNullable<
+  Awaited<ReturnType<typeof aiAssistantChat>>
+>;
+export type AiAssistantChatMutationBody = BodyType<AiChatBody>;
+export type AiAssistantChatMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Ask the AI data assistant a question (tool-calling over live, role-scoped data).
+ */
+export const useAiAssistantChat = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof aiAssistantChat>>,
+    TError,
+    { data: BodyType<AiChatBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof aiAssistantChat>>,
+  TError,
+  { data: BodyType<AiChatBody> },
+  TContext
+> => {
+  return useMutation(getAiAssistantChatMutationOptions(options));
+};
+
+/**
+ * @summary Generate an AI project report draft for a given month (project PM/TW or management).
+ */
+export const getGenerateAiReportDraftUrl = () => {
+  return `/api/ai/report-draft`;
+};
+
+export const generateAiReportDraft = async (
+  aiReportDraftBody: AiReportDraftBody,
+  options?: RequestInit,
+): Promise<AiReportDraftResult> => {
+  return customFetch<AiReportDraftResult>(getGenerateAiReportDraftUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(aiReportDraftBody),
+  });
+};
+
+export const getGenerateAiReportDraftMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof generateAiReportDraft>>,
+    TError,
+    { data: BodyType<AiReportDraftBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof generateAiReportDraft>>,
+  TError,
+  { data: BodyType<AiReportDraftBody> },
+  TContext
+> => {
+  const mutationKey = ["generateAiReportDraft"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof generateAiReportDraft>>,
+    { data: BodyType<AiReportDraftBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return generateAiReportDraft(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type GenerateAiReportDraftMutationResult = NonNullable<
+  Awaited<ReturnType<typeof generateAiReportDraft>>
+>;
+export type GenerateAiReportDraftMutationBody = BodyType<AiReportDraftBody>;
+export type GenerateAiReportDraftMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Generate an AI project report draft for a given month (project PM/TW or management).
+ */
+export const useGenerateAiReportDraft = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof generateAiReportDraft>>,
+    TError,
+    { data: BodyType<AiReportDraftBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof generateAiReportDraft>>,
+  TError,
+  { data: BodyType<AiReportDraftBody> },
+  TContext
+> => {
+  return useMutation(getGenerateAiReportDraftMutationOptions(options));
+};
+
+/**
+ * @summary Return the latest stored AI weekly digest (management only, no AI call).
+ */
+export const getGetAiWeeklyDigestUrl = () => {
+  return `/api/ai/weekly-digest`;
+};
+
+export const getAiWeeklyDigest = async (
+  options?: RequestInit,
+): Promise<AiWeeklyDigestState> => {
+  return customFetch<AiWeeklyDigestState>(getGetAiWeeklyDigestUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetAiWeeklyDigestQueryKey = () => {
+  return [`/api/ai/weekly-digest`] as const;
+};
+
+export const getGetAiWeeklyDigestQueryOptions = <
+  TData = Awaited<ReturnType<typeof getAiWeeklyDigest>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getAiWeeklyDigest>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetAiWeeklyDigestQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getAiWeeklyDigest>>
+  > = ({ signal }) => getAiWeeklyDigest({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getAiWeeklyDigest>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetAiWeeklyDigestQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getAiWeeklyDigest>>
+>;
+export type GetAiWeeklyDigestQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Return the latest stored AI weekly digest (management only, no AI call).
+ */
+
+export function useGetAiWeeklyDigest<
+  TData = Awaited<ReturnType<typeof getAiWeeklyDigest>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getAiWeeklyDigest>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetAiWeeklyDigestQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Generate (or regenerate) this week's AI digest now (management only, incurs AI cost).
+ */
+export const getGenerateAiWeeklyDigestUrl = () => {
+  return `/api/ai/weekly-digest/generate`;
+};
+
+export const generateAiWeeklyDigest = async (
+  options?: RequestInit,
+): Promise<AiWeeklyDigestResult> => {
+  return customFetch<AiWeeklyDigestResult>(getGenerateAiWeeklyDigestUrl(), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getGenerateAiWeeklyDigestMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof generateAiWeeklyDigest>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof generateAiWeeklyDigest>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = ["generateAiWeeklyDigest"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof generateAiWeeklyDigest>>,
+    void
+  > = () => {
+    return generateAiWeeklyDigest(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type GenerateAiWeeklyDigestMutationResult = NonNullable<
+  Awaited<ReturnType<typeof generateAiWeeklyDigest>>
+>;
+
+export type GenerateAiWeeklyDigestMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Generate (or regenerate) this week's AI digest now (management only, incurs AI cost).
+ */
+export const useGenerateAiWeeklyDigest = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof generateAiWeeklyDigest>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof generateAiWeeklyDigest>>,
+  TError,
+  void,
+  TContext
+> => {
+  return useMutation(getGenerateAiWeeklyDigestMutationOptions(options));
 };

@@ -31,6 +31,7 @@ export const EMAIL_NOTIFICATION_TYPES = new Set<string>([
   "INVOICE_DUE_SOON",
   "PROJECT_OVERRUN",
   "LOW_MARGIN",
+  "WEEKLY_DIGEST",
 ]);
 
 export function shouldEmailNotification(type: string): boolean {

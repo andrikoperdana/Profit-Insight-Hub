@@ -54,7 +54,7 @@ Editable by MGMT/assigned-PM/Sales-owner unless noted; each tab has its own `rou
 
 ## Notifications
 
-Persisted `Notification` rows (`lib/notifications.ts` `notifyUser`), surfaced in the Header bell (`GET /api/notifications`, polled 60s). Timesheet submit notifies the PM; approve/reject notifies the submitter. Daily lead/project rules dedup by day and run via a server scheduler (`index.ts`): 15-min `setInterval` with an atomic DB claim on `AppSetting.notificationChecksLastRunAt` (updateMany where null or >60min old) so only one instance runs them per hour; MGMT dashboard-load trigger + manual `POST /notifications/run-checks` remain.
+Persisted `Notification` rows (`lib/notifications.ts` `notifyUser`), surfaced in the Header bell (`GET /api/notifications`, polled 60s) and on `/alerts` (Smart Alerts page, severity derived statically from notification `type`). Timesheet submit notifies the PM; approve/reject notifies the submitter. LOW_MARGIN/PROJECT_OVERRUN messages append a deterministic top-cost-driver sentence (`notificationRules.ts`, no AI). `WEEKLY_DIGEST` notifies MGMT when the weekly AI digest row is first created. Daily lead/project rules dedup by day and run via a server scheduler (`index.ts`): 15-min `setInterval` with an atomic DB claim on `AppSetting.notificationChecksLastRunAt` (updateMany where null or >60min old) so only one instance runs them per hour; MGMT dashboard-load trigger + manual `POST /notifications/run-checks` remain.
 
 **Email** (`lib/email.ts`, Resend) — best-effort side effect of `notifyUser`, **important types only**. Global kill-switch `AppSetting.emailNotificationsEnabled` **defaults disabled** (Settings → Email Notifications, MGMT/SUPER_ADMIN). Never blocks/throws, 5s timeout, never logs the provider response body (PII). Optional env levers (sane defaults in code): `EMAIL_SEND_ALLOWLIST` (gate rollout vs bouncy seed emails), `EMAIL_SEND_BLOCKLIST_DOMAINS`, `EMAIL_FROM`, `APP_BASE_URL`, `EMAIL_LOGO_URL`, `EMAIL_REPLY_TO`.
 
@@ -82,6 +82,10 @@ Persisted `Notification` rows (`lib/notifications.ts` `notifyUser`), surfaced in
 - `/portal/:token` (public, no login) — read-only client progress; NO documents/financials; identical 404 for any invalid token.
 - `/work-hours` (HR/MGMT/Principal_*) — 40h/week compliance; `UserLeave` lowers target (`lib/work-hours.ts`).
 - `/performance-reviews` (MGMT/PM/Principal_*) — DRAFT→SUBMITTED→ACKNOWLEDGED.
+- `/alerts` (all roles) — Smart Alerts: notification feed with type→severity badges + MGMT-only Weekly AI Digest card. Digest (`lib/ai-digest.ts`): one `AiWeeklyDigest` row per WIB ISO week (id = weekKey), auto-generated Monday ≥07:00 WIB inside the hourly claimed scheduler tick; create-first (catch P2002) makes exactly one winner notify MGMT; manual regenerate MGMT-only, 4/h.
+- Header ✨ (all roles) — AI Data Assistant chat sheet (`lib/ai-assistant.ts`, `POST /api/ai/assistant/chat`, 20/10min): OpenAI tool loop (≤4 rounds) over 5 read-only server-side role-scoped tools, default-deny; replies mirror the question's language; internal `/projects/...` links navigate in-app.
+- Project Report tab "Draft with AI" (`lib/ai-report-draft.ts`, `POST /api/ai/report-draft`, 10/10min) — monthly report draft (id default, en optional) for MGMT/SA or the project's pmId/adminProjectId/technicalWriterId; financial facts only for money roles or that project's PM/Admin Project; never persisted.
+- **AI money invariant**: every AI surface reporting billing totals uses shared `lib/billing-facts.ts` (uncapped fetch, sum before slicing) so chat and digest always agree.
 - Phase-2: bulk timesheet entry, leave/availability, task templates.
 
 ## Role-based access

@@ -31,6 +31,7 @@ import {
   FileText,
   Sparkles,
   CircleDollarSign,
+  BellRing,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -60,6 +61,7 @@ export default function Sidebar() {
 
   const main: NavLink[] = [
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/alerts", label: "Smart Alerts", icon: BellRing },
     ...(isSiteAdmin || isHr ? [] : [{ href: "/projects", label: "Projects", icon: Briefcase }]),
     ...(isSiteAdmin || isFinance || isHr || user?.role === "MANAGEMENT" || user?.role === "SALES"
       ? []

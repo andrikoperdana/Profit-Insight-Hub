@@ -43,6 +43,7 @@ describe("shouldEmailNotification", () => {
       "INVOICE_DUE_SOON",
       "PROJECT_OVERRUN",
       "LOW_MARGIN",
+      "WEEKLY_DIGEST",
     ]) {
       expect(shouldEmailNotification(t)).toBe(true);
     }
@@ -64,6 +65,6 @@ describe("shouldEmailNotification", () => {
   });
 
   it("has exactly the expected set size", () => {
-    expect(EMAIL_NOTIFICATION_TYPES.size).toBe(7);
+    expect(EMAIL_NOTIFICATION_TYPES.size).toBe(8);
   });
 });
