@@ -99,6 +99,10 @@ an encoding bug but is a Xero-portal app-type mismatch.
 with the app's id/secret. `unauthorized_client` => standard Auth Code app (good).
 `invalid_scope`/"Client credentials scope validation failed" => the client *accepts*
 client_credentials => it's a Custom Connection (wrong type for our flow).
+**Update (July 2026): this probe no longer distinguishes app type** — identity.xero.com
+now returns HTTP 200 + token for client_credentials even on a standard Web app. It still
+proves the credentials are VALID (`invalid_client` = deleted app / wrong id+secret), so
+use it only as a liveness/typo check. Never print/save the response body (contains a token).
 **Fix is in the Xero developer portal**, not code: create a "Web app" / Auth Code
 integration, register the production `<domain>/api/xero/callback` redirect, and put its
 client id/secret in XERO_CLIENT_ID/XERO_CLIENT_SECRET.
@@ -117,6 +121,17 @@ authorize URL with a *valid registered redirect*; reaching `/identity/user/login
 OK, `/identity/error` (page body contains `invalid_scope`) = scope refused.
 Our code only POSTs /Invoices, POSTs /Contacts, GETs /Invoices -> needs exactly
 `accounting.invoices accounting.contacts offline_access`.
+
+## Developer-portal app is per-Xero-LOGIN; ours was re-created 2026-07-27
+"My Apps" at developer.xero.com only lists apps created by the logged-in Xero account —
+an empty page does NOT mean the app was deleted (probe the credentials instead, above).
+The original June-2026 app lived under the Xero org owner's login (a colleague), not the
+app user's. On 2026-07-27 a fresh Web app ("SecureProfit Hub") was created under the app
+user's OWN login: new XERO_CLIENT_ID/SECRET + XERO_WEBHOOK_KEY, same-org reconnect
+(soft-disconnect logic preserves contact/invoice ids), old colleague-owned app abandoned.
+**How to apply:** for any portal task (webhooks, redirect URIs, secret rotation) the user
+must be logged in as the app's creator; expected Xero client id length 32, secret 48,
+webhook key 88 — exact lengths are the cheap paste-error check (never echo values).
 
 ## App binds to ONE org; switching orgs needs soft-disconnect + stale-id cleanup
 `completeConnection` auto-picks the first ORGANISATION tenant from `/connections`
