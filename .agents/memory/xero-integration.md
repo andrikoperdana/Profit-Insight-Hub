@@ -197,6 +197,21 @@ re-enable the poll unconditionally; keep the default OFF. The PUT `/api/app-sett
 validator treats `xeroAutoSyncEnabled` as OPTIONAL (preserve stored value when omitted) so
 a stale client sending the old payload shape doesn't 400 or silently reset it.
 
+## Inbound webhook: instant PAID updates (POST /api/xero/webhook)
+Xero signs the RAW request bytes: the path gets an `express.raw({type:"*/*"})` mount
+BEFORE the global `express.json` in app.ts (json parser skips already-parsed bodies)
+plus a site-gate bypass; auth is handler-level only — `x-xero-signature` ==
+base64(HMAC-SHA256(raw body, XERO_WEBHOOK_KEY)) compared with timingSafeEqual, fail
+closed when the key is unset. Xero's intent-to-receive contract: invalid → 401,
+valid → EMPTY 200 within 5s — so ack first, process after the response.
+- Payload is a hint only (invoice ids); real status is re-fetched via
+  `runPaymentSyncFor(ids)`, which MUST apply the same status-eligibility scope as
+  `runPaymentSync` (INVOICED/PLANNED + PAID within the 180d lookback) — without it a
+  webhook event resurrects CANCELLED milestones to PAID (caught in code review).
+- Replay guard: Xero's scheme has no timestamp/nonce, so processing is capped by a
+  GLOBAL rateLimitAllow bucket (single legitimate sender; per-IP is spoofable).
+- The 30-min poll stays enabled as the backstop for missed deliveries.
+
 ## OAuth state must fail closed
 `/api/xero/callback` is intentionally unauthenticated and site-gate-bypassed; it trusts
 only the HMAC-signed `state`. The signing secret (`SESSION_SECRET`) must have **no

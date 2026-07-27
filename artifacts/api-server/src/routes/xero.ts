@@ -1,5 +1,7 @@
+import { createHmac, timingSafeEqual } from "node:crypto";
 import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
+import { rateLimitAllow } from "../lib/rateLimit.js";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
 import { logger } from "../lib/logger.js";
@@ -428,13 +430,51 @@ export async function runPaymentSync(): Promise<{ checked: number; updated: numb
     },
     select: { id: true, xeroInvoiceId: true, xeroInvoiceNumber: true, status: true },
   });
-  if (pending.length === 0) return { checked: 0, updated: 0 };
+  return syncMilestonePaymentStatuses(pending);
+}
+
+/**
+ * Targeted variant used by the inbound webhook: refresh only the milestones
+ * linked to the given Xero invoice ids. Events for invoices we never pushed
+ * resolve to zero rows and cost no Xero API call.
+ */
+export async function runPaymentSyncFor(
+  xeroInvoiceIds: string[],
+): Promise<{ checked: number; updated: number }> {
+  if (xeroInvoiceIds.length === 0) return { checked: 0, updated: 0 };
+  // Same eligibility scope as runPaymentSync: a webhook event must never
+  // resurrect a CANCELLED (or otherwise out-of-scope) milestone to PAID just
+  // because it mentioned the linked invoice; recently-paid rows stay eligible
+  // for snapshot refreshes, long-settled ones are left alone.
+  const paidLookback = new Date(Date.now() - 180 * 24 * 60 * 60 * 1000);
+  const rows = await prisma.billingMilestone.findMany({
+    where: {
+      xeroInvoiceId: { in: xeroInvoiceIds },
+      OR: [
+        { status: { in: ["INVOICED", "PLANNED"] } },
+        { status: "PAID", paidAt: { gte: paidLookback } },
+      ],
+    },
+    select: { id: true, xeroInvoiceId: true, xeroInvoiceNumber: true, status: true },
+  });
+  return syncMilestonePaymentStatuses(rows);
+}
+
+async function syncMilestonePaymentStatuses(
+  rows: {
+    id: string;
+    xeroInvoiceId: string | null;
+    xeroInvoiceNumber: string | null;
+    status: string;
+  }[],
+): Promise<{ checked: number; updated: number }> {
+  if (rows.length === 0) return { checked: 0, updated: 0 };
 
   // Chunk to keep the IDs query string bounded.
   const CHUNK = 40;
   let updated = 0;
-  for (let i = 0; i < pending.length; i += CHUNK) {
-    const slice = pending.slice(i, i + CHUNK);
+  for (let i = 0; i < rows.length; i += CHUNK) {
+    const slice = rows.slice(i, i + CHUNK);
     const ids = slice.map((m) => m.xeroInvoiceId!).filter(Boolean);
     const statuses = await getInvoiceStatuses(ids);
     for (const m of slice) {
@@ -463,7 +503,7 @@ export async function runPaymentSync(): Promise<{ checked: number; updated: numb
       await prisma.billingMilestone.update({ where: { id: m.id }, data });
     }
   }
-  return { checked: pending.length, updated };
+  return { checked: rows.length, updated };
 }
 
 router.post("/xero/sync-payments", requireAuth, requireRole(...ADMIN_ROLES), async (req, res) => {
@@ -478,6 +518,88 @@ router.post("/xero/sync-payments", requireAuth, requireRole(...ADMIN_ROLES), asy
     req.log.error({ err }, "Xero payment sync failed");
     res.status(502).json({ error: "Failed to sync payments from Xero" });
   }
+});
+
+// --- Inbound webhook: instant payment updates -------------------------------
+//
+// Xero delivers invoice change events here (developer portal → app → Webhooks,
+// subscribed to Invoices), so paid invoices are reflected within seconds
+// instead of waiting for the 30-minute poll — which stays on as a backstop for
+// missed deliveries. UNAUTHENTICATED by design: authenticity comes from the
+// x-xero-signature header = base64(HMAC-SHA256(raw body, XERO_WEBHOOK_KEY)).
+// The raw Buffer body is provided by an express.raw() mount in app.ts.
+//
+// Xero's delivery contract (its intent-to-receive validation enforces this):
+//   - correctly signed   → HTTP 200, empty body, within 5 seconds
+//   - incorrectly signed → HTTP 401
+// Event processing therefore happens after the response is sent, and the
+// payload is only a hint (invoice ids): the actual status is re-fetched from
+// the Xero API, never trusted from the webhook body.
+
+function xeroSignatureValid(rawBody: Buffer, signature: string, key: string): boolean {
+  const expected = createHmac("sha256", key).update(rawBody).digest();
+  const provided = Buffer.from(signature, "base64");
+  return provided.length === expected.length && timingSafeEqual(provided, expected);
+}
+
+router.post("/xero/webhook", (req, res) => {
+  // Fail closed until the signing key is configured — an unverifiable webhook
+  // must never trigger processing.
+  const key = process.env["XERO_WEBHOOK_KEY"]?.trim();
+  const raw = Buffer.isBuffer(req.body) ? (req.body as Buffer) : null;
+  const signature = req.get("x-xero-signature")?.trim() ?? "";
+  if (!key || !raw || !signature || !xeroSignatureValid(raw, signature, key)) {
+    res.status(401).end();
+    return;
+  }
+
+  // Ack immediately — Xero requires the response within 5 seconds and counts
+  // slow answers as delivery failures (eventually disabling the webhook).
+  res.status(200).end();
+
+  let invoiceIds: string[] = [];
+  try {
+    const payload = JSON.parse(raw.toString("utf8")) as {
+      events?: { resourceId?: unknown; eventCategory?: unknown }[];
+    };
+    invoiceIds = [
+      ...new Set(
+        (payload.events ?? [])
+          .filter(
+            (e) => e?.eventCategory === "INVOICE" && typeof e?.resourceId === "string",
+          )
+          .map((e) => e.resourceId as string),
+      ),
+    ];
+  } catch {
+    // A signed-but-unparseable body should never happen; drop it quietly.
+    return;
+  }
+  // Intent-to-receive probes carry no events — the 200 above is all they need.
+  if (invoiceIds.length === 0) return;
+
+  void (async () => {
+    // Signed payloads can be replayed by anyone who captured one (Xero's
+    // scheme has no timestamp/nonce), so cap how often deliveries may trigger
+    // Xero API round trips. All legitimate traffic is a single sender, so one
+    // global bucket is the right key — per-IP would be spoofable via
+    // X-Forwarded-For anyway. Dropped events are picked up later by the
+    // 30-minute poll or a manual sync.
+    if (!(await rateLimitAllow("xero:webhook-sync", 30, 5 * 60_000))) {
+      logger.warn(
+        { events: invoiceIds.length },
+        "Xero webhook sync rate-limited; deferring to poll",
+      );
+      return;
+    }
+    const result = await runPaymentSyncFor(invoiceIds);
+    if (result.updated > 0) {
+      logger.info(result, "Xero webhook updated milestone payment status");
+    }
+  })().catch((err) => {
+    if (err instanceof XeroNotConnectedError) return;
+    logger.warn({ err }, "Xero webhook payment sync failed (poll will catch up)");
+  });
 });
 
 export default router;

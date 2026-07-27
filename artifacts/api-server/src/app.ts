@@ -35,6 +35,10 @@ app.use(
   }),
 );
 app.use(cors({ exposedHeaders: ["X-Total-Count"] }));
+// Xero webhook signature verification needs the exact raw bytes Xero signed,
+// so this one path is captured as a raw Buffer BEFORE the JSON parser runs
+// (the JSON parser skips requests whose body was already consumed).
+app.use("/api/xero/webhook", express.raw({ type: "*/*", limit: "1mb" }));
 app.use(express.json({ limit: "12mb" }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -53,6 +57,9 @@ app.use("/api", (req, res, next) => {
   // authenticates via a shared secret checked in the handler, so it must bypass
   // the front-door gate.
   if (p === "/pipedrive/webhook") return next();
+  // Xero posts signed webhook events here with no app cookies; the handler
+  // verifies the HMAC signature itself, so it must bypass the front-door gate.
+  if (p === "/xero/webhook") return next();
   // Public, token-gated endpoints (client portal, customer survey) are designed
   // to be reachable without a session — they must bypass the front-door gate.
   // Each is individually protected by an unguessable token.

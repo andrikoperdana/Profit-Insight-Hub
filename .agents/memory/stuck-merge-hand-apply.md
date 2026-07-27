@@ -23,10 +23,19 @@ were re-implemented directly on main:
 **Why:** the platform merge queue hung; user said to install everything
 directly rather than wait.
 
-**How to apply:** if the platform later merges the original task branches
-(or the still-running Xero-webhooks task), diff for duplicates: a second
-splitVat/nextInvoiceNumber in routes, a second shrink helper or shrink call
-in attachFromAsset, or a second approve/reject UI block in the mobile
-expenses screen. Keep one copy, preferring whichever matches the invariants
-above. The Xero instant-payment-updates task was still actively being worked
-by its agent and was NOT re-implemented.
+Later the same day the user asked for the fourth queued feature too, without
+waiting for its agent:
+
+4. **Xero webhook for instant paid-invoice updates** — POST /api/xero/webhook
+   (raw-body express.raw mount before express.json in app.ts + site-gate
+   bypass), HMAC-SHA256 base64 signature check against XERO_WEBHOOK_KEY
+   (fail closed), empty 200/401 per Xero intent-to-receive, post-ack async
+   processing via runPaymentSyncFor(ids) with the SAME status-eligibility
+   scope as the poll (never resurrects CANCELLED), global replay rate limit,
+   30-min poll kept as backstop.
+
+**How to apply:** if the platform later merges the original task branches,
+diff for duplicates: a second splitVat/nextInvoiceNumber in routes, a second
+shrink helper or shrink call in attachFromAsset, a second approve/reject UI
+block in the mobile expenses screen, or a second Xero webhook route/raw-body
+mount. Keep one copy, preferring whichever matches the invariants above.
