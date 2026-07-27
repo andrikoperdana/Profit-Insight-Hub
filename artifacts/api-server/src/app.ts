@@ -1,10 +1,10 @@
 import express, { type Express } from "express";
 import cors from "cors";
-import path from "path";
 import pinoHttp from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
 import { requireAuth } from "./middlewares/auth.js";
+import { serveUploadedFile } from "./lib/serveUploadedFile.js";
 import { gateEnabled, readGateCookie, verifyGateToken } from "./lib/site-gate.js";
 
 const app: Express = express();
@@ -67,20 +67,13 @@ app.use("/api", (req, res, next) => {
   res.status(403).json({ error: "site_gate_required" });
 });
 
-// File serving is auth-gated: uploaded BAST/Invoice/Report PDFs may contain
-// confidential client data, so we never expose the uploads directory publicly.
-// Anyone with a valid session can fetch by filename — fine-grained per-document
-// authorization is enforced by routes/documents.ts.
-app.use(
-  "/api/files",
-  requireAuth,
-  express.static(path.resolve(process.cwd(), "uploads"), {
-    setHeaders: (res) => {
-      res.setHeader("Cache-Control", "private, no-store");
-      res.setHeader("X-Content-Type-Options", "nosniff");
-    },
-  }),
-);
+// File serving is auth-gated AND authorization-gated: uploaded
+// BAST/Invoice/Report PDFs may contain confidential client data, so downloads
+// require project-level access to the Document record referencing the file —
+// a valid session alone is not enough (no cross-project enumeration by
+// filename). Files are always served as PDF attachments so a stored payload
+// can never render as HTML in the app's origin.
+app.get("/api/files/:filename", requireAuth, serveUploadedFile);
 app.use("/api", router);
 
 export default app;

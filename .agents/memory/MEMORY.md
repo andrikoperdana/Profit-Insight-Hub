@@ -40,4 +40,5 @@
 - [Rate history baseline backfill](rate-history-baseline-backfill.md) — denormalized current value + history fallback must backfill a baseline row on the FIRST period or old records reprice retroactively.
 - [BOD doc pipeline](bod-doc-pipeline.md) — regenerate board DOCX via bod-* scripts (shots in ≤6-batches, SVG→PNG, docx builder); deep links need sync auth init; COMPLETE gate = invoiced not paid.
 - [Public endpoint rate limiting](public-rate-limiting.md) — public routes must use the DB-backed rateLimitAllow (shared/restart-proof, memory fallback); write endpoints add a token-keyed cap since forwarded IPs are spoofable.
+- [Uploads file serving authz](uploads-file-serving.md) — /api/files needs Document-backed project authz + magic-byte PDF check + random .pdf names + attachment disposition; never express.static over uploads.
 - [requireAuth no-prefix cascade](requireauth-cascade.md) — per-request middleware DB lookups multiply by router mount position; keep the req.user guard; quantized latency = count middleware round trips.
