@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import { prisma } from "@workspace/db";
 import { logger } from "./logger.js";
+import { encryptToken, decryptToken } from "./tokenCrypto.js";
 
 // ---------------------------------------------------------------------------
 // Xero OAuth 2.0 + Accounting API integration (manual, no SDK).
@@ -223,16 +224,16 @@ export async function completeConnection(
     where: { id: CONNECTION_ID },
     create: {
       id: CONNECTION_ID,
-      accessToken: token.access_token,
-      refreshToken: token.refresh_token,
+      accessToken: encryptToken(token.access_token),
+      refreshToken: encryptToken(token.refresh_token),
       expiresAt,
       tenantId: tenant.tenantId,
       tenantName: tenant.tenantName,
       connectedById,
     },
     update: {
-      accessToken: token.access_token,
-      refreshToken: token.refresh_token,
+      accessToken: encryptToken(token.access_token),
+      refreshToken: encryptToken(token.refresh_token),
       expiresAt,
       tenantId: tenant.tenantId,
       tenantName: tenant.tenantName,
@@ -333,24 +334,24 @@ async function doRefresh(): Promise<{ accessToken: string; tenantId: string }> {
       const conn = await tx.xeroConnection.findUnique({ where: { id: CONNECTION_ID } });
       if (!conn || conn.disconnectedAt) throw new XeroNotConnectedError();
       if (conn.expiresAt.getTime() - Date.now() > EXPIRY_BUFFER_MS) {
-        return { accessToken: conn.accessToken, tenantId: conn.tenantId };
+        return { accessToken: decryptToken(conn.accessToken), tenantId: conn.tenantId };
       }
       const token = await requestToken(
         new URLSearchParams({
           grant_type: "refresh_token",
-          refresh_token: conn.refreshToken,
+          refresh_token: decryptToken(conn.refreshToken),
         }),
       );
       const expiresAt = new Date(Date.now() + token.expires_in * 1000);
       const updated = await tx.xeroConnection.update({
         where: { id: CONNECTION_ID },
         data: {
-          accessToken: token.access_token,
-          refreshToken: token.refresh_token,
+          accessToken: encryptToken(token.access_token),
+          refreshToken: encryptToken(token.refresh_token),
           expiresAt,
         },
       });
-      return { accessToken: updated.accessToken, tenantId: updated.tenantId };
+      return { accessToken: token.access_token, tenantId: updated.tenantId };
     },
     { timeout: 20_000 },
   );
@@ -365,7 +366,7 @@ export async function getValidAccessToken(): Promise<{ accessToken: string; tena
   const conn = await prisma.xeroConnection.findUnique({ where: { id: CONNECTION_ID } });
   if (!conn || conn.disconnectedAt) throw new XeroNotConnectedError();
   if (conn.expiresAt.getTime() - Date.now() > EXPIRY_BUFFER_MS) {
-    return { accessToken: conn.accessToken, tenantId: conn.tenantId };
+    return { accessToken: decryptToken(conn.accessToken), tenantId: conn.tenantId };
   }
   if (!refreshInFlight) {
     refreshInFlight = doRefresh().finally(() => {

@@ -215,3 +215,14 @@ but in-router blanket auth does not. **How to apply:** any unauthenticated route
 callbacks, webhooks) must be mounted in the router chain *before* the first sub-router that
 has a top-level `router.use(requireAuth/requireRole)` — or those routers must not use
 blanket auth (see the express-sub-router gotcha in replit.md).
+
+## Redirect URI is server-config-only; tokens encrypted at rest
+- `redirectUri()` must NEVER be derived from request headers (Host /
+  X-Forwarded-Host/Proto are attacker-controllable → OAuth redirect_uri
+  poisoning). Resolve from XERO_REDIRECT_URI → APP_BASE_URL →
+  REPLIT_DOMAINS → REPLIT_DEV_DOMAIN and refuse to proceed when none is set.
+- XeroConnection access/refresh tokens are AES-256-GCM encrypted at the app
+  layer (`tokenCrypto.ts`, `enc:v1:` prefix; key = HKDF of XERO_TOKEN_ENC_KEY
+  or SESSION_SECRET). Legacy plaintext rows decrypt as passthrough and get
+  re-encrypted on the next refresh. Any new code reading/writing these columns
+  must go through encryptToken/decryptToken.

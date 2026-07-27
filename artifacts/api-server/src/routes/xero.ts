@@ -1,4 +1,4 @@
-import { Router, type IRouter, type Request } from "express";
+import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
@@ -27,13 +27,25 @@ const router: IRouter = Router();
 const ADMIN_ROLES = ["MANAGEMENT", "FINANCE"] as const;
 
 /** Absolute redirect URI Xero calls back. Must match a URI registered in the
- *  Xero app config and be identical between connect + token exchange. */
-function redirectUri(req: Request): string {
-  const env = process.env["XERO_REDIRECT_URI"];
+ *  Xero app config and be identical between connect + token exchange.
+ *
+ *  SECURITY: derived exclusively from server-side configuration — never from
+ *  request headers (Host / X-Forwarded-Host / X-Forwarded-Proto), which are
+ *  attacker-controllable and would allow redirect_uri poisoning of the OAuth
+ *  flow. Returns null when no trusted origin is configured, and callers must
+ *  refuse to proceed. */
+function redirectUri(): string | null {
+  const env = process.env["XERO_REDIRECT_URI"]?.trim();
   if (env) return env;
-  const proto = (req.headers["x-forwarded-proto"] as string | undefined)?.split(",")[0] || req.protocol;
-  const host = (req.headers["x-forwarded-host"] as string | undefined)?.split(",")[0] || req.get("host");
-  return `${proto}://${host}/api/xero/callback`;
+  // Trusted server-side origins, in preference order: explicit app base URL,
+  // the published Replit domain, then the dev domain.
+  const base =
+    process.env["APP_BASE_URL"]?.trim() ||
+    process.env["REPLIT_DOMAINS"]?.split(",")[0]?.trim() ||
+    process.env["REPLIT_DEV_DOMAIN"]?.trim();
+  if (!base) return null;
+  const origin = base.startsWith("http://") || base.startsWith("https://") ? base : `https://${base}`;
+  return `${origin.replace(/\/+$/, "")}/api/xero/callback`;
 }
 
 function splitVat(
@@ -121,8 +133,16 @@ router.post("/xero/connect-url", requireAuth, requireRole(...ADMIN_ROLES), async
     res.status(409).json({ error: "Xero is not configured on the server" });
     return;
   }
+  const uri = redirectUri();
+  if (!uri) {
+    res.status(409).json({
+      error:
+        "No trusted redirect URI is configured for the Xero OAuth flow. Set XERO_REDIRECT_URI (or APP_BASE_URL) on the server.",
+    });
+    return;
+  }
   const state = signState({ userId: req.user!.sub });
-  const url = buildAuthorizeUrl(redirectUri(req), state);
+  const url = buildAuthorizeUrl(uri, state);
   res.json({ url });
 });
 
@@ -152,7 +172,13 @@ router.get("/xero/callback", async (req, res) => {
     } catch {
       userId = null;
     }
-    await completeConnection(code, redirectUri(req), userId);
+    const uri = redirectUri();
+    if (!uri) {
+      logger.error("Xero OAuth callback received but no trusted redirect URI is configured");
+      res.redirect(dest("xero=error"));
+      return;
+    }
+    await completeConnection(code, uri, userId);
     res.redirect(dest("xero=connected"));
   } catch (err) {
     logger.error({ err }, "Xero OAuth callback failed");
