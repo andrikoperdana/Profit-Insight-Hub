@@ -72,7 +72,7 @@ export default function TrackScreen() {
   const createTs = useCreateTimesheet();
 
   const projectOptions: SelectOption[] = (projectsQ.data ?? []).map((p) => ({
-    label: `${p.code} — ${p.name}`,
+    label: `${p.projectId ?? p.code ?? "No ID"} — ${p.name}`,
     value: p.id,
   }));
   const taskOptions: SelectOption[] = (tasksQ.data ?? [])

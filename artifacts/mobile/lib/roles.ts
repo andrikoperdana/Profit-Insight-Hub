@@ -65,6 +65,22 @@ export function expensesAutoApproved(role: UserRole | undefined | null): boolean
   return role === "MANAGEMENT" || role === "SUPER_ADMIN";
 }
 
+/**
+ * Roles that can edit the SPK / PO Number (Project.code) from the phone.
+ * Mirrors the server's `writeRoles` in lib/projectValidators.ts (PATCH
+ * /api/projects/:id). The auto-assigned Project ID is read-only everywhere.
+ */
+export function canEditProjectCode(role: UserRole | undefined | null): boolean {
+  return (
+    role === "MANAGEMENT" ||
+    role === "SUPER_ADMIN" ||
+    role === "PROJECT_MANAGER" ||
+    role === "SALES" ||
+    role === "PRINCIPAL_TECHNICAL_WRITER" ||
+    role === "PRINCIPAL_ADMIN_PROJECT"
+  );
+}
+
 /** Friendly label for a role, used in the header greeting. */
 export function roleLabel(role: UserRole | undefined | null): string {
   switch (role) {

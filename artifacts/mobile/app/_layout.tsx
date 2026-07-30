@@ -41,9 +41,12 @@ function RootLayoutNav() {
   useEffect(() => {
     if (isLoading) return;
     const inTabs = segments[0] === "(tabs)";
-    if (!token && inTabs) {
+    // Screens outside the tab bar (e.g. project detail) that a signed-in
+    // user may visit without being bounced back to the tabs root.
+    const inDetail = segments[0] === "project";
+    if (!token && (inTabs || inDetail)) {
       router.replace("/login");
-    } else if (token && !inTabs) {
+    } else if (token && !inTabs && !inDetail) {
       router.replace("/");
     }
   }, [token, isLoading, segments, router]);

@@ -614,7 +614,7 @@ function SubmitExpenseModal({
   });
   const projectOptions: SelectOption[] = (projectsQuery.data ?? []).map((p) => ({
     value: p.id,
-    label: `${p.code} — ${p.name}`,
+    label: `${p.projectId ?? p.code ?? "No ID"} — ${p.name}`,
   }));
 
   const reset = () => {
