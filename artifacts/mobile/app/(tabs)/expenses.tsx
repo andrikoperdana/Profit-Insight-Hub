@@ -14,6 +14,7 @@ import * as DocumentPicker from "expo-document-picker";
 import { File } from "expo-file-system";
 import * as Haptics from "expo-haptics";
 import * as ImagePicker from "expo-image-picker";
+import { useRouter } from "expo-router";
 import React, { useMemo, useState } from "react";
 import {
   ActivityIndicator,
@@ -136,6 +137,7 @@ function ExpenseStatusBadge({ status }: { status: ExpenseStatus }) {
 // generates the receipt PDF once a claim is closed.
 function ExpenseCard({
   projectLabel,
+  projectId,
   submitterName,
   category,
   spentAt,
@@ -151,6 +153,7 @@ function ExpenseCard({
   deciding,
 }: {
   projectLabel: string;
+  projectId?: string | null;
   submitterName?: string | null;
   category: string;
   spentAt: string;
@@ -166,15 +169,26 @@ function ExpenseCard({
   deciding?: boolean;
 }) {
   const colors = useColors();
+  const router = useRouter();
   return (
     <Card style={{ gap: 8 }}>
       <View style={styles.rowTop}>
-        <Text
-          style={[styles.project, { color: colors.foreground }]}
-          numberOfLines={1}
+        <Pressable
+          style={{ flex: 1 }}
+          onPress={
+            projectId ? () => router.push(`/project/${projectId}`) : undefined
+          }
+          disabled={!projectId}
+          hitSlop={8}
+          testID={`link-expense-project-${expenseId}`}
         >
-          {projectLabel}
-        </Text>
+          <Text
+            style={[styles.project, { color: colors.foreground }]}
+            numberOfLines={1}
+          >
+            {projectLabel}
+          </Text>
+        </Pressable>
         <ExpenseStatusBadge status={status} />
       </View>
       {submitterName ? (
@@ -346,6 +360,7 @@ export default function ExpensesScreen() {
           renderItem={({ item }) => (
             <ExpenseCard
               projectLabel={item.projectName ?? item.projectCode ?? "Project"}
+              projectId={item.projectId}
               submitterName={item.createdByName}
               category={item.category}
               spentAt={item.spentAt}
@@ -486,6 +501,7 @@ export default function ExpensesScreen() {
         renderItem={({ item }) => (
           <ExpenseCard
             projectLabel={item.projectName ?? item.projectCode ?? "Project"}
+            projectId={item.projectId}
             category={item.category}
             spentAt={item.spentAt}
             amount={item.amount}
@@ -982,7 +998,7 @@ const styles = StyleSheet.create({
   kpiValue: { fontSize: 18, fontFamily: "Inter_700Bold" },
   kpiLabel: { fontSize: 13, fontFamily: "Inter_400Regular" },
   rowTop: { flexDirection: "row", alignItems: "center", gap: 10 },
-  project: { flex: 1, fontSize: 16, fontFamily: "Inter_600SemiBold" },
+  project: { fontSize: 16, fontFamily: "Inter_600SemiBold" },
   rowMeta: {
     flexDirection: "row",
     justifyContent: "space-between",

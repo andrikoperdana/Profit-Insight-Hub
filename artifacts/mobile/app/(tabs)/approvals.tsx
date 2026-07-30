@@ -140,12 +140,18 @@ export default function ApprovalsScreen() {
                   >
                     {item.userName ?? "Team member"}
                   </Text>
-                  <Text
-                    style={[styles.project, { color: colors.mutedForeground }]}
-                    numberOfLines={1}
+                  <Pressable
+                    onPress={() => router.push(`/project/${item.projectId}`)}
+                    hitSlop={8}
+                    testID={`link-approval-project-${item.id}`}
                   >
-                    {item.projectName ?? "Project"}
-                  </Text>
+                    <Text
+                      style={[styles.project, { color: colors.mutedForeground }]}
+                      numberOfLines={1}
+                    >
+                      {item.projectName ?? "Project"}
+                    </Text>
+                  </Pressable>
                 </View>
                 <View style={{ alignItems: "flex-end" }}>
                   <Text style={[styles.hours, { color: colors.primary }]}>

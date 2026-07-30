@@ -1,6 +1,14 @@
 import { useListTimesheets } from "@workspace/api-client-react";
+import { useRouter } from "expo-router";
 import React from "react";
-import { FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  Pressable,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 import { Card, EmptyState, ScreenHeader, StatusBadge } from "@/components/ui";
 import { useColors } from "@/hooks/useColors";
@@ -8,6 +16,7 @@ import { formatHours, formatShortDate, isThisWeek } from "@/lib/format";
 
 export default function TimesheetsScreen() {
   const colors = useColors();
+  const router = useRouter();
   const q = useListTimesheets({ scope: "mine" });
   const rows = q.data ?? [];
 
@@ -54,12 +63,19 @@ export default function TimesheetsScreen() {
         renderItem={({ item }) => (
           <Card style={{ gap: 8 }}>
             <View style={styles.rowTop}>
-              <Text
-                style={[styles.project, { color: colors.foreground }]}
-                numberOfLines={1}
+              <Pressable
+                style={{ flex: 1 }}
+                onPress={() => router.push(`/project/${item.projectId}`)}
+                hitSlop={8}
+                testID={`link-timesheet-project-${item.id}`}
               >
-                {item.projectName ?? "Project"}
-              </Text>
+                <Text
+                  style={[styles.project, { color: colors.foreground }]}
+                  numberOfLines={1}
+                >
+                  {item.projectName ?? "Project"}
+                </Text>
+              </Pressable>
               <StatusBadge status={item.status} />
             </View>
             <View style={styles.rowMeta}>
@@ -102,7 +118,7 @@ const styles = StyleSheet.create({
   summaryValue: { fontSize: 26, fontFamily: "Inter_700Bold" },
   summaryLabel: { fontSize: 13, fontFamily: "Inter_400Regular" },
   rowTop: { flexDirection: "row", alignItems: "center", gap: 10 },
-  project: { flex: 1, fontSize: 16, fontFamily: "Inter_600SemiBold" },
+  project: { fontSize: 16, fontFamily: "Inter_600SemiBold" },
   rowMeta: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
   meta: { fontSize: 14, fontFamily: "Inter_400Regular" },
   hours: { fontSize: 16, fontFamily: "Inter_600SemiBold" },
