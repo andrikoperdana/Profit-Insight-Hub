@@ -25,7 +25,7 @@ const children = [
     ["Kategori", "Item"],
     [
       ["Perbaikan bug", "Scroll dropdown; halaman kosong saat Sales mengonversi lead Won"],
-      ["Fitur baru (digabung)", "Tombol Convert semua stage; convert ulang setelah proyek dihapus; Project ID otomatis (web & mobile); Project ID di laporan"],
+      ["Fitur baru (digabung)", "Tombol Convert semua stage; convert ulang setelah proyek dihapus; Project ID otomatis (web, mobile, laporan, pencarian); tab Projects mobile lebih rapi; navigasi cepat mobile; fitur Archive proyek"],
       ["Persiapan publish", "Migrasi & backfill database produksi, perbaikan build, verifikasi tes"],
       ["Dokumen", "Manual Fitur AI dwibahasa (EN+ID) dengan tangkapan layar"],
       ["Analisis / tanya-jawab", "Daftar laporan aplikasi; definisi Archive/Closed; timesheet per task; Billing Plan & sinkronisasi Xero"],
@@ -49,18 +49,22 @@ const children = [
   ]),
 
   h1("2. Fitur Baru yang Selesai Digabung"),
-  p("Lima tugas selesai dikerjakan dan digabung ke aplikasi utama hari ini:"),
+  p("Sembilan tugas selesai dikerjakan dan digabung ke aplikasi utama hari ini:"),
   bullets([
     "Tombol Convert di semua stage — lead bisa dikonversi menjadi proyek sejak stage New, supaya biaya bisa dicatat lebih awal; lead yang sudah dikonversi kini menampilkan kode proyeknya.",
     "Convert ulang setelah proyek dihapus — jika proyek hasil konversi dihapus, lead-nya terbuka kembali untuk dikonversi (status kembali ke Negotiation).",
     "Project ID otomatis — setiap proyek kini punya identitas permanen format PRJ/TAHUN/NNN (misal PRJ/2026/030) yang dibuat otomatis dan tidak bisa diedit; nomor SPK/PO menjadi kolom terpisah yang boleh diisi belakangan.",
     "Project ID di aplikasi mobile — tab Projects mendukung pencarian dengan Project ID; halaman detail menampilkan Project ID (baca-saja) dan SPK/PO (bisa diedit).",
     "Project ID di laporan & dokumen — invoice PDF, kalender, jawaban AI, dan laporan memakai Project ID sehingga tidak ada identitas kosong untuk proyek lama.",
+    "Pencarian dengan Project ID — kotak pencarian di Sales Pipeline (termasuk lead yang sudah dikonversi), pemilih proyek di Timesheet, dan tampilan ketersediaan resource kini mendukung Project ID.",
+    "Urutan & filter tab Projects di mobile — proyek aktif dan terbaru tampil paling atas, plus chip filter status.",
+    "Navigasi cepat di mobile — nama proyek pada baris timesheet, approval, dan expense bisa diketuk untuk langsung membuka detail proyeknya.",
+    "Fitur Archive proyek — lapisan baru di antara Closed dan Delete: Manajemen bisa mengarsipkan proyek sehingga keluar dari dashboard, laporan, dan perhitungan keuangan serta terkunci dari perubahan (bisa dibuka kembali); Delete kini hanya boleh untuk proyek yang sudah diarsipkan; ada tab Archived di daftar proyek.",
   ]),
 
   h1("3. Persiapan Publish"),
   bullets([
-    "Struktur database produksi diperbarui (kolom Project ID) dan seluruh proyek lama di produksi sudah diberi nomor PRJ/2026/NNN — tidak ada yang tampil kosong setelah publish.",
+    "Struktur database produksi diperbarui dua kali hari ini (kolom Project ID, lalu kolom Archive) dan seluruh proyek lama di produksi sudah diberi nomor PRJ/2026/NNN — tidak ada yang tampil kosong setelah publish.",
     "Satu error build ditemukan dan diperbaiki (script data demo belum menyesuaikan kolom SPK/PO yang kini boleh kosong).",
     "Verifikasi menyeluruh: pemeriksaan tipe lolos, build produksi web & server sukses, seluruh 156 tes otomatis lulus, server di-restart dan menampilkan Project ID dengan benar.",
     "Aplikasi siap dipublish; tombol Publish tinggal diklik agar semua perbaikan tersedia di psa4pmo.xyz.",
@@ -76,14 +80,14 @@ const children = [
   h2("5.1 Daftar laporan aplikasi"),
   p("Dipetakan seluruh laporan yang tersedia: 9 laporan utama di menu Reports (bisa diekspor CSV/Excel/PDF), 9 halaman analisis khusus (Executive Copilot, Revenue Recognition, Portfolio Monitor, Invoice Planning, Capacity, Bench, Rekap PPN, Survei, Skill Matrix), plus ekspor dari halaman Timesheet, Expenses, Leads, dan Audit Log."),
   h2("5.2 Definisi Archive / Delete / Closed (feedback poin 2)"),
-  p("Kesimpulan: Delete (soft delete, khusus Manajemen) dan status Closed (dengan syarat checklist, survei, feedback 360) sudah ada; lapisan \u201CArchive\u201D terpisah belum ada dan menjadi kandidat fitur baru. Catatan: proyek Closed saat ini masih ikut perhitungan laporan keuangan."),
+  p("Kesimpulan analisis: Delete (soft delete, khusus Manajemen) dan status Closed (dengan syarat checklist, survei, feedback 360) sudah ada; lapisan \u201CArchive\u201D terpisah belum ada. Tindak lanjutnya langsung dikerjakan dan selesai hari ini juga (lihat bagian 2) — kini alurnya menjadi Closed → Archive → Delete."),
   h2("5.3 Timesheet per task untuk Konsultan (feedback poin 4)"),
   p("Sudah tersedia dan justru wajib: Konsultan, Technical Writer, dan Admin Project harus memilih task saat mengisi jam kerja, di web maupun mobile, dengan validasi penugasan dan budget jam per task."),
   h2("5.4 Billing Plan & sinkronisasi Xero"),
   p("Dijelaskan cara kerja tab Billing: rencana termin pembayaran (DPP, PPN 11%, total, jatuh tempo, status Planned/Invoiced/Paid), tombol Send to Xero untuk membuat invoice per termin, dan Sync from Xero yang menarik status pembayaran — termin hanya ditandai Paid bila Xero menyatakan invoice lunas."),
 
   h1("6. Tugas Lanjutan yang Terdaftar"),
-  p("Beberapa usulan tugas berikutnya sudah masuk daftar tugas proyek, antara lain: menampilkan Project ID pada PDF klaim expense, memakai Project ID pada referensi invoice Xero, Project ID pada notifikasi dan label laporan, filter status cepat di mobile, pemulihan proyek yang terhapus, serta pencocokan otomatis lead impor dengan klien."),
+  p("Dua tugas sedang dikerjakan: arsip otomatis untuk proyek Closed yang sudah lama, dan pengecualian proyek terarsip dari daftar & perhitungan di aplikasi mobile. Usulan berikutnya yang sudah terdaftar antara lain: Project ID pada PDF klaim expense, referensi invoice Xero, notifikasi dan label laporan; filter status cepat untuk timesheet & expense mobile; pemulihan proyek yang terhapus; serta pencocokan otomatis lead impor dengan klien."),
 ];
 
 await writeDocx({
