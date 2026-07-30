@@ -89,7 +89,7 @@ async function buildWeeklyDigestFacts(): Promise<{ facts: Record<string, unknown
     const link = `/projects/${p.id}`;
     if ((p.status === "ACTIVE" || p.status === "PAUSE") && p.endDate && p.endDate.getTime() < nowMs) {
       delayed.push({
-        code: p.code,
+        code: p.code ?? "",
         name: p.name,
         daysOverdue: Math.floor((nowMs - p.endDate.getTime()) / DAY_MS),
         link,
@@ -111,7 +111,7 @@ async function buildWeeklyDigestFacts(): Promise<{ facts: Record<string, unknown
       topUserIds.add(top[0]);
     }
     const row: ProjRow = {
-      code: p.code,
+      code: p.code ?? "",
       name: p.name,
       link,
       marginPct: Math.round(metrics.marginPct * 10) / 10,

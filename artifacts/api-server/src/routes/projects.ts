@@ -18,6 +18,7 @@ import { issueSurveyTokenIfMissing } from "../lib/surveyDefaults.js";
 import { notifyUser, notifyUsers } from "../lib/notifications.js";
 import { createFeedback360PairsIfMissing, checkCloseRequirements } from "../lib/feedback360.js";
 import { userCanAccessProject } from "../lib/projectAccess.js";
+import { nextProjectId } from "../lib/projectIds.js";
 import {
   writeRoles,
   validatePdfDataUrl,
@@ -189,8 +190,8 @@ router.post("/projects", requireRole(...writeRoles), validateBody(CreateProjectB
   const b = req.body || {};
   // Zod guarantees these are present strings; reject empty/whitespace-only values
   // before they reach Prisma (clientId is an FK).
-  if (!String(b.code).trim() || !String(b.name).trim() || !String(b.clientId).trim()) {
-    res.status(400).json({ error: "code, name, clientId required" });
+  if (!String(b.name).trim() || !String(b.clientId).trim()) {
+    res.status(400).json({ error: "name, clientId required" });
     return;
   }
   const cv = Number(b.contractValue || 0);
@@ -268,37 +269,57 @@ router.post("/projects", requireRole(...writeRoles), validateBody(CreateProjectB
   const finalIncludesVat = isNonCommercial ? false : contractValueIncludesVat;
   const finalSpkFileUrl = isNonCommercial ? null : spkFileUrl;
   const finalContractFileUrl = isNonCommercial ? null : contractFileUrl;
-  const created = await prisma.project.create({
-    data: {
-      code: String(b.code),
-      name: String(b.name),
-      description: b.description || null,
-      clientId: String(b.clientId),
-      salesId,
-      pmId,
-      status,
-      kind,
-      startDate,
-      endDate,
-      contractValue: Number(b.contractValue || 0),
-      currency: (b.currency ? String(b.currency).toUpperCase() : "IDR").slice(0, 8),
-      exchangeRate: Number(b.exchangeRate ?? 1) > 0 ? Number(b.exchangeRate ?? 1) : 1,
-      vatPercent: finalVatPercent,
-      contractValueIncludesVat: finalIncludesVat,
-      estimatedCost: Number(b.estimatedCost || 0),
-      plannedMandays: Number(b.plannedMandays || 0),
-      useWorkstreams: b.useWorkstreams === true,
-      spkFileUrl: finalSpkFileUrl,
-      spkFileName: finalSpkFileUrl ? sanitizeFileName(b.spkFileName) ?? null : null,
-      contractFileUrl: finalContractFileUrl,
-      contractFileName: finalContractFileUrl ? sanitizeFileName(b.contractFileName) ?? null : null,
-    },
-    include: projectInclude,
-  });
+  const spkCode = b.code ? String(b.code).trim() || null : null;
+
+  // Auto-generate a read-only Project ID (PRJ/YYYY/NNN), retrying on unique-constraint
+  // collisions the same way invoice numbers are allocated.
+  let created: Awaited<ReturnType<typeof prisma.project.create>> | null = null;
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const projectIdVal = await nextProjectId(new Date());
+    try {
+      created = await prisma.project.create({
+        data: {
+          projectId: projectIdVal,
+          code: spkCode,
+          name: String(b.name),
+          description: b.description || null,
+          clientId: String(b.clientId),
+          salesId,
+          pmId,
+          status,
+          kind,
+          startDate,
+          endDate,
+          contractValue: Number(b.contractValue || 0),
+          currency: (b.currency ? String(b.currency).toUpperCase() : "IDR").slice(0, 8),
+          exchangeRate: Number(b.exchangeRate ?? 1) > 0 ? Number(b.exchangeRate ?? 1) : 1,
+          vatPercent: finalVatPercent,
+          contractValueIncludesVat: finalIncludesVat,
+          estimatedCost: Number(b.estimatedCost || 0),
+          plannedMandays: Number(b.plannedMandays || 0),
+          useWorkstreams: b.useWorkstreams === true,
+          spkFileUrl: finalSpkFileUrl,
+          spkFileName: finalSpkFileUrl ? sanitizeFileName(b.spkFileName) ?? null : null,
+          contractFileUrl: finalContractFileUrl,
+          contractFileName: finalContractFileUrl ? sanitizeFileName(b.contractFileName) ?? null : null,
+        },
+        include: projectInclude,
+      });
+      break;
+    } catch (e: unknown) {
+      const pe = e as { code?: string };
+      if (pe?.code === "P2002" && attempt < 4) continue; // unique collision → retry
+      throw e;
+    }
+  }
+  if (!created) {
+    res.status(500).json({ error: "Failed to allocate a Project ID after multiple attempts" });
+    return;
+  }
   await prisma.activity.create({
     data: {
       type: "project.created",
-      message: `Project ${created.code} created`,
+      message: `Project ${created.projectId ?? created.code ?? created.id} created`,
       userId: req.user!.sub,
       projectId: created.id,
     },
@@ -307,10 +328,11 @@ router.post("/projects", requireRole(...writeRoles), validateBody(CreateProjectB
     action: "project.created",
     entityType: "Project",
     entityId: created.id,
-    description: `Created project ${created.code} — ${created.name}`,
-    after: serializeProject(created),
+    description: `Created project ${created.projectId ?? created.code ?? created.id} — ${created.name}`,
+    after: serializeProject(created as any),
   });
-  res.status(201).json(serializeProject(created, req.user?.role));
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  res.status(201).json(serializeProject(created as any, req.user?.role));
 });
 
 router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdateProjectBody), async (req, res) => {
@@ -648,7 +670,7 @@ router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdatePro
   }
 
   const data: Record<string, unknown> = {};
-  if (b.code !== undefined) data.code = String(b.code);
+  if (b.code !== undefined) data.code = b.code ? String(b.code) : null;
   if (b.name !== undefined) data.name = String(b.name);
   if (b.description !== undefined) data.description = b.description || null;
   if (b.clientId !== undefined) data.clientId = String(b.clientId);

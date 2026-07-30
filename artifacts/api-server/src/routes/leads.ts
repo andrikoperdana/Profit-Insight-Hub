@@ -6,6 +6,7 @@ import { validateBody } from "../middlewares/validate.js";
 import { CreateLeadBody, UpdateLeadBody, ReassignLeadsBody } from "@workspace/api-zod";
 import { notifyOnceDailyForLead } from "../lib/leadNotifications.js";
 import { validatePdfDataUrl, sanitizeFileName } from "../lib/projectValidators.js";
+import { nextProjectId } from "../lib/projectIds.js";
 
 // Local input shapes for serialize helpers. They mirror the Prisma `include`
 // shape used at each call site rather than reaching for full Prisma payload
@@ -162,9 +163,12 @@ router.get("/leads", async (req: AuthedRequest, res: Response) => {
   if (convertedIds.length > 0) {
     const projects = await prisma.project.findMany({
       where: { id: { in: convertedIds } },
-      select: { id: true, code: true },
+      select: { id: true, projectId: true, code: true },
     });
-    for (const p of projects) codeById.set(p.id, p.code);
+    for (const p of projects) {
+      const display = p.projectId ?? p.code;
+      if (display) codeById.set(p.id, display);
+    }
   }
   const now = new Date();
   res.json(
@@ -611,7 +615,7 @@ router.post("/leads/:id/convert", requireRole("SALES"), async (req: AuthedReques
     return;
   }
 
-  const code = (body.code || `LEAD-${lead.id.slice(-6).toUpperCase()}`).toString().trim();
+  const code = body.code ? String(body.code).trim() || null : null;
   if (!lead.clientId && !body.clientId) {
     const name = (body.clientName || lead.prospectiveClientName || "").toString().trim();
     if (!name) {
@@ -667,92 +671,107 @@ router.post("/leads/:id/convert", requireRole("SALES"), async (req: AuthedReques
     return;
   }
 
+  // Generate Project ID and retry on unique-constraint collision (same pattern as invoice numbering).
+  let convResult: { projectId: string; projectCode: string | null } | undefined;
   try {
-    const result = await prisma.$transaction(async (tx) => {
-      const fresh = await tx.lead.findUnique({ where: { id: lead.id } });
-      if (!fresh || fresh.deletedAt) throw new Error("LEAD_NOT_FOUND");
-      if (fresh.convertedProjectId) throw new Error("ALREADY_CONVERTED");
+    for (let attempt = 0; attempt < 5; attempt++) {
+      const generatedProjectId = await nextProjectId(new Date());
+      try {
+        convResult = await prisma.$transaction(async (tx) => {
+          const fresh = await tx.lead.findUnique({ where: { id: lead.id } });
+          if (!fresh || fresh.deletedAt) throw new Error("LEAD_NOT_FOUND");
+          if (fresh.convertedProjectId) throw new Error("ALREADY_CONVERTED");
 
-      let clientId = fresh.clientId;
-      if (!clientId && body.clientId) {
-        const existing = await tx.client.findUnique({ where: { id: String(body.clientId) } });
-        if (!existing) throw new Error("CLIENT_NOT_FOUND");
-        clientId = existing.id;
+          let clientId = fresh.clientId;
+          if (!clientId && body.clientId) {
+            const existing = await tx.client.findUnique({ where: { id: String(body.clientId) } });
+            if (!existing) throw new Error("CLIENT_NOT_FOUND");
+            clientId = existing.id;
+          }
+          if (!clientId) {
+            const name = (body.clientName || fresh.prospectiveClientName || "").toString().trim();
+            const created = await tx.client.create({ data: { name, industry: fresh.industry || null } });
+            clientId = created.id;
+          }
+
+          // Only check code uniqueness when a SPK/PO code was provided.
+          if (code) {
+            const existingCode = await tx.project.findUnique({ where: { code } });
+            if (existingCode) throw new Error("CODE_EXISTS");
+          }
+
+          const contractValueOverride =
+            body.contractValue !== undefined && body.contractValue !== null && body.contractValue !== ""
+              ? Number(body.contractValue)
+              : null;
+          const vatPercent =
+            body.vatPercent !== undefined && body.vatPercent !== null && body.vatPercent !== ""
+              ? Number(body.vatPercent)
+              : undefined;
+          const contractValueIncludesVat =
+            typeof body.contractValueIncludesVat === "boolean" ? body.contractValueIncludesVat : undefined;
+          const descriptionOverride =
+            typeof body.description === "string" && body.description.trim().length > 0
+              ? body.description
+              : fresh.notes || null;
+          const estimatedCostOverride =
+            body.estimatedCost !== undefined && body.estimatedCost !== null && body.estimatedCost !== ""
+              ? Number(body.estimatedCost)
+              : null;
+          const plannedMandaysOverride =
+            body.plannedMandays !== undefined && body.plannedMandays !== null && body.plannedMandays !== ""
+              ? Number(body.plannedMandays)
+              : null;
+
+          const project = await tx.project.create({
+            data: {
+              projectId: generatedProjectId,
+              code: code || null,
+              name: fresh.title,
+              status: "DRAFT",
+              clientId,
+              salesId: fresh.ownerId,
+              contractValue:
+                contractValueOverride !== null && !Number.isNaN(contractValueOverride)
+                  ? contractValueOverride
+                  : fresh.estimatedValue,
+              description: descriptionOverride,
+              ...(estimatedCostOverride !== null && !Number.isNaN(estimatedCostOverride)
+                ? { estimatedCost: estimatedCostOverride }
+                : {}),
+              ...(plannedMandaysOverride !== null && !Number.isNaN(plannedMandaysOverride)
+                ? { plannedMandays: plannedMandaysOverride }
+                : {}),
+              ...(vatPercent !== undefined && !Number.isNaN(vatPercent) ? { vatPercent } : {}),
+              ...(contractValueIncludesVat !== undefined ? { contractValueIncludesVat } : {}),
+              ...(validatedSpkUrl !== undefined ? { spkFileUrl: validatedSpkUrl } : {}),
+              ...(validatedSpkUrl
+                ? { spkFileName: sanitizeFileName(body.spkFileName) ?? null }
+                : validatedSpkUrl === null
+                  ? { spkFileName: null }
+                  : {}),
+              ...(validatedContractUrl !== undefined ? { contractFileUrl: validatedContractUrl } : {}),
+              ...(validatedContractUrl
+                ? { contractFileName: sanitizeFileName(body.contractFileName) ?? null }
+                : validatedContractUrl === null
+                  ? { contractFileName: null }
+                  : {}),
+            },
+          });
+
+          await tx.lead.update({
+            where: { id: fresh.id },
+            data: { stage: "WON", wonAt: new Date(), convertedProjectId: project.id },
+          });
+          return { projectId: project.id, projectCode: project.projectId ?? project.code };
+        });
+        break; // success
+      } catch (e: unknown) {
+        const pe = e as { code?: string };
+        if (pe?.code === "P2002" && attempt < 4) continue; // projectId collision → retry
+        throw e; // domain errors + exhausted retries
       }
-      if (!clientId) {
-        const name = (body.clientName || fresh.prospectiveClientName || "").toString().trim();
-        const created = await tx.client.create({ data: { name, industry: fresh.industry || null } });
-        clientId = created.id;
-      }
-
-      const existingCode = await tx.project.findUnique({ where: { code } });
-      if (existingCode) throw new Error("CODE_EXISTS");
-
-      const contractValueOverride =
-        body.contractValue !== undefined && body.contractValue !== null && body.contractValue !== ""
-          ? Number(body.contractValue)
-          : null;
-      const vatPercent =
-        body.vatPercent !== undefined && body.vatPercent !== null && body.vatPercent !== ""
-          ? Number(body.vatPercent)
-          : undefined;
-      const contractValueIncludesVat =
-        typeof body.contractValueIncludesVat === "boolean" ? body.contractValueIncludesVat : undefined;
-      const descriptionOverride =
-        typeof body.description === "string" && body.description.trim().length > 0
-          ? body.description
-          : fresh.notes || null;
-      const estimatedCostOverride =
-        body.estimatedCost !== undefined && body.estimatedCost !== null && body.estimatedCost !== ""
-          ? Number(body.estimatedCost)
-          : null;
-      const plannedMandaysOverride =
-        body.plannedMandays !== undefined && body.plannedMandays !== null && body.plannedMandays !== ""
-          ? Number(body.plannedMandays)
-          : null;
-
-      const project = await tx.project.create({
-        data: {
-          code,
-          name: fresh.title,
-          status: "DRAFT",
-          clientId,
-          salesId: fresh.ownerId,
-          contractValue:
-            contractValueOverride !== null && !Number.isNaN(contractValueOverride)
-              ? contractValueOverride
-              : fresh.estimatedValue,
-          description: descriptionOverride,
-          ...(estimatedCostOverride !== null && !Number.isNaN(estimatedCostOverride)
-            ? { estimatedCost: estimatedCostOverride }
-            : {}),
-          ...(plannedMandaysOverride !== null && !Number.isNaN(plannedMandaysOverride)
-            ? { plannedMandays: plannedMandaysOverride }
-            : {}),
-          ...(vatPercent !== undefined && !Number.isNaN(vatPercent) ? { vatPercent } : {}),
-          ...(contractValueIncludesVat !== undefined ? { contractValueIncludesVat } : {}),
-          ...(validatedSpkUrl !== undefined ? { spkFileUrl: validatedSpkUrl } : {}),
-          ...(validatedSpkUrl
-            ? { spkFileName: sanitizeFileName(body.spkFileName) ?? null }
-            : validatedSpkUrl === null
-              ? { spkFileName: null }
-              : {}),
-          ...(validatedContractUrl !== undefined ? { contractFileUrl: validatedContractUrl } : {}),
-          ...(validatedContractUrl
-            ? { contractFileName: sanitizeFileName(body.contractFileName) ?? null }
-            : validatedContractUrl === null
-              ? { contractFileName: null }
-              : {}),
-        },
-      });
-
-      await tx.lead.update({
-        where: { id: fresh.id },
-        data: { stage: "WON", wonAt: new Date(), convertedProjectId: project.id },
-      });
-      return { projectId: project.id, projectCode: project.code };
-    });
-    res.status(201).json(result);
+    }
   } catch (e: unknown) {
     const msg = errorMessage(e);
     if (msg === "ALREADY_CONVERTED") {
@@ -773,6 +792,7 @@ router.post("/leads/:id/convert", requireRole("SALES"), async (req: AuthedReques
     }
     throw e;
   }
+  res.status(201).json(convResult);
 });
 
 // ─── Activities ──────────────────────────────────────────────────────────────

@@ -217,7 +217,8 @@ model Client {
 
 model Project {
   id             String        @id @default(cuid())
-  code           String        @unique
+  projectId      String?       @unique
+  code           String?       @unique
   name           String
   description    String?
   status         ProjectStatus @default(OBSERVATION)

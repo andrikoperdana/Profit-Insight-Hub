@@ -277,7 +277,7 @@ router.post("/survey/seed-demo", requireAuth, requireRole("MANAGEMENT"), async (
     if (project.status !== "CLOSED" || !surveyToken) {
       surveyToken = surveyToken ?? randomBytes(24).toString("base64url");
       await prisma.project.update({ where: { id: project.id }, data: { status: "CLOSED", surveyToken } });
-      projectsClosed.push(project.code);
+      projectsClosed.push(project.code ?? project.id);
     }
     const count = i < 3 ? 2 : 1;
     for (let k = 0; k < count; k += 1) {
@@ -740,7 +740,7 @@ router.get("/survey/by-project", requireAuth, requireRole("MANAGEMENT", "SALES")
   type PerQAgg = { key: string; text: string; order: number; sum: number; count: number };
   type ProjectAgg = {
     projectId: string;
-    projectCode: string;
+    projectCode: string | null;
     projectName: string;
     projectStatus: string;
     clientName: string;
@@ -767,7 +767,7 @@ router.get("/survey/by-project", requireAuth, requireRole("MANAGEMENT", "SALES")
     if (!p) {
       p = {
         projectId: r.project.id,
-        projectCode: r.project.code,
+        projectCode: r.project.code ?? null,
         projectName: r.project.name,
         projectStatus: r.project.status,
         clientName: r.project.client.name,

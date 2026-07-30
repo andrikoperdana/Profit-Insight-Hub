@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
+import { nextProjectId } from "../lib/projectIds.js";
 
 const router: IRouter = Router();
 
@@ -320,79 +321,99 @@ router.post(
       return;
     }
     const b = req.body || {};
-    if (!b.code || !b.name || !b.clientId) {
-      res.status(400).json({ error: "code, name, clientId required" });
+    if (!b.name || !b.clientId) {
+      res.status(400).json({ error: "name, clientId required" });
       return;
     }
-    // unique code check
-    const dup = await prisma.project.findUnique({ where: { code: String(b.code) } });
-    if (dup) {
-      res.status(409).json({ error: "Project code already exists" });
-      return;
+    const spkCode = b.code ? String(b.code).trim() || null : null;
+    // unique code check (only when a SPK/PO code was provided)
+    if (spkCode) {
+      const dup = await prisma.project.findUnique({ where: { code: spkCode } });
+      if (dup) {
+        res.status(409).json({ error: "Project code already exists" });
+        return;
+      }
     }
     const role = req.user!.role;
     const startDate = b.startDate ? new Date(b.startDate) : new Date();
     const endDate = new Date(startDate);
     endDate.setDate(endDate.getDate() + template.defaultDurationDays);
 
-    const created = await prisma.$transaction(async (tx) => {
-      const project = await tx.project.create({
-        data: {
-          code: String(b.code).trim(),
-          name: String(b.name).trim(),
-          description: b.description || template.description || null,
-          status: "DRAFT",
-          kind: template.kind,
-          clientId: String(b.clientId),
-          salesId: role === "SALES" ? req.user!.sub : (b.salesId || null),
-          pmId: null,
-          startDate,
-          endDate,
-          contractValue: Number(b.contractValue ?? template.estimatedContractValue),
-          currency: (b.currency ? String(b.currency).toUpperCase() : "IDR").slice(0, 8),
-          exchangeRate: Number(b.exchangeRate ?? 1) > 0 ? Number(b.exchangeRate ?? 1) : 1,
-          vatPercent: template.vatPercent,
-          contractValueIncludesVat: template.contractValueIncludesVat,
-          estimatedCost: template.estimatedCost,
-          plannedMandays: template.plannedMandays,
-        },
-      });
-      // billing milestones
-      for (let i = 0; i < template.milestones.length; i++) {
-        const m = template.milestones[i]!;
-        const due = new Date(startDate);
-        due.setDate(due.getDate() + m.offsetDays);
-        const amount = (project.contractValue * m.percentage) / 100;
-        await tx.billingMilestone.create({
-          data: {
-            projectId: project.id,
-            name: m.name,
-            percentage: m.percentage,
-            amount,
-            dueDate: due,
-            status: "PLANNED",
-            sortOrder: (m.order ?? i) * 10,
-          },
+    // Allocate Project ID with collision retry (same pattern as /projects create).
+    let created: Awaited<ReturnType<typeof prisma.project.create>> | null = null;
+    for (let attempt = 0; attempt < 5; attempt++) {
+      const generatedProjectId = await nextProjectId(new Date());
+      try {
+        created = await prisma.$transaction(async (tx) => {
+          const project = await tx.project.create({
+            data: {
+              projectId: generatedProjectId,
+              code: spkCode,
+              name: String(b.name).trim(),
+              description: b.description || template.description || null,
+              status: "DRAFT",
+              kind: template.kind,
+              clientId: String(b.clientId),
+              salesId: role === "SALES" ? req.user!.sub : (b.salesId || null),
+              pmId: null,
+              startDate,
+              endDate,
+              contractValue: Number(b.contractValue ?? template.estimatedContractValue),
+              currency: (b.currency ? String(b.currency).toUpperCase() : "IDR").slice(0, 8),
+              exchangeRate: Number(b.exchangeRate ?? 1) > 0 ? Number(b.exchangeRate ?? 1) : 1,
+              vatPercent: template.vatPercent,
+              contractValueIncludesVat: template.contractValueIncludesVat,
+              estimatedCost: template.estimatedCost,
+              plannedMandays: template.plannedMandays,
+            },
+          });
+          // billing milestones
+          for (let i = 0; i < template.milestones.length; i++) {
+            const m = template.milestones[i]!;
+            const due = new Date(startDate);
+            due.setDate(due.getDate() + m.offsetDays);
+            const amount = (project.contractValue * m.percentage) / 100;
+            await tx.billingMilestone.create({
+              data: {
+                projectId: project.id,
+                name: m.name,
+                percentage: m.percentage,
+                amount,
+                dueDate: due,
+                status: "PLANNED",
+                sortOrder: (m.order ?? i) * 10,
+              },
+            });
+          }
+          // RAID items
+          for (const r of template.raidItems) {
+            await tx.projectRaidItem.create({
+              data: {
+                projectId: project.id,
+                type: r.type,
+                title: r.title,
+                description: r.description,
+                impact: r.impact,
+                likelihood: r.likelihood,
+                mitigation: r.mitigation,
+                status: "OPEN",
+                createdById: req.user!.sub,
+              },
+            });
+          }
+          return project;
         });
+        break; // success
+      } catch (e: unknown) {
+        const pe = e as { code?: string };
+        if (pe?.code === "P2002" && attempt < 4) continue; // projectId collision → retry
+        throw e;
       }
-      // RAID items
-      for (const r of template.raidItems) {
-        await tx.projectRaidItem.create({
-          data: {
-            projectId: project.id,
-            type: r.type,
-            title: r.title,
-            description: r.description,
-            impact: r.impact,
-            likelihood: r.likelihood,
-            mitigation: r.mitigation,
-            status: "OPEN",
-            createdById: req.user!.sub,
-          },
-        });
-      }
-      return project;
-    });
+    }
+    if (!created) {
+      res.status(500).json({ error: "Failed to allocate a Project ID" });
+      return;
+    }
 
     await recordAudit(req, {
       action: "project_template.applied",

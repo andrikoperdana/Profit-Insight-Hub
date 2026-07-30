@@ -69,6 +69,6 @@ export async function fetchOpenMilestones(
       percentage: ms.percentage,
       contractValue: ms.project.contractValue,
     }),
-    project: { id: ms.project.id, code: ms.project.code, name: ms.project.name },
+    project: { id: ms.project.id, code: ms.project.code ?? "", name: ms.project.name },
   }));
 }

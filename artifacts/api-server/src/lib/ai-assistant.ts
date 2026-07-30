@@ -216,7 +216,7 @@ async function toolGetProjectDetail(user: AssistantUser, args: { query?: string 
   if (candidates.length === 0) {
     return { error: `No project matching "${q}" is visible to this user.` };
   }
-  const exact = candidates.find((c) => c.code.toLowerCase() === q.toLowerCase());
+  const exact = candidates.find((c) => c.code?.toLowerCase() === q.toLowerCase());
   if (!exact && candidates.length > 1) {
     return {
       note: "Multiple projects matched — ask the user which one they mean.",

@@ -1099,7 +1099,10 @@ export type ProjectProfitOutlook = {
 
 export interface Project {
   id: string;
-  code: string;
+  /** Auto-assigned read-only Project ID (PRJ/YYYY/NNN) */
+  projectId?: string | null;
+  /** SPK / PO Number — optional, user-supplied */
+  code?: string | null;
   name: string;
   description?: string | null;
   status: ProjectStatus;
@@ -1560,7 +1563,8 @@ export type ProjectDetail = Project & {
 };
 
 export interface CreateProjectBody {
-  code: string;
+  /** SPK / PO Number (optional — auto-assigned Project ID is separate) */
+  code?: string | null;
   name: string;
   description?: string;
   clientId: string;
@@ -1589,7 +1593,8 @@ export interface CreateProjectBody {
 }
 
 export interface UpdateProjectBody {
-  code?: string;
+  /** SPK / PO Number — pass null to clear */
+  code?: string | null;
   name?: string;
   description?: string;
   clientId?: string;

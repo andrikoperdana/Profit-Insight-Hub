@@ -86,7 +86,7 @@ const salesResourceRowSchema = z.object({
 });
 
 const salesIntakeSchema = z.object({
-  code: z.string().min(2, "SPK/PO Number is required"),
+  code: z.string().optional(),
   name: z.string().min(3, "Project name is required"),
   clientId: z.string().min(1, "Select a client"),
   contractValue: z.coerce.number().min(0, "Project value cannot be negative"),
@@ -146,7 +146,7 @@ function SalesIntakeForm() {
   const form = useForm<SalesIntake>({
     resolver: zodResolver(salesIntakeSchema),
     defaultValues: {
-      code: "",
+      code: undefined,
       name: "",
       clientId: "",
       contractValue: 0,
@@ -314,7 +314,7 @@ function SalesIntakeForm() {
                 name="code"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>SPK / PO Number *</FormLabel>
+                    <FormLabel>SPK / PO Number <span className="text-muted-foreground font-normal">(optional)</span></FormLabel>
                     <FormControl><Input placeholder="e.g. SPK-2026-005" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
@@ -602,7 +602,7 @@ const workstreamRowSchema = z.object({
 });
 
 const createProjectSchema = z.object({
-  code: z.string().min(2, "SPK/PO Number is required"),
+  code: z.string().optional(),
   name: z.string().min(3, "Project name required"),
   description: z.string().optional(),
   clientId: z.string().min(1, "Client is required"),

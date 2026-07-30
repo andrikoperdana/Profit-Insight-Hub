@@ -10816,6 +10816,7 @@ export namespace Prisma {
 
   export type ProjectMinAggregateOutputType = {
     id: string | null
+    projectId: string | null
     code: string | null
     name: string | null
     description: string | null
@@ -10857,6 +10858,7 @@ export namespace Prisma {
 
   export type ProjectMaxAggregateOutputType = {
     id: string | null
+    projectId: string | null
     code: string | null
     name: string | null
     description: string | null
@@ -10898,6 +10900,7 @@ export namespace Prisma {
 
   export type ProjectCountAggregateOutputType = {
     id: number
+    projectId: number
     code: number
     name: number
     description: number
@@ -10957,6 +10960,7 @@ export namespace Prisma {
 
   export type ProjectMinAggregateInputType = {
     id?: true
+    projectId?: true
     code?: true
     name?: true
     description?: true
@@ -10998,6 +11002,7 @@ export namespace Prisma {
 
   export type ProjectMaxAggregateInputType = {
     id?: true
+    projectId?: true
     code?: true
     name?: true
     description?: true
@@ -11039,6 +11044,7 @@ export namespace Prisma {
 
   export type ProjectCountAggregateInputType = {
     id?: true
+    projectId?: true
     code?: true
     name?: true
     description?: true
@@ -11167,7 +11173,8 @@ export namespace Prisma {
 
   export type ProjectGroupByOutputType = {
     id: string
-    code: string
+    projectId: string | null
+    code: string | null
     name: string
     description: string | null
     status: $Enums.ProjectStatus
@@ -11227,6 +11234,7 @@ export namespace Prisma {
 
   export type ProjectSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    projectId?: boolean
     code?: boolean
     name?: boolean
     description?: boolean
@@ -11290,6 +11298,7 @@ export namespace Prisma {
 
   export type ProjectSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    projectId?: boolean
     code?: boolean
     name?: boolean
     description?: boolean
@@ -11336,6 +11345,7 @@ export namespace Prisma {
 
   export type ProjectSelectScalar = {
     id?: boolean
+    projectId?: boolean
     code?: boolean
     name?: boolean
     description?: boolean
@@ -11434,7 +11444,8 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      code: string
+      projectId: string | null
+      code: string | null
       name: string
       description: string | null
       status: $Enums.ProjectStatus
@@ -11886,6 +11897,7 @@ export namespace Prisma {
    */ 
   interface ProjectFieldRefs {
     readonly id: FieldRef<"Project", 'String'>
+    readonly projectId: FieldRef<"Project", 'String'>
     readonly code: FieldRef<"Project", 'String'>
     readonly name: FieldRef<"Project", 'String'>
     readonly description: FieldRef<"Project", 'String'>
@@ -59057,6 +59069,7 @@ export namespace Prisma {
 
   export const ProjectScalarFieldEnum: {
     id: 'id',
+    projectId: 'projectId',
     code: 'code',
     name: 'name',
     description: 'description',
@@ -60773,7 +60786,8 @@ export namespace Prisma {
     OR?: ProjectWhereInput[]
     NOT?: ProjectWhereInput | ProjectWhereInput[]
     id?: StringFilter<"Project"> | string
-    code?: StringFilter<"Project"> | string
+    projectId?: StringNullableFilter<"Project"> | string | null
+    code?: StringNullableFilter<"Project"> | string | null
     name?: StringFilter<"Project"> | string
     description?: StringNullableFilter<"Project"> | string | null
     status?: EnumProjectStatusFilter<"Project"> | $Enums.ProjectStatus
@@ -60835,7 +60849,8 @@ export namespace Prisma {
 
   export type ProjectOrderByWithRelationInput = {
     id?: SortOrder
-    code?: SortOrder
+    projectId?: SortOrderInput | SortOrder
+    code?: SortOrderInput | SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     status?: SortOrder
@@ -60897,6 +60912,7 @@ export namespace Prisma {
 
   export type ProjectWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    projectId?: string
     code?: string
     surveyToken?: string
     clientShareToken?: string
@@ -60958,11 +60974,12 @@ export namespace Prisma {
     reports?: ProjectReportListRelationFilter
     baselines?: ProjectBaselineListRelationFilter
     changeRequests?: ChangeRequestListRelationFilter
-  }, "id" | "code" | "surveyToken" | "clientShareToken">
+  }, "id" | "projectId" | "code" | "surveyToken" | "clientShareToken">
 
   export type ProjectOrderByWithAggregationInput = {
     id?: SortOrder
-    code?: SortOrder
+    projectId?: SortOrderInput | SortOrder
+    code?: SortOrderInput | SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     status?: SortOrder
@@ -61011,7 +61028,8 @@ export namespace Prisma {
     OR?: ProjectScalarWhereWithAggregatesInput[]
     NOT?: ProjectScalarWhereWithAggregatesInput | ProjectScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Project"> | string
-    code?: StringWithAggregatesFilter<"Project"> | string
+    projectId?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    code?: StringNullableWithAggregatesFilter<"Project"> | string | null
     name?: StringWithAggregatesFilter<"Project"> | string
     description?: StringNullableWithAggregatesFilter<"Project"> | string | null
     status?: EnumProjectStatusWithAggregatesFilter<"Project"> | $Enums.ProjectStatus
@@ -65579,7 +65597,8 @@ export namespace Prisma {
 
   export type ProjectCreateInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -65636,7 +65655,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedCreateInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -65693,7 +65713,8 @@ export namespace Prisma {
 
   export type ProjectUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -65750,7 +65771,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -65807,7 +65829,8 @@ export namespace Prisma {
 
   export type ProjectCreateManyInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -65848,7 +65871,8 @@ export namespace Prisma {
 
   export type ProjectUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -65884,7 +65908,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -71081,6 +71106,7 @@ export namespace Prisma {
 
   export type ProjectCountOrderByAggregateInput = {
     id?: SortOrder
+    projectId?: SortOrder
     code?: SortOrder
     name?: SortOrder
     description?: SortOrder
@@ -71130,6 +71156,7 @@ export namespace Prisma {
 
   export type ProjectMaxOrderByAggregateInput = {
     id?: SortOrder
+    projectId?: SortOrder
     code?: SortOrder
     name?: SortOrder
     description?: SortOrder
@@ -71171,6 +71198,7 @@ export namespace Prisma {
 
   export type ProjectMinOrderByAggregateInput = {
     id?: SortOrder
+    projectId?: SortOrder
     code?: SortOrder
     name?: SortOrder
     description?: SortOrder
@@ -80906,7 +80934,8 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutSalesInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -80962,7 +80991,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedCreateWithoutSalesInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -81028,7 +81058,8 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutPmInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -81084,7 +81115,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedCreateWithoutPmInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -81150,7 +81182,8 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutTechnicalWriterInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -81206,7 +81239,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedCreateWithoutTechnicalWriterInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -81272,7 +81306,8 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutAdminProjectInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -81328,7 +81363,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedCreateWithoutAdminProjectInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -83368,7 +83404,8 @@ export namespace Prisma {
     OR?: ProjectScalarWhereInput[]
     NOT?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
     id?: StringFilter<"Project"> | string
-    code?: StringFilter<"Project"> | string
+    projectId?: StringNullableFilter<"Project"> | string | null
+    code?: StringNullableFilter<"Project"> | string | null
     name?: StringFilter<"Project"> | string
     description?: StringNullableFilter<"Project"> | string | null
     status?: EnumProjectStatusFilter<"Project"> | $Enums.ProjectStatus
@@ -85088,7 +85125,8 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutClientInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -85144,7 +85182,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedCreateWithoutClientInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -87514,7 +87553,8 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutBaselinesInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -87570,7 +87610,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedCreateWithoutBaselinesInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -87826,7 +87867,8 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutBaselinesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -87882,7 +87924,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateWithoutBaselinesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -88134,7 +88177,8 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutChangeRequestsInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -88190,7 +88234,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedCreateWithoutChangeRequestsInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -88572,7 +88617,8 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutChangeRequestsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -88628,7 +88674,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateWithoutChangeRequestsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -88982,7 +89029,8 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutReportsInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -89038,7 +89086,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedCreateWithoutReportsInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -89296,7 +89345,8 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutReportsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -89352,7 +89402,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateWithoutReportsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -89606,7 +89657,8 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutWorkstreamsInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -89662,7 +89714,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedCreateWithoutWorkstreamsInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -90069,7 +90122,8 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutWorkstreamsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -90125,7 +90179,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateWithoutWorkstreamsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -90312,7 +90367,8 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutSurveyResponsesInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -90368,7 +90424,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedCreateWithoutSurveyResponsesInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -90440,7 +90497,8 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutSurveyResponsesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -90496,7 +90554,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateWithoutSurveyResponsesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -90552,7 +90611,8 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutFeedback360Input = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -90608,7 +90668,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedCreateWithoutFeedback360Input = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -90950,7 +91011,8 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutFeedback360Input = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -91006,7 +91068,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateWithoutFeedback360Input = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -91620,7 +91683,8 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutResourcesInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -91676,7 +91740,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedCreateWithoutResourcesInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -92097,7 +92162,8 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutResourcesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -92153,7 +92219,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateWithoutResourcesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -92916,7 +92983,8 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutTimesheetsInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -92972,7 +93040,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedCreateWithoutTimesheetsInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -93418,7 +93487,8 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutTimesheetsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -93474,7 +93544,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateWithoutTimesheetsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -93928,7 +93999,8 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutDocumentsInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -93984,7 +94056,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedCreateWithoutDocumentsInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -94339,7 +94412,8 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutDocumentsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -94395,7 +94469,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateWithoutDocumentsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -94720,7 +94795,8 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutClosingChecklistInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -94776,7 +94852,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedCreateWithoutClosingChecklistInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -94983,7 +95060,8 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutClosingChecklistInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -95039,7 +95117,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateWithoutClosingChecklistInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -95236,7 +95315,8 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutExpensesInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -95292,7 +95372,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedCreateWithoutExpensesInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -95820,7 +95901,8 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutExpensesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -95876,7 +95958,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateWithoutExpensesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -98593,7 +98676,8 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutActivitiesInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -98649,7 +98733,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedCreateWithoutActivitiesInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -98862,7 +98947,8 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutActivitiesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -98918,7 +99004,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateWithoutActivitiesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -98974,7 +99061,8 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutTasksInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -99030,7 +99118,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedCreateWithoutTasksInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -99670,7 +99759,8 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutTasksInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -99726,7 +99816,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateWithoutTasksInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -100510,7 +100601,8 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutBillingMilestonesInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -100566,7 +100658,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedCreateWithoutBillingMilestonesInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -100737,7 +100830,8 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutBillingMilestonesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -100793,7 +100887,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateWithoutBillingMilestonesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -104350,7 +104445,8 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutRaidItemsInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -104406,7 +104502,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedCreateWithoutRaidItemsInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -104748,7 +104845,8 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutRaidItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -104804,7 +104902,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateWithoutRaidItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -105787,7 +105886,8 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutPerfProjectRatingsInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -105843,7 +105943,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedCreateWithoutPerfProjectRatingsInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -106103,7 +106204,8 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutPerfProjectRatingsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -106159,7 +106261,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateWithoutPerfProjectRatingsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -106447,7 +106550,8 @@ export namespace Prisma {
 
   export type ProjectCreateManySalesInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -106487,7 +106591,8 @@ export namespace Prisma {
 
   export type ProjectCreateManyPmInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -106527,7 +106632,8 @@ export namespace Prisma {
 
   export type ProjectCreateManyTechnicalWriterInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -106567,7 +106673,8 @@ export namespace Prisma {
 
   export type ProjectCreateManyAdminProjectInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -107594,7 +107701,8 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutSalesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -107650,7 +107758,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateWithoutSalesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -107706,7 +107815,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateManyWithoutSalesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -107746,7 +107856,8 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutPmInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -107802,7 +107913,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateWithoutPmInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -107858,7 +107970,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateManyWithoutPmInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -107898,7 +108011,8 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutTechnicalWriterInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -107954,7 +108068,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateWithoutTechnicalWriterInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -108010,7 +108125,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateManyWithoutTechnicalWriterInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -108050,7 +108166,8 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutAdminProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -108106,7 +108223,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateWithoutAdminProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -108162,7 +108280,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateManyWithoutAdminProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -109840,7 +109959,8 @@ export namespace Prisma {
 
   export type ProjectCreateManyClientInput = {
     id?: string
-    code: string
+    projectId?: string | null
+    code?: string | null
     name: string
     description?: string | null
     status?: $Enums.ProjectStatus
@@ -109909,7 +110029,8 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutClientInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -109965,7 +110086,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateWithoutClientInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
@@ -110021,7 +110143,8 @@ export namespace Prisma {
 
   export type ProjectUncheckedUpdateManyWithoutClientInput = {
     id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus

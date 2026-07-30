@@ -9,7 +9,8 @@ import type { ProjectKind } from "./projectKind";
 import type { ProjectStatus } from "./projectStatus";
 
 export interface CreateProjectBody {
-  code: string;
+  /** SPK / PO Number (optional — auto-assigned Project ID is separate) */
+  code?: string | null;
   name: string;
   description?: string;
   clientId: string;

@@ -585,7 +585,7 @@ router.post("/billing-milestones/:milestoneId/generate-invoice", async (req, res
         invoiceDate: invoicedAt,
         dueDate: milestone.dueDate ?? null,
         issuer,
-        project: { code: milestone.project.code, name: milestone.project.name },
+        project: { code: milestone.project.code ?? "", name: milestone.project.name },
         client: {
           name: milestone.project.client?.name ?? "—",
           contactPerson: milestone.project.client?.contactPerson,

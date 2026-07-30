@@ -95,6 +95,7 @@ function OverviewTab({ project }: { project: any }) {
 
   const [form, setForm] = useState({
     clientId: project.clientId ?? "",
+    code: project.code ?? "",
     description: project.description ?? "",
     startDate: project.startDate ? String(project.startDate).slice(0, 10) : "",
     endDate: project.endDate ? String(project.endDate).slice(0, 10) : "",
@@ -172,6 +173,7 @@ function OverviewTab({ project }: { project: any }) {
   function startEdit() {
     setForm({
       clientId: project.clientId ?? "",
+      code: project.code ?? "",
       description: project.description ?? "",
       startDate: project.startDate ? String(project.startDate).slice(0, 10) : "",
       endDate: project.endDate ? String(project.endDate).slice(0, 10) : "",
@@ -236,12 +238,14 @@ function OverviewTab({ project }: { project: any }) {
     }
     const data: Record<string, unknown> = isSalesDraftEdit
       ? {
+          code: form.code.trim() || null,
           description: form.description.trim() || null,
           contractValue: Number(form.contractValue),
           vatPercent: vp,
           contractValueIncludesVat: form.contractValueIncludesVat,
         }
       : {
+          code: form.code.trim() || null,
           description: form.description.trim() || null,
           startDate: form.startDate || undefined,
           endDate: form.endDate || undefined,
@@ -344,10 +348,17 @@ function OverviewTab({ project }: { project: any }) {
                     </Button>
                   )}
                 </div>
+                {project.projectId && (
+                  <InfoRow
+                    icon={<FileText className="h-4 w-4" />}
+                    label="Project ID"
+                    value={project.projectId}
+                  />
+                )}
                 <InfoRow
                   icon={<FileText className="h-4 w-4" />}
                   label="SPK / PO Number"
-                  value={project.code ?? "-"}
+                  value={project.code ?? "—"}
                 />
                 <OverviewFileSlot
                   label="SPK / PO File"
@@ -438,6 +449,17 @@ function OverviewTab({ project }: { project: any }) {
                 )}
                 <InfoRow icon={<User className="h-4 w-4" />} label="Sales" value={project.salesName ?? "-"} />
                 <InfoRow icon={<User className="h-4 w-4" />} label="Project Manager" value={project.pmName ?? "-"} />
+                <div>
+                  <Label htmlFor="ov-code">SPK / PO Number</Label>
+                  <Input
+                    id="ov-code"
+                    value={form.code}
+                    onChange={(e) => setForm({ ...form, code: e.target.value })}
+                    placeholder="e.g. SPK-2026-005 (optional)"
+                    className="mt-1"
+                    data-testid="input-overview-spk-po"
+                  />
+                </div>
                 {!isSalesDraftEdit && (
                   <div className="grid grid-cols-2 gap-3">
                     <div>
@@ -497,22 +519,22 @@ function OverviewTab({ project }: { project: any }) {
                 {canViewProjectFinancials(user?.role) ? (
                   <>
                     <Stat
-                      label={`Revenue (Selling Price)${(project as any).currency && (project as any).currency !== "IDR" ? ` · ${(project as any).currency}` : ""}`}
-                      value={formatMoney(project.contractValue, (project as any).currency)}
+                      label={`Revenue (Selling Price)${project.currency && project.currency !== "IDR" ? ` · ${project.currency}` : ""}`}
+                      value={formatMoney(project.contractValue, project.currency ?? undefined)}
                     />
                     <Stat
                       label="Estimated Operational Cost"
-                      value={formatMoney(project.estimatedCost, (project as any).currency)}
+                      value={formatMoney(project.estimatedCost, project.currency ?? undefined)}
                       muted
                     />
                     <Stat
                       label="Estimated Profit"
-                      value={formatMoney(project.estimatedProfit, (project as any).currency)}
+                      value={formatMoney(project.estimatedProfit, project.currency ?? undefined)}
                       highlight
                     />
-                    {(project as any).currency && (project as any).currency !== "IDR" && (project as any).exchangeRate && (
+                    {project.currency && project.currency !== "IDR" && project.exchangeRate && (
                       <p className="text-[11px] text-muted-foreground">
-                        Stored rate: 1 {(project as any).currency} ≈ {formatIDR((project as any).exchangeRate)}
+                        Stored rate: 1 {project.currency} ≈ {formatIDR(project.exchangeRate)}
                       </p>
                     )}
                     <div className="flex items-center justify-between pt-3 border-t border-border">
@@ -526,7 +548,7 @@ function OverviewTab({ project }: { project: any }) {
                           score={project.healthScore}
                           label={project.healthLabel ?? null}
                           reasons={project.healthReasons ?? null}
-                          components={(project as any).healthComponents ?? null}
+                          components={(project.healthComponents as import("@/components/common/Badges").HealthComponents) ?? null}
                           showLabel
                         />
                       </div>
@@ -536,9 +558,9 @@ function OverviewTab({ project }: { project: any }) {
                         {project.healthReasons.slice(0, 4).map((r: string, i: number) => <li key={i}>{r}</li>)}
                       </ul>
                     )}
-                    {(project as any).profitOutlook && (
+                    {project.profitOutlook && (
                       <div className="pt-3 border-t border-border">
-                        <ProfitOutlookCompact outlook={(project as any).profitOutlook as ProfitOutlook} />
+                        <ProfitOutlookCompact outlook={project.profitOutlook as ProfitOutlook} />
                       </div>
                     )}
                   </>

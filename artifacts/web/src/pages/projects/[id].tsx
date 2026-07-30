@@ -218,7 +218,9 @@ export default function ProjectDetail() {
         <span className="text-muted-foreground/40">/</span>
         <Link href="/projects" className="hover:text-foreground transition-colors">Projects</Link>
         <span className="text-muted-foreground/40">/</span>
-        <span className="text-foreground font-medium truncate max-w-[200px] sm:max-w-none">{project.code}</span>
+        <span className="text-foreground font-medium truncate max-w-[200px] sm:max-w-none">
+          {project.projectId ?? project.code ?? project.id}
+        </span>
       </nav>
 
       <div className="flex items-center justify-between gap-4 flex-wrap">
@@ -231,7 +233,18 @@ export default function ProjectDetail() {
               <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">{project.name}</h1>
               <ProjectStatusBadge status={project.status} />
             </div>
-            <p className="text-sm text-muted-foreground font-mono mt-1">SPK/PO: {project.code}</p>
+            <div className="flex items-center gap-3 mt-1 flex-wrap">
+              {project.projectId && (
+                <span className="text-sm text-muted-foreground font-mono">
+                  ID: {project.projectId}
+                </span>
+              )}
+              {project.code && (
+                <span className="text-sm text-muted-foreground font-mono">
+                  SPK/PO: {project.code}
+                </span>
+              )}
+            </div>
           </div>
         </div>
         {canChangeStatus && (

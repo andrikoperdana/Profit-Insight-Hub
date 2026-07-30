@@ -279,6 +279,7 @@ export function serializeProject(project: ProjectWithRelations, callerRole?: str
       };
   return {
     id: project.id,
+    projectId: (project as any).projectId ?? null,
     code: project.code,
     name: project.name,
     description: project.description,

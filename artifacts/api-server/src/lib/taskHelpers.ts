@@ -21,7 +21,7 @@ export type TaskWithRelations = {
   updatedAt: Date;
   assignee?: { id: string; name: string } | null;
   createdBy?: { name: string } | null;
-  project?: { code: string; name: string; pmId: string | null } | null;
+  project?: { code: string | null; name: string; pmId: string | null } | null;
   workstreamId?: string | null;
   timeLogs?: { hours: number }[];
   timesheets?: { hours: number; status: string }[];

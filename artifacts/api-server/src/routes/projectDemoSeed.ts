@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { prisma, type ProjectStatus } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
+import { nextProjectId } from "../lib/projectIds.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -33,7 +34,7 @@ router.post("/projects/seed-demo", requireRole("MANAGEMENT"), async (req, res) =
     orderBy: { code: "desc" },
   });
   let nextNum = 1;
-  if (last) {
+  if (last?.code) {
     const m = last.code.match(/SPH-2026-(\d+)/);
     if (m) nextNum = parseInt(m[1], 10) + 1;
   }
@@ -54,23 +55,36 @@ router.post("/projects/seed-demo", requireRole("MANAGEMENT"), async (req, res) =
     const startOffset = p.status === "OBSERVATION" ? 30 : p.status === "ACTIVE" ? -20 : -45;
     const startDate = new Date(today.getTime() + startOffset * 86400000);
     const endDate = new Date(startDate.getTime() + p.mandays * 86400000);
-    const project = await prisma.project.create({
-      data: {
-        code,
-        name: p.name,
-        description: `${p.name} for ${client.name}.`,
-        status: p.status,
-        clientId: client.id,
-        salesId: sales.id,
-        pmId: pm.id,
-        startDate,
-        endDate,
-        contractValue: p.value,
-        estimatedCost: Math.round(p.value * 0.55),
-        plannedMandays: p.mandays,
-      },
-    });
-    created.push(project.code);
+    let project: Awaited<ReturnType<typeof prisma.project.create>> | null = null;
+    for (let attempt = 0; attempt < 5; attempt++) {
+      const projectIdVal = await nextProjectId(new Date());
+      try {
+        project = await prisma.project.create({
+          data: {
+            projectId: projectIdVal,
+            code,
+            name: p.name,
+            description: `${p.name} for ${client.name}.`,
+            status: p.status,
+            clientId: client.id,
+            salesId: sales.id,
+            pmId: pm.id,
+            startDate,
+            endDate,
+            contractValue: p.value,
+            estimatedCost: Math.round(p.value * 0.55),
+            plannedMandays: p.mandays,
+          },
+        });
+        break; // success
+      } catch (e: unknown) {
+        const pe = e as { code?: string };
+        if (pe?.code === "P2002" && attempt < 4) continue;
+        throw e;
+      }
+    }
+    if (!project) { skipped.push(p.name); continue; }
+    created.push(project.projectId ?? project.code ?? project.id);
 
     // Assign PM + 2 consultants for ACTIVE/PAUSE; just PM for OBSERVATION
     const assignments: { userId: string; role: string; share: number; rate: number }[] = [

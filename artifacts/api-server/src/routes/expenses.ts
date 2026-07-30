@@ -91,7 +91,7 @@ function serializeExpense(e: {
   createdById: string | null;
   createdBy?: { name: string } | null;
   createdAt: Date;
-  project?: { code: string; name: string; client?: { name: string } | null } | null;
+  project?: { code: string | null; name: string; client?: { name: string } | null } | null;
 }) {
   return {
     id: e.id,

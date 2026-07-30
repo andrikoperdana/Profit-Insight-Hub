@@ -55,11 +55,15 @@ export default function ProjectsList() {
     }
   };
 
-  const filteredProjects = projects?.filter(p => 
-    p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    p.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (p.clientName && p.clientName.toLowerCase().includes(searchQuery.toLowerCase()))
-  )?.filter(p => pmFilter === "all" || p.pmId === pmFilter);
+  const filteredProjects = projects?.filter(p => {
+    const q = searchQuery.toLowerCase();
+    return (
+      p.name.toLowerCase().includes(q) ||
+      (p.code?.toLowerCase().includes(q) ?? false) ||
+      (p.projectId?.toLowerCase().includes(q) ?? false) ||
+      (p.clientName?.toLowerCase().includes(q) ?? false)
+    );
+  })?.filter(p => pmFilter === "all" || p.pmId === pmFilter);
 
   // Distinct PMs present in the loaded (status-scoped) project set, for the
   // "Filter by PM" dropdown next to the search box. Lets MGMT/Super Admin slice
@@ -77,26 +81,27 @@ export default function ProjectsList() {
 
   const projectExportRows = (filteredProjects ?? []).map((p) => {
     const base: Record<string, unknown> = {
-      Code: p.code,
+      ProjectID: p.projectId ?? "",
+      SPK_PO: p.code ?? "",
       Name: p.name,
-      Type: classifyProject({ name: p.name, code: p.code }),
+      Type: classifyProject({ name: p.name, code: p.projectId ?? p.code ?? "" }),
       Client: p.clientName ?? "",
       PM: p.pmName ?? "",
-      Sales: (p as any).salesName ?? "",
+      Sales: p.salesName ?? "",
       Status: p.status,
     };
     if (showFinancials) {
       base.ContractValue = p.contractValue;
-      base.EstimatedCost = (p as any).estimatedCost ?? 0;
-      base.EstimatedProfit = (p as any).estimatedProfit ?? 0;
-      base.ActualCost = (p as any).actualCost ?? 0;
-      base.ActualProfit = (p as any).actualProfit ?? 0;
+      base.EstimatedCost = p.estimatedCost ?? 0;
+      base.EstimatedProfit = p.estimatedProfit ?? 0;
+      base.ActualCost = p.actualCost ?? 0;
+      base.ActualProfit = p.actualProfit ?? 0;
       base.MarginPct = p.marginPct;
     }
-    base.PlannedMandays = (p as any).plannedMandays ?? 0;
-    base.ActualMandays = (p as any).actualMandays ?? 0;
-    base.StartDate = (p as any).startDate ?? "";
-    base.EndDate = (p as any).endDate ?? "";
+    base.PlannedMandays = p.plannedMandays ?? 0;
+    base.ActualMandays = p.actualMandays ?? 0;
+    base.StartDate = p.startDate ?? "";
+    base.EndDate = p.endDate ?? "";
     return base;
   });
 
@@ -214,7 +219,12 @@ export default function ProjectsList() {
                     <div className="flex items-center gap-2">
                       <Link href={`/projects/${project.id}`} className="block min-w-0 outline-none">
                         <div className="font-medium text-foreground group-hover:text-primary transition-colors">{project.name}</div>
-                        <div className="text-xs text-muted-foreground font-mono">{project.code}</div>
+                        <div className="text-xs text-muted-foreground font-mono">
+                          {project.projectId ?? project.code}
+                          {project.projectId && project.code && (
+                            <span className="ml-1 text-muted-foreground/60">· {project.code}</span>
+                          )}
+                        </div>
                       </Link>
                       <Button
                         asChild
@@ -235,9 +245,9 @@ export default function ProjectsList() {
                   {showFinancials && (
                     <>
                       <TableCell className="text-right font-mono text-sm">
-                        {formatMoney(project.contractValue, (project as any).currency)}
-                        {(project as any).currency && (project as any).currency !== "IDR" && (
-                          <span className="ml-1 text-[10px] uppercase text-muted-foreground">{(project as any).currency}</span>
+                        {formatMoney(project.contractValue, project.currency ?? undefined)}
+                        {project.currency && project.currency !== "IDR" && (
+                          <span className="ml-1 text-[10px] uppercase text-muted-foreground">{project.currency}</span>
                         )}
                       </TableCell>
                       <TableCell className="text-center"><MarginBadge marginPct={project.marginPct} /></TableCell>
@@ -246,7 +256,7 @@ export default function ProjectsList() {
                           score={project.healthScore ?? null}
                           label={project.healthLabel ?? null}
                           reasons={project.healthReasons ?? null}
-                          components={(project as any).healthComponents ?? null}
+                          components={(project.healthComponents as import("@/components/common/Badges").HealthComponents) ?? null}
                         />
                       </TableCell>
                     </>

@@ -172,7 +172,7 @@ type ProjectRating = {
   id: string;
   reviewId: string;
   projectId: string;
-  project: { code: string; name: string } | null;
+  project: { code: string | null; name: string } | null;
   rating: number;
   comment: string | null;
   ratedById: string;
@@ -223,7 +223,7 @@ async function computeMetrics(userId: string, start: Date, end: Date) {
   ]);
   let billable = 0;
   let total = 0;
-  const perProject = new Map<string, { projectId: string; projectCode: string; projectName: string; hours: number }>();
+  const perProject = new Map<string, { projectId: string; projectCode: string | null; projectName: string; hours: number }>();
   for (const t of timesheets) {
     total += t.hours;
     const isBillable = t.task ? t.task.billable : true;
@@ -233,7 +233,7 @@ async function computeMetrics(userId: string, start: Date, end: Date) {
       if (existing) existing.hours += t.hours;
       else perProject.set(t.project.id, {
         projectId: t.project.id,
-        projectCode: t.project.code,
+        projectCode: t.project.code ?? null,
         projectName: t.project.name,
         hours: t.hours,
       });

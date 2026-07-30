@@ -1468,7 +1468,7 @@ export const ListProjectsResponseItem = zod.object({
 export const ListProjectsResponse = zod.array(ListProjectsResponseItem);
 
 export const CreateProjectBody = zod.object({
-  code: zod.string(),
+  code: zod.string().nullish(),
   name: zod.string(),
   description: zod.string().optional(),
   clientId: zod.string(),
@@ -1522,7 +1522,8 @@ export const GetProjectParams = zod.object({
 export const GetProjectResponse = zod
   .object({
     id: zod.string(),
-    code: zod.string(),
+    projectId: zod.string().nullish(),
+    code: zod.string().nullish(),
     name: zod.string(),
     description: zod.string().nullish(),
     status: zod.enum([
@@ -1710,7 +1711,7 @@ export const UpdateProjectParams = zod.object({
 });
 
 export const UpdateProjectBody = zod.object({
-  code: zod.string().optional(),
+  code: zod.string().nullish(),
   name: zod.string().optional(),
   description: zod.string().optional(),
   clientId: zod.string().optional(),

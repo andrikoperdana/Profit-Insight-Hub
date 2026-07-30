@@ -3935,10 +3935,11 @@ components:
 
     Project:
       type: object
-      required: [id, code, name, status, contractValue, estimatedCost, estimatedProfit, plannedMandays, actualCost, resourceCost, additionalCost, createdAt]
+      required: [id, name, status, contractValue, estimatedCost, estimatedProfit, plannedMandays, actualCost, resourceCost, additionalCost, createdAt]
       properties:
         id: { type: string }
-        code: { type: string }
+        projectId: { type: string, nullable: true, description: "Auto-assigned read-only Project ID (PRJ/YYYY/NNN)" }
+        code: { type: string, nullable: true, description: "SPK / PO Number — optional, user-supplied" }
         name: { type: string }
         description: { type: string, nullable: true }
         status: { $ref: "#/components/schemas/ProjectStatus" }
@@ -4319,9 +4320,9 @@ components:
 
     CreateProjectBody:
       type: object
-      required: [code, name, clientId]
+      required: [name, clientId]
       properties:
-        code: { type: string }
+        code: { type: string, nullable: true, description: "SPK / PO Number (optional — auto-assigned Project ID is separate)" }
         name: { type: string }
         description: { type: string }
         clientId: { type: string }
@@ -4347,7 +4348,7 @@ components:
     UpdateProjectBody:
       type: object
       properties:
-        code: { type: string }
+        code: { type: string, nullable: true, description: "SPK / PO Number — pass null to clear" }
         name: { type: string }
         description: { type: string }
         clientId: { type: string }
