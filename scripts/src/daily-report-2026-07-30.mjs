@@ -36,21 +36,21 @@ const children = [
   h1("1. Perbaikan Bug"),
   h2("1.1 Scroll di dalam dropdown tidak berfungsi"),
   p("Dari catatan feedback: dropdown dengan daftar panjang (pilih klien, pilih orang, pilih lead) bisa memanjang melebihi layar sehingga terasa tidak bisa di-scroll."),
-  bullets([
+  ...bullets([
     "Semua dropdown kini dibatasi tinggi maksimalnya (±380 px) sehingga daftar panjang otomatis bisa di-scroll di dalamnya.",
     "Panel popup lain diberi pengaman serupa agar tidak pernah melebihi tinggi layar.",
     "Berlaku otomatis di seluruh aplikasi karena perbaikan dilakukan di komponen bersama.",
   ]),
   h2("1.2 Halaman kosong saat Sales mengonversi lead Won"),
   p("Dilaporkan lewat tangkapan layar dari situs live: user Sales membuka halaman konversi lead Won dan hanya melihat halaman putih kosong."),
-  bullets([
+  ...bullets([
     "Penyebab: satu label form (kolom Description) dipakai dengan cara yang salah sehingga halaman crash — hanya terjadi untuk role Sales; Manajemen tidak terdampak sehingga tidak ketahuan sebelumnya.",
     "Sudah diperbaiki dan diverifikasi dengan pengujian browser otomatis: baik lewat URL langsung maupun tombol \u201CRegister Project\u201D di Sales Pipeline, form kini tampil normal dengan lead langsung terpilih.",
   ]),
 
   h1("2. Fitur Baru yang Selesai Digabung"),
   p("Sembilan tugas selesai dikerjakan dan digabung ke aplikasi utama hari ini:"),
-  bullets([
+  ...bullets([
     "Tombol Convert di semua stage — lead bisa dikonversi menjadi proyek sejak stage New, supaya biaya bisa dicatat lebih awal; lead yang sudah dikonversi kini menampilkan kode proyeknya.",
     "Convert ulang setelah proyek dihapus — jika proyek hasil konversi dihapus, lead-nya terbuka kembali untuk dikonversi (status kembali ke Negotiation).",
     "Project ID otomatis — setiap proyek kini punya identitas permanen format PRJ/TAHUN/NNN (misal PRJ/2026/030) yang dibuat otomatis dan tidak bisa diedit; nomor SPK/PO menjadi kolom terpisah yang boleh diisi belakangan.",
@@ -63,7 +63,7 @@ const children = [
   ]),
 
   h1("3. Persiapan Publish"),
-  bullets([
+  ...bullets([
     "Struktur database produksi diperbarui dua kali hari ini (kolom Project ID, lalu kolom Archive) dan seluruh proyek lama di produksi sudah diberi nomor PRJ/2026/NNN — tidak ada yang tampil kosong setelah publish.",
     "Satu error build ditemukan dan diperbaiki (script data demo belum menyesuaikan kolom SPK/PO yang kini boleh kosong).",
     "Verifikasi menyeluruh: pemeriksaan tipe lolos, build produksi web & server sukses, seluruh 156 tes otomatis lulus, server di-restart dan menampilkan Project ID dengan benar.",
@@ -71,7 +71,7 @@ const children = [
   ]),
 
   h1("4. Dokumen yang Dihasilkan"),
-  bullets([
+  ...bullets([
     "Manual Fitur AI (SecureProfit-Hub-AI-Features-Manual.docx) — manual dwibahasa (Inggris + Indonesia) untuk empat fitur AI: Asisten Data, Smart Alerts & Ringkasan Mingguan, Draf Laporan AI, dan Executive Copilot, lengkap dengan enam tangkapan layar asli dari sistem.",
     "Dokumen ringkasan ini (Ringkasan-Pekerjaan-2026-07-30.docx).",
   ]),
