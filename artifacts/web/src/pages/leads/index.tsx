@@ -634,7 +634,7 @@ export default function LeadsPage() {
                           <Button size="sm" variant="ghost" className="h-7 px-2 text-xs" onClick={() => openEdit(l)}>
                             Edit
                           </Button>
-                          {!l.convertedProjectId && (s.key === "NEGOTIATION" || s.key === "PROPOSAL") && (
+                          {!l.convertedProjectId && (
                             <Button
                               size="sm"
                               variant="ghost"
@@ -662,8 +662,10 @@ export default function LeadsPage() {
                               variant="ghost"
                               className="h-7 px-2 text-xs"
                               onClick={() => navigate(`/projects/${l.convertedProjectId}`)}
+                              data-testid={`button-project-${l.id}`}
                             >
-                              <Briefcase className="h-3 w-3 mr-1" /> Project
+                              <Briefcase className="h-3 w-3 mr-1" />{" "}
+                              {l.convertedProjectCode || "Project"}
                             </Button>
                           )}
                           <Button size="sm" variant="ghost" className="h-7 px-2 text-xs text-destructive ml-auto" onClick={() => handleDelete(l)}>

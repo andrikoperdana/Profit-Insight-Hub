@@ -32,6 +32,7 @@ type LeadForSerialize = {
   lostReason: string | null;
   competitorWon: string | null;
   convertedProjectId: string | null;
+  convertedProject?: { code: string } | null;
   wonAt: Date | null;
   lostAt: Date | null;
   pipedriveDealId: number | null;
@@ -93,6 +94,7 @@ function serialize(l: LeadForSerialize) {
     lostReason: l.lostReason,
     competitorWon: l.competitorWon,
     convertedProjectId: l.convertedProjectId,
+    convertedProjectCode: l.convertedProject?.code ?? null,
     wonAt: l.wonAt ? l.wonAt.toISOString() : null,
     lostAt: l.lostAt ? l.lostAt.toISOString() : null,
     pipedriveDealId: l.pipedriveDealId,
@@ -153,12 +155,24 @@ router.get("/leads", async (req: AuthedRequest, res: Response) => {
     },
     orderBy: [{ stage: "asc" }, { updatedAt: "desc" }],
   });
+  // `convertedProjectId` is a plain scalar (no Prisma relation), so resolve
+  // project codes for converted leads with one extra query.
+  const convertedIds = leads.map((l) => l.convertedProjectId).filter((id): id is string => !!id);
+  const codeById = new Map<string, string>();
+  if (convertedIds.length > 0) {
+    const projects = await prisma.project.findMany({
+      where: { id: { in: convertedIds } },
+      select: { id: true, code: true },
+    });
+    for (const p of projects) codeById.set(p.id, p.code);
+  }
   const now = new Date();
   res.json(
     leads.map((l) => {
       const next = l.activities[0]?.nextActionAt ?? null;
       return {
         ...serialize(l),
+        convertedProjectCode: l.convertedProjectId ? (codeById.get(l.convertedProjectId) ?? null) : null,
         nextActionAt: next ? next.toISOString() : null,
         followupOverdue: next ? next.getTime() <= now.getTime() : false,
       };

@@ -29,6 +29,7 @@ export interface Lead {
   lostReason?: string | null;
   competitorWon?: string | null;
   convertedProjectId?: string | null;
+  convertedProjectCode?: string | null;
   wonAt?: string | null;
   lostAt?: string | null;
   pipedriveDealId?: number | null;

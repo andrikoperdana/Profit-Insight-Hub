@@ -3708,6 +3708,7 @@ components:
         lostReason: { type: string, nullable: true }
         competitorWon: { type: string, nullable: true }
         convertedProjectId: { type: string, nullable: true }
+        convertedProjectCode: { type: string, nullable: true }
         wonAt: { type: string, nullable: true }
         lostAt: { type: string, nullable: true }
         pipedriveDealId: { type: integer, nullable: true }
