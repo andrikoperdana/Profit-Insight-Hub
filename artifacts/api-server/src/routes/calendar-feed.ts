@@ -99,7 +99,7 @@ router.get("/ics", async (req, res) => {
         ],
         status: { in: ["OBSERVATION", "ACTIVE", "PAUSE"] },
       },
-      select: { id: true, code: true, name: true, startDate: true, endDate: true, status: true },
+      select: { id: true, projectId: true, code: true, name: true, startDate: true, endDate: true, status: true },
     }),
     prisma.task.findMany({
       where: {
@@ -112,7 +112,7 @@ router.get("/ics", async (req, res) => {
         startDate: true,
         endDate: true,
         status: true,
-        project: { select: { code: true, name: true } },
+        project: { select: { projectId: true, code: true, name: true } },
       },
     }),
     prisma.billingMilestone.findMany({
@@ -127,7 +127,7 @@ router.get("/ics", async (req, res) => {
         dueDate: true,
         amount: true,
         status: true,
-        project: { select: { code: true, name: true } },
+        project: { select: { projectId: true, code: true, name: true } },
       },
     }),
   ]);
@@ -153,7 +153,7 @@ router.get("/ics", async (req, res) => {
       const endExcl = new Date(start.getTime() + 86400000);
       lines.push(`DTSTART;VALUE=DATE:${formatIcsDateOnly(start)}`);
       lines.push(`DTEND;VALUE=DATE:${formatIcsDateOnly(endExcl)}`);
-      lines.push(fold(`SUMMARY:[Deadline] ${escapeIcs(p.code ?? "")} – ${escapeIcs(p.name)}`));
+      lines.push(fold(`SUMMARY:[Deadline] ${escapeIcs(p.projectId ?? p.code ?? "")} – ${escapeIcs(p.name)}`));
       lines.push(fold(`DESCRIPTION:${escapeIcs(`Status: ${p.status}`)}`));
       lines.push("END:VEVENT");
     }
@@ -168,7 +168,7 @@ router.get("/ics", async (req, res) => {
     const endExcl = new Date(new Date(e).getTime() + 86400000);
     lines.push(`DTSTART;VALUE=DATE:${formatIcsDateOnly(new Date(s))}`);
     lines.push(`DTEND;VALUE=DATE:${formatIcsDateOnly(endExcl)}`);
-    lines.push(fold(`SUMMARY:[Task] ${escapeIcs(t.title)} (${escapeIcs(t.project.code ?? "")})`));
+    lines.push(fold(`SUMMARY:[Task] ${escapeIcs(t.title)} (${escapeIcs(t.project.projectId ?? t.project.code ?? "")})`));
     lines.push(fold(`DESCRIPTION:${escapeIcs(`${t.project.name} – status: ${t.status}`)}`));
     lines.push("END:VEVENT");
   }
@@ -181,7 +181,7 @@ router.get("/ics", async (req, res) => {
     const endExcl = new Date(start.getTime() + 86400000);
     lines.push(`DTSTART;VALUE=DATE:${formatIcsDateOnly(start)}`);
     lines.push(`DTEND;VALUE=DATE:${formatIcsDateOnly(endExcl)}`);
-    lines.push(fold(`SUMMARY:[Milestone] ${escapeIcs(m.name)} – ${escapeIcs(m.project.code ?? "")}`));
+    lines.push(fold(`SUMMARY:[Milestone] ${escapeIcs(m.name)} – ${escapeIcs(m.project.projectId ?? m.project.code ?? "")}`));
     lines.push(
       fold(`DESCRIPTION:${escapeIcs(`${m.project.name} – status: ${m.status} – amount: ${m.amount}`)}`),
     );

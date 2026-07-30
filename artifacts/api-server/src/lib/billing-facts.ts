@@ -18,6 +18,7 @@ export type OpenMilestoneRow = {
   invoiceNumber: string | null;
   /** Resolved amount in IDR (explicit amount or percentage of contract value). */
   amount: number;
+  /** `code` is the display identifier: canonical projectId, falling back to SPK/PO code. */
   project: { id: string; code: string; name: string };
 };
 
@@ -55,7 +56,7 @@ export async function fetchOpenMilestones(
       percentage: true,
       dueDate: true,
       invoiceNumber: true,
-      project: { select: { id: true, code: true, name: true, contractValue: true } },
+      project: { select: { id: true, projectId: true, code: true, name: true, contractValue: true } },
     },
     orderBy: { dueDate: "asc" },
   });
@@ -69,6 +70,10 @@ export async function fetchOpenMilestones(
       percentage: ms.percentage,
       contractValue: ms.project.contractValue,
     }),
-    project: { id: ms.project.id, code: ms.project.code ?? "", name: ms.project.name },
+    project: {
+      id: ms.project.id,
+      code: ms.project.projectId ?? ms.project.code ?? "",
+      name: ms.project.name,
+    },
   }));
 }

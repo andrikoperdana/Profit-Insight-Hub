@@ -60,6 +60,7 @@ function fmtIDR(n: number): string {
 
 const digestProjectSelect = {
   ...projectMetricsSelect,
+  projectId: true,
   code: true,
   name: true,
   endDate: true,
@@ -89,7 +90,7 @@ async function buildWeeklyDigestFacts(): Promise<{ facts: Record<string, unknown
     const link = `/projects/${p.id}`;
     if ((p.status === "ACTIVE" || p.status === "PAUSE") && p.endDate && p.endDate.getTime() < nowMs) {
       delayed.push({
-        code: p.code ?? "",
+        code: p.projectId ?? p.code ?? "",
         name: p.name,
         daysOverdue: Math.floor((nowMs - p.endDate.getTime()) / DAY_MS),
         link,
@@ -111,7 +112,7 @@ async function buildWeeklyDigestFacts(): Promise<{ facts: Record<string, unknown
       topUserIds.add(top[0]);
     }
     const row: ProjRow = {
-      code: p.code ?? "",
+      code: p.projectId ?? p.code ?? "",
       name: p.name,
       link,
       marginPct: Math.round(metrics.marginPct * 10) / 10,
@@ -138,7 +139,8 @@ async function buildWeeklyDigestFacts(): Promise<{ facts: Record<string, unknown
   }
   const fillTopUser = (rows: ProjRow[], byId: Map<string, string>) => {
     for (const r of rows) {
-      const pid = projects.find((p) => p.code === r.code)?.id;
+      // Match by the row's link (`/projects/<id>`) — codes can be blank/duplicated-blank.
+      const pid = projects.find((p) => `/projects/${p.id}` === r.link)?.id;
       const uid = pid ? perProjectTopUser.get(pid) : undefined;
       r.costTopUser = uid ? byId.get(uid) ?? null : null;
     }

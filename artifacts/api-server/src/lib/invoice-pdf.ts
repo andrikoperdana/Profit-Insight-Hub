@@ -5,7 +5,8 @@ export interface InvoicePdfData {
   invoiceDate: Date;
   dueDate: Date | null;
   issuer: InvoiceIssuer;
-  project: { code: string; name: string };
+  /** `reference` is the canonical project identifier (projectId, falling back to SPK/PO code). */
+  project: { reference: string; name: string };
   client: {
     name: string;
     contactPerson?: string | null;
@@ -176,7 +177,7 @@ export async function buildInvoicePdf(data: InvoicePdfData): Promise<Uint8Array>
   const metaRows: [string, string][] = [
     ["Invoice Date", fmtDate(data.invoiceDate)],
     ["Due Date", data.dueDate ? fmtDate(data.dueDate) : "—"],
-    ["Project", data.project.code],
+    ["Project", data.project.reference],
   ];
   let my = y;
   for (const [label, value] of metaRows) {

@@ -88,6 +88,7 @@ function parseDay(s: string | undefined, fallback: Date): Date {
 
 const listProjectsSelect = {
   ...projectMetricsSelect,
+  projectId: true,
   code: true,
   name: true,
   kind: true,
@@ -125,6 +126,7 @@ async function toolListProjects(
     const metrics = computeMetrics(p as unknown as ProjectWithRelations);
     const money = canSeeMoney(user, p);
     const base: Record<string, unknown> = {
+      projectId: p.projectId ?? null,
       code: p.code,
       name: p.name,
       status: p.status,
@@ -172,6 +174,7 @@ async function toolListProjects(
 
 const projectDetailSelect = {
   ...projectMetricsSelect,
+  projectId: true,
   code: true,
   name: true,
   kind: true,
@@ -199,12 +202,13 @@ const projectDetailSelect = {
 
 async function toolGetProjectDetail(user: AssistantUser, args: { query?: string }): Promise<unknown> {
   const q = (args.query ?? "").trim();
-  if (!q) return { error: "query is required (project code or part of its name)" };
+  if (!q) return { error: "query is required (project ID, code, or part of its name)" };
   const candidates = await prisma.project.findMany({
     where: {
       deletedAt: null,
       ...projectScopeWhere(user),
       OR: [
+        { projectId: { equals: q, mode: "insensitive" } },
         { code: { equals: q, mode: "insensitive" } },
         { name: { contains: q, mode: "insensitive" } },
         { client: { name: { contains: q, mode: "insensitive" } } },
@@ -216,11 +220,19 @@ async function toolGetProjectDetail(user: AssistantUser, args: { query?: string 
   if (candidates.length === 0) {
     return { error: `No project matching "${q}" is visible to this user.` };
   }
-  const exact = candidates.find((c) => c.code?.toLowerCase() === q.toLowerCase());
+  const exact = candidates.find(
+    (c) =>
+      c.projectId?.toLowerCase() === q.toLowerCase() || c.code?.toLowerCase() === q.toLowerCase(),
+  );
   if (!exact && candidates.length > 1) {
     return {
       note: "Multiple projects matched — ask the user which one they mean.",
-      candidates: candidates.map((c) => ({ code: c.code, name: c.name, status: c.status })),
+      candidates: candidates.map((c) => ({
+        projectId: c.projectId ?? null,
+        code: c.code,
+        name: c.name,
+        status: c.status,
+      })),
     };
   }
   const p = exact ?? candidates[0];
@@ -241,6 +253,7 @@ async function toolGetProjectDetail(user: AssistantUser, args: { query?: string 
   const openRaid = p.raidItems.filter((r) => r.status !== "CLOSED");
 
   const detail: Record<string, unknown> = {
+    projectId: p.projectId ?? null,
     code: p.code,
     name: p.name,
     status: p.status,
@@ -393,7 +406,7 @@ async function toolGetBillingStatus(
         dueDate: true,
         paidAt: true,
         invoiceNumber: true,
-        project: { select: { id: true, name: true, code: true, contractValue: true } },
+        project: { select: { id: true, name: true, projectId: true, code: true, contractValue: true } },
       },
       orderBy: { paidAt: "desc" },
       take: 25,
@@ -402,7 +415,7 @@ async function toolGetBillingStatus(
       filter: "PAID",
       note: "Most recent paid milestones (up to 25).",
       milestones: paid.map((ms) => ({
-        project: `${ms.project.code} ${ms.project.name}`,
+        project: `${ms.project.projectId ?? ms.project.code ?? ""} ${ms.project.name}`,
         link: `/projects/${ms.project.id}?tab=billing`,
         milestone: ms.name,
         status: "PAID",
@@ -503,7 +516,7 @@ const TOOL_DEFS = [
     function: {
       name: "get_project_detail",
       description:
-        "Full detail of ONE project by code or name fragment: team, schedule, progress, health, open risks, recent hours, and (when permitted) financials and billing milestones.",
+        "Full detail of ONE project by Project ID, SPK/PO code, or name fragment: team, schedule, progress, health, open risks, recent hours, and (when permitted) financials and billing milestones.",
       parameters: {
         type: "object",
         properties: {

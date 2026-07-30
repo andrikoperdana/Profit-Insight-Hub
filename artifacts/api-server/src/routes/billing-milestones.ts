@@ -518,6 +518,7 @@ router.post("/billing-milestones/:milestoneId/generate-invoice", async (req, res
       project: {
         select: {
           id: true,
+          projectId: true,
           code: true,
           name: true,
           status: true,
@@ -585,7 +586,10 @@ router.post("/billing-milestones/:milestoneId/generate-invoice", async (req, res
         invoiceDate: invoicedAt,
         dueDate: milestone.dueDate ?? null,
         issuer,
-        project: { code: milestone.project.code ?? "", name: milestone.project.name },
+        project: {
+          reference: milestone.project.projectId ?? milestone.project.code ?? "",
+          name: milestone.project.name,
+        },
         client: {
           name: milestone.project.client?.name ?? "—",
           contactPerson: milestone.project.client?.contactPerson,
@@ -694,7 +698,7 @@ router.post("/billing-milestones/:milestoneId/generate-invoice", async (req, res
 router.get("/billing-milestones/:milestoneId/invoice", async (req, res) => {
   const milestone = await prisma.billingMilestone.findUnique({
     where: { id: req.params.milestoneId },
-    include: { project: { select: { id: true, code: true, pmId: true, salesId: true } } },
+    include: { project: { select: { id: true, projectId: true, code: true, pmId: true, salesId: true } } },
   });
   if (!milestone) {
     res.status(404).json({ error: "Billing milestone not found" });
@@ -723,7 +727,7 @@ router.get("/billing-milestones/:milestoneId/invoice", async (req, res) => {
   res.setHeader("Content-Type", "application/pdf");
   res.setHeader(
     "Content-Disposition",
-    `attachment; filename="${doc.fileName || `invoice-${milestone.project.code}.pdf`}"`,
+    `attachment; filename="${doc.fileName || `invoice-${milestone.project.projectId ?? milestone.project.code ?? milestone.project.id}.pdf`}"`,
   );
   res.send(bytes);
 });
